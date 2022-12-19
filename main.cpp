@@ -55,6 +55,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// DirectX毎フレーム処理　ここから
 		
 		// 更新処理ここから
+		input->Update();
 		sprite->Update();
 		// ここまで
 		

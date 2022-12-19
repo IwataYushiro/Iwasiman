@@ -56,9 +56,21 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 	
 	//変換行列
 	CreateConstBufferTransform();
-	//平行投影変換
-	constMapTransform->mat = XMMatrixOrthographicOffCenterLH(0,(float)WinApp::window_width,(float)WinApp::window_height, 0, 0, 1);
+	XMMATRIX matProjection = XMMatrixOrthographicOffCenterLH(0, (float)WinApp::window_width, (float)WinApp::window_height, 0, 0, 1);
+	
+	XMMATRIX matRot, matTrans;
+	//スケーリング等計算
+	matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(rotationZ);
 
+	matTrans = XMMatrixTranslation(position.x, position.y, 0.0f);
+	//ワールド行列合成
+	matWorld = XMMatrixIdentity();
+	matWorld *= matRot;		//回転反映
+	matWorld *= matTrans;	//平行移動反映
+
+	constMapTransform->mat = matWorld * matProjection;
+	
 	//シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};				//設定構造体
 	srvDesc.Format = resDesc.Format;
@@ -80,7 +92,9 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 	vbView.StrideInBytes = sizeof(vertices[0]);
 }
 void Sprite::Update()
-{
+{//平行投影変換
+	XMMATRIX matProjection= XMMatrixOrthographicOffCenterLH(0, (float)WinApp::window_width, (float)WinApp::window_height, 0, 0, 1);
+
 	XMMATRIX matRot, matTrans;
 	//スケーリング等計算
 	matRot = XMMatrixIdentity();
@@ -92,10 +106,10 @@ void Sprite::Update()
 	matWorld *= matRot;		//回転反映
 	matWorld *= matTrans;	//平行移動反映
 
-	constMapTransform->mat = matWorld;
+	constMapTransform->mat = matWorld*matProjection;
 	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT))
 	{
-		if (input_->PushKey(DIK_UP)) { position.y += 2.0f; }
+		if (input_->PushKey(DIK_UP)) { position.y += 1.0f; }
 		else if (input_->PushKey(DIK_DOWN)) { position.y -= 1.0f; }
 		if (input_->PushKey(DIK_RIGHT)) { position.x += 1.0f; }
 		else if (input_->PushKey(DIK_LEFT)) { position.x -= 1.0f; }
