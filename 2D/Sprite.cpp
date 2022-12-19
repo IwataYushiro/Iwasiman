@@ -95,7 +95,7 @@ void Sprite::Update()
 	constMapTransform->mat = matWorld;
 	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT))
 	{
-		if (input_->PushKey(DIK_UP)) { position.y += 1.0f; }
+		if (input_->PushKey(DIK_UP)) { position.y += 2.0f; }
 		else if (input_->PushKey(DIK_DOWN)) { position.y -= 1.0f; }
 		if (input_->PushKey(DIK_RIGHT)) { position.x += 1.0f; }
 		else if (input_->PushKey(DIK_LEFT)) { position.x -= 1.0f; }
