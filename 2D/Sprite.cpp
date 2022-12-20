@@ -52,7 +52,7 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 	//定数バッファ
 	//マテリアル
 	CreateConstBufferMaterial();
-	constMapMaterial->color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	constMapMaterial->color = color_;
 
 	//変換行列
 	CreateConstBufferTransform();
@@ -93,7 +93,11 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 	vbView.StrideInBytes = sizeof(vertices[0]);
 }
 void Sprite::Update()
-{//平行投影変換
+{
+	//色情報をGPUに転送
+	constMapMaterial->color = color_;
+
+	//平行投影変換
 	matProjection = XMMatrixOrthographicOffCenterLH(0, (float)WinApp::window_width, (float)WinApp::window_height, 0, 0, 1);
 
 	//スケーリング等計算

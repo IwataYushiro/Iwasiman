@@ -31,12 +31,18 @@ private://構造体類
 	struct ConstBufferDataTransform
 	{
 		XMMATRIX mat;	//3D変換行列
-
 	};
+
+	//回転
 	float rotationZ_ = 0.0f;
+	//座標
 	XMFLOAT2 position_ = { 0.0f,0.0f };
+	//色(RGBA)
+	XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+
 	//射影行列
 	XMMATRIX matProjection;
+	
 	//ワールド変換行列
 	XMMATRIX matRot;
 	XMMATRIX matTrans;
@@ -102,5 +108,10 @@ public://アクセッサ置き場
 	void SetRotationZ(const float& rotationZ) { rotationZ_ = rotationZ; }
 
 	const float& GetRotationZ()const { return rotationZ_; }
+
+	void SetColor(const XMFLOAT4& color) { color_ = color; }
+
+	const XMFLOAT4& GetColor()const { return color_; }
+
 
 };
