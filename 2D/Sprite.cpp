@@ -93,14 +93,26 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 }
 void Sprite::Update()
 {
-
 	//êFèÓïÒÇGPUÇ…ì]ëó
 	constMapMaterial->color = color_;
 
-	float left = (0.0f * anchorPoint_.x) * size_.x;
-	float right = (1.0f * anchorPoint_.x) * size_.x;
-	float top = (0.0f * anchorPoint_.y) * size_.y;
-	float bottom = (1.0f * anchorPoint_.y) * size_.y;
+	float left = (0.0f - anchorPoint_.x) * size_.x;
+	float right = (1.0f - anchorPoint_.x) * size_.x;
+	float top = (0.0f - anchorPoint_.y) * size_.y;
+	float bottom = (1.0f - anchorPoint_.y) * size_.y;
+	//ç∂âEîΩì]
+	if (isFlipX_)
+	{
+		left = -left;
+		right = -right;
+	}
+	//è„â∫îΩì]
+	if (isFlipY_)
+	{
+		top = -top;
+		bottom = -bottom;
+	}
+	
 	//í∏ì_ÉfÅ[É^
 	vertices[LB].pos = { left,bottom,0.0f };
 	vertices[LT].pos = { left,top,0.0f };

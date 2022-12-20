@@ -34,7 +34,7 @@ private://構造体類
 	};
 
 	//アンカーポイント
-	XMFLOAT2 anchorPoint_ = { 0.0f,0.0f };
+	XMFLOAT2 anchorPoint_ = { 0.5f,0.5f };
 	//表示サイズ
 	XMFLOAT2 size_ = { 100.0f,100.0f };
 	
@@ -54,6 +54,11 @@ private://構造体類
 	XMFLOAT2 position_ = { 0.0f,0.0f };
 	//色(RGBA)
 	XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+
+	//左右フリップ
+	bool isFlipX_ = false;
+	//上下フリップ
+	bool isFlipY_ = false;
 
 	//射影行列
 	XMMATRIX matProjection;
@@ -117,25 +122,39 @@ private://メンバ変数
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
 public://アクセッサ置き場
+	//アンカーポイント
 	void SetAnchorPoint(const XMFLOAT2& anchorPoint) { anchorPoint_ = anchorPoint; }
 
 	const XMFLOAT2& GetAnchorPoint()const { return anchorPoint_; }
 
+	//スケーリング
 	void SetSize(const XMFLOAT2& size) { size_ = size; }
 
 	const XMFLOAT2& GetSize()const { return size_; }
 
+	//座標
 	void SetPosition(const XMFLOAT2& position) { position_ = position; }
 
 	const XMFLOAT2& GetPosition()const { return position_; }
 
+	//回転
 	void SetRotationZ(const float& rotationZ) { rotationZ_ = rotationZ; }
 
 	const float& GetRotationZ()const { return rotationZ_; }
 
+	//色
 	void SetColor(const XMFLOAT4& color) { color_ = color; }
 
 	const XMFLOAT4& GetColor()const { return color_; }
 
+	//左右フリップ
+	void SetFlipX(const float& isFlipX) { isFlipX_ = isFlipX; }
+
+	const float& GetFlipX()const { return isFlipX_; }
+	
+	//上下フリップ
+	void SetFlipY(const float& isFlipY) { isFlipY_ = isFlipY; }
+
+	const float& GetFlipY()const { return isFlipY_; }
 
 };
