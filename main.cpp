@@ -61,17 +61,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		//スプライト呼び出し例
 		XMFLOAT2 pos = sprite->GetPosition();
-		bool vis = sprite->GetInvisible();
-		
-		pos.x = 300.0f;
-		pos.y = 300.0f;
-
-		//vis = true;
-
 
 		sprite->SetPosition(pos);
-		sprite->SetInvisible(vis);
-
+	
 		sprite->Update();
 		// ここまで
 		

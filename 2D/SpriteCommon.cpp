@@ -99,9 +99,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 		);
 		assert(SUCCEEDED(result));
 	}
-	//SRVの最大個数
-	const size_t kMaxSRVCount = 2056;
-
+	
 	//デスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;

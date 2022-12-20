@@ -21,12 +21,18 @@ public://メンバ関数
 	//初期化
 	void Initialize(DirectXCommon* dxCommon);
 
+	//テクスチャ読み込み
+	
 	//描画前処理
 	void PreDraw();
 
 private://メンバ変数
 
 	DirectXCommon* dxCommon_ = nullptr;
+
+	//SRVの最大個数
+	static const size_t kMaxSRVCount = 2056;
+
 	//テクスチャバッファの生成
 	ComPtr<ID3D12Resource> texbuff = nullptr;
 	// 画像イメージデータ配列
