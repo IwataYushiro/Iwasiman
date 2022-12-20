@@ -33,8 +33,11 @@ private://構造体類
 		XMMATRIX mat;	//3D変換行列
 	};
 
+	//アンカーポイント
+	XMFLOAT2 anchorPoint_ = { 0.0f,0.0f };
 	//表示サイズ
 	XMFLOAT2 size_ = { 100.0f,100.0f };
+	
 	//頂点番号
 	enum VertexNumber
 	{
@@ -42,6 +45,7 @@ private://構造体類
 		LT,		//左上
 		RB,		//右下
 		RT,		//右上
+		verticesCount,//要素数
 	};
 
 	//回転
@@ -88,9 +92,7 @@ public://メンバ関数
 	//3D座標
 	void CreateConstBufferTransform();
 private://メンバ変数
-	//頂点数
-	static const size_t verticesCount = 4;
-
+	
 	//頂点データ
 	Vertex vertices[verticesCount] = {
 		{{  0.0f,size_.y,0.0f},{0.0f,1.0f}},	//左下
@@ -115,6 +117,10 @@ private://メンバ変数
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
 public://アクセッサ置き場
+	void SetAnchorPoint(const XMFLOAT2& anchorPoint) { anchorPoint_ = anchorPoint; }
+
+	const XMFLOAT2& GetAnchorPoint()const { return anchorPoint_; }
+
 	void SetSize(const XMFLOAT2& size) { size_ = size; }
 
 	const XMFLOAT2& GetSize()const { return size_; }

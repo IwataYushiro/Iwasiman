@@ -97,11 +97,15 @@ void Sprite::Update()
 	//色情報をGPUに転送
 	constMapMaterial->color = color_;
 
+	float left = (0.0f * anchorPoint_.x) * size_.x;
+	float right = (1.0f * anchorPoint_.x) * size_.x;
+	float top = (0.0f * anchorPoint_.y) * size_.y;
+	float bottom = (1.0f * anchorPoint_.y) * size_.y;
 	//頂点データ
-	vertices[LB].pos = { 0.0f,size_.y,0.0f };
-	vertices[LT].pos = { 0.0f,0.0f,0.0f };
-	vertices[RB].pos = { size_.x,size_.y,0.0f };
-	vertices[RT].pos = { size_.x,0.0f,0.0f };
+	vertices[LB].pos = { left,bottom,0.0f };
+	vertices[LT].pos = { left,top,0.0f };
+	vertices[RB].pos = { right,bottom,0.0f };
+	vertices[RT].pos = { right,top,0.0f };
 	//頂点データをGPUに転送
 	std::copy(std::begin(vertices), std::end(vertices), vertMap);
 

@@ -60,11 +60,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input->Update();
 
 		//スプライト呼び出し例
-		XMFLOAT2 size = sprite->GetSize();
-		size.x = 300.0f;
-		size.y = 150.0f;
+		XMFLOAT2 ap = sprite->GetAnchorPoint();
+		float rot = sprite->GetRotationZ();
+		XMFLOAT2 pos = sprite->GetPosition();
+		
+		ap.x = 0.5f;
+		ap.y = 0.5f;
 
-		sprite->SetSize(size);
+		rot += 0.01f;
+		
+		pos.x += 2.0f;
+		pos.y += 1.0f;
+
+		sprite->SetAnchorPoint(ap);
+		sprite->SetRotationZ(rot);
+		sprite->SetPosition(pos);
 
 		sprite->Update();
 		// ここまで
