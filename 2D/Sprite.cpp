@@ -16,7 +16,7 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 	D3D12_HEAP_PROPERTIES heapProp{};	//ヒープ設定
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//GPU転送用
 	//リソース設定
-	
+
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc.Width = sizeVB;
 	resDesc.Height = 1;
@@ -53,24 +53,25 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 	//マテリアル
 	CreateConstBufferMaterial();
 	constMapMaterial->color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	
+
 	//変換行列
 	CreateConstBufferTransform();
-	XMMATRIX matProjection = XMMatrixOrthographicOffCenterLH(0, (float)WinApp::window_width, (float)WinApp::window_height, 0, 0, 1);
+
+	matProjection = XMMatrixOrthographicOffCenterLH(0, (float)WinApp::window_width, (float)WinApp::window_height, 0, 0, 1);
+
 	
-	XMMATRIX matRot, matTrans;
 	//スケーリング等計算
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(rotationZ);
+	matRot *= XMMatrixRotationZ(rotationZ_);
 
-	matTrans = XMMatrixTranslation(position.x, position.y, 0.0f);
+	matTrans = XMMatrixTranslation(position_.x, position_.y, 0.0f);
 	//ワールド行列合成
 	matWorld = XMMatrixIdentity();
 	matWorld *= matRot;		//回転反映
 	matWorld *= matTrans;	//平行移動反映
 
 	constMapTransform->mat = matWorld * matProjection;
-	
+
 	//シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};				//設定構造体
 	srvDesc.Format = resDesc.Format;
@@ -80,8 +81,8 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 	srvDesc.Texture2D.MipLevels = resDesc.MipLevels;
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
-	 spCommon_->GetDxCommon()->GetDevice()->
-		 CreateShaderResourceView(spCommon_->GetTextureBuffer().Get(), &srvDesc,spCommon_->GetSRVHandle());
+	spCommon_->GetDxCommon()->GetDevice()->
+		CreateShaderResourceView(spCommon_->GetTextureBuffer().Get(), &srvDesc, spCommon_->GetSRVHandle());
 
 	//頂点バッファビュー
 	//GPU仮想アドレス
@@ -93,26 +94,26 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 }
 void Sprite::Update()
 {//平行投影変換
-	XMMATRIX matProjection= XMMatrixOrthographicOffCenterLH(0, (float)WinApp::window_width, (float)WinApp::window_height, 0, 0, 1);
+	matProjection = XMMatrixOrthographicOffCenterLH(0, (float)WinApp::window_width, (float)WinApp::window_height, 0, 0, 1);
 
-	XMMATRIX matRot, matTrans;
 	//スケーリング等計算
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(rotationZ);
+	matRot *= XMMatrixRotationZ(rotationZ_);
 
-	matTrans = XMMatrixTranslation(position.x,position.y,0.0f);
+	matTrans = XMMatrixTranslation(position_.x, position_.y, 0.0f);
+	
 	//ワールド行列合成
 	matWorld = XMMatrixIdentity();
 	matWorld *= matRot;		//回転反映
 	matWorld *= matTrans;	//平行移動反映
 
-	constMapTransform->mat = matWorld*matProjection;
+	constMapTransform->mat = matWorld * matProjection;
 	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT))
 	{
-		if (input_->PushKey(DIK_UP)) { position.y += 1.0f; }
-		else if (input_->PushKey(DIK_DOWN)) { position.y -= 1.0f; }
-		if (input_->PushKey(DIK_RIGHT)) { position.x += 1.0f; }
-		else if (input_->PushKey(DIK_LEFT)) { position.x -= 1.0f; }
+		if (input_->PushKey(DIK_UP)) { position_.y -= 1.0f; }
+		else if (input_->PushKey(DIK_DOWN)) { position_.y += 1.0f; }
+		if (input_->PushKey(DIK_RIGHT)) { position_.x += 1.0f; }
+		else if (input_->PushKey(DIK_LEFT)) { position_.x -= 1.0f; }
 	}
 
 }

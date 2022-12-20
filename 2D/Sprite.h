@@ -31,15 +31,17 @@ private://構造体類
 	struct ConstBufferDataTransform
 	{
 		XMMATRIX mat;	//3D変換行列
-		
+
 	};
-//アフィン変換情報
-		XMFLOAT2 scale = { 1.0f,1.0f};
-		float rotationZ = 0.0f;
-		XMFLOAT2 position = { 0.0f,0.0f};
-		//ワールド変換行列
-		XMMATRIX matWorld=DirectX::XMMatrixIdentity();
-		
+	float rotationZ_ = 0.0f;
+	XMFLOAT2 position_ = { 0.0f,0.0f };
+	//射影行列
+	XMMATRIX matProjection;
+	//ワールド変換行列
+	XMMATRIX matRot;
+	XMMATRIX matTrans;
+	XMMATRIX matWorld = DirectX::XMMatrixIdentity();
+
 
 	//定数バッファのGPUリソースのポインタ
 	ComPtr<ID3D12Resource> constBuffTransform = nullptr;
@@ -83,7 +85,7 @@ private://メンバ変数
 	//インプット
 	Input* input_ = nullptr;
 	SpriteCommon* spCommon_ = nullptr;
-	
+
 	//頂点バッファのリソース設定
 	D3D12_RESOURCE_DESC resDesc{};
 
@@ -91,4 +93,14 @@ private://メンバ変数
 	ComPtr<ID3D12Resource> vertBuff;
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
+
+public://アクセッサ置き場
+	void SetPosition(const XMFLOAT2& position) { position_ = position; }
+
+	const XMFLOAT2& GetPosition()const { return position_; }
+
+	void SetRotationZ(const float& rotationZ) { rotationZ_ = rotationZ; }
+
+	const float& GetRotationZ()const { return rotationZ_; }
+
 };

@@ -4,6 +4,8 @@
 #include "SpriteCommon.h"
 #include "Sprite.h"
 
+using namespace DirectX;
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -56,6 +58,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		
 		// 更新処理ここから
 		input->Update();
+
+		//スプライト呼び出し例
+		XMFLOAT2 pos = sprite->GetPosition();
+		float rot = sprite->GetRotationZ();
+
+		//座標変更
+		pos.x += 2.0f;
+		pos.y += 1.0f;
+
+		rot += 0.1f;
+
+		sprite->SetPosition(pos);
+		sprite->SetRotationZ(rot);
+
 		sprite->Update();
 		// ここまで
 		
