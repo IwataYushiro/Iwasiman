@@ -60,6 +60,9 @@ private://構造体類
 	//上下フリップ
 	bool isFlipY_ = false;
 
+	//非表示フラグ
+	bool isInvisible_ = false;
+
 	//射影行列
 	XMMATRIX matProjection;
 
@@ -148,13 +151,18 @@ public://アクセッサ置き場
 	const XMFLOAT4& GetColor()const { return color_; }
 
 	//左右フリップ
-	void SetFlipX(const float& isFlipX) { isFlipX_ = isFlipX; }
+	void SetFlipX(const bool& isFlipX) { isFlipX_ = isFlipX; }
 
-	const float& GetFlipX()const { return isFlipX_; }
+	const bool& GetFlipX()const { return isFlipX_; }
 	
 	//上下フリップ
-	void SetFlipY(const float& isFlipY) { isFlipY_ = isFlipY; }
+	void SetFlipY(const bool& isFlipY) { isFlipY_ = isFlipY; }
 
-	const float& GetFlipY()const { return isFlipY_; }
+	const bool& GetFlipY()const { return isFlipY_; }
+
+	//視覚化
+	void SetInvisible(const bool& isInvisible) { isInvisible_ = isInvisible; }
+
+	const bool& GetInvisible()const { return isInvisible_; }
 
 };

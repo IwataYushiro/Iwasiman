@@ -60,19 +60,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input->Update();
 
 		//スプライト呼び出し例
-		float flipX = sprite->GetFlipX();
-		float flipY = sprite->GetFlipY();
 		XMFLOAT2 pos = sprite->GetPosition();
+		bool vis = sprite->GetInvisible();
 		
-		//flipX = true;
-		flipY = true;
-
 		pos.x = 300.0f;
 		pos.y = 300.0f;
 
-		sprite->SetFlipX(flipX);
-		sprite->SetFlipY(flipY);
+		//vis = true;
+
+
 		sprite->SetPosition(pos);
+		sprite->SetInvisible(vis);
 
 		sprite->Update();
 		// ここまで

@@ -147,6 +147,11 @@ void Sprite::Update()
 }
 void Sprite::Draw()
 {
+	//非表示
+	if (isInvisible_)
+	{
+		return;
+	}
 	//頂点バッファビューの設定コマンド
 	spCommon_->GetDxCommon()->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
 
