@@ -33,6 +33,17 @@ private://構造体類
 		XMMATRIX mat;	//3D変換行列
 	};
 
+	//表示サイズ
+	XMFLOAT2 size_ = { 100.0f,100.0f };
+	//頂点番号
+	enum VertexNumber
+	{
+		LB,		//左下
+		LT,		//左上
+		RB,		//右下
+		RT,		//右上
+	};
+
 	//回転
 	float rotationZ_ = 0.0f;
 	//座標
@@ -42,7 +53,7 @@ private://構造体類
 
 	//射影行列
 	XMMATRIX matProjection;
-	
+
 	//ワールド変換行列
 	XMMATRIX matRot;
 	XMMATRIX matTrans;
@@ -82,14 +93,17 @@ private://メンバ変数
 
 	//頂点データ
 	Vertex vertices[verticesCount] = {
-		{{  0.0f,100.0f,0.0f},{0.0f,1.0f}},	//左下
+		{{  0.0f,size_.y,0.0f},{0.0f,1.0f}},	//左下
 		{{  0.0f,  0.0f,0.0f},{0.0f,0.0f}},		//左上
-		{{100.0f,100.0f,0.0f},{1.0f,1.0f}},	//右下
-		{{100.0f,  0.0f,0.0f},{1.0f,0.0f}},	//右上
+		{{size_.x,size_.y,0.0f},{1.0f,1.0f}},	//右下
+		{{size_.x,  0.0f,0.0f},{1.0f,0.0f}},	//右上
 	};
 
+	//GPU上のバッファに対応した仮想メモリを取得
+	Vertex* vertMap = nullptr;
 	//インプット
 	Input* input_ = nullptr;
+	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
 
 	//頂点バッファのリソース設定
@@ -101,6 +115,10 @@ private://メンバ変数
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
 
 public://アクセッサ置き場
+	void SetSize(const XMFLOAT2& size) { size_ = size; }
+
+	const XMFLOAT2& GetSize()const { return size_; }
+
 	void SetPosition(const XMFLOAT2& position) { position_ = position; }
 
 	const XMFLOAT2& GetPosition()const { return position_; }

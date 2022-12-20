@@ -60,11 +60,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input->Update();
 
 		//スプライト呼び出し例
-		XMFLOAT4 color = sprite->GetColor();
+		XMFLOAT2 size = sprite->GetSize();
+		size.x = 300.0f;
+		size.y = 150.0f;
 
-		color.x=0.0f;
-
-		sprite->SetColor(color);
+		sprite->SetSize(size);
 
 		sprite->Update();
 		// ここまで

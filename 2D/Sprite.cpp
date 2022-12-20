@@ -37,7 +37,6 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 	assert(SUCCEEDED(result));
 
 	//GPU上のバッファに対応した仮想メモリを取得
-	Vertex* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
 
@@ -59,7 +58,7 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 
 	matProjection = XMMatrixOrthographicOffCenterLH(0, (float)WinApp::window_width, (float)WinApp::window_height, 0, 0, 1);
 
-	
+
 	//スケーリング等計算
 	matRot = XMMatrixIdentity();
 	matRot *= XMMatrixRotationZ(rotationZ_);
@@ -94,8 +93,17 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 }
 void Sprite::Update()
 {
+
 	//色情報をGPUに転送
 	constMapMaterial->color = color_;
+
+	//頂点データ
+	vertices[LB].pos = { 0.0f,size_.y,0.0f };
+	vertices[LT].pos = { 0.0f,0.0f,0.0f };
+	vertices[RB].pos = { size_.x,size_.y,0.0f };
+	vertices[RT].pos = { size_.x,0.0f,0.0f };
+	//頂点データをGPUに転送
+	std::copy(std::begin(vertices), std::end(vertices), vertMap);
 
 	//平行投影変換
 	matProjection = XMMatrixOrthographicOffCenterLH(0, (float)WinApp::window_width, (float)WinApp::window_height, 0, 0, 1);
@@ -105,7 +113,7 @@ void Sprite::Update()
 	matRot *= XMMatrixRotationZ(rotationZ_);
 
 	matTrans = XMMatrixTranslation(position_.x, position_.y, 0.0f);
-	
+
 	//ワールド行列合成
 	matWorld = XMMatrixIdentity();
 	matWorld *= matRot;		//回転反映
