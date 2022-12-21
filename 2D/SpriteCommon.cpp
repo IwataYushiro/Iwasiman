@@ -293,6 +293,11 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	result = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 }
+//テクスチャ読み込み
+void SpriteCommon::LoadTexture(uint32_t index)
+{
+
+}
 
 void SpriteCommon::PreDraw()
 {

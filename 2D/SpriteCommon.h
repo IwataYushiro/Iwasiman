@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include "DirectXCommon.h"
 #include <DirectXMath.h>
 #include <d3d12.h>
@@ -22,7 +23,8 @@ public://メンバ関数
 	void Initialize(DirectXCommon* dxCommon);
 
 	//テクスチャ読み込み
-	
+	void LoadTexture(uint32_t index);
+
 	//描画前処理
 	void PreDraw();
 
