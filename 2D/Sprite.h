@@ -99,6 +99,7 @@ public://メンバ関数
 	void CreateConstBufferMaterial();
 	//3D座標
 	void CreateConstBufferTransform();
+
 private://メンバ変数
 	
 	//頂点データ
@@ -123,6 +124,9 @@ private://メンバ変数
 	ComPtr<ID3D12Resource> vertBuff;
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView{};
+
+	//テクスチャ番号
+	uint32_t textureIndex_ = 0;
 
 public://アクセッサ置き場
 	//アンカーポイント
@@ -165,4 +169,8 @@ public://アクセッサ置き場
 
 	const bool& GetInvisible()const { return isInvisible_; }
 
+	//テクスチャ番号取得
+	void SetTextureIndex(const uint32_t& textureIndex) { textureIndex_ = textureIndex; }
+
+	const uint32_t& GetTextureIndex()const { return textureIndex_; }
 };

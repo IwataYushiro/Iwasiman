@@ -3,6 +3,7 @@
 #include "DirectXCommon.h"
 #include <DirectXMath.h>
 #include <d3d12.h>
+#include <string>
 #include <wrl.h>
 
 //スプライト基盤クラス
@@ -23,20 +24,26 @@ public://メンバ関数
 	void Initialize(DirectXCommon* dxCommon);
 
 	//テクスチャ読み込み
-	void LoadTexture(uint32_t index);
+	void LoadTexture(uint32_t index, const std::string& fileName);
 
 	//描画前処理
 	void PreDraw();
+
+	//描画用テクスチャコマンドの発行
+	void SetTextureCommands(uint32_t index);
 
 private://メンバ変数
 
 	DirectXCommon* dxCommon_ = nullptr;
 
+	//デフォルトテクスチャ格納ディレクトリ
+	static std::string kDefaultTextureDirectoryPath;
+
 	//SRVの最大個数
 	static const size_t kMaxSRVCount = 2056;
 
 	//テクスチャバッファの生成
-	ComPtr<ID3D12Resource> texbuff = nullptr;
+	std::array<ComPtr<ID3D12Resource>,kMaxSRVCount> texBuffs;
 	// 画像イメージデータ配列
 	XMFLOAT4* imageData;
 
@@ -44,6 +51,7 @@ private://メンバ変数
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	//SRVヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle;
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle;
 
 
 	//シェーダオブジェクト
@@ -61,6 +69,6 @@ private://メンバ変数
 public://アクセッサ
 
 	DirectXCommon* GetDxCommon() { return dxCommon_; }
-	ComPtr<ID3D12Resource> GetTextureBuffer() { return texbuff; }
+	
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVHandle() { return srvHandle; }
 };

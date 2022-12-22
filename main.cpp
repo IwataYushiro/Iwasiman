@@ -39,8 +39,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//スプライト関係
 	sprCommon->Initialize(dxCommon);
+	//ここでテクスチャを指定しよう
+	sprCommon->LoadTexture(sprite->GetTextureIndex(), "texture.png");
+	
 	sprite->Initialize(sprCommon,input);
-
+	
 #pragma endregion
 	// 描画初期化処理　ここまで
 

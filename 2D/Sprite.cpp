@@ -71,18 +71,6 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 
 	constMapTransform->mat = matWorld * matProjection;
 
-	//シェーダーリソースビュー設定
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};				//設定構造体
-	srvDesc.Format = resDesc.Format;
-	srvDesc.Shader4ComponentMapping =
-		D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = resDesc.MipLevels;
-
-	//ハンドルの指す位置にシェーダーリソースビュー作成
-	spCommon_->GetDxCommon()->GetDevice()->
-		CreateShaderResourceView(spCommon_->GetTextureBuffer().Get(), &srvDesc, spCommon_->GetSRVHandle());
-
 	//頂点バッファビュー
 	//GPU仮想アドレス
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
@@ -90,6 +78,7 @@ void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
 	vbView.SizeInBytes = sizeVB;
 	//頂点一つ分のサイズ
 	vbView.StrideInBytes = sizeof(vertices[0]);
+
 }
 void Sprite::Update()
 {
@@ -152,6 +141,8 @@ void Sprite::Draw()
 	{
 		return;
 	}
+	//テクスチャコマンド
+	spCommon_->SetTextureCommands(textureIndex_);
 	//頂点バッファビューの設定コマンド
 	spCommon_->GetDxCommon()->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
 
