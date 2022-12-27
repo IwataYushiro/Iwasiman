@@ -291,9 +291,10 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 
 	
 	//SRVヒープのハンドルを取得
+	incrementSize = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
-	
-	srvHandle.ptr += index;
+
+	srvHandle.ptr += index * incrementSize;
 	
 	//シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};				//設定構造体
@@ -327,7 +328,7 @@ void SpriteCommon::SetTextureCommands(uint32_t index)
 	//SRVヒープの先頭ハンドルを取得
 	srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
 	
-	srvGpuHandle.ptr += index;
+	srvGpuHandle.ptr += index * incrementSize;
 
 	// SRVヒープの先頭にあるSRVルートパラメータ1番に設定5
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
