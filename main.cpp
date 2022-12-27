@@ -17,6 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	SpriteCommon* sprCommon = new SpriteCommon();
 
 	Sprite* sprite = new Sprite();
+	Sprite* sprite2 = new Sprite();
 
 	Input* input = new Input();
 
@@ -29,7 +30,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//DirectX初期化
 	dxCommon->Initialize(winApp);
+	
+	//スプライト関係
+	sprCommon->Initialize(dxCommon);
+	
 	// DirectX初期化処理　ここまで
+
 
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
@@ -37,13 +43,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//入力
 	input->Initialize(winApp);
 
-	//スプライト関係
-	sprCommon->Initialize(dxCommon);
+	
 	//ここでテクスチャを指定しよう
 	sprCommon->LoadTexture(sprite->GetTextureIndex(), "texture.png");
 	
 	sprite->Initialize(sprCommon,input);
 	
+	sprite2->SetTextureIndex(1);
+	sprCommon->LoadTexture(sprite2->GetTextureIndex(), "reimu.png");
+
+	sprite2->Initialize(sprCommon, input);
+
 #pragma endregion
 	// 描画初期化処理　ここまで
 
@@ -63,11 +73,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input->Update();
 
 		//スプライト呼び出し例
-		XMFLOAT2 pos = sprite->GetPosition();
-
-		sprite->SetPosition(pos);
-	
 		sprite->Update();
+
+		XMFLOAT2 pos = sprite2->GetPosition();
+
+		pos.x = 300.0f;
+		pos.y = 300.0f;
+
+		sprite2->SetPosition(pos);
+	
+		sprite2->Update();
 		// ここまで
 		
 		//描画前処理
@@ -76,6 +91,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//背景スプライト描画
 		sprCommon->PreDraw();
 		sprite->Draw();
+		sprite2->Draw();
 		//モデル描画
 
 		//前景スプライト描画 
@@ -92,6 +108,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//解放
 	delete sprite;
+	delete sprite2;
+
 	delete sprCommon;
 	delete input;
 	delete dxCommon;

@@ -19,7 +19,6 @@ public:
 	using XMMATRIX = DirectX::XMMATRIX;
 public://メンバ関数
 
-	~SpriteCommon();
 	//初期化
 	void Initialize(DirectXCommon* dxCommon);
 
@@ -44,9 +43,10 @@ private://メンバ変数
 
 	//テクスチャバッファの生成
 	std::array<ComPtr<ID3D12Resource>,kMaxSRVCount> texBuffs;
-	// 画像イメージデータ配列
-	XMFLOAT4* imageData;
 
+	//サイズの問い合わせ
+	UINT incrementSize;
+	
 	//設定をもとにSRV用デスクリプタヒープを生成
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	//SRVヒープのハンドルを取得

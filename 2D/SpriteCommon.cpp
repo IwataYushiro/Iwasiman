@@ -13,11 +13,6 @@ using namespace Microsoft::WRL;
 //デフォルトテクスチャ格納ディレクトリ
 std::string SpriteCommon::kDefaultTextureDirectoryPath = "Resources/";
 
-SpriteCommon::~SpriteCommon()
-{
-	delete[] imageData;
-}
-
 void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 {
 	HRESULT result;
@@ -202,6 +197,17 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	//パイプラインステート生成
 	result = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
+
+	//デスクリプタヒープ設定
+	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
+	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descHeapDesc.NumDescriptors = kMaxSRVCount;
+	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダーから見えるように
+
+	//設定をもとにSRV用デスクリプタヒープを生成
+	result = dxCommon_->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&srvHeap));
+	assert(SUCCEEDED(result));
+
 }
 
 //テクスチャ読み込み
@@ -242,22 +248,7 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 	}
 	//読み込んだディフューズテクスチャをSRGBとして扱う
 	metadata.format = MakeSRGB(metadata.format);
-	// 横方向ピクセル数
-	const size_t textureWidth = 256;
-	// 縦方向ピクセル数
-	const size_t textureHeight = 256;
-	// 配列要素数
-	const size_t imageDataCount = textureWidth * textureHeight;
-	// 画像イメージデータ配列
-	imageData = new XMFLOAT4[imageDataCount];
-	// 全ピクセルの色を配列化
-	for (size_t i = 0; i < imageDataCount; i++)
-	{
-		imageData[i].x = 1.0f;		//R
-		imageData[i].y = 0.0f;		//G
-		imageData[i].z = 0.0f;		//B
-		imageData[i].w = 1.0f;		//A
-	}
+	
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES textureHeapProp{};
 	textureHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
@@ -298,18 +289,10 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 		assert(SUCCEEDED(result));
 	}
 
-	//デスクリプタヒープ設定
-	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	srvHeapDesc.NumDescriptors = kMaxSRVCount;
-	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダーから見えるように
-
-	//設定をもとにSRV用デスクリプタヒープを生成
-	result = dxCommon_->GetDevice()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
-	assert(SUCCEEDED(result));
-
+	
 	//SRVヒープのハンドルを取得
 	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
+	
 	srvHandle.ptr += index;
 	
 	//シェーダーリソースビュー設定
@@ -321,7 +304,7 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 	srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
-	dxCommon_->GetDevice()->
+	 dxCommon_->GetDevice()->
 		CreateShaderResourceView(texBuffs[index].Get(), &srvDesc, srvHandle);
 
 }
@@ -343,6 +326,7 @@ void SpriteCommon::SetTextureCommands(uint32_t index)
 {
 	//SRVヒープの先頭ハンドルを取得
 	srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
+	
 	srvGpuHandle.ptr += index;
 
 	// SRVヒープの先頭にあるSRVルートパラメータ1番に設定5
