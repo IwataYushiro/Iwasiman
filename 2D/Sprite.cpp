@@ -2,12 +2,19 @@
 
 using namespace DirectX;
 
-void Sprite::Initialize(SpriteCommon* spCommon, Input* input)
+void Sprite::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 {
 	HRESULT result;
 	assert(spCommon);
 	this->spCommon_ = spCommon;
-	this->input_ = input;
+	
+	if (textureIndex != UINT32_MAX)
+	{
+		textureIndex_ = textureIndex;
+		AdjustTextureSize();
+		//テクスチャサイズをスプライトのサイズに適用
+		size_ = textureSize_;
+	}
 
 	//サイズ
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * _countof(vertices));
@@ -144,13 +151,7 @@ void Sprite::Update()
 	matWorld *= matTrans;	//平行移動反映
 
 	constMapTransform->mat = matWorld * matProjection;
-	if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN) || input_->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT))
-	{
-		if (input_->PushKey(DIK_UP)) { position_.y -= 1.0f; }
-		else if (input_->PushKey(DIK_DOWN)) { position_.y += 1.0f; }
-		if (input_->PushKey(DIK_RIGHT)) { position_.x += 1.0f; }
-		else if (input_->PushKey(DIK_LEFT)) { position_.x -= 1.0f; }
-	}
+	
 
 }
 void Sprite::Draw()

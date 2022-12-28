@@ -93,7 +93,7 @@ private://構造体類
 public://メンバ関数
 
 	//初期化
-	void Initialize(SpriteCommon* spCommon, Input* input);
+	void Initialize(SpriteCommon* spCommon, uint32_t textureIndex = UINT32_MAX);
 	//更新
 	void Update();
 	//描画

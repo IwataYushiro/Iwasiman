@@ -45,12 +45,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	
 	//ここでテクスチャを指定しよう
-	sprCommon->LoadTexture(sprite->GetTextureIndex(), "texture.png");
-	sprite->Initialize(sprCommon,input);
+	UINT texindex1 = 00;
+	sprCommon->LoadTexture(texindex1, "texture.png");
+	sprite->Initialize(sprCommon, texindex1);
 	
-	sprite2->SetTextureIndex(1);
-	sprCommon->LoadTexture(sprite2->GetTextureIndex(), "reimu.png");
-	sprite2->Initialize(sprCommon, input);
+	uint16_t texindex2 = 01;
+	sprCommon->LoadTexture(texindex2, "reimu.png");
+	sprite2->Initialize(sprCommon, texindex2);
 
 #pragma endregion
 	// 描画初期化処理　ここまで
@@ -75,9 +76,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		XMFLOAT2 pos = sprite2->GetPosition();
 
-		pos.x = 300.0f;
+		pos.x = 600.0f;
 		pos.y = 300.0f;
 
+		sprite->SetPosition(pos);
 		sprite2->SetPosition(pos);
 	
 		sprite2->Update();
