@@ -107,6 +107,25 @@ void Sprite::Update()
 	vertices[LT].pos = { left,top,0.0f };
 	vertices[RB].pos = { right,bottom,0.0f };
 	vertices[RT].pos = { right,top,0.0f };
+
+	ComPtr<ID3D12Resource> texBuff = spCommon_->GetTextureBuffer(textureIndex_);
+	//指定番号の画像が読み込み済みなら
+	if (texBuff)
+	{
+		//テクスチャ情報取得
+		D3D12_RESOURCE_DESC resDesc = texBuff->GetDesc();
+
+		float tex_left = textureLeftTop_.x / resDesc.Width;
+		float tex_right = (textureLeftTop_.x + textureSize_.x) / resDesc.Width;
+		float tex_top = textureLeftTop_.y / resDesc.Height;
+		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / resDesc.Height;
+		//頂点のUVに反映する
+		vertices[LB].uv = { tex_left,tex_bottom, };		//左下
+		vertices[LT].uv = { tex_left,tex_top, };		//左上
+		vertices[RB].uv = { tex_right,tex_bottom, };	//右下
+		vertices[RT].uv = { tex_right,tex_top, };		//右上
+	}
+
 	//頂点データをGPUに転送
 	std::copy(std::begin(vertices), std::end(vertices), vertMap);
 
@@ -213,4 +232,15 @@ void Sprite::CreateConstBufferTransform()
 	//定数バッファのマッピング
 	result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform);//マッピング
 	assert(SUCCEEDED(result));
+}
+void Sprite::AdjustTextureSize() {
+	ComPtr<ID3D12Resource> texBuff = spCommon_->GetTextureBuffer(textureIndex_);
+	assert(texBuff);
+
+	//テクスチャ情報取得
+	D3D12_RESOURCE_DESC resDesc = texBuff->GetDesc();
+
+	//テクスチャサイズ取得
+	textureSize_.x = static_cast<float>(resDesc.Width);
+	textureSize_.y = static_cast<float>(resDesc.Height);
 }
