@@ -63,6 +63,11 @@ private://構造体類
 	//非表示フラグ
 	bool isInvisible_ = false;
 
+	//テクスチャ左上座標
+	XMFLOAT2 textureLeftTop_ = { 0.0f,0.0f };
+	//テクスチャ切り出しサイズ
+	XMFLOAT2 textureSize_ = { 100.0f,100.0f };
+
 	//射影行列
 	XMMATRIX matProjection;
 
@@ -173,4 +178,15 @@ public://アクセッサ置き場
 	void SetTextureIndex(const uint32_t& textureIndex) { textureIndex_ = textureIndex; }
 
 	const uint32_t& GetTextureIndex()const { return textureIndex_; }
+
+	//テクスチャ左上座標
+	void SetTextureLeftTop(const XMFLOAT2& textureLeftTop) { textureLeftTop_ = textureLeftTop; }
+
+	const XMFLOAT2& GetTextureLeftTop()const { return textureLeftTop_; }
+
+	//テクスチャ切り出しサイズ
+	void SetTextureSize(const XMFLOAT2& textureSize) { textureSize_ = textureSize; }
+
+	const XMFLOAT2& GetTextureSize()const { return textureSize_; }
+
 };

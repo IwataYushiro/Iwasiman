@@ -46,12 +46,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	
 	//ここでテクスチャを指定しよう
 	sprCommon->LoadTexture(sprite->GetTextureIndex(), "texture.png");
-	
 	sprite->Initialize(sprCommon,input);
 	
 	sprite2->SetTextureIndex(1);
 	sprCommon->LoadTexture(sprite2->GetTextureIndex(), "reimu.png");
-
 	sprite2->Initialize(sprCommon, input);
 
 #pragma endregion

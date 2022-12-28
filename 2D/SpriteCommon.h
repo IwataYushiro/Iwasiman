@@ -71,4 +71,10 @@ public://アクセッサ
 	DirectXCommon* GetDxCommon() { return dxCommon_; }
 	
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVHandle() { return srvHandle; }
+
+	ComPtr<ID3D12Resource> GetTextureBuffer(uint32_t index)const
+	{
+		return texBuffs[index].Get();
+	}
+
 };
