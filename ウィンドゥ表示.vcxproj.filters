@@ -66,6 +66,9 @@
     <ClCompile Include="3D\Object3d.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
+    <ClCompile Include="3D\Model.cpp">
+      <Filter>ソース ファイル\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\Mesh.h">
@@ -87,6 +90,9 @@
       <Filter>ヘッダー ファイル\2D</Filter>
     </ClInclude>
     <ClInclude Include="3D\Object3d.h">
+      <Filter>ヘッダー ファイル\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Model.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
   </ItemGroup>

@@ -154,6 +154,7 @@
     <ClCompile Include="2D\Sprite.cpp" />
     <ClCompile Include="2D\SpriteCommon.cpp" />
     <ClCompile Include="3D\Mesh.cpp" />
+    <ClCompile Include="3D\Model.cpp" />
     <ClCompile Include="3D\Object3d.cpp" />
     <ClCompile Include="Base\DirectXCommon.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="2D\Sprite.h" />
     <ClInclude Include="2D\SpriteCommon.h" />
     <ClInclude Include="3D\Mesh.h" />
+    <ClInclude Include="3D\Model.h" />
     <ClInclude Include="3D\Object3d.h" />
     <ClInclude Include="Base\DirectXCommon.h" />
     <ClInclude Include="Base\WinApp.h" />
