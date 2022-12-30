@@ -1,6 +1,7 @@
 #include "WinApp.h"
 #include "DirectXCommon.h"
 #include "Input.h"
+#include "Object3d.h"
 #include "SpriteCommon.h"
 #include "Sprite.h"
 
@@ -34,6 +35,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//スプライト関係
 	sprCommon->Initialize(dxCommon);
 	
+	//3Dオブジェクト関係
+	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
+	Object3d* object3d = Object3d::Create();
+
 	// DirectX初期化処理　ここまで
 
 
@@ -83,16 +88,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		sprite2->SetPosition(pos);
 	
 		sprite2->Update();
+
+		//モデル呼び出し例
+		object3d->Update();
 		// ここまで
 		
 		//描画前処理
 		dxCommon->PreDraw();
 
 		//背景スプライト描画
+		
+		//スプライト描画前処理
 		sprCommon->PreDraw();
+		//スプライト描画
 		sprite->Draw();
 		sprite2->Draw();
+
 		//モデル描画
+
+		//モデル描画前処理
+		object3d->PreDraw(dxCommon->GetCommandList());
+
+		//モデル描画
+		object3d->Draw();
+
+		//モデル描画後処理
+		object3d->PostDraw();
 
 		//前景スプライト描画 
 
@@ -107,9 +128,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	winApp->Finalize();
 
 	//解放
+	//スプライト
 	delete sprite;
 	delete sprite2;
+	
+	//モデル
+	delete object3d;
 
+	//基盤系
 	delete sprCommon;
 	delete input;
 	delete dxCommon;
