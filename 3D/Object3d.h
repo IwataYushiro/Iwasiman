@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
+#include "Model.h"
 
 /// <summary>
 /// 3Dオブジェクト
@@ -29,16 +30,7 @@ public: // サブクラス
 		//XMFLOAT4 color;	// 色 (RGBA)
 		XMMATRIX mat;	// ３Ｄ変換行列
 	};
-	struct ConstBufferDataB1
-	{
-		XMFLOAT3 ambient;	// アンビエント係数
-		float pad1;			// パディング
-		XMFLOAT3 diffuse;	// ディフューズ係数
-		float pad2;			// パディング
-		XMFLOAT3 specular;	// スペキュラー係数
-		float alpha;		// アルファ値
-	};
-
+	
 private: // 定数
 	static const int division = 50;					// 分割数
 	static const float radius;				// 底面の半径
@@ -111,10 +103,6 @@ private: // 静的メンバ変数
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
-	// 頂点バッファ
-	static ComPtr<ID3D12Resource> vertBuff;
-	// インデックスバッファ
-	static ComPtr<ID3D12Resource> indexBuff;
 	// ビュー行列
 	static XMMATRIX matView;
 	// 射影行列
@@ -125,17 +113,9 @@ private: // 静的メンバ変数
 	static XMFLOAT3 target;
 	// 上方向ベクトル
 	static XMFLOAT3 up;
-	// 頂点バッファビュー
-	static D3D12_VERTEX_BUFFER_VIEW vbView;
-	// インデックスバッファビュー
-	static D3D12_INDEX_BUFFER_VIEW ibView;
 	
 private:// 静的メンバ関数
-	/// <summary>
-	/// デスクリプタヒープの初期化
-	/// </summary>
-	static void InitializeDescriptorHeap();
-
+	
 	/// <summary>
 	/// カメラ初期化
 	/// </summary>
@@ -149,11 +129,6 @@ private:// 静的メンバ関数
 	/// <returns>成否</returns>
 	static void InitializeGraphicsPipeline();
 
-	/// <summary>
-	/// モデル作成
-	/// </summary>
-	static void CreateModel();
-	
 	/// <summary>
 	/// ビュー行列を更新
 	/// </summary>
@@ -184,8 +159,11 @@ public: // メンバ関数
 	void SetPosition(const XMFLOAT3& position) { this->position = position; }
 
 private: // メンバ変数
+	//モデル
+	Model* model = nullptr;
+
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
-	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
+	
 	// 色
 	XMFLOAT4 color = { 1,1,1,1 };
 	// ローカルスケール

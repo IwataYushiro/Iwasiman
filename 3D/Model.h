@@ -23,6 +23,18 @@ private://サブクラス
 		XMFLOAT3 normal; // 法線ベクトル
 		XMFLOAT2 uv;  // uv座標
 	};
+
+	//定数バッファ
+	struct ConstBufferDataB1
+	{
+		XMFLOAT3 ambient;	// アンビエント係数
+		float pad1;			// パディング
+		XMFLOAT3 diffuse;	// ディフューズ係数
+		float pad2;			// パディング
+		XMFLOAT3 specular;	// スペキュラー係数
+		float alpha;		// アルファ値
+	};
+
 	//マテリアル
 	struct Material
 	{
@@ -41,17 +53,30 @@ private://サブクラス
 			alpha = 1.0f;
 		}
 	};
+	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
+	//マテリアル
+	Material material;
+
 
 public://静的メンバ関数
 	//OBJファイルから3Dモデルを読み込む
 	static Model* LoadFromOBJ();
 	
 public://メンバ関数
+	// デスクリプタヒープの初期化
+	void InitializeDescriptorHeap();
+
 	// マテリアル読み込み
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
-	/// テクスチャ読み込み
+	// テクスチャ読み込み
 	void LoadTexture(const std::string& directoryPath, const std::string& filename);
+	
+	//各種バッファ生成
+	void CreateBuffers();
+
+	// 描画
+	void Draw(ID3D12GraphicsCommandList* cmdlist,UINT rootParamIndexMaterial);
 
 private://メンバ変数
 	// デバイス
@@ -64,15 +89,21 @@ private://メンバ変数
 	std::vector<unsigned short> indices;
 	// デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeap;
+	// 頂点バッファ
+	ComPtr<ID3D12Resource> vertBuff;
+	// インデックスバッファ
+	ComPtr<ID3D12Resource> indexBuff;
 	// テクスチャバッファ
 	ComPtr<ID3D12Resource> texbuff;
 	// シェーダリソースビューのハンドル(CPU)
 	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
 	// シェーダリソースビューのハンドル(CPU)
 	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
-	//マテリアル
-	Material material;
-
+	// 頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView;
+	// インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView;
+	
 public://アクセッサ置き場
 	//デバイス
 	static void SetDevice(ID3D12Device* device) { Model::device = device; }
