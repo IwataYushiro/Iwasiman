@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
 	
 	//OBJファイルからモデルデータを読み込む
-	Model* model = Model::LoadFromOBJ();
+	Model* model = Model::LoadFromOBJ("triangle_mat");
 	//3Dオブジェクト生成
 	Object3d* object3d = Object3d::Create();
 	//オブジェクトにモデル紐付ける

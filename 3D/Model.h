@@ -60,7 +60,7 @@ private://サブクラス
 
 public://静的メンバ関数
 	//OBJファイルから3Dモデルを読み込む
-	static Model* LoadFromOBJ();
+	static Model* LoadFromOBJ(const std::string& modelName);
 	
 public://メンバ関数
 	// デスクリプタヒープの初期化
@@ -107,9 +107,10 @@ private://メンバ変数
 public://アクセッサ置き場
 	//デバイス
 	static void SetDevice(ID3D12Device* device) { Model::device = device; }
+
 private://メンバ関数(カプセル化)
 	//OBJファイルから3Dモデルを読み込む(非公開)
-	void LoadFromOBJInternal();
+	void LoadFromOBJInternal(const std::string& modelName);
 	
 };
 

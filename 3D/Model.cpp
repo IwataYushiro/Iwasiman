@@ -14,7 +14,7 @@ using namespace std;
 ID3D12Device* Model::device = nullptr;
 
 //OBJファイルから3Dモデルを読み込む
-Model* Model::LoadFromOBJ()
+Model* Model::LoadFromOBJ(const std::string& modelName)
 {
 	//新たなModel型のインスタンスのメモリを確保
 	Model* model = new Model();
@@ -23,7 +23,7 @@ Model* Model::LoadFromOBJ()
 	model->InitializeDescriptorHeap();
 
 	//OBJファイルからのデータ読み込み
-	model->LoadFromOBJInternal();
+	model->LoadFromOBJInternal(modelName);
 
 	//読み込んだデータを元に各種バッファ生成
 	model->CreateBuffers();
@@ -312,13 +312,12 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial
 }
 
 //OBJファイルから3Dモデルを読み込む(非公開)
-void Model::LoadFromOBJInternal() {
+void Model::LoadFromOBJInternal(const std::string& modelName) {
 	//ファイルストリーム
 	std::ifstream file;
 	//objファイルを開く
-	const string modelname = "triangle_mat";
-	const string filename = modelname + ".obj";					//"triangle_mat.obj"
-	const string directoryPath = "Resources/" + modelname + "/";//"Resources/triangle_mat/"
+	const string filename = modelName + ".obj";					
+	const string directoryPath = "Resources/" + modelName + "/";
 
 	file.open(directoryPath + filename);//"Resources/triangle_mat/triangle_mat.obj"
 	//ファイルオープン失敗をチェック
