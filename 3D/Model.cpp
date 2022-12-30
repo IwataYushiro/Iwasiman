@@ -283,6 +283,33 @@ void Model::CreateBuffers() {
 		constBuffB1->Unmap(0, nullptr);
 	}
 }
+// 描画
+void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial) {
+	// nullptrチェック
+	assert(device);
+	assert(cmdList);
+
+	// 頂点バッファの設定
+	cmdList->IASetVertexBuffers(0, 1, &vbView);
+	// インデックスバッファの設定
+	cmdList->IASetIndexBuffer(&ibView);
+
+	//定数バッファビューのセット(マテリアル)
+	cmdList->SetComputeRootConstantBufferView(rootParamIndexMaterial, constBuffB1->GetGPUVirtualAddress());
+
+	// デスクリプタヒープの配列
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	if (material.textureFilename.size() > 0)
+	{
+		// シェーダリソースビューをセット
+		cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
+	}
+	// 描画コマンド
+	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
+
+}
 
 //OBJファイルから3Dモデルを読み込む(非公開)
 void Model::LoadFromOBJInternal() {

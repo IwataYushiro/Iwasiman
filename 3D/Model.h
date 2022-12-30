@@ -76,7 +76,7 @@ public://メンバ関数
 	void CreateBuffers();
 
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* cmdlist,UINT rootParamIndexMaterial);
+	void Draw(ID3D12GraphicsCommandList* cmdList,UINT rootParamIndexMaterial);
 
 private://メンバ変数
 	// デバイス
