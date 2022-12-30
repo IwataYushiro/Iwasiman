@@ -41,10 +41,11 @@ Object3d::Material Object3d::material;
 
 void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
 {
+
 	// nullptrチェック
 	assert(device);
-
-	Object3d::device = device;
+	//モデルにデバイスをセット
+	Model::SetDevice(device);
 
 	// デスクリプタヒープの初期化
 	InitializeDescriptorHeap();

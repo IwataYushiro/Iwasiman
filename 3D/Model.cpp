@@ -10,12 +10,12 @@
 using namespace DirectX;
 using namespace std;
 
+//静的メンバ変数の実体
+ID3D12Device* Model::device = nullptr;
+
 //OBJファイルから3Dモデルを読み込む
 Model* Model::LoadFromOBJ()
 {
-	//モデルにデバイスをセット
-	Model::SetDevice(device);
-
 	//新たなModel型のインスタンスのメモリを確保
 	Model* model = new Model();
 	
