@@ -38,24 +38,6 @@ public: // サブクラス
 		XMFLOAT3 specular;	// スペキュラー係数
 		float alpha;		// アルファ値
 	};
-	//マテリアル
-	struct Material
-	{
-		std::string name;				//マテリアル名
-		XMFLOAT3 ambient;				//アンビエント影響度
-		XMFLOAT3 diffuse;				//ディフューズ影響度
-		XMFLOAT3 specular;				//スペキュラー影響度
-		float alpha;					//アルファ値
-		std::string textureFilename;	//テクスチャファイル名
-		
-		//コンストラクタ
-		Material() {
-			ambient = { 0.3f,0.3f,0.3f };
-			diffuse = { 0.0f,0.0f,0.0f };
-			specular = { 0.0f,0.0f,0.0f };
-			alpha = 1.0f;
-		}
-	};
 
 private: // 定数
 	static const int division = 50;					// 分割数
@@ -123,26 +105,16 @@ public: // 静的メンバ関数
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device;
-	// デスクリプタサイズ
-	static UINT descriptorHandleIncrementSize;
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
 	// ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
-	// デスクリプタヒープ
-	static ComPtr<ID3D12DescriptorHeap> descHeap;
 	// 頂点バッファ
 	static ComPtr<ID3D12Resource> vertBuff;
 	// インデックスバッファ
 	static ComPtr<ID3D12Resource> indexBuff;
-	// テクスチャバッファ
-	static ComPtr<ID3D12Resource> texbuff;
-	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 	// ビュー行列
 	static XMMATRIX matView;
 	// 射影行列
@@ -158,9 +130,6 @@ private: // 静的メンバ変数
 	// インデックスバッファビュー
 	static D3D12_INDEX_BUFFER_VIEW ibView;
 	
-	//マテリアル
-	static Material material;
-
 private:// 静的メンバ関数
 	/// <summary>
 	/// デスクリプタヒープの初期化
@@ -181,18 +150,10 @@ private:// 静的メンバ関数
 	static void InitializeGraphicsPipeline();
 
 	/// <summary>
-	/// テクスチャ読み込み
-	/// </summary>
-	static void LoadTexture(const std::string& directoryPath, const std::string& filename);
-
-	/// <summary>
 	/// モデル作成
 	/// </summary>
 	static void CreateModel();
-	/// <summary>
-	/// マテリアル読み込み
-	/// </summary>
-	static void	LoadMaterial(const std::string& directoryPath, const std::string& filename);
+	
 	/// <summary>
 	/// ビュー行列を更新
 	/// </summary>
