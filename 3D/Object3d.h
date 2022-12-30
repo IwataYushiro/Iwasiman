@@ -160,7 +160,7 @@ public: // メンバ関数
 
 private: // メンバ変数
 	//モデル
-	Model* model = nullptr;
+	Model* model_ = nullptr;
 
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	
@@ -176,5 +176,10 @@ private: // メンバ変数
 	XMMATRIX matWorld;
 	// 親オブジェクト
 	Object3d* parent = nullptr;
+
+public: //アクセッサ置き場
+	//モデル
+	void SetModel(Model* model) { this->model_ = model; }
+
 };
 

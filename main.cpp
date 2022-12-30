@@ -36,7 +36,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	
 	//3Dオブジェクト関係
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
+	
+	//OBJファイルからモデルデータを読み込む
+	Model* model = Model::LoadFromOBJ();
+	//3Dオブジェクト生成
 	Object3d* object3d = Object3d::Create();
+	//オブジェクトにモデル紐付ける
+	object3d->SetModel(model);
 
 	// DirectX初期化処理　ここまで
 
@@ -116,7 +122,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	delete sprite;
 
 	//モデル
+	//3Dオブジェクト
 	delete object3d;
+	//3Dモデル
+	delete model;
 
 	//基盤系
 	delete sprCommon;
