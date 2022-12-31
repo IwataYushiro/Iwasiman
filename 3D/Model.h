@@ -34,7 +34,7 @@ private://サブクラス
 		XMFLOAT3 specular;	// スペキュラー係数
 		float alpha;		// アルファ値
 	};
-
+ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
 	//マテリアル
 	struct Material
 	{
@@ -53,7 +53,7 @@ private://サブクラス
 			alpha = 1.0f;
 		}
 	};
-	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
+	
 	//マテリアル
 	Material material;
 
