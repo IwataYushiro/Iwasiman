@@ -11,7 +11,7 @@ private://エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-private://サブクラス
+private://サブクラス(カプセル化)
 	//チャンクヘッダ
 	struct ChunkHeader
 	{
@@ -32,7 +32,7 @@ private://サブクラス
 		ChunkHeader chunk;	//"fmt"
 		WAVEFORMATEX fmt;	//波形フォーマット
 	};
-
+public://サブクラス(共通)
 	//サウンドデータ
 	struct SoundData
 	{
@@ -49,7 +49,11 @@ public://メンバ関数
 	//初期化
 	void Initialize();
 
-	//更新
+	//サウンド読み込み
+	SoundData SoundLordWave(const char* filename);
+
+	//終了処理(xAudio2の開放->各種音声データを開放するように！)
+	void Finalize();
 
 private://メンバ変数
 
