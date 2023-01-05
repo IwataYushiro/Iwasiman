@@ -3,8 +3,6 @@
 #include <fstream>
 #include <wrl.h>
 
-#pragma comment(lib,"xaudio2.lib")
-
 class Audio
 {
 private://エイリアス
@@ -29,7 +27,7 @@ private://サブクラス(カプセル化)
 	//Formatチャンク
 	struct FormatChunk
 	{
-		ChunkHeader chunk;	//"fmt"
+		ChunkHeader chunk;	//"fmt "
 		WAVEFORMATEX fmt;	//波形フォーマット
 	};
 public://サブクラス(共通)
@@ -51,7 +49,13 @@ public://メンバ関数
 
 	//サウンド読み込み
 	SoundData SoundLordWave(const char* filename);
-
+	
+	//音声再生
+	void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData);
+	
+	//各種音声データの開放
+	void SoundUnLoad(SoundData* soundData);
+	
 	//終了処理(xAudio2の開放->各種音声データを開放するように！)
 	void Finalize();
 
@@ -59,5 +63,7 @@ private://メンバ変数
 
 	ComPtr<IXAudio2> xaudio2;
 
-	IXAudio2MasteringVoice* masterVoice;
+public://アクセッサ置き場
+	//xAudio2
+	IXAudio2* GetXAudio2() { return xaudio2.Get(); }
 };

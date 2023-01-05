@@ -1,5 +1,8 @@
 #include "Audio.h"
 #include <cassert>
+#include <string.h>
+
+#pragma comment(lib,"xaudio2.lib")
 
 //初期化
 void Audio::Initialize()
@@ -10,6 +13,9 @@ void Audio::Initialize()
 	result = XAudio2Create(&xaudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
 
 	//マスターボイスを生成
+
+	IXAudio2MasteringVoice* masterVoice;
+
 	result = xaudio2->CreateMasteringVoice(&masterVoice);
 
 }
@@ -17,8 +23,6 @@ void Audio::Initialize()
 //サウンド読み込み
 Audio::SoundData Audio::SoundLordWave(const char* filename)
 {
-	HRESULT result;
-
 	//ファイルオープン
 	//ファイル入力ストリームのインスタンス
 	std::ifstream file;
@@ -46,12 +50,12 @@ Audio::SoundData Audio::SoundLordWave(const char* filename)
 	FormatChunk format = {};
 	//チャンクヘッダーの確認
 	file.read((char*)&format, sizeof(ChunkHeader));
-	if (strncmp(format.chunk.id, "fmt", 4) != 0)
+	if (strncmp(format.chunk.id, "fmt ", 4) != 0)
 	{
 		assert(0);
 	}
 	//チャンク本体の読み込み 
-	assert(format.chunk.size <= sizeof(ChunkHeader));
+	assert(format.chunk.size <= sizeof(format.fmt));
 	file.read((char*)&format.fmt, format.chunk.size);
 	
 	//Dataチャンクの読み込み
@@ -65,7 +69,7 @@ Audio::SoundData Audio::SoundLordWave(const char* filename)
 		//再読み込み
 		file.read((char*)&data, sizeof(data));
 	}
-	if (strncmp(data.id, "JUNK", 4) != 0)
+	if (strncmp(data.id, "data", 4) != 0)
 	{
 		assert(0);
 	}
@@ -85,4 +89,42 @@ Audio::SoundData Audio::SoundLordWave(const char* filename)
 	soundData.bufferSize = data.size;
 
 	return soundData;
+}
+
+//音声再生
+void Audio::SoundPlayWave(IXAudio2* xAudio2, const Audio::SoundData& soundData)
+{
+	HRESULT result;
+
+	//波形フォーマットを元にSourceVoiceの生成
+	IXAudio2SourceVoice* pSourceVoice = nullptr;
+	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
+	assert(SUCCEEDED(result));
+
+	//再生する波形データの生成
+	XAUDIO2_BUFFER buf{};
+	buf.pAudioData = soundData.pBuffer;
+	buf.AudioBytes = soundData.bufferSize;
+	buf.Flags = XAUDIO2_END_OF_STREAM;
+
+	//波形データの再生
+	result = pSourceVoice->SubmitSourceBuffer(&buf);
+	result = pSourceVoice->Start();
+}
+
+//各種音声データの開放
+void Audio::SoundUnLoad(SoundData* soundData)
+{
+	//バッファのメモリを開放
+	delete[] soundData->pBuffer;
+
+	soundData->pBuffer = 0;
+	soundData->bufferSize = 0;
+	soundData->wfex = {};
+}
+
+//終了処理(xAudio2の開放→各種音声データを開放するように！)
+void Audio::Finalize()
+{
+	xaudio2.Reset();
 }

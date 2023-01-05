@@ -1,4 +1,5 @@
 #include "WinApp.h"
+#include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Object3d.h"
@@ -19,6 +20,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	Sprite* sprite = new Sprite();
 
+	Audio* audio = new Audio();
+
 	Input* input = new Input();
 
 #pragma endregion
@@ -31,8 +34,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//DirectX初期化
 	dxCommon->Initialize(winApp);
 	
-	//スプライト関係
+	//スプライト基盤
 	sprCommon->Initialize(dxCommon);
+	//入力
+	input->Initialize(winApp);
+	
+	// DirectX初期化処理　ここまで
+
+
+	// 描画初期化処理　ここから
+#pragma region 描画初期化処理
+	
+	//音声データ
+	audio->Initialize();
+
+	Audio::SoundData sound = audio->SoundLordWave("Resources/Alarm01.wav");
+	
+	//ここでテクスチャを指定しよう
+	UINT texindex = 00;
+	sprCommon->LoadTexture(texindex, "texture.png");
+	sprite->Initialize(sprCommon, texindex);
 	
 	//3Dオブジェクト関係
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
@@ -43,21 +64,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Object3d* object3d = Object3d::Create();
 	//オブジェクトにモデル紐付ける
 	object3d->SetModel(model);
-
-	// DirectX初期化処理　ここまで
-
-
-	// 描画初期化処理　ここから
-#pragma region 描画初期化処理
-
-	//入力
-	input->Initialize(winApp);
-
-	
-	//ここでテクスチャを指定しよう
-	UINT texindex = 00;
-	sprCommon->LoadTexture(texindex, "texture.png");
-	sprite->Initialize(sprCommon, texindex);
 
 #pragma endregion
 	// 描画初期化処理　ここまで
@@ -74,8 +80,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		// DirectX毎フレーム処理　ここから
 		
-		// 更新処理ここから
 		input->Update();
+		// 更新処理ここから
+		//音声再生呼び出し例
+		audio->SoundPlayWave(audio->GetXAudio2(), sound);
 
 		//スプライト呼び出し例
 		sprite->Update();
@@ -115,9 +123,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// DirectX毎フレーム処理　ここまで
 		
 	}
+	//終了処理
+	audio->Finalize();
 	winApp->Finalize();
 
 	//解放
+	//各種音声
+	audio->SoundUnLoad(&sound);
+	//音声全体
+	delete audio;
+
 	//スプライト
 	delete sprite;
 
