@@ -48,8 +48,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//音声データ
 	audio->Initialize();
 
-	Audio::SoundData sound = audio->SoundLordWave("Resources/Alarm01.wav");
-	
+	Audio::SoundData sound = audio->SoundLordWave("Resources/TestMusic.wav");
+	//音声再生呼び出し例
+	audio->SoundPlayWave(audio->GetXAudio2(), sound);
+
 	//ここでテクスチャを指定しよう
 	UINT texindex = 00;
 	sprCommon->LoadTexture(texindex, "texture.png");
@@ -82,9 +84,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		
 		input->Update();
 		// 更新処理ここから
-		//音声再生呼び出し例
-		audio->SoundPlayWave(audio->GetXAudio2(), sound);
-
+		
 		//スプライト呼び出し例
 		sprite->Update();
 	

@@ -3,13 +3,14 @@
 #include <fstream>
 #include <wrl.h>
 
+//音声
 class Audio
 {
 private://エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-private://サブクラス(カプセル化)
+public://サブクラス(カプセル化)
 	//チャンクヘッダ
 	struct ChunkHeader
 	{
@@ -30,7 +31,7 @@ private://サブクラス(カプセル化)
 		ChunkHeader chunk;	//"fmt "
 		WAVEFORMATEX fmt;	//波形フォーマット
 	};
-public://サブクラス(共通)
+
 	//サウンドデータ
 	struct SoundData
 	{

@@ -75,7 +75,7 @@ Audio::SoundData Audio::SoundLordWave(const char* filename)
 	}
 
 	//Dataチャンクのデータ部(波形データ)の読み込み
-	char* pBuffer = new char(data.size);
+	char* pBuffer = new char[data.size];
 	file.read(pBuffer, data.size);
 	//ファイルクローズ
 	file.close();
