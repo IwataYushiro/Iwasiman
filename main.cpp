@@ -6,6 +6,10 @@
 #include "SpriteCommon.h"
 #include "Sprite.h"
 
+#include <imgui.h>
+#include <imgui_impl_dx12.h>
+#include <imgui_impl_win32.h>
+
 using namespace DirectX;
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -41,7 +45,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	
 	// DirectX初期化処理　ここまで
 
-
+	//一旦ここでimguiテスト
+	
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	

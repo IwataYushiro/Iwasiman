@@ -141,7 +141,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)3D;$(ProjectDir)Input;$(ProjectDir)Base;$(ProjectDir)2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <Optimization>MinSpace</Optimization>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
