@@ -4,7 +4,6 @@
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
-#pragma comment(lib,"winmm.lib")
 
 using namespace Microsoft::WRL;
 
@@ -18,8 +17,7 @@ void DirectXCommon::Initialize(WinApp* winApp)
 #pragma region DirectX初期化
 	//FPS固定初期化
 	InitializeFixFPS();
-	//システムタイマーの分解能を上げる
-	timeBeginPeriod(1);
+	
 	//デバイスの初期化
 	InitializeDevice();
 	//コマンド関連の初期化
@@ -39,9 +37,10 @@ void DirectXCommon::InitializeDevice()
 {
 #ifdef _DEBUG
 	//デバッグレイヤーをオンに
-	ComPtr<ID3D12Debug> debugController;
+	ComPtr<ID3D12Debug1> debugController;
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
 		debugController->EnableDebugLayer();
+		debugController->SetEnableGPUBasedValidation(TRUE);
 	}
 #endif
 

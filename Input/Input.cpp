@@ -35,8 +35,6 @@ void Input::Initialize(WinApp* winApp)
 //更新
 void Input::Update()
 {
-	HRESULT result;
-
 	//前回のキー入力を保存
 	memcpy(preKeys, keys, sizeof(keys));
 	//キーボード情報の取得開始
