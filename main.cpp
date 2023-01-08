@@ -42,7 +42,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//“ü—Í
 	input->Initialize(winApp);
 	//imgui
-	imguiManager->Initialize(winApp);
+	imguiManager->Initialize(winApp,dxCommon);
 
 	// DirectX‰Šú‰»ˆ—@‚±‚±‚Ü‚Å
 
