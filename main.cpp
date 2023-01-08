@@ -9,20 +9,18 @@
 
 using namespace DirectX;
 
-void Classic()
-{
-	ImGui::StyleColorsClassic();
-	
-}
-void Light()
-{
-	ImGui::StyleColorsLight();
+static char buf[50] = {};
+static float f = 0.0f;
 
-}
-void Dark()
-{
-	ImGui::StyleColorsDark();
+void ImGuiStyleShowSample() {
+	ImGui::Text("Hello, world %d", 184);
 
+	if (ImGui::Button("Style Classic")) { ImGui::StyleColorsClassic(); }
+	if (ImGui::Button("Style Light")) { ImGui::StyleColorsLight(); }
+	if (ImGui::Button("Style Dack")) { ImGui::StyleColorsDark(); }
+
+	ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
+	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 }
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -52,21 +50,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//DirectX初期化
 	dxCommon->Initialize(winApp);
-	
+
 	//スプライト基盤
 	sprCommon->Initialize(dxCommon);
 	//入力
 	input->Initialize(winApp);
 	//imgui
-	imguiManager->Initialize(winApp,dxCommon);
+	imguiManager->Initialize(winApp, dxCommon);
 
 	// DirectX初期化処理　ここまで
 
 	//一旦ここでimguiテスト
-	
+
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
-	
+
 	//音声データ
 	audio->Initialize();
 
@@ -78,10 +76,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	UINT texindex = 00;
 	sprCommon->LoadTexture(texindex, "texture.png");
 	sprite->Initialize(sprCommon, texindex);
-	
+
 	//3Dオブジェクト関係
 	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
-	
+
 	//OBJファイルからモデルデータを読み込む
 	Model* model = Model::LoadFromOBJ("triangle_mat");
 	//3Dオブジェクト生成
@@ -103,34 +101,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 
 		// DirectX毎フレーム処理　ここから
-		
+
 		// 更新処理ここから
 		input->Update();
 		//スプライト呼び出し例
 		sprite->Update();
-	
+
 		//モデル呼び出し例
 		object3d->Update();
-		
+
 		//ImGui呼び出し
 		imguiManager->Begin();
 		//ここからImGuiの表示項目を追加する
-		ImGui::Text("Hello, world %d", 184);
-
-		if (ImGui::Button("Style Classic")) Classic();
-		if (ImGui::Button("Style Light"))   Light();
-		if (ImGui::Button("Style Dack"))    Dark();
-
-		char buf[] = "start";
-		float f = 0.0f;
-
-		ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+		ImGuiStyleShowSample();
 		//表示項目ここまで
 		imguiManager->End();
 
 		// ここまで
-		
+
 		//描画処理ここから
 		//描画前処理
 		dxCommon->PreDraw();
@@ -140,7 +128,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		sprCommon->PreDraw();
 		//スプライト描画
 		sprite->Draw();
-		
+
 		//モデル
 		//モデル描画前処理
 		object3d->PreDraw(dxCommon->GetCommandList());
@@ -160,7 +148,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// 描画処理ここまで
 
 		// DirectX毎フレーム処理　ここまで
-		
+
 	}
 	//終了処理
 	imguiManager->Finalize();
