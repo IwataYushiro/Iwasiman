@@ -15,8 +15,16 @@ public:
 	
 	//初期化
 	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
+	
 	//更新
-	void Update();
+	//受付開始
+	void Begin();
+	//受付終了
+	void End();
+	
+	//描画
+	void Draw();
+	
 	//終了
 	void Finalize();
 

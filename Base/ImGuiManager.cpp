@@ -38,10 +38,39 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 
 }
 
-void ImGuiManager::Update()
+void ImGuiManager::Begin()
 {
+	//imguiフレーム開始
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+}
+
+void ImGuiManager::End()
+{
+	//描画前準備
+	ImGui::Render();
+}
+
+void ImGuiManager::Draw()
+{
+	//コマンドリスト
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+
+	//デスクリプタヒープの配列をセットするコマンド
+	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap_.Get() };
+	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	//描画コマンドの実行
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 }
 
 void ImGuiManager::Finalize()
 {
+	//後処理
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
+	//デスクリプタヒープ開放
+	srvHeap_.Reset();
 }

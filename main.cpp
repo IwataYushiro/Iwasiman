@@ -88,28 +88,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		// DirectX毎フレーム処理　ここから
 		
-		input->Update();
 		// 更新処理ここから
-		
+		input->Update();
 		//スプライト呼び出し例
 		sprite->Update();
 	
 		//モデル呼び出し例
 		object3d->Update();
+		
+		//ImGui呼び出し
+		imguiManager->Begin();
+		//ここからImGuiの表示項目を追加する
+
+		//表示項目ここまで
+		imguiManager->End();
+
 		// ここまで
 		
+		//描画処理ここから
 		//描画前処理
 		dxCommon->PreDraw();
 
-		//背景スプライト描画
-		
+		//背景スプライト
 		//スプライト描画前処理
 		sprCommon->PreDraw();
 		//スプライト描画
 		sprite->Draw();
 		
-		//モデル描画
-
+		//モデル
 		//モデル描画前処理
 		object3d->PreDraw(dxCommon->GetCommandList());
 
@@ -119,17 +125,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//モデル描画後処理
 		object3d->PostDraw();
 
-		//前景スプライト描画 
+		//前景スプライト
 
+		//ImGuiの表示
+		imguiManager->Draw();
 		//描画後処理
-
 		dxCommon->PostDraw();
-		// 4.描画コマンドここまで
+		// 描画処理ここまで
 
 		// DirectX毎フレーム処理　ここまで
 		
 	}
 	//終了処理
+	imguiManager->Finalize();
 	audio->Finalize();
 	winApp->Finalize();
 
