@@ -1,14 +1,11 @@
 #include "WinApp.h"
 #include "Audio.h"
 #include "DirectXCommon.h"
+#include "ImGuiManager.h"
 #include "Input.h"
 #include "Object3d.h"
 #include "SpriteCommon.h"
 #include "Sprite.h"
-
-#include <imgui.h>
-#include <imgui_impl_dx12.h>
-#include <imgui_impl_win32.h>
 
 using namespace DirectX;
 
@@ -28,6 +25,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	Input* input = new Input();
 
+	ImGuiManager* imguiManager = new ImGuiManager();
+
 #pragma endregion
 
 #pragma region Windows初期化
@@ -42,7 +41,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	sprCommon->Initialize(dxCommon);
 	//入力
 	input->Initialize(winApp);
-	
+	//imgui
+	imguiManager->Initialize(winApp);
+
 	// DirectX初期化処理　ここまで
 
 	//一旦ここでimguiテスト
@@ -148,6 +149,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	delete model;
 
 	//基盤系
+	delete imguiManager;
 	delete sprCommon;
 	delete input;
 	delete dxCommon;
