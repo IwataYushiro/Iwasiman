@@ -9,6 +9,22 @@
 
 using namespace DirectX;
 
+void Classic()
+{
+	ImGui::StyleColorsClassic();
+	
+}
+void Light()
+{
+	ImGui::StyleColorsLight();
+
+}
+void Dark()
+{
+	ImGui::StyleColorsDark();
+
+}
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -100,10 +116,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		imguiManager->Begin();
 		//ここからImGuiの表示項目を追加する
 		ImGui::Text("Hello, world %d", 184);
-		ImGui::Button("Save");
-			//MySaveFunction();
-		static char buf[] = "start";
-		static float f = 0.0f;
+
+		if (ImGui::Button("Style Classic")) Classic();
+		if (ImGui::Button("Style Light"))   Light();
+		if (ImGui::Button("Style Dack"))    Dark();
+
+		char buf[] = "start";
+		float f = 0.0f;
 
 		ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
 		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
@@ -174,3 +193,4 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	return 0;
 }
+
