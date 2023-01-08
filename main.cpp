@@ -99,7 +99,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//ImGuiŒÄ‚Ño‚µ
 		imguiManager->Begin();
 		//‚±‚±‚©‚çImGui‚Ì•\¦€–Ú‚ğ’Ç‰Á‚·‚é
+		ImGui::Text("Hello, world %d", 184);
+		ImGui::Button("Save");
+			//MySaveFunction();
+		static char buf[] = "start";
+		static float f = 0.0f;
 
+		ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
+		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 		//•\¦€–Ú‚±‚±‚Ü‚Å
 		imguiManager->End();
 
