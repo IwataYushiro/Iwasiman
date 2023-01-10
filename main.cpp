@@ -150,7 +150,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//ImGuiŒÄ‚Ño‚µ
 		imguiManager->Begin();
 		//‚±‚±‚©‚çImGui‚Ì•\¦€–Ú‚ğ’Ç‰Á‚·‚é
-		ImGuiMyFirstToolColor();
+		
 		//•\¦€–Ú‚±‚±‚Ü‚Å
 		imguiManager->End();
 
