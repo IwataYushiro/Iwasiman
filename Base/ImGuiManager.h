@@ -22,6 +22,10 @@ public:
 	//ó•tI—¹
 	void End();
 	
+	void ImGuiStyleShowSample();
+
+	void ImGuiMyFirstToolColor();
+	
 	//•`‰æ
 	void Draw();
 	

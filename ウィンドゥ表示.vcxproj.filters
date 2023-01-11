@@ -40,6 +40,12 @@
     <Filter Include="ヘッダー ファイル\2D">
       <UniqueIdentifier>{eaeeaec6-a73c-450c-a3f8-ed6bda8c78fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\MyGame">
+      <UniqueIdentifier>{f1eff419-90de-4286-ab78-75bde1eb9c1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\MyGame">
+      <UniqueIdentifier>{4d63fb01-9867-407d-a9da-1ce2aaa0c6e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3D\Mesh.cpp">
@@ -75,6 +81,9 @@
     <ClCompile Include="Base\ImGuiManager.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
+    <ClCompile Include="MyGame\MyGame.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\Mesh.h">
@@ -106,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="Base\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\MyGame.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
