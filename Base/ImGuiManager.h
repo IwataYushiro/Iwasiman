@@ -17,6 +17,7 @@ public:
 	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
 	
 	//更新
+	void Update();
 	//受付開始
 	void Begin();
 	//受付終了

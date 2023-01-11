@@ -23,20 +23,35 @@ public:
 	//終了
 	void Finalize();
 	
+	//終了フラグチェック
+	bool IsEndRequest() { return EndGame_; }
 private:
+	//WinApp
+	WinApp* winApp_ = new WinApp();
+	//DXCommon
+	DirectXCommon* dxCommon_ = new DirectXCommon();
+	//SpriteCommon
+	SpriteCommon* sprCommon_ = new SpriteCommon();
+	//Sprite
+	Sprite* sprite_ = new Sprite();
+	//Audio
+	Audio* audio_ = new Audio();
+	//Input
+	Input* input_ = new Input();
+	//imgui
+	ImGuiManager* imguiManager_ = new ImGuiManager();
 
-	WinApp* winApp = new WinApp();
+	//サウンド読み込み
+	Audio::SoundData sound;
 
-	DirectXCommon* dxCommon = new DirectXCommon();
+	//モデル
+	Model* model_ = nullptr;
 
-	SpriteCommon* sprCommon = new SpriteCommon();
+	//3Dオブジェクト
+	Object3d* object3D_ = nullptr;
 
-	Sprite* sprite = new Sprite();
+	//ゲーム終了フラグ
+	bool EndGame_ = false;
 
-	Audio* audio = new Audio();
-
-	Input* input = new Input();
-
-	ImGuiManager* imguiManager = new ImGuiManager();
 };
 

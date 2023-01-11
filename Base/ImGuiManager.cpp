@@ -38,6 +38,18 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 
 }
 
+void ImGuiManager::Update()
+{
+
+	//ImGui呼び出し
+	Begin();
+	//ここからImGuiの表示項目を追加する
+
+	//表示項目ここまで
+	End();
+
+}
+
 void ImGuiManager::Begin()
 {
 	//imguiフレーム開始

@@ -1,192 +1,32 @@
-#include "WinApp.h"
-#include "Audio.h"
-#include "DirectXCommon.h"
-#include "ImGuiManager.h"
-#include "Input.h"
-#include "Object3d.h"
-#include "SpriteCommon.h"
-#include "Sprite.h"
-
 #include "MyGame.h"
-
-using namespace DirectX;
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-#pragma region ポインタ置き場
-	WinApp* winApp = new WinApp();
-
-	DirectXCommon* dxCommon = new DirectXCommon();
-
-	SpriteCommon* sprCommon = new SpriteCommon();
-
-	Sprite* sprite = new Sprite();
-
-	Audio* audio = new Audio();
-
-	Input* input = new Input();
-
-	ImGuiManager* imguiManager = new ImGuiManager();
-
-#pragma endregion
-
-#pragma region Windows初期化
-	winApp->Initialize();
-#pragma endregion
-	// DirectX初期化処理　ここから
-
-	//DirectX初期化
-	dxCommon->Initialize(winApp);
-
-	//スプライト基盤
-	sprCommon->Initialize(dxCommon);
-	//入力
-	input->Initialize(winApp);
-	//imgui
-	imguiManager->Initialize(winApp, dxCommon);
-
-	// DirectX初期化処理　ここまで
-
-	//一旦ここでimguiテスト
-	
-	// 描画初期化処理　ここから
-#pragma region 描画初期化処理
-
-	//音声データ
-	audio->Initialize();
-
-	Audio::SoundData sound = audio->SoundLordWave("Resources/TestMusic.wav");
-	//音声再生呼び出し例
-	audio->SoundPlayWave(audio->GetXAudio2(), sound);
-
-	//ここでテクスチャを指定しよう
-	UINT texindex = 00;
-	sprCommon->LoadTexture(texindex, "texture.png");
-	sprite->Initialize(sprCommon, texindex);
-
-	//3Dオブジェクト関係
-	Object3d::StaticInitialize(dxCommon->GetDevice(), winApp->window_width, winApp->window_height);
-
-	//OBJファイルからモデルデータを読み込む
-	Model* model = Model::LoadFromOBJ("triangle_mat");
-	//3Dオブジェクト生成
-	Object3d* object3d = Object3d::Create();
-	//オブジェクトにモデル紐付ける
-	object3d->SetModel(model);
-
-#pragma endregion
-	// 描画初期化処理　ここまで
+	MyGame game;
+	//初期化
+	game.Initialize();
 
 	//ゲームループ
 	while (true)
 	{
-		//Windowsのメッセージ処理
-		if (winApp->ProcessMessage())
+		game.Update();
+
+		//終了リクエストが来たらループを抜ける
+		if (game.IsEndRequest())
 		{
 			//ゲームループを抜ける
 			break;
 		}
-
-		// DirectX毎フレーム処理　ここから
-
-		// 更新処理ここから
-		input->Update();
-		//スプライト呼び出し例
-		sprite->Update();
-
-		//モデル呼び出し例
-		XMFLOAT3 pos = object3d->GetPosition();
-
-		if (input->PushKey(DIK_RIGHT))
-		{
-			pos.x += 0.1f;
-		}
-		if (input->PushKey(DIK_LEFT))
-		{
-			pos.x -= 0.1f;
-		}
-		if (input->PushKey(DIK_UP))
-		{
-			pos.y += 0.1f;
-		}
-		if (input->PushKey(DIK_DOWN))
-		{
-			pos.y -= 0.1f;
-		}
-		
-		object3d->SetPosition(pos);
-
-		object3d->Update();
-
-		//ImGui呼び出し
-		imguiManager->Begin();
-		//ここからImGuiの表示項目を追加する
-		
-		//表示項目ここまで
-		imguiManager->End();
-
-		// ここまで
-
 		//描画処理ここから
-		//描画前処理
-		dxCommon->PreDraw();
-
-		//背景スプライト
-		//スプライト描画前処理
-		sprCommon->PreDraw();
-		//スプライト描画
-		sprite->Draw();
-
-		//モデル
-		//モデル描画前処理
-		object3d->PreDraw(dxCommon->GetCommandList());
-
-		//モデル描画
-		object3d->Draw();
-
-		//モデル描画後処理
-		object3d->PostDraw();
-
-		//前景スプライト
-
-		//ImGuiの表示
-		imguiManager->Draw();
-		//描画後処理
-		dxCommon->PostDraw();
+		game.Draw();
 		// 描画処理ここまで
 
 		// DirectX毎フレーム処理　ここまで
 
 	}
 	//終了処理
-	imguiManager->Finalize();
-	audio->Finalize();
-	winApp->Finalize();
-
-	//解放
-	//各種音声
-	audio->SoundUnLoad(&sound);
-	//音声全体
-	delete audio;
-
-	//スプライト
-	delete sprite;
-
-	//モデル
-	//3Dオブジェクト
-	delete object3d;
-	//3Dモデル
-	delete model;
-
-	//基盤系
-	delete imguiManager;
-	delete sprCommon;
-	delete input;
-	delete dxCommon;
-	delete winApp;
-	//コンソールへの文字出力
-	OutputDebugStringA("Hello DilectX!!\n");
+	game.Finalize();
 
 	return 0;
 }
