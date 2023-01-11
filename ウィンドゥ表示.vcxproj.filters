@@ -84,6 +84,9 @@
     <ClCompile Include="MyGame\MyGame.cpp">
       <Filter>ソース ファイル\MyGame</Filter>
     </ClCompile>
+    <ClCompile Include="MyGame\Framework.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\Mesh.h">
@@ -117,6 +120,9 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="MyGame\MyGame.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\Framework.h">
       <Filter>ヘッダー ファイル\MyGame</Filter>
     </ClInclude>
   </ItemGroup>
