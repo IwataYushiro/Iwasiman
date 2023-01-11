@@ -5,9 +5,20 @@
 #include "Object3d.h"
 #include "Sprite.h"
 
+#include "Player.h"
+
 class MyGame :public Framework
 {
 public:
+
+	enum Scene { //シーンID
+		title,
+		howtoplay,
+		stage,
+		clear,
+		gameover,
+	};
+
 	//初期化
 	void Initialize() override;
 
@@ -21,7 +32,7 @@ public:
 	void Finalize() override;
 
 private:
-
+	
 	//Sprite
 	Sprite* sprite_ = new Sprite();
 	//Audio
@@ -43,6 +54,11 @@ private:
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
 	Object3d* object3DSkyDome_ = nullptr;
+
+	Player* player_ = nullptr;
+
+	//シーン
+	size_t scene_;
 
 	//ゲーム終了フラグ
 	bool EndGame_ = false;

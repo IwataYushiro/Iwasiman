@@ -37,16 +37,14 @@ void MyGame::Initialize()
 	
 	//OBJファイルからモデルデータを読み込む
 	
-	modelSkyDome_ = Model::LoadFromOBJ("playerbullet");
+	modelSkyDome_ = Model::LoadFromOBJ("enemybullet");
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 	
-
 	//3Dオブジェクト生成
 	object3DSkyDome_ = Object3d::Create();
 	object3DPlayer_ = Object3d::Create();
 	object3DEnemy_ = Object3d::Create();
-
 
 	//オブジェクトにモデル紐付ける
 	object3DSkyDome_->SetModel(modelSkyDome_);
@@ -54,7 +52,8 @@ void MyGame::Initialize()
 	object3DEnemy_->SetModel(modelEnemy_);
 	
 	//ポジション
-	object3DPlayer_->SetPosition({ 0.0f,0.0f,600.0f });
+	player_->Initialize(modelPlayer_, object3DPlayer_, input_);
+
 	object3DEnemy_->SetPosition({ 0.0f,0.0f,1000.0f });
 	
 #pragma endregion
@@ -71,33 +70,14 @@ void MyGame::Update()
 	sprite_->Update();
 
 	//モデル呼び出し例
-	XMFLOAT3 pos = object3DPlayer_->GetPosition();
 	XMFLOAT3 enemyPos = object3DEnemy_->GetPosition();
 
-	if (input_->PushKey(DIK_RIGHT))
-	{
-		pos.x += 3.0f;
-	}
-	if (input_->PushKey(DIK_LEFT))
-	{
-		pos.x -= 3.0f;
-	}
-	if (input_->PushKey(DIK_UP))
-	{
-		pos.y += 3.0f;
-	}
-	if (input_->PushKey(DIK_DOWN))
-	{
-		pos.y -= 3.0f;
-	}
 	enemyPos.z -= 0.2f;
 
-	object3DPlayer_->SetPosition(pos);
 	object3DEnemy_->SetPosition(enemyPos);
 
 	object3DSkyDome_->Update();
 
-	object3DPlayer_->Update();
 	object3DEnemy_->Update();
 	
 
@@ -123,7 +103,7 @@ void MyGame::Draw()
 	
 	//モデル描画
 	object3DSkyDome_->Draw();
-	object3DPlayer_->Draw();
+	player_->Draw();
 	object3DEnemy_->Draw();
 
 	//モデル描画後処理
@@ -163,6 +143,7 @@ void MyGame::Finalize()
 
 	//基盤系
 	delete imguiManager_;
+	delete player_;
 
 	Framework::Finalize();
 }

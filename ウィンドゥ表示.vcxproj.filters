@@ -46,6 +46,12 @@
     <Filter Include="ヘッダー ファイル\MyGame">
       <UniqueIdentifier>{4d63fb01-9867-407d-a9da-1ce2aaa0c6e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Math">
+      <UniqueIdentifier>{393d4d1b-d4a1-4d39-ab28-90ab178f417a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Math">
+      <UniqueIdentifier>{6052ccc9-3f77-4f3f-b541-f8eeb95b2979}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3D\Mesh.cpp">
@@ -87,6 +93,15 @@
     <ClCompile Include="MyGame\Framework.cpp">
       <Filter>ソース ファイル\MyGame</Filter>
     </ClCompile>
+    <ClCompile Include="MyGame\Player.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\MyMath.cpp">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame\PlayerBullet.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\Mesh.h">
@@ -123,6 +138,15 @@
       <Filter>ヘッダー ファイル\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="MyGame\Framework.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\Player.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\MyMath.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\PlayerBullet.h">
       <Filter>ヘッダー ファイル\MyGame</Filter>
     </ClInclude>
   </ItemGroup>
