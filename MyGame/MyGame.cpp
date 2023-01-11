@@ -4,46 +4,25 @@ using namespace DirectX;
 
 void MyGame::Initialize()
 {
-	//WinApp
-	winApp_ = new WinApp();
-	//DXCommon
-	dxCommon_ = new DirectXCommon();
-	//SpriteCommon
-	sprCommon_ = new SpriteCommon();
+	Framework::Initialize();
 	//Sprite
 	sprite_ = new Sprite();
 	//Audio
 	audio_ = new Audio();
-	//Input
-	input_ = new Input();
 	//imgui
 	imguiManager_ = new ImGuiManager();
 
 #pragma region Windows初期化
-	winApp_->Initialize();
 #pragma endregion
 	// DirectX初期化処理　ここから
-
-	//DirectX初期化
-	dxCommon_->Initialize(winApp_);
-
-	//スプライト基盤
-	sprCommon_->Initialize(dxCommon_);
-	//入力
-	input_->Initialize(winApp_);
 	//imgui
 	imguiManager_->Initialize(winApp_, dxCommon_);
 
 	// DirectX初期化処理　ここまで
-
-	//一旦ここでimguiテスト
-
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
-
 	//音声データ
 	audio_->Initialize();
-
 	sound = audio_->SoundLordWave("Resources/TestMusic.wav");
 	//音声再生呼び出し例
 	audio_->SoundPlayWave(audio_->GetXAudio2(), sound);
@@ -69,17 +48,10 @@ void MyGame::Initialize()
 
 void MyGame::Update()
 {
-	//Windowsのメッセージ処理
-	if (winApp_->ProcessMessage())
-	{
-		//ゲーム終了
-		EndGame_ = true;
-	}
-
 	// DirectX毎フレーム処理　ここから
-
 	// 更新処理ここから
-	input_->Update();
+	Framework::Update();
+
 	//スプライト呼び出し例
 	sprite_->Update();
 
@@ -107,8 +79,8 @@ void MyGame::Update()
 
 	object3D_->Update();
 
+	//imgui
 	imguiManager_->Update();
-
 	// ここまで
 }
 
@@ -143,9 +115,9 @@ void MyGame::Draw()
 
 void MyGame::Finalize()
 {
+	//終了処理
 	imguiManager_->Finalize();
 	audio_->Finalize();
-	winApp_->Finalize();
 
 	//解放
 	//各種音声
@@ -164,8 +136,6 @@ void MyGame::Finalize()
 
 	//基盤系
 	delete imguiManager_;
-	delete sprCommon_;
-	delete input_;
-	delete dxCommon_;
-	delete winApp_;
+
+	Framework::Finalize();
 }
