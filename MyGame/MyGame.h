@@ -34,10 +34,15 @@ private:
 	Audio::SoundData sound;
 
 	//モデル
-	Model* model_ = nullptr;
+	Model* modelPlayer_ = nullptr;
+	Model* modelEnemy_ = nullptr;
+	//天球
+	Model* modelSkyDome_ = nullptr;
 
 	//3Dオブジェクト
-	Object3d* object3D_ = nullptr;
+	Object3d* object3DPlayer_ = nullptr;
+	Object3d* object3DEnemy_ = nullptr;
+	Object3d* object3DSkyDome_ = nullptr;
 
 	//ゲーム終了フラグ
 	bool EndGame_ = false;
