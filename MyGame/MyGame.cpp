@@ -16,6 +16,8 @@ Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp
 	
 	//プレイヤー関係
 	player_ = new Player();
+	//敵関係
+	enemy_ = new Enemy();
 
 #pragma region Windows初期化
 #pragma endregion
@@ -47,7 +49,6 @@ Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 	
-	
 	//オブジェクトにモデル紐付ける
 	object3DPlayer_->SetModel(modelPlayer_);
 	object3DEnemy_->SetModel(modelEnemy_);
@@ -55,8 +56,10 @@ Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp
 	//ポジション
 	player_->Initialize(modelPlayer_, object3DPlayer_, input_);
 
-	object3DEnemy_->SetPosition({ 0.0f,0.0f,1000.0f });
-	
+	//enemy_->Initialize(modelEnemy_, object3DEnemy_);
+	//敵に自機のアドレスを渡す
+	//enemy_->SetPlayer(player_);
+
 	//シーン
 	scene_ = title;
 
@@ -75,10 +78,8 @@ void MyGame::Update()
 	sprite_->Update();
 
 	//モデル呼び出し例
-	
-	object3DEnemy_->Update();
-
 	player_->Update();
+	//enemy_->Update();
 
 	//imgui
 	imguiManager_->Update();
@@ -94,7 +95,7 @@ void MyGame::Draw()
 	//スプライト描画前処理
 	sprCommon_->PreDraw();
 	//スプライト描画
-	sprite_->Draw();
+	//sprite_->Draw();
 
 	//モデル
 	//モデル描画前処理
@@ -102,7 +103,7 @@ void MyGame::Draw()
 	
 	//モデル描画
 	player_->Draw();
-	object3DEnemy_->Draw();
+	//enemy_->Draw();
 
 	//モデル描画後処理
 	Object3d::PostDraw();
@@ -140,6 +141,7 @@ void MyGame::Finalize()
 	
 	//基盤系
 	delete player_;
+	delete enemy_;
 	delete imguiManager_;
 	
 

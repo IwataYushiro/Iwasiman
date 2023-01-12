@@ -105,6 +105,9 @@
     <ClCompile Include="MyGame\Enemy.cpp">
       <Filter>ソース ファイル\MyGame</Filter>
     </ClCompile>
+    <ClCompile Include="MyGame\EnemyBullet.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\Mesh.h">
@@ -153,6 +156,9 @@
       <Filter>ヘッダー ファイル\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="MyGame\Enemy.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\EnemyBullet.h">
       <Filter>ヘッダー ファイル\MyGame</Filter>
     </ClInclude>
   </ItemGroup>

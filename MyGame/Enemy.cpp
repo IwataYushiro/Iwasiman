@@ -1,18 +1,20 @@
 #include "Enemy.h"
 #include <cassert>
-#include "MyGame.h"
 #include "Player.h"
 
 using namespace DirectX;
 
-// 初期化
 Enemy::~Enemy() {
+	//モデルの解放
 	delete model_;
+	delete obj_;
+
 	delete modelBullet_;
-	
+	delete objBullet_;
 }
 
-void Enemy::Initialize(Model* model, Object3d* obj, Input* input) {
+// 初期化
+void Enemy::Initialize(Model* model, Object3d* obj) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -23,20 +25,15 @@ void Enemy::Initialize(Model* model, Object3d* obj, Input* input) {
 	objBullet_ = Object3d::Create();
 
 	objBullet_->SetModel(modelBullet_);
-
-	//シングルトンインスタンスを取得
-	input_ = input;
-
-	//ワールドトランスフォームの初期化
-
-	isReverse_ = false;
-	//初期ステージ
 	Stage1Parameter();
 }
 
 //パラメータ
 void Enemy::Stage1Parameter() {
-	pos = { 0.0f,0.0f,600.0f };
+
+	isReverse_ = false;
+	//初期ステージ
+	pos = { 0.0f,0.0f,0.0f };
 	obj_->SetPosition(pos);
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
@@ -52,18 +49,13 @@ void Enemy::Stage1Parameter() {
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
 		bullet->Reset();
 	}
+	
+	
 }
 
 //リセット
 void Enemy::Reset() { Stage1Parameter(); }
 
-//エンディング用のポジション
-void Enemy::EndingPosition() {
-	worldTransform_.translation_ = { 10.0f, -10.0f, -10.0f };
-	//回転速度
-	const float kRotSpeed = -0.05f;
-	worldTransform_.rotation_ = { 0.0f, kRotSpeed, 0.0f };
-}
 //更新
 void Enemy::Update() {
 	
@@ -96,15 +88,36 @@ void Enemy::Update() {
 		case Enemy::Phase::Leave:
 			UpdateLeave();
 			break;
-		case Enemy::Phase::end:
-			EndingPosition();
-			break;
+		
 		}
 	}
 	//行列更新
-	worldTransform_.Update(worldTransform_);
+	Trans();
 }
 
+//転送
+void Enemy::Trans() {
+
+	XMMATRIX world;
+	//行列更新
+	world = XMMatrixIdentity();
+	XMMATRIX matWorld = XMMatrixIdentity();
+
+	XMMATRIX matScale = XMMatrixScaling(obj_->GetScale().x, obj_->GetScale().y, obj_->GetScale().z);
+
+	XMMATRIX matRot = XMMatrixRotationZ(obj_->GetRotation().z)
+		* XMMatrixRotationX(obj_->GetRotation().x) * XMMatrixRotationY(obj_->GetRotation().y);
+
+	XMMATRIX matTrans = XMMatrixTranslation(obj_->GetPosition().x,
+		obj_->GetPosition().y, obj_->GetPosition().z);
+
+	//合成
+	matWorld = matScale * matRot * matTrans;
+
+	world = matWorld;
+	obj_->SetWorld(world);
+
+}
 //弾発射
 void Enemy::Fire() {
 
@@ -112,85 +125,67 @@ void Enemy::Fire() {
 
 	//弾の速度
 	const float kBulletSpeed = -1.0f;
-	Vector3 velocity;
+	XMFLOAT3 velocity = {};
 
 	//自機のワールド座標を取得
 	player_->GetWorldPosition();
 	//敵のワールド座標を取得
 	GetWorldPosition();
 	//敵→自機の差分ベクトルを求める
-	velocity = player_->GetWorldPosition() -= GetWorldPosition();
+	velocity.x = player_->GetWorldPosition().x - GetWorldPosition().x;
+	velocity.y = player_->GetWorldPosition().y - GetWorldPosition().y;
+	velocity.z = player_->GetWorldPosition().z - GetWorldPosition().z;
 	// ベクトルの正規化
-	MyMathUtility::MyVector3Normalize(velocity);
+	float len;
+	len = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
+	if (len != 0)
+	{
+		velocity.x /= len;
+		velocity.y /= len;
+		velocity.z /= len;
+	}
+
 	// ベクトルの長さを速さに合わせる
 	velocity.z = kBulletSpeed;
 
+	//座標をコピー
+	XMFLOAT3 position = obj_->GetPosition();
+
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(modelBullet_, worldTransform_.translation_, velocity);
+	newBullet->Initialize(modelBullet_,objBullet_, position, velocity);
 
 	//弾を登録
 	enemyBullets_.push_back(std::move(newBullet));
 }
 
 //描画
-void Enemy::DrawStage1(const ViewProjection& viewProjection) {
+void Enemy::Draw() {
 	if (!isDead_) {
 		//モデルの描画
-		modelStage1_->Draw(worldTransform_, viewProjection);
+		obj_->Draw();
 
 		//弾描画
 		for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-			bullet->Draw(viewProjection);
+			bullet->Draw();
 		}
 	}
-	else {
-		//モデルの描画
-		modelDeadStage1_->Draw(worldTransform_, viewProjection);
-	}
+	
 }
 
-void Enemy::DrawStage2(const ViewProjection& viewProjection) {
-	if (!isDead_) {
-		//モデルの描画
-		modelStage2_->Draw(worldTransform_, viewProjection);
-
-		//弾描画
-		for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-			bullet->Draw(viewProjection);
-		}
-	}
-	else {
-		//モデルの描画
-		modelDeadStage2_->Draw(worldTransform_, viewProjection);
-	}
-}
-
-void Enemy::DrawStage3(const ViewProjection& viewProjection) {
-	if (!isDead_) {
-		//モデルの描画
-		modelStage3_->Draw(worldTransform_, viewProjection);
-
-		//弾描画
-		for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-			bullet->Draw(viewProjection);
-		}
-	}
-	else {
-		//モデルの描画
-		modelSaveStage3_->Draw(worldTransform_, viewProjection);
-	}
-}
 
 //状態変化用の更新関数
 //接近
 void Enemy::UpdateApproachStage1() {
 	//速度
-	Vector3 velocity;
+	XMFLOAT3 velocity;
 	//移動
 	velocity = { 0.0f, 0.0f, -0.1f };
-	worldTransform_.translation_ += velocity;
+	pos.x += velocity.x;
+	pos.y += velocity.y;
+	pos.z += velocity.z;
 
+	obj_->SetPosition(pos);
 	//発射タイマーカウントダウン
 	fireTimer--;
 	//指定時間に達した
@@ -201,71 +196,30 @@ void Enemy::UpdateApproachStage1() {
 		fireTimer = kFireIntervalStage1;
 	}
 
-	//指定の位置に到達したら離脱
-	if (worldTransform_.translation_.z < 50.0f) {
+	//指定の位置に到達したら攻撃
+	if (pos.z < 30.0f) {
 		phase_ = Phase::AttackStage1;
 	}
 }
-void Enemy::UpdateApproachStage2() {
-	//速度
-	Vector3 velocity;
-	//移動
-	velocity = { 0.0f, 0.0f, -0.3f };
-	worldTransform_.translation_ += velocity;
-
-	//発射タイマーカウントダウン
-	fireTimer--;
-	//指定時間に達した
-	if (fireTimer <= 0) {
-		//弾発射
-		Fire();
-		//発射タイマー初期化
-		fireTimer = kFireIntervalStage2;
-	}
-	if (worldTransform_.translation_.z < 80.0f) {
-		phase_ = Phase::AttackStage2;
-	}
-}
-void Enemy::UpdateApproachStage3() {
-	//速度
-	Vector3 velocity;
-	//移動
-	velocity = { 0.0f, 0.0f, -0.1f };
-	worldTransform_.translation_ += velocity;
-
-	//発射タイマーカウントダウン
-	fireTimer--;
-	//指定時間に達した
-	if (fireTimer <= 0) {
-		//弾発射
-		Fire();
-		//発射タイマー初期化
-		fireTimer = kFireIntervalStage3;
-	}
-	if (worldTransform_.translation_.z < 70.0f) {
-		phase_ = Phase::AttackStage3;
-	}
-}
-
 //攻撃
 void Enemy::UpdateAttackStage1() {
 
 	//速度
-	Vector3 velocity;
+	XMFLOAT3 velocity;
 	//移動
 	velocity = { 0.1f, 0.0f, 0.0f };
 	if (isReverse_) {
-		worldTransform_.translation_ -= velocity;
+		pos.x -= velocity.x;
 	}
 	else {
-		worldTransform_.translation_ += velocity;
+		pos.x += velocity.x;
 	}
 
 	//指定の位置に到達したら反転
-	if (worldTransform_.translation_.x >= 30.0f) {
+	if (pos.x >= 30.0f) {
 		isReverse_ = true;
 	}
-	if (worldTransform_.translation_.x <= -30.0f) {
+	if (pos.x <= -30.0f) {
 		isReverse_ = false;
 	}
 
@@ -286,133 +240,31 @@ void Enemy::UpdateAttackStage1() {
 	}
 }
 
-void Enemy::UpdateAttackStage2() {
-
-	//速度
-	Vector3 velocity;
-	//反転速度
-	Vector3 velocityReverse;
-
-	//移動
-	velocity = { 0.2f, 0.2f, -0.03f };
-	velocityReverse = { -0.2f, -0.2f, -0.03f };
-	if (isReverse_) {
-		worldTransform_.translation_ += velocityReverse;
-	}
-	else {
-		worldTransform_.translation_ += velocity;
-	}
-
-	//指定の位置に到達したら反転
-	if (worldTransform_.translation_.x >= 20.0f || worldTransform_.translation_.y >= 10.0f) {
-		isReverse_ = true;
-	}
-	if (worldTransform_.translation_.x <= -20.0f || worldTransform_.translation_.y <= -10.0f) {
-		isReverse_ = false;
-	}
-
-	//発射タイマーカウントダウン
-	fireTimer--;
-	//指定時間に達した
-	if (fireTimer <= 0) {
-		//弾発射
-		Fire();
-		//発射タイマー初期化
-		fireTimer = kFireIntervalStage2;
-	}
-	//死んだら
-	if (life_ <= 0) {
-		phase_ = Phase::Leave;
-		life_ = 0;
-		isDead_ = true;
-	}
-}
-
-void Enemy::UpdateAttackStage3() {
-
-	//速度
-	Vector3 velocity;
-	//反転速度
-	Vector3 velocityReverse;
-
-	//移動
-	velocity = { 0.2f, 0.2f, -0.02f };
-	velocityReverse = { 0.2f, -0.2f, -0.02f };
-
-	if (isReverse_) {
-		worldTransform_.translation_ += velocityReverse;
-	}
-	else {
-		worldTransform_.translation_ += velocity;
-	}
-
-	//指定の位置に到達したら反転
-	if (worldTransform_.translation_.y >= 18.0f) {
-		isReverse_ = true;
-	}
-	if (worldTransform_.translation_.y <= -18.0f) {
-		isReverse_ = false;
-	}
-
-	if (worldTransform_.translation_.x >= 30.0f) {
-		worldTransform_.translation_.x = -30.0f;
-	}
-
-	//発射タイマーカウントダウン
-	fireTimer--;
-	//指定時間に達した
-	if (fireTimer <= 0) {
-		//弾発射
-		Fire();
-		//発射タイマー初期化
-		fireTimer = kFireIntervalStage3;
-	}
-	//死んだら
-	if (life_ <= 0) {
-		phase_ = Phase::SaveStage3;
-		life_ = 0;
-		isDead_ = true;
-	}
-	if (worldTransform_.translation_.z <= -10.0f) {
-		phase_ = Phase::end;
-	}
-}
 //離脱
 void Enemy::UpdateLeave() {
 	//速度
-	Vector3 velocity;
+	XMFLOAT3 velocity;
 
 	//移動
 	velocity = { 0.0f, 0.0f, 0.03f };
-	worldTransform_.translation_ += velocity;
+	pos.x += velocity.x;
+	pos.y += velocity.y;
+	pos.z += velocity.z;
 }
 
-//ステージ3限定離脱
-void Enemy::UpdateSaveStage3() {
-	//速度
-	Vector3 velocity;
 
-	//移動
-	velocity = { 0.0f, 0.0f, -0.05f };
-	worldTransform_.translation_ += velocity;
-	if (input_->TriggerKey(DIK_SPACE)) {
-		phase_ = Phase::end;
-	}
-}
 //ワールド座標を取得
-Vector3 Enemy::GetWorldPosition() {
+XMFLOAT3 Enemy::GetWorldPosition() {
 
 	//ワールド座標を取得
-	Vector3 worldPos;
+	XMFLOAT3 worldPos;
 
 	//ワールド行列の平行移動成分を取得
-	worldPos.x = worldTransform_.translation_.x;
-	worldPos.y = worldTransform_.translation_.y;
-	worldPos.z = worldTransform_.translation_.z;
+	worldPos.x = obj_->GetPosition().x;
+	worldPos.y = obj_->GetPosition().y;
+	worldPos.z = obj_->GetPosition().z;
 
 	return worldPos;
 }
 //衝突を検出したら呼び出されるコールバック関数
-void Enemy::OnCollisionPlayer() { life_ -= 2; }
-
-void Enemy::OnCollisionOption() { life_--; }
+void Enemy::OnCollisionPlayer() { life_--; }

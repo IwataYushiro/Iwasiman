@@ -113,6 +113,10 @@ private: // 静的メンバ変数
 	// 上方向ベクトル
 	static XMFLOAT3 up;
 	
+	static ComPtr<ID3DBlob> rootSigBlob;
+	static ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
+	static ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
+	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 private:// 静的メンバ関数
 	
 	/// <summary>
@@ -164,7 +168,7 @@ private: // メンバ変数
 	XMMATRIX matWorld;
 	// 親オブジェクト
 	Object3d* parent = nullptr;
-
+	
 public: //アクセッサ置き場
 	//モデル
 	void SetModel(Model* model) { this->model_ = model; }

@@ -30,14 +30,11 @@ public:
 	//プレイヤーの移動処理
 	void Move();
 
-	//プレイヤーの旋回処理
-	void Rotate();
-
 	//プレイヤーの攻撃処理
 	void Attack();
 
-	//移動処理制限
-	void MoveLimit();
+	//転送
+	void Trans();
 
 	//ワールド座標を取得
 	XMFLOAT3 GetWorldPosition();
@@ -63,8 +60,6 @@ private:
 	Object3d* obj_ = nullptr;
 	Object3d* objBullet_ = nullptr;
 
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
 	//インプット
 	Input* input_ = nullptr;
 	

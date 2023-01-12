@@ -4,9 +4,12 @@
 using namespace DirectX;
 
 Player::~Player() {
-	//オプションの解放
+	//モデルの解放
 	delete model_;
 	delete obj_;
+
+	delete modelBullet_;
+	delete objBullet_;
 }
 
 void Player::Initialize(Model* model, Object3d* obj, Input* input) {
@@ -26,13 +29,13 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input) {
 	this->input_ = input;
 
 	//ワールド変換の初期化
-	pos = { 0.0f,0.0f,600.0f };
+	pos = { 0.0f,0.0f,-30.0f };
 	obj_->SetPosition(pos);
 	
 }
 
 void Player::Reset() {
-	pos = { 0.0f, 0.0f, 600.0f };
+	pos = { 0.0f, 0.0f, -30.0f };
 	angle = { 0.0f,0.0f,0.0f };
 
 	life_ = 5;
@@ -50,8 +53,6 @@ void Player::Update() {
 
 		//移動処理
 		Move();
-		//旋回処理
-		Rotate();
 		//攻撃処理
 		Attack();
 
@@ -61,7 +62,7 @@ void Player::Update() {
 		}
 
 		//移動制限
-		MoveLimit();
+		Trans();
 	}
 
 	obj_->Update();
@@ -83,7 +84,7 @@ void Player::Draw() {
 void Player::Move() {
 
 	XMFLOAT3 move = obj_->GetPosition();
-	float moveSpeed = 3.0f;
+	float moveSpeed = 1.0f;
 
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
@@ -102,22 +103,6 @@ void Player::Move() {
 
 	obj_->SetPosition(move);
 	
-}
-
-//旋回処理
-void Player::Rotate() {
-
-	angle = obj_->GetRotation();
-	float angleSpeed = 3.0f;
-
-	if (input_->PushKey(DIK_Q)) {
-		angle.y -= angleSpeed;
-	}
-	if (input_->PushKey(DIK_E)) {
-		angle.y += angleSpeed;
-	}
-
-	obj_->SetRotation(angle);
 }
 
 //攻撃処理
@@ -150,7 +135,7 @@ void Player::Attack() {
 	}
 }
 
-void Player::MoveLimit() {
+void Player::Trans() {
 	
 	XMMATRIX world;
 	//行列更新

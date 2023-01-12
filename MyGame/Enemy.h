@@ -1,5 +1,5 @@
 #pragma once
-#include "Input.h"
+#include "EnemyBullet.h"
 #include "Model.h"
 #include "Object3d.h"
 #include <DirectXMath.h>
@@ -8,8 +8,6 @@
 
 //自機クラスの前方宣言
 class Player;
-//ゲームシーンも
-class MyGame;
 //敵
 class Enemy {
 private:
@@ -24,21 +22,23 @@ public:
 	//弾発射間隔
 	static const int kFireIntervalStage1 = 40;
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input);
+	void Initialize(Model* model, Object3d* obj);
 
 	//リセット処理
 	void Reset();
-	void EndingPosition();
+	
 	//パラメータ
 	void Stage1Parameter();
 	//更新
 	void Update();
+	//転送　
+	void Trans();
 	//弾発射
 	void Fire();
 	//ワールド座標を取得
-	Vector3 GetWorldPosition();
+	XMFLOAT3 GetWorldPosition();
 	//描画
-	void DrawStage1();
+	void Draw();
 
 	//状態変化用の更新関数
 	//接近
@@ -58,17 +58,12 @@ private:
 	
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
-	//インプット
-	Input* input_ = nullptr;
-	
 	//モデル
 	Model* model_ = nullptr;	
 	Model* modelBullet_ = nullptr;
 
 	Object3d* obj_ = nullptr;
 	Object3d* objBullet_ = nullptr;
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
 
 	//行動フェーズ
 	enum class Phase {
@@ -78,8 +73,7 @@ private:
 
 		//全体
 		Leave, //離脱
-		//エンディング
-		end,
+		
 	};
 
 	//フェーズ
@@ -93,8 +87,6 @@ private:
 
 	//自機
 	Player* player_ = nullptr;
-	//ゲームシーン
-	MyGame* gameScene_ = nullptr;
 
 	//死亡フラグとライフ
 	bool isDead_;

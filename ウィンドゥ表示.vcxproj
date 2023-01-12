@@ -167,6 +167,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\MyMath.cpp" />
     <ClCompile Include="MyGame\Enemy.cpp" />
+    <ClCompile Include="MyGame\EnemyBullet.cpp" />
     <ClCompile Include="MyGame\Framework.cpp" />
     <ClCompile Include="MyGame\MyGame.cpp" />
     <ClCompile Include="MyGame\Player.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Math\MyMath.h" />
     <ClInclude Include="MyGame\Enemy.h" />
+    <ClInclude Include="MyGame\EnemyBullet.h" />
     <ClInclude Include="MyGame\Framework.h" />
     <ClInclude Include="MyGame\MyGame.h" />
     <ClInclude Include="MyGame\Player.h" />
