@@ -32,10 +32,16 @@ public:
 	//èIóπ
 	void Finalize() override;
 
+	//ìñÇΩÇËîªíË
+	void ChackAllCollisions();
+
 private:
 	
 	//Sprite
-	Sprite* sprite_ = new Sprite();
+	Sprite* spriteTitle_ = new Sprite();
+	Sprite* spriteHowToPlay_ = new Sprite();
+	Sprite* spriteGameClear_ = new Sprite();
+	Sprite* spriteGameOver_ = new Sprite();
 	//Audio
 	Audio* audio_ = new Audio();
 

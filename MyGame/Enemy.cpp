@@ -49,8 +49,8 @@ void Enemy::Stage1Parameter() {
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
 		bullet->Reset();
 	}
-	
-	
+
+
 }
 
 //リセット
@@ -58,39 +58,38 @@ void Enemy::Reset() { Stage1Parameter(); }
 
 //更新
 void Enemy::Update() {
-	
-	if (!isDead_) {
-		//死亡フラグの立った弾を削除
-		enemyBullets_.remove_if(
-			[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
 
-		//座標を移動させる
-		switch (phase_) {
-		case Enemy::Phase::ApproachStage1:
 
-			UpdateApproachStage1();
-			break;
+	//死亡フラグの立った弾を削除
+	enemyBullets_.remove_if(
+		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
 
-		case Enemy::Phase::AttackStage1:
+	//座標を移動させる
+	switch (phase_) {
+	case Enemy::Phase::ApproachStage1:
 
-			UpdateAttackStage1();
-			
-			break;
-		}
-		//弾更新
-		for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-			bullet->Update();
-		}
+		UpdateApproachStage1();
+		break;
+
+	case Enemy::Phase::AttackStage1:
+
+		UpdateAttackStage1();
+
+		break;
 	}
-	else {
-		//座標を移動させる
-		switch (phase_) {
-		case Enemy::Phase::Leave:
-			UpdateLeave();
-			break;
-		
-		}
+	//弾更新
+	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
+		bullet->Update();
 	}
+
+	//座標を移動させる
+	switch (phase_) {
+	case Enemy::Phase::Leave:
+		UpdateLeave();
+		break;
+
+	}
+
 	//行列更新
 	Trans();
 
@@ -156,7 +155,7 @@ void Enemy::Fire() {
 
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(modelBullet_,objBullet_, position, velocity);
+	newBullet->Initialize(modelBullet_, objBullet_, position, velocity);
 
 	//弾を登録
 	enemyBullets_.push_back(std::move(newBullet));
@@ -173,7 +172,7 @@ void Enemy::Draw() {
 			bullet->Draw();
 		}
 	}
-	
+
 }
 
 
@@ -241,9 +240,12 @@ void Enemy::UpdateAttackStage1() {
 	}
 	//死んだら
 	if (life_ <= 0) {
-		phase_ = Phase::Leave;
-		life_ = 0;
 		isDead_ = true;
+		life_ = 0;
+	}
+	if (isDead_)
+	{
+		phase_ = Phase::Leave;
 	}
 }
 

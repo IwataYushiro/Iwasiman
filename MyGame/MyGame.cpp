@@ -5,15 +5,14 @@ using namespace DirectX;
 void MyGame::Initialize()
 {
 	Framework::Initialize();
-	//Sprite
-	sprite_ = new Sprite();
+
 	//Audio
 	audio_ = new Audio();
 	//imgui
 	imguiManager_ = new ImGuiManager();
 
-Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
-	
+	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
+
 	//プレイヤー関係
 	player_ = new Player();
 	//敵関係
@@ -35,12 +34,24 @@ Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp
 	audio_->SoundPlayWave(audio_->GetXAudio2(), sound);
 
 	//ここでテクスチャを指定しよう
-	UINT texindex = 00;
-	sprCommon_->LoadTexture(texindex, "texture.png");
-	sprite_->Initialize(sprCommon_, texindex);
+	UINT titleTex = 00;
+	sprCommon_->LoadTexture(titleTex, "texture/title.png");
+	spriteTitle_->Initialize(sprCommon_, titleTex);
+
+	UINT howtoplayTex = 01;
+	sprCommon_->LoadTexture(howtoplayTex, "texture/howtoplay.png");
+	spriteHowToPlay_->Initialize(sprCommon_, howtoplayTex);
+
+	UINT gameClearTex = 02;
+	sprCommon_->LoadTexture(gameClearTex, "texture/gameclear.png");
+	spriteGameClear_->Initialize(sprCommon_, gameClearTex);
+
+	UINT gameOverTex = 03;
+	sprCommon_->LoadTexture(gameOverTex, "texture/gameover.png");
+	spriteGameOver_->Initialize(sprCommon_, gameOverTex);
 
 	//3Dオブジェクト関係
-	
+
 	//3Dオブジェクト生成
 	object3DPlayer_ = Object3d::Create();
 	object3DEnemy_ = Object3d::Create();
@@ -48,11 +59,11 @@ Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp
 	//OBJファイルからモデルデータを読み込む
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
-	
+
 	//オブジェクトにモデル紐付ける
 	object3DPlayer_->SetModel(modelPlayer_);
 	object3DEnemy_->SetModel(modelEnemy_);
-	
+
 	//ポジション
 	player_->Initialize(modelPlayer_, object3DPlayer_, input_);
 
@@ -69,17 +80,75 @@ Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp
 
 void MyGame::Update()
 {
-	
+
 	// DirectX毎フレーム処理　ここから
 	// 更新処理ここから
 	Framework::Update();
 
-	//スプライト呼び出し例
-	sprite_->Update();
+	switch (scene_)
+	{
+	case title:
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			player_->Reset();
+			enemy_->Reset();
+			scene_ = howtoplay;
 
-	//モデル呼び出し例
-	player_->Update();
-	enemy_->Update();
+			break;
+		}
+		spriteTitle_->Update();
+		break;
+
+	case howtoplay:
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			scene_ = stage;
+			break;
+		}
+		spriteHowToPlay_->Update();
+		break;
+
+	case stage:
+
+		//モデル呼び出し例
+		player_->Update();
+		enemy_->Update();
+
+		ChackAllCollisions();
+
+		if (player_->IsDead())
+		{
+			scene_ = gameover;
+			break;
+		}
+		if (enemy_->IsDead())
+		{
+			scene_ = clear;
+			break;
+		}
+		break;
+
+	case clear:
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			scene_ = title;
+			break;
+		}
+		spriteGameClear_->Update();
+
+		break;
+	case gameover:
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			scene_ = title;
+			break;
+		}
+		spriteGameOver_->Update();
+
+		break;
+
+
+	}
 
 	//imgui
 	imguiManager_->Update();
@@ -91,20 +160,64 @@ void MyGame::Draw()
 	//描画前処理
 	dxCommon_->PreDraw();
 
-	//背景スプライト
+
 	//スプライト描画前処理
 	sprCommon_->PreDraw();
-	//スプライト描画
-	//sprite_->Draw();
+
+	//背景スプライト
+	switch (scene_)
+	{
+	case title:
+		//スプライト描画
+		spriteTitle_->Draw();
+		break;
+	
+	case howtoplay:
+		spriteHowToPlay_->Draw();
+		break;
+	
+	case stage:
+
+		break;
+	
+	case clear:
+		spriteGameClear_->Draw();
+		break;
+
+	case gameover:
+		spriteGameOver_->Draw();
+		break;
+
+
+	}
 
 	//モデル
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
-	
+
 	//モデル描画
-	player_->Draw();
+	switch (scene_)
+	{
+	case title:
+
+		break;
+	case howtoplay:
+
+		break;
+	case stage:
+player_->Draw();
 	enemy_->Draw();
 
+		break;
+	case clear:
+
+		break;
+	case gameover:
+
+		break;
+
+	}
+	
 	//モデル描画後処理
 	Object3d::PostDraw();
 	//前景スプライト
@@ -128,22 +241,101 @@ void MyGame::Finalize()
 	delete audio_;
 
 	//スプライト
-	delete sprite_;
+	delete spriteTitle_;
+	delete spriteHowToPlay_;
+	delete spriteGameClear_;
+	delete spriteGameOver_;
 
 	//モデル
 	//3Dオブジェクト
 	delete object3DPlayer_;
 	delete object3DEnemy_;
-	
+
 	//3Dモデル
 	delete modelPlayer_;
 	delete modelEnemy_;
-	
+
 	//基盤系
 	delete player_;
 	delete enemy_;
 	delete imguiManager_;
-	
+
 
 	Framework::Finalize();
+}
+
+//衝突判定と応答
+void MyGame::ChackAllCollisions() {
+
+	//判定対象A,Bの座標
+	XMFLOAT3 posA, posB;
+	// A,Bの座標の距離用
+	XMFLOAT3 posAB;
+	//判定対象A,Bの半径
+	float radiusA;
+	float radiusB;
+	float radiiusAB;
+
+	//自機弾リストを取得
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
+	//敵弾リストを取得
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetEnemyBullets();
+
+#pragma region 自機と敵弾の当たり判定
+	//それぞれの半径
+	radiusA = 1.0f;
+	radiusB = 1.0f;
+
+	//自機の座標
+	posA = player_->GetWorldPosition();
+
+	//自機と全ての敵弾の当たり判定
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+		//敵弾の座標
+		posB = bullet->GetWorldPosition();
+		//座標A,Bの距離を求める
+		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
+		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
+		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
+		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+
+		//球と球の交差判定
+		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+			//自キャラの衝突時コールバック関数を呼び出す
+			player_->OnCollision();
+			//敵弾の衝突時コールバック関数を呼び出す
+			bullet->OnCollision();
+		}
+	}
+
+#pragma endregion
+
+#pragma region 自弾と敵の当たり判定
+	//それぞれの半径
+	radiusA = 5.0f;
+	radiusB = 1.0f;
+
+	//敵の座標
+	posA = enemy_->GetWorldPosition();
+
+	//敵と全ての弾の当たり判定
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+		//弾の座標
+		posB = bullet->GetWorldPosition();
+		//座標A,Bの距離を求める
+		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
+		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
+		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
+		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+
+		//球と球の交差判定
+		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+			//敵キャラの衝突時コールバック関数を呼び出す
+			enemy_->OnCollisionPlayer();
+			//自機弾の衝突時コールバック関数を呼び出す
+			bullet->OnCollision();
+		}
+	}
+#pragma endregion
+
 }

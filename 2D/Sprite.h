@@ -34,7 +34,7 @@ private://構造体類
 	};
 
 	//アンカーポイント
-	XMFLOAT2 anchorPoint_ = { 0.5f,0.5f };
+	XMFLOAT2 anchorPoint_ = { 0.0f,0.0f };
 	//表示サイズ
 	XMFLOAT2 size_ = { 100.0f,100.0f };
 	
