@@ -1,5 +1,4 @@
 #include "Player.h"
-#include <DirectXMath.h>
 #include <cassert>
 
 using namespace DirectX;

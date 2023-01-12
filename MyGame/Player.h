@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Object3d.h"
 #include "PlayerBullet.h"
+#include <DirectXMath.h>
 #include <list>
 #include <memory>
 
