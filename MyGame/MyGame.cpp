@@ -12,6 +12,9 @@ void MyGame::Initialize()
 	//imgui
 	imguiManager_ = new ImGuiManager();
 
+	//プレイヤー関係
+	player_ = new Player();
+
 #pragma region Windows初期化
 #pragma endregion
 	// DirectX初期化処理　ここから
@@ -35,19 +38,16 @@ void MyGame::Initialize()
 	//3Dオブジェクト関係
 	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
 	
-	//OBJファイルからモデルデータを読み込む
-	
-	modelSkyDome_ = Model::LoadFromOBJ("enemybullet");
-	modelPlayer_ = Model::LoadFromOBJ("player");
-	modelEnemy_ = Model::LoadFromOBJ("enemy1");
-	
 	//3Dオブジェクト生成
-	object3DSkyDome_ = Object3d::Create();
 	object3DPlayer_ = Object3d::Create();
 	object3DEnemy_ = Object3d::Create();
 
+	//OBJファイルからモデルデータを読み込む
+	modelPlayer_ = Model::LoadFromOBJ("player");
+	modelEnemy_ = Model::LoadFromOBJ("enemy1");
+	
+	
 	//オブジェクトにモデル紐付ける
-	object3DSkyDome_->SetModel(modelSkyDome_);
 	object3DPlayer_->SetModel(modelPlayer_);
 	object3DEnemy_->SetModel(modelEnemy_);
 	
@@ -56,12 +56,16 @@ void MyGame::Initialize()
 
 	object3DEnemy_->SetPosition({ 0.0f,0.0f,1000.0f });
 	
+	//シーン
+	scene_ = title;
+
 #pragma endregion
 	// 描画初期化処理　ここまで
 }
 
 void MyGame::Update()
 {
+	
 	// DirectX毎フレーム処理　ここから
 	// 更新処理ここから
 	Framework::Update();
@@ -70,16 +74,16 @@ void MyGame::Update()
 	sprite_->Update();
 
 	//モデル呼び出し例
+	
 	XMFLOAT3 enemyPos = object3DEnemy_->GetPosition();
 
 	enemyPos.z -= 0.2f;
 
 	object3DEnemy_->SetPosition(enemyPos);
 
-	object3DSkyDome_->Update();
-
 	object3DEnemy_->Update();
-	
+
+	player_->Update();
 
 	//imgui
 	imguiManager_->Update();
@@ -102,7 +106,6 @@ void MyGame::Draw()
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	
 	//モデル描画
-	object3DSkyDome_->Draw();
 	player_->Draw();
 	object3DEnemy_->Draw();
 
@@ -142,8 +145,9 @@ void MyGame::Finalize()
 	delete modelSkyDome_;
 
 	//基盤系
-	delete imguiManager_;
 	delete player_;
+	delete imguiManager_;
+	
 
 	Framework::Finalize();
 }

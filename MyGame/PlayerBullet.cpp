@@ -27,7 +27,6 @@ void PlayerBullet::Update() {
 	//行列更新
 	XMMATRIX world;
 
-	//行列更新
 	world = XMMatrixIdentity();
 	XMMATRIX matWorld = XMMatrixIdentity();
 
@@ -40,10 +39,9 @@ void PlayerBullet::Update() {
 		obj_->GetPosition().y, obj_->GetPosition().z);
 
 	//合成
-	matWorld *= matScale *= matRot *= matTrans;
+	matWorld = matScale * matRot * matTrans;
 
-	world = matWorld;
-	obj_->SetWorld(world);
+	obj_->SetWorld(matWorld);
 	obj_->Update();
 
 	//時間経過で死亡

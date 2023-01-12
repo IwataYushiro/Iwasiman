@@ -76,18 +76,18 @@ void Player::Move() {
 	float moveSpeed = 3.0f;
 
 	//キーボード入力による移動処理
-	XMMATRIX matTrans =XMMatrixIdentity();
+	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->PushKey(DIK_A)) {
-		move.x = -moveSpeed;
+		move.x -= moveSpeed;
 	}
 	if (input_->PushKey(DIK_D)) {
-		move.x = moveSpeed;
+		move.x += moveSpeed;
 	}
 	if (input_->PushKey(DIK_W)) {
-		move.y = moveSpeed;
+		move.y += moveSpeed;
 	}
 	if (input_->PushKey(DIK_S)) {
-		move.y = -moveSpeed;
+		move.y -= moveSpeed;
 	}
 
 	obj_->SetPosition(move);
@@ -118,17 +118,18 @@ void Player::Attack() {
 		const float kBulletSpeed = 10.0f;
 		XMFLOAT3 velocity(0.0f, 0.0f, kBulletSpeed);
 
-		/*XMMATRIX matVec = XMMatrixIdentity();
-		matVec.r[0] = velocity.x;
-		matVec.r[1] = velocity.y;
-		matVec.r[2] = velocity.z;
-		matVec.r[3] = 0.0f;
+		XMMATRIX matVec = XMMatrixIdentity();
+		matVec.r[0].m128_f32[0] = velocity.x;
+		matVec.r[0].m128_f32[1] = velocity.y;
+		matVec.r[0].m128_f32[2] = velocity.z;
+		matVec.r[0].m128_f32[3] = 0.0f;
 		
 		matVec *= obj_->GetWorld();
+		obj_->SetWorld(matVec);
 		
-		vector.x = matVec.m[0][0];
-		vector.y = matVec.m[0][1];
-		vector.z = matVec.m[0][2];*/
+		velocity.x = matVec.r[0].m128_f32[0];
+		velocity.y = matVec.r[0].m128_f32[1];
+		velocity.z = matVec.r[0].m128_f32[2];
 		
 		//自キャラの座標をコピー
 		XMFLOAT3 position = obj_->GetPosition();
