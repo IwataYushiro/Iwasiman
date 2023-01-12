@@ -12,6 +12,8 @@ void MyGame::Initialize()
 	//imgui
 	imguiManager_ = new ImGuiManager();
 
+Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
+	
 	//プレイヤー関係
 	player_ = new Player();
 
@@ -36,7 +38,6 @@ void MyGame::Initialize()
 	sprite_->Initialize(sprCommon_, texindex);
 
 	//3Dオブジェクト関係
-	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
 	
 	//3Dオブジェクト生成
 	object3DPlayer_ = Object3d::Create();
@@ -75,12 +76,6 @@ void MyGame::Update()
 
 	//モデル呼び出し例
 	
-	XMFLOAT3 enemyPos = object3DEnemy_->GetPosition();
-
-	enemyPos.z -= 0.2f;
-
-	object3DEnemy_->SetPosition(enemyPos);
-
 	object3DEnemy_->Update();
 
 	player_->Update();
@@ -138,12 +133,11 @@ void MyGame::Finalize()
 	//3Dオブジェクト
 	delete object3DPlayer_;
 	delete object3DEnemy_;
-	delete object3DSkyDome_;
+	
 	//3Dモデル
 	delete modelPlayer_;
 	delete modelEnemy_;
-	delete modelSkyDome_;
-
+	
 	//基盤系
 	delete player_;
 	delete imguiManager_;

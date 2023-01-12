@@ -69,6 +69,8 @@ private:
 	
 	//ポジション
 	XMFLOAT3 pos;
+	//アングル
+	XMFLOAT3 angle;
 
 	//死亡フラグとライフ
 	bool isDead_ = false;

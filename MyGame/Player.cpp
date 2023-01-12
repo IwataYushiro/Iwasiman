@@ -32,6 +32,17 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input) {
 	
 }
 
+void Player::Reset() {
+	pos = { 0.0f, 0.0f, 600.0f };
+	angle = { 0.0f,0.0f,0.0f };
+
+	life_ = 5;
+	isDead_ = false;
+	//弾リセット
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		bullet->Reset();
+	}
+}
 void Player::Update() {
 
 	if (!isDead_) {
@@ -97,8 +108,8 @@ void Player::Move() {
 //旋回処理
 void Player::Rotate() {
 
-	XMFLOAT3 angle = obj_->GetRotation();
-	float angleSpeed = 0.1f;
+	angle = obj_->GetRotation();
+	float angleSpeed = 3.0f;
 
 	if (input_->PushKey(DIK_Q)) {
 		angle.y -= angleSpeed;
@@ -113,9 +124,9 @@ void Player::Rotate() {
 //攻撃処理
 void Player::Attack() {
 
-	if (input_->PushKey(DIK_SPACE)) {
+	if (input_->TriggerKey(DIK_SPACE)) {
 		//弾の速度
-		const float kBulletSpeed = 10.0f;
+		const float kBulletSpeed = 1.0f;
 		XMFLOAT3 velocity(0.0f, 0.0f, kBulletSpeed);
 
 		XMMATRIX matVec = XMMatrixIdentity();
@@ -125,11 +136,6 @@ void Player::Attack() {
 		matVec.r[0].m128_f32[3] = 0.0f;
 		
 		matVec *= obj_->GetWorld();
-		obj_->SetWorld(matVec);
-		
-		velocity.x = matVec.r[0].m128_f32[0];
-		velocity.y = matVec.r[0].m128_f32[1];
-		velocity.z = matVec.r[0].m128_f32[2];
 		
 		//自キャラの座標をコピー
 		XMFLOAT3 position = obj_->GetPosition();
@@ -161,7 +167,7 @@ void Player::MoveLimit() {
 		obj_->GetPosition().y, obj_->GetPosition().z);
 
 	//合成
-	matWorld *= matScale *= matRot *= matTrans;
+	matWorld = matScale * matRot * matTrans;
 
 	world = matWorld;
 	obj_->SetWorld(world);

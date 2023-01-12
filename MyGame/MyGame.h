@@ -50,12 +50,12 @@ private:
 	
 	Model* modelEnemy_ = nullptr;
 	//天球
-	Model* modelSkyDome_ = nullptr;
+	//Model* modelSkyDome_ = nullptr;
 
 	//3Dオブジェクト
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
-	Object3d* object3DSkyDome_ = nullptr;
+	//Object3d* object3DSkyDome_ = nullptr;
 
 	//シーン
 	size_t scene_;

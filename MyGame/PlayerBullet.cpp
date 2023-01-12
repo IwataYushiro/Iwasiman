@@ -21,9 +21,12 @@ void PlayerBullet::Reset() { isDead_ = true; }
 void PlayerBullet::Update() {
 	//座標を移動させる
 	XMFLOAT3 pos = obj_->GetPosition();
+
 	pos.x += velocity_.x;
 	pos.y += velocity_.y;
 	pos.z += velocity_.z;
+
+	obj_->SetPosition(pos);
 	//行列更新
 	XMMATRIX world;
 
