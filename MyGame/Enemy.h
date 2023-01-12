@@ -8,6 +8,7 @@
 
 //自機クラスの前方宣言
 class Player;
+
 //敵
 class Enemy {
 private:
@@ -80,6 +81,8 @@ private:
 	Phase phase_;
 	//弾発射タイマー
 	int32_t fireTimer = 0;
+	//スケール
+	XMFLOAT3 scale;
 	//ポジション
 	XMFLOAT3 pos;
 	//アングル

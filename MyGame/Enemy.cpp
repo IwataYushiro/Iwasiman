@@ -6,8 +6,6 @@ using namespace DirectX;
 
 Enemy::~Enemy() {
 	//モデルの解放
-	delete model_;
-	delete obj_;
 
 	delete modelBullet_;
 	delete objBullet_;
@@ -33,8 +31,10 @@ void Enemy::Stage1Parameter() {
 
 	isReverse_ = false;
 	//初期ステージ
-	pos = { 0.0f,0.0f,0.0f };
+	scale = { 3.0f,3.0f,3.0f };
+	pos = { 0.0f,0.0f,100.0f };
 	obj_->SetPosition(pos);
+	obj_->SetScale(scale);
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
 
@@ -74,12 +74,12 @@ void Enemy::Update() {
 		case Enemy::Phase::AttackStage1:
 
 			UpdateAttackStage1();
+			
 			break;
-
-			//弾更新
-			for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-				bullet->Update();
-			}
+		}
+		//弾更新
+		for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
+			bullet->Update();
 		}
 	}
 	else {
@@ -93,6 +93,8 @@ void Enemy::Update() {
 	}
 	//行列更新
 	Trans();
+
+	obj_->Update();
 }
 
 //転送
@@ -124,7 +126,7 @@ void Enemy::Fire() {
 	assert(player_);
 
 	//弾の速度
-	const float kBulletSpeed = -1.0f;
+	const float kBulletSpeed = 0.5f;
 	XMFLOAT3 velocity = {};
 
 	//自機のワールド座標を取得
@@ -146,7 +148,8 @@ void Enemy::Fire() {
 	}
 
 	// ベクトルの長さを速さに合わせる
-	velocity.z = kBulletSpeed;
+
+	velocity.z -= kBulletSpeed;
 
 	//座標をコピー
 	XMFLOAT3 position = obj_->GetPosition();
@@ -180,7 +183,7 @@ void Enemy::UpdateApproachStage1() {
 	//速度
 	XMFLOAT3 velocity;
 	//移動
-	velocity = { 0.0f, 0.0f, -0.1f };
+	velocity = { 0.0f, 0.0f, -0.3f };
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;
@@ -207,14 +210,18 @@ void Enemy::UpdateAttackStage1() {
 	//速度
 	XMFLOAT3 velocity;
 	//移動
-	velocity = { 0.1f, 0.0f, 0.0f };
+	velocity = { 0.3f, 0.0f, 0.0f };
 	if (isReverse_) {
 		pos.x -= velocity.x;
+		pos.y -= velocity.y;
+		pos.z -= velocity.z;
 	}
 	else {
 		pos.x += velocity.x;
+		pos.y += velocity.y;
+		pos.z += velocity.z;
 	}
-
+	obj_->SetPosition(pos);
 	//指定の位置に到達したら反転
 	if (pos.x >= 30.0f) {
 		isReverse_ = true;
@@ -250,6 +257,7 @@ void Enemy::UpdateLeave() {
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;
+	obj_->SetPosition(pos);
 }
 
 

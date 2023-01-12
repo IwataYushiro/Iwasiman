@@ -56,9 +56,9 @@ Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp
 	//ポジション
 	player_->Initialize(modelPlayer_, object3DPlayer_, input_);
 
-	//enemy_->Initialize(modelEnemy_, object3DEnemy_);
+	enemy_->Initialize(modelEnemy_, object3DEnemy_);
 	//敵に自機のアドレスを渡す
-	//enemy_->SetPlayer(player_);
+	enemy_->SetPlayer(player_);
 
 	//シーン
 	scene_ = title;
@@ -79,7 +79,7 @@ void MyGame::Update()
 
 	//モデル呼び出し例
 	player_->Update();
-	//enemy_->Update();
+	enemy_->Update();
 
 	//imgui
 	imguiManager_->Update();
@@ -103,7 +103,7 @@ void MyGame::Draw()
 	
 	//モデル描画
 	player_->Draw();
-	//enemy_->Draw();
+	enemy_->Draw();
 
 	//モデル描画後処理
 	Object3d::PostDraw();

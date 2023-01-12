@@ -5,9 +5,7 @@ using namespace DirectX;
 
 Player::~Player() {
 	//ƒ‚ƒfƒ‹‚Ì‰ð•ú
-	delete model_;
-	delete obj_;
-
+	
 	delete modelBullet_;
 	delete objBullet_;
 }
@@ -29,13 +27,13 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input) {
 	this->input_ = input;
 
 	//ƒ[ƒ‹ƒh•ÏŠ·‚Ì‰Šú‰»
-	pos = { 0.0f,0.0f,-30.0f };
+	pos = { 0.0f,0.0f,-60.0f };
 	obj_->SetPosition(pos);
 	
 }
 
 void Player::Reset() {
-	pos = { 0.0f, 0.0f, -30.0f };
+	pos = { 0.0f, 0.0f, -60.0f };
 	angle = { 0.0f,0.0f,0.0f };
 
 	life_ = 5;
