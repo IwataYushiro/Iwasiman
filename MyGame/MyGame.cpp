@@ -15,6 +15,8 @@ void MyGame::Initialize()
 
 	//プレイヤー関係
 	player_ = new Player();
+	player2_ = new Player();
+
 	//敵関係
 	enemy_ = new Enemy();
 
@@ -54,18 +56,25 @@ void MyGame::Initialize()
 
 	//3Dオブジェクト生成
 	object3DPlayer_ = Object3d::Create();
+	object3DPlayer2_ = Object3d::Create();
 	object3DEnemy_ = Object3d::Create();
 
 	//OBJファイルからモデルデータを読み込む
 	modelPlayer_ = Model::LoadFromOBJ("player");
+	modelPlayer2_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 
 	//オブジェクトにモデル紐付ける
 	object3DPlayer_->SetModel(modelPlayer_);
+	object3DPlayer2_->SetModel(modelPlayer2_);
 	object3DEnemy_->SetModel(modelEnemy_);
 
+	
 	//ポジション
 	player_->Initialize(modelPlayer_, object3DPlayer_, input_);
+	player2_->Initialize(modelPlayer2_, object3DPlayer2_, input_);
+
+	object3DPlayer2_->SetPosition({ 0.0f,5.0f,-60.0f });
 
 	enemy_->Initialize(modelEnemy_, object3DEnemy_);
 	//敵に自機のアドレスを渡す
@@ -91,6 +100,7 @@ void MyGame::Update()
 		if (input_->TriggerKey(DIK_SPACE))
 		{
 			player_->Reset();
+			player2_->Reset();
 			enemy_->Reset();
 			scene_ = howtoplay;
 
@@ -112,11 +122,12 @@ void MyGame::Update()
 
 		//モデル呼び出し例
 		player_->Update();
+		player2_->Update();
 		enemy_->Update();
 
 		ChackAllCollisions();
 
-		if (player_->IsDead())
+		if (player_->IsDead() || player2_->IsDead())
 		{
 			scene_ = gameover;
 			break;
@@ -205,8 +216,9 @@ void MyGame::Draw()
 
 		break;
 	case stage:
-player_->Draw();
-	enemy_->Draw();
+		player_->Draw();
+		player2_->Draw();
+		enemy_->Draw();
 
 		break;
 	case clear:
@@ -249,10 +261,12 @@ void MyGame::Finalize()
 	//モデル
 	//3Dオブジェクト
 	delete object3DPlayer_;
+	delete object3DPlayer2_;
 	delete object3DEnemy_;
 
 	//3Dモデル
 	delete modelPlayer_;
+	delete modelPlayer2_;
 	delete modelEnemy_;
 
 	//基盤系
@@ -283,7 +297,7 @@ void MyGame::ChackAllCollisions() {
 
 #pragma region 自機と敵弾の当たり判定
 	//それぞれの半径
-	radiusA = 1.0f;
+	radiusA = 3.0f;
 	radiusB = 1.0f;
 
 	//自機の座標
@@ -309,10 +323,37 @@ void MyGame::ChackAllCollisions() {
 	}
 
 #pragma endregion
+#pragma region 自機と敵弾の当たり判定
+	//それぞれの半径
+	radiusA = 3.0f;
+	radiusB = 1.0f;
 
+	//自機の座標
+	posA = player2_->GetWorldPosition();
+
+	//自機と全ての敵弾の当たり判定
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+		//敵弾の座標
+		posB = bullet->GetWorldPosition();
+		//座標A,Bの距離を求める
+		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
+		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
+		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
+		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+
+		//球と球の交差判定
+		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+			//自キャラの衝突時コールバック関数を呼び出す
+			player2_->OnCollision();
+			//敵弾の衝突時コールバック関数を呼び出す
+			bullet->OnCollision();
+		}
+	}
+
+#pragma endregion
 #pragma region 自弾と敵の当たり判定
 	//それぞれの半径
-	radiusA = 5.0f;
+	radiusA = 50.0f;
 	radiusB = 1.0f;
 
 	//敵の座標

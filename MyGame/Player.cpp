@@ -3,11 +3,24 @@
 
 using namespace DirectX;
 
+std::list<std::unique_ptr<PlayerBullet>> Player::bullets_;
+
+Player::Player()
+{
+}
+
 Player::~Player() {
 	//ƒ‚ƒfƒ‹‚Ì‰ð•ú
 	
 	delete modelBullet_;
 	delete objBullet_;
+}
+
+Player::Player(const Player& obj)
+{
+	this->pos = obj.pos;
+	this->angle = obj.angle;
+	this->isDead_ = obj.isDead_;
 }
 
 void Player::Initialize(Model* model, Object3d* obj, Input* input) {

@@ -17,7 +17,10 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	Player();
 	~Player();
+	//コピーコンストラクタ
+	Player(const Player& obj);
 
 	//初期化
 	void Initialize(Model* model, Object3d* obj, Input* input);
@@ -41,17 +44,16 @@ public:
 
 	//描画
 	void Draw();
-	void DrawDead();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 
 	//弾リストを取得
-	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
+	static const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
 private:
 	//弾
-	std::list<std::unique_ptr<PlayerBullet>> bullets_;
+	static std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	
 	//モデル
 	Model* model_ = nullptr;
@@ -74,4 +76,5 @@ private:
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
+
 };

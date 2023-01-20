@@ -41,7 +41,7 @@ void Enemy::Stage1Parameter() {
 	//発射タイマー初期化
 	fireTimer = kFireIntervalStage1;
 
-	life_ = 40;
+	life_ = 4;
 	isDead_ = false;
 
 	isReverse_ = false;

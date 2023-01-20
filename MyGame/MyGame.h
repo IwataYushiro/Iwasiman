@@ -53,13 +53,16 @@ private:
 
 	//モデル
 	Player* player_ = nullptr;
+	Player* player2_ = nullptr;
 	Model* modelPlayer_ = nullptr;
+	Model* modelPlayer2_ = nullptr;
 	
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy_ = nullptr;
 	
 	//3Dオブジェクト
 	Object3d* object3DPlayer_ = nullptr;
+	Object3d* object3DPlayer2_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
 	
 	//シーン
