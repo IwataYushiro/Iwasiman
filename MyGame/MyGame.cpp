@@ -60,8 +60,8 @@ void MyGame::Initialize()
 	object3DEnemy_ = Object3d::Create();
 
 	//OBJファイルからモデルデータを読み込む
-	modelPlayer_ = Model::LoadFromOBJ("player");
-	modelPlayer2_ = Model::LoadFromOBJ("player");
+	modelPlayer_ = Model::LoadFromOBJ("bplayer");
+	modelPlayer2_ = Model::LoadFromOBJ("wplayer");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 
 	//オブジェクトにモデル紐付ける

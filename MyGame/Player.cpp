@@ -4,7 +4,8 @@
 using namespace DirectX;
 
 std::list<std::unique_ptr<PlayerBullet>> Player::bullets_;
-
+bool Player::isDead_ = false;
+int Player::life_ = 5;
 Player::Player()
 {
 }
@@ -14,13 +15,6 @@ Player::~Player() {
 	
 	delete modelBullet_;
 	delete objBullet_;
-}
-
-Player::Player(const Player& obj)
-{
-	this->pos = obj.pos;
-	this->angle = obj.angle;
-	this->isDead_ = obj.isDead_;
 }
 
 void Player::Initialize(Model* model, Object3d* obj, Input* input) {
