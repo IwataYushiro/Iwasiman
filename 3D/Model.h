@@ -4,6 +4,8 @@
 #include <DirectXMath.h>
 #include <wrl.h>
 
+//絶対にモディファイアーでモデルを三角面にしてから読み込もうね！！！
+
 class Model
 {
 private://エイリアス
