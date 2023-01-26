@@ -19,6 +19,7 @@ private:
 public:
 	Player();
 	~Player();
+	
 
 	//初期化
 	void Initialize(Model* model, Object3d* obj, Input* input);
@@ -44,7 +45,7 @@ public:
 	void Draw();
 
 	//衝突を検出したら呼び出されるコールバック関数
-	static void OnCollision();
+	void OnCollision();
 
 	//弾リストを取得
 	static const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
