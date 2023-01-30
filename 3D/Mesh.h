@@ -13,9 +13,6 @@
 #include <DirectXTex.h>
 #include "WinApp.h"
 
-//using namespace DirectX;
-
-
 class Mesh
 {
 public: // ƒƒ“ƒoŠÖ”
