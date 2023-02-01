@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include <cassert>
+
 #include "Player.h"
 
 using namespace DirectX;
@@ -24,6 +25,12 @@ void Enemy::Initialize(Model* model, Object3d* obj) {
 
 	objBullet_->SetModel(modelBullet_);
 	Stage1Parameter();
+
+	startCount= std::chrono::steady_clock::now();	//開始時間
+	nowCount= std::chrono::steady_clock::now();		//現在時間
+	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
+	maxTime = 10.0f;					//全体時間
+	timeRate;
 }
 
 //パラメータ
@@ -32,7 +39,7 @@ void Enemy::Stage1Parameter() {
 	isReverse_ = false;
 	//初期ステージ
 	scale = { 3.0f,3.0f,3.0f };
-	pos = { 0.0f,0.0f,100.0f };
+	pos = { -30.0f,0.0f,100.0f };
 	obj_->SetPosition(pos);
 	obj_->SetScale(scale);
 	//初期フェーズ
@@ -49,8 +56,6 @@ void Enemy::Stage1Parameter() {
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
 		bullet->Reset();
 	}
-
-
 }
 
 //リセット
@@ -208,25 +213,39 @@ void Enemy::UpdateAttackStage1() {
 
 	//速度
 	XMFLOAT3 velocity;
+	//制御点
+	start = { -30.0f,0.0f,0.0f };
+	p1 = { -10.0f,-30.0f,0.0f };
+	p2 = { 10.0f,30.0f,0.0f };
+	end = { 30.0f,0.0f,0.0f };
+	//時間
+
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
+
+	float elapsed= std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count()/1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	timeRate = min(elapsed / maxTime, 1.0f);
+
 	//移動
 	velocity = { 0.3f, 0.0f, 0.0f };
 	if (isReverse_) {
-		pos.x -= velocity.x;
-		pos.y -= velocity.y;
-		pos.z -= velocity.z;
+		pos = Bezier3(end, p2, p1, start, timeRate);
 	}
 	else {
-		pos.x += velocity.x;
-		pos.y += velocity.y;
-		pos.z += velocity.z;
+		pos = Bezier3(start, p1, p2, end, timeRate);
 	}
 	obj_->SetPosition(pos);
 	//指定の位置に到達したら反転
 	if (pos.x >= 30.0f) {
 		isReverse_ = true;
+		startCount = std::chrono::steady_clock::now();
 	}
 	if (pos.x <= -30.0f) {
 		isReverse_ = false;
+		startCount = std::chrono::steady_clock::now();
 	}
 
 	//発射タイマーカウントダウン
@@ -260,6 +279,19 @@ void Enemy::UpdateLeave() {
 	pos.y += velocity.y;
 	pos.z += velocity.z;
 	obj_->SetPosition(pos);
+}
+
+const XMFLOAT3 Enemy::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
+{
+	XMFLOAT3 ans;
+	ans.x=(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.x + 3 * (1.0f - t) * t * t * p2.x + t * t * t * p3.x;
+	ans.y = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.y + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.y + 3 * (1.0f - t) * t * t * p2.y + t * t * t * p3.y;
+	ans.z = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.z + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.z + 3 * (1.0f - t) * t * t * p2.z + t * t * t * p3.z;
+
+	return ans;
 }
 
 

@@ -2,6 +2,7 @@
 #include "EnemyBullet.h"
 #include "Model.h"
 #include "Object3d.h"
+#include <chrono>
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
@@ -49,6 +50,8 @@ public:
 	//離脱
 	void UpdateLeave();
 
+	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
+
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollisionPlayer();
 	
@@ -90,7 +93,18 @@ private:
 
 	//自機
 	Player* player_ = nullptr;
-
+//時間計測
+	std::chrono::steady_clock::time_point startCount;	//開始時間
+	std::chrono::steady_clock::time_point nowCount;		//現在時間
+	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
+	float	maxTime = 10.0f;					//全体時間
+	float	timeRate;
+	//制御点
+	XMFLOAT3 start;
+	XMFLOAT3 p1;
+	XMFLOAT3 p2;
+	XMFLOAT3 end;
+	
 	//死亡フラグとライフ
 	bool isDead_;
 	int life_;
