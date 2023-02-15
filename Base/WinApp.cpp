@@ -1,7 +1,10 @@
 #include "WinApp.h"
+#include <imgui_impl_win32.h>
 
 #pragma comment(lib,"winmm.lib")
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler
+(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 //ウィンドゥプロシージャ
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -14,7 +17,10 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		PostQuitMessage(0);
 		return 0;
 	}
-
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
+	{
+		return true;
+	}
 	//標準のメッセージ処理を行う
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }

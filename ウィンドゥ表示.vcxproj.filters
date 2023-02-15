@@ -40,6 +40,18 @@
     <Filter Include="ヘッダー ファイル\2D">
       <UniqueIdentifier>{eaeeaec6-a73c-450c-a3f8-ed6bda8c78fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\MyGame">
+      <UniqueIdentifier>{f1eff419-90de-4286-ab78-75bde1eb9c1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\MyGame">
+      <UniqueIdentifier>{4d63fb01-9867-407d-a9da-1ce2aaa0c6e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Math">
+      <UniqueIdentifier>{393d4d1b-d4a1-4d39-ab28-90ab178f417a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Math">
+      <UniqueIdentifier>{6052ccc9-3f77-4f3f-b541-f8eeb95b2979}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3D\Mesh.cpp">
@@ -72,6 +84,39 @@
     <ClCompile Include="3D\Audio.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
+    <ClCompile Include="Base\ImGuiManager.cpp">
+      <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame\MyGame.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame\Framework.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame\Player.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\MyMath.cpp">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame\PlayerBullet.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame\Enemy.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame\EnemyBullet.cpp">
+      <Filter>ソース ファイル\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Matrix4.cpp">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector2.cpp">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector3.cpp">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\Mesh.h">
@@ -100,6 +145,39 @@
     </ClInclude>
     <ClInclude Include="3D\Audio.h">
       <Filter>ヘッダー ファイル\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\ImGuiManager.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\MyGame.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\Framework.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\Player.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\MyMath.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\PlayerBullet.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\Enemy.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame\EnemyBullet.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Matrix4.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector2.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector3.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

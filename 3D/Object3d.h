@@ -16,7 +16,6 @@ private: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	// DirectX::を省略
-	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
@@ -114,6 +113,10 @@ private: // 静的メンバ変数
 	// 上方向ベクトル
 	static XMFLOAT3 up;
 	
+	static ComPtr<ID3DBlob> rootSigBlob;
+	static ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
+	static ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
+	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 private:// 静的メンバ関数
 	
 	/// <summary>
@@ -146,18 +149,7 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	/// <summary>
-	/// 座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
-	const XMFLOAT3& GetPosition() const { return position; }
-
-	/// <summary>
-	/// 座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
-	void SetPosition(const XMFLOAT3& position) { this->position = position; }
-
+	
 private: // メンバ変数
 	//モデル
 	Model* model_ = nullptr;
@@ -176,10 +168,31 @@ private: // メンバ変数
 	XMMATRIX matWorld;
 	// 親オブジェクト
 	Object3d* parent = nullptr;
-
+	
 public: //アクセッサ置き場
 	//モデル
 	void SetModel(Model* model) { this->model_ = model; }
+	//スケール
+	const XMFLOAT3& GetScale() const { return scale; }
+	void SetScale(const XMFLOAT3& scale) { this->scale = scale; }
+	//回転
+	const XMFLOAT3& GetRotation() const { return rotation; }
+	void SetRotation(const XMFLOAT3& rotation) { this->rotation = rotation; }
+	//ワールド座標
+	const XMMATRIX& GetWorld() const { return matWorld; }
+	void SetWorld(const XMMATRIX& matWorld) { this->matWorld = matWorld; }
 
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns>座標</returns>
+	const XMFLOAT3& GetPosition() const { return position; }
+
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="position">座標</param>
+	void SetPosition(const XMFLOAT3& position) { this->position = position; }
+//
 };
 

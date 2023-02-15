@@ -235,7 +235,7 @@ void Sprite::CreateConstBufferTransform()
 	assert(SUCCEEDED(result));
 }
 void Sprite::AdjustTextureSize() {
-	ComPtr<ID3D12Resource> texBuff = spCommon_->GetTextureBuffer(textureIndex_);
+	ID3D12Resource* texBuff = spCommon_->GetTextureBuffer(textureIndex_);
 	assert(texBuff);
 
 	//テクスチャ情報取得
