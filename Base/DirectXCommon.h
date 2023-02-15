@@ -76,7 +76,8 @@ public://アクセッサ置き場
 	ID3D12Device* GetDevice() const { return device.Get(); }
 	//コマンドリスト取得
 	ID3D12GraphicsCommandList* GetCommandList() const { return commandList.Get(); }
-
+	//バックバッファ数を取得
+	size_t GetBuckBufferCount()const { return backBuffers.size(); }
 private://メンバ関数
 	//FPS固定初期化
 	void InitializeFixFPS();

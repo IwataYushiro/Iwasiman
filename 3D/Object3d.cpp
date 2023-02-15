@@ -23,10 +23,13 @@ ComPtr<ID3D12RootSignature> Object3d::rootsignature;
 ComPtr<ID3D12PipelineState> Object3d::pipelinestate;
 XMMATRIX Object3d::matView{};
 XMMATRIX Object3d::matProjection{};
-XMFLOAT3 Object3d::eye = { 0, 0, -50.0f };
+XMFLOAT3 Object3d::eye = { 0, 0, -100.0f };
 XMFLOAT3 Object3d::target = { 0, 0, 0 };
 XMFLOAT3 Object3d::up = { 0, 1, 0 };
-
+ComPtr<ID3DBlob> Object3d::rootSigBlob;
+ComPtr<ID3DBlob> Object3d::vsBlob; // 頂点シェーダオブジェクト
+ComPtr<ID3DBlob> Object3d::psBlob;	// ピクセルシェーダオブジェクト
+ComPtr<ID3DBlob> Object3d::errorBlob; // エラーオブジェクト
 void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
 {
 
@@ -75,7 +78,7 @@ Object3d* Object3d::Create()
 		return nullptr;
 	}
 	//スケールをセット
-	float scale_val = 25.0f;
+	float scale_val = 1.0f;
 	object3d->scale = { scale_val,scale_val ,scale_val };
 	// 初期化
 	if (!object3d->Initialize()) {
@@ -133,7 +136,7 @@ void Object3d::InitializeCamera(int window_width, int window_height)
 	//	0, 1);
 	// 透視投影による射影行列の生成
 	matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(60.0f),
+		XMConvertToRadians(45.0f),
 		(float)window_width / window_height,
 		0.1f, 1000.0f
 	);
@@ -142,9 +145,9 @@ void Object3d::InitializeCamera(int window_width, int window_height)
 void Object3d::InitializeGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;
-	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
-	ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
-	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
+	//ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
+	//ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
+	//ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -271,7 +274,7 @@ void Object3d::InitializeGraphicsPipeline()
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-	ComPtr<ID3DBlob> rootSigBlob;
+	
 	// バージョン自動判定のシリアライズ
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 	// ルートシグネチャの生成
