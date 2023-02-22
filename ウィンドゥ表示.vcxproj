@@ -138,7 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)3D;$(ProjectDir)Input;$(ProjectDir)Base;$(ProjectDir)2D;$(ProjectDir)MyGame;$(ProjectDir)Math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)3D;$(ProjectDir)Input;$(ProjectDir)Base;$(ProjectDir)2D;$(ProjectDir)MyGame;$(ProjectDir)Math;$(ProjectDir)Stage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
@@ -175,6 +175,8 @@
     <ClCompile Include="MyGame\MyGame.cpp" />
     <ClCompile Include="MyGame\Player.cpp" />
     <ClCompile Include="MyGame\PlayerBullet.cpp" />
+    <ClCompile Include="Stage\Stage.cpp" />
+    <ClCompile Include="Stage\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -205,6 +207,8 @@
     <ClInclude Include="MyGame\MyGame.h" />
     <ClInclude Include="MyGame\Player.h" />
     <ClInclude Include="MyGame\PlayerBullet.h" />
+    <ClInclude Include="Stage\Stage.h" />
+    <ClInclude Include="Stage\Switch.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli" />
