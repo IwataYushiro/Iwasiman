@@ -197,6 +197,9 @@
     <ClInclude Include="Stage\Switch.h">
       <Filter>ヘッダー ファイル\Stage</Filter>
     </ClInclude>
+    <ClInclude Include="MyGame\GlobalScene.h">
+      <Filter>ヘッダー ファイル\MyGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
