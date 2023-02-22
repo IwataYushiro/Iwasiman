@@ -1,14 +1,12 @@
 #pragma once
+#include "Audio.h"
 #include "Input.h"
 #include "Model.h"
 #include "Object3d.h"
-#include "PlayerBullet.h"
 #include <DirectXMath.h>
-#include <list>
 #include <memory>
 
-class Player
-{
+class Player {
 private:
 	// DirectX::を省略
 	using XMFLOAT2 = DirectX::XMFLOAT2;
@@ -17,61 +15,56 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	~Player();
-
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input);
-	//リセット処理
-	void Reset();
-	
+	void Initialize(Model* model, Object3d* obj, Input* input, XMFLOAT3 pos = { 0.0f, 0.0f, 0.0f });
+
 	//更新
 	void Update();
+	//転送
+	void Trans();
+	//描画
+	void Draw();
 
+	//リセット処理
+	void Reset();
+
+	// 死亡
+	void IsDead() { isDead_ = true; }
+
+	// 当たり判定
+	void OnCollisionStage(bool collisionFlag);
+	static void OnCollisionPlayer(bool collisionFlag);
+
+private:
 	//プレイヤーの移動処理
 	void Move();
 
-	//プレイヤーの攻撃処理
-	void Attack();
-
-	//転送
-	void Trans();
-
-	//ワールド座標を取得
-	XMFLOAT3 GetWorldPosition();
-
-	//描画
-	void Draw();
-	void DrawDead();
-
-	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision();
-
-	//弾リストを取得
-	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
-
 private:
-	//弾
-	std::list<std::unique_ptr<PlayerBullet>> bullets_;
-	
-	//モデル
-	Model* model_ = nullptr;
-	Model* modelBullet_ = nullptr;
-
-	Object3d* obj_ = nullptr;
-	Object3d* objBullet_ = nullptr;
-
 	//インプット
 	Input* input_ = nullptr;
 	
-	//ポジション
-	XMFLOAT3 pos;
-	//アングル
-	XMFLOAT3 angle;
+	//モデル
+	Model* model_ = nullptr;
+	Object3d* obj_ = nullptr;
+	//テクスチャハンドル
+	uint32_t textureHandle_ = 0u;
 
-	//死亡フラグとライフ
-	bool isDead_ = false;
-	int life_ = 5;
+	//サウンドデータ
+	uint32_t jumpSound_ = 0;
+
+	// ワールド変換データ
+	XMFLOAT3 pos_;
+	// 前フレーム座標
+	XMFLOAT3 prePos_{};
+	// 半径
+	float radius_ = 1.5f;
+	//死亡フラグ
+	bool isDead_;
+	static bool isDeads_;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
+	XMFLOAT3 GetPosition() const { return pos_; }
+	float GetRadius() const { return radius_; }
+
 };
