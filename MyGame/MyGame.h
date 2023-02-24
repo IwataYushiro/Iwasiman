@@ -13,11 +13,16 @@ class MyGame :public Framework
 public:
 
 	enum Scene { //ÉVÅ[ÉìID
-		title,
-		howtoplay,
-		stage,
-		clear,
-		gameover,
+		TITLE,
+		INFO,
+		SELECT,
+		STAGE1,
+		STAGE2,
+		STAGE3,
+		STAGE4,
+		STAGE5,
+		STAGE6,
+		CLEAR,
 	};
 
 	//èâä˙âª

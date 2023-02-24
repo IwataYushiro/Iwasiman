@@ -204,7 +204,6 @@
     <ClInclude Include="MyGame\Enemy.h" />
     <ClInclude Include="MyGame\EnemyBullet.h" />
     <ClInclude Include="MyGame\Framework.h" />
-    <ClInclude Include="MyGame\GlobalScene.h" />
     <ClInclude Include="MyGame\MyGame.h" />
     <ClInclude Include="MyGame\Player.h" />
     <ClInclude Include="MyGame\PlayerBullet.h" />
