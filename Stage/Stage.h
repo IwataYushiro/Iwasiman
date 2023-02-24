@@ -1,8 +1,18 @@
 #pragma once
+#include <DirectXMath.h>
 #include <sstream>
+#include "Model.h"
+#include "Object3d.h"
 #include "Switch.h"
 
 class Stage {
+private:
+	// DirectX::を省略
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMMATRIX = DirectX::XMMATRIX;
+
 private: // 定数
 	static const int STAGE_WIDTH = 20;
 	static const int STAGE_HEIGHT = 20;
@@ -24,7 +34,8 @@ public:
 
 	// 構造体
 	struct StageData {
-		WorldTransform worldTransform_;	// 座標
+		XMFLOAT3 scale_; // スケール
+		XMFLOAT3 pos_;	// 座標
 		int type_;	// ブロックの種類
 		int line_;
 		int row_;
@@ -35,16 +46,17 @@ public:
 	~Stage();
 
 	// 初期化
-	void Initialize(Model* model);
+	void Initialize(Model* model,Object3d* obj);
 
 	// ステージ初期化
 	void StageInitialize(const std::string stageNum);
 
 	// 更新
 	void Update();
-
+	//転送
+	void Trans();
 	// 描画
-	void Draw(ViewProjection viewProjection);
+	void Draw();
 
 	// 足元のブロックを判別する
 	void CheckBlock(int line, int row);
@@ -53,7 +65,7 @@ public:
 	bool CheckFloorBlock(int line, int row);
 
 	// 座標ゲッター
-	Vector3 GetBlockPosition(int line, int row);
+	XMFLOAT3 GetBlockPosition(int line, int row);
 
 private:
 	// ステージ床の読み込み
@@ -66,7 +78,7 @@ private:
 	void LoadStageCommands();
 
 	// ブロック初期化
-	void InitializeStageBlock(std::unique_ptr<StageData>& block, Vector3 pos, int line, int row);
+	void InitializeStageBlock(std::unique_ptr<StageData>& block, XMFLOAT3 pos, int line, int row);
 
 	// リストにブロックを追加
 	void PushStageBlockList(std::list<std::unique_ptr<StageData>>& blocks_, int type, int line, int row, float depth);
@@ -80,6 +92,14 @@ private:
 	Model* modelWallR_ = nullptr;
 	Model* modelWallB_ = nullptr;
 	Model* modelGoal_ = nullptr;
+
+	Object3d* obj_ = nullptr;
+	Object3d* objFloor_ = nullptr;
+	Object3d* objSwitchR_ = nullptr;
+	Object3d* objSwitchB_ = nullptr;
+	Object3d* objWallR_ = nullptr;
+	Object3d* objWallB_ = nullptr;
+	Object3d* objGoal_ = nullptr;
 	// テクスチャハンドル
 	int32_t textureHandle_ = 0u;
 

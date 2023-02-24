@@ -2,31 +2,50 @@
 #include <cassert>
 #include <fstream>
 
+using namespace DirectX;
+
 Stage::~Stage() {
+	delete modelFloor_;
 	delete modelGoal_;
 	delete modelSwitchR_;
 	delete modelSwitchB_;
 	delete modelWallR_;
 	delete modelWallB_;
+
+	delete objFloor_;
+	delete objSwitchR_;
+	delete objSwitchB_;
+	delete objWallR_;
+	delete objWallB_;
+	delete objGoal_;
+	
 	delete switchR_;
 	delete switchB_;
 }
 
-void Stage::Initialize(Model* model) {
+void Stage::Initialize(Model* model, Object3d* obj) {
+	obj_ = obj;
+	objFloor_ = Object3d::Create();
+	objSwitchR_= Object3d::Create();
+	objSwitchB_= Object3d::Create();
+	objWallR_= Object3d::Create();
+	objWallB_= Object3d::Create();
+	objGoal_= Object3d::Create();
+
 	// モデル読み込み
 	model_ = model;
-	modelFloor_ = Model::CreateFromOBJ("floor", true);
-	modelSwitchR_ = Model::CreateFromOBJ("rswitch", true);
-	modelSwitchB_ = Model::CreateFromOBJ("bswitch", true);
-	modelWallR_ = Model::CreateFromOBJ("cubeR", true);
-	modelWallB_ = Model::CreateFromOBJ("cubeB", true);
-	modelGoal_ = Model::CreateFromOBJ("goal", true);
+	modelFloor_ = Model::LoadFromOBJ("floor");
+	modelSwitchR_ = Model::LoadFromOBJ("rswitch");
+	modelSwitchB_ = Model::LoadFromOBJ("bswitch");
+	modelWallR_ = Model::LoadFromOBJ("cubeR");
+	modelWallB_ = Model::LoadFromOBJ("cubeB");
+	modelGoal_ = Model::LoadFromOBJ("goal");
 
 	// スイッチ
 	switchR_ = new Switch();
 	switchB_ = new Switch();
-	switchR_->Initialize(modelSwitchR_);
-	switchB_->Initialize(modelSwitchB_);
+	switchR_->Initialize(modelSwitchR_, objSwitchR_);
+	switchB_->Initialize(modelSwitchB_, objSwitchB_);
 
 	// ステージの床を初期化
 	LoadFloorBlock();
@@ -88,37 +107,58 @@ void Stage::Update() {
 
 	isGoal_ = false;
 }
+void Stage::Trans()
+{
+	XMMATRIX world;
+	//行列更新
+	world = XMMatrixIdentity();
+	XMMATRIX matWorld = XMMatrixIdentity();
 
-void Stage::Draw(ViewProjection viewProjection) {
+	XMMATRIX matScale = XMMatrixScaling(obj_->GetScale().x, obj_->GetScale().y, obj_->GetScale().z);
+
+	XMMATRIX matRot = XMMatrixRotationZ(obj_->GetRotation().z)
+		* XMMatrixRotationX(obj_->GetRotation().x) * XMMatrixRotationY(obj_->GetRotation().y);
+
+	XMMATRIX matTrans = XMMatrixTranslation(obj_->GetPosition().x,
+		obj_->GetPosition().y, obj_->GetPosition().z);
+
+	//合成
+	matWorld = matScale * matRot * matTrans;
+
+	world = matWorld;
+	obj_->SetWorld(world);
+}
+
+void Stage::Draw() {
 	// ステージ描画
 	for (std::unique_ptr<StageData>& block : stageBlocks_) {
 		if (block->type_ == BLOCK) {
 			// 壁描画
-			model_->Draw(block->worldTransform_, viewProjection);
+			obj_->Draw();
 		}
 		else if (block->type_ == WALLR) {
 			// 赤壁描画
-			modelWallR_->Draw(block->worldTransform_, viewProjection);
+			objWallR_->Draw();
 		}
 		else if (block->type_ == WALLB) {
 			// 青壁描画
-			modelWallB_->Draw(block->worldTransform_, viewProjection);
+			objWallB_->Draw();
 		}
 		else if (block->type_ == GOAL) {
 			// ゴール描画
-			block->worldTransform_.translation_.y = -15.5f;
-			modelGoal_->Draw(block->worldTransform_, viewProjection);
+			block->pos_.y = -15.5f;
+			objGoal_->Draw();
 		}
 	}
 
 	// 床描画
 	for (std::unique_ptr<StageData>& block : floorBlocks_) {
-		modelFloor_->Draw(block->worldTransform_, viewProjection);
+		objFloor_->Draw();
 	}
 
 	// スイッチ描画
-	if (isSwitchDrawR_) switchR_->Draw(viewProjection);
-	if (isSwitchDrawB_) switchB_->Draw(viewProjection);
+	if (isSwitchDrawR_) switchR_->Draw();
+	if (isSwitchDrawB_) switchB_->Draw();
 }
 
 void Stage::LoadStageData(const std::string stageNum) {
@@ -224,19 +264,15 @@ void Stage::LoadFloorBlock() {
 	}
 }
 
-void Stage::InitializeStageBlock(std::unique_ptr<StageData>& block, Vector3 pos, int line, int row) {
-	// ワールドトランスフォームの初期化設定
-	block->worldTransform_.Initialize();
-
+void Stage::InitializeStageBlock(std::unique_ptr<StageData>& block, XMFLOAT3 pos, int line, int row) {
+	
 	// スケール設定
-	block->worldTransform_.scale_ = { magnification_, magnification_, magnification_ };
+	block->scale_ = { magnification_, magnification_, magnification_ };
 	// 座標設定
-	block->worldTransform_.translation_ = pos;
+	block->pos_ = pos;
 
 	// 行列更新
-	block->worldTransform_.matWorld_ = MyMathUtility::MySetMatrix4Identity();
-	block->worldTransform_.matWorld_ *= MyMathUtility::MySynMatrix4WorldTransform(block->worldTransform_);
-	block->worldTransform_.TransferMatrix();
+	Trans();
 
 	block->line_ = line;
 	block->row_ = row;
@@ -248,7 +284,7 @@ void Stage::PushStageBlockList(std::list<std::unique_ptr<StageData>>& blocks_, i
 	// ブロックの種類
 	newBlock->type_ = type;
 	// 座標
-	Vector3 pos;
+	XMFLOAT3 pos;
 	pos.x = 2.0f + (4.0f * line);
 	pos.y = depth;
 	pos.z = 78.0f - (4.0f * row);
@@ -304,17 +340,17 @@ bool Stage::CheckFloorBlock(int line, int row) {
 	return false;
 }
 
-Vector3 Stage::GetBlockPosition(int line, int row) {
+XMFLOAT3 Stage::GetBlockPosition(int line, int row) {
 	// 範囲for
 	for (std::unique_ptr<StageData>& block : stageBlocks_) {
 		// ブロックと壁の時は返す
 		if (block->type_ == BLOCK || block->type_ == WALLR || block->type_ == WALLB) {
 			// 指定した番号に合った座標を返す
 			if (block->line_ == line && block->row_ == row) {
-				return block->worldTransform_.translation_;
+				return block->pos_;
 			}
 		}
 	}
 	// なかったら0を返す
-	return Vector3(0, 0, 0);
+	return XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
