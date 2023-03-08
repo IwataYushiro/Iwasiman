@@ -13,6 +13,7 @@ private:
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+	using XMVECTOR = DirectX::XMVECTOR;
 
 public://構造体、バッファ類
 	struct ConstBufferDataViewProjection
@@ -33,6 +34,15 @@ public://関数
 	void CreateConstBuffer();
 	//マッピング
 	void MapingCB();
+	//更新
+	void Update();
+
+	//各行列更新
+	void UpdateView();
+	void UpdateProjection();
+
+	//転送
+	void Trans();
 
 public://変数
 	//視点
@@ -49,7 +59,7 @@ public://変数
 	//ニアクリップ(手前側の深度限界)
 	float nearZ_;
 	//ファークリップ(奥側の深度限界)
-	float farZ;
+	float farZ_;
 
 	//ビュー行列
 	XMMATRIX matView_;
@@ -57,7 +67,9 @@ public://変数
 	XMMATRIX matProjection_;
 	//ビュープロジェクション行列(合成用)
 	XMMATRIX matViewProjection_;
-
-	
+	//ビルボード行列
+	XMMATRIX matBillboard_;
+	//Y軸回りビルボード行列
+	XMMATRIX matBillboardY_;
 
 };
