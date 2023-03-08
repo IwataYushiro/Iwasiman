@@ -14,17 +14,25 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-public://構造体類
+public://構造体、バッファ類
 	struct ConstBufferDataViewProjection
 	{
 		XMMATRIX view;
 		XMMATRIX projection;
 		XMFLOAT3 cameraPos;
 	};
+	//定数バッファ
+	ComPtr<ID3D12Resource> constBuff_;
+	//マッピング
+	ConstBufferDataViewProjection* constMap_;
 
 public://関数
 	//初期化
 	void Initialize();
+	//定数バッファ生成
+	void CreateConstBuffer();
+	//マッピング
+	void MapingCB();
 
 public://変数
 	//視点
