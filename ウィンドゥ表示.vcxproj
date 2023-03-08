@@ -175,6 +175,7 @@
     <ClCompile Include="MyGame\MyGame.cpp" />
     <ClCompile Include="MyGame\Player.cpp" />
     <ClCompile Include="MyGame\PlayerBullet.cpp" />
+    <ClCompile Include="ViewProjection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -205,6 +206,7 @@
     <ClInclude Include="MyGame\MyGame.h" />
     <ClInclude Include="MyGame\Player.h" />
     <ClInclude Include="MyGame\PlayerBullet.h" />
+    <ClInclude Include="ViewProjection.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli" />
