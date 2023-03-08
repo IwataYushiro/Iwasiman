@@ -32,6 +32,10 @@ void ViewProjection::Initialize()
 	CreateConstBuffer();
 	//マッピング
 	MapingCB();
+	//更新
+	Update();
+	//転送
+	Trans();
 }
 
 void ViewProjection::CreateConstBuffer()
@@ -131,6 +135,26 @@ void ViewProjection::UpdateView()
 	//ビュー行列に平行移動成分を指定
 	matView_.r[3] = trans;
 
+	//全方向ビルボード計算
+	matBillboard_.r[0] = axisX;
+	matBillboard_.r[1] = axisY;
+	matBillboard_.r[2] = axisZ;
+	matBillboard_.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+
+	//Y軸回りビルボード計算
+	XMVECTOR yBillAxisX, yBillAxisY, yBillAxisZ;
+
+	//X軸は共通
+	yBillAxisX = axisX;
+	//Y軸はワールド座標系のY軸
+	yBillAxisY = XMVector3Normalize(upVec);
+	//Z軸はX→Y軸の外積で決まる
+	yBillAxisZ = XMVector3Cross(yBillAxisX, yBillAxisY);
+
+	matBillboardY_.r[0] = yBillAxisX;
+	matBillboardY_.r[1] = yBillAxisY;
+	matBillboardY_.r[2] = yBillAxisZ;
+	matBillboardY_.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void ViewProjection::UpdateProjection()
@@ -143,4 +167,8 @@ void ViewProjection::UpdateProjection()
 
 void ViewProjection::Trans()
 {
+	//定数バッファに書き込み
+	constMap_->view = matView_;
+	constMap_->projection = matProjection_;
+	constMap_->cameraPos = eye_;
 }
