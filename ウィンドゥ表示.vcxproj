@@ -160,13 +160,16 @@
     <ClCompile Include="3D\Mesh.cpp" />
     <ClCompile Include="3D\Model.cpp" />
     <ClCompile Include="3D\Object3d.cpp" />
+    <ClCompile Include="3D\ViewProjection.cpp" />
     <ClCompile Include="Base\DirectXCommon.cpp" />
     <ClCompile Include="Base\ImGuiManager.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Matrix4.cpp" />
     <ClCompile Include="Math\MyMath.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Math\Vector2.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
     <ClCompile Include="MyGame\Enemy.cpp" />
@@ -175,7 +178,6 @@
     <ClCompile Include="MyGame\MyGame.cpp" />
     <ClCompile Include="MyGame\Player.cpp" />
     <ClCompile Include="MyGame\PlayerBullet.cpp" />
-    <ClCompile Include="ViewProjection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -192,12 +194,15 @@
     <ClInclude Include="3D\Mesh.h" />
     <ClInclude Include="3D\Model.h" />
     <ClInclude Include="3D\Object3d.h" />
+    <ClInclude Include="3D\ViewProjection.h" />
     <ClInclude Include="Base\DirectXCommon.h" />
     <ClInclude Include="Base\ImGuiManager.h" />
     <ClInclude Include="Base\WinApp.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Math\Matrix4.h" />
     <ClInclude Include="Math\MyMath.h" />
+    <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="MyGame\Enemy.h" />
@@ -206,7 +211,6 @@
     <ClInclude Include="MyGame\MyGame.h" />
     <ClInclude Include="MyGame\Player.h" />
     <ClInclude Include="MyGame\PlayerBullet.h" />
-    <ClInclude Include="ViewProjection.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli" />

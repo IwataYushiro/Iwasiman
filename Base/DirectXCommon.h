@@ -14,8 +14,9 @@ public: // 省略
 	//エイリアステンプレート
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+public://静的メンバ関数
+	static DirectXCommon* GetInstance();
 public:
-	
 	//初期化
 	void Initialize(WinApp* winApp);
 	//デバイスの初期化
