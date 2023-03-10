@@ -4,6 +4,7 @@
 #include "Object3d.h"
 #include "PlayerBullet.h"
 #include <DirectXMath.h>
+#include "Camera.h"
 #include <list>
 #include <memory>
 
@@ -20,7 +21,7 @@ public:
 	~Player();
 
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input);
+	void Initialize(Model* model, Object3d* obj, Input* input,Camera* camera);
 	//リセット処理
 	void Reset();
 	
@@ -41,7 +42,6 @@ public:
 
 	//描画
 	void Draw();
-	void DrawDead();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
@@ -60,6 +60,8 @@ private:
 	Object3d* obj_ = nullptr;
 	Object3d* objBullet_ = nullptr;
 
+	//カメラ
+	Camera* camera_ = nullptr;
 	//インプット
 	Input* input_ = nullptr;
 	

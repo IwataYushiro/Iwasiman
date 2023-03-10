@@ -2,6 +2,7 @@
 #include "EnemyBullet.h"
 #include "Model.h"
 #include "Object3d.h"
+#include "Camera.h"
 #include <chrono>
 #include <DirectXMath.h>
 #include <list>
@@ -24,7 +25,7 @@ public:
 	//弾発射間隔
 	static const int kFireIntervalStage1 = 40;
 	//初期化
-	void Initialize(Model* model, Object3d* obj);
+	void Initialize(Model* model, Object3d* obj, Camera* camera);
 
 	//リセット処理
 	void Reset();
@@ -68,6 +69,9 @@ private:
 
 	Object3d* obj_ = nullptr;
 	Object3d* objBullet_ = nullptr;
+
+	//カメラ
+	Camera* camera_ = nullptr;
 
 	//行動フェーズ
 	enum class Phase {

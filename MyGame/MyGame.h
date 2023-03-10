@@ -4,6 +4,7 @@
 #include "ImGuiManager.h"
 #include "Object3d.h"
 #include "Sprite.h"
+#include "Camera.h"
 
 #include "Player.h"
 #include "Enemy.h"
@@ -61,7 +62,8 @@ private:
 	//3Dオブジェクト
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
-	
+	//カメラ
+	Camera* camera_ = nullptr;
 	//シーン
 	size_t scene_;
 

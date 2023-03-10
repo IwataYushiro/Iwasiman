@@ -13,17 +13,19 @@ Enemy::~Enemy() {
 }
 
 // 初期化
-void Enemy::Initialize(Model* model, Object3d* obj) {
+void Enemy::Initialize(Model* model, Object3d* obj, Camera* camera) {
 	// NULLポインタチェック
 	assert(model);
 
 	model_ = model;
 	obj_ = obj;
+	camera_ = camera;
 
 	modelBullet_ = Model::LoadFromOBJ("enemybullet");
 	objBullet_ = Object3d::Create();
 
 	objBullet_->SetModel(modelBullet_);
+	objBullet_->SetCamera(camera_);
 	Stage1Parameter();
 
 	startCount= std::chrono::steady_clock::now();	//開始時間

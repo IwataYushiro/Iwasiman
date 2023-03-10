@@ -5,7 +5,7 @@ void Framework::Initialize()
 	//WinApp
 	winApp_ = new WinApp();
 	//DXCommon
-	dxCommon_ = new DirectXCommon();
+	dxCommon_ = DirectXCommon::GetInstance();
 	//SpriteCommon
 	sprCommon_ = new SpriteCommon();
 	//Input
@@ -42,7 +42,6 @@ void Framework::Finalize()
 	//Šî”Õ—Þ
 	delete sprCommon_;
 	delete input_;
-	delete dxCommon_;
 	delete winApp_;
 }
 

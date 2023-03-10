@@ -6,13 +6,15 @@ void MyGame::Initialize()
 {
 	Framework::Initialize();
 
+	
 	//Audio
 	audio_ = new Audio();
 	//imgui
 	imguiManager_ = new ImGuiManager();
 
 	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
-
+	//カメラ
+	camera_ = new Camera();
 	//プレイヤー関係
 	player_ = new Player();
 	//敵関係
@@ -62,12 +64,14 @@ void MyGame::Initialize()
 
 	//オブジェクトにモデル紐付ける
 	object3DPlayer_->SetModel(modelPlayer_);
+	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetModel(modelEnemy_);
+	object3DEnemy_->SetCamera(camera_);
 
 	//ポジション
-	player_->Initialize(modelPlayer_, object3DPlayer_, input_);
+	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
 
-	enemy_->Initialize(modelEnemy_, object3DEnemy_);
+	enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
 	//敵に自機のアドレスを渡す
 	enemy_->SetPlayer(player_);
 
@@ -254,6 +258,9 @@ void MyGame::Finalize()
 	//3Dモデル
 	delete modelPlayer_;
 	delete modelEnemy_;
+
+	//カメラ
+	delete camera_;
 
 	//基盤系
 	delete player_;

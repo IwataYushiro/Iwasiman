@@ -10,18 +10,20 @@ Player::~Player() {
 	delete objBullet_;
 }
 
-void Player::Initialize(Model* model, Object3d* obj, Input* input) {
+void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera) {
 	// NULLポインタチェック
 	assert(model);
 
 	//引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
 	obj_ = obj;
+	camera_ = camera;
 
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 	objBullet_ = Object3d::Create();
 
 	objBullet_->SetModel(modelBullet_);
+	objBullet_->SetCamera(camera_);
 
 	//シングルトンインスタンスを取得
 	this->input_ = input;

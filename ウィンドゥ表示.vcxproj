@@ -157,6 +157,7 @@
     <ClCompile Include="2D\Sprite.cpp" />
     <ClCompile Include="2D\SpriteCommon.cpp" />
     <ClCompile Include="3D\Audio.cpp" />
+    <ClCompile Include="3D\Camera.cpp" />
     <ClCompile Include="3D\Mesh.cpp" />
     <ClCompile Include="3D\Model.cpp" />
     <ClCompile Include="3D\Object3d.cpp" />
@@ -164,7 +165,6 @@
     <ClCompile Include="Base\DirectXCommon.cpp" />
     <ClCompile Include="Base\ImGuiManager.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Matrix4.cpp" />
@@ -191,6 +191,7 @@
     <ClInclude Include="2D\Sprite.h" />
     <ClInclude Include="2D\SpriteCommon.h" />
     <ClInclude Include="3D\Audio.h" />
+    <ClInclude Include="3D\Camera.h" />
     <ClInclude Include="3D\Mesh.h" />
     <ClInclude Include="3D\Model.h" />
     <ClInclude Include="3D\Object3d.h" />
@@ -198,7 +199,6 @@
     <ClInclude Include="Base\DirectXCommon.h" />
     <ClInclude Include="Base\ImGuiManager.h" />
     <ClInclude Include="Base\WinApp.h" />
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Math\Matrix4.h" />
     <ClInclude Include="Math\MyMath.h" />
