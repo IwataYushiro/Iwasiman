@@ -23,6 +23,7 @@ void Camera::Initialize()
 	//	0, window_width,
 	//	window_height, 0,
 	//	0, 1);
+	
 	// “§‹“Š‰e‚É‚æ‚éË‰es—ñ‚Ì¶¬
 	matProjection = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(45.0f),
@@ -32,5 +33,17 @@ void Camera::Initialize()
 }
 
 void Camera::Update()
+{
+}
+
+void Camera::SetEye(const XMFLOAT3& eye)
+{
+}
+
+void Camera::SetTarget(const XMFLOAT3& target)
+{
+}
+
+void Camera::SetUp(const XMFLOAT3& up)
 {
 }

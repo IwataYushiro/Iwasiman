@@ -11,7 +11,7 @@ void MyGame::Initialize()
 	//imgui
 	imguiManager_ = new ImGuiManager();
 
-	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
+	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height,camera_);
 
 	//ƒvƒŒƒCƒ„[ŠÖŒW
 	player_ = new Player();
