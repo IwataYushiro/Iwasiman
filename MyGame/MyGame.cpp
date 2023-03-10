@@ -109,10 +109,7 @@ void MyGame::Update()
 		break;
 
 	case stage:
-		XMFLOAT3 cameraMove = camera_->GetEye();
-		cameraMove.z += 0.5f;
-		camera_->SetEye(cameraMove);
-
+		camera_->CameraMoveVector({ 0.0f,0.0f,-0.5f });
 		camera_->Update();
 
 		//ƒ‚ƒfƒ‹ŒÄ‚Ño‚µ—á
