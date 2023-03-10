@@ -1,5 +1,6 @@
 #pragma once
 #include "WinApp.h"
+#include "Camera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "SpriteCommon.h"
@@ -25,14 +26,15 @@ public://メンバ関数
 
 protected:
 	//WinApp
-	WinApp* winApp_ = new WinApp();
+	WinApp* winApp_ = nullptr;
 	//DXCommon
-	DirectXCommon* dxCommon_ = new DirectXCommon();
+	DirectXCommon* dxCommon_ =nullptr;
 	//SpriteCommon
-	SpriteCommon* sprCommon_ = new SpriteCommon();
+	SpriteCommon* sprCommon_ =nullptr;
 	//Input
-	Input* input_ = new Input();
-
+	Input* input_ =nullptr;
+	//カメラ
+	Camera* camera_ = nullptr;
 	//ゲーム終了フラグ
 	bool EndGame_ = false;
 };

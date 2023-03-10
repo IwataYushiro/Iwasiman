@@ -121,27 +121,6 @@ void Object3d::CameraMoveVector(XMFLOAT3 move)
 	SetTarget(target_moved);
 }
 
-void Object3d::InitializeCamera(int window_width, int window_height)
-{
-	// ビュー行列の生成
-	matView = XMMatrixLookAtLH(
-		XMLoadFloat3(&eye),
-		XMLoadFloat3(&target),
-		XMLoadFloat3(&up));
-
-	// 平行投影による射影行列の生成
-	//constMap->mat = XMMatrixOrthographicOffCenterLH(
-	//	0, window_width,
-	//	window_height, 0,
-	//	0, 1);
-	// 透視投影による射影行列の生成
-	matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(45.0f),
-		(float)window_width / window_height,
-		0.1f, 1000.0f
-	);
-}
-
 void Object3d::InitializeGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;

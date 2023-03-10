@@ -8,6 +8,8 @@ void Framework::Initialize()
 	dxCommon_ = new DirectXCommon();
 	//SpriteCommon
 	sprCommon_ = new SpriteCommon();
+	//カメラ
+	camera_ = new Camera();
 	//Input
 	input_ = new Input();
 
@@ -17,6 +19,8 @@ void Framework::Initialize()
 	dxCommon_->Initialize(winApp_);
 	//スプライト基盤
 	sprCommon_->Initialize(dxCommon_);
+	//カメラ
+	camera_->Initialize();
 	//入力
 	input_->Initialize(winApp_);
 

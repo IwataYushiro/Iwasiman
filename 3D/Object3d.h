@@ -102,16 +102,6 @@ private: // 静的メンバ変数
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
-	// ビュー行列
-	static XMMATRIX matView;
-	// 射影行列
-	static XMMATRIX matProjection;
-	// 視点座標
-	static XMFLOAT3 eye;
-	// 注視点座標
-	static XMFLOAT3 target;
-	// 上方向ベクトル
-	static XMFLOAT3 up;
 	
 	static ComPtr<ID3DBlob> rootSigBlob;
 	static ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
