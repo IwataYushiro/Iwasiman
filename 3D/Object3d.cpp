@@ -279,9 +279,10 @@ void Object3d::Update()
 
 	// 定数バッファへデータ転送
 	ConstBufferDataB0* constMap0 = nullptr;
+	const XMMATRIX& matVP = camera_->GetViewProjection();
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
 	//constMap0->color = color;
-	constMap0->mat = matWorld * camera_->GetViewProjection();	// 行列の合成
+	constMap0->mat = matWorld * matVP;	// 行列の合成
 	constBuffB0->Unmap(0, nullptr);
 }
 

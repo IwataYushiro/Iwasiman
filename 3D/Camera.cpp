@@ -70,7 +70,7 @@ void Camera::CameraMoveEyeVector(const XMFLOAT3& move)
 	SetEye(eye_moved);
 }
 
-void Camera::SetEye(XMFLOAT3 eye)
+void Camera::SetEye(const XMFLOAT3& eye)
 {
 	viewProjection_.eye_ = eye;
 
@@ -78,7 +78,7 @@ void Camera::SetEye(XMFLOAT3 eye)
 	viewDirty_ = true;
 }
 
-void Camera::SetTarget(XMFLOAT3 target)
+void Camera::SetTarget(const XMFLOAT3& target)
 {
 	viewProjection_.target_ = target;
 
@@ -86,7 +86,7 @@ void Camera::SetTarget(XMFLOAT3 target)
 	viewDirty_ = true;
 }
 
-void Camera::SetUp(XMFLOAT3 up)
+void Camera::SetUp(const XMFLOAT3& up)
 {
 	viewProjection_.up_ = up;
 

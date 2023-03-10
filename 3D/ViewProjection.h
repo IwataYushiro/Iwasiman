@@ -53,13 +53,13 @@ public://変数
 	XMFLOAT3 up_;
 
 	//視野角
-	float angle_;
+	float angle_ = 0.0f;
 	//アスペクト比
-	float aspect_;
+	float aspect_ = 0.0f;
 	//ニアクリップ(手前側の深度限界)
-	float nearZ_;
+	float nearZ_ = 0.0f;
 	//ファークリップ(奥側の深度限界)
-	float farZ_;
+	float farZ_ = 0.0f;
 
 	//ビュー行列
 	XMMATRIX matView_;

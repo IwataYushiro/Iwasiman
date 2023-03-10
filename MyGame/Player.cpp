@@ -63,7 +63,7 @@ void Player::Update() {
 		//ˆÚ“®§ŒÀ
 		Trans();
 	}
-
+	camera_->Update();
 	obj_->Update();
 }
 

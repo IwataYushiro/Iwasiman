@@ -48,12 +48,12 @@ public://ゲッター、セッター等
 
 	//視点座標
 	const XMFLOAT3& GetEye() { return viewProjection_.eye_; }
-	void SetEye(XMFLOAT3 eye);
+	void SetEye(const XMFLOAT3& eye);
 	//注視点座標
 	const XMFLOAT3& GetTarget() { return viewProjection_.target_; }
-	void SetTarget(XMFLOAT3 target);
+	void SetTarget(const XMFLOAT3& target);
 	//上方向ベクトル座標
 	const XMFLOAT3& GetUp() { return viewProjection_.up_; }
-	void SetUp(XMFLOAT3 up);
+	void SetUp(const XMFLOAT3& up);
 };
 

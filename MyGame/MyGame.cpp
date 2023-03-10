@@ -6,15 +6,15 @@ void MyGame::Initialize()
 {
 	Framework::Initialize();
 
-	
+	//カメラ
+	camera_ = new Camera();
 	//Audio
 	audio_ = new Audio();
 	//imgui
 	imguiManager_ = new ImGuiManager();
 
 	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
-	//カメラ
-	camera_ = new Camera();
+	
 	//プレイヤー関係
 	player_ = new Player();
 	//敵関係
@@ -113,11 +113,16 @@ void MyGame::Update()
 		break;
 
 	case stage:
-
+		if (input_->PushKey(DIK_UP))
+		{
+			camera_->CameraMoveEyeVector({ +1.0f,0.0f,0.0f });
+		}
+		camera_->Update();
 		//モデル呼び出し例
 		player_->Update();
-		enemy_->Update();
+		//enemy_->Update();
 
+		
 		ChackAllCollisions();
 
 		if (player_->IsDead())
