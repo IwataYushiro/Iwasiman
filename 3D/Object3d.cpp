@@ -38,7 +38,7 @@ void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int wind
 	Model::SetDevice(device);
 
 	// カメラ初期化
-	InitializeCamera(window_width, window_height);
+	camera_->Initialize();
 
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
@@ -85,37 +85,6 @@ Object3d* Object3d::Create()
 	}
 
 	return object3d;
-}
-
-void Object3d::SetEye(XMFLOAT3 eye)
-{
-	Object3d::eye = eye;
-
-	UpdateViewMatrix();
-}
-
-void Object3d::SetTarget(XMFLOAT3 target)
-{
-	Object3d::target = target;
-
-	UpdateViewMatrix();
-}
-
-void Object3d::CameraMoveVector(XMFLOAT3 move)
-{
-	XMFLOAT3 eye_moved = GetEye();
-	XMFLOAT3 target_moved = GetTarget();
-
-	eye_moved.x += move.x;
-	eye_moved.y += move.y;
-	eye_moved.z += move.z;
-
-	target_moved.x += move.x;
-	target_moved.y += move.y;
-	target_moved.z += move.z;
-
-	SetEye(eye_moved);
-	SetTarget(target_moved);
 }
 
 void Object3d::InitializeGraphicsPipeline()
@@ -265,11 +234,6 @@ void Object3d::InitializeGraphicsPipeline()
 
 }
 
-void Object3d::UpdateViewMatrix()
-{
-	// ビュー行列の更新
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-}
 
 bool Object3d::Initialize()
 {

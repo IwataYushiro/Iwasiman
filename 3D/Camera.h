@@ -17,7 +17,13 @@ public:
 	void Initialize();
 	//更新
 	void Update();
-
+	//ビュー行列更新
+	void UpdateViewMatrix();
+	//プロジェクション行列更新
+	void UpdateProjectionMatrix();
+	//カメラ移動
+	void CameraMoveVector(XMFLOAT3 move);
+	
 private:
 	// ビュー行列
 	XMMATRIX matView_ = {};
@@ -33,17 +39,18 @@ private:
 public://アクセッサ
 	//ビュー行列
 	const XMMATRIX& GetMatView() { return matView_; }
+	
 	//プロジェクション行列
 	const XMMATRIX& GetMatProjection() { return matProjection_; }
-
+	
 	//視点
 	const XMFLOAT3& GetEye() { return eye_; }
 	void SetEye(const XMFLOAT3& eye);
-	
 
 	//注視点
 	const XMFLOAT3& GetTarget() { return target_; }
 	void SetTarget(const XMFLOAT3& target);
+
 	//上方向ベクトル
 	const XMFLOAT3& GetUp() { return up_; }
 	void SetUp(const XMFLOAT3& up);

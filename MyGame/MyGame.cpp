@@ -109,10 +109,15 @@ void MyGame::Update()
 		break;
 
 	case stage:
+		XMFLOAT3 cameraMove = camera_->GetEye();
+		cameraMove.z += 0.5f;
+		camera_->SetEye(cameraMove);
+
+		camera_->Update();
 
 		//ƒ‚ƒfƒ‹ŒÄ‚Ño‚µ—á
 		player_->Update();
-		enemy_->Update();
+		//enemy_->Update();
 
 		ChackAllCollisions();
 
