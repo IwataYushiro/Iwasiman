@@ -45,7 +45,7 @@ public: // 静的メンバ関数
 	/// <param name="device">デバイス</param>
 	/// <param name="window_width">画面幅</param>
 	/// <param name="window_height">画面高さ</param>
-	static void StaticInitialize(ID3D12Device* device, int window_width, int window_height,Camera* camera);
+	static void StaticInitialize(ID3D12Device* device, int window_width, int window_height);
 
 	/// <summary>
 	/// 描画前処理
@@ -67,9 +67,7 @@ public: // 静的メンバ関数
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device_;
-	//カメラ
-	static Camera* camera_;
-
+	
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
 	// ルートシグネチャ
@@ -117,7 +115,9 @@ public: // メンバ関数
 private: // メンバ変数
 	//モデル
 	Model* model_ = nullptr;
-	
+	//カメラ
+	Camera* camera_;
+
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	
 	// 色
@@ -157,6 +157,8 @@ public: //アクセッサ置き場
 	/// </summary>
 	/// <param name="position">座標</param>
 	void SetPosition(const XMFLOAT3& position) { this->position = position; }
-//
+	
+	//カメラ
+	void SetCamera( Camera* camera) { this->camera_ = camera; };
 };
 

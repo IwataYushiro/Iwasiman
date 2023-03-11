@@ -4,19 +4,15 @@
 using namespace DirectX;
 Camera::Camera()
 {
-}
-
-Camera::~Camera()
-{
-}
-
-void Camera::Initialize()
-{
 	// ビュー行列の生成
 	UpdateViewMatrix();
 
 	// 透視投影による射影行列の生成
 	UpdateProjectionMatrix();
+}
+
+Camera::~Camera()
+{
 }
 
 void Camera::Update()
@@ -42,7 +38,7 @@ void Camera::UpdateProjectionMatrix()
 		0.1f, 1000.0f
 	);
 }
-void Camera::CameraMoveVector(XMFLOAT3 move)
+void Camera::CameraMoveVector(const XMFLOAT3& move)
 {
 	XMFLOAT3 eye_moved = eye_;
 	XMFLOAT3 target_moved = target_;
@@ -57,6 +53,17 @@ void Camera::CameraMoveVector(XMFLOAT3 move)
 
 	SetEye(eye_moved);
 	SetTarget(target_moved);
+}
+
+void Camera::CameraMoveVectorEye(const XMFLOAT3& move)
+{
+	XMFLOAT3 eye_moved = eye_;
+
+	eye_moved.x += move.x;
+	eye_moved.y += move.y;
+	eye_moved.z += move.z;
+
+	SetEye(eye_moved);
 }
 
 

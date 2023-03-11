@@ -11,7 +11,7 @@ void MyGame::Initialize()
 	//imgui
 	imguiManager_ = new ImGuiManager();
 
-	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height,camera_);
+	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
 
 	//プレイヤー関係
 	player_ = new Player();
@@ -63,11 +63,14 @@ void MyGame::Initialize()
 	//オブジェクトにモデル紐付ける
 	object3DPlayer_->SetModel(modelPlayer_);
 	object3DEnemy_->SetModel(modelEnemy_);
+	//カメラも紐づけ
+	object3DPlayer_->SetCamera(camera_);
+	object3DEnemy_->SetCamera(camera_);
 
 	//ポジション
-	player_->Initialize(modelPlayer_, object3DPlayer_, input_);
+	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
 
-	enemy_->Initialize(modelEnemy_, object3DEnemy_);
+	enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
 	//敵に自機のアドレスを渡す
 	enemy_->SetPlayer(player_);
 
@@ -109,12 +112,13 @@ void MyGame::Update()
 		break;
 
 	case stage:
+		//カメラ
 		camera_->CameraMoveVector({ 0.0f,0.0f,-0.5f });
 		camera_->Update();
 
 		//モデル呼び出し例
 		player_->Update();
-		//enemy_->Update();
+		enemy_->Update();
 
 		ChackAllCollisions();
 

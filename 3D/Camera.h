@@ -12,19 +12,19 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
 	Camera();
-	~Camera();
-	//初期化
-	void Initialize();
+	virtual ~Camera();
 	//更新
-	void Update();
+	virtual void Update();
 	//ビュー行列更新
 	void UpdateViewMatrix();
 	//プロジェクション行列更新
 	void UpdateProjectionMatrix();
 	//カメラ移動
-	void CameraMoveVector(XMFLOAT3 move);
+	void CameraMoveVector(const XMFLOAT3& move);
+	//カメラ視点移動
+	void CameraMoveVectorEye(const XMFLOAT3& move);
 	
-private:
+protected:
 	// ビュー行列
 	XMMATRIX matView_ = {};
 	// 射影行列
@@ -37,7 +37,6 @@ private:
 	XMFLOAT3 up_ = { 0.0f,1.0f,0.0f };
 
 public://アクセッサ
-	//ビュー行列
 	const XMMATRIX& GetMatView() { return matView_; }
 	
 	//プロジェクション行列

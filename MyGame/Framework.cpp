@@ -19,8 +19,6 @@ void Framework::Initialize()
 	dxCommon_->Initialize(winApp_);
 	//スプライト基盤
 	sprCommon_->Initialize(dxCommon_);
-	//カメラ
-	camera_->Initialize();
 	//入力
 	input_->Initialize(winApp_);
 

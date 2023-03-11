@@ -18,7 +18,6 @@ using namespace Microsoft::WRL;
 const float Object3d::radius = 5.0f;				// 底面の半径
 const float Object3d::prizmHeight = 8.0f;			// 柱の高さ
 ID3D12Device* Object3d::device_ = nullptr;
-Camera* Object3d::camera_ = nullptr;
 ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
 ComPtr<ID3D12RootSignature> Object3d::rootsignature;
 ComPtr<ID3D12PipelineState> Object3d::pipelinestate;
@@ -26,19 +25,15 @@ ComPtr<ID3DBlob> Object3d::rootSigBlob;
 ComPtr<ID3DBlob> Object3d::vsBlob; // 頂点シェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::psBlob;	// ピクセルシェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::errorBlob; // エラーオブジェクト
-void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height,Camera* camera)
+void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
 {
 
 	// nullptrチェック
 	assert(device);
 	device_ = device;
-	camera_ = camera;
 
 	//モデルにデバイスをセット
 	Model::SetDevice(device);
-
-	// カメラ初期化
-	camera_->Initialize();
 
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
