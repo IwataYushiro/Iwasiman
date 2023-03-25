@@ -5,7 +5,6 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
-#include <forward_list>
 #include "Camera.h"
 
 /// <summary>
@@ -31,11 +30,6 @@ public: // サブクラス
 	//	XMFLOAT2 uv;  // uv座標
 	//};
 
-	struct VertexPosScale
-	{
-		XMFLOAT3 pos; // xyz座標
-		float scale;  //スケール
-	};
 
 	// 定数バッファ用データ構造体
 	struct ConstBufferData
@@ -44,31 +38,7 @@ public: // サブクラス
 		XMMATRIX mat;	// ３Ｄ変換行列
 		XMMATRIX matBillboard;	//ビルボード行列
 	};
-	//パーティクル一粒
-	struct Particle
-	{
-		//DirectX::を省略
-		using XMFLOAT3 = DirectX::XMFLOAT3;
-
-		//座標
-		XMFLOAT3 position = {};
-		//速度
-		XMFLOAT3 velocity = {};
-		//加速度
-		XMFLOAT3 accel = {};
-		//現在frame
-		int frame = 0;
-		//終了frame
-		int num_frame = 0;
-
-		//スケール
-		float scale = 1.0f;
-		//初期値
-		float s_scale = 1.0f;
-		//最終値
-		float e_scale = 0.0f;
-	};
-
+	
 private: // 定数
 	static const int division = 50;					// 分割数
 	static const float radius;				// 底面の半径
@@ -115,45 +85,14 @@ private: // 静的メンバ変数
 	static ComPtr<ID3D12PipelineState> pipelinestate;
 	// デスクリプタヒープ
 	static ComPtr<ID3D12DescriptorHeap> descHeap;
-	// 頂点バッファ
-	static ComPtr<ID3D12Resource> vertBuff;
-	// インデックスバッファ
-	//static ComPtr<ID3D12Resource> indexBuff;
-	// テクスチャバッファ
-	static ComPtr<ID3D12Resource> texbuff;
-	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
-	// 頂点バッファビュー
-	static D3D12_VERTEX_BUFFER_VIEW vbView;
-	// インデックスバッファビュー
-	//static D3D12_INDEX_BUFFER_VIEW ibView;
-	//頂点データ配列
-	static VertexPosScale vertices[vertexCount];
-	//頂点インデックス配列
-	//static unsigned short indices[indexCount];
+	
 
 private:// 静的メンバ関数
-	/// <summary>
-	/// デスクリプタヒープの初期化
-	/// </summary>
-	static void InitializeDescriptorHeap();
 
 	/// グラフィックパイプライン生成
 	/// </summary>
 	/// <returns>成否</returns>
 	static void InitializeGraphicsPipeline();
-
-	/// <summary>
-	/// テクスチャ読み込み
-	/// </summary>
-	static void LoadTexture();
-
-	/// <summary>
-	/// モデル作成
-	/// </summary>
-	static void CreateModel();
 
 public: // メンバ関数
 	bool Initialize();
@@ -167,18 +106,6 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	/// <summary>
-	/// 座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
-	//const XMFLOAT3& GetPosition() const { return position; }
-
-	/// <summary>
-	/// 座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
-	//void SetPosition(const XMFLOAT3& position) { this->position = position; }
-
 	//パーティクルの追加
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
 		float start_scale, float end_scale);
@@ -187,7 +114,7 @@ private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	// ローカルスケール
 	XMFLOAT3 scale = { 1,1,1 };
-	std::forward_list<Particle> particles;
+	
 	Camera* camera_ = nullptr;
 
 public://アクセッサ置き場
@@ -195,4 +122,3 @@ public://アクセッサ置き場
 	void SetCamera(Camera* camera) { this->camera_ = camera; };
 };
 
-const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);
