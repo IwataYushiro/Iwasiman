@@ -68,10 +68,15 @@ void MyGame::Initialize()
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
 	//パーティクル
-	particle_ = Particle::LoadFromParticleTexture("particle1.png");
-	pm_ = ParticleManager::Create();
-	pm_->SetParticleModel(particle_);
-	pm_->SetCamera(camera_);
+	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
+	pm1_ = ParticleManager::Create();
+	pm1_->SetParticleModel(particle1_);
+	pm1_->SetCamera(camera_);
+
+	particle2_ = Particle::LoadFromParticleTexture("particle3.png");
+	pm2_ = ParticleManager::Create();
+	pm2_->SetParticleModel(particle2_);
+	pm2_->SetCamera(camera_);
 	//ポジション
 	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
 
@@ -96,7 +101,7 @@ void MyGame::Update()
 	switch (scene_)
 	{
 	case title:
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 			const float md_pos = 40.0f;
@@ -116,7 +121,29 @@ void MyGame::Update()
 			acc.y = -(float)rand() / RAND_MAX * md_acc;
 
 			//追加
-			particle_->Add(60, pos, vel, acc, 3.0f, 0.0f);
+			particle1_->Add(60, pos, vel, acc, 3.0f, 0.0f);
+		}
+		for (int i = 0; i < 5; i++)
+		{
+			//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
+			const float md_pos = 100.0f;
+			XMFLOAT3 pos{};
+			pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+			pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+			pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+			//X,Y,Z全て{0.1f,0.1f}でランダムに分布
+			const float md_vel = 0.2f;
+			XMFLOAT3 vel{};
+			vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+			//重力に見立ててYのみ{0.001f,0}でランダムに分布
+			XMFLOAT3 acc{};
+			const float md_acc = 0.001f;
+			acc.y = -(float)rand() / RAND_MAX * md_acc;
+
+			//追加
+			particle2_->Add(60, pos, vel, acc, 6.0f, 0.0f);
 		}
 
 
@@ -141,9 +168,7 @@ void MyGame::Update()
 		break;
 
 	case stage:
-		//カメラ
-		camera_->Update();
-
+		
 		//モデル呼び出し例
 		player_->Update();
 		enemy_->Update();
@@ -183,7 +208,11 @@ void MyGame::Update()
 
 
 	}
-	pm_->Update();
+	//カメラ
+	camera_->Update();
+
+	pm1_->Update();
+	pm2_->Update();
 	//imgui
 	imguiManager_->Update();
 	// ここまで
@@ -254,6 +283,7 @@ player_->Draw();
 	
 	//モデル描画後処理
 	Object3d::PostDraw();
+
 	//エフェクト
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
@@ -262,7 +292,8 @@ player_->Draw();
 	switch (scene_)
 	{
 	case title:
-		pm_->Draw();
+		pm1_->Draw();
+		pm2_->Draw();
 		break;
 	case howtoplay:
 
@@ -307,8 +338,10 @@ void MyGame::Finalize()
 	delete spriteGameClear_;
 	delete spriteGameOver_;
 	//パーティクル
-	delete particle_;
-	delete pm_;
+	delete particle1_;
+	delete pm1_;
+	delete particle2_;
+	delete pm2_;
 	//モデル
 	//3Dオブジェクト
 	delete object3DPlayer_;

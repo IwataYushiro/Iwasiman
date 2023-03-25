@@ -64,8 +64,11 @@ private:
 	Object3d* object3DEnemy_ = nullptr;
 	
 	//パーティクル
-	Particle* particle_ = nullptr;
-	ParticleManager * pm_ = nullptr;
+	Particle* particle1_ = nullptr;
+	ParticleManager * pm1_ = nullptr;
+
+	Particle* particle2_ = nullptr;
+	ParticleManager* pm2_ = nullptr;
 	//シーン
 	size_t scene_;
 
