@@ -68,8 +68,10 @@ void MyGame::Initialize()
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
 	//パーティクル
-	p1 = Particle::LoadFromParticleTexture("particle1.png");
-	p1->SetCamera(camera_);
+	particle_ = Particle::LoadFromParticleTexture("particle1.png");
+	pm_ = ParticleManager::Create();
+	pm_->SetParticleModel(particle_);
+	pm_->SetCamera(camera_);
 	//ポジション
 	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
 
@@ -114,10 +116,10 @@ void MyGame::Update()
 			acc.y = -(float)rand() / RAND_MAX * md_acc;
 
 			//追加
-			p1->Add(60, pos, vel, acc, 3.0f, 0.0f);
+			particle_->Add(60, pos, vel, acc, 3.0f, 0.0f);
 		}
 
-		p1->Update();
+
 		if (input_->TriggerKey(DIK_SPACE))
 		{
 			player_->Reset();
@@ -181,7 +183,7 @@ void MyGame::Update()
 
 
 	}
-
+	pm_->Update();
 	//imgui
 	imguiManager_->Update();
 	// ここまで
@@ -260,7 +262,7 @@ player_->Draw();
 	switch (scene_)
 	{
 	case title:
-		p1->Draw();
+		pm_->Draw();
 		break;
 	case howtoplay:
 
@@ -305,8 +307,8 @@ void MyGame::Finalize()
 	delete spriteGameClear_;
 	delete spriteGameOver_;
 	//パーティクル
-	delete p1;
-	//delete p2;
+	delete particle_;
+	delete pm_;
 	//モデル
 	//3Dオブジェクト
 	delete object3DPlayer_;

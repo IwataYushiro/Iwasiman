@@ -13,11 +13,9 @@ using namespace Microsoft::WRL;
 const float ParticleManager::radius = 5.0f;				// 底面の半径
 const float ParticleManager::prizmHeight = 8.0f;			// 柱の高さ
 ID3D12Device* ParticleManager::device_ = nullptr;
-UINT ParticleManager::descriptorHandleIncrementSize = 0;
 ID3D12GraphicsCommandList* ParticleManager::cmdList = nullptr;
 ComPtr<ID3D12RootSignature> ParticleManager::rootsignature;
 ComPtr<ID3D12PipelineState> ParticleManager::pipelinestate;
-ComPtr<ID3D12DescriptorHeap> ParticleManager::descHeap;
 
 void ParticleManager::StaticInitialize(ID3D12Device* device)
 {
@@ -84,7 +82,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/Shader/ParticleVS.hlsl",	// シェーダファイル名
+		L"Resources/shader/ParticleVS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -107,7 +105,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 
 	// ジオメトリシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/Shader/ParticleGS.hlsl",	// シェーダファイル名
+		L"Resources/shader/ParticleGS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "gs_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -129,7 +127,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 	}
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/Shader/ParticlePS.hlsl",	// シェーダファイル名
+		L"Resources/shader/ParticlePS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -162,16 +160,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		},
-		//{ // 法線ベクトル(1行で書いたほうが見やすい)
-		//	"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-		//	D3D12_APPEND_ALIGNED_ELEMENT,
-		//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		//},
-		//{ // uv座標(1行で書いたほうが見やすい)
-		//	"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
-		//	D3D12_APPEND_ALIGNED_ELEMENT,
-		//	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-		//},
+		
 	};
 
 	// グラフィックスパイプラインの流れを設定
@@ -286,8 +275,10 @@ bool ParticleManager::Initialize()
 
 void ParticleManager::Update()
 {
+	
 	HRESULT result;
 	
+	particle_->Update();
 	XMMATRIX matView = camera_->GetMatViewProjection();
 	XMMATRIX matBillboard = camera_->GetMatBillboard();
 
@@ -304,11 +295,6 @@ void ParticleManager::Draw()
 	// nullptrチェック
 	assert(device_);
 	assert(ParticleManager::cmdList);
-
-
-	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
