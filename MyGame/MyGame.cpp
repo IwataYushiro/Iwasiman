@@ -11,7 +11,8 @@ void MyGame::Initialize()
 	//imgui
 	imguiManager_ = new ImGuiManager();
 
-	Object3d::StaticInitialize(dxCommon_->GetDevice(), winApp_->window_width, winApp_->window_height);
+	Object3d::StaticInitialize(dxCommon_->GetDevice());
+	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 
 	//プレイヤー関係
 	player_ = new Player();
@@ -66,7 +67,9 @@ void MyGame::Initialize()
 	//カメラも紐づけ
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
-
+	//パーティクル
+	p1=ParticleManager::Create();
+	p1->SetCamera(camera_);
 	//ポジション
 	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
 
@@ -91,6 +94,30 @@ void MyGame::Update()
 	switch (scene_)
 	{
 	case title:
+		for (int i = 0; i < 20; i++)
+		{
+			//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
+			const float md_pos = 40.0f;
+			XMFLOAT3 pos{};
+			pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+			pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+			pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+			//X,Y,Z全て{0.1f,0.1f}でランダムに分布
+			const float md_vel = 0.2f;
+			XMFLOAT3 vel{};
+			vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+			//重力に見立ててYのみ{0.001f,0}でランダムに分布
+			XMFLOAT3 acc{};
+			const float md_acc = 0.001f;
+			acc.y = -(float)rand() / RAND_MAX * md_acc;
+
+			//追加
+			p1->Add(60, pos, vel, acc, 3.0f, 0.0f);
+		}
+
+		p1->Update();
 		if (input_->TriggerKey(DIK_SPACE))
 		{
 			player_->Reset();
@@ -174,7 +201,7 @@ void MyGame::Draw()
 	{
 	case title:
 		//スプライト描画
-		spriteTitle_->Draw();
+		//spriteTitle_->Draw();
 		break;
 	
 	case howtoplay:
@@ -225,6 +252,33 @@ player_->Draw();
 	
 	//モデル描画後処理
 	Object3d::PostDraw();
+	//エフェクト
+	//エフェクト描画前処理
+	ParticleManager::PreDraw(dxCommon_->GetCommandList());
+
+	//エフェクト描画
+	switch (scene_)
+	{
+	case title:
+		p1->Draw();
+		break;
+	case howtoplay:
+
+		break;
+	case stage:
+
+		break;
+	case clear:
+
+		break;
+	case gameover:
+
+		break;
+
+	}
+
+	//エフェクト描画後処理
+	ParticleManager::PostDraw();
 	//前景スプライト
 
 	//ImGuiの表示
@@ -250,7 +304,9 @@ void MyGame::Finalize()
 	delete spriteHowToPlay_;
 	delete spriteGameClear_;
 	delete spriteGameOver_;
-
+	//パーティクル
+	delete p1;
+	//delete p2;
 	//モデル
 	//3Dオブジェクト
 	delete object3DPlayer_;

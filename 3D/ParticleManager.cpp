@@ -28,7 +28,7 @@ D3D12_VERTEX_BUFFER_VIEW ParticleManager::vbView{};
 ParticleManager::VertexPosScale ParticleManager::vertices[vertexCount];
 //unsigned short Object3d::indices[indexCount];
 
-void ParticleManager::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
+void ParticleManager::StaticInitialize(ID3D12Device* device)
 {
 	// nullptrチェック
 	assert(device);
@@ -302,7 +302,7 @@ void ParticleManager::LoadTexture()
 	ScratchImage scratchImg{};
 
 	// WICテクスチャのロード
-	result = LoadFromWICFile(L"Resources/particle2.png", WIC_FLAGS_NONE, &metadata, scratchImg);
+	result = LoadFromWICFile(L"Resources/particle/particle2.png", WIC_FLAGS_NONE, &metadata, scratchImg);
 	assert(SUCCEEDED(result));
 
 	ScratchImage mipChain{};
@@ -513,14 +513,13 @@ void ParticleManager::Update()
 		}
 		vertBuff->Unmap(0, nullptr);
 	}
-	XMMATRIX matView = camera_->GetMatView();
-	XMMATRIX matProjection = camera_->GetMatProjection();
+	XMMATRIX matView = camera_->GetMatViewProjection();
 	XMMATRIX matBillboard = camera_->GetMatBillboard();
 
 	// 定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->mat = matView * matProjection;	// 行列の合成
+	constMap->mat = matView;	// 行列の合成
 	constMap->matBillboard = matBillboard;
 	constBuff->Unmap(0, nullptr);
 }
