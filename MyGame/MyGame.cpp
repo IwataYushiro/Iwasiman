@@ -125,7 +125,7 @@ void MyGame::Update()
 		}
 		for (int i = 0; i < 5; i++)
 		{
-			//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
+			//X,Y,Z全て{-50.0f,50.0f}でランダムに分布
 			const float md_pos = 100.0f;
 			XMFLOAT3 pos{};
 			pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
@@ -168,7 +168,7 @@ void MyGame::Update()
 		break;
 
 	case stage:
-		
+
 		//モデル呼び出し例
 		player_->Update();
 		enemy_->Update();
@@ -234,15 +234,15 @@ void MyGame::Draw()
 		//スプライト描画
 		//spriteTitle_->Draw();
 		break;
-	
+
 	case howtoplay:
 		spriteHowToPlay_->Draw();
 		break;
-	
+
 	case stage:
 
 		break;
-	
+
 	case clear:
 		spriteGameClear_->Draw();
 		break;
@@ -268,8 +268,8 @@ void MyGame::Draw()
 
 		break;
 	case stage:
-player_->Draw();
-	enemy_->Draw();
+		player_->Draw();
+		enemy_->Draw();
 
 		break;
 	case clear:
@@ -280,7 +280,7 @@ player_->Draw();
 		break;
 
 	}
-	
+
 	//モデル描画後処理
 	Object3d::PostDraw();
 
