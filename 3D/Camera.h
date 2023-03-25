@@ -29,6 +29,13 @@ protected:
 	XMMATRIX matView_ = {};
 	// 射影行列
 	XMMATRIX matProjection_ = {};
+	
+	XMMATRIX matViewProjection_ = {};
+	
+	// ビルボード行列
+	XMMATRIX matBillboard_ = {};
+	// Y軸回りビルボード行列
+	XMMATRIX matBillboardY_ = {};
 	// 視点座標
 	XMFLOAT3 eye_ = { 0.0f, 0.0f, -100.0f };
 	// 注視点座標
@@ -37,11 +44,20 @@ protected:
 	XMFLOAT3 up_ = { 0.0f,1.0f,0.0f };
 
 public://アクセッサ
+	//ビュー行列
 	const XMMATRIX& GetMatView() { return matView_; }
 	
 	//プロジェクション行列
 	const XMMATRIX& GetMatProjection() { return matProjection_; }
+
+	const XMMATRIX& GetMatViewProjection() { return matViewProjection_; }
+
 	
+	//ビルボード行列
+	const XMMATRIX& GetMatBillboard() { return matBillboard_; }
+	const XMMATRIX& GetMatBillboardY() { return matBillboardY_; }
+
+
 	//視点
 	const XMFLOAT3& GetEye() { return eye_; }
 	void SetEye(const XMFLOAT3& eye);

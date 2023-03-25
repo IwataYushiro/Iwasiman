@@ -4,6 +4,7 @@
 #include "ImGuiManager.h"
 #include "Object3d.h"
 #include "Sprite.h"
+#include "ParticleManager.h"
 
 #include "Player.h"
 #include "Enemy.h"

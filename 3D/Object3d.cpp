@@ -277,15 +277,13 @@ void Object3d::Update()
 		// 親オブジェクトのワールド行列を掛ける
 		matWorld *= parent->matWorld;
 	}
-
-	XMMATRIX matView = camera_->GetMatView();
-	XMMATRIX matProjection = camera_->GetMatProjection();
+	XMMATRIX matViewProjection = camera_->GetMatViewProjection();
 
 	// 定数バッファへデータ転送
 	ConstBufferDataB0* constMap0 = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
 	//constMap0->color = color;
-	constMap0->mat = matWorld * matView * matProjection;	// 行列の合成
+	constMap0->mat = matWorld * matViewProjection;	// 行列の合成
 	constBuffB0->Unmap(0, nullptr);
 }
 

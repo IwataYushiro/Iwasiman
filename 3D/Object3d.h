@@ -80,24 +80,11 @@ private: // 静的メンバ変数
 	static ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
 	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 private:// 静的メンバ関数
-	
-	/// <summary>
-	/// カメラ初期化
-	/// </summary>
-	/// <param name="window_width">画面横幅</param>
-	/// <param name="window_height">画面縦幅</param>
-	static void InitializeCamera(int window_width, int window_height);
-
 	/// <summary>
 	/// グラフィックパイプライン生成
 	/// </summary>
 	/// <returns>成否</returns>
 	static void InitializeGraphicsPipeline();
-
-	/// <summary>
-	/// ビュー行列を更新
-	/// </summary>
-	static void UpdateViewMatrix();
 
 public: // メンバ関数
 	bool Initialize();

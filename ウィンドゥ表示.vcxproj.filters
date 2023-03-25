@@ -120,6 +120,12 @@
     <ClCompile Include="3D\Camera.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
+    <ClCompile Include="3D\Particle.cpp">
+      <Filter>ソース ファイル\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\ParticleManager.cpp">
+      <Filter>ソース ファイル\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3D\Mesh.h">
@@ -185,6 +191,12 @@
     <ClInclude Include="3D\Camera.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
+    <ClInclude Include="3D\Particle.h">
+      <Filter>ヘッダー ファイル\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\ParticleManager.h">
+      <Filter>ヘッダー ファイル\3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -194,6 +206,9 @@
       <Filter>シェーダー ファイル</Filter>
     </None>
     <None Include="Resources\shader\OBJ.hlsli">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="Resources\shader\Particle.hlsli">
       <Filter>シェーダー ファイル</Filter>
     </None>
   </ItemGroup>
@@ -214,6 +229,15 @@
       <Filter>シェーダー ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\OBJVS.hlsl">
+      <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ParticleGS.hlsl">
+      <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ParticlePS.hlsl">
+      <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\ParticleVS.hlsl">
       <Filter>シェーダー ファイル</Filter>
     </FxCompile>
   </ItemGroup>
