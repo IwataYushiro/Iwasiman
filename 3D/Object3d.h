@@ -43,8 +43,6 @@ public: // 静的メンバ関数
 	/// 静的初期化
 	/// </summary>
 	/// <param name="device">デバイス</param>
-	/// <param name="window_width">画面幅</param>
-	/// <param name="window_height">画面高さ</param>
 	static void StaticInitialize(ID3D12Device* device);
 
 	/// <summary>
@@ -146,6 +144,6 @@ public: //アクセッサ置き場
 	void SetPosition(const XMFLOAT3& position) { this->position = position; }
 	
 	//カメラ
-	void SetCamera( Camera* camera) { this->camera_ = camera; };
+	void SetCamera( Camera* camera) { this->camera_ = camera; }
 };
 

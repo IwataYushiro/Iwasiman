@@ -52,7 +52,7 @@ public://サブクラス
 private://定数
 	static const int vertexCount = 1024;		// 頂点数
 
-public://メンバ変数
+public://メンバ関数
 
 	//OBJファイルからパーティクルモデルを読み込む
 	static Particle* LoadFromParticleTexture(const std::string& fileName);
@@ -66,9 +66,13 @@ public://メンバ変数
 	//更新
 	void Update();
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial);
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-private:
+	//パーティクルの追加
+	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
+		float start_scale, float end_scale);
+
+private://メンバ変数
 	// デバイス
 	static ID3D12Device* device_;
 	//デフォルトテクスチャ格納ディレクトリ

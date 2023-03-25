@@ -25,6 +25,7 @@ ComPtr<ID3DBlob> Object3d::rootSigBlob;
 ComPtr<ID3DBlob> Object3d::vsBlob; // 頂点シェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::psBlob;	// ピクセルシェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::errorBlob; // エラーオブジェクト
+
 void Object3d::StaticInitialize(ID3D12Device* device)
 {
 

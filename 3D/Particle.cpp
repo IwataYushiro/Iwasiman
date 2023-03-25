@@ -228,8 +228,42 @@ void Particle::Update()
 	
 }
 
-void Particle::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial)
+void Particle::Draw(ID3D12GraphicsCommandList* cmdList)
 {
+	// nullptrチェック
+	assert(device_);
+	assert(cmdList);
+
+	// 頂点バッファの設定
+	cmdList->IASetVertexBuffers(0, 1, &vbView_);
+	
+	// デスクリプタヒープの配列
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeap_.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	
+	// シェーダリソースビューをセット
+	cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV_);
+	
+	// 描画コマンド
+	cmdList->DrawInstanced((UINT)std::distance(particles_.begin(), particles_.end()), 1, 0, 0);
+
+}
+
+void Particle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale)
+{
+	//リストに要素を追加
+	particles_.emplace_front();
+	//追加した要素の参照
+	OneParticle& p = particles_.front();
+	//値セット
+	p.position = position;
+	p.velocity = velocity;
+	p.accel = accel;
+	p.num_frame = life;
+
+	p.s_scale = start_scale;
+	p.e_scale = end_scale;
+	p.scale = p.s_scale;
 }
 
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)

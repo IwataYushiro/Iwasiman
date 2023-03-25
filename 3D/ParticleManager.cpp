@@ -26,6 +26,8 @@ void ParticleManager::StaticInitialize(ID3D12Device* device)
 
 	device_ = device;
 
+	Particle::SetDevice(device_);
+
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
 
@@ -285,43 +287,7 @@ bool ParticleManager::Initialize()
 void ParticleManager::Update()
 {
 	HRESULT result;
-	////寿命が尽きたパーティクルを全削除
-	//particles.remove_if([](OneParticle& x) {return x.frame >= x.num_frame; });
-	////全パーティクル更新
-	//for (std::forward_list<OneParticle>::iterator it = particles.begin();
-	//	it != particles.end(); it++)
-	//{
-	//	//経過フレーム数をカウント
-	//	it->frame++;
-	//	//速度に加速度を加算
-	//	it->velocity = it->velocity + it->accel;
-	//	//速度による移動
-	//	it->position = it->position + it->velocity;
-
-	//	//進行度を0~1の範囲に換算
-	//	float f = (float)it->frame / it->num_frame;
-	//	//スケールの線形補間
-	//	it->scale = (it->e_scale - it->s_scale) * f;
-	//	it->scale += it->s_scale;
-	//}
-	////頂点バッファへデータ転送
-	//VertexPosScale* vertMap = nullptr;
-	//result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-	//if (SUCCEEDED(result))
-	//{
-	//	//パーティクルの情報を1つずつ反映
-	//	for (std::forward_list<OneParticle>::iterator it = particles.begin();
-	//		it != particles.end(); it++)
-	//	{
-	//		//座標
-	//		vertMap->pos = it->position;
-	//		//スケール
-	//		vertMap->scale = it->scale;
-	//		//次の頂点へ
-	//		vertMap++;
-	//	}
-	//	vertBuff->Unmap(0, nullptr);
-	//}
+	
 	XMMATRIX matView = camera_->GetMatViewProjection();
 	XMMATRIX matBillboard = camera_->GetMatBillboard();
 
@@ -339,10 +305,6 @@ void ParticleManager::Draw()
 	assert(device_);
 	assert(ParticleManager::cmdList);
 
-	// 頂点バッファの設定
-	cmdList->IASetVertexBuffers(0, 1, &vbView);
-	// インデックスバッファの設定
-	//cmdList->IASetIndexBuffer(&ibView);
 
 	// デスクリプタヒープの配列
 	ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
@@ -350,26 +312,6 @@ void ParticleManager::Draw()
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
-	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV);
-	// 描画コマンド
-	cmdList->DrawInstanced((UINT)std::distance(particles.begin(), particles.end()), 1, 0, 0);
-}
-
-void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
-	float start_scale, float end_scale)
-{
-	//リストに要素を追加
-	particles.emplace_front();
-	//追加した要素の参照
-	OneParticle& p = particles.front();
-	//値セット
-	p.position = position;
-	p.velocity = velocity;
-	p.accel = accel;
-	p.num_frame = life;
-
-	p.s_scale = start_scale;
-	p.e_scale = end_scale;
-	p.scale = p.s_scale;
+	
+	particle_->Draw(cmdList);
 }

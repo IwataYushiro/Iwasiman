@@ -6,6 +6,7 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include "Camera.h"
+#include "Particle.h"
 
 /// <summary>
 /// 3Dオブジェクト
@@ -51,8 +52,6 @@ public: // 静的メンバ関数
 	/// 静的初期化
 	/// </summary>
 	/// <param name="device">デバイス</param>
-	/// <param name="window_width">画面幅</param>
-	/// <param name="window_height">画面高さ</param>
 	static void StaticInitialize(ID3D12Device* device);
 
 	/// <summary>
@@ -115,10 +114,14 @@ private: // メンバ変数
 	// ローカルスケール
 	XMFLOAT3 scale = { 1,1,1 };
 	
+	Particle* particle_ = nullptr;
+
 	Camera* camera_ = nullptr;
 
 public://アクセッサ置き場
+	//パーティクルモデル
+	void SetParticleModel(Particle* pmodel) { this->particle_ = pmodel; }
 	//カメラ
-	void SetCamera(Camera* camera) { this->camera_ = camera; };
+	void SetCamera(Camera* camera) { this->camera_ = camera; }
 };
 
