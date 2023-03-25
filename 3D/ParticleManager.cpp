@@ -41,9 +41,6 @@ void ParticleManager::StaticInitialize(ID3D12Device* device)
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
 
-	// テクスチャ読み込み
-	LoadTexture();
-
 	// モデル生成
 	CreateModel();
 
@@ -78,6 +75,8 @@ ParticleManager* ParticleManager::Create()
 	if (object3d == nullptr) {
 		return nullptr;
 	}
+	// テクスチャ読み込み
+	LoadTexture();
 
 	// 初期化
 	if (!object3d->Initialize()) {
