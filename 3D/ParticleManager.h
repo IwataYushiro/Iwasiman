@@ -100,11 +100,21 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// パーティクル発射
+	/// </summary>
+	/// <param name="p">パーティクル</param>
+	/// <param name="setpos">位置</param>
+	/// <param name="setvel">移動量</param>
+	/// <param name="setacc">重力分布</param>
+	/// <param name="setnum">一気に何個か</param>
+	///  <param name="setscale">x = 開始スケール , y = 終了スケール</param>
+	void Active(Particle* p, const float& setpos, const float& setvel, const float& setacc, const int& setnum, const XMFLOAT2& setscale);
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	// ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
+	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
 	
 	Particle* particle_ = nullptr;
 

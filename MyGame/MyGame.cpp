@@ -68,7 +68,7 @@ void MyGame::Initialize()
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle2.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
@@ -101,51 +101,8 @@ void MyGame::Update()
 	switch (scene_)
 	{
 	case title:
-		for (int i = 0; i < 2; i++)
-		{
-			//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
-			const float md_pos = 40.0f;
-			XMFLOAT3 pos{};
-			pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			//X,Y,Z全て{0.1f,0.1f}でランダムに分布
-			const float md_vel = 0.2f;
-			XMFLOAT3 vel{};
-			vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			//重力に見立ててYのみ{0.001f,0}でランダムに分布
-			XMFLOAT3 acc{};
-			const float md_acc = 0.001f;
-			acc.y = -(float)rand() / RAND_MAX * md_acc;
-
-			//追加
-			particle1_->Add(60, pos, vel, acc, 3.0f, 0.0f);
-		}
-		for (int i = 0; i < 5; i++)
-		{
-			//X,Y,Z全て{-50.0f,50.0f}でランダムに分布
-			const float md_pos = 100.0f;
-			XMFLOAT3 pos{};
-			pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-			//X,Y,Z全て{0.1f,0.1f}でランダムに分布
-			const float md_vel = 0.2f;
-			XMFLOAT3 vel{};
-			vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-			//重力に見立ててYのみ{0.001f,0}でランダムに分布
-			XMFLOAT3 acc{};
-			const float md_acc = 0.001f;
-			acc.y = -(float)rand() / RAND_MAX * md_acc;
-
-			//追加
-			particle2_->Add(60, pos, vel, acc, 6.0f, 0.0f);
-		}
-
+		pm1_->Active(particle1_, 40.0f, 0.2f, 0.001f, 2, { 13.0f, 0.0f });
+		pm2_->Active(particle2_, 100.0f, 0.2f, 0.001f, 5, { 6.0f,0.0f });
 
 		if (input_->TriggerKey(DIK_SPACE))
 		{
