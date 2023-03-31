@@ -68,12 +68,12 @@ void MyGame::Initialize()
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle2.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
 
-	particle2_ = Particle::LoadFromParticleTexture("particle3.png");
+	particle2_ = Particle::LoadFromParticleTexture("particle5.png");
 	pm2_ = ParticleManager::Create();
 	pm2_->SetParticleModel(particle2_);
 	pm2_->SetCamera(camera_);
