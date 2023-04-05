@@ -46,10 +46,12 @@ void MyGame::Initialize()
 	UINT gameClearTex = 02;
 	sprCommon_->LoadTexture(gameClearTex, "texture/gameclear.png");
 	spriteGameClear_->Initialize(sprCommon_, gameClearTex);
+	spriteGameClear_->SetAnchorPoint({ 0.5f,0.5f });
 
 	UINT gameOverTex = 03;
 	sprCommon_->LoadTexture(gameOverTex, "texture/gameover.png");
 	spriteGameOver_->Initialize(sprCommon_, gameOverTex);
+	spriteGameOver_->SetAnchorPoint({ -0.5f,-0.5f });
 
 	//3Dオブジェクト関係
 
@@ -68,7 +70,7 @@ void MyGame::Initialize()
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
@@ -101,8 +103,6 @@ void MyGame::Update()
 	switch (scene_)
 	{
 	case title:
-		pm1_->Active(particle1_, 40.0f, 0.2f, 0.001f, 2, { 13.0f, 0.0f });
-		pm2_->Active(particle2_, 100.0f, 0.2f, 0.001f, 5, { 6.0f,0.0f });
 
 		if (input_->TriggerKey(DIK_SPACE))
 		{
@@ -113,6 +113,7 @@ void MyGame::Update()
 			break;
 		}
 		spriteTitle_->Update();
+
 		break;
 
 	case howtoplay:
@@ -125,6 +126,8 @@ void MyGame::Update()
 		break;
 
 	case stage:
+		pm1_->Active(particle1_, 40.0f, 0.2f, 0.001f, 2, { 13.0f, 0.0f });
+		pm2_->Active(particle2_, 100.0f, 0.2f, 0.001f, 5, { 6.0f,0.0f });
 
 		//モデル呼び出し例
 		player_->Update();
@@ -132,21 +135,15 @@ void MyGame::Update()
 
 		ChackAllCollisions();
 
-		if (player_->IsDead())
-		{
-			scene_ = gameover;
-			break;
-		}
-		if (enemy_->IsDead())
-		{
-			scene_ = clear;
-			break;
-		}
+		spriteGameClear_->Update();
+		spriteGameOver_->Update();
 		break;
 
 	case clear:
 		if (input_->TriggerKey(DIK_SPACE))
 		{
+			player_->Reset();
+			enemy_->Reset();
 			scene_ = title;
 			break;
 		}
@@ -156,6 +153,8 @@ void MyGame::Update()
 	case gameover:
 		if (input_->TriggerKey(DIK_SPACE))
 		{
+			player_->Reset();
+			enemy_->Reset();
 			scene_ = title;
 			break;
 		}
@@ -189,7 +188,7 @@ void MyGame::Draw()
 	{
 	case title:
 		//スプライト描画
-		//spriteTitle_->Draw();
+		spriteTitle_->Draw();
 		break;
 
 	case howtoplay:
@@ -197,7 +196,8 @@ void MyGame::Draw()
 		break;
 
 	case stage:
-
+		spriteGameClear_->Draw();
+		spriteGameOver_->Draw();
 		break;
 
 	case clear:
@@ -211,10 +211,39 @@ void MyGame::Draw()
 
 	}
 
+
+	//エフェクト
+	//エフェクト描画前処理
+	ParticleManager::PreDraw(dxCommon_->GetCommandList());
+
+	//エフェクト描画
+	switch (scene_)
+	{
+	case title:
+
+		break;
+	case howtoplay:
+
+		break;
+	case stage:
+		pm1_->Draw();
+		pm2_->Draw();
+		break;
+	case clear:
+
+		break;
+	case gameover:
+
+		break;
+
+	}
+
+	//エフェクト描画後処理
+	ParticleManager::PostDraw();
+	
 	//モデル
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
-
 	//モデル描画
 	switch (scene_)
 	{
@@ -241,34 +270,7 @@ void MyGame::Draw()
 	//モデル描画後処理
 	Object3d::PostDraw();
 
-	//エフェクト
-	//エフェクト描画前処理
-	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
-	//エフェクト描画
-	switch (scene_)
-	{
-	case title:
-		pm1_->Draw();
-		pm2_->Draw();
-		break;
-	case howtoplay:
-
-		break;
-	case stage:
-
-		break;
-	case clear:
-
-		break;
-	case gameover:
-
-		break;
-
-	}
-
-	//エフェクト描画後処理
-	ParticleManager::PostDraw();
 	//前景スプライト
 
 	//ImGuiの表示

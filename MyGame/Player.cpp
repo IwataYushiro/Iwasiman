@@ -52,6 +52,7 @@ void Player::Update() {
 
 		//移動処理
 		Move();
+		CameraMove();
 		//攻撃処理
 		Attack();
 
@@ -100,8 +101,37 @@ void Player::Move() {
 		move.y -= moveSpeed;
 	}
 
+	
 	obj_->SetPosition(move);
 	
+}
+
+void Player::CameraMove()
+{
+	XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 cmove = camera_->GetEye();
+	float moveSpeed = 1.0f;
+
+	//キーボード入力による移動処理
+	XMMATRIX matTrans = XMMatrixIdentity();
+	if (input_->PushKey(DIK_LEFT)) {
+		move.x -= moveSpeed;
+		cmove.x -= moveSpeed;
+	}
+	if (input_->PushKey(DIK_RIGHT)) {
+		move.x += moveSpeed;
+		cmove.x += moveSpeed;
+	}
+	if (input_->PushKey(DIK_UP)) {
+		move.y += moveSpeed;
+		cmove.y += moveSpeed;
+	}
+	if (input_->PushKey(DIK_DOWN)) {
+		move.y -= moveSpeed;
+		cmove.y -= moveSpeed;
+	}
+	obj_->SetPosition(move);
+	camera_->SetEye(cmove);
 }
 
 //攻撃処理

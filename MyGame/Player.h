@@ -30,6 +30,7 @@ public:
 
 	//プレイヤーの移動処理
 	void Move();
+	void CameraMove();
 
 	//プレイヤーの攻撃処理
 	void Attack();
