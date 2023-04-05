@@ -126,7 +126,7 @@ void MyGame::Update()
 		break;
 
 	case stage:
-		pm1_->Active(particle1_, 40.0f, 0.2f, 0.001f, 2, { 13.0f, 0.0f });
+		pm1_->Active(particle1_, 180.0f, 0.2f, 0.001f, 20, { 10.0f, 0.0f });
 		pm2_->Active(particle2_, 100.0f, 0.2f, 0.001f, 5, { 6.0f,0.0f });
 
 		//ƒ‚ƒfƒ‹ŒÄ‚Ño‚µ—á
