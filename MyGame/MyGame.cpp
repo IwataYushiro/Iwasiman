@@ -103,7 +103,7 @@ void MyGame::Update()
 	switch (scene_)
 	{
 	case title:
-		imguiManager_->Update();
+		//imguiManager_->Update();
 		if (input_->TriggerKey(DIK_SPACE))
 		{
 			player_->Reset();
