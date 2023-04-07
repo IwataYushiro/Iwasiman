@@ -119,7 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)3D;$(ProjectDir)Input;$(ProjectDir)Base;$(ProjectDir)2D;$(ProjectDir)MyGame;$(ProjectDir)Math;$(ProjectDir)3D\Camera;$(ProjectDir)3D\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)3D;$(ProjectDir)Input;$(ProjectDir)Base;$(ProjectDir)2D;$(ProjectDir)MyGame;$(ProjectDir)Math;$(ProjectDir)3D\Camera;$(ProjectDir)3D\Audio;$(ProjectDir)3D\Object;$(ProjectDir)3D\Particle;$(ProjectDir)2D\Sprite;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -138,7 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)3D;$(ProjectDir)Input;$(ProjectDir)Base;$(ProjectDir)2D;$(ProjectDir)MyGame;$(ProjectDir)Math;$(ProjectDir)3D\Camera;$(ProjectDir)3D\Audio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)3D;$(ProjectDir)Input;$(ProjectDir)Base;$(ProjectDir)2D;$(ProjectDir)MyGame;$(ProjectDir)Math;$(ProjectDir)3D\Camera;$(ProjectDir)3D\Audio;$(ProjectDir)3D\Object;$(ProjectDir)3D\Particle;$(ProjectDir)2D\Sprite;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
@@ -154,15 +154,14 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2D\Sprite.cpp" />
-    <ClCompile Include="2D\SpriteCommon.cpp" />
+    <ClCompile Include="2D\Sprite\Sprite.cpp" />
+    <ClCompile Include="2D\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="3D\Audio\Audio.cpp" />
     <ClCompile Include="3D\Camera\Camera.cpp" />
-    <ClCompile Include="3D\Mesh.cpp" />
-    <ClCompile Include="3D\Model.cpp" />
-    <ClCompile Include="3D\Object3d.cpp" />
-    <ClCompile Include="3D\Particle.cpp" />
-    <ClCompile Include="3D\ParticleManager.cpp" />
+    <ClCompile Include="3D\Object\Model.cpp" />
+    <ClCompile Include="3D\Object\Object3d.cpp" />
+    <ClCompile Include="3D\Particle\Particle.cpp" />
+    <ClCompile Include="3D\Particle\ParticleManager.cpp" />
     <ClCompile Include="Base\DirectXCommon.cpp" />
     <ClCompile Include="Base\Framework.cpp" />
     <ClCompile Include="Base\ImGuiManager.cpp" />
@@ -188,15 +187,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="2D\Sprite.h" />
-    <ClInclude Include="2D\SpriteCommon.h" />
+    <ClInclude Include="2D\Sprite\Sprite.h" />
+    <ClInclude Include="2D\Sprite\SpriteCommon.h" />
     <ClInclude Include="3D\Audio\Audio.h" />
     <ClInclude Include="3D\Camera\Camera.h" />
-    <ClInclude Include="3D\Mesh.h" />
-    <ClInclude Include="3D\Model.h" />
-    <ClInclude Include="3D\Object3d.h" />
-    <ClInclude Include="3D\Particle.h" />
-    <ClInclude Include="3D\ParticleManager.h" />
+    <ClInclude Include="3D\Object\Model.h" />
+    <ClInclude Include="3D\Object\Object3d.h" />
+    <ClInclude Include="3D\Particle\Particle.h" />
+    <ClInclude Include="3D\Particle\ParticleManager.h" />
     <ClInclude Include="Base\DirectXCommon.h" />
     <ClInclude Include="Base\Framework.h" />
     <ClInclude Include="Base\ImGuiManager.h" />

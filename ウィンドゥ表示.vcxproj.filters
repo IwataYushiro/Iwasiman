@@ -76,6 +76,12 @@
     <Filter Include="ヘッダー ファイル\3D\Particle">
       <UniqueIdentifier>{97b429af-153d-4558-b1b7-05b86a690587}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\2D\Sprite">
+      <UniqueIdentifier>{2421db43-415a-474e-9dfa-b38287bacd54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\2D\Sprite">
+      <UniqueIdentifier>{01da2eee-dad8-4e6e-a701-8e30ee29ff2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -89,12 +95,6 @@
     </ClCompile>
     <ClCompile Include="Base\DirectXCommon.cpp">
       <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="2D\Sprite.cpp">
-      <Filter>ソース ファイル\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="2D\SpriteCommon.cpp">
-      <Filter>ソース ファイル\2D</Filter>
     </ClCompile>
     <ClCompile Include="Base\ImGuiManager.cpp">
       <Filter>ソース ファイル\Base</Filter>
@@ -126,21 +126,6 @@
     <ClCompile Include="Math\Vector3.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="3D\Particle.cpp">
-      <Filter>ソース ファイル\3D\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="3D\ParticleManager.cpp">
-      <Filter>ソース ファイル\3D\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="3D\Model.cpp">
-      <Filter>ソース ファイル\3D\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="3D\Object3d.cpp">
-      <Filter>ソース ファイル\3D\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="3D\Mesh.cpp">
-      <Filter>ソース ファイル\3D\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Base\Framework.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
@@ -149,6 +134,24 @@
     </ClCompile>
     <ClCompile Include="3D\Audio\Audio.cpp">
       <Filter>ソース ファイル\3D\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Object\Model.cpp">
+      <Filter>ソース ファイル\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Object\Object3d.cpp">
+      <Filter>ソース ファイル\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Particle\Particle.cpp">
+      <Filter>ソース ファイル\3D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Particle\ParticleManager.cpp">
+      <Filter>ソース ファイル\3D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="2D\Sprite\Sprite.cpp">
+      <Filter>ソース ファイル\2D\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="2D\Sprite\SpriteCommon.cpp">
+      <Filter>ソース ファイル\2D\Sprite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,12 +163,6 @@
     </ClInclude>
     <ClInclude Include="Base\DirectXCommon.h">
       <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="2D\Sprite.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="2D\SpriteCommon.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
     </ClInclude>
     <ClInclude Include="Base\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Base</Filter>
@@ -197,21 +194,6 @@
     <ClInclude Include="Math\Vector3.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="3D\Mesh.h">
-      <Filter>ヘッダー ファイル\3D\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="3D\Model.h">
-      <Filter>ヘッダー ファイル\3D\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="3D\Object3d.h">
-      <Filter>ヘッダー ファイル\3D\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="3D\Particle.h">
-      <Filter>ヘッダー ファイル\3D\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="3D\ParticleManager.h">
-      <Filter>ヘッダー ファイル\3D\Particle</Filter>
-    </ClInclude>
     <ClInclude Include="Base\Framework.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
@@ -220,6 +202,24 @@
     </ClInclude>
     <ClInclude Include="3D\Audio\Audio.h">
       <Filter>ヘッダー ファイル\3D\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Object\Model.h">
+      <Filter>ヘッダー ファイル\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Object\Object3d.h">
+      <Filter>ヘッダー ファイル\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Particle\Particle.h">
+      <Filter>ヘッダー ファイル\3D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Particle\ParticleManager.h">
+      <Filter>ヘッダー ファイル\3D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="2D\Sprite\Sprite.h">
+      <Filter>ヘッダー ファイル\2D\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="2D\Sprite\SpriteCommon.h">
+      <Filter>ヘッダー ファイル\2D\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
