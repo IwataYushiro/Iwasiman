@@ -82,6 +82,12 @@
     <Filter Include="ヘッダー ファイル\2D\Sprite">
       <UniqueIdentifier>{01da2eee-dad8-4e6e-a701-8e30ee29ff2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Debug">
+      <UniqueIdentifier>{78e9d6e2-0dd1-4fc0-81f9-371f692e9866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Debug">
+      <UniqueIdentifier>{fdbcca7e-08d0-478e-a497-340a58cefd0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -94,9 +100,6 @@
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="Base\DirectXCommon.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Base\ImGuiManager.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="MyGame\MyGame.cpp">
@@ -153,6 +156,9 @@
     <ClCompile Include="2D\Sprite\SpriteCommon.cpp">
       <Filter>ソース ファイル\2D\Sprite</Filter>
     </ClCompile>
+    <ClCompile Include="Debug\ImGuiManager.cpp">
+      <Filter>ソース ファイル\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input\Input.h">
@@ -162,9 +168,6 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="Base\DirectXCommon.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Base\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="MyGame\MyGame.h">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="2D\Sprite\SpriteCommon.h">
       <Filter>ヘッダー ファイル\2D\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug\ImGuiManager.h">
+      <Filter>ヘッダー ファイル\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
