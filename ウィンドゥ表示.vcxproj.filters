@@ -52,11 +52,32 @@
     <Filter Include="ソース ファイル\Math">
       <UniqueIdentifier>{6052ccc9-3f77-4f3f-b541-f8eeb95b2979}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\3D\Object">
+      <UniqueIdentifier>{a46e912c-8f28-4bce-9967-7fc3368fda40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3D\Particle">
+      <UniqueIdentifier>{47ea03fe-da0f-43ff-a556-d0f4ba3db1fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3D\Audio">
+      <UniqueIdentifier>{4c2fc172-1501-4cd6-8c19-235cb00b9e38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3D\Camera">
+      <UniqueIdentifier>{b18850d5-0d78-4b2d-a647-b98e8c58d1bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3D\Audio">
+      <UniqueIdentifier>{b7cf98e0-70c9-4971-828e-67c346b1c19f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3D\Camera">
+      <UniqueIdentifier>{54cfb7e3-5a9c-4fc1-8ac2-87d5f0a3740f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3D\Object">
+      <UniqueIdentifier>{81110383-fdc2-4fa7-b2d4-7acbfdcad502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3D\Particle">
+      <UniqueIdentifier>{97b429af-153d-4558-b1b7-05b86a690587}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="3D\Mesh.cpp">
-      <Filter>ソース ファイル\3D</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -75,22 +96,10 @@
     <ClCompile Include="2D\SpriteCommon.cpp">
       <Filter>ソース ファイル\2D</Filter>
     </ClCompile>
-    <ClCompile Include="3D\Object3d.cpp">
-      <Filter>ソース ファイル\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="3D\Model.cpp">
-      <Filter>ソース ファイル\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="3D\Audio.cpp">
-      <Filter>ソース ファイル\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Base\ImGuiManager.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="MyGame\MyGame.cpp">
-      <Filter>ソース ファイル\MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="MyGame\Framework.cpp">
       <Filter>ソース ファイル\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="MyGame\Player.cpp">
@@ -117,20 +126,32 @@
     <ClCompile Include="Math\Vector3.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="3D\Camera.cpp">
-      <Filter>ソース ファイル\3D</Filter>
-    </ClCompile>
     <ClCompile Include="3D\Particle.cpp">
-      <Filter>ソース ファイル\3D</Filter>
+      <Filter>ソース ファイル\3D\Particle</Filter>
     </ClCompile>
     <ClCompile Include="3D\ParticleManager.cpp">
-      <Filter>ソース ファイル\3D</Filter>
+      <Filter>ソース ファイル\3D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Model.cpp">
+      <Filter>ソース ファイル\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Object3d.cpp">
+      <Filter>ソース ファイル\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Mesh.cpp">
+      <Filter>ソース ファイル\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Framework.cpp">
+      <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Camera\Camera.cpp">
+      <Filter>ソース ファイル\3D\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Audio\Audio.cpp">
+      <Filter>ソース ファイル\3D\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3D\Mesh.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Input\Input.h">
       <Filter>ヘッダー ファイル\Input</Filter>
     </ClInclude>
@@ -146,22 +167,10 @@
     <ClInclude Include="2D\SpriteCommon.h">
       <Filter>ヘッダー ファイル\2D</Filter>
     </ClInclude>
-    <ClInclude Include="3D\Object3d.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="3D\Model.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="3D\Audio.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Base\ImGuiManager.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="MyGame\MyGame.h">
-      <Filter>ヘッダー ファイル\MyGame</Filter>
-    </ClInclude>
-    <ClInclude Include="MyGame\Framework.h">
       <Filter>ヘッダー ファイル\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="MyGame\Player.h">
@@ -188,14 +197,29 @@
     <ClInclude Include="Math\Vector3.h">
       <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="3D\Camera.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
+    <ClInclude Include="3D\Mesh.h">
+      <Filter>ヘッダー ファイル\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Model.h">
+      <Filter>ヘッダー ファイル\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Object3d.h">
+      <Filter>ヘッダー ファイル\3D\Object</Filter>
     </ClInclude>
     <ClInclude Include="3D\Particle.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
+      <Filter>ヘッダー ファイル\3D\Particle</Filter>
     </ClInclude>
     <ClInclude Include="3D\ParticleManager.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
+      <Filter>ヘッダー ファイル\3D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Framework.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Camera\Camera.h">
+      <Filter>ヘッダー ファイル\3D\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Audio\Audio.h">
+      <Filter>ヘッダー ファイル\3D\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

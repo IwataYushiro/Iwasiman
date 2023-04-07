@@ -14,7 +14,7 @@ void Audio::Initialize()
 
 	//マスターボイスを生成
 
-	IXAudio2MasteringVoice* masterVoice;
+	IXAudio2MasteringVoice* masterVoice;     
 
 	result = xaudio2->CreateMasteringVoice(&masterVoice);
 
