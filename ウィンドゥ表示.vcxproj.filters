@@ -102,145 +102,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Base\DirectXCommon.cpp">
-      <Filter>ソース ファイル\Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Base\Framework.cpp">
-      <Filter>ソース ファイル\Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Base\WinApp.cpp">
-      <Filter>ソース ファイル\Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Debug\ImGuiManager.cpp">
-      <Filter>ソース ファイル\Engine\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Input\Input.cpp">
-      <Filter>ソース ファイル\Engine\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\Matrix4.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\MyMath.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\Vector2.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Math\Vector3.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\2D\Sprite\Sprite.cpp">
-      <Filter>ソース ファイル\Engine\2D\Sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\2D\Sprite\SpriteCommon.cpp">
-      <Filter>ソース ファイル\Engine\2D\Sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Audio\Audio.cpp">
-      <Filter>ソース ファイル\Engine\3D\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Camera\Camera.cpp">
-      <Filter>ソース ファイル\Engine\3D\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Particle\Particle.cpp">
-      <Filter>ソース ファイル\Engine\3D\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Particle\ParticleManager.cpp">
-      <Filter>ソース ファイル\Engine\3D\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Object\Model.cpp">
-      <Filter>ソース ファイル\Engine\3D\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\3D\Object\Object3d.cpp">
-      <Filter>ソース ファイル\Engine\3D\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\MyGame\Enemy.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\MyGame\EnemyBullet.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\MyGame\MyGame.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\MyGame\Player.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\MyGame\PlayerBullet.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Engine\Base\DirectXCommon.h">
-      <Filter>ヘッダー ファイル\Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Base\Framework.h">
-      <Filter>ヘッダー ファイル\Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Base\WinApp.h">
-      <Filter>ヘッダー ファイル\Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Debug\ImGuiManager.h">
-      <Filter>ヘッダー ファイル\Engine\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Input\Input.h">
-      <Filter>ヘッダー ファイル\Engine\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Matrix4.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\MyMath.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Vector2.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Vector3.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\Sprite\Sprite.h">
-      <Filter>ヘッダー ファイル\Engine\2D\Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\2D\Sprite\SpriteCommon.h">
-      <Filter>ヘッダー ファイル\Engine\2D\Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Audio\Audio.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Camera\Camera.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Particle\Particle.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Particle\ParticleManager.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Object\Model.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\3D\Object\Object3d.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MyGame\Enemy.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MyGame\EnemyBullet.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MyGame\MyGame.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MyGame\Player.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\MyGame\PlayerBullet.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
       <Filter>シェーダー ファイル</Filter>
     </None>
@@ -282,5 +143,144 @@
     <FxCompile Include="Resources\shader\ParticleVS.hlsl">
       <Filter>シェーダー ファイル</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy.cpp">
+      <Filter>ソース ファイル\Application\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\EnemyBullet.cpp">
+      <Filter>ソース ファイル\Application\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp">
+      <Filter>ソース ファイル\Application\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Player.cpp">
+      <Filter>ソース ファイル\Application\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\PlayerBullet.cpp">
+      <Filter>ソース ファイル\Application\MyGame</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\2D\Sprite\SpriteCommon.cpp">
+      <Filter>ソース ファイル\Engine\2D\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\2D\Sprite\Sprite.cpp">
+      <Filter>ソース ファイル\Engine\2D\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Audio\Audio.cpp">
+      <Filter>ソース ファイル\Engine\3D\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Camera\Camera.cpp">
+      <Filter>ソース ファイル\Engine\3D\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Object\Model.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Object\Object3d.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Particle\Particle.cpp">
+      <Filter>ソース ファイル\Engine\3D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Particle\ParticleManager.cpp">
+      <Filter>ソース ファイル\Engine\3D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Base\DirectXCommon.cpp">
+      <Filter>ソース ファイル\Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Base\Framework.cpp">
+      <Filter>ソース ファイル\Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Base\WinApp.cpp">
+      <Filter>ソース ファイル\Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Debug\ImGuiManager.cpp">
+      <Filter>ソース ファイル\Engine\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Input\Input.cpp">
+      <Filter>ソース ファイル\Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Math\Vector2.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Math\Vector3.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Math\Matrix4.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Math\MyMath.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
+      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\PlayerBullet.h">
+      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy.h">
+      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\EnemyBullet.h">
+      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h">
+      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\2D\Sprite\Sprite.h">
+      <Filter>ヘッダー ファイル\Engine\2D\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\2D\Sprite\SpriteCommon.h">
+      <Filter>ヘッダー ファイル\Engine\2D\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Audio\Audio.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Camera\Camera.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Object\Model.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Object\Object3d.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Particle\Particle.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Particle\ParticleManager.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Base\Framework.h">
+      <Filter>ヘッダー ファイル\Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Base\WinApp.h">
+      <Filter>ヘッダー ファイル\Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Base\DirectXCommon.h">
+      <Filter>ヘッダー ファイル\Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Debug\ImGuiManager.h">
+      <Filter>ヘッダー ファイル\Engine\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Input\Input.h">
+      <Filter>ヘッダー ファイル\Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Math\Vector2.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Math\Vector3.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Math\Matrix4.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Math\MyMath.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
