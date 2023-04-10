@@ -11,7 +11,11 @@ class ImGuiManager
 {
 private://エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-public:
+
+public://シングルトンインスタンス
+	static ImGuiManager* GetInstance();
+
+public://メンバ関数
 	
 	//初期化
 	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);

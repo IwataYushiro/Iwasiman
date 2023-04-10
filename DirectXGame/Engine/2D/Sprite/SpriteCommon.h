@@ -17,6 +17,10 @@ public:
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+
+public://シングルトンインスタンス
+	static SpriteCommon* GetInstance();
+
 public://メンバ関数
 
 	//初期化

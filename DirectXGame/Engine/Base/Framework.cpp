@@ -1,4 +1,6 @@
 #include "Framework.h"
+#include "Object3d.h"
+#include "ParticleManager.h"
 
 void Framework::Initialize()
 {
@@ -8,10 +10,12 @@ void Framework::Initialize()
 	dxCommon_ = new DirectXCommon();
 	//SpriteCommon
 	sprCommon_ = new SpriteCommon();
-	//カメラ
-	camera_ = new Camera();
+	//オーディオ
+	audio_ = new Audio();
 	//Input
 	input_ = new Input();
+	//imgui
+	imguiManager_ = new ImGuiManager();
 
 	//WinApp初期化
 	winApp_->Initialize();
@@ -19,9 +23,15 @@ void Framework::Initialize()
 	dxCommon_->Initialize(winApp_);
 	//スプライト基盤
 	sprCommon_->Initialize(dxCommon_);
+	//オーディオ
+	audio_->Initialize();
 	//入力
 	input_->Initialize(winApp_);
+	//imgui
+	imguiManager_->Initialize(winApp_, dxCommon_);
 
+	Object3d::StaticInitialize(dxCommon_->GetDevice());
+	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 }
 
 void Framework::Update()
@@ -34,14 +44,19 @@ void Framework::Update()
 	}
 	//入力の更新
 	input_->Update();
+	
 }
 
 void Framework::Finalize()
 {
+	//imgui
+	imguiManager_->Finalize();
 	//WinApp
 	winApp_->Finalize();
 
 	//基盤類
+	delete imguiManager_;
+	delete audio_;
 	delete sprCommon_;
 	delete input_;
 	delete dxCommon_;

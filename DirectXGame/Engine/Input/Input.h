@@ -14,6 +14,8 @@ public:
 	//エイリアステンプレートでnamespace省略
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+public://シングルトンインスタンス
+	static Input* GetInstance();
 public:
 
 	//初期化

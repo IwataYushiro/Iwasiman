@@ -1,51 +1,45 @@
-#include "MyGame.h"
+#include "GamePlayScene.h"
 
 using namespace DirectX;
 
-void MyGame::Initialize()
+DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
+SpriteCommon* GamePlayScene::spCommon_ = SpriteCommon::GetInstance();
+Input* GamePlayScene::input_ = Input::GetInstance();
+Audio* GamePlayScene::audio_ = Audio::GetInstance();
+
+void GamePlayScene::Initialize()
 {
-	Framework::Initialize();
 	//カメラ
 	camera_ = new Camera();
-	//Audio
-	audio_ = new Audio();
-
-	Object3d::StaticInitialize(dxCommon_->GetDevice());
-	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
-
 	//プレイヤー関係
 	player_ = new Player();
 	//敵関係
 	enemy_ = new Enemy();
 
-#pragma region Windows初期化
-#pragma endregion
-	
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
-	audio_->Initialize();
-	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
+	sound = Audio::GetInstance()->SoundLoadWave("Resources/TestMusic.wav");
 	//音声再生呼び出し例
-	audio_->SoundPlayWave(audio_->GetXAudio2(), sound);
+	//Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->GetXAudio2(), sound);
 
 	//ここでテクスチャを指定しよう
 	UINT titleTex = 00;
-	sprCommon_->LoadTexture(titleTex, "texture/title.png");
-	spriteTitle_->Initialize(sprCommon_, titleTex);
+	spCommon_->LoadTexture(titleTex, "texture/title.png");
+	spriteTitle_->Initialize(spCommon_, titleTex);
 
 	UINT howtoplayTex = 01;
-	sprCommon_->LoadTexture(howtoplayTex, "texture/howtoplay.png");
-	spriteHowToPlay_->Initialize(sprCommon_, howtoplayTex);
+	spCommon_->LoadTexture(howtoplayTex, "texture/howtoplay.png");
+	spriteHowToPlay_->Initialize(spCommon_, howtoplayTex);
 
 	UINT gameClearTex = 02;
-	sprCommon_->LoadTexture(gameClearTex, "texture/gameclear.png");
-	spriteGameClear_->Initialize(sprCommon_, gameClearTex);
+	spCommon_->LoadTexture(gameClearTex, "texture/gameclear.png");
+	spriteGameClear_->Initialize(spCommon_, gameClearTex);
 	spriteGameClear_->SetAnchorPoint({ 0.5f,0.5f });
 
 	UINT gameOverTex = 03;
-	sprCommon_->LoadTexture(gameOverTex, "texture/gameover.png");
-	spriteGameOver_->Initialize(sprCommon_, gameOverTex);
+	spCommon_->LoadTexture(gameOverTex, "texture/gameover.png");
+	spriteGameOver_->Initialize(spCommon_, gameOverTex);
 	spriteGameOver_->SetAnchorPoint({ -0.5f,-0.5f });
 
 	//3Dオブジェクト関係
@@ -80,21 +74,12 @@ void MyGame::Initialize()
 	enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
 	//敵に自機のアドレスを渡す
 	enemy_->SetPlayer(player_);
-
 	//シーン
 	scene_ = title;
-
-#pragma endregion
-	// 描画初期化処理　ここまで
 }
 
-void MyGame::Update()
+void GamePlayScene::Update()
 {
-
-	// DirectX毎フレーム処理　ここから
-	// 更新処理ここから
-	Framework::Update();
-
 	switch (scene_)
 	{
 	case title:
@@ -164,23 +149,14 @@ void MyGame::Update()
 
 	pm1_->Update();
 	pm2_->Update();
-	//ImGui呼び出し
-	imguiManager_->Begin();
-	//ここからImGuiの表示項目を追加する
-	//ImGuiStyleShowSample();
-	//表示項目ここまで
-	imguiManager_->End();
-	// ここまで
+
 }
 
-void MyGame::Draw()
+void GamePlayScene::Draw()
 {
-	//描画前処理
-	dxCommon_->PreDraw();
-
 
 	//スプライト描画前処理
-	sprCommon_->PreDraw();
+	spCommon_->PreDraw();
 
 	//背景スプライト
 	switch (scene_)
@@ -239,7 +215,7 @@ void MyGame::Draw()
 
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
-	
+
 	//モデル
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
@@ -273,22 +249,17 @@ void MyGame::Draw()
 	//前景スプライト
 
 	//ImGuiの表示
-	imguiManager_->Draw();
-	//描画後処理
-	dxCommon_->PostDraw();
+
+	ImGuiManager::GetInstance()->Draw();
 }
 
-void MyGame::Finalize()
+void GamePlayScene::Finalize()
 {
 	//終了処理
 	audio_->Finalize();
-
 	//解放
 	//各種音声
 	audio_->SoundUnLoad(&sound);
-	//音声全体
-	delete audio_;
-
 	//スプライト
 	delete spriteTitle_;
 	delete spriteHowToPlay_;
@@ -311,12 +282,10 @@ void MyGame::Finalize()
 	//基盤系
 	delete player_;
 	delete enemy_;
-	
-	Framework::Finalize();
-}
 
+}
 //衝突判定と応答
-void MyGame::ChackAllCollisions() {
+void GamePlayScene::ChackAllCollisions() {
 
 	//判定対象A,Bの座標
 	XMFLOAT3 posA, posB;

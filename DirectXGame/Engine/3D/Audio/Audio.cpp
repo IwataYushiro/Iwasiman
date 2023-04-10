@@ -4,6 +4,12 @@
 
 #pragma comment(lib,"xaudio2.lib")
 
+Audio* Audio::GetInstance()
+{
+	static Audio instance;
+	return &instance;
+}
+
 //初期化
 void Audio::Initialize()
 {
@@ -21,7 +27,7 @@ void Audio::Initialize()
 }
 
 //サウンド読み込み
-Audio::SoundData Audio::SoundLordWave(const char* filename)
+Audio::SoundData Audio::SoundLoadWave(const char* filename)
 {
 	//ファイルオープン
 	//ファイル入力ストリームのインスタンス

@@ -1,6 +1,7 @@
 #pragma once
-#include "Framework.h"
 #include "Audio.h"
+#include "Camera.h"
+#include "DirectXCommon.h"
 #include "ImGuiManager.h"
 #include "Object3d.h"
 #include "Sprite.h"
@@ -9,10 +10,10 @@
 #include "Player.h"
 #include "Enemy.h"
 
-class MyGame :public Framework
+//ゲームプレイ
+class GamePlayScene
 {
-public:
-
+public://構造体類
 	enum Scene { //シーンID
 		title,
 		howtoplay,
@@ -21,30 +22,34 @@ public:
 		gameover,
 	};
 
+public:
 	//初期化
-	void Initialize() override;
-
+	void Initialize();
 	//更新
-	void Update() override;
-
+	void Update();
 	//描画
-	void Draw() override;
-
+	void Draw();
 	//終了
-	void Finalize() override;
-
+	void Finalize();
 	//当たり判定
 	void ChackAllCollisions();
 
+private://静的メンバ変数
+	//DirectX基盤
+	static DirectXCommon* dxCommon_;
+	//スプライト基盤
+	static SpriteCommon* spCommon_;
+	//インプット
+	static Input* input_;
+	//オーディオ
+	static Audio* audio_;
 private:
-	
+
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
 	Sprite* spriteHowToPlay_ = new Sprite();
 	Sprite* spriteGameClear_ = new Sprite();
 	Sprite* spriteGameOver_ = new Sprite();
-	//Audio
-	Audio* audio_ = new Audio();
 
 	//サウンド読み込み
 	Audio::SoundData sound;
@@ -52,28 +57,24 @@ private:
 	//モデル
 	Player* player_ = nullptr;
 	Model* modelPlayer_ = nullptr;
-	
+
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy_ = nullptr;
-	
+
 	//3Dオブジェクト
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
-	
+
 	//パーティクル
 	Particle* particle1_ = nullptr;
-	ParticleManager * pm1_ = nullptr;
+	ParticleManager* pm1_ = nullptr;
 
 	Particle* particle2_ = nullptr;
 	ParticleManager* pm2_ = nullptr;
 	//カメラ
 	Camera* camera_ = nullptr;
-
 	//シーン
 	size_t scene_;
 
-	//ゲーム終了フラグ
-	bool EndGame_ = false;
 
 };
-

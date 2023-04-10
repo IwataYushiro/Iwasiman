@@ -100,6 +100,12 @@
     <Filter Include="ヘッダー ファイル\Application\MyGame">
       <UniqueIdentifier>{4d63fb01-9867-407d-a9da-1ce2aaa0c6e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Scene">
+      <UniqueIdentifier>{20ce93d7-d4b9-4ec3-af8e-f8a28f42627c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Scene">
+      <UniqueIdentifier>{698a67bf-15ca-436a-bc60-a4bb14c9232d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -214,6 +220,9 @@
     <ClCompile Include="DirectXGame\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp">
+      <Filter>ソース ファイル\Application\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -281,6 +290,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Math\MyMath.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\GamePlayScene.h">
+      <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

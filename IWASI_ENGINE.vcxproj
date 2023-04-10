@@ -123,7 +123,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
@@ -227,6 +227,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Player.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\PlayerBullet.cpp" />
+    <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp" />
     <ClCompile Include="DirectXGame\Engine\2D\Sprite\Sprite.cpp" />
     <ClCompile Include="DirectXGame\Engine\2D\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Audio\Audio.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\PlayerBullet.h" />
+    <ClInclude Include="DirectXGame\Application\Scene\GamePlayScene.h" />
     <ClInclude Include="DirectXGame\Engine\2D\Sprite\Sprite.h" />
     <ClInclude Include="DirectXGame\Engine\2D\Sprite\SpriteCommon.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Audio\Audio.h" />
