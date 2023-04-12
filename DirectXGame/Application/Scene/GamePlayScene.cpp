@@ -19,9 +19,9 @@ void GamePlayScene::Initialize()
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
-	sound = Audio::GetInstance()->SoundLoadWave("Resources/TestMusic.wav");
+	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
 	//音声再生呼び出し例
-	//Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->GetXAudio2(), sound);
+	audio_->SoundPlayWave(audio_->GetXAudio2(), sound);
 
 	//ここでテクスチャを指定しよう
 	UINT titleTex = 00;

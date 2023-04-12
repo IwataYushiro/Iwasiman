@@ -34,4 +34,6 @@ public://アクセッサ置き場
 	HWND GetHwnd() const { return hwnd; }
 
 	HINSTANCE GetHinstance() const { return wndClassEx.hInstance; }
+
+	static WinApp* GetInstance();
 };

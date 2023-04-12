@@ -87,3 +87,9 @@ void WinApp::Finalize()
 	//ウィンドゥクラスを登録解除
 	UnregisterClass(wndClassEx.lpszClassName, wndClassEx.hInstance);
 }
+
+WinApp* WinApp::GetInstance()
+{
+	static WinApp instance;
+	return &instance;
+}

@@ -5,17 +5,17 @@
 void Framework::Initialize()
 {
 	//WinApp
-	winApp_ = new WinApp();
+	winApp_ = WinApp::GetInstance();
 	//DXCommon
-	dxCommon_ = new DirectXCommon();
+	dxCommon_ = DirectXCommon::GetInstance();
 	//SpriteCommon
-	sprCommon_ = new SpriteCommon();
+	sprCommon_ = SpriteCommon::GetInstance();
 	//オーディオ
-	audio_ = new Audio();
+	audio_ = Audio::GetInstance();
 	//Input
-	input_ = new Input();
+	input_ = Input::GetInstance();
 	//imgui
-	imguiManager_ = new ImGuiManager();
+	imguiManager_ = ImGuiManager::GetInstance();
 
 	//WinApp初期化
 	winApp_->Initialize();
@@ -44,6 +44,8 @@ void Framework::Update()
 	}
 	//入力の更新
 	input_->Update();
+	imguiManager_->Begin();
+	imguiManager_->End();
 	
 }
 
@@ -53,14 +55,6 @@ void Framework::Finalize()
 	imguiManager_->Finalize();
 	//WinApp
 	winApp_->Finalize();
-
-	//基盤類
-	delete imguiManager_;
-	delete audio_;
-	delete sprCommon_;
-	delete input_;
-	delete dxCommon_;
-	delete winApp_;
 }
 
 
