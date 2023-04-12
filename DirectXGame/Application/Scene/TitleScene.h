@@ -1,6 +1,12 @@
 #pragma once
+#include "Audio.h"
+#include "DirectXCommon.h"
+#include "ImGuiManager.h"
+#include "Object3d.h"
+#include "ParticleManager.h"
 #include "Sprite.h"
-#include "BaseScene.h"
+
+#include "SceneManager.h"
 
 //タイトルシーン
 class TitleScene :public BaseScene
@@ -16,10 +22,21 @@ public://メンバ関数
 	void Finalize() override;
 
 private://静的メンバ変数
+	//DirectX基盤
+	static DirectXCommon* dxCommon_;
 	//スプライト基盤
 	static SpriteCommon* spCommon_;
+	//インプット
+	static Input* input_;
+	//オーディオ
+	static Audio* audio_;
+	//シーンマネージャー
+	static SceneManager* sceneManager_;
+	//imgui
+	static ImGuiManager* imguiManager_;
 
 private://メンバ変数
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
+	
 };

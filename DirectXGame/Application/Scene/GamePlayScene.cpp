@@ -1,4 +1,5 @@
 #include "GamePlayScene.h"
+#include "TitleScene.h"
 
 using namespace DirectX;
 
@@ -6,6 +7,8 @@ DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 SpriteCommon* GamePlayScene::spCommon_ = SpriteCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
 Audio* GamePlayScene::audio_ = Audio::GetInstance();
+SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
+ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
 void GamePlayScene::Initialize()
 {
@@ -22,15 +25,6 @@ void GamePlayScene::Initialize()
 	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
 	//音声再生呼び出し例
 	audio_->SoundPlayWave(audio_->GetXAudio2(), sound);
-
-	//ここでテクスチャを指定しよう
-	UINT titleTex = 00;
-	spCommon_->LoadTexture(titleTex, "texture/title.png");
-	spriteTitle_->Initialize(spCommon_, titleTex);
-
-	UINT howtoplayTex = 01;
-	spCommon_->LoadTexture(howtoplayTex, "texture/howtoplay.png");
-	spriteHowToPlay_->Initialize(spCommon_, howtoplayTex);
 
 	UINT gameClearTex = 02;
 	spCommon_->LoadTexture(gameClearTex, "texture/gameclear.png");
@@ -74,82 +68,35 @@ void GamePlayScene::Initialize()
 	enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
 	//敵に自機のアドレスを渡す
 	enemy_->SetPlayer(player_);
-	//シーン
-	scene_ = title;
+
 }
 
 void GamePlayScene::Update()
 {
-	switch (scene_)
-	{
-	case title:
-		//imguiManager_->Update();
-		if (input_->TriggerKey(DIK_SPACE))
-		{
-			player_->Reset();
-			enemy_->Reset();
-			scene_ = howtoplay;
+	pm1_->Active(particle1_, 120.0f, 0.2f, 0.001f, 15, { 10.0f, 0.0f });
+	pm2_->Active(particle2_, 100.0f, 0.2f, 0.001f, 5, { 6.0f,0.0f });
 
-			break;
-		}
-		spriteTitle_->Update();
+	//モデル呼び出し例
+	player_->Update();
+	enemy_->Update();
 
-		break;
+	ChackAllCollisions();
 
-	case howtoplay:
-		if (input_->TriggerKey(DIK_SPACE))
-		{
-			scene_ = stage;
-			break;
-		}
-		spriteHowToPlay_->Update();
-		break;
+	spriteGameClear_->Update();
+	spriteGameOver_->Update();
 
-	case stage:
-		pm1_->Active(particle1_, 120.0f, 0.2f, 0.001f, 15, { 10.0f, 0.0f });
-		pm2_->Active(particle2_, 100.0f, 0.2f, 0.001f, 5, { 6.0f,0.0f });
-
-		//モデル呼び出し例
-		player_->Update();
-		enemy_->Update();
-
-		ChackAllCollisions();
-
-		spriteGameClear_->Update();
-		spriteGameOver_->Update();
-		break;
-
-	case clear:
-		if (input_->TriggerKey(DIK_SPACE))
-		{
-			player_->Reset();
-			enemy_->Reset();
-			scene_ = title;
-			break;
-		}
-		spriteGameClear_->Update();
-
-		break;
-	case gameover:
-		if (input_->TriggerKey(DIK_SPACE))
-		{
-			player_->Reset();
-			enemy_->Reset();
-			scene_ = title;
-			break;
-		}
-		spriteGameOver_->Update();
-
-		break;
-
-
-	}
 	//カメラ
 	camera_->Update();
 
 	pm1_->Update();
 	pm2_->Update();
 
+	if (input_->TriggerKey(DIK_RETURN))
+	{
+		BaseScene* scene = new TitleScene();
+
+		sceneManager_->SetNextScene(scene);
+	}
 }
 
 void GamePlayScene::Draw()
@@ -159,59 +106,17 @@ void GamePlayScene::Draw()
 	spCommon_->PreDraw();
 
 	//背景スプライト
-	switch (scene_)
-	{
-	case title:
-		//スプライト描画
-		spriteTitle_->Draw();
-		break;
 
-	case howtoplay:
-		spriteHowToPlay_->Draw();
-		break;
-
-	case stage:
-		spriteGameClear_->Draw();
-		spriteGameOver_->Draw();
-		break;
-
-	case clear:
-		spriteGameClear_->Draw();
-		break;
-
-	case gameover:
-		spriteGameOver_->Draw();
-		break;
-
-
-	}
-
+	spriteGameClear_->Draw();
+	spriteGameOver_->Draw();
 
 	//エフェクト
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
 	//エフェクト描画
-	switch (scene_)
-	{
-	case title:
-
-		break;
-	case howtoplay:
-
-		break;
-	case stage:
-		pm1_->Draw();
-		pm2_->Draw();
-		break;
-	case clear:
-
-		break;
-	case gameover:
-
-		break;
-
-	}
+	pm1_->Draw();
+	pm2_->Draw();
 
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
@@ -220,37 +125,17 @@ void GamePlayScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	//モデル描画
-	switch (scene_)
-	{
-	case title:
-
-		break;
-	case howtoplay:
-
-		break;
-	case stage:
-		player_->Draw();
-		enemy_->Draw();
-
-		break;
-	case clear:
-
-		break;
-	case gameover:
-
-		break;
-
-	}
+	player_->Draw();
+	enemy_->Draw();
 
 	//モデル描画後処理
 	Object3d::PostDraw();
-
 
 	//前景スプライト
 
 	//ImGuiの表示
 
-	ImGuiManager::GetInstance()->Draw();
+	imguiManager_->Draw();
 }
 
 void GamePlayScene::Finalize()

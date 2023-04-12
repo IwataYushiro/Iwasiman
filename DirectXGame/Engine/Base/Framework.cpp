@@ -26,8 +26,6 @@ void Framework::Initialize()
 	dxCommon_->Initialize(winApp_);
 	//スプライト基盤
 	sprCommon_->Initialize(dxCommon_);
-	//オーディオ
-	audio_->Initialize();
 	//入力
 	input_->Initialize(winApp_);
 	//imgui

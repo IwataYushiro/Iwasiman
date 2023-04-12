@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "Enemy.h"
 
-#include "BaseScene.h"
+#include "SceneManager.h"
 
 //ゲームプレイ
 class GamePlayScene :public BaseScene
@@ -45,6 +45,11 @@ private://静的メンバ変数
 	static Input* input_;
 	//オーディオ
 	static Audio* audio_;
+	//シーンマネージャー
+	static SceneManager* sceneManager_;
+	//imgui
+	static ImGuiManager* imguiManager_;
+
 private:
 
 	//Sprite
@@ -75,8 +80,5 @@ private:
 	ParticleManager* pm2_ = nullptr;
 	//カメラ
 	Camera* camera_ = nullptr;
-	//シーン
-	size_t scene_;
-
 
 };

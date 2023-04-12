@@ -1,9 +1,19 @@
 #include "TitleScene.h"
+#include "GamePlayScene.h"
 
+DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 SpriteCommon* TitleScene::spCommon_ = SpriteCommon::GetInstance();
+Input* TitleScene::input_ = Input::GetInstance();
+Audio* TitleScene::audio_ = Audio::GetInstance();
+SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
+ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
+
 
 void TitleScene::Initialize()
 {
+	//オーディオ
+	audio_->Initialize();
+
 	UINT titleTex = 00;
 	spCommon_->LoadTexture(titleTex, "texture/title.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
@@ -11,23 +21,40 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	/*if (input_->TriggerKey(DIK_SPACE))
+	if (input_->TriggerKey(DIK_SPACE))
 	{
-		player_->Reset();
-		enemy_->Reset();
-		scene_ = howtoplay;
+		BaseScene* scene = new GamePlayScene();
 
-		break;
-	}*/
+		sceneManager_->SetNextScene(scene);
+	}
 	spriteTitle_->Update();
 }
 
 void TitleScene::Draw()
 {
-	//スプライト描画前処理
+	//背景スプライト描画前処理
 	spCommon_->PreDraw();
 	//スプライト描画
 	spriteTitle_->Draw();
+
+
+	//エフェクト描画前処理
+	ParticleManager::PreDraw(dxCommon_->GetCommandList());
+
+	//エフェクト描画後処理
+	ParticleManager::PostDraw();
+
+
+	//モデル描画前処理
+	Object3d::PreDraw(dxCommon_->GetCommandList());
+
+	//モデル描画後処理
+	Object3d::PostDraw();
+
+	//前景スプライト
+
+	//ImGuiの表示
+	imguiManager_->Draw();
 }
 
 void TitleScene::Finalize()
