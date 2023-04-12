@@ -1,11 +1,12 @@
 #pragma once
 #include "BaseScene.h"
 
-class Scenemanager
+class SceneManager
 {
+public://シングルトンインスタンス
+	static SceneManager* GetInstance();
+
 public://メンバ関数
-	//デストラクタ
-	~Scenemanager();
 	//更新
 	void Update();
 

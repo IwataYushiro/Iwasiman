@@ -1,11 +1,12 @@
 #include "SceneManager.h"
 
-Scenemanager::~Scenemanager()
+SceneManager* SceneManager::GetInstance()
 {
-	Finalize();
+	static SceneManager instance;
+	return &instance;
 }
 
-void Scenemanager::Update()
+void SceneManager::Update()
 {
 	//シーン切り替え機構
 	//次のシーンの予約が入ったら
@@ -30,12 +31,12 @@ void Scenemanager::Update()
 	scene_->Update();
 }
 
-void Scenemanager::Draw()
+void SceneManager::Draw()
 {
 	scene_->Draw();
 }
 
-void Scenemanager::Finalize()
+void SceneManager::Finalize()
 {
 	scene_->Finalize();
 	delete scene_;

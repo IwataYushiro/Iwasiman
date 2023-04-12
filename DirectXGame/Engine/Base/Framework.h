@@ -1,11 +1,11 @@
 #pragma once
 #include "WinApp.h"
 #include "Audio.h"
-#include "BaseScene.h"
 #include "Camera.h"
 #include "DirectXCommon.h"
 #include "ImGuiManager.h"
 #include "Input.h"
+#include "SceneManager.h"
 #include "SpriteCommon.h"
 
 //ゲーム全体
@@ -39,7 +39,7 @@ protected:
 	//Input
 	Input* input_ = nullptr;
 	//シーン
-	BaseScene* scene_ = nullptr;
+	SceneManager* sceneManager_ = nullptr;
 	//imgui
 	ImGuiManager* imguiManager_ = nullptr;
 

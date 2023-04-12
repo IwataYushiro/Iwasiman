@@ -14,7 +14,8 @@ void Framework::Initialize()
 	audio_ = Audio::GetInstance();
 	//Input
 	input_ = Input::GetInstance();
-	
+	//SceneManager
+	sceneManager_ = SceneManager::GetInstance();
 	//imgui
 	imguiManager_ = ImGuiManager::GetInstance();
 	
@@ -46,6 +47,7 @@ void Framework::Update()
 	}
 	//“ü—Í‚ÌXV
 	input_->Update();
+	sceneManager_->Update();
 	imguiManager_->Begin();
 	imguiManager_->End();
 	
@@ -53,6 +55,8 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
+	//scene
+	sceneManager_->Finalize();
 	//imgui
 	imguiManager_->Finalize();
 	//WinApp
