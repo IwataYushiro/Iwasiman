@@ -1,18 +1,19 @@
 #pragma once
 #include "Sprite.h"
+#include "BaseScene.h"
 
 //タイトルシーン
-class TitleScene
+class TitleScene :public BaseScene
 {
 public://メンバ関数
 	//初期化
-	void Initialize();
+	void Initialize() override;
 	//更新
-	void Update();
+	void Update() override;
 	//描画
-	void Draw();
+	void Draw() override;
 	//終了
-	void Finalize();
+	void Finalize() override;
 
 private://静的メンバ変数
 	//スプライト基盤

@@ -6,8 +6,8 @@ void MyGame::Initialize()
 {
 	Framework::Initialize();
 	
-	scene = new TitleScene();
-	scene->Initialize();
+	scene_ = new TitleScene();
+	scene_->Initialize();
 	
 }
 
@@ -18,7 +18,7 @@ void MyGame::Update()
 	// XVˆ—‚±‚±‚©‚ç
 	Framework::Update();
 
-	scene->Update();
+	scene_->Update();
 }
 
 void MyGame::Draw()
@@ -26,15 +26,15 @@ void MyGame::Draw()
 	//•`‰æ‘Oˆ—
 	dxCommon_->PreDraw();
 
-	scene->Draw();
+	scene_->Draw();
 	//•`‰æŒãˆ—
 	dxCommon_->PostDraw();
 }
 
 void MyGame::Finalize()
 {
-	scene->Finalize();
-	delete scene;
+	scene_->Finalize();
+	delete scene_;
 	
 	Framework::Finalize();
 }

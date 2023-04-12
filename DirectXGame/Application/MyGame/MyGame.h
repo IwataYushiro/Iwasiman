@@ -18,10 +18,5 @@ public:
 
 	//èIóπ
 	void Finalize() override;
-
-private:
-	
-	TitleScene* scene = nullptr;
-
 };
 

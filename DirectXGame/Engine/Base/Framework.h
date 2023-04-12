@@ -1,6 +1,7 @@
 #pragma once
 #include "WinApp.h"
 #include "Audio.h"
+#include "BaseScene.h"
 #include "Camera.h"
 #include "DirectXCommon.h"
 #include "ImGuiManager.h"
@@ -37,6 +38,8 @@ protected:
 	Audio* audio_ = nullptr;
 	//Input
 	Input* input_ = nullptr;
+	//ÉVÅ[Éì
+	BaseScene* scene_ = nullptr;
 	//imgui
 	ImGuiManager* imguiManager_ = nullptr;
 

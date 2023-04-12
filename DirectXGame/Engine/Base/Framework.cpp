@@ -14,8 +14,10 @@ void Framework::Initialize()
 	audio_ = Audio::GetInstance();
 	//Input
 	input_ = Input::GetInstance();
+	
 	//imgui
 	imguiManager_ = ImGuiManager::GetInstance();
+	
 
 	//WinApp‰Šú‰»
 	winApp_->Initialize();

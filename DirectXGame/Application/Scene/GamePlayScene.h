@@ -10,8 +10,10 @@
 #include "Player.h"
 #include "Enemy.h"
 
+#include "BaseScene.h"
+
 //ゲームプレイ
-class GamePlayScene
+class GamePlayScene :public BaseScene
 {
 public://構造体類
 	enum Scene { //シーンID
@@ -24,13 +26,13 @@ public://構造体類
 
 public:
 	//初期化
-	void Initialize();
+	void Initialize() override;
 	//更新
-	void Update();
+	void Update() override;
 	//描画
-	void Draw();
+	void Draw() override;
 	//終了
-	void Finalize();
+	void Finalize() override;
 	//当たり判定
 	void ChackAllCollisions();
 

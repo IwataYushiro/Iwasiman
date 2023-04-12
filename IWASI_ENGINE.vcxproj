@@ -227,6 +227,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Player.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\PlayerBullet.cpp" />
+    <ClCompile Include="DirectXGame\Application\Scene\BaseScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\TitleScene.cpp" />
     <ClCompile Include="DirectXGame\Engine\2D\Sprite\Sprite.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\PlayerBullet.h" />
+    <ClInclude Include="DirectXGame\Application\Scene\BaseScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\GamePlayScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\TitleScene.h" />
     <ClInclude Include="DirectXGame\Engine\2D\Sprite\Sprite.h" />
