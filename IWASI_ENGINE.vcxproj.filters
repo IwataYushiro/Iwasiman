@@ -223,6 +223,9 @@
     <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\TitleScene.cpp">
+      <Filter>ソース ファイル\Application\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -292,6 +295,9 @@
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\GamePlayScene.h">
+      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\TitleScene.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
     </ClInclude>
   </ItemGroup>

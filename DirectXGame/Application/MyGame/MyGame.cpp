@@ -34,6 +34,7 @@ void MyGame::Draw()
 void MyGame::Finalize()
 {
 	scene->Finalize();
+	delete scene;
 	
 	Framework::Finalize();
 }
