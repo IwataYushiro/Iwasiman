@@ -106,6 +106,12 @@
     <Filter Include="ヘッダー ファイル\Application\Scene">
       <UniqueIdentifier>{698a67bf-15ca-436a-bc60-a4bb14c9232d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Scene\Factory">
+      <UniqueIdentifier>{e2b47729-5c59-4c96-86cb-0acaf7356271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Scene\Factory">
+      <UniqueIdentifier>{54abcc95-b37b-41d3-b244-27a85305fd22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -232,6 +238,9 @@
     <ClCompile Include="DirectXGame\Application\Scene\SceneManager.cpp">
       <Filter>ソース ファイル\Application\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\Factory\SceneFactory.cpp">
+      <Filter>ソース ファイル\Application\Scene\Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -311,6 +320,12 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\SceneManager.h">
       <Filter>ヘッダー ファイル\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\Factory\AbstractSceneFactory.h">
+      <Filter>ヘッダー ファイル\Application\Scene\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\Factory\SceneFactory.h">
+      <Filter>ヘッダー ファイル\Application\Scene\Factory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
