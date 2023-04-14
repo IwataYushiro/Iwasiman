@@ -55,6 +55,7 @@ void Framework::Finalize()
 {
 	//scene
 	sceneManager_->Finalize();
+	delete sceneFactory_;
 	//imgui
 	imguiManager_->Finalize();
 	//WinApp

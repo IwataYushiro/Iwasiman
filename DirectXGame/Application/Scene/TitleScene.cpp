@@ -1,5 +1,4 @@
 #include "TitleScene.h"
-#include "GamePlayScene.h"
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 SpriteCommon* TitleScene::spCommon_ = SpriteCommon::GetInstance();
@@ -23,9 +22,7 @@ void TitleScene::Update()
 {
 	if (input_->TriggerKey(DIK_SPACE))
 	{
-		BaseScene* scene = new GamePlayScene();
-
-		sceneManager_->SetNextScene(scene);
+		sceneManager_->ChangeScene("GAMEPLAY");
 	}
 	spriteTitle_->Update();
 }

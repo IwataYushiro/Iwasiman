@@ -1,5 +1,4 @@
 #include "GamePlayScene.h"
-#include "TitleScene.h"
 
 using namespace DirectX;
 
@@ -93,9 +92,7 @@ void GamePlayScene::Update()
 
 	if (input_->TriggerKey(DIK_RETURN))
 	{
-		BaseScene* scene = new TitleScene();
-
-		sceneManager_->SetNextScene(scene);
+		sceneManager_->ChangeScene("TITLE");
 	}
 }
 

@@ -1,7 +1,5 @@
 #pragma once
 #include "Framework.h"
-#include "GamePlayScene.h"
-#include "TitleScene.h"
 
 class MyGame :public Framework
 {

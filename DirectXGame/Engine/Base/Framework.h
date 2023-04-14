@@ -1,5 +1,6 @@
 #pragma once
 #include "WinApp.h"
+#include "AbstractSceneFactory.h"
 #include "Audio.h"
 #include "Camera.h"
 #include "DirectXCommon.h"
@@ -40,9 +41,11 @@ protected:
 	Input* input_ = nullptr;
 	//シーン
 	SceneManager* sceneManager_ = nullptr;
+	//シーンファクトリー
+	AbstractSceneFactory* sceneFactory_ = nullptr;
 	//imgui
 	ImGuiManager* imguiManager_ = nullptr;
-
+	
 	
 	//ゲーム終了フラグ
 	bool EndGame_ = false;

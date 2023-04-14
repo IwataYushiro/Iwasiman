@@ -1,4 +1,5 @@
 #include "MyGame.h"
+#include "SceneFactory.h"
 
 using namespace DirectX;
 
@@ -6,10 +7,9 @@ void MyGame::Initialize()
 {
 	Framework::Initialize();
 	
-	BaseScene* scene = new TitleScene();
-
-	sceneManager_->SetNextScene(scene);
-	
+	sceneFactory_ = new SceneFactory();
+	sceneManager_->SetSceneFactory(sceneFactory_);
+	sceneManager_->ChangeScene("TITLE");
 }
 
 void MyGame::Update()
