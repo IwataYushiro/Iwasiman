@@ -14,6 +14,8 @@ public: // 省略
 	//エイリアステンプレート
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+public://シングルトンインスタンス
+	static DirectXCommon* GetInstance();
 public:
 	
 	//初期化

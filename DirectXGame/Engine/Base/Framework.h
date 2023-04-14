@@ -1,8 +1,12 @@
 #pragma once
 #include "WinApp.h"
+#include "AbstractSceneFactory.h"
+#include "Audio.h"
 #include "Camera.h"
 #include "DirectXCommon.h"
+#include "ImGuiManager.h"
 #include "Input.h"
+#include "SceneManager.h"
 #include "SpriteCommon.h"
 
 //ゲーム全体
@@ -28,13 +32,21 @@ protected:
 	//WinApp
 	WinApp* winApp_ = nullptr;
 	//DXCommon
-	DirectXCommon* dxCommon_ =nullptr;
+	DirectXCommon* dxCommon_ = nullptr;
 	//SpriteCommon
-	SpriteCommon* sprCommon_ =nullptr;
+	SpriteCommon* sprCommon_ = nullptr;
+	//Audio
+	Audio* audio_ = nullptr;
 	//Input
-	Input* input_ =nullptr;
-	//カメラ
-	Camera* camera_ = nullptr;
+	Input* input_ = nullptr;
+	//シーン
+	SceneManager* sceneManager_ = nullptr;
+	//シーンファクトリー
+	AbstractSceneFactory* sceneFactory_ = nullptr;
+	//imgui
+	ImGuiManager* imguiManager_ = nullptr;
+	
+	
 	//ゲーム終了フラグ
 	bool EndGame_ = false;
 };

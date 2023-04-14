@@ -100,6 +100,18 @@
     <Filter Include="ヘッダー ファイル\Application\MyGame">
       <UniqueIdentifier>{4d63fb01-9867-407d-a9da-1ce2aaa0c6e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Application\Scene">
+      <UniqueIdentifier>{20ce93d7-d4b9-4ec3-af8e-f8a28f42627c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Scene">
+      <UniqueIdentifier>{698a67bf-15ca-436a-bc60-a4bb14c9232d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Application\Scene\Factory">
+      <UniqueIdentifier>{e2b47729-5c59-4c96-86cb-0acaf7356271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Application\Scene\Factory">
+      <UniqueIdentifier>{54abcc95-b37b-41d3-b244-27a85305fd22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -214,6 +226,21 @@
     <ClCompile Include="DirectXGame\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp">
+      <Filter>ソース ファイル\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\TitleScene.cpp">
+      <Filter>ソース ファイル\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\BaseScene.cpp">
+      <Filter>ソース ファイル\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\SceneManager.cpp">
+      <Filter>ソース ファイル\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\Factory\SceneFactory.cpp">
+      <Filter>ソース ファイル\Application\Scene\Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -281,6 +308,24 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Math\MyMath.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\GamePlayScene.h">
+      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\TitleScene.h">
+      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\BaseScene.h">
+      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\SceneManager.h">
+      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\Factory\AbstractSceneFactory.h">
+      <Filter>ヘッダー ファイル\Application\Scene\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\Factory\SceneFactory.h">
+      <Filter>ヘッダー ファイル\Application\Scene\Factory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

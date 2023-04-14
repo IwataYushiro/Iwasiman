@@ -13,6 +13,12 @@ using namespace Microsoft::WRL;
 //デフォルトテクスチャ格納ディレクトリ
 std::string SpriteCommon::kDefaultTextureDirectoryPath = "Resources/";
 
+SpriteCommon* SpriteCommon::GetInstance()
+{
+	static SpriteCommon instance;
+	return &instance;
+}
+
 void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 {
 	HRESULT result;

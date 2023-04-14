@@ -1,17 +1,24 @@
 #include "Framework.h"
+#include "Object3d.h"
+#include "ParticleManager.h"
 
 void Framework::Initialize()
 {
 	//WinApp
-	winApp_ = new WinApp();
+	winApp_ = WinApp::GetInstance();
 	//DXCommon
-	dxCommon_ = new DirectXCommon();
+	dxCommon_ = DirectXCommon::GetInstance();
 	//SpriteCommon
-	sprCommon_ = new SpriteCommon();
-	//カメラ
-	camera_ = new Camera();
+	sprCommon_ = SpriteCommon::GetInstance();
+	//オーディオ
+	audio_ = Audio::GetInstance();
 	//Input
-	input_ = new Input();
+	input_ = Input::GetInstance();
+	//SceneManager
+	sceneManager_ = SceneManager::GetInstance();
+	//imgui
+	imguiManager_ = ImGuiManager::GetInstance();
+	
 
 	//WinApp初期化
 	winApp_->Initialize();
@@ -21,7 +28,11 @@ void Framework::Initialize()
 	sprCommon_->Initialize(dxCommon_);
 	//入力
 	input_->Initialize(winApp_);
+	//imgui
+	imguiManager_->Initialize(winApp_, dxCommon_);
 
+	Object3d::StaticInitialize(dxCommon_->GetDevice());
+	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 }
 
 void Framework::Update()
@@ -34,18 +45,21 @@ void Framework::Update()
 	}
 	//入力の更新
 	input_->Update();
+	sceneManager_->Update();
+	imguiManager_->Begin();
+	imguiManager_->End();
+	
 }
 
 void Framework::Finalize()
 {
+	//scene
+	sceneManager_->Finalize();
+	delete sceneFactory_;
+	//imgui
+	imguiManager_->Finalize();
 	//WinApp
 	winApp_->Finalize();
-
-	//基盤類
-	delete sprCommon_;
-	delete input_;
-	delete dxCommon_;
-	delete winApp_;
 }
 
 

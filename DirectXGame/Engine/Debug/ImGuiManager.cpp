@@ -1,6 +1,12 @@
 #include "ImGuiManager.h"
 #include <cassert>
 
+ImGuiManager* ImGuiManager::GetInstance()
+{
+	static ImGuiManager instance;
+	return &instance;
+}
+
 void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 {
 	HRESULT result;
@@ -44,7 +50,7 @@ void ImGuiManager::Update()
 	//ImGuiŒÄ‚Ño‚µ
 	Begin();
 	//‚±‚±‚©‚çImGui‚Ì•\¦€–Ú‚ğ’Ç‰Á‚·‚é
-	ImGuiStyleShowSample();
+	//ImGuiStyleShowSample();
 	//•\¦€–Ú‚±‚±‚Ü‚Å
 	End();
 

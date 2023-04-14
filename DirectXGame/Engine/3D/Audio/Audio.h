@@ -42,6 +42,8 @@ public://サブクラス(カプセル化)
 		//バッファのサイズ
 		unsigned int bufferSize;
 	};
+public://シングルトンインスタンス
+	static Audio* GetInstance();
 
 public://メンバ関数
 	
@@ -49,7 +51,7 @@ public://メンバ関数
 	void Initialize();
 
 	//サウンド読み込み
-	SoundData SoundLordWave(const char* filename);
+	SoundData SoundLoadWave(const char* filename);
 	
 	//音声再生
 	void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData);

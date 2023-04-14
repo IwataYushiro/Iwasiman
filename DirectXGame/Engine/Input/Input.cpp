@@ -4,6 +4,12 @@
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 
+Input* Input::GetInstance()
+{
+	static Input instance;
+	return &instance;
+}
+
 //‰Šú‰»
 void Input::Initialize(WinApp* winApp)
 {
