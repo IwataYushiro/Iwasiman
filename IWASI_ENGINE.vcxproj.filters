@@ -241,6 +241,9 @@
     <ClCompile Include="DirectXGame\Application\Scene\Factory\SceneFactory.cpp">
       <Filter>ソース ファイル\Application\Scene\Factory</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Math\Quaternion.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -326,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\Factory\SceneFactory.h">
       <Filter>ヘッダー ファイル\Application\Scene\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Math\Quaternion.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
