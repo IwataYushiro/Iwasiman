@@ -230,7 +230,7 @@ void Model::CreateBuffers() {
 		vertBuff->Unmap(0, nullptr);
 	}
 
-	// 頂点バッファビューの作成
+	// 頂点バッファビューの作成(頂点、インデックスビューはデスクリプタ外で作る)
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeVB;
 	vbView.StrideInBytes = sizeof(vertices[0]);
