@@ -19,7 +19,7 @@ void Framework::Initialize()
 	//imgui
 	imguiManager_ = ImGuiManager::GetInstance();
 	
-
+	fbxManager = FbxManager::Create();
 	//WinApp‰Šú‰»
 	winApp_->Initialize();
 	//DirectX‰Šú‰»
