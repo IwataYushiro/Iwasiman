@@ -4,7 +4,6 @@
 #include "Audio.h"
 #include "Camera.h"
 #include "DirectXCommon.h"
-#include <fbxsdk.h>
 #include "ImGuiManager.h"
 #include "Input.h"
 #include "SceneManager.h"
@@ -47,8 +46,6 @@ protected:
 	//imgui
 	ImGuiManager* imguiManager_ = nullptr;
 	
-	//fbx
-	FbxManager* fbxManager = nullptr;
 	//ゲーム終了フラグ
 	bool EndGame_ = false;
 };
