@@ -112,6 +112,12 @@
     <Filter Include="ヘッダー ファイル\Application\Scene\Factory">
       <UniqueIdentifier>{54abcc95-b37b-41d3-b244-27a85305fd22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\3D\FBX">
+      <UniqueIdentifier>{ac0b00d4-e452-4253-9877-7f6e0f96ea93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\3D\FBX">
+      <UniqueIdentifier>{b3793c53-287b-4b1f-9ba7-f3bc11c9caa6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -244,6 +250,9 @@
     <ClCompile Include="DirectXGame\Engine\Math\Quaternion.cpp">
       <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxLoader.cpp">
+      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -332,6 +341,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Math\Quaternion.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxLoader.h">
+      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
