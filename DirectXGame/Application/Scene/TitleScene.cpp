@@ -1,4 +1,5 @@
 #include "TitleScene.h"
+#include "FbxLoader.h"
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 SpriteCommon* TitleScene::spCommon_ = SpriteCommon::GetInstance();
@@ -16,6 +17,8 @@ void TitleScene::Initialize()
 	UINT titleTex = 00;
 	spCommon_->LoadTexture(titleTex, "texture/title.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
+
+	FbxLoader::GetInstance()->LoadModelFromFile("fbxhuman");
 }
 
 void TitleScene::Update()

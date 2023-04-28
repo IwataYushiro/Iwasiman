@@ -4,6 +4,7 @@
 #include "Audio.h"
 #include "Camera.h"
 #include "DirectXCommon.h"
+#include "FbxLoader.h"
 #include "ImGuiManager.h"
 #include "Input.h"
 #include "SceneManager.h"
