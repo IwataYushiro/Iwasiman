@@ -253,6 +253,9 @@
     <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxLoader.cpp">
       <Filter>ソース ファイル\Engine\3D\FBX</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxModel.cpp">
+      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -343,6 +346,9 @@
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxLoader.h">
+      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxModel.h">
       <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
     </ClInclude>
   </ItemGroup>
