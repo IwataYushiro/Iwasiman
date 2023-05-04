@@ -35,7 +35,16 @@ public:
 
 	//再帰的にノード構成を解析
 	void ParseNodeRecursive(ModelFbx* modelF, FbxNode* fbxNode, Node* parent = nullptr);
-
+	//メッシュ読み込み
+	void ParseMesh(ModelFbx* modelF, FbxNode* fbxNode);
+	//頂点座標読み取り
+	void ParseMeshVertices(ModelFbx* modelF, FbxMesh* fbxMesh);
+	//面情報読み取り
+	void ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh);
+	//マテリアル読み取り
+	void ParseMaterial(ModelFbx* modelF, FbxNode* fbxNode);
+	//テクスチャ読み取り
+	void LoadTexture(ModelFbx* modelF, const std::string& fullpath);
 private:
 	// privateなコンストラクタ（シングルトンパターン）
 	FbxLoader() = default;
