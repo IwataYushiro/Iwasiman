@@ -1,5 +1,6 @@
 ﻿#include "FbxLoader.h"
 #include <cassert>
+
 //静的メンバ変数の実体
 const std::string FbxLoader::baseDirectory = "Resources/";
 
@@ -25,6 +26,7 @@ void FbxLoader::Initialize(ID3D12Device* device)
 
     //FBXインポーター生成
     fbxImporter_ = FbxImporter::Create(fbxManager_, "");
+
 }
 
 void FbxLoader::Finalize()
@@ -53,4 +55,30 @@ void FbxLoader::LoadModelFromFile(const string& modelName)
 
     //ファイルからロードしたFBXの情報をシーンにインポート
     fbxImporter_->Import(fbxScene);
+
+    //モデル生成
+    ModelFbx* modelF = new ModelFbx();
+    modelF->name = modelName;
+
+   //ルートノードから順に解析してモデルに流し込む
+    ParseNodeRecursive(modelF, fbxScene->GetRootNode());
+   //FBXシーン解放
+    fbxScene->Destroy();
+
+}
+
+void FbxLoader::ParseNodeRecursive(ModelFbx* modelF, FbxNode* fbxNode)
+{
+    //ノード名を取得
+    string name = fbxNode->GetName();
+
+    //モデルにノードを追加
+    //FBXノードの情報を解析してノードに記録
+    //FBXノードのメッシュ情報を解析
+    
+    //子ノードに対して再帰呼び出し
+    for (int i = 0; i < fbxNode->GetChildCount(); i++)
+    {
+        ParseNodeRecursive(modelF, fbxNode->GetChild(i));
+    }
 }
