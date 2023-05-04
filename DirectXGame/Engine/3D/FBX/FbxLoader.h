@@ -34,7 +34,7 @@ public:
 	void LoadModelFromFile(const string& modelName);
 
 	//再帰的にノード構成を解析
-	void ParseNodeRecursive(ModelFbx* modelF, FbxNode* fbxNode);
+	void ParseNodeRecursive(ModelFbx* modelF, FbxNode* fbxNode, Node* parent = nullptr);
 
 private:
 	// privateなコンストラクタ（シングルトンパターン）
