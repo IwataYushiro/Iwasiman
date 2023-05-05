@@ -171,6 +171,76 @@ void FbxLoader::ParseMeshVertices(ModelFbx* modelF, FbxMesh* fbxMesh)
 
 void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 {
+	auto& vertices = modelF->vertices;
+	auto& indices = modelF->indices;
+
+	//1ファイルに複数メッシュのモデルは非対応
+	assert(indices.size() == 0);
+	//面の数
+	const int polygonCount = fbxMesh->GetPolygonCount();
+	//UVデータ数
+	const int textureCount = fbxMesh->GetTextureUVCount();
+	//UV名リスト
+	FbxStringList uvNames;
+	fbxMesh->GetUVSetNames(uvNames);
+	//面ごとの情報読み取り
+	for (int i = 0; i < polygonCount; i++)
+	{
+		//面を構成する頂点の数を取得(3なら三角形ポリゴン)
+		const int polygonSize = fbxMesh->GetPolygonSize(i);
+		assert(polygonSize <= 4);
+
+		//1頂点ずつ処理
+		for (int j = 0; j < polygonSize; j++)
+		{
+			//FBX頂点配列のインデックス
+			int index = fbxMesh->GetPolygonVertex(i, j);
+			assert(index >= 0);
+
+			//頂点法線読み込み
+			ModelFbx::VertexPosNormalUv& vertex = vertices[index];
+			FbxVector4 normal;
+			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
+			{
+				vertex.normal.x = (float)normal[0];
+				vertex.normal.y = (float)normal[1];
+				vertex.normal.z = (float)normal[2];
+			}
+			//テクスチャUV読み込み
+			if (textureCount > 0)
+			{
+				FbxVector2 uvs;
+				bool lUnmappedUV;
+				//0番決め打ちで代入
+				if (fbxMesh->GetPolygonVertexUV(i, j,
+					uvNames[0], uvs, lUnmappedUV))
+				{
+					vertex.uv.x = (float)uvs[0];
+					vertex.uv.y = (float)uvs[1];
+				}
+			}
+			//インデックス配列に頂点インデックスを追加
+			//3頂点目までなら
+			if (j < 3)
+			{
+				//1点追加し、他の2点と三角形を構築
+				indices.push_back(index);
+			}
+			//4頂点目
+			else
+			{
+				//3点追加
+				//四角形の0,1,2,3の内 2,3,0で三角形を構築する
+				int index2 = indices[indices.size() - 1];
+				int index3 = index;
+				int index0 = indices[indices.size() - 3];
+				indices.push_back(index2);
+				indices.push_back(index3);
+				indices.push_back(index0);
+			}
+		}
+	}
+
 }
 
 void FbxLoader::ParseMaterial(ModelFbx* modelF, FbxNode* fbxNode)
