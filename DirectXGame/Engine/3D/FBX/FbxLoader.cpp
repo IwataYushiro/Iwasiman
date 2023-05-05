@@ -246,10 +246,72 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 
 void FbxLoader::ParseMaterial(ModelFbx* modelF, FbxNode* fbxNode)
 {
+	const int materialCount = fbxNode->GetMaterialCount();
+	if (materialCount > 0)
+	{
+		//先頭のマテリアルを取得
+		FbxSurfaceMaterial* material = fbxNode->GetMaterial(0);
+		//テクスチャを読み込んだかどうかを表すフラグ
+		bool textureLoaded = false;
+		if (material)
+		{
+			//FbxSurfaceLambertクラスかどうかを調べる
+			if (material->GetClassId().Is(FbxSurfaceLambert::ClassId))
+			{
+				FbxSurfaceLambert* lambert =
+				static_cast<FbxSurfaceLambert*>(material);
+				//アンビエント係数
+				FbxPropertyT<FbxDouble3> ambient = lambert->Ambient;
+				modelF->ambient.x = (float)ambient.Get()[0];
+				modelF->ambient.y = (float)ambient.Get()[1];
+				modelF->ambient.z = (float)ambient.Get()[2];
+				//ディフューズ係数
+				FbxPropertyT<FbxDouble3> diffuse = lambert->Diffuse;
+				modelF->diffuse.x = (float)diffuse.Get()[0];
+				modelF->diffuse.y = (float)diffuse.Get()[1];
+				modelF->diffuse.z = (float)diffuse.Get()[2];
+			}
+			//ディフューズテクスチャを取り出す
+			const FbxProperty diffuseProperty =
+			material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+			if (diffuseProperty.IsValid())
+			{
+				const FbxFileTexture* texture =
+				diffuseProperty.GetSrcObject<FbxFileTexture>();
+				if (texture)
+				{
+					const char* filePath = texture->GetFileName();
+					//ファイルパス名からファイル名を検出
+					string path_str(filePath);
+					string name = ExtractFileName(path_str);
+					//テクスチャを読み込む
+					LoadTexture(modelF, baseDirectory + modelF->name + "/" + name);
+					textureLoaded = true;
+				}
+			}
+		}
+		//テクスチャがない場合はデフォルトテクスチャ
+		if (!textureLoaded)
+		{
+			LoadTexture(modelF, baseDirectory + defaultTextureFileName);
+		}
+	}
 }
 
 void FbxLoader::LoadTexture(ModelFbx* modelF, const std::string& fullpath)
 {
+	HRESULT result = S_FALSE;
+	//WICテクスチャのロード
+	TexMetadata& metadata = modelF->metadata;
+	ScratchImage& scratchImg = modelF->scratchImg;
+	//ユニコード文字列に変換
+	wchar_t wfilePath[128];
+	MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilePath, _countof(wfilePath));
+	result = LoadFromWICFile(wfilePath, WIC_FLAGS_NONE, &metadata, scratchImg);
+	if (FAILED(result))
+	{
+		assert(0);
+	}
 }
 
 std::string FbxLoader::ExtractFileName(const std::string path)
