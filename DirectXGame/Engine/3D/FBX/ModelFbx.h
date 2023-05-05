@@ -55,8 +55,12 @@ public://フレンド、サブクラス
 
 
 public://メンバ関数
+	//描画
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//バッファ生成
 	void CreateBuffers(ID3D12Device* device);
+
+
 private://メンバ変数
 	//モデル名
 	string name;
@@ -90,4 +94,7 @@ private://メンバ変数
 	//スクラッチイメージ
 	ScratchImage scratchImg = {};
 
+public://アクセッサ置き場
+	//モデル変形行列
+	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 };
