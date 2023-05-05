@@ -28,4 +28,35 @@ void ModelFbx::CreateBuffers(ID3D12Device* device)
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeVB;
 	vbView.StrideInBytes = sizeof(vertices[0]);
+
+	//頂点インデックス全体のサイズ
+	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
+	// リソース設定
+	resourceDesc.Width = sizeIB;
+	resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeIB);
+
+	// インデックスバッファ生成
+	result = device->CreateCommittedResource(
+		&heapProps,
+		D3D12_HEAP_FLAG_NONE,
+		&resourceDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&indexBuff));
+
+	// インデックスバッファへのデータ転送
+	unsigned short* indexMap = nullptr;
+	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
+	if (SUCCEEDED(result)) {
+
+		// 全インデックスに対して
+		std::copy(indices.begin(), indices.end(), indexMap);
+		indexBuff->Unmap(0, nullptr);
+	}
+
+	// インデックスバッファビューの作成
+	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
+	ibView.Format = DXGI_FORMAT_R16_UINT;
+	ibView.SizeInBytes = sizeIB;
+
 }
