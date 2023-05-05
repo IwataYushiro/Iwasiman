@@ -45,6 +45,9 @@ public:
 	void ParseMaterial(ModelFbx* modelF, FbxNode* fbxNode);
 	//テクスチャ読み取り
 	void LoadTexture(ModelFbx* modelF, const std::string& fullpath);
+	//ディレクトリを含んだファイルパスからファイル名を抽出する
+	std::string ExtractFileName(const std::string path);
+
 private:
 	// privateなコンストラクタ（シングルトンパターン）
 	FbxLoader() = default;
@@ -54,7 +57,8 @@ private:
 	FbxLoader(const FbxLoader& obj) = delete;
 	// コピー代入演算子を禁止（シングルトンパターン）
 	void operator=(const FbxLoader& obj) = delete;
-
+	//デフォルトテクスチャ名
+	static const string defaultTextureFileName;
 private:
 	//デバイス
 	ID3D12Device* device_ = nullptr;

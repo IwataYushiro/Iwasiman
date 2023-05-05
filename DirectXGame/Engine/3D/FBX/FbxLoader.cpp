@@ -5,6 +5,7 @@ using namespace DirectX;
 
 //静的メンバ変数の実体
 const std::string FbxLoader::baseDirectory = "Resources/";
+const std::string FbxLoader::defaultTextureFileName = "white1x1.png";
 
 FbxLoader* FbxLoader::GetInstance()
 {
@@ -249,4 +250,22 @@ void FbxLoader::ParseMaterial(ModelFbx* modelF, FbxNode* fbxNode)
 
 void FbxLoader::LoadTexture(ModelFbx* modelF, const std::string& fullpath)
 {
+}
+
+std::string FbxLoader::ExtractFileName(const std::string path)
+{
+	size_t pos1;
+	//区切り文字‘\\’が出てくる一番最後の文字を検索
+	pos1 = path.rfind('\\');
+	if (pos1 != string::npos)
+	{
+		return path.substr(pos1 + 1, path.size() - pos1 - 1);
+	}
+	//区切り文字‘/’が出てくる一番最後の文字を検索
+	pos1 = path.rfind('/');
+	if (pos1 != string::npos)
+	{
+		return path.substr(pos1 + 1, path.size() - pos1 - 1);
+	}
+	return path;
 }
