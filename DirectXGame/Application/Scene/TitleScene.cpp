@@ -18,7 +18,7 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(titleTex, "texture/title.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
 
-	FbxLoader::GetInstance()->LoadModelFromFile("fbxhuman");
+	FbxLoader::GetInstance()->LoadModelFromFile("cube");
 }
 
 void TitleScene::Update()
