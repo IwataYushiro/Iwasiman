@@ -49,10 +49,25 @@ public://メンバ関数
 
 	//初期化
 	void Initialize();
+	//更新
+	void Update();
+	//描画
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 
 protected://メンバ変数
+	//ローカルスケール
+	XMFLOAT3 scale_ = { 1.0f,1.0f,1.0f };
+	// ローカル回転角
+	XMFLOAT3 rotation_ = { 0.0f,0.0f,0.0f };
+	// ローカル座標
+	XMFLOAT3 position_ = { 0.0f,0.0f,0.0f };
+	// ローカルワールド行列
+	XMMATRIX matWorld_;
+	// モデル
+	ModelFbx* modelF_ = nullptr;
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBufferTransform;
-
+public://アクセッサ置き場
+	void SetModelFBX(ModelFbx* modelF) { this->modelF_ = modelF; }
 };

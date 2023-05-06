@@ -19,7 +19,7 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(titleTex, "texture/title.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
 
-	FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	FbxLoader::GetInstance()->LoadModelFromFile("spheref");
 	//デバイスセット
 	ObjectFbx::SetDevice(dxCommon_->GetDevice());
 	//カメラセット

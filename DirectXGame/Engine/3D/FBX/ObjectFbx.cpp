@@ -4,6 +4,7 @@
 #pragma comment(lib,"d3dcompiler.lib")
 
 using namespace Microsoft::WRL;
+using namespace DirectX;
 
 //静的メンバ変数の実体
 ID3D12Device* ObjectFbx::device_ = nullptr;
@@ -181,4 +182,46 @@ void ObjectFbx::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBufferTransform));
 
+}
+
+void ObjectFbx::Update()
+{
+	HRESULT result;
+	XMMATRIX matScale, matRot, matTrans;
+
+	// スケール、回転、平行移動行列の計算
+	matScale = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
+	matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation_.z));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation_.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation_.y));
+	matTrans = XMMatrixTranslation(position_.x, position_.y, position_.z);
+
+	// ワールド行列の合成
+	matWorld_ = XMMatrixIdentity(); // 変形をリセット
+	matWorld_ *= matScale; // ワールド行列にスケーリングを反映
+	matWorld_ *= matRot; // ワールド行列に回転を反映
+	matWorld_ *= matTrans; // ワールド行列に平行移動を反映
+	
+	//ビュプロ行列
+	const XMMATRIX& matViewProjection = camera_->GetMatViewProjection();
+	//モデルのメッシュトランスフォーム
+	const XMMATRIX& modelTransform = modelF_->GetModelTransform();
+	//カメラ座標
+	const XMFLOAT3& cameraPos = camera_->GetEye();
+
+	//定数バッファへのデータ転送
+	ConstBufferDataTransform* constMap = nullptr;
+	result = constBufferTransform->Map(0, nullptr, (void**)&constMap);
+	if (SUCCEEDED(result))
+	{
+		constMap->viewProj = matViewProjection;
+		constMap->world = modelTransform * matWorld_;
+		constMap->cameraPos = cameraPos;
+		constBufferTransform->Unmap(0, nullptr);
+	}
+}
+
+void ObjectFbx::Draw(ID3D12GraphicsCommandList* cmdList)
+{
 }
