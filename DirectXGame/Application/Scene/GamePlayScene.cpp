@@ -6,13 +6,12 @@ DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 SpriteCommon* GamePlayScene::spCommon_ = SpriteCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
 Audio* GamePlayScene::audio_ = Audio::GetInstance();
+Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
 void GamePlayScene::Initialize()
 {
-	//ƒJƒƒ‰
-	camera_ = new Camera();
 	//ƒvƒŒƒCƒ„[ŠÖŒW
 	player_ = new Player();
 	//“GŠÖŒW

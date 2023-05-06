@@ -7,6 +7,7 @@ Input* TitleScene::input_ = Input::GetInstance();
 Audio* TitleScene::audio_ = Audio::GetInstance();
 SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
+Camera* TitleScene::camera_ = Camera::GetInstance();
 
 
 void TitleScene::Initialize()
@@ -19,6 +20,10 @@ void TitleScene::Initialize()
 	spriteTitle_->Initialize(spCommon_, titleTex);
 
 	FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	//デバイスセット
+	ObjectFbx::SetDevice(dxCommon_->GetDevice());
+	//カメラセット
+	ObjectFbx::SetCamera(camera_);
 }
 
 void TitleScene::Update()

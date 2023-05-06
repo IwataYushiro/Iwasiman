@@ -75,12 +75,12 @@ void ModelFbx::CreateBuffers(ID3D12Device* device)
 		(UINT16)metadata.mipLevels);
 
 	// ヒーププロパティ
-	CD3DX12_HEAP_PROPERTIES heapProps =
+	CD3DX12_HEAP_PROPERTIES texHeapProps =
 		CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
 
 	// テクスチャ用バッファの生成
 	result = device->CreateCommittedResource(
-		&heapProps,
+		&texHeapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&texresDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ, // テクスチャ用指定
