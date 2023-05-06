@@ -21,7 +21,7 @@ void TitleScene::Initialize()
 
 	//FBX
 	objF = ObjectFbx::Create();
-	modelF = FbxLoader::GetInstance()->LoadModelFromFile("spheref");
+	modelF = FbxLoader::GetInstance()->LoadModelFromFile("cube2");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
 	camera_->SetEye({ 0.0f,0.0f,200.0f });
