@@ -11,7 +11,7 @@ float4 main(VSOutput input) : SV_TARGET
 	//ランバート反射
     float3 light = normalize(float3(1.0f, -1.0f, 1.0f));//右下奥向きのライト
     float diffuse = saturate(dot(-light, input.normal));
-    float brightness = diffuse + 0.6f;
+    float brightness = diffuse + 0.3f;
     float4 shadecolor = float4(brightness, brightness, brightness, 1.0f);
 	//陰影とテクスチャの色を合成
     return shadecolor * texcolor;
