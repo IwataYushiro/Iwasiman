@@ -118,6 +118,9 @@
     <Filter Include="ヘッダー ファイル\Engine\3D\FBX">
       <UniqueIdentifier>{b3793c53-287b-4b1f-9ba7-f3bc11c9caa6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー ファイル\FBX">
+      <UniqueIdentifier>{3cad425a-1b8f-469e-b032-5897afe78ffd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -131,6 +134,9 @@
     </None>
     <None Include="Resources\shader\Particle.hlsli">
       <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="Resources\shader\FBX\FBX.hlsli">
+      <Filter>シェーダー ファイル\FBX</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +166,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\ParticleVS.hlsl">
       <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
+      <Filter>シェーダー ファイル\FBX</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
+      <Filter>シェーダー ファイル\FBX</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

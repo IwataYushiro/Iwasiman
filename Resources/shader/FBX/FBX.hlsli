@@ -1,0 +1,1 @@
+cbuffer cbuff0 : register(b0)
