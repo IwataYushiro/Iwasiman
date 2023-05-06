@@ -24,6 +24,8 @@ void TitleScene::Initialize()
 	ObjectFbx::SetDevice(dxCommon_->GetDevice());
 	//カメラセット
 	ObjectFbx::SetCamera(camera_);
+	//グラフィックスパイプライン生成
+	ObjectFbx::CreateGraphicsPipeline();
 }
 
 void TitleScene::Update()

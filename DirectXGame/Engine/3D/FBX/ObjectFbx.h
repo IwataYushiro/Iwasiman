@@ -33,17 +33,23 @@ public://静的メンバ関数
 	//セッター
 	static void SetDevice(ID3D12Device* device) { ObjectFbx::device_ = device; }
 	static void SetCamera(Camera* camera) { ObjectFbx::camera_ = camera; }
+	//グラフィックスパイプライン生成
+	static void CreateGraphicsPipeline();
 
 private://静的メンバ変数
 	//デバイス
 	static ID3D12Device* device_;
 	//カメラ
 	static Camera* camera_;
-
+	//ルートシグネチャ
+	static ComPtr<ID3D12RootSignature> rootSignature_;
+	//パイプラインステートオブジェクト
+	static ComPtr<ID3D12PipelineState> pipelineState_;
 public://メンバ関数
 
 	//初期化
 	void Initialize();
+
 
 protected://メンバ変数
 	//定数バッファ
