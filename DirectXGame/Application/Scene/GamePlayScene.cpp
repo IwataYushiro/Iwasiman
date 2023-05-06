@@ -91,6 +91,7 @@ void GamePlayScene::Update()
 
 	if (input_->TriggerKey(DIK_RETURN))
 	{
+		camera_->Reset();
 		sceneManager_->ChangeScene("TITLE");
 	}
 }

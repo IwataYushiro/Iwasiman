@@ -1,5 +1,6 @@
 #include "Framework.h"
 #include "Object3d.h"
+#include "ObjectFbx.h"
 #include "ParticleManager.h"
 
 void Framework::Initialize()
@@ -35,6 +36,7 @@ void Framework::Initialize()
 	FbxLoader::GetInstance()->Initialize(dxCommon_->GetDevice());
 	
 	Object3d::StaticInitialize(dxCommon_->GetDevice());
+	ObjectFbx::StaticInitialize(dxCommon_->GetDevice());
 	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 }
 

@@ -13,6 +13,8 @@ private:
 public:
 	Camera();
 	virtual ~Camera();
+	//初期値にリセット
+	void Reset();
 	//更新
 	virtual void Update();
 	//ビュー行列更新

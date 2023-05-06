@@ -42,5 +42,7 @@ private://Ã“Iƒƒ“ƒo•Ï”
 private://ƒƒ“ƒo•Ï”
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
-	
+	//FBX
+	ModelFbx* modelF = nullptr;
+	ObjectFbx* objF = nullptr;
 };

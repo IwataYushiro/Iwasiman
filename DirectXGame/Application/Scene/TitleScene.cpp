@@ -19,22 +19,24 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(titleTex, "texture/title.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
 
-	FbxLoader::GetInstance()->LoadModelFromFile("spheref");
-	//デバイスセット
-	ObjectFbx::SetDevice(dxCommon_->GetDevice());
-	//カメラセット
-	ObjectFbx::SetCamera(camera_);
-	//グラフィックスパイプライン生成
-	ObjectFbx::CreateGraphicsPipeline();
+	//FBX
+	objF = ObjectFbx::Create();
+	modelF = FbxLoader::GetInstance()->LoadModelFromFile("spheref");
+	objF->SetModelFBX(modelF);
+	objF->SetCamera(camera_);
+	camera_->SetEye({ 0.0f,0.0f,200.0f });
 }
 
 void TitleScene::Update()
 {
 	if (input_->TriggerKey(DIK_SPACE))
 	{
+		camera_->Reset();
 		sceneManager_->ChangeScene("GAMEPLAY");
 	}
 	spriteTitle_->Update();
+	camera_->Update();
+	objF->Update();
 }
 
 void TitleScene::Draw()
@@ -58,6 +60,13 @@ void TitleScene::Draw()
 	//モデル描画後処理
 	Object3d::PostDraw();
 
+	//Fbxモデル描画前処理
+	ObjectFbx::PreDraw(dxCommon_->GetCommandList());
+
+	objF->Draw();
+	//Fbxモデル描画後処理
+	ObjectFbx::PostDraw();
+
 	//前景スプライト
 
 	//ImGuiの表示
@@ -68,4 +77,7 @@ void TitleScene::Finalize()
 {
 	//スプライト
 	delete spriteTitle_;
+	//FBX
+	delete objF;
+	delete modelF;
 }

@@ -30,29 +30,41 @@ public://サブクラス
 	};
 
 public://静的メンバ関数
+	//静的初期化
+	static void StaticInitialize(ID3D12Device* device);
+	// 描画前処理
+	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
+	// 描画後処理
+	static void PostDraw();
+	// 3Dオブジェクト生成
+	static ObjectFbx* Create();
+
 	//セッター
 	static void SetDevice(ID3D12Device* device) { ObjectFbx::device_ = device; }
-	static void SetCamera(Camera* camera) { ObjectFbx::camera_ = camera; }
+	
+private:
 	//グラフィックスパイプライン生成
 	static void CreateGraphicsPipeline();
 
 private://静的メンバ変数
 	//デバイス
 	static ID3D12Device* device_;
-	//カメラ
-	static Camera* camera_;
+	
+	// コマンドリスト
+	static ID3D12GraphicsCommandList* cmdList_;
 	//ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootSignature_;
 	//パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelineState_;
+
 public://メンバ関数
 
 	//初期化
-	void Initialize();
+	bool Initialize();
 	//更新
 	void Update();
 	//描画
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw();
 
 
 protected://メンバ変数
@@ -68,6 +80,10 @@ protected://メンバ変数
 	ModelFbx* modelF_ = nullptr;
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBufferTransform;
+	//カメラ
+	Camera* camera_;
 public://アクセッサ置き場
 	void SetModelFBX(ModelFbx* modelF) { this->modelF_ = modelF; }
+	void SetCamera(Camera* camera) { this->camera_ = camera; }
+
 };

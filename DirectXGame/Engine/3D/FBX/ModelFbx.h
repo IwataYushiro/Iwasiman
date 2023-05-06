@@ -59,9 +59,12 @@ public://メンバ関数
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//バッファ生成
 	void CreateBuffers(ID3D12Device* device);
-
+	//デバイス
+	static void SetDevice(ID3D12Device* device) { ModelFbx::device_ = device; }
 
 private://メンバ変数
+	// デバイス
+	static ID3D12Device* device_;
 	//モデル名
 	string name;
 	//ノード配列

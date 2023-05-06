@@ -31,7 +31,7 @@ public:
 	void Finalize();
 
 	//ファイルからFBXモデル読み込み
-	void LoadModelFromFile(const string& modelName);
+	ModelFbx* LoadModelFromFile(const string& modelName);
 
 	//再帰的にノード構成を解析
 	void ParseNodeRecursive(ModelFbx* modelF, FbxNode* fbxNode, Node* parent = nullptr);

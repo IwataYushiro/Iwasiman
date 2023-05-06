@@ -8,9 +8,65 @@ using namespace DirectX;
 
 //静的メンバ変数の実体
 ID3D12Device* ObjectFbx::device_ = nullptr;
-Camera* ObjectFbx::camera_ = nullptr;
+ID3D12GraphicsCommandList* ObjectFbx::cmdList_ = nullptr;
 ComPtr<ID3D12RootSignature> ObjectFbx::rootSignature_;
 ComPtr<ID3D12PipelineState> ObjectFbx::pipelineState_;
+
+void ObjectFbx::StaticInitialize(ID3D12Device* device)
+{
+	// nullptrチェック
+	assert(device);
+	device_ = device;
+
+	//モデルにデバイスをセット
+	ModelFbx::SetDevice(device);
+
+	// パイプライン初期化
+	CreateGraphicsPipeline();
+}
+
+void ObjectFbx::PreDraw(ID3D12GraphicsCommandList* cmdList)
+{
+	// PreDrawとPostDrawがペアで呼ばれていなければエラー
+	assert(ObjectFbx::cmdList_ == nullptr);
+
+	// コマンドリストをセット
+	ObjectFbx::cmdList_ = cmdList;
+
+	//パイプラインステートの設定
+	cmdList->SetPipelineState(pipelineState_.Get());
+	//ルートシグネチャの設定
+	cmdList->SetGraphicsRootSignature(rootSignature_.Get());
+	//プリミティブ形状の設定
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+}
+
+void ObjectFbx::PostDraw()
+{
+	// コマンドリストを解除
+	ObjectFbx::cmdList_ = nullptr;
+}
+
+ObjectFbx* ObjectFbx::Create()
+{
+	// 3Dオブジェクトのインスタンスを生成
+	ObjectFbx* objectFbx = new ObjectFbx();
+	if (objectFbx == nullptr) {
+		return nullptr;
+	}
+	//スケールをセット
+	float scale_val = 1.0f;
+	objectFbx->scale_ = { scale_val,scale_val ,scale_val };
+	// 初期化
+	if (!objectFbx->Initialize()) {
+		delete objectFbx;
+		assert(0);
+		return nullptr;
+	}
+
+	return objectFbx;
+}
 
 void ObjectFbx::CreateGraphicsPipeline()
 {
@@ -23,7 +79,7 @@ void ObjectFbx::CreateGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/FBX/FBXVS.hlsl",    // シェーダファイル名
+		L"Resources/shader/FBX/FBXVS.hlsl",    // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",    // エントリーポイント名、シェーダーモデル指定
@@ -46,7 +102,7 @@ void ObjectFbx::CreateGraphicsPipeline()
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/FBX/FBXPS.hlsl",    // シェーダファイル名
+		L"Resources/shader/FBX/FBXPS.hlsl",    // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",    // エントリーポイント名、シェーダーモデル指定
@@ -161,7 +217,7 @@ void ObjectFbx::CreateGraphicsPipeline()
 	if (FAILED(result)) { assert(0); }
 }
 
-void ObjectFbx::Initialize()
+bool ObjectFbx::Initialize()
 {
 	HRESULT result;
 
@@ -170,8 +226,6 @@ void ObjectFbx::Initialize()
 	// リソース設定
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
-
-	HRESULT result;
 
 	// 定数バッファの生成
 	result = device_->CreateCommittedResource(
@@ -182,6 +236,7 @@ void ObjectFbx::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBufferTransform));
 
+	return true;
 }
 
 void ObjectFbx::Update()
@@ -222,6 +277,17 @@ void ObjectFbx::Update()
 	}
 }
 
-void ObjectFbx::Draw(ID3D12GraphicsCommandList* cmdList)
+void ObjectFbx::Draw()
 {
+	assert(device_);
+	assert(ObjectFbx::cmdList_);
+	//モデルの割り当てが無ければ描画しない
+	if (modelF_ == nullptr)
+	{
+		return;
+	}
+	//定数バッファビューセット
+	cmdList_->SetGraphicsRootConstantBufferView(0, constBufferTransform->GetGPUVirtualAddress());
+	//モデル描画
+	modelF_->Draw(cmdList_);
 }

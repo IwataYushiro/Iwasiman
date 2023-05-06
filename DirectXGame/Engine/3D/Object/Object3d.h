@@ -106,13 +106,13 @@ private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	
 	// 色
-	XMFLOAT4 color = { 1,1,1,1 };
+	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 	// ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
+	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
 	// X,Y,Z軸回りのローカル回転角
-	XMFLOAT3 rotation = { 0,0,0 };
+	XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
 	// ローカル座標
-	XMFLOAT3 position = { 0,0,0 };
+	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
 	// ローカルワールド変換行列
 	XMMATRIX matWorld;
 	// 親オブジェクト
