@@ -242,6 +242,7 @@
     <ClCompile Include="DirectXGame\Engine\3D\Camera\Camera.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxLoader.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ModelFbx.cpp" />
+    <ClCompile Include="DirectXGame\Engine\3D\FBX\ObjectFbx.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Model.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Object3d.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Particle\Particle.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="DirectXGame\Engine\3D\Camera\Camera.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxLoader.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ModelFbx.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\FBX\ObjectFbx.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Model.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Object3d.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Particle\Particle.h" />

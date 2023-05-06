@@ -46,7 +46,8 @@ protected:
 	AbstractSceneFactory* sceneFactory_ = nullptr;
 	//imgui
 	ImGuiManager* imguiManager_ = nullptr;
-	
+	//カメラ
+	Camera* camera_ = nullptr;
 	//ゲーム終了フラグ
 	bool EndGame_ = false;
 };

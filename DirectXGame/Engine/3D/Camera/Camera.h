@@ -69,4 +69,6 @@ public://アクセッサ
 	//上方向ベクトル
 	const XMFLOAT3& GetUp() { return up_; }
 	void SetUp(const XMFLOAT3& up);
+
+	static Camera* GetInstance();
 };
