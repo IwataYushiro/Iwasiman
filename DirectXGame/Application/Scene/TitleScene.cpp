@@ -43,7 +43,16 @@ void TitleScene::Update()
 	}*/
 
 	//spriteTitle_->Update();
+	//横方向の風
 	pm1_->ActiveX(particle1_, { 25.0f ,10.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+	//縦方向の風
+	//pm1_->ActiveY(particle1_, { 10.0f ,25.0f,0.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+	//全方位にはじける(クリア演出に使えそう)
+	//pm1_->ActiveZ(particle1_, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
+	
+	//ばらけるような
+	//pm1_->ActiveY(particle1_, { 10.0f ,25.0f,0.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+	
 	pm1_->Update();
 
 	camera_->Update();
