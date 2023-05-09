@@ -21,10 +21,11 @@ void TitleScene::Initialize()
 
 	//FBX
 	objF = ObjectFbx::Create();
-	modelF = FbxLoader::GetInstance()->LoadModelFromFile("cube2");
+	modelF = FbxLoader::GetInstance()->LoadModelFromFile("cube");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
 	camera_->SetEye({ 0.0f,0.0f,200.0f });
+	camera_->SetTarget({ 0.0f,20.0f,0.0f });
 }
 
 void TitleScene::Update()
