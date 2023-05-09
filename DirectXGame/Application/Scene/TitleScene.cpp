@@ -28,7 +28,7 @@ void TitleScene::Initialize()
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });*/
 
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
@@ -43,7 +43,7 @@ void TitleScene::Update()
 	}*/
 
 	//spriteTitle_->Update();
-	pm1_->Active(particle1_, { 120.0f ,120.0f,120.0f }, { 0.2f,0.2f,0.2f }, { 0.0f,0.001f,0.0f }, 15, { 10.0f, 0.0f });
+	pm1_->ActiveX(particle1_, { 25.0f ,10.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
 	pm1_->Update();
 
 	camera_->Update();
