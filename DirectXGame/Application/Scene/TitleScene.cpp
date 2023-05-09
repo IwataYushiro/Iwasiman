@@ -21,11 +21,11 @@ void TitleScene::Initialize()
 
 	//FBX
 	objF = ObjectFbx::Create();
-	modelF = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
-	camera_->SetEye({ 0.0f,0.0f,200.0f });
-	camera_->SetTarget({ 0.0f,20.0f,0.0f });
+	camera_->SetEye({ 0.0f,0.0f,-20.0f });
+	//camera_->SetTarget({ 0.0f,20.0f,0.0f });*/
 }
 
 void TitleScene::Update()
@@ -45,7 +45,7 @@ void TitleScene::Draw()
 	//背景スプライト描画前処理
 	spCommon_->PreDraw();
 	//スプライト描画
-	spriteTitle_->Draw();
+	//spriteTitle_->Draw();
 
 
 	//エフェクト描画前処理
