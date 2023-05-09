@@ -45,4 +45,8 @@ private://メンバ変数
 	//FBX
 	ModelFbx* modelF = nullptr;
 	ObjectFbx* objF = nullptr;
+
+	//パーティクル
+	Particle* particle1_ = nullptr;
+	ParticleManager* pm1_ = nullptr;
 };

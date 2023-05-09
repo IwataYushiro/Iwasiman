@@ -302,26 +302,26 @@ void ParticleManager::Draw()
 	particle_->Draw(cmdList);
 }
 
-void ParticleManager::Active(Particle* p, const float& setpos, const float& setvel, const float& setacc, const int& setnum, const XMFLOAT2& setscale)
+void ParticleManager::Active(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
 {
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
-		const float md_pos = setpos;
+		const XMFLOAT3 md_pos = setpos;
 		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * md_pos - md_pos / 2.0f;
+		pos.x = (float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
-		const float md_vel = setvel;
+		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
-		vel.x = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * md_vel - md_vel / 2.0f;
+		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / 2.0f;
 		//重力に見立ててYのみ{0.001f,0}でランダムに分布
 		XMFLOAT3 acc{};
-		const float md_acc = setacc;
-		acc.y = -(float)rand() / RAND_MAX * md_acc;
+		const XMFLOAT3 md_acc = setacc;
+		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
 		p->Add(60, pos, vel, acc, setscale.x, setscale.y);

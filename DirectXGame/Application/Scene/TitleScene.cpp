@@ -24,18 +24,28 @@ void TitleScene::Initialize()
 	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
-	camera_->SetEye({ 0.0f,0.0f,-20.0f });
+	//camera_->SetEye({ 0.0f,0.0f,-20.0f });
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });*/
+
+	//パーティクル
+	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
+	pm1_ = ParticleManager::Create();
+	pm1_->SetParticleModel(particle1_);
+	pm1_->SetCamera(camera_);
 }
 
 void TitleScene::Update()
 {
-	if (input_->TriggerKey(DIK_SPACE))
+	/*if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
 		sceneManager_->ChangeScene("GAMEPLAY");
-	}
-	spriteTitle_->Update();
+	}*/
+
+	//spriteTitle_->Update();
+	pm1_->Active(particle1_, { 120.0f ,120.0f,120.0f }, { 0.2f,0.2f,0.2f }, { 0.0f,0.001f,0.0f }, 15, { 10.0f, 0.0f });
+	pm1_->Update();
+
 	camera_->Update();
 	objF->Update();
 }
@@ -51,6 +61,7 @@ void TitleScene::Draw()
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
+	pm1_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -78,6 +89,9 @@ void TitleScene::Finalize()
 {
 	//スプライト
 	delete spriteTitle_;
+	//パーティクル
+	delete particle1_;
+	delete pm1_;
 	//FBX
 	delete objF;
 	delete modelF;
