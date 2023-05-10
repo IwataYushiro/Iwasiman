@@ -4,6 +4,7 @@
 #include "ImGuiManager.h"
 #include "Object3d.h"
 #include "ObjectFbx.h"
+#include "Player.h"
 
 #include "ParticleManager.h"
 #include "Sprite.h"
@@ -45,6 +46,11 @@ private://メンバ変数
 	//FBX
 	ModelFbx* modelF = nullptr;
 	ObjectFbx* objF = nullptr;
+
+	//モデル
+	Player* player_ = nullptr;
+	Model* modelPlayer_ = nullptr;
+	Object3d* object3DPlayer_ = nullptr;
 
 	//パーティクル
 	Particle* particle1_ = nullptr;

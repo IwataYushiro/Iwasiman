@@ -14,7 +14,20 @@ void TitleScene::Initialize()
 {
 	//オーディオ
 	audio_->Initialize();
-
+	
+	//プレイヤー関係
+	player_ = new Player();
+	//3Dオブジェクト生成
+	object3DPlayer_ = Object3d::Create();
+	//OBJファイルからモデルデータを読み込む
+	modelPlayer_ = Model::LoadFromOBJ("player");
+	//オブジェクトにモデル紐付ける
+	object3DPlayer_->SetModel(modelPlayer_);
+	//カメラも紐づけ
+	object3DPlayer_->SetCamera(camera_);
+	//プレイヤー初期化
+	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
+	
 	UINT titleTex = 00;
 	spCommon_->LoadTexture(titleTex, "texture/title.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
@@ -44,9 +57,11 @@ void TitleScene::Update()
 
 	//spriteTitle_->Update();
 	//横方向の風
-	pm1_->ActiveX(particle1_, { 25.0f ,100.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 8, { 3.0f, 0.0f });
+	//pm1_->ActiveX(particle1_, { 25.0f ,10.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+	//横方向の風(ワイド)
+	//pm1_->ActiveX(particle1_, { 25.0f ,100.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
 	//縦方向の風
-	pm1_->ActiveY(particle1_, { 10.0f ,25.0f,0.0f }, { 0.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+	//pm1_->ActiveY(particle1_, { 10.0f ,25.0f,0.0f }, { 0.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
 	//全方位にはじける(クリア演出に使えそう)
 	//pm1_->ActiveZ(particle1_, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
 	
@@ -56,6 +71,7 @@ void TitleScene::Update()
 	//雪とか雨
 	//pm1_->ActiveY(particle1_, { 150.0f ,100.0f,0.0f }, { 0.0f,-5.2f,0.0f }, { 0.0f,0.001f,0.0f }, 5, { 5.0f, 0.0f });
 
+	player_->Update();
 	pm1_->Update();
 
 	camera_->Update();
@@ -81,6 +97,7 @@ void TitleScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
+	player_->Draw();
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -101,6 +118,11 @@ void TitleScene::Finalize()
 {
 	//スプライト
 	delete spriteTitle_;
+	//プレイヤー
+	delete object3DPlayer_;
+	delete modelPlayer_;
+	delete player_;
+
 	//パーティクル
 	delete particle1_;
 	delete pm1_;
