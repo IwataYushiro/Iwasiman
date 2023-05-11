@@ -15,14 +15,6 @@ private://エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-private://サブクラス
-	// 頂点データ構造体
-	struct VertexPosNormalUv
-	{
-		XMFLOAT3 pos; // xyz座標
-		XMFLOAT3 normal; // 法線ベクトル
-		XMFLOAT2 uv;  // uv座標
-	};
 
 public://静的メンバ関数
 	//OBJファイルから3Dモデルを読み込む
@@ -49,21 +41,10 @@ private://メンバ変数
 	static ID3D12Device* device;
 	// デスクリプタサイズ
 	UINT descriptorHandleIncrementSize;
-	// 頂点データ配列
-	std::vector<VertexPosNormalUv> vertices;
-	// 頂点インデックス配列
-	std::vector<unsigned short> indices;
+	
 	// デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeap;
-	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
-	// インデックスバッファ
-	ComPtr<ID3D12Resource> indexBuff;
 	
-	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
-	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView;
 	
 public://アクセッサ置き場
 	//デバイス
