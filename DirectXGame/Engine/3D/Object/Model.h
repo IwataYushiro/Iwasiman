@@ -24,40 +24,6 @@ private://サブクラス
 		XMFLOAT2 uv;  // uv座標
 	};
 
-	//定数バッファ
-	struct ConstBufferDataB1
-	{
-		XMFLOAT3 ambient;	// アンビエント係数
-		float pad1;			// パディング
-		XMFLOAT3 diffuse;	// ディフューズ係数
-		float pad2;			// パディング
-		XMFLOAT3 specular;	// スペキュラー係数
-		float alpha;		// アルファ値
-	};
-ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
-	//マテリアル
-	struct Material
-	{
-		std::string name;				//マテリアル名
-		XMFLOAT3 ambient;				//アンビエント影響度
-		XMFLOAT3 diffuse;				//ディフューズ影響度
-		XMFLOAT3 specular;				//スペキュラー影響度
-		float alpha;					//アルファ値
-		std::string textureFilename;	//テクスチャファイル名
-
-		//コンストラクタ
-		Material() {
-			ambient = { 0.3f,0.3f,0.3f };
-			diffuse = { 0.0f,0.0f,0.0f };
-			specular = { 0.0f,0.0f,0.0f };
-			alpha = 1.0f;
-		}
-	};
-	
-	//マテリアル
-	Material material;
-
-
 public://静的メンバ関数
 	//OBJファイルから3Dモデルを読み込む
 	static Model* LoadFromOBJ(const std::string& modelName, bool smoothing = false);
@@ -93,12 +59,7 @@ private://メンバ変数
 	ComPtr<ID3D12Resource> vertBuff;
 	// インデックスバッファ
 	ComPtr<ID3D12Resource> indexBuff;
-	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texbuff;
-	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView;
 	// インデックスバッファビュー

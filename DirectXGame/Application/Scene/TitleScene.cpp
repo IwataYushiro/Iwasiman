@@ -49,11 +49,11 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	/*if (input_->TriggerKey(DIK_SPACE))
+	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
 		sceneManager_->ChangeScene("GAMEPLAY");
-	}*/
+	}
 
 	//spriteTitle_->Update();
 	//‰¡•ûŒü‚Ì•—

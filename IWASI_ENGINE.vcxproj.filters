@@ -283,6 +283,12 @@
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ObjectFbx.cpp">
       <Filter>ソース ファイル\Engine\3D\FBX</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Object\Mesh.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Object\Material.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -380,6 +386,12 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ObjectFbx.h">
       <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Object\Mesh.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Object\Material.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
