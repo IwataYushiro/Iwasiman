@@ -1,8 +1,7 @@
 #pragma once
-#include <d3d12.h>
-#include <d3dx12.h>
+#include "Mesh.h"
 #include <DirectXMath.h>
-#include <wrl.h>
+#include <unordered_map>
 
 class Model
 {
@@ -15,40 +14,55 @@ private://エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
+public://コンストラクタ等
+	// デストラクタ
+	~Model();
 
 public://静的メンバ関数
+	//静的初期化
+	static void StaticInitialize(ID3D12Device* device);
 	//OBJファイルから3Dモデルを読み込む
 	static Model* LoadFromOBJ(const std::string& modelName, bool smoothing = false);
 	
 public://メンバ関数
+	
 	// デスクリプタヒープの初期化
 	void InitializeDescriptorHeap();
 
 	// マテリアル読み込み
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
-
+	//マテリアル登録
+	void AddMaterial(Material* material) { materials.emplace(material->name, material); }
 	// テクスチャ読み込み
-	void LoadTexture(const std::string& directoryPath, const std::string& filename);
-	
-	//各種バッファ生成
-	void CreateBuffers();
+	void LoadTextures();	
 
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* cmdList,UINT rootParamIndexMaterial);
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-private://メンバ変数
+private://静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 	// デスクリプタサイズ
-	UINT descriptorHandleIncrementSize;
+	static UINT descriptorHandleIncrementSize;
+	//ベースディレクトリ
+	static const std::string baseDirectory;
 	
+private:
+	//名前
+	std::string name;
+	//メッシュコンテナ
+	std::vector<Mesh*> meshes;
+	//マテリアルコンテナ
+	std::unordered_map<std::string, Material*> materials;
+	//デフォルトマテリアル
+	Material* defaultMaterial = nullptr;
 	// デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeap;
 	
 	
 public://アクセッサ置き場
 	//デバイス
-	static void SetDevice(ID3D12Device* device) { Model::device = device; }
+	static void SetDevice(ID3D12Device* device) { Model::device_ = device; }
 
 private://メンバ関数(カプセル化)
 	//OBJファイルから3Dモデルを読み込む(非公開)

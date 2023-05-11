@@ -20,7 +20,7 @@ private: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
-private://サブクラス
+public://サブクラス
 	// 頂点データ構造体
 	struct VertexPosNormalUv
 	{
@@ -28,6 +28,7 @@ private://サブクラス
 		XMFLOAT3 normal; // 法線ベクトル
 		XMFLOAT2 uv;  // uv座標
 	};
+public:
 	//静的初期化
 	static void StaticInitialize(ID3D12Device* device);
 

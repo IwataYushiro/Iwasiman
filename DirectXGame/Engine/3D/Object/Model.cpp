@@ -1,33 +1,53 @@
-#include <DirectXTex.h>
 #include "Model.h"
-#include <cassert>
-#include <string>
 #include <fstream>
 #include <sstream>
-#include <vector>
-#include <Windows.h>
+#include <cassert>
 
 using namespace DirectX;
 using namespace std;
 
 //静的メンバ変数の実体
-ID3D12Device* Model::device = nullptr;
+ID3D12Device* Model::device_ = nullptr;
+// デスクリプタサイズ
+UINT Model::descriptorHandleIncrementSize;
+
+const std::string Model::baseDirectory = "Resource/";
+
+Model::~Model()
+{
+	for (auto m : meshes)
+	{
+		delete m;
+	}
+	meshes.clear();
+
+	for (auto m: materials)
+	{
+		delete m.second;
+	}
+	materials.clear();
+}
+
+void Model::StaticInitialize(ID3D12Device* device)
+{
+	Model::device_ = device;
+	//メッシュ初期化
+	Mesh::StaticInitialize(device_);
+}
 
 //OBJファイルから3Dモデルを読み込む
 Model* Model::LoadFromOBJ(const std::string& modelName, bool smoothing)
 {
 	//新たなModel型のインスタンスのメモリを確保
 	Model* model = new Model();
-
-	//デスクリプタヒープ生成
-	model->InitializeDescriptorHeap();
-
 	//OBJファイルからのデータ読み込み
 	model->LoadFromOBJInternal(modelName, smoothing);
 
-	//読み込んだデータを元に各種バッファ生成
-	model->CreateBuffers();
-
+	//デスクリプタヒープ生成
+	model->InitializeDescriptorHeap();
+	//テクスチャ読み込み
+	model->LoadTextures();
+	
 	return model;
 }
 
@@ -41,13 +61,13 @@ void Model::InitializeDescriptorHeap() {
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダから見えるように
 	descHeapDesc.NumDescriptors = 1; // シェーダーリソースビュー1つ
-	result = device->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));//生成
+	result = device_->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));//生成
 	if (FAILED(result)) {
 		assert(0);
 	}
 
 	// デスクリプタサイズを取得
-	descriptorHandleIncrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorHandleIncrementSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 }
 
@@ -121,21 +141,25 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 	file.close();
 }
 
+void Model::LoadTextures()
+{
+}
+
 // 描画
-void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial) {
+void Model::Draw(ID3D12GraphicsCommandList* cmdList) {
 	// nullptrチェック
-	assert(device);
+	assert(device_);
 	assert(cmdList);
 
-	
-
-	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
-	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-	if (material.textureFilename.size() > 0)
+	if (descHeap)
 	{
-		
+		// デスクリプタヒープの配列
+		ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
+		cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	}
+	for (auto& mesh : meshes)
+	{
+		mesh->Draw(cmdList);
 	}
 	
 }
@@ -154,6 +178,10 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 	{
 		assert(0);
 	}
+	//メッシュ生成
+	Mesh* mesh = new Mesh();
+	int indexCountTex = 0;
+	int indexCountNoTex = 0;
 
 	vector<XMFLOAT3> positions;					//頂点座標
 	vector<XMFLOAT3> normals;					//法線ベクトル
@@ -176,6 +204,29 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 			line_stream >> filename;
 			//マテリアル読み込み
 			LoadMaterial(directoryPath, filename);
+		}
+		//先頭文字列がgならグループの開始
+		if (key == "g")
+		{
+			if (mesh->GetName().size()>0)
+			{
+				//頂点法線の平均によるエッジの平滑化
+				if (smoothing)
+				{
+					mesh->CalculateSmoothedVertexNormals();
+				}
+				//コンテナに登録
+				meshes.emplace_back(mesh);
+				//次のメッシュ生成
+				mesh = new Mesh();
+				indexCountTex = 0;
+			}
+
+			//グループ名読み込み
+			string groupName;
+			line_stream >> groupName;
+
+			mesh->SetName(groupName);
 		}
 		//先頭文字列がvなら頂点座標
 		if (key == "v")
@@ -215,10 +266,27 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 			//法線ベクトルデータに追加
 			normals.emplace_back(normal);
 		}
+		// 先頭文字列がusemtlならマテリアルを割り当てる
+		if (key == "usemtl") 
+		{
+			if (mesh->GetMaterial() == nullptr)
+			{
+				//マテリアル名読み込み
+				string materialName;
+				line_stream >> materialName;
 
+				//マテリアル名で検索し割り当てる
+				auto itr = materials.find(materialName);
+				if (itr!=materials.end())
+				{
+					mesh->SetMaterial(itr->second);
+				}
+			}
+		}
 		//先頭文字列がfならポリゴン(三角形)
 		if (key == "f")
 		{
+			
 			//半角スペース区切りで行の続きを読み込む
 			string index_string;
 			while (getline(line_stream, index_string, ' '))
@@ -226,30 +294,127 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 				//頂点インデックス1個分の文字列をストリームに変換して解析しやすくする
 				std::istringstream index_stream(index_string);
 				unsigned short indexPosition, indexTexcoord, indexNormal;
+				//頂点番号
 				index_stream >> indexPosition;
+
+				Material* material = mesh->GetMaterial();
 				//スラッシュを飛ばす
 				index_stream.seekg(1, ios_base::cur);
-				index_stream >> indexTexcoord;
-				//スラッシュを飛ばす
-				index_stream.seekg(1, ios_base::cur);
-				index_stream >> indexNormal;
+				//マテリアル、テクスチャがある場合
+				if (material && material->textureFilename.size() > 0)
+				{
+					index_stream >> indexTexcoord;
+					index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+					index_stream >> indexNormal;
 
-				//頂点データの追加
-				VertexPosNormalUv vertex{};
-				vertex.pos = positions[indexPosition - 1];
-				vertex.normal = normals[indexNormal - 1];
-				vertex.uv = texcoords[indexTexcoord - 1];
-				vertices.emplace_back(vertex);
-
+					//頂点データの追加
+					Mesh::VertexPosNormalUv vertex{};
+					vertex.pos = positions[indexPosition - 1];
+					vertex.normal = normals[indexNormal - 1];
+					vertex.uv = texcoords[indexTexcoord - 1];
+					mesh->AddVertex(vertex);
+					//エッジ平滑化データの追加
+					if (smoothing)
+					{
+						mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
+					}
+				}
+				else
+				{
+					char c;
+					index_stream >> c;
+					// スラッシュ二連続なら頂点番号のみ
+					if (c == '/')
+					{
+						//頂点データ追加
+						Mesh::VertexPosNormalUv vertex{};
+						vertex.pos = positions[indexPosition - 1];
+						vertex.normal = { 0.0f,0.0f,1.0f };
+						vertex.uv = { 0.0f,0.0f };
+						mesh->AddVertex(vertex);
+						//エッジ平滑化データの追加
+						if (smoothing)
+						{
+							mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
+						}
+					}
+					else
+					{
+						index_stream.seekg(-1, ios_base::cur);//ヒトマスモドル
+						index_stream >> indexTexcoord;
+						index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+						index_stream >> indexNormal;
+						//頂点データの追加
+						Mesh::VertexPosNormalUv vertex{};
+						vertex.pos = positions[indexPosition - 1];
+						vertex.normal = normals[indexNormal - 1];
+						vertex.uv = { 0.0f,0.0f };
+						mesh->AddVertex(vertex);
+						//エッジ平滑化データの追加
+						if (smoothing)
+						{
+							mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
+						}
+					}
+				}
 				//インデックスデータの追加
-
-				//頂点インデックスに追加
-				indices.emplace_back((unsigned short)indices.size());
+				//インデックスカウント
+				int faceIndexCount = 0;
+				if (faceIndexCount >= 3)
+				{
+					// 四角形ポリゴンの4点目なので、
+					// 四角形の0,1,2,3の内 2,3,0で三角形を構築する
+					mesh->AddIndex(indexCountTex - 1);
+					mesh->AddIndex(indexCountTex);
+					mesh->AddIndex(indexCountTex - 3);
+				}
+				else
+				{
+					mesh->AddIndex(indexCountTex);
+				}
+				indexCountTex++;
+				faceIndexCount++;
 			}
 		}
 	}
 	//ファイルを閉じる
 	file.close();
 
+	//頂点法線の平均によるエッジの平滑化
+	if (smoothing)
+	{
+		mesh->CalculateSmoothedVertexNormals();
+	}
+	//メッシュコンテナに登録
+	meshes.emplace_back(mesh);
+
+	//メッシュのマテリアルチェック
+	for (auto& m : meshes)
+	{
+		//ない場合
+		if (m->GetMaterial() == nullptr)
+		{
+			if (defaultMaterial == nullptr)
+			{
+				//デフォルトのマテリアルを生成
+				defaultMaterial = Material::Create();
+				defaultMaterial->name = "no material";
+				materials.emplace(defaultMaterial->name, defaultMaterial);
+			}
+			//それをセット
+			m->SetMaterial(defaultMaterial);
+		}
+	}
+
+	//メッシュのバッファ生成
+	for (auto& m : meshes)
+	{
+		m->CreateBuffers();
+	}
+	//マテリアル数値を定数バッファに反映
+	for (auto& m : materials)
+	{
+		m.second->Update();
+	}
 }
 
