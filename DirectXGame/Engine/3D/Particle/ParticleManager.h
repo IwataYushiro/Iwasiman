@@ -109,7 +109,11 @@ public: // メンバ関数
 	/// <param name="setacc">重力分布</param>
 	/// <param name="setnum">一気に何個か</param>
 	///  <param name="setscale">x = 開始スケール , y = 終了スケール</param>
-	void Active(Particle* p, const float& setpos, const float& setvel, const float& setacc, const int& setnum, const XMFLOAT2& setscale);
+	void Active(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
+	void ActiveX(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
+	void ActiveY(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
+	void ActiveZ(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
+
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ

@@ -13,6 +13,8 @@ private:
 public:
 	Camera();
 	virtual ~Camera();
+	//初期値にリセット
+	void Reset();
 	//更新
 	virtual void Update();
 	//ビュー行列更新
@@ -69,4 +71,6 @@ public://アクセッサ
 	//上方向ベクトル
 	const XMFLOAT3& GetUp() { return up_; }
 	void SetUp(const XMFLOAT3& up);
+
+	static Camera* GetInstance();
 };

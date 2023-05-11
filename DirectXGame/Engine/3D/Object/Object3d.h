@@ -7,6 +7,7 @@
 #include <d3dx12.h>
 #include "Model.h"
 #include "Camera.h"
+#include <unordered_map>
 
 /// <summary>
 /// 3Dオブジェクト
@@ -27,8 +28,9 @@ public: // サブクラス
 	// 定数バッファ用データ構造体
 	struct ConstBufferDataB0
 	{
-		//XMFLOAT4 color;	// 色 (RGBA)
-		XMMATRIX mat;	// ３Ｄ変換行列
+		XMMATRIX viewproj;		//ビュープロジェクション行列
+		XMMATRIX world;			//ワールド行列
+		XMFLOAT3 cameraPos;		//カメラ座標(ワールド座標)
 	};
 	
 private: // 定数
@@ -102,17 +104,19 @@ private: // メンバ変数
 	Model* model_ = nullptr;
 	//カメラ
 	Camera* camera_;
-
-	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
-	
+	//ビルボード
+	bool isBillboard_ = false;
+	// 定数バッファ
+	ComPtr<ID3D12Resource> constBuffB0; 
+	ConstBufferDataB0* constMap0 = nullptr;
 	// 色
-	XMFLOAT4 color = { 1,1,1,1 };
+	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 	// ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
+	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
 	// X,Y,Z軸回りのローカル回転角
-	XMFLOAT3 rotation = { 0,0,0 };
+	XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
 	// ローカル座標
-	XMFLOAT3 position = { 0,0,0 };
+	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
 	// ローカルワールド変換行列
 	XMMATRIX matWorld;
 	// 親オブジェクト
@@ -145,5 +149,8 @@ public: //アクセッサ置き場
 	
 	//カメラ
 	void SetCamera( Camera* camera) { this->camera_ = camera; }
+
+	//ビルボード
+	void SetBillboard(bool isBillboard) { this->isBillboard_ = isBillboard; }
 };
 

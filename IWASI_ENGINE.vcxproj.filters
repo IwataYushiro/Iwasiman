@@ -112,6 +112,18 @@
     <Filter Include="ヘッダー ファイル\Application\Scene\Factory">
       <UniqueIdentifier>{54abcc95-b37b-41d3-b244-27a85305fd22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\3D\FBX">
+      <UniqueIdentifier>{ac0b00d4-e452-4253-9877-7f6e0f96ea93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\3D\FBX">
+      <UniqueIdentifier>{b3793c53-287b-4b1f-9ba7-f3bc11c9caa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー ファイル\FBX">
+      <UniqueIdentifier>{3cad425a-1b8f-469e-b032-5897afe78ffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー ファイル\Toon">
+      <UniqueIdentifier>{849def26-6782-4675-9c6f-57ed1dfa5832}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -125,6 +137,12 @@
     </None>
     <None Include="Resources\shader\Particle.hlsli">
       <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="Resources\shader\FBX\FBX.hlsli">
+      <Filter>シェーダー ファイル\FBX</Filter>
+    </None>
+    <None Include="Resources\shader\Toon\Toon.hlsli">
+      <Filter>シェーダー ファイル\Toon</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +172,18 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\ParticleVS.hlsl">
       <Filter>シェーダー ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
+      <Filter>シェーダー ファイル\FBX</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
+      <Filter>シェーダー ファイル\FBX</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Toon\ToonVS.hlsl">
+      <Filter>シェーダー ファイル\Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Toon\ToonPS.hlsl">
+      <Filter>シェーダー ファイル\Toon</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +271,24 @@
     <ClCompile Include="DirectXGame\Application\Scene\Factory\SceneFactory.cpp">
       <Filter>ソース ファイル\Application\Scene\Factory</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\Math\Quaternion.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxLoader.cpp">
+      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\FBX\ModelFbx.cpp">
+      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\FBX\ObjectFbx.cpp">
+      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Object\Mesh.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Object\Material.cpp">
+      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -326,6 +374,24 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\Factory\SceneFactory.h">
       <Filter>ヘッダー ファイル\Application\Scene\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\Math\Quaternion.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxLoader.h">
+      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\FBX\ModelFbx.h">
+      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\FBX\ObjectFbx.h">
+      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Object\Mesh.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Object\Material.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

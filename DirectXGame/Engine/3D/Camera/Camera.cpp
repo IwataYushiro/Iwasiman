@@ -18,6 +18,24 @@ Camera::~Camera()
 {
 }
 
+void Camera::Reset()
+{
+	// 視点座標
+	eye_ = { 0.0f, 0.0f, -100.0f };
+	// 注視点座標
+	target_ = { 0.0f,0.0f,0.0f };
+	// 上方向ベクトル
+	up_ = { 0.0f,1.0f,0.0f };
+
+	// ビュー行列の生成
+	UpdateViewMatrix();
+
+	// 透視投影による射影行列の生成
+	UpdateProjectionMatrix();
+
+	matViewProjection_ = matView_ * matProjection_;
+}
+
 void Camera::Update()
 {
 	// ビュー行列の生成
@@ -164,4 +182,10 @@ void Camera::SetTarget(const XMFLOAT3& target) {
 void Camera::SetUp(const XMFLOAT3& up)
 {
 	this->up_ = up; 
+}
+
+Camera* Camera::GetInstance()
+{
+	static Camera instance;
+	return &instance;
 }

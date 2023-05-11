@@ -49,7 +49,8 @@ private://静的メンバ変数
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
-
+	//カメラ
+	static Camera* camera_;
 private:
 
 	//Sprite
@@ -78,7 +79,6 @@ private:
 
 	Particle* particle2_ = nullptr;
 	ParticleManager* pm2_ = nullptr;
-	//カメラ
-	Camera* camera_ = nullptr;
+
 
 };

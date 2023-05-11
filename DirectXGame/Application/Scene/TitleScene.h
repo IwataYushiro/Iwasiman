@@ -3,6 +3,9 @@
 #include "DirectXCommon.h"
 #include "ImGuiManager.h"
 #include "Object3d.h"
+#include "ObjectFbx.h"
+#include "Player.h"
+
 #include "ParticleManager.h"
 #include "Sprite.h"
 
@@ -34,9 +37,22 @@ private://静的メンバ変数
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
+	//カメラ
+	static Camera* camera_;
 
 private://メンバ変数
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
-	
+	//FBX
+	ModelFbx* modelF = nullptr;
+	ObjectFbx* objF = nullptr;
+
+	//モデル
+	Player* player_ = nullptr;
+	Model* modelPlayer_ = nullptr;
+	Object3d* object3DPlayer_ = nullptr;
+
+	//パーティクル
+	Particle* particle1_ = nullptr;
+	ParticleManager* pm1_ = nullptr;
 };

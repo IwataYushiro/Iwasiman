@@ -4,6 +4,7 @@
 #include "Audio.h"
 #include "Camera.h"
 #include "DirectXCommon.h"
+#include "FbxLoader.h"
 #include "ImGuiManager.h"
 #include "Input.h"
 #include "SceneManager.h"
@@ -45,8 +46,8 @@ protected:
 	AbstractSceneFactory* sceneFactory_ = nullptr;
 	//imgui
 	ImGuiManager* imguiManager_ = nullptr;
-	
-	
+	//カメラ
+	Camera* camera_ = nullptr;
 	//ゲーム終了フラグ
 	bool EndGame_ = false;
 };

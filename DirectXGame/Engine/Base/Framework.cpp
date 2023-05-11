@@ -1,5 +1,6 @@
 #include "Framework.h"
 #include "Object3d.h"
+#include "ObjectFbx.h"
 #include "ParticleManager.h"
 
 void Framework::Initialize()
@@ -18,8 +19,9 @@ void Framework::Initialize()
 	sceneManager_ = SceneManager::GetInstance();
 	//imgui
 	imguiManager_ = ImGuiManager::GetInstance();
+	//ƒJƒƒ‰
+	camera_ = Camera::GetInstance();
 	
-
 	//WinApp‰Šú‰»
 	winApp_->Initialize();
 	//DirectX‰Šú‰»
@@ -30,8 +32,11 @@ void Framework::Initialize()
 	input_->Initialize(winApp_);
 	//imgui
 	imguiManager_->Initialize(winApp_, dxCommon_);
-
+	//FBX
+	FbxLoader::GetInstance()->Initialize(dxCommon_->GetDevice());
+	
 	Object3d::StaticInitialize(dxCommon_->GetDevice());
+	ObjectFbx::StaticInitialize(dxCommon_->GetDevice());
 	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 }
 
@@ -56,6 +61,8 @@ void Framework::Finalize()
 	//scene
 	sceneManager_->Finalize();
 	delete sceneFactory_;
+	//FBX
+	FbxLoader::GetInstance()->Finalize();
 	//imgui
 	imguiManager_->Finalize();
 	//WinApp

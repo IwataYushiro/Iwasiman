@@ -6,13 +6,12 @@ DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 SpriteCommon* GamePlayScene::spCommon_ = SpriteCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
 Audio* GamePlayScene::audio_ = Audio::GetInstance();
+Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
 void GamePlayScene::Initialize()
 {
-	//ƒJƒƒ‰
-	camera_ = new Camera();
 	//ƒvƒŒƒCƒ„[ŠÖŒW
 	player_ = new Player();
 	//“GŠÖŒW
@@ -72,8 +71,8 @@ void GamePlayScene::Initialize()
 
 void GamePlayScene::Update()
 {
-	pm1_->Active(particle1_, 120.0f, 0.2f, 0.001f, 15, { 10.0f, 0.0f });
-	pm2_->Active(particle2_, 100.0f, 0.2f, 0.001f, 5, { 6.0f,0.0f });
+	pm1_->Active(particle1_, { 120.0f ,120.0f,120.0f }, { 0.2f,0.2f,0.2f }, { 0.0f,0.001f,0.0f }, 15, { 10.0f, 0.0f });
+	pm2_->Active(particle2_, { 100.0f,120.0f,120.0f }, { 0.2f,0.2f,0.2f }, { 0.0f,0.001f,0.0f }, 5, { 6.0f,0.0f });
 
 	//ƒ‚ƒfƒ‹ŒÄ‚Ño‚µ—á
 	player_->Update();
@@ -92,6 +91,7 @@ void GamePlayScene::Update()
 
 	if (input_->TriggerKey(DIK_RETURN))
 	{
+		camera_->Reset();
 		sceneManager_->ChangeScene("TITLE");
 	}
 }

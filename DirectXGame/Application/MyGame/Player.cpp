@@ -110,6 +110,7 @@ void Player::CameraMove()
 {
 	XMFLOAT3 move = obj_->GetPosition();
 	XMFLOAT3 cmove = camera_->GetEye();
+	XMFLOAT3 tmove = camera_->GetTarget();
 	float moveSpeed = 1.0f;
 
 	//キーボード入力による移動処理
@@ -117,21 +118,26 @@ void Player::CameraMove()
 	if (input_->PushKey(DIK_LEFT)) {
 		move.x -= moveSpeed;
 		cmove.x -= moveSpeed;
+		tmove.x -= moveSpeed;
 	}
 	if (input_->PushKey(DIK_RIGHT)) {
 		move.x += moveSpeed;
 		cmove.x += moveSpeed;
+		tmove.x += moveSpeed;
 	}
 	if (input_->PushKey(DIK_UP)) {
 		move.y += moveSpeed;
 		cmove.y += moveSpeed;
+		tmove.y += moveSpeed;
 	}
 	if (input_->PushKey(DIK_DOWN)) {
 		move.y -= moveSpeed;
 		cmove.y -= moveSpeed;
+		tmove.y -= moveSpeed;
 	}
 	obj_->SetPosition(move);
 	camera_->SetEye(cmove);
+	camera_->SetTarget(tmove);
 }
 
 //攻撃処理
