@@ -14,7 +14,7 @@ using namespace std;
 ID3D12Device* Model::device = nullptr;
 
 //OBJファイルから3Dモデルを読み込む
-Model* Model::LoadFromOBJ(const std::string& modelName)
+Model* Model::LoadFromOBJ(const std::string& modelName, bool smoothing)
 {
 	//新たなModel型のインスタンスのメモリを確保
 	Model* model = new Model();
@@ -23,7 +23,7 @@ Model* Model::LoadFromOBJ(const std::string& modelName)
 	model->InitializeDescriptorHeap();
 
 	//OBJファイルからのデータ読み込み
-	model->LoadFromOBJInternal(modelName);
+	model->LoadFromOBJInternal(modelName, smoothing);
 
 	//読み込んだデータを元に各種バッファ生成
 	model->CreateBuffers();
@@ -312,7 +312,7 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial
 }
 
 //OBJファイルから3Dモデルを読み込む(非公開)
-void Model::LoadFromOBJInternal(const std::string& modelName) {
+void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 	//ファイルストリーム
 	std::ifstream file;
 	//objファイルを開く

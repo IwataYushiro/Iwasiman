@@ -121,6 +121,9 @@
     <Filter Include="シェーダー ファイル\FBX">
       <UniqueIdentifier>{3cad425a-1b8f-469e-b032-5897afe78ffd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー ファイル\Toon">
+      <UniqueIdentifier>{849def26-6782-4675-9c6f-57ed1dfa5832}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -137,6 +140,9 @@
     </None>
     <None Include="Resources\shader\FBX\FBX.hlsli">
       <Filter>シェーダー ファイル\FBX</Filter>
+    </None>
+    <None Include="Resources\shader\Toon\Toon.hlsli">
+      <Filter>シェーダー ファイル\Toon</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +178,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
       <Filter>シェーダー ファイル\FBX</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Toon\ToonVS.hlsl">
+      <Filter>シェーダー ファイル\Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Toon\ToonPS.hlsl">
+      <Filter>シェーダー ファイル\Toon</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

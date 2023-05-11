@@ -20,7 +20,7 @@ void TitleScene::Initialize()
 	//3Dオブジェクト生成
 	object3DPlayer_ = Object3d::Create();
 	//OBJファイルからモデルデータを読み込む
-	modelPlayer_ = Model::LoadFromOBJ("player");
+	modelPlayer_ = Model::LoadFromOBJ("sphere");
 	//オブジェクトにモデル紐付ける
 	object3DPlayer_->SetModel(modelPlayer_);
 	//カメラも紐づけ
@@ -37,7 +37,7 @@ void TitleScene::Initialize()
 	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
-	//camera_->SetEye({ 0.0f,0.0f,-20.0f });
+	camera_->SetEye({ 0.0f,0.0f,-75.0f });
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });*/
 
 	//パーティクル

@@ -60,7 +60,7 @@ ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
 
 public://静的メンバ関数
 	//OBJファイルから3Dモデルを読み込む
-	static Model* LoadFromOBJ(const std::string& modelName);
+	static Model* LoadFromOBJ(const std::string& modelName, bool smoothing = false);
 	
 public://メンバ関数
 	// デスクリプタヒープの初期化
@@ -110,7 +110,7 @@ public://アクセッサ置き場
 
 private://メンバ関数(カプセル化)
 	//OBJファイルから3Dモデルを読み込む(非公開)
-	void LoadFromOBJInternal(const std::string& modelName);
+	void LoadFromOBJInternal(const std::string& modelName, bool smoothing = false);
 	
 };
 

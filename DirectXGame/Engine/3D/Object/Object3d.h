@@ -27,8 +27,9 @@ public: // サブクラス
 	// 定数バッファ用データ構造体
 	struct ConstBufferDataB0
 	{
-		//XMFLOAT4 color;	// 色 (RGBA)
-		XMMATRIX mat;	// ３Ｄ変換行列
+		XMMATRIX viewproj;		//ビュープロジェクション行列
+		XMMATRIX world;			//ワールド行列
+		XMFLOAT3 cameraPos;		//カメラ座標(ワールド座標)
 	};
 	
 private: // 定数
@@ -102,9 +103,11 @@ private: // メンバ変数
 	Model* model_ = nullptr;
 	//カメラ
 	Camera* camera_;
-
-	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
-	
+	//ビルボード
+	bool isBillboard_ = false;
+	// 定数バッファ
+	ComPtr<ID3D12Resource> constBuffB0; 
+	ConstBufferDataB0* constMap0 = nullptr;
 	// 色
 	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 	// ローカルスケール
@@ -145,5 +148,8 @@ public: //アクセッサ置き場
 	
 	//カメラ
 	void SetCamera( Camera* camera) { this->camera_ = camera; }
+
+	//ビルボード
+	void SetBillboard(bool isBillboard) { this->isBillboard_ = isBillboard; }
 };
 

@@ -251,6 +251,10 @@ bool Object3d::Initialize()
 		IID_PPV_ARGS(&constBuffB0));
 	assert(SUCCEEDED(result));
 	
+	// 定数バッファのマッピング
+	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
+	assert(SUCCEEDED(result));
+
 	return true;
 }
 
@@ -273,18 +277,31 @@ void Object3d::Update()
 	matWorld *= matRot; // ワールド行列に回転を反映
 	matWorld *= matTrans; // ワールド行列に平行移動を反映
 
+	if (isBillboard_)
+	{
+		const XMMATRIX& matBillboard = camera_->GetMatBillboard();
+		// ワールド行列の合成
+		matWorld = XMMatrixIdentity(); // 変形をリセット
+		matWorld *= matScale; // ワールド行列にスケーリングを反映
+		matWorld *= matRot; // ワールド行列に回転を反映
+		matWorld *= matBillboard;
+		matWorld *= matTrans; // ワールド行列に平行移動を反映
+	}
 	// 親オブジェクトがあれば
 	if (parent != nullptr) {
 		// 親オブジェクトのワールド行列を掛ける
 		matWorld *= parent->matWorld;
 	}
-	XMMATRIX matViewProjection = camera_->GetMatViewProjection();
+	const XMMATRIX& matViewProjection = camera_->GetMatViewProjection();
+	const XMFLOAT3& camerePos = camera_->GetEye();
 
 	// 定数バッファへデータ転送
-	ConstBufferDataB0* constMap0 = nullptr;
+	
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
 	//constMap0->color = color;
-	constMap0->mat = matWorld * matViewProjection;	// 行列の合成
+	constMap0->viewproj = matViewProjection;	// 行列の合成
+	constMap0->world = matWorld;
+	constMap0->cameraPos = camerePos;
 	constBuffB0->Unmap(0, nullptr);
 }
 

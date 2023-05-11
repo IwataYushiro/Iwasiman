@@ -1,6 +1,8 @@
 cbuffer cbuff0 : register(b0)
 {
-	matrix mat; // ３Ｄ変換行列
+    matrix viewproj;
+    matrix world; // ３Ｄ変換行列
+    float3 cameraPos;
 };
 
 cbuffer cbuff1 : register(b1)
@@ -14,6 +16,7 @@ cbuffer cbuff1 : register(b1)
 struct VSOutput
 {
 	float4 svpos : SV_POSITION; // システム用頂点座標
+    float4 worldPos : POSITION;
 	float3 normal :NORMAL; // 法線ベクトル
 	float2 uv  :TEXCOORD; // uv値
 };
