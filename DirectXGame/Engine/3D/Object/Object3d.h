@@ -7,6 +7,7 @@
 #include <d3dx12.h>
 #include "Model.h"
 #include "Camera.h"
+#include <unordered_map>
 
 /// <summary>
 /// 3Dオブジェクト

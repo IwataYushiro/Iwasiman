@@ -31,14 +31,12 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 
 	// nullptrチェック
 	assert(device);
-	device_ = device;
-
-	//モデルにデバイスをセット
-	Model::SetDevice(device);
+	Object3d::device_ = device;
 
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
 
+	Model::StaticInitialize(device);
 }
 
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
@@ -320,5 +318,5 @@ void Object3d::Draw()
 	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	
 	//モデルを描画
-	model_->Draw(cmdList, 1);
+	model_->Draw(cmdList);
 }

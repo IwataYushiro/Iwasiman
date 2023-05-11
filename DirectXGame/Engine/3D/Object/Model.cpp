@@ -11,7 +11,7 @@ ID3D12Device* Model::device_ = nullptr;
 // デスクリプタサイズ
 UINT Model::descriptorHandleIncrementSize;
 
-const std::string Model::baseDirectory = "Resource/";
+const std::string Model::baseDirectory = "Resources/";
 
 Model::~Model()
 {
@@ -56,11 +56,13 @@ void Model::InitializeDescriptorHeap() {
 
 	HRESULT result = S_FALSE;
 
+	//マテリアル数
+	size_t materialCount = materials.size();
 	// デスクリプタヒープを生成	
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダから見えるように
-	descHeapDesc.NumDescriptors = 1; // シェーダーリソースビュー1つ
+	descHeapDesc.NumDescriptors = (UINT)materialCount; // シェーダーリソースビュー=マテリアル数
 	result = device_->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));//生成
 	if (FAILED(result)) {
 		assert(0);
@@ -84,6 +86,8 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 		assert(0);
 	}
 
+	Material* material = nullptr;
+
 	//1行ずつ読み込む
 	string line;
 	while (getline(file, line))
@@ -101,48 +105,94 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 			key.erase(key.begin());//先頭の文字を削除
 		}
 
-		//先頭文字列がnewlibならマテリアル名
+		//先頭文字列がnewmtlならマテリアル名
 		if (key == "newmtl")
 		{
+			//既にマテリアルがある場合
+			if (material)
+			{
+				//マテリアルをコンテナに登録
+				AddMaterial(material);
+			}
+			//新しいマテリアルの生成
+			material = Material::Create();
 			//マテリアル名読み込み
-			line_stream >> material.name;
+			line_stream >> material->name;
 		}
 		//先頭文字列がKaならアンビエント色
 		if (key == "Ka")
 		{
-			line_stream >> material.ambient.x;
-			line_stream >> material.ambient.y;
-			line_stream >> material.ambient.z;
+			line_stream >> material->ambient.x;
+			line_stream >> material->ambient.y;
+			line_stream >> material->ambient.z;
 		}
 		//先頭文字列がKdならディフューズ色
 		if (key == "Kd")
 		{
-			line_stream >> material.diffuse.x;
-			line_stream >> material.diffuse.y;
-			line_stream >> material.diffuse.z;
+			line_stream >> material->diffuse.x;
+			line_stream >> material->diffuse.y;
+			line_stream >> material->diffuse.z;
 		}
 		//先頭文字列がKsならスペキュラー色
 		if (key == "Ks")
 		{
-			line_stream >> material.specular.x;
-			line_stream >> material.specular.y;
-			line_stream >> material.specular.z;
+			line_stream >> material->specular.x;
+			line_stream >> material->specular.y;
+			line_stream >> material->specular.z;
 		}
 		////先頭文字列がmap_Kdならテクスチャファイル名
 		if (key == "map_Kd")
 		{
 			//テクスチャのファイル名読み込み
-			line_stream >> material.textureFilename;
-			//テクスチャ読み込み
-			LoadTexture(directoryPath, material.textureFilename);
+			line_stream >> material->textureFilename;
+			//フルパスからファイル名取り出し
+			size_t pos1;
+			pos1 = material->textureFilename.rfind('\\');
+			if (pos1!=string::npos)
+			{
+				material->textureFilename = material->textureFilename.substr(
+					pos1 + 1, material->textureFilename.size() - pos1 - 1);
+			}
+
+			pos1 = material->textureFilename.rfind('/');
+			if (pos1 != string::npos)
+			{
+				material->textureFilename = material->textureFilename.substr(
+					pos1 + 1, material->textureFilename.size() - pos1 - 1);
+			}
 		}
 	}
 	//ファイルを閉じる
 	file.close();
+
+	if (material)
+	{
+		AddMaterial(material);
+	}
 }
 
 void Model::LoadTextures()
 {
+	int texIndex = 0;
+	string directoryPath = baseDirectory + name + "/";
+	for (auto& m : materials)
+	{
+		Material* material = m.second;
+		D3D12_CPU_DESCRIPTOR_HANDLE CDHSRV = descHeap->GetCPUDescriptorHandleForHeapStart();
+		CDHSRV.ptr += (descriptorHandleIncrementSize * texIndex);
+		
+		D3D12_GPU_DESCRIPTOR_HANDLE GDHSRV = descHeap->GetGPUDescriptorHandleForHeapStart();
+		GDHSRV.ptr += (descriptorHandleIncrementSize * texIndex);
+		//テクスチャ無しの場合
+		if (material->textureFilename.size() <= 0)
+		{
+			directoryPath = baseDirectory;
+		}
+
+		//テクスチャ読み込み
+		material->LoadTexture(directoryPath, CDHSRV, GDHSRV);
+		texIndex++;
+	}
 }
 
 // 描画
@@ -170,7 +220,7 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 	std::ifstream file;
 	//objファイルを開く
 	const string filename = modelName + ".obj";					
-	const string directoryPath = "Resources/" + modelName + "/";
+	const string directoryPath = baseDirectory + modelName + "/";
 
 	file.open(directoryPath + filename);//"Resources/triangle_mat/triangle_mat.obj"
 	//ファイルオープン失敗をチェック
@@ -178,6 +228,7 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 	{
 		assert(0);
 	}
+	name = modelName;
 	//メッシュ生成
 	Mesh* mesh = new Mesh();
 	int indexCountTex = 0;

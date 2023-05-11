@@ -50,8 +50,8 @@ public://メンバ関数
 	
 	// テクスチャ読み込み
 	void LoadTexture(
-		const std::string& directoryPath, CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle);
+		const std::string& directoryPath, D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle,
+		D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
 	// 更新
 	void Update();
 
@@ -60,9 +60,9 @@ private://メンバ変数
 	// テクスチャバッファ
 	ComPtr<ID3D12Resource> texBuff;
 	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	D3D12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
 	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 	//マッピング
 	ConstBufferDataB1* constMap = nullptr;
 
@@ -84,8 +84,8 @@ public://アクセッサ置き場
 	// 定数バッファの取得
 	ID3D12Resource* GetConstantBuffer() { return constBuff.Get(); }
 	//ハンドル関係
-	const CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return cpuDescHandleSRV; }
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return gpuDescHandleSRV; }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return cpuDescHandleSRV; }
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return gpuDescHandleSRV; }
 
 
 };

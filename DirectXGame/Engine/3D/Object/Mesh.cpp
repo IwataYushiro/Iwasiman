@@ -54,9 +54,19 @@ void Mesh::CreateBuffers()
 	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
 
 	// ヒーププロパティ
-	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	D3D12_HEAP_PROPERTIES heapProps{};
+	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+
 	// リソース設定
-	CD3DX12_RESOURCE_DESC resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resourceDesc.Width = sizeVB;
+	resourceDesc.Height = 1;
+	resourceDesc.DepthOrArraySize = 1;
+	resourceDesc.MipLevels = 1;
+	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
 
 	// 頂点バッファ生成
 	result = device_->CreateCommittedResource(
@@ -79,8 +89,6 @@ void Mesh::CreateBuffers()
 
 	// リソース設定
 	resourceDesc.Width = sizeIB;
-	resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeIB);
-
 	// インデックスバッファ生成
 	result = device_->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,

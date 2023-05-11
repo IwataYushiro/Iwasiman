@@ -22,15 +22,19 @@ void Material::StaticInitialize(ID3D12Device* device)
 	Material::device_ = device;
 }
 
-void Material::LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle,
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+void Material::LoadTexture(const std::string& directoryPath, D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle,
+	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
 {
+	HRESULT result = S_FALSE;
 
+	
 	// テクスチャなし
 	if (textureFilename.size() == 0) {
 		textureFilename = "white1x1.png";
 	}
-	HRESULT result = S_FALSE;
+	// シェーダリソースビュー作成
+	cpuDescHandleSRV = cpuHandle;
+	gpuDescHandleSRV = gpuHandle;
 
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
@@ -40,7 +44,7 @@ void Material::LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIP
 
 	//ユニコード文字列に変換する
 	wchar_t wfilepath[128];
-	int iBufferSize = MultiByteToWideChar(CP_ACP, 0,
+	MultiByteToWideChar(CP_ACP, 0,
 		filepath.c_str(), -1, wfilepath, _countof(wfilepath));
 	// WICテクスチャのロード
 	result = LoadFromWICFile(wfilepath, WIC_FLAGS_NONE, &metadata, scratchImg);
@@ -59,15 +63,22 @@ void Material::LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIP
 	// 読み込んだディフューズテクスチャをSRGBとして扱う
 	metadata.format = MakeSRGB(metadata.format);
 
-	// リソース設定
-	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-		metadata.format, metadata.width, (UINT)metadata.height, (UINT16)metadata.arraySize,
-		(UINT16)metadata.mipLevels);
-
 	// ヒーププロパティ
-	CD3DX12_HEAP_PROPERTIES heapProps =
-		CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
-
+	D3D12_HEAP_PROPERTIES heapProps{};
+	heapProps.Type = D3D12_HEAP_TYPE_CUSTOM;
+	heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	
+	// リソース設定
+	D3D12_RESOURCE_DESC texresDesc{};
+	texresDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	texresDesc.Format = metadata.format;
+	texresDesc.Width = metadata.width;
+	texresDesc.Height = (UINT)metadata.height;
+	texresDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
+	texresDesc.MipLevels = (UINT16)metadata.mipLevels;
+	texresDesc.SampleDesc.Count = 1;
+	
 	// テクスチャ用バッファの生成
 	result = device_->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &texresDesc,
@@ -87,10 +98,6 @@ void Material::LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIP
 		);
 		assert(SUCCEEDED(result));
 	}
-
-	// シェーダリソースビュー作成
-	cpuDescHandleSRV = cpuHandle;
-	gpuDescHandleSRV = gpuHandle;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
 	D3D12_RESOURCE_DESC resDesc = texBuff->GetDesc();
@@ -126,11 +133,18 @@ void Material::CreateConstBuffer()
 	HRESULT result;
 	//定数バッファ(マテリアル)
 	//ヒーププロパティ
-	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	D3D12_HEAP_PROPERTIES heapProps{};
+	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
 	//リソース設定
-	CD3DX12_RESOURCE_DESC resourceDesc =
-		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB1) + 0xff) & ~0xff);
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resourceDesc.Width = (sizeof(ConstBufferDataB1) + 0xff) & ~0xff;
+	resourceDesc.Height = 1;
+	resourceDesc.DepthOrArraySize = 1;
+	resourceDesc.MipLevels = 1;
+	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//定数バッファ生成
 	result = device_->CreateCommittedResource(
