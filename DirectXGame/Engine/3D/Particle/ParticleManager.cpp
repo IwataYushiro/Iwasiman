@@ -302,16 +302,17 @@ void ParticleManager::Draw()
 	particle_->Draw(cmdList);
 }
 
-void ParticleManager::Active(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
+void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
 {
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
+		const XMFLOAT3 md_move = setmove;
 		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f) + setmove.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f) + setmove.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f) + setmove.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};

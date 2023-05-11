@@ -20,7 +20,7 @@ void TitleScene::Initialize()
 	//3Dオブジェクト生成
 	object3DPlayer_ = Object3d::Create();
 	//OBJファイルからモデルデータを読み込む
-	modelPlayer_ = Model::LoadFromOBJ("sphere");
+	modelPlayer_ = Model::LoadFromOBJ("sphere", true);
 	//オブジェクトにモデル紐付ける
 	object3DPlayer_->SetModel(modelPlayer_);
 	//カメラも紐づけ
@@ -37,7 +37,7 @@ void TitleScene::Initialize()
 	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
-	camera_->SetEye({ 0.0f,0.0f,-75.0f });
+	camera_->SetEye({ 0.0f,0.0f,-70.0f });
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });*/
 
 	//パーティクル
@@ -49,15 +49,18 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	if (input_->TriggerKey(DIK_SPACE))
+	/*if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
 		sceneManager_->ChangeScene("GAMEPLAY");
-	}
+	}*/
 
 	//spriteTitle_->Update();
 	//横方向の風
-	//pm1_->ActiveX(particle1_, { 25.0f ,10.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+	pm1_->Active(particle1_, { -40.0f ,0.0f,0.0f } ,{ 20.0f ,20.0f,20.0f }, { 3.0f,3.0f,3.0f }, { 0.0f,0.001f,0.0f }, 3, { 3.0f, 0.0f });
+
+	//横方向の風
+	pm1_->ActiveX(particle1_, { 25.0f ,10.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
 	//横方向の風(ワイド)
 	//pm1_->ActiveX(particle1_, { 25.0f ,100.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
 	//縦方向の風
