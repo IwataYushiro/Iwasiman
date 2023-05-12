@@ -124,6 +124,12 @@
     <Filter Include="シェーダー ファイル\Toon">
       <UniqueIdentifier>{849def26-6782-4675-9c6f-57ed1dfa5832}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\3D\Light">
+      <UniqueIdentifier>{54670238-1e42-4114-bd78-9be17ce69585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\3D\Light">
+      <UniqueIdentifier>{c78cf77f-eb2d-4f42-873a-024885ce302b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -289,6 +295,9 @@
     <ClCompile Include="DirectXGame\Engine\3D\Object\Material.cpp">
       <Filter>ソース ファイル\Engine\3D\Object</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Light\DirectionalLight.cpp">
+      <Filter>ソース ファイル\Engine\3D\Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -392,6 +401,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Object\Material.h">
       <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Light\DirectionalLight.h">
+      <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

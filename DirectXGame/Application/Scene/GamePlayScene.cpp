@@ -50,6 +50,10 @@ void GamePlayScene::Initialize()
 	//カメラも紐づけ
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
+	//ライトを生成
+	light_ = DirectionalLight::Create();
+	light_->SetLightColor({ 1.0f,1.0f,1.0f });
+	Object3d::SetLight(light_);
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
 	pm1_ = ParticleManager::Create();
@@ -85,7 +89,7 @@ void GamePlayScene::Update()
 
 	//カメラ
 	camera_->Update();
-
+light_->Update();
 	pm1_->Update();
 	pm2_->Update();
 
@@ -94,6 +98,7 @@ void GamePlayScene::Update()
 		camera_->Reset();
 		sceneManager_->ChangeScene("TITLE");
 	}
+	
 }
 
 void GamePlayScene::Draw()
@@ -152,6 +157,8 @@ void GamePlayScene::Finalize()
 	delete pm1_;
 	delete particle2_;
 	delete pm2_;
+	//ライト
+	delete light_;
 	//モデル
 	//3Dオブジェクト
 	delete object3DPlayer_;

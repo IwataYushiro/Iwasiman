@@ -1,4 +1,5 @@
 #include "Framework.h"
+#include "DirectionalLight.h"
 #include "Object3d.h"
 #include "ObjectFbx.h"
 #include "ParticleManager.h"
@@ -38,6 +39,8 @@ void Framework::Initialize()
 	Object3d::StaticInitialize(dxCommon_->GetDevice());
 	ObjectFbx::StaticInitialize(dxCommon_->GetDevice());
 	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
+	//ƒ‰ƒCƒg
+	DirectionalLight::StaticInitialize(dxCommon_->GetDevice());
 }
 
 void Framework::Update()
