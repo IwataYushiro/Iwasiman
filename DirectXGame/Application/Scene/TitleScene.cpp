@@ -17,19 +17,19 @@ void TitleScene::Initialize()
 	audio_->Initialize();
 
 	//カメラ
-	camera_->SetEye({ 0.0f,0.0f,-20.0f });
+	camera_->SetEye({ 0.0f,0.0f,-15.0f });
 	camera_->SetTarget({ 0.0f,1.0f,0.0f });
 //camera_->SetTarget({ 0.0f,20.0f,0.0f });*/
 
 	//3Dオブジェクト生成
-	object3DPlayer_ = Object3d::Create();
+	//object3DPlayer_ = Object3d::Create();
 	//OBJファイルからモデルデータを読み込む
-	modelPlayer_ = Model::LoadFromOBJ("chr_sword",true);
+	//modelPlayer_ = Model::LoadFromOBJ("chr_sword",true);
 	//オブジェクトにモデル紐付ける
-	object3DPlayer_->SetModel(modelPlayer_);
-	//カメラも紐づけ
-	object3DPlayer_->SetCamera(camera_);
-	object3DPlayer_->SetPosition({ 0.0f,0.0f,-15.0f });
+	//object3DPlayer_->SetModel(modelPlayer_);
+	////カメラも紐づけ
+	//object3DPlayer_->SetCamera(camera_);
+	//object3DPlayer_->SetPosition({ 0.0f,0.0f,-15.0f });
 	//ライトを生成
 	light_ = DirectionalLight::Create();
 	light_->SetLightColor({ 1.0f,1.0f,1.0f });
@@ -46,37 +46,15 @@ void TitleScene::Initialize()
 	objF->SetCamera(camera_);
 	
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle2.png");
+	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);
+	pm1_->SetCamera(camera_);*/
 	
 }
 
 void TitleScene::Update()
 {
-	camera_->Update();
-	light_->Update();
-	DirectX::XMFLOAT3 rot = object3DPlayer_->GetRotation();
-	rot.y += 1.0f;
-	object3DPlayer_->SetRotation(rot);
-
-	static DirectX::XMVECTOR dir = { 0.0f,1.0f,5.0f,0.0f };
-	if (input_->PushKey(DIK_P))
-	{
-		dir.m128_f32[1] += 1.0f;
-	}
-	if (input_->PushKey(DIK_0))
-	{
-		dir.m128_f32[1] -= 1.0f;
-	}
-
-	light_->SetLightDir(dir);
-	if (input_->TriggerKey(DIK_SPACE))
-	{
-		camera_->Reset();
-		sceneManager_->ChangeScene("GAMEPLAY");
-	}
 
 	//spriteTitle_->Update();
 	//位置指定調整
@@ -89,16 +67,17 @@ void TitleScene::Update()
 	//縦方向の風
 	//pm1_->ActiveY(particle1_,{ 30.0f ,30.0f,0.0f }, { 10.0f ,25.0f,0.0f }, { 0.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
 	//全方位にはじける(クリア演出に使えそう)
-	pm1_->ActiveZ(particle1_,{object3DPlayer_->GetPosition()}, {0.0f ,0.0f,25.0f}, {4.2f,4.2f,0.0f}, {0.0f,0.001f,0.0f}, 10, {3.0f, 0.0f});
+	//pm1_->ActiveZ(particle1_,{object3DPlayer_->GetPosition()}, {0.0f ,0.0f,25.0f}, {4.2f,4.2f,0.0f}, {0.0f,0.001f,0.0f}, 10, {3.0f, 0.0f});
 	
 	//ばらけるような
 	//pm1_->ActiveY(particle1_,{ 30.0f ,30.0f,0.0f }, { 10.0f ,25.0f,0.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
 	
 	//雪とか雨
 	//pm1_->ActiveY(particle1_,{ 30.0f ,30.0f,0.0f }, { 150.0f ,100.0f,0.0f }, { 0.0f,-5.2f,0.0f }, { 0.0f,0.001f,0.0f }, 5, { 5.0f, 0.0f });
-
-	pm1_->Update();
-	object3DPlayer_->Update();
+camera_->Update();
+	light_->Update();
+	//pm1_->Update();
+	//object3DPlayer_->Update();
 	
 	objF->Update();
 }
@@ -114,7 +93,7 @@ void TitleScene::Draw()
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
-	pm1_->Draw();
+	//pm1_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -122,7 +101,7 @@ void TitleScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
-	object3DPlayer_->Draw();
+	//object3DPlayer_->Draw();
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -144,13 +123,13 @@ void TitleScene::Finalize()
 	//スプライト
 	delete spriteTitle_;
 	//プレイヤー
-	delete object3DPlayer_;
-	delete modelPlayer_;
+	//delete object3DPlayer_;
+	//delete modelPlayer_;
 	//ライト
 	delete light_;
 	//パーティクル
-	delete particle1_;
-	delete pm1_;
+	//delete particle1_;
+	//delete pm1_;
 	//FBX
 	delete objF;
 	delete modelF;
