@@ -32,7 +32,7 @@ void TitleScene::Initialize()
 	object3DPlayer_->SetPosition({ 0.0f,0.0f,-15.0f });
 	//ƒ‰ƒCƒg‚ð¶¬
 	light_ = DirectionalLight::Create();
-	light_->SetLightColor({ 1.0f,0.6f,0.6f });
+	light_->SetLightColor({ 1.0f,1.0f,1.0f });
 	Object3d::SetLight(light_);
 
 	UINT titleTex = 00;
