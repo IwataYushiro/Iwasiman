@@ -76,6 +76,8 @@ public://フレンド、サブクラス
 	};
 
 public://メンバ関数
+	//デストラクタ
+	~ModelFbx();
 	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//バッファ生成
@@ -94,7 +96,8 @@ private://メンバ変数
 	Node* meshNode = nullptr;
 	//ボーン配列
 	std::vector<Bone> bones;
-	 
+	 //FBXシーン
+	FbxScene* fbxScene = nullptr;
 	//頂点データ配列
 	vector<VertexPosNormalUvSkin> vertices;
 	//頂点インデックス配列
@@ -126,4 +129,6 @@ public://アクセッサ置き場
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 	//全ボーン
 	std::vector<Bone>& GetBones() { return bones; }
+	//FBXシーン
+	FbxScene* GetFbxScene() { return fbxScene; }
 };

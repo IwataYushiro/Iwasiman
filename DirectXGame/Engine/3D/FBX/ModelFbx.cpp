@@ -3,6 +3,12 @@
 //静的メンバ変数の実体
 ID3D12Device* ModelFbx::device_ = nullptr;
 
+ModelFbx::~ModelFbx()
+{
+	//Fbxシーン開放
+	fbxScene->Destroy();
+}
+
 void ModelFbx::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	// nullptrチェック

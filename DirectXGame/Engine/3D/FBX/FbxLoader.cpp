@@ -82,8 +82,7 @@ ModelFbx* FbxLoader::LoadModelFromFile(const string& modelName)
 	modelF->nodes.reserve(nodeCount);
 	//ルートノードから順に解析してモデルに流し込む
 	ParseNodeRecursive(modelF, fbxScene->GetRootNode());
-	//FBXシーン解放
-	fbxScene->Destroy();
+	modelF->fbxScene = fbxScene;
 	//バッファ生成
 	modelF->CreateBuffers(device_);
 
@@ -368,6 +367,76 @@ void FbxLoader::ParseSkin(ModelFbx* modelF, FbxMesh* fbxMesh)
 		//初期姿勢行列の逆行列を取得
 		bone.invInitialPose = XMMatrixInverse(nullptr, initialPose);
 	}
+	//ボーン番号とスキンウェイト
+	struct WeightSet
+	{
+		UINT index;
+		float weight;
+	};
+	//二次元配列(ジャグ配列)
+	//list=頂点が影響を受けるボーンのリスト
+	//vecter＝そんなリストの全頂点分
+	std::vector<std::list<WeightSet>>
+		weightLists(modelF->vertices.size());
+
+	//全ボーンについて
+	for (int i = 0; i < clusterCount; i++)
+	{
+		//FBXボーン情報
+		FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
+		//このボーンに影響を受ける頂点の数
+		int controlPointIndicesCount = fbxCluster->GetControlPointIndicesCount();
+		//このボーンに影響を受ける頂点の配列
+		int* controlPointIndices = fbxCluster->GetControlPointIndices();
+		double* controlPointWeight = fbxCluster->GetControlPointWeights();
+		//影響を受ける全頂点について
+		for (int j = 0; j < controlPointIndicesCount; j++)
+		{
+			//頂点取得
+			int vertIndex = controlPointIndices[j];
+			//スキンウェイト
+			float weight = (float)controlPointWeight[j];
+			//その頂点の影響を受けるボーンリストにボーンとウェイトのペアを追加
+			weightLists[vertIndex].emplace_back(WeightSet{ (UINT)i,weight });
+		}
+	}
+	//頂点配列書き換え用の参照
+	auto& vertices = modelF->vertices;
+	//各頂点についての処理
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		//頂点のウェイトから最も大きい4つを選択
+		auto& weightList = weightLists[i];
+		//大小比較用のラムダ式を指定して降順にソート
+		weightList.sort(
+			[](auto const& lhs, auto const& rhs) {
+				//先の要素の方が大きければtrue　それ以外はfalseを返す
+				return lhs.weight > rhs.weight;
+			}
+		);
+		int weightArrayIndex = 0;
+		//降順ソート済みのウェイトリストから
+		for (auto& WeightSet : weightList)
+		{
+			//頂点データに書き込み
+			vertices[i].boneIndex[weightArrayIndex] = WeightSet.index;
+			vertices[i].boneWeight[weightArrayIndex] = WeightSet.weight;
+			//4つに達したら終了
+			if (++weightArrayIndex >= ModelFbx::MAX_BONE_INDICES)
+			{
+				float weight = 0.0f;
+				//2番目以降のウェイトを合計
+				for (int j = 0; j < ModelFbx::MAX_BONE_INDICES; j++)
+				{
+					weight += vertices[i].boneWeight[j];
+				}
+				//合計で1.0f(100％)になるように調整
+				vertices[i].boneWeight[0] = 1.0f - weight;
+				break;
+			}
+		}
+	}
+
 }
 
 std::string FbxLoader::ExtractFileName(const std::string path)
