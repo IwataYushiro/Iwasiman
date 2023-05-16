@@ -47,6 +47,8 @@ public://メンバ関数
 	void ParseMaterial(ModelFbx* modelF, FbxNode* fbxNode);
 	//テクスチャ読み取り
 	void LoadTexture(ModelFbx* modelF, const std::string& fullpath);
+	//スキニング情報読み取り
+	void ParseSkin(ModelFbx* modelF, FbxMesh* fbxMesh);
 	//ディレクトリを含んだファイルパスからファイル名を抽出する
 	std::string ExtractFileName(const std::string path);
 

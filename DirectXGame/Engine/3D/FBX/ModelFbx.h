@@ -44,15 +44,21 @@ private://エイリアス
 	using string = std::string;
 	template <class T>using vector = std::vector<T>;
 
+public://定数
+	//ボーンインデックスの最大数
+	static const int MAX_BONE_INDICES = 4;
+
 public://フレンド、サブクラス
 	//フレンドクラス
 	friend class FbxLoader;
 	//頂点データ構造体
-	struct VertexPosNormalUv
+	struct VertexPosNormalUvSkin
 	{
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMFLOAT3 normal;
 		DirectX::XMFLOAT2 uv;
+		UINT boneIndex[MAX_BONE_INDICES];	//ボーン番号
+		float boneWeight[MAX_BONE_INDICES];	//スキンウェイト
 	};
 	//ボーン構造体
 	struct Bone
@@ -68,9 +74,7 @@ public://フレンド、サブクラス
 			this->name = name;
 		}
 	};
-public://定数
-	//ボーンインデックスの最大数
-	static const int MAX_BONE_INDICES = 4;
+
 public://メンバ関数
 	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
@@ -92,7 +96,7 @@ private://メンバ変数
 	std::vector<Bone> bones;
 	 
 	//頂点データ配列
-	vector<VertexPosNormalUv> vertices;
+	vector<VertexPosNormalUvSkin> vertices;
 	//頂点インデックス配列
 	vector<unsigned short> indices;
 	// 頂点バッファ

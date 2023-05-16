@@ -30,7 +30,7 @@ void ModelFbx::CreateBuffers(ID3D12Device* device)
 {
 	HRESULT result;
 	//頂点データ全体のサイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUvSkin) * vertices.size());
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	// リソース設定
@@ -44,7 +44,7 @@ void ModelFbx::CreateBuffers(ID3D12Device* device)
 		nullptr,
 		IID_PPV_ARGS(&vertBuff));
 	//頂点バッファへのデータ転送
-	VertexPosNormalUv* vertMap = nullptr;
+	VertexPosNormalUvSkin* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		std::copy(vertices.begin(), vertices.end(), vertMap);
