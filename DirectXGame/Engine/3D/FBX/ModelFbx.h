@@ -3,11 +3,13 @@
 #include <d3dx12.h>
 #include <DirectXMath.h>
 #include <DirectXTex.h>
+#include <fbxsdk.h>
 #include <string>
 #include <vector>
 #include <Windows.h>
 #include <wrl.h>
 
+//ノード構造体
 struct Node
 {
 	//名前
@@ -52,8 +54,23 @@ public://フレンド、サブクラス
 		DirectX::XMFLOAT3 normal;
 		DirectX::XMFLOAT2 uv;
 	};
-
-
+	//ボーン構造体
+	struct Bone
+	{
+		//名前
+		std::string name;
+		//初期姿勢の逆行列
+		DirectX::XMMATRIX invInitialPose;
+		//クラスター
+		FbxCluster* fbxCluster;
+		//コンストラクタ
+		Bone(const std::string& name) {
+			this->name = name;
+		}
+	};
+public://定数
+	//ボーンインデックスの最大数
+	static const int MAX_BONE_INDICES = 4;
 public://メンバ関数
 	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
@@ -71,6 +88,9 @@ private://メンバ変数
 	vector<Node> nodes;
 	//メッシュを持つノード
 	Node* meshNode = nullptr;
+	//ボーン配列
+	std::vector<Bone> bones;
+	 
 	//頂点データ配列
 	vector<VertexPosNormalUv> vertices;
 	//頂点インデックス配列
@@ -100,4 +120,6 @@ private://メンバ変数
 public://アクセッサ置き場
 	//モデル変形行列
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	//全ボーン
+	std::vector<Bone>& GetBones() { return bones; }
 };

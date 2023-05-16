@@ -13,6 +13,20 @@ FbxLoader* FbxLoader::GetInstance()
 	return &instance;
 }
 
+void FbxLoader::ConvertMatrixFromFBX(DirectX::XMMATRIX* dst, const FbxAMatrix& src)
+{
+	//行
+	for (int i = 0; i < 4; i++)
+	{
+		//列
+		for (int j = 0; j < 4; j++)
+		{
+			//1要素をコピー
+			dst->r[i].m128_f32[j] = (float)src.Get(i, j);
+		}
+	}
+}
+
 void FbxLoader::Initialize(ID3D12Device* device)
 {
 	//再初期化チェック

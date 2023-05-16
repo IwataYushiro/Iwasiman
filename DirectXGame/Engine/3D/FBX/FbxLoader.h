@@ -16,14 +16,16 @@ private://エイリアス
 public://定数
 	static const string baseDirectory;
 
-public:
+public://静的メンバ関数
 	/// <summary>
 	/// シングルトンインスタンスの取得
 	/// </summary>
 	/// <returns>インスタンス</returns>
 	static FbxLoader* GetInstance();
 
-public:
+	//FBXの行列をXMMATRIXに変換
+	static void ConvertMatrixFromFBX(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
+public://メンバ関数
 	//初期化
 	void Initialize(ID3D12Device* device);
 
