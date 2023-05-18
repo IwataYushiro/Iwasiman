@@ -76,7 +76,8 @@ public://メンバ関数
 	void Update();
 	//描画
 	void Draw();
-
+	//アニメーション開始
+	void PlayAnimation();
 
 protected://メンバ変数
 	//ローカルスケール
@@ -93,6 +94,17 @@ protected://メンバ変数
 	ComPtr<ID3D12Resource> constBufferTransform;
 	//スキン
 	ComPtr<ID3D12Resource> constBufferSkin;
+
+	//1フレームの時間
+	FbxTime frameTime;
+	// アニメーション開始時間
+	FbxTime startTime;
+	// アニメーション終了時間
+	FbxTime endTime;
+	//アニメーション現在時間
+	FbxTime currentTime;
+	//アニメーション再生中フラグ
+	bool isPlayAnimation = false;
 
 	//カメラ
 	Camera* camera_;

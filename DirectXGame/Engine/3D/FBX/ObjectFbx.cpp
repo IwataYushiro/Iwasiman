@@ -256,6 +256,7 @@ bool ObjectFbx::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBufferSkin));
 
+	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 	return true;
 }
 
@@ -298,16 +299,28 @@ void ObjectFbx::Update()
 
 	//ボーン配列
 	std::vector<ModelFbx::Bone>& bones = modelF_->GetBones();
-	
+	//アニメーション
+	if (isPlayAnimation)
+	{
+		//1フレーム進める
+		currentTime += frameTime;
+		//最後まで再生したら先頭に戻す
+		if (currentTime > endTime)
+		{
+			currentTime = startTime;
+		}
+	}
 	//定数バッファへのデータ転送
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBufferSkin->Map(0, nullptr, (void**)&constMapSkin);
 	for (int i = 0; i < bones.size(); i++)
 	{
+	
 		//現姿勢行列
 		XMMATRIX matCurrentPose;
 		//現姿勢行列の取得
-		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(0);
+		FbxAMatrix fbxCurrentPose 
+			= bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
 		//XMMATRIXに変換
 		FbxLoader::ConvertMatrixFromFBX(&matCurrentPose, fbxCurrentPose);
 		//合成してスキニング行列に
@@ -332,4 +345,24 @@ void ObjectFbx::Draw()
 
 	//モデル描画
 	modelF_->Draw(cmdList_);
+}
+
+void ObjectFbx::PlayAnimation()
+{
+	FbxScene* fbxScene = modelF_->GetFbxScene();
+	//0番のアニメーション取得
+	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+	//アニメーションの名前を取得
+	const char* animstackname = animstack->GetName();
+	//アニメーションの時間情報
+	FbxTakeInfo* takeinfo = fbxScene->GetTakeInfo(animstackname);
+
+	//開始時間取得
+	startTime = takeinfo->mLocalTimeSpan.GetStart();
+	//終了時間取得
+	endTime = takeinfo->mLocalTimeSpan.GetStop();
+	//開始時間に合わせる
+	currentTime = startTime;
+	//アニメーション再生中状態にする
+	isPlayAnimation = true;
 }

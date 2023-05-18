@@ -44,6 +44,7 @@ void TitleScene::Initialize()
 	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
+	objF->PlayAnimation();
 	
 	//パーティクル
 	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
@@ -74,11 +75,12 @@ void TitleScene::Update()
 	
 	//雪とか雨
 	//pm1_->ActiveY(particle1_,{ 30.0f ,30.0f,0.0f }, { 150.0f ,100.0f,0.0f }, { 0.0f,-5.2f,0.0f }, { 0.0f,0.001f,0.0f }, 5, { 5.0f, 0.0f });
-camera_->Update();
+	camera_->Update();
 	light_->Update();
 	//pm1_->Update();
 	//object3DPlayer_->Update();
 	
+	//objF->PlayAnimation();
 	objF->Update();
 }
 
