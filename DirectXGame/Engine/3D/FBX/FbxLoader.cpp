@@ -337,7 +337,17 @@ void FbxLoader::ParseSkin(ModelFbx* modelF, FbxMesh* fbxMesh)
 	//スキニング情報
 	FbxSkin* fbxSkin = static_cast<FbxSkin*>(fbxMesh->GetDeformer(0, FbxDeformer::eSkin));
 	//スキニング情報が無ければ終了
-	if (fbxSkin == nullptr)return;
+	if (fbxSkin == nullptr)
+	{
+		//各頂点について処理
+		for (int i = 0; i < modelF->vertices.size(); i++)
+		{
+			//最初のボーンの影響を100％にする
+			modelF->vertices[i].boneIndex[0] = 0;
+			modelF->vertices[i].boneWeight[0] = 1.0f;
+		}
+		return;
+	}
 	//ボーン配列参照
 	std::vector<ModelFbx::Bone>& bones = modelF->bones;
 	//ボーン数

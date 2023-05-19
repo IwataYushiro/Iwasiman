@@ -17,7 +17,7 @@ void TitleScene::Initialize()
 	audio_->Initialize();
 
 	//カメラ
-	camera_->SetEye({ 0.0f,0.0f,-15.0f });
+	camera_->SetEye({ 0.0f,0.0f,-150.0f });
 	camera_->SetTarget({ 0.0f,1.0f,0.0f });
 //camera_->SetTarget({ 0.0f,20.0f,0.0f });*/
 
@@ -41,10 +41,10 @@ void TitleScene::Initialize()
 
 	//FBX
 	objF = ObjectFbx::Create();
-	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+	modelF = FbxLoader::GetInstance()->LoadModelFromFile("cube2");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
-	objF->PlayAnimation();
+	//objF->PlayAnimation();//更新で呼ぶと止まるから注意
 	
 	//パーティクル
 	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
@@ -80,7 +80,6 @@ void TitleScene::Update()
 	//pm1_->Update();
 	//object3DPlayer_->Update();
 	
-	//objF->PlayAnimation();
 	objF->Update();
 }
 
