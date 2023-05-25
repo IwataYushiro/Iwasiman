@@ -76,7 +76,11 @@ void TitleScene::Update()
 	
 	//á‚Æ‚©‰J
 	//pm1_->ActiveY(particle1_,{ 30.0f ,30.0f,0.0f }, { 150.0f ,100.0f,0.0f }, { 0.0f,-5.2f,0.0f }, { 0.0f,0.001f,0.0f }, 5, { 5.0f, 0.0f });
-	
+	if (input_->TriggerKey(DIK_SPACE))
+	{
+		camera_->Reset();
+		sceneManager_->ChangeScene("GAMEPLAY");
+	}
 	camera_->Update();
 	light_->Update();
 	//pm1_->Update();
