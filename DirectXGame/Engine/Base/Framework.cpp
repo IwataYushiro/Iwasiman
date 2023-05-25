@@ -55,6 +55,11 @@ void Framework::Update()
 	input_->Update();
 	sceneManager_->Update();
 	imguiManager_->Begin();
+#ifdef _DEBUG
+	camera_->DebugCamera();
+
+#endif // DEBUG
+
 	imguiManager_->End();
 	
 }

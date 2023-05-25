@@ -17,9 +17,10 @@ void TitleScene::Initialize()
 	audio_->Initialize();
 
 	//カメラ
-	camera_->SetEye({ 0.0f,0.0f,-150.0f });
-	camera_->SetTarget({ 0.0f,1.0f,0.0f });
-//camera_->SetTarget({ 0.0f,20.0f,0.0f });*/
+	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
+	camera_->SetTarget({ 90.0f,0.0f,0.0f });
+	camera_->SetEye({ -20.0f,0.0f,0.0f });
+	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
 
 	//3Dオブジェクト生成
 	//object3DPlayer_ = Object3d::Create();
@@ -41,10 +42,10 @@ void TitleScene::Initialize()
 
 	//FBX
 	objF = ObjectFbx::Create();
-	modelF = FbxLoader::GetInstance()->LoadModelFromFile("cube2");
+	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
-	//objF->PlayAnimation();//更新で呼ぶと止まるから注意
+	objF->PlayAnimation();//更新で呼ぶと止まるから注意
 	
 	//パーティクル
 	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
@@ -75,6 +76,7 @@ void TitleScene::Update()
 	
 	//雪とか雨
 	//pm1_->ActiveY(particle1_,{ 30.0f ,30.0f,0.0f }, { 150.0f ,100.0f,0.0f }, { 0.0f,-5.2f,0.0f }, { 0.0f,0.001f,0.0f }, 5, { 5.0f, 0.0f });
+	
 	camera_->Update();
 	light_->Update();
 	//pm1_->Update();
@@ -135,3 +137,4 @@ void TitleScene::Finalize()
 	delete objF;
 	delete modelF;
 }
+

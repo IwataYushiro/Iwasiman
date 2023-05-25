@@ -361,6 +361,11 @@ void ObjectFbx::PlayAnimation()
 	FbxScene* fbxScene = modelF_->GetFbxScene();
 	//0番のアニメーション取得
 	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+	//アニメーション情報がないなら終了
+	if (animstack == nullptr)
+	{
+		return;
+	}
 	//アニメーションの名前を取得
 	const char* animstackname = animstack->GetName();
 	//アニメーションの時間情報
