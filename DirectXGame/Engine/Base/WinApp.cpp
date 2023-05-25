@@ -45,7 +45,8 @@ void WinApp::Initialize() {
 	//ウィンドゥ作成
 	hwnd = CreateWindow(wndClassEx.lpszClassName,   //クラス名
 		L"DirectXGame IWASI Engine",				//タイトルバーの文字
-		WS_OVERLAPPEDWINDOW | WS_SYSMENU,					//標準的なウィンドウスタイル
+		//WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE,	//最大化だけ封印
+		WS_OVERLAPPEDWINDOW,					//標準的なウィンドウスタイル WS_OVERLAPPED | WS_SYSMENU=閉じるだけ
 		CW_USEDEFAULT,							//表示X座標(OSに任せる)
 		CW_USEDEFAULT,							//表示Y座標(OSに任せる)
 		wrc.right - wrc.left,					//ウィンドウ横幅
