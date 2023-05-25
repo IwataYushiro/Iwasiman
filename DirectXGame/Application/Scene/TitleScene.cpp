@@ -19,7 +19,7 @@ void TitleScene::Initialize()
 	//カメラ
 	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
 	camera_->SetTarget({ 90.0f,0.0f,0.0f });
-	camera_->SetEye({ -20.0f,0.0f,0.0f });
+	camera_->SetEye({ -10.0f,2.0f,0.0f });
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
 
 	//3Dオブジェクト生成
