@@ -41,6 +41,14 @@ void Framework::Initialize()
 	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 	//ライト
 	DirectionalLight::StaticInitialize(dxCommon_->GetDevice());
+	
+	//ポストエフェクト
+	UINT post = 100;
+	sprCommon_->LoadTexture(post, "white1x1.png");
+	postEffect_ = new PostEffect();
+	postEffect_->Initialize(sprCommon_, post);
+	postEffect_->SetSize({ 500.0f,500.0f });
+
 }
 
 void Framework::Update()
@@ -66,6 +74,8 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
+	//ポストエフェクト
+	delete postEffect_;
 	//scene
 	sceneManager_->Finalize();
 	delete sceneFactory_;
