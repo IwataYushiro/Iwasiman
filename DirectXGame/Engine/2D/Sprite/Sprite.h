@@ -15,30 +15,20 @@ public: // メンバ関数
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-private://構造体類
+public://構造体類
 	//マテリアル
 	struct ConstBufferDataMaterial
 	{
 		XMFLOAT4 color;
 	};
 
-	//定数バッファのGPUリソースのポインタ
-	ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
-	//マッピング用のポインタ
-	ConstBufferDataMaterial* constMapMaterial = nullptr;
-
-	//マテリアル
+	//座標
 	struct ConstBufferDataTransform
 	{
 		XMMATRIX mat;	//3D変換行列
 	};
 
-	//アンカーポイント
-	XMFLOAT2 anchorPoint_ = { 0.0f,0.0f };
-	//表示サイズ
-	XMFLOAT2 size_ = { 100.0f,100.0f };
-	
-	//頂点番号
+//頂点番号
 	enum VertexNumber
 	{
 		LB,		//左下
@@ -47,6 +37,25 @@ private://構造体類
 		RT,		//右上
 		verticesCount,//要素数
 	};
+
+	//頂点データ構造体
+	struct Vertex
+	{
+		XMFLOAT3 pos;		//xyz座標
+		XMFLOAT2 uv;		//uv座標
+	};
+protected://構造体類に関係あるメンバ変数
+	//定数バッファのGPUリソースのポインタ
+	ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
+	//マッピング用のポインタ
+	ConstBufferDataMaterial* constMapMaterial = nullptr;
+
+	//アンカーポイント
+	XMFLOAT2 anchorPoint_ = { 0.0f,0.0f };
+	//表示サイズ
+	XMFLOAT2 size_ = { 100.0f,100.0f };
+	
+	
 
 	//回転
 	float rotationZ_ = 0.0f;
@@ -82,14 +91,6 @@ private://構造体類
 	//マッピング用のポインタ
 	ConstBufferDataTransform* constMapTransform = nullptr;
 
-	//頂点データ構造体
-	struct Vertex
-	{
-		XMFLOAT3 pos;		//xyz座標
-		XMFLOAT2 uv;		//uv座標
-	};
-
-
 public://メンバ関数
 
 	//初期化
@@ -105,8 +106,8 @@ public://メンバ関数
 	//3D座標
 	void CreateConstBufferTransform();
 
-private://メンバ変数
-	
+//private://メンバ変数
+protected:
 	//頂点データ
 	Vertex vertices[verticesCount] = {
 		{{  0.0f,size_.y,0.0f},{0.0f,1.0f}},	//左下

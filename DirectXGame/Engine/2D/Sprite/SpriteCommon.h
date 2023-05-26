@@ -80,5 +80,8 @@ public://アクセッサ
 	{
 		return texBuffs[index].Get();
 	}
-
+	//パイプラインステート
+	ID3D12PipelineState* GetPipelineState() { return pipelineState.Get(); }
+	//ルートシグネチャ
+	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
 };

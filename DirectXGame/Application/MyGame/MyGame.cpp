@@ -25,7 +25,7 @@ void MyGame::Draw()
 	//•`‰æ‘Oˆ—
 	dxCommon_->PreDraw();
 
-	sceneManager_->Draw();
+	//sceneManager_->Draw();
 	//•`‰æŒãˆ—
 	dxCommon_->PostDraw();
 }

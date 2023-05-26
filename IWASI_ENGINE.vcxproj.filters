@@ -130,6 +130,9 @@
     <Filter Include="ヘッダー ファイル\Engine\3D\Light">
       <UniqueIdentifier>{c78cf77f-eb2d-4f42-873a-024885ce302b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\2D\PostEffect">
+      <UniqueIdentifier>{d58e78a4-391a-46b6-a0d4-b46e87e49284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -298,6 +301,9 @@
     <ClCompile Include="DirectXGame\Engine\3D\Light\DirectionalLight.cpp">
       <Filter>ソース ファイル\Engine\3D\Light</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\2D\PostEffect\PostEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -404,6 +410,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Light\DirectionalLight.h">
       <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\2D\PostEffect\PostEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
