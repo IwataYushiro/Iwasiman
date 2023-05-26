@@ -58,7 +58,7 @@ void TitleScene::Initialize()
 void TitleScene::Update()
 {
 
-	//spriteTitle_->Update();
+	spriteTitle_->Update();
 	//ˆÊ’uŽw’è’²®
 	//pm1_->Active(particle1_, { -40.0f ,0.0f,0.0f } ,{ 20.0f ,20.0f,20.0f }, { 3.0f,3.0f,3.0f }, { 0.0f,0.001f,0.0f }, 3, { 3.0f, 0.0f });
 

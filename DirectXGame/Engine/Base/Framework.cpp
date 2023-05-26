@@ -47,7 +47,7 @@ void Framework::Initialize()
 	sprCommon_->LoadTexture(post, "white1x1.png");
 	postEffect_ = new PostEffect();
 	postEffect_->Initialize(sprCommon_, post);
-	postEffect_->SetSize({ 500.0f,500.0f });
+	postEffect_->SetSize({ 700.0f,500.0f });
 
 }
 
@@ -59,6 +59,9 @@ void Framework::Update()
 		//ゲーム終了
 		EndGame_ = true;
 	}
+	//ポストエフェクト
+	postEffect_->Update();
+
 	//入力の更新
 	input_->Update();
 	sceneManager_->Update();
