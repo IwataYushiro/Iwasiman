@@ -1,418 +1,418 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
+    <Filter Include="Shader File">
+      <UniqueIdentifier>{24f0b882-25f2-4b93-927b-58748213ae3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\FBX">
+      <UniqueIdentifier>{3cad425a-1b8f-469e-b032-5897afe78ffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\Toon">
+      <UniqueIdentifier>{849def26-6782-4675-9c6f-57ed1dfa5832}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="ヘッダー ファイル">
+    <Filter Include="Source File\Engine">
+      <UniqueIdentifier>{cc86304c-f8fb-4e61-99f3-fed9348c53f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\Base">
+      <UniqueIdentifier>{79e040a5-2522-45e7-9426-b2ff8b0c4bb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\Input">
+      <UniqueIdentifier>{00471b23-bb1f-4f31-9feb-f87cd8a8c7c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\Math">
+      <UniqueIdentifier>{6052ccc9-3f77-4f3f-b541-f8eeb95b2979}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\3D">
+      <UniqueIdentifier>{b4f11c48-06da-4500-8cd2-6f8395662936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\3D\Object">
+      <UniqueIdentifier>{a46e912c-8f28-4bce-9967-7fc3368fda40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\3D\Particle">
+      <UniqueIdentifier>{47ea03fe-da0f-43ff-a556-d0f4ba3db1fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\3D\Audio">
+      <UniqueIdentifier>{4c2fc172-1501-4cd6-8c19-235cb00b9e38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\3D\Camera">
+      <UniqueIdentifier>{b18850d5-0d78-4b2d-a647-b98e8c58d1bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\3D\FBX">
+      <UniqueIdentifier>{ac0b00d4-e452-4253-9877-7f6e0f96ea93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\3D\Light">
+      <UniqueIdentifier>{54670238-1e42-4114-bd78-9be17ce69585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\2D">
+      <UniqueIdentifier>{f2774ded-34ff-4376-9a68-652e8d593542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\2D\Sprite">
+      <UniqueIdentifier>{2421db43-415a-474e-9dfa-b38287bacd54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\2D\PostEffect">
+      <UniqueIdentifier>{d58e78a4-391a-46b6-a0d4-b46e87e49284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\Debug">
+      <UniqueIdentifier>{78e9d6e2-0dd1-4fc0-81f9-371f692e9866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Application">
+      <UniqueIdentifier>{27262f8c-fca5-4a1e-a272-18015c67d4b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Application\MyGame">
+      <UniqueIdentifier>{f1eff419-90de-4286-ab78-75bde1eb9c1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Application\Scene">
+      <UniqueIdentifier>{20ce93d7-d4b9-4ec3-af8e-f8a28f42627c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Application\Scene\Factory">
+      <UniqueIdentifier>{e2b47729-5c59-4c96-86cb-0acaf7356271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="シェーダー ファイル">
-      <UniqueIdentifier>{24f0b882-25f2-4b93-927b-58748213ae3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine">
-      <UniqueIdentifier>{cc86304c-f8fb-4e61-99f3-fed9348c53f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application">
-      <UniqueIdentifier>{27262f8c-fca5-4a1e-a272-18015c67d4b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine">
+    <Filter Include="Header File\Engine">
       <UniqueIdentifier>{05c1b417-318a-44c0-ab47-b1cb3182258a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Application">
-      <UniqueIdentifier>{88775aed-b594-4db1-8006-15e71f1a0276}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Base">
-      <UniqueIdentifier>{79e040a5-2522-45e7-9426-b2ff8b0c4bb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Input">
-      <UniqueIdentifier>{00471b23-bb1f-4f31-9feb-f87cd8a8c7c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Math">
-      <UniqueIdentifier>{6052ccc9-3f77-4f3f-b541-f8eeb95b2979}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3D">
-      <UniqueIdentifier>{b4f11c48-06da-4500-8cd2-6f8395662936}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3D\Object">
-      <UniqueIdentifier>{a46e912c-8f28-4bce-9967-7fc3368fda40}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3D\Particle">
-      <UniqueIdentifier>{47ea03fe-da0f-43ff-a556-d0f4ba3db1fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3D\Audio">
-      <UniqueIdentifier>{4c2fc172-1501-4cd6-8c19-235cb00b9e38}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3D\Camera">
-      <UniqueIdentifier>{b18850d5-0d78-4b2d-a647-b98e8c58d1bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\2D">
-      <UniqueIdentifier>{f2774ded-34ff-4376-9a68-652e8d593542}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\2D\Sprite">
-      <UniqueIdentifier>{2421db43-415a-474e-9dfa-b38287bacd54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\Debug">
-      <UniqueIdentifier>{78e9d6e2-0dd1-4fc0-81f9-371f692e9866}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\MyGame">
-      <UniqueIdentifier>{f1eff419-90de-4286-ab78-75bde1eb9c1a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\2D">
+    <Filter Include="Header File\Engine\2D">
       <UniqueIdentifier>{eaeeaec6-a73c-450c-a3f8-ed6bda8c78fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\2D\Sprite">
+    <Filter Include="Header File\Engine\2D\Sprite">
       <UniqueIdentifier>{01da2eee-dad8-4e6e-a701-8e30ee29ff2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3D">
+    <Filter Include="Header File\Engine\3D">
       <UniqueIdentifier>{14a919c7-6b88-41fd-b50d-bf6ed0e41633}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3D\Audio">
+    <Filter Include="Header File\Engine\3D\Audio">
       <UniqueIdentifier>{b7cf98e0-70c9-4971-828e-67c346b1c19f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3D\Camera">
+    <Filter Include="Header File\Engine\3D\Camera">
       <UniqueIdentifier>{54cfb7e3-5a9c-4fc1-8ac2-87d5f0a3740f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3D\Object">
+    <Filter Include="Header File\Engine\3D\Object">
       <UniqueIdentifier>{81110383-fdc2-4fa7-b2d4-7acbfdcad502}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3D\Particle">
+    <Filter Include="Header File\Engine\3D\Particle">
       <UniqueIdentifier>{97b429af-153d-4558-b1b7-05b86a690587}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Base">
-      <UniqueIdentifier>{dd9b7173-9ee8-4a2a-854f-1dd5177dbc4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Input">
-      <UniqueIdentifier>{3dfdd574-de2e-47c8-b114-db1b88dd6cf9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Math">
-      <UniqueIdentifier>{393d4d1b-d4a1-4d39-ab28-90ab178f417a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\Debug">
-      <UniqueIdentifier>{fdbcca7e-08d0-478e-a497-340a58cefd0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\MyGame">
-      <UniqueIdentifier>{4d63fb01-9867-407d-a9da-1ce2aaa0c6e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Scene">
-      <UniqueIdentifier>{20ce93d7-d4b9-4ec3-af8e-f8a28f42627c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Scene">
-      <UniqueIdentifier>{698a67bf-15ca-436a-bc60-a4bb14c9232d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Application\Scene\Factory">
-      <UniqueIdentifier>{e2b47729-5c59-4c96-86cb-0acaf7356271}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Application\Scene\Factory">
-      <UniqueIdentifier>{54abcc95-b37b-41d3-b244-27a85305fd22}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3D\FBX">
-      <UniqueIdentifier>{ac0b00d4-e452-4253-9877-7f6e0f96ea93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3D\FBX">
+    <Filter Include="Header File\Engine\3D\FBX">
       <UniqueIdentifier>{b3793c53-287b-4b1f-9ba7-f3bc11c9caa6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="シェーダー ファイル\FBX">
-      <UniqueIdentifier>{3cad425a-1b8f-469e-b032-5897afe78ffd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="シェーダー ファイル\Toon">
-      <UniqueIdentifier>{849def26-6782-4675-9c6f-57ed1dfa5832}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Engine\3D\Light">
-      <UniqueIdentifier>{54670238-1e42-4114-bd78-9be17ce69585}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Engine\3D\Light">
+    <Filter Include="Header File\Engine\3D\Light">
       <UniqueIdentifier>{c78cf77f-eb2d-4f42-873a-024885ce302b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Engine\2D\PostEffect">
-      <UniqueIdentifier>{d58e78a4-391a-46b6-a0d4-b46e87e49284}</UniqueIdentifier>
+    <Filter Include="Header File\Engine\Base">
+      <UniqueIdentifier>{dd9b7173-9ee8-4a2a-854f-1dd5177dbc4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Engine\Input">
+      <UniqueIdentifier>{3dfdd574-de2e-47c8-b114-db1b88dd6cf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Engine\Math">
+      <UniqueIdentifier>{393d4d1b-d4a1-4d39-ab28-90ab178f417a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Engine\Debug">
+      <UniqueIdentifier>{fdbcca7e-08d0-478e-a497-340a58cefd0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Application">
+      <UniqueIdentifier>{88775aed-b594-4db1-8006-15e71f1a0276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Application\MyGame">
+      <UniqueIdentifier>{4d63fb01-9867-407d-a9da-1ce2aaa0c6e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Application\Scene">
+      <UniqueIdentifier>{698a67bf-15ca-436a-bc60-a4bb14c9232d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Application\Scene\Factory">
+      <UniqueIdentifier>{54abcc95-b37b-41d3-b244-27a85305fd22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource File">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </None>
     <None Include="Resources\shader\Sprite.hlsli">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </None>
     <None Include="Resources\shader\OBJ.hlsli">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </None>
     <None Include="Resources\shader\Particle.hlsli">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </None>
     <None Include="Resources\shader\FBX\FBX.hlsli">
-      <Filter>シェーダー ファイル\FBX</Filter>
+      <Filter>Shader File\FBX</Filter>
     </None>
     <None Include="Resources\shader\Toon\Toon.hlsli">
-      <Filter>シェーダー ファイル\Toon</Filter>
+      <Filter>Shader File\Toon</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\CG2\ウィンドゥ表示\Resources\shader\BasicPS.hlsl">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="..\..\CG2\ウィンドゥ表示\Resources\shader\BasicVS.hlsl">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\SpriteVS.hlsl">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\SpritePS.hlsl">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\OBJPS.hlsl">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\OBJVS.hlsl">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\ParticleGS.hlsl">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\ParticlePS.hlsl">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\ParticleVS.hlsl">
-      <Filter>シェーダー ファイル</Filter>
+      <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
-      <Filter>シェーダー ファイル\FBX</Filter>
+      <Filter>Shader File\FBX</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
-      <Filter>シェーダー ファイル\FBX</Filter>
+      <Filter>Shader File\FBX</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\Toon\ToonVS.hlsl">
-      <Filter>シェーダー ファイル\Toon</Filter>
+      <Filter>Shader File\Toon</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\Toon\ToonPS.hlsl">
-      <Filter>シェーダー ファイル\Toon</Filter>
+      <Filter>Shader File\Toon</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
+      <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\MyGame\EnemyBullet.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
+      <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
+      <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\MyGame\Player.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
+      <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\MyGame\PlayerBullet.cpp">
-      <Filter>ソース ファイル\Application\MyGame</Filter>
+      <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\2D\Sprite\SpriteCommon.cpp">
-      <Filter>ソース ファイル\Engine\2D\Sprite</Filter>
+      <Filter>Source File\Engine\2D\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\2D\Sprite\Sprite.cpp">
-      <Filter>ソース ファイル\Engine\2D\Sprite</Filter>
+      <Filter>Source File\Engine\2D\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Audio\Audio.cpp">
-      <Filter>ソース ファイル\Engine\3D\Audio</Filter>
+      <Filter>Source File\Engine\3D\Audio</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Camera\Camera.cpp">
-      <Filter>ソース ファイル\Engine\3D\Camera</Filter>
+      <Filter>Source File\Engine\3D\Camera</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Object\Model.cpp">
-      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+      <Filter>Source File\Engine\3D\Object</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Object\Object3d.cpp">
-      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+      <Filter>Source File\Engine\3D\Object</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Particle\Particle.cpp">
-      <Filter>ソース ファイル\Engine\3D\Particle</Filter>
+      <Filter>Source File\Engine\3D\Particle</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Particle\ParticleManager.cpp">
-      <Filter>ソース ファイル\Engine\3D\Particle</Filter>
+      <Filter>Source File\Engine\3D\Particle</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Base\DirectXCommon.cpp">
-      <Filter>ソース ファイル\Engine\Base</Filter>
+      <Filter>Source File\Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Base\Framework.cpp">
-      <Filter>ソース ファイル\Engine\Base</Filter>
+      <Filter>Source File\Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Base\WinApp.cpp">
-      <Filter>ソース ファイル\Engine\Base</Filter>
+      <Filter>Source File\Engine\Base</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Debug\ImGuiManager.cpp">
-      <Filter>ソース ファイル\Engine\Debug</Filter>
+      <Filter>Source File\Engine\Debug</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Input\Input.cpp">
-      <Filter>ソース ファイル\Engine\Input</Filter>
+      <Filter>Source File\Engine\Input</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Math\Vector2.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
+      <Filter>Source File\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Math\Vector3.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
+      <Filter>Source File\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Math\Matrix4.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
+      <Filter>Source File\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Math\MyMath.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
+      <Filter>Source File\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\main.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Source File</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
+      <Filter>Source File\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\Scene\TitleScene.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
+      <Filter>Source File\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\Scene\BaseScene.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
+      <Filter>Source File\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\Scene\SceneManager.cpp">
-      <Filter>ソース ファイル\Application\Scene</Filter>
+      <Filter>Source File\Application\Scene</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\Scene\Factory\SceneFactory.cpp">
-      <Filter>ソース ファイル\Application\Scene\Factory</Filter>
+      <Filter>Source File\Application\Scene\Factory</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Math\Quaternion.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
+      <Filter>Source File\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxLoader.cpp">
-      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+      <Filter>Source File\Engine\3D\FBX</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ModelFbx.cpp">
-      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+      <Filter>Source File\Engine\3D\FBX</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ObjectFbx.cpp">
-      <Filter>ソース ファイル\Engine\3D\FBX</Filter>
+      <Filter>Source File\Engine\3D\FBX</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Object\Mesh.cpp">
-      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+      <Filter>Source File\Engine\3D\Object</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Object\Material.cpp">
-      <Filter>ソース ファイル\Engine\3D\Object</Filter>
+      <Filter>Source File\Engine\3D\Object</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Light\DirectionalLight.cpp">
-      <Filter>ソース ファイル\Engine\3D\Light</Filter>
+      <Filter>Source File\Engine\3D\Light</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\2D\PostEffect\PostEffect.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Source File\Engine\2D\PostEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+      <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\PlayerBullet.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+      <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+      <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\EnemyBullet.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+      <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h">
-      <Filter>ヘッダー ファイル\Application\MyGame</Filter>
+      <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\2D\Sprite\Sprite.h">
-      <Filter>ヘッダー ファイル\Engine\2D\Sprite</Filter>
+      <Filter>Header File\Engine\2D\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\2D\Sprite\SpriteCommon.h">
-      <Filter>ヘッダー ファイル\Engine\2D\Sprite</Filter>
+      <Filter>Header File\Engine\2D\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Audio\Audio.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Audio</Filter>
+      <Filter>Header File\Engine\3D\Audio</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Camera\Camera.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Camera</Filter>
+      <Filter>Header File\Engine\3D\Camera</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Object\Model.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+      <Filter>Header File\Engine\3D\Object</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Object\Object3d.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+      <Filter>Header File\Engine\3D\Object</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Particle\Particle.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Particle</Filter>
+      <Filter>Header File\Engine\3D\Particle</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Particle\ParticleManager.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Particle</Filter>
+      <Filter>Header File\Engine\3D\Particle</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Base\Framework.h">
-      <Filter>ヘッダー ファイル\Engine\Base</Filter>
+      <Filter>Header File\Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Base\WinApp.h">
-      <Filter>ヘッダー ファイル\Engine\Base</Filter>
+      <Filter>Header File\Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Base\DirectXCommon.h">
-      <Filter>ヘッダー ファイル\Engine\Base</Filter>
+      <Filter>Header File\Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Debug\ImGuiManager.h">
-      <Filter>ヘッダー ファイル\Engine\Debug</Filter>
+      <Filter>Header File\Engine\Debug</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Input\Input.h">
-      <Filter>ヘッダー ファイル\Engine\Input</Filter>
+      <Filter>Header File\Engine\Input</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Math\Vector2.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+      <Filter>Header File\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Math\Vector3.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+      <Filter>Header File\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Math\Matrix4.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+      <Filter>Header File\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Math\MyMath.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+      <Filter>Header File\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\GamePlayScene.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+      <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\TitleScene.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+      <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\BaseScene.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+      <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\SceneManager.h">
-      <Filter>ヘッダー ファイル\Application\Scene</Filter>
+      <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\Factory\AbstractSceneFactory.h">
-      <Filter>ヘッダー ファイル\Application\Scene\Factory</Filter>
+      <Filter>Header File\Application\Scene\Factory</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\Factory\SceneFactory.h">
-      <Filter>ヘッダー ファイル\Application\Scene\Factory</Filter>
+      <Filter>Header File\Application\Scene\Factory</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Math\Quaternion.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+      <Filter>Header File\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxLoader.h">
-      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+      <Filter>Header File\Engine\3D\FBX</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ModelFbx.h">
-      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+      <Filter>Header File\Engine\3D\FBX</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ObjectFbx.h">
-      <Filter>ヘッダー ファイル\Engine\3D\FBX</Filter>
+      <Filter>Header File\Engine\3D\FBX</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Object\Mesh.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+      <Filter>Header File\Engine\3D\Object</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Object\Material.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Object</Filter>
+      <Filter>Header File\Engine\3D\Object</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Light\DirectionalLight.h">
-      <Filter>ヘッダー ファイル\Engine\3D\Light</Filter>
+      <Filter>Header File\Engine\3D\Light</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\2D\PostEffect\PostEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Header File\Engine\2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
