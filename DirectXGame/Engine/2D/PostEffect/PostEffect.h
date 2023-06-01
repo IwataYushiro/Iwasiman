@@ -7,7 +7,7 @@ public:
     //コンストラクタ
     PostEffect();
     //初期化
-    void Initialize();
+    void Initialize(SpriteCommon* spCommon, uint32_t textureIndex = UINT32_MAX);
     //描画
     void Draw(ID3D12GraphicsCommandList* cmdList);
 

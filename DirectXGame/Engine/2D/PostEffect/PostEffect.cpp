@@ -8,14 +8,17 @@ PostEffect::PostEffect()
 {
 }
 
-void PostEffect::Initialize()
+void PostEffect::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 {
 	HRESULT result;
+	assert(spCommon);
+	this->spCommon_ = spCommon;
+
 	//基盤クラスとしての初期化
-	Sprite::Initialize(spCommon_);
+	Sprite::Initialize(spCommon_, textureIndex);
 	//テクスチャリソース設定
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-		DXGI_FORMAT_B8G8R8X8_UNORM_SRGB,
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		WinApp::window_width,
 		(UINT)WinApp::window_height,
 		1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
@@ -29,22 +32,46 @@ void PostEffect::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&texBuff));
 	assert(SUCCEEDED(result));
+	{
 
-	//テクスチャ赤クリア
-	//画素数(1280 x 720 = 921600ピクセル)
-	const UINT pixelCount = WinApp::window_width * WinApp::window_height;
-	//画像一枚分のデータサイズ
-	const UINT rowPitch = sizeof(UINT) * WinApp::window_width;
-	//画像全体のデータサイズ
-	const UINT depthPitch = rowPitch * WinApp::window_height;
-	//画像イメージ
-	UINT* img = new UINT[pixelCount];
-	for (int i = 0; i < pixelCount; i++) { img[i] = 0xff0000ff; }
+		//テクスチャ赤クリア
+		//画素数(1280 x 720 = 921600ピクセル)
+		const UINT pixelCount = WinApp::window_width * WinApp::window_height;
+		//画像一枚分のデータサイズ
+		const UINT rowPitch = sizeof(UINT) * WinApp::window_width;
+		//画像全体のデータサイズ
+		const UINT depthPitch = rowPitch * WinApp::window_height;
+		//画像イメージ
+		UINT* img = new UINT[pixelCount];
+		for (int i = 0; i < pixelCount; i++) { img[i] = 0xff0000ff; }
 
-	//テクスチャバッファにデータ転送
-	result = texBuff->WriteToSubresource(0, nullptr, img, rowPitch, depthPitch);
+		//テクスチャバッファにデータ転送
+		result = texBuff->WriteToSubresource(0, nullptr, img, rowPitch, depthPitch);
+		assert(SUCCEEDED(result));
+		delete[] img;
+	}
+
+	//SRV用デスクリプタヒープ設定
+	D3D12_DESCRIPTOR_HEAP_DESC srvDescHeapDesc = {};
+	srvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	srvDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	srvDescHeapDesc.NumDescriptors = 1;
+	//SRV用デスクリプタヒープ生成
+	result = spCommon_->GetDxCommon()->GetDevice()->CreateDescriptorHeap(
+		&srvDescHeapDesc, IID_PPV_ARGS(&descHeapSRV));
 	assert(SUCCEEDED(result));
-	delete[] img;
+
+	//SRV設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};//設定構造体
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	//デスクリプタヒープにSRV作成
+	spCommon_->GetDxCommon()->GetDevice()->CreateShaderResourceView(
+		texBuff.Get()/*ビューと関連付けるバッファ*/, &srvDesc,
+		descHeapSRV->GetCPUDescriptorHandleForHeapStart());
 }
 
 void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -55,9 +82,16 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 		return;
 	}
 	//パイプラインステートとルートシグネチャの設定
-	spCommon_->PreDraw();
+	spCommon_->GetDxCommon()->GetCommandList()->SetPipelineState(spCommon_->GetPipelineState());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootSignature(spCommon_->GetRootSignature());
+	//プリミティブ形状の設定コマンド
+	spCommon_->GetDxCommon()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	
+	//デスクリプタヒープの配列をセットするコマンド
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeapSRV.Get() };
+	spCommon_->GetDxCommon()->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	//テクスチャコマンド
-	spCommon_->SetTextureCommands(textureIndex_);
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootDescriptorTable(1, descHeapSRV->GetGPUDescriptorHandleForHeapStart());
 	//頂点バッファビューの設定コマンド
 	spCommon_->GetDxCommon()->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
 
