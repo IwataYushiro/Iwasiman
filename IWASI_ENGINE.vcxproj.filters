@@ -133,6 +133,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header File\Engine\2D\PostEffect">
+      <UniqueIdentifier>{be1d2d58-4698-434a-b22c-ad9db1f4a85c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -412,7 +415,7 @@
       <Filter>Header File\Engine\3D\Light</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\2D\PostEffect\PostEffect.h">
-      <Filter>Header File\Engine\2D</Filter>
+      <Filter>Header File\Engine\2D\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
