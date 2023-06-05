@@ -20,11 +20,11 @@ void PostEffect::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 	// SRV生成
 	CreateSRV();
 	// RTV生成
-
+	CreateRTV();
 	// 深度バッファ生成
-
+	CreateDepthBuffer();
 	// DSV生成
-	
+	CreateDSV();
 }
 
 void PostEffect::CreateTexture()
@@ -90,6 +90,72 @@ void PostEffect::CreateSRV()
 	spCommon_->GetDxCommon()->GetDevice()->CreateShaderResourceView(
 		texBuff.Get()/*ビューと関連付けるバッファ*/, &srvDesc,
 		descHeapSRV->GetCPUDescriptorHandleForHeapStart());
+}
+
+void PostEffect::CreateRTV()
+{
+	HRESULT result;
+	//RTV用デスクリプタヒープ設定
+	D3D12_DESCRIPTOR_HEAP_DESC rtvDescHeapDesc{};
+	rtvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	rtvDescHeapDesc.NumDescriptors = 1;
+	//RTV用デスクリプタヒープ生成
+	result = spCommon_->GetDxCommon()->GetDevice()->CreateDescriptorHeap(
+		&rtvDescHeapDesc, IID_PPV_ARGS(&descHeapRTV));
+	assert(SUCCEEDED(result));
+
+	//レンダターゲットビュー設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	//シェーダーの計算結果をSRGBに変換して書き込む
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+	//デスクリプタヒープにRTV作成
+	spCommon_->GetDxCommon()->GetDevice()->CreateRenderTargetView(
+	texBuff.Get(), &rtvDesc, descHeapRTV->GetCPUDescriptorHandleForHeapStart());
+}
+
+void PostEffect::CreateDepthBuffer()
+{
+	HRESULT result;
+
+	//深度バッファリソース設定
+	CD3DX12_RESOURCE_DESC depthResDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+		DXGI_FORMAT_D32_FLOAT,
+		WinApp::window_width,
+		WinApp::window_height,
+		1, 0, 1, 0,
+		D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+
+	//深度バッファ生成
+	result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+		D3D12_HEAP_FLAG_NONE, &depthResDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D32_FLOAT, 1.0f, 0),
+		IID_PPV_ARGS(&depthBuff));
+	assert(SUCCEEDED(result));
+}
+
+void PostEffect::CreateDSV()
+{
+	HRESULT result;
+
+	//DSV用デスクリプタヒープ設定
+	D3D12_DESCRIPTOR_HEAP_DESC dsvDescHeapDesc{};
+	dsvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	dsvDescHeapDesc.NumDescriptors = 1;
+	//DSV用デスクリプタヒープ生成
+	result = spCommon_->GetDxCommon()->GetDevice()->CreateDescriptorHeap(
+		&dsvDescHeapDesc, IID_PPV_ARGS(&descHeapDSV));
+	assert(SUCCEEDED(result));
+
+	//デスクリプタヒープにDSV作成
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;	//深度値フォーマット
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	spCommon_->GetDxCommon()->GetDevice()->CreateDepthStencilView(
+	depthBuff.Get(), &dsvDesc, descHeapDSV->GetCPUDescriptorHandleForHeapStart());
 }
 
 void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)

@@ -13,11 +13,11 @@ public:
     // SRV生成
     void CreateSRV();
     // RTV生成
-    
+    void CreateRTV();
     // 深度バッファ生成
-    
+    void CreateDepthBuffer();
     // DSV生成
-    
+    void CreateDSV();
     
     //描画
     void Draw(ID3D12GraphicsCommandList* cmdList);
