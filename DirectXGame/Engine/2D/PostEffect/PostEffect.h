@@ -8,6 +8,17 @@ public:
     PostEffect();
     //初期化
     void Initialize(SpriteCommon* spCommon, uint32_t textureIndex = UINT32_MAX);
+    //テクスチャ生成
+    void CreateTexture();
+    // SRV生成
+    void CreateSRV();
+    // RTV生成
+    
+    // 深度バッファ生成
+    
+    // DSV生成
+    
+    
     //描画
     void Draw(ID3D12GraphicsCommandList* cmdList);
 
@@ -16,5 +27,11 @@ private:
     ComPtr<ID3D12Resource> texBuff;
     //SRV用デスクリプタヒープ
     ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+    //深度バッファ
+    ComPtr<ID3D12Resource> depthBuff;
+    //RTV用デスクリプタヒープ
+    ComPtr<ID3D12DescriptorHeap> descHeapRTV;
+    //DSV用デスクリプタヒープ
+    ComPtr<ID3D12DescriptorHeap> descHeapDSV;
 };
 

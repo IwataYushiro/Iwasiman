@@ -10,19 +10,33 @@ PostEffect::PostEffect()
 
 void PostEffect::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 {
-	HRESULT result;
 	assert(spCommon);
 	this->spCommon_ = spCommon;
 
 	//基盤クラスとしての初期化
 	Sprite::Initialize(spCommon_, textureIndex);
+	//テクスチャ生成
+	CreateTexture();
+	// SRV生成
+	CreateSRV();
+	// RTV生成
+
+	// 深度バッファ生成
+
+	// DSV生成
+	
+}
+
+void PostEffect::CreateTexture()
+{
+	HRESULT result;
 	//テクスチャリソース設定
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		WinApp::window_width,
 		(UINT)WinApp::window_height,
 		1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
-	
+
 	//テクスチャバッファ生成
 	result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
@@ -50,7 +64,11 @@ void PostEffect::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 		assert(SUCCEEDED(result));
 		delete[] img;
 	}
+}
 
+void PostEffect::CreateSRV()
+{
+	HRESULT result;
 	//SRV用デスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC srvDescHeapDesc = {};
 	srvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
