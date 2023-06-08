@@ -21,6 +21,11 @@ public:
     
     //描画
     void Draw(ID3D12GraphicsCommandList* cmdList);
+    //描画前処理
+    void PreDraw(ID3D12GraphicsCommandList* cmdList);
+
+    //描画後処理
+    void PostDraw(ID3D12GraphicsCommandList* cmdList);
 
 private:
     //テクスチャバッファ
@@ -33,5 +38,9 @@ private:
     ComPtr<ID3D12DescriptorHeap> descHeapRTV;
     //DSV用デスクリプタヒープ
     ComPtr<ID3D12DescriptorHeap> descHeapDSV;
+    
+    //画面クリアカラー
+    static const float clearcolor[4];
+
 };
 

@@ -105,8 +105,7 @@ void TitleScene::Draw()
 
 	//前景スプライト
 
-	//ImGuiの表示
-	imguiManager_->Draw();
+	
 }
 
 void TitleScene::Finalize()
