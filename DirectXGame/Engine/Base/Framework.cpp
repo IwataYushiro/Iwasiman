@@ -45,7 +45,7 @@ void Framework::Initialize()
 	//ポストエフェクト
 	postEffect_ = new PostEffect();
 	postEffect_->Initialize(sprCommon_);
-	
+
 }
 
 void Framework::Update()
@@ -57,6 +57,7 @@ void Framework::Update()
 		EndGame_ = true;
 	}
 	//ポストエフェクト
+	//postEffect_->Update();
 
 	//入力の更新
 	input_->Update();

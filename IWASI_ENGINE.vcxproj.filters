@@ -136,18 +136,18 @@
     <Filter Include="Header File\Engine\2D\PostEffect">
       <UniqueIdentifier>{be1d2d58-4698-434a-b22c-ad9db1f4a85c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader File\Sprite">
+      <UniqueIdentifier>{6d27c446-0827-4366-97d6-fe62470ab58c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\Particle">
+      <UniqueIdentifier>{6246361f-35d3-4cd4-ae65-015e0bd12738}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
       <Filter>Shader File</Filter>
     </None>
-    <None Include="Resources\shader\Sprite.hlsli">
-      <Filter>Shader File</Filter>
-    </None>
     <None Include="Resources\shader\OBJ.hlsli">
-      <Filter>Shader File</Filter>
-    </None>
-    <None Include="Resources\shader\Particle.hlsli">
       <Filter>Shader File</Filter>
     </None>
     <None Include="Resources\shader\FBX\FBX.hlsli">
@@ -155,6 +155,12 @@
     </None>
     <None Include="Resources\shader\Toon\Toon.hlsli">
       <Filter>Shader File\Toon</Filter>
+    </None>
+    <None Include="Resources\shader\Sprite\Sprite.hlsli">
+      <Filter>Shader File\Sprite</Filter>
+    </None>
+    <None Include="Resources\shader\Particle\Particle.hlsli">
+      <Filter>Shader File\Particle</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -164,25 +170,10 @@
     <FxCompile Include="..\..\CG2\ウィンドゥ表示\Resources\shader\BasicVS.hlsl">
       <Filter>Shader File</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\SpriteVS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\SpritePS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shader\OBJPS.hlsl">
       <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\OBJVS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\ParticleGS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\ParticlePS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\ParticleVS.hlsl">
       <Filter>Shader File</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
@@ -196,6 +187,21 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\Toon\ToonPS.hlsl">
       <Filter>Shader File\Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Sprite\SpritePS.hlsl">
+      <Filter>Shader File\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Sprite\SpriteVS.hlsl">
+      <Filter>Shader File\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Particle\ParticleGS.hlsl">
+      <Filter>Shader File\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Particle\ParticlePS.hlsl">
+      <Filter>Shader File\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Particle\ParticleVS.hlsl">
+      <Filter>Shader File\Particle</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

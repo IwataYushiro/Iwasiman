@@ -75,9 +75,8 @@ void GamePlayScene::Initialize()
 
 void GamePlayScene::Update()
 {
-	//pm1_->Active(particle1_, { 120.0f ,120.0f,120.0f }, { 0.2f,0.2f,0.2f }, { 0.0f,0.001f,0.0f }, 15, { 10.0f, 0.0f });
-	//pm2_->Active(particle2_, { 100.0f,120.0f,120.0f }, { 0.2f,0.2f,0.2f }, { 0.0f,0.001f,0.0f }, 5, { 6.0f,0.0f });
-
+	//全方位にはじける(クリア演出に使えそう)
+	pm1_->ActiveZ(particle1_,{object3DPlayer_->GetPosition()}, {0.0f ,0.0f,25.0f}, {4.2f,4.2f,0.0f}, {0.0f,0.001f,0.0f}, 10, {3.0f, 0.0f});
 	//モデル呼び出し例
 	player_->Update();
 	enemy_->Update();
@@ -136,8 +135,6 @@ void GamePlayScene::Draw()
 	//前景スプライト
 
 	//ImGuiの表示
-
-	imguiManager_->Draw();
 }
 
 void GamePlayScene::Finalize()

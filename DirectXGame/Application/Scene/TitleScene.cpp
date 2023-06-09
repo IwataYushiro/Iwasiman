@@ -63,7 +63,7 @@ void TitleScene::Update()
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
-		//sceneManager_->ChangeScene("GAMEPLAY");
+		sceneManager_->ChangeScene("GAMEPLAY");
 	}
 	camera_->Update();
 	light_->Update();

@@ -8,6 +8,8 @@ public:
     PostEffect();
     //初期化
     void Initialize(SpriteCommon* spCommon);
+    //更新
+    void Update();
     //頂点バッファ生成
     void CreateVertexBuffer();
     //定数バッファ生成

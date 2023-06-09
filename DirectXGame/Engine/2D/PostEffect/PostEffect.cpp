@@ -31,6 +31,10 @@ void PostEffect::Initialize(SpriteCommon* spCommon)
 	CreateDSV();
 }
 
+void PostEffect::Update()
+{
+}
+
 void PostEffect::CreateVertexBuffer()
 {
 	HRESULT result;
