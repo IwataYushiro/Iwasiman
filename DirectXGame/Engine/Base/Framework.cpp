@@ -43,12 +43,9 @@ void Framework::Initialize()
 	DirectionalLight::StaticInitialize(dxCommon_->GetDevice());
 	
 	//ポストエフェクト
-	UINT post = 100;
-	sprCommon_->LoadTexture(post, "white1x1.png");
 	postEffect_ = new PostEffect();
-	postEffect_->Initialize(sprCommon_, post);
-	postEffect_->SetSize({ 700.0f,500.0f });
-
+	postEffect_->Initialize(sprCommon_);
+	
 }
 
 void Framework::Update()
@@ -60,7 +57,6 @@ void Framework::Update()
 		EndGame_ = true;
 	}
 	//ポストエフェクト
-	postEffect_->Update();
 
 	//入力の更新
 	input_->Update();

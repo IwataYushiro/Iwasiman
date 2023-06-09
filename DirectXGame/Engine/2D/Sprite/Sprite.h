@@ -190,7 +190,7 @@ public://アクセッサ置き場
 
 	const XMFLOAT2& GetTextureSize()const { return textureSize_; }
 
-private:
+protected:
 	//テクスチャサイズをイメージに合わせる
 	void AdjustTextureSize();
 

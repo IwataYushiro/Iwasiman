@@ -7,7 +7,15 @@ public:
     //コンストラクタ
     PostEffect();
     //初期化
-    void Initialize(SpriteCommon* spCommon, uint32_t textureIndex = UINT32_MAX);
+    void Initialize(SpriteCommon* spCommon);
+    //頂点バッファ生成
+    void CreateVertexBuffer();
+    //定数バッファ生成
+    void CreateConstBuffer();
+    //マテリアル
+    void CreateConstBufferMaterialPost();
+    //座標
+    void CreateConstBufferTransformPost();
     //テクスチャ生成
     void CreateTexture();
     // SRV生成

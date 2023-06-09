@@ -10,13 +10,15 @@ PostEffect::PostEffect()
 {
 }
 
-void PostEffect::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
+void PostEffect::Initialize(SpriteCommon* spCommon)
 {
 	assert(spCommon);
 	this->spCommon_ = spCommon;
 
-	//基盤クラスとしての初期化
-	Sprite::Initialize(spCommon_, textureIndex);
+	//頂点バッファ
+	CreateVertexBuffer();
+	//定数バッファ
+	CreateConstBuffer();
 	//テクスチャ生成
 	CreateTexture();
 	// SRV生成
@@ -27,6 +29,118 @@ void PostEffect::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 	CreateDepthBuffer();
 	// DSV生成
 	CreateDSV();
+}
+
+void PostEffect::CreateVertexBuffer()
+{
+	HRESULT result;
+	//頂点データ
+	Vertex verticesPost[verticesCount] = {
+		{{-0.5f,-0.5f,0.0f},{0.0f,1.0f}},	//左下
+		{{-0.5f,+0.5f,0.0f},{0.0f,0.0f}},		//左上
+		{{+0.5f,-0.5f,0.0f},{1.0f,1.0f}},	//右下
+		{{+0.5f,+0.5f,0.0f},{1.0f,0.0f}},	//右上
+	};
+
+	//サイズ
+	UINT sizeVB = static_cast<UINT>(sizeof(verticesPost[0]) * _countof(verticesPost));
+
+	//頂点バッファ
+	D3D12_HEAP_PROPERTIES heapProp{};	//ヒープ設定
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//GPU転送用
+	//リソース設定
+	//頂点バッファ生成
+	result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
+		&heapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(Vertex)*verticesCount),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertBuff));
+
+	assert(SUCCEEDED(result));
+
+	//データ転送
+	Vertex* vertMapPost = nullptr;
+	//GPU上のバッファに対応した仮想メモリを取得
+	result = vertBuff->Map(0, nullptr, (void**)&vertMapPost);
+	assert(SUCCEEDED(result));
+
+	//全頂点に対して
+	for (int i = 0; i < _countof(verticesPost); i++)
+	{
+		vertMapPost[i] = verticesPost[i];	//座標をコピー
+	}
+	//繋がりを解除
+	vertBuff->Unmap(0, nullptr);
+
+	//頂点バッファビュー
+	//GPU仮想アドレス
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	//頂点バッファのサイズ
+	vbView.SizeInBytes = sizeof(Vertex) * 4;
+	//頂点一つ分のサイズ
+	vbView.StrideInBytes = sizeof(Vertex);
+}
+
+void PostEffect::CreateConstBuffer()
+{
+	//定数バッファ
+	//マテリアル
+	CreateConstBufferMaterialPost();
+	constMapMaterial->color = this->color_;
+	
+
+	//変換行列
+	CreateConstBufferTransformPost();
+	constMapTransform->mat = XMMatrixIdentity();
+	
+	constBuffMaterial->Unmap(0, nullptr);
+	constBuffTransform->Unmap(0, nullptr);
+}
+
+void PostEffect::CreateConstBufferMaterialPost()
+{
+	HRESULT result;
+
+	D3D12_HEAP_PROPERTIES cbHeapProp{};		//ヒープ設定
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUへの転送用
+	
+	//定数バッファの生成
+	result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
+		&cbHeapProp,//ヒープ設定
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataMaterial) + 0xff) & ~0xff),//リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffMaterial));
+	assert(SUCCEEDED(result));
+
+	//定数バッファのマッピング
+	result = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);//マッピング
+	assert(SUCCEEDED(result));
+}
+
+void PostEffect::CreateConstBufferTransformPost()
+{
+	HRESULT result;
+
+	D3D12_HEAP_PROPERTIES cbHeapProp{};		//ヒープ設定
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUへの転送用
+	//リソース設定
+	//定数バッファの生成
+	result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
+		&cbHeapProp,//ヒープ設定
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff), //リソース設定
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffTransform));
+	assert(SUCCEEDED(result));
+
+	//定数バッファのマッピング
+	result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform);//マッピング
+	assert(SUCCEEDED(result));
 }
 
 void PostEffect::CreateTexture()
