@@ -142,6 +142,9 @@
     <Filter Include="Shader File\Particle">
       <UniqueIdentifier>{6246361f-35d3-4cd4-ae65-015e0bd12738}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader File\PostEffect">
+      <UniqueIdentifier>{def67072-c1ae-4ba4-afe9-4eebe39ae972}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -161,6 +164,9 @@
     </None>
     <None Include="Resources\shader\Particle\Particle.hlsli">
       <Filter>Shader File\Particle</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\Test.hlsli">
+      <Filter>Shader File\PostEffect</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +208,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\Particle\ParticleVS.hlsl">
       <Filter>Shader File\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\TestPS.hlsl">
+      <Filter>Shader File\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\TestVS.hlsl">
+      <Filter>Shader File\PostEffect</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

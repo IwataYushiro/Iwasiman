@@ -28,6 +28,8 @@ public:
     void CreateDepthBuffer();
     // DSV生成
     void CreateDSV();
+    //パイプライン生成
+    void CreateGraphicsPipelineState();
     
     //描画
     void Draw(ID3D12GraphicsCommandList* cmdList);
@@ -48,7 +50,10 @@ private:
     ComPtr<ID3D12DescriptorHeap> descHeapRTV;
     //DSV用デスクリプタヒープ
     ComPtr<ID3D12DescriptorHeap> descHeapDSV;
-    
+    //グラフィックスパイプライン
+    ComPtr<ID3D12PipelineState> pipelineState;
+    //ルートシグネチャ
+    ComPtr<ID3D12RootSignature> rootSignature;
     //画面クリアカラー
     static const float clearcolor[4];
 
