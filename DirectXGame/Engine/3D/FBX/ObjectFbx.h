@@ -87,7 +87,7 @@ protected://メンバ変数
 	// ローカル座標
 	XMFLOAT3 position_ = { 0.0f,0.0f,0.0f };
 	// ローカルワールド行列
-	XMMATRIX matWorld_;
+	XMMATRIX matWorld_ = {};
 	// モデル
 	ModelFbx* modelF_ = nullptr;
 	//定数バッファ
@@ -107,7 +107,7 @@ protected://メンバ変数
 	bool isPlayAnimation = false;
 
 	//カメラ
-	Camera* camera_;
+	Camera* camera_ = nullptr;
 public://アクセッサ置き場
 	void SetModelFBX(ModelFbx* modelF) { this->modelF_ = modelF; }
 	void SetCamera(Camera* camera) { this->camera_ = camera; }
