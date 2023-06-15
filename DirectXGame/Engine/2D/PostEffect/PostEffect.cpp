@@ -466,11 +466,7 @@ void PostEffect::CreateGraphicsPipelineState()
 
 void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	//非表示
-	if (GetInvisible())
-	{
-		return;
-	}
+	
 	//パイプラインステートとルートシグネチャの設定
 	spCommon_->GetDxCommon()->GetCommandList()->SetPipelineState(pipelineState.Get());
 	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
