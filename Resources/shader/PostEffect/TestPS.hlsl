@@ -2,11 +2,19 @@
 
 Texture2D<float4> tex : register(t0);	//0番スロットに設定されたテクスチャ
 SamplerState smp      : register(s0);	//0番スロットに設定されたサンプラー
+//ウインドウサイズ
+float2 windowsSize = { 1280.0f, 720.0f };
 
 float4 main(VSOutput input) : SV_TARGET
 {
-    float4 texcolor = tex.Sample(smp, input.uv);
-    return float4(texcolor.rgb, 1.0f);
+    //float4 texcolor = tex.Sample(smp, input.uv);
+    //return float4(texcolor.rgb, 1.0f);
+    float density = 100;
+	//長方形モザイク
+	float4 col = tex.Sample(smp, floor(input.uv * density) / density);
+	//正方形モザイク
+    //float4 col = tex.Sample(smp, floor(input.uv * windowsSize / density) * density / windowsSize);
+    return col;
 }
 
 /*
