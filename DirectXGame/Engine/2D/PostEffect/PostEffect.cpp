@@ -44,14 +44,7 @@ void PostEffect::Update()
 void PostEffect::CreateVertexBuffer()
 {
 	HRESULT result;
-	//頂点データ
-	Vertex verticesPost[verticesCount] = {
-		{{-0.5f,-0.5f,0.0f},{0.0f,1.0f}},	//左下
-		{{-0.5f,+0.5f,0.0f},{0.0f,0.0f}},		//左上
-		{{+0.5f,-0.5f,0.0f},{1.0f,1.0f}},	//右下
-		{{+0.5f,+0.5f,0.0f},{1.0f,0.0f}},	//右上
-	};
-
+	
 	//サイズ
 	UINT sizeVB = static_cast<UINT>(sizeof(verticesPost[0]) * _countof(verticesPost));
 
@@ -98,15 +91,15 @@ void PostEffect::CreateConstBuffer()
 	//定数バッファ
 	//マテリアル
 	CreateConstBufferMaterialPost();
-	constMapMaterial->color = this->color_;
+	constMapMaterialPost->color = this->color_;
 	
 
 	//変換行列
 	CreateConstBufferTransformPost();
-	constMapTransform->mat = XMMatrixIdentity();
+	constMapTransformPost->mat = XMMatrixIdentity();
 	
-	constBuffMaterial->Unmap(0, nullptr);
-	constBuffTransform->Unmap(0, nullptr);
+	constBuffMaterialPost->Unmap(0, nullptr);
+	constBuffTransformPost->Unmap(0, nullptr);
 }
 
 void PostEffect::CreateConstBufferMaterialPost()
@@ -123,11 +116,11 @@ void PostEffect::CreateConstBufferMaterialPost()
 		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataMaterial) + 0xff) & ~0xff),//リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuffMaterial));
+		IID_PPV_ARGS(&constBuffMaterialPost));
 	assert(SUCCEEDED(result));
 
 	//定数バッファのマッピング
-	result = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);//マッピング
+	result = constBuffMaterialPost->Map(0, nullptr, (void**)&constMapMaterialPost);//マッピング
 	assert(SUCCEEDED(result));
 }
 
@@ -145,11 +138,11 @@ void PostEffect::CreateConstBufferTransformPost()
 		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff), //リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuffTransform));
+		IID_PPV_ARGS(&constBuffTransformPost));
 	assert(SUCCEEDED(result));
 
 	//定数バッファのマッピング
-	result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform);//マッピング
+	result = constBuffTransformPost->Map(0, nullptr, (void**)&constMapTransformPost);//マッピング
 	assert(SUCCEEDED(result));
 }
 
@@ -377,7 +370,7 @@ void PostEffect::CreateGraphicsPipelineState()
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	//RGBA全てのチャンネルを描画
 
 	//ブレンド共通設定(これ＋合成で動く)
-	blenddesc.BlendEnable = true;					//ブレンドを有効にする
+	blenddesc.BlendEnable = false;					//ブレンドを有効にする
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;	//加算
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;		//ソースの値を100％使う
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;	//デストの値を0％使う
@@ -479,8 +472,8 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 		return;
 	}
 	//パイプラインステートとルートシグネチャの設定
-	spCommon_->GetDxCommon()->GetCommandList()->SetPipelineState(spCommon_->GetPipelineState());
-	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootSignature(spCommon_->GetRootSignature());
+	spCommon_->GetDxCommon()->GetCommandList()->SetPipelineState(pipelineState.Get());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	//プリミティブ形状の設定コマンド
 	spCommon_->GetDxCommon()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	
@@ -493,11 +486,11 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 	spCommon_->GetDxCommon()->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
 
 	//定数バッファビュー(CBVの設定コマンド)
-	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuffMaterial->GetGPUVirtualAddress());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuffMaterialPost->GetGPUVirtualAddress());
 
-	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(2, constBuffTransform->GetGPUVirtualAddress());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(2, constBuffTransformPost->GetGPUVirtualAddress());
 	//描画コマンド
-	spCommon_->GetDxCommon()->GetCommandList()->DrawInstanced(_countof(vertices), 1, 0, 0);
+	spCommon_->GetDxCommon()->GetCommandList()->DrawInstanced(_countof(verticesPost), 1, 0, 0);
 
 }
 

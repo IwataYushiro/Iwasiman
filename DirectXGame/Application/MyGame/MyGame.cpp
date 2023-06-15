@@ -24,14 +24,14 @@ void MyGame::Update()
 void MyGame::Draw()
 {
 	postEffect_->PreDraw(dxCommon_->GetCommandList());
-	//ポストエフェクトの描画
-	postEffect_->Draw(dxCommon_->GetCommandList());
-	
+	sceneManager_->Draw();
 	postEffect_->PostDraw(dxCommon_->GetCommandList());
 
 	//描画前処理
 	dxCommon_->PreDraw();
-	sceneManager_->Draw();
+	
+	//ポストエフェクトの描画
+	postEffect_->Draw(dxCommon_->GetCommandList());
 	
 	//ImGuiの表示
 	imguiManager_->Draw();

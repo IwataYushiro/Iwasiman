@@ -40,6 +40,23 @@ public:
     void PostDraw(ID3D12GraphicsCommandList* cmdList);
 
 private:
+    //頂点データ
+    Vertex verticesPost[verticesCount] = {
+        {{-0.5f,-0.5f,0.0f},{0.0f,1.0f}},	//左下
+        {{-0.5f,+0.5f,0.0f},{0.0f,0.0f}},		//左上
+        {{+0.5f,-0.5f,0.0f},{1.0f,1.0f}},	//右下
+        {{+0.5f,+0.5f,0.0f},{1.0f,0.0f}},	//右上
+    };
+    //定数バッファのGPUリソースのポインタ
+    ComPtr<ID3D12Resource> constBuffMaterialPost = nullptr;
+    //マッピング用のポインタ
+    ConstBufferDataMaterial* constMapMaterialPost = nullptr;
+
+    //定数バッファのGPUリソースのポインタ
+    ComPtr<ID3D12Resource> constBuffTransformPost = nullptr;
+    //マッピング用のポインタ
+    ConstBufferDataTransform* constMapTransformPost = nullptr;
+
     //テクスチャバッファ
     ComPtr<ID3D12Resource> texBuff;
     //SRV用デスクリプタヒープ

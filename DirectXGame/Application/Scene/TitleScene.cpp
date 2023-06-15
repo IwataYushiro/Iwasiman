@@ -78,7 +78,7 @@ void TitleScene::Draw()
 	//背景スプライト描画前処理
 	spCommon_->PreDraw();
 	//スプライト描画
-	//spriteTitle_->Draw();
+	spriteTitle_->Draw();
 
 
 	//エフェクト描画前処理
