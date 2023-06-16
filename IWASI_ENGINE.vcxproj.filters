@@ -145,6 +145,9 @@
     <Filter Include="Shader File\PostEffect">
       <UniqueIdentifier>{def67072-c1ae-4ba4-afe9-4eebe39ae972}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader File\PostEffect\Test">
+      <UniqueIdentifier>{5c68dfca-52a2-49e5-9dd1-e49e70ddb044}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">

@@ -69,7 +69,7 @@ float4 main(VSOutput input) : SV_TARGET
 }
 
 
-正方形モザイクw
+正方形モザイク
 float4 main(VSOutput input) : SV_TARGET
 {
    

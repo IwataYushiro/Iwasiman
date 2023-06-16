@@ -40,11 +40,17 @@ public://構造体類
         XMFLOAT3 pos;		//xyz座標
         XMFLOAT2 uv;		//uv座標
     };
+private://静的メンバ変数
+    //ベースディレクトリ
+    static const std::string baseDirectory;
+    static const std::string DirectoryVS;
+    static const std::string DirectoryPS;
+
 public:
     //コンストラクタ
     PostEffect();
     //初期化
-    void Initialize(SpriteCommon* spCommon);
+    void Initialize(SpriteCommon* spCommon, const std::string& fileName="Test");
     //更新
     void Update();
     //頂点バッファ生成
@@ -66,7 +72,7 @@ public:
     // DSV生成
     void CreateDSV();
     //パイプライン生成
-    void CreateGraphicsPipelineState();
+    void CreateGraphicsPipelineState(const std::string& fileName);
 
     //描画
     void Draw(ID3D12GraphicsCommandList* cmdList);

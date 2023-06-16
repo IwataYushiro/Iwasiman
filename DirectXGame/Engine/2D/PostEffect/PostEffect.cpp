@@ -10,11 +10,15 @@ using namespace DirectX;
 //静的メンバ変数の実体
 const float PostEffect::clearcolor[4] = { 0.25f,0.5f,0.1f,0.0f };
 
+const std::string PostEffect::baseDirectory = "Resources/shader/PostEffect/";
+const std::string PostEffect::DirectoryVS = "VS.hlsl";
+const std::string PostEffect::DirectoryPS = "PS.hlsl";
+
 PostEffect::PostEffect()
 {
 }
 
-void PostEffect::Initialize(SpriteCommon* spCommon)
+void PostEffect::Initialize(SpriteCommon* spCommon, const std::string& fileName)
 {
 	assert(spCommon);
 	this->spCommon_ = spCommon;
@@ -34,7 +38,7 @@ void PostEffect::Initialize(SpriteCommon* spCommon)
 	// DSV生成
 	CreateDSV();
 	//グラフィックスパイプライン
-	CreateGraphicsPipelineState();
+	CreateGraphicsPipelineState(fileName);
 }
 
 void PostEffect::Update()
@@ -277,10 +281,32 @@ void PostEffect::CreateDSV()
 	depthBuff.Get(), &dsvDesc, descHeapDSV->GetCPUDescriptorHandleForHeapStart());
 }
 
-void PostEffect::CreateGraphicsPipelineState()
+void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 {
 	HRESULT result;
-	
+	//頂点シェーダー
+	//ディレクトリパスとファイル名を連結してフルパスを得る
+	std::string fullPathV = baseDirectory + fileName + DirectoryVS;
+
+	//ワイド文字列に変換した際の文字列バッファサイズを計算
+	int filePathBufferSizeV = MultiByteToWideChar(CP_ACP, 0, fullPathV.c_str(), -1, nullptr, 0);
+
+	//ワイド文字列に変換
+	std::vector<wchar_t> wfilePathV(filePathBufferSizeV);
+	MultiByteToWideChar(CP_ACP, 0, fullPathV.c_str(), -1, wfilePathV.data(), filePathBufferSizeV);
+
+	//ピクセルシェーダー
+	//ディレクトリパスとファイル名を連結してフルパスを得る
+	std::string fullPathP = baseDirectory + fileName + DirectoryPS;
+
+	//ワイド文字列に変換した際の文字列バッファサイズを計算
+	int filePathBufferSizeP = MultiByteToWideChar(CP_ACP, 0, fullPathP.c_str(), -1, nullptr, 0);
+
+	//ワイド文字列に変換
+	std::vector<wchar_t> wfilePathP(filePathBufferSizeP);
+	MultiByteToWideChar(CP_ACP, 0, fullPathP.c_str(), -1, wfilePathP.data(), filePathBufferSizeP);
+
+
 	//シェーダオブジェクト
 	ComPtr<ID3DBlob> vsBlob = nullptr;		//頂点シェーダーオブジェクト
 	ComPtr<ID3DBlob> psBlob = nullptr;		//ピクセルシェーダーオブジェクト
@@ -288,7 +314,7 @@ void PostEffect::CreateGraphicsPipelineState()
 
 	//頂点シェーダ読み込み
 	result = D3DCompileFromFile(
-		L"Resources/shader/PostEffect/TestVS.hlsl",					//シェーダファイル名
+		wfilePathV.data(),					//シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,					//インクルード出来るように
 		"main", "vs_5_0",									//エントリーポイント名、シェーダモデル
@@ -310,7 +336,7 @@ void PostEffect::CreateGraphicsPipelineState()
 
 	//ピクセルシェーダ読み込み
 	result = D3DCompileFromFile(
-		L"Resources/shader/PostEffect/TestPS.hlsl",					//シェーダファイル名
+		wfilePathP.data(),					//シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,					//インクルード出来るように
 		"main", "ps_5_0",									//エントリーポイント名、シェーダモデル
