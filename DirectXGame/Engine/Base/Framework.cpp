@@ -67,7 +67,7 @@ void Framework::Update()
 	ImGui::SetWindowPos(ImVec2(0, 600));
 	ImGui::SetWindowSize(ImVec2(800, 100));
 	ImGui::Text("0 change");
-	ImGui::Text(" normal -> cold -> sepia");
+	ImGui::Text(" normal -> cold -> sepia -> negapozi -> blur -> grayscale -> mosaic -> uv shift");
 
 	ImGui::End();
 #endif // DEBUG

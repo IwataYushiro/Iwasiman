@@ -54,39 +54,29 @@ void MyGame::Finalize()
 
 void MyGame::PostInitialize()
 {
-	pe1_ = new PostEffect();
-	pe1_->Initialize(sprCommon_);
+	pe = new PostEffect[POST_NUM];
 
-	pe2_ = new PostEffect();
-	pe2_->Initialize(sprCommon_, "Cold");
-
-	pe3_ = new PostEffect();
-	pe3_->Initialize(sprCommon_, "Sepia");
+	pe[0].Initialize(sprCommon_);
+	pe[1].Initialize(sprCommon_, "Cold");
+	pe[2].Initialize(sprCommon_, "Sepia");
+	pe[3].Initialize(sprCommon_, "NegaPozi");
+	pe[4].Initialize(sprCommon_, "GaussianBlur");
+	pe[5].Initialize(sprCommon_, "GrayScale");
+	pe[6].Initialize(sprCommon_, "Mosaic");
+	pe[7].Initialize(sprCommon_, "UVShift");
 }
 
 void MyGame::PostDraw()
 {
-	//合計
-	const int POST_NUM = 3;
+	int Variation = postCount % POST_NUM;
 	//ポストエフェクトの描画
-	if (postCount % POST_NUM == 0)
-	{
-		pe1_->Draw(dxCommon_->GetCommandList());
-	}
-	else if (postCount % POST_NUM == 1)
-	{
-		pe2_->Draw(dxCommon_->GetCommandList());
-	}
-	else if (postCount % POST_NUM == 2)
-	{
-		pe3_->Draw(dxCommon_->GetCommandList());
-	}
+	pe[Variation].Draw(dxCommon_->GetCommandList());
+	
 }
 
 
 void MyGame::PostDelete()
 {
-	delete pe1_;
-	delete pe2_;
-	delete pe3_;
+	delete[] pe;
+
 }
