@@ -176,7 +176,9 @@
     <None Include="Resources\shader\FBX\FBX.hlsli" />
     <None Include="Resources\shader\OBJ.hlsli" />
     <None Include="Resources\shader\Particle\Particle.hlsli" />
-    <None Include="Resources\shader\PostEffect\Test.hlsli" />
+    <None Include="Resources\shader\PostEffect\Cold\Cold.hlsli" />
+    <None Include="Resources\shader\PostEffect\Sepia\Sepia.hlsli" />
+    <None Include="Resources\shader\PostEffect\Test\Test.hlsli" />
     <None Include="Resources\shader\Sprite\Sprite.hlsli" />
     <None Include="Resources\shader\Toon\Toon.hlsli" />
   </ItemGroup>
@@ -225,11 +227,27 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\TestPS.hlsl">
+    <FxCompile Include="Resources\shader\PostEffect\Cold\ColdPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\TestVS.hlsl">
+    <FxCompile Include="Resources\shader\PostEffect\Cold\ColdVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Sepia\SepiaPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Sepia\SepiaVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Test\TestPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Test\TestVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>

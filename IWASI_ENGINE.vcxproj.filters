@@ -148,6 +148,12 @@
     <Filter Include="Shader File\PostEffect\Test">
       <UniqueIdentifier>{5c68dfca-52a2-49e5-9dd1-e49e70ddb044}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader File\PostEffect\Cold">
+      <UniqueIdentifier>{60f7b92d-132e-414e-8181-595c2f3886a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\Sepia">
+      <UniqueIdentifier>{0ba9181a-c278-4583-86c3-b20cb110fb19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -168,8 +174,14 @@
     <None Include="Resources\shader\Particle\Particle.hlsli">
       <Filter>Shader File\Particle</Filter>
     </None>
-    <None Include="Resources\shader\PostEffect\Test.hlsli">
-      <Filter>Shader File\PostEffect</Filter>
+    <None Include="Resources\shader\PostEffect\Test\Test.hlsli">
+      <Filter>Shader File\PostEffect\Test</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\Cold\Cold.hlsli">
+      <Filter>Shader File\PostEffect\Cold</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\Sepia\Sepia.hlsli">
+      <Filter>Shader File\PostEffect\Sepia</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -212,11 +224,23 @@
     <FxCompile Include="Resources\shader\Particle\ParticleVS.hlsl">
       <Filter>Shader File\Particle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\TestPS.hlsl">
-      <Filter>Shader File\PostEffect</Filter>
+    <FxCompile Include="Resources\shader\PostEffect\Test\TestPS.hlsl">
+      <Filter>Shader File\PostEffect\Test</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\TestVS.hlsl">
-      <Filter>Shader File\PostEffect</Filter>
+    <FxCompile Include="Resources\shader\PostEffect\Test\TestVS.hlsl">
+      <Filter>Shader File\PostEffect\Test</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Cold\ColdPS.hlsl">
+      <Filter>Shader File\PostEffect\Cold</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Cold\ColdVS.hlsl">
+      <Filter>Shader File\PostEffect\Cold</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Sepia\SepiaPS.hlsl">
+      <Filter>Shader File\PostEffect\Sepia</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Sepia\SepiaVS.hlsl">
+      <Filter>Shader File\PostEffect\Sepia</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

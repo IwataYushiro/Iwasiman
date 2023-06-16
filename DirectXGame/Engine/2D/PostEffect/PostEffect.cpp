@@ -14,6 +14,10 @@ const std::string PostEffect::baseDirectory = "Resources/shader/PostEffect/";
 const std::string PostEffect::DirectoryVS = "VS.hlsl";
 const std::string PostEffect::DirectoryPS = "PS.hlsl";
 
+Microsoft::WRL::ComPtr<ID3D12Resource> PostEffect::texBuff;
+Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> PostEffect::descHeapRTV;
+Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> PostEffect::descHeapDSV;
+
 PostEffect::PostEffect()
 {
 }
@@ -286,7 +290,8 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 	HRESULT result;
 	//頂点シェーダー
 	//ディレクトリパスとファイル名を連結してフルパスを得る
-	std::string fullPathV = baseDirectory + fileName + DirectoryVS;
+	std::string fullPathV = baseDirectory + fileName + "/" + fileName + DirectoryVS;
+	//Resources/shader/PostEffect/ Test / Test VS.hlsl
 
 	//ワイド文字列に変換した際の文字列バッファサイズを計算
 	int filePathBufferSizeV = MultiByteToWideChar(CP_ACP, 0, fullPathV.c_str(), -1, nullptr, 0);
@@ -297,7 +302,7 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 
 	//ピクセルシェーダー
 	//ディレクトリパスとファイル名を連結してフルパスを得る
-	std::string fullPathP = baseDirectory + fileName + DirectoryPS;
+	std::string fullPathP = baseDirectory + fileName + "/" + fileName + DirectoryPS;
 
 	//ワイド文字列に変換した際の文字列バッファサイズを計算
 	int filePathBufferSizeP = MultiByteToWideChar(CP_ACP, 0, fullPathP.c_str(), -1, nullptr, 0);

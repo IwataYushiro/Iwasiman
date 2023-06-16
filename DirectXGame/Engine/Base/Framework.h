@@ -9,7 +9,6 @@
 #include "Input.h"
 #include "SceneManager.h"
 #include "SpriteCommon.h"
-#include "PostEffect.h"
 
 //ゲーム全体
 class Framework
@@ -49,8 +48,7 @@ protected:
 	ImGuiManager* imguiManager_ = nullptr;
 	//カメラ
 	Camera* camera_ = nullptr;
-	//ポストエフェクト
-	PostEffect* postEffect_ = nullptr;
+	
 	//ゲーム終了フラグ
 	bool EndGame_ = false;
 };

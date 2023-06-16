@@ -42,9 +42,7 @@ void Framework::Initialize()
 	//ライト
 	DirectionalLight::StaticInitialize(dxCommon_->GetDevice());
 	
-	//ポストエフェクト
-	postEffect_ = new PostEffect();
-	postEffect_->Initialize(sprCommon_);
+	
 
 }
 
@@ -65,7 +63,13 @@ void Framework::Update()
 	imguiManager_->Begin();
 #ifdef _DEBUG
 	camera_->DebugCamera();
+	ImGui::Begin("Post Loop");
+	ImGui::SetWindowPos(ImVec2(0, 600));
+	ImGui::SetWindowSize(ImVec2(800, 100));
+	ImGui::Text("0 change");
+	ImGui::Text(" normal -> cold -> sepia");
 
+	ImGui::End();
 #endif // DEBUG
 
 	imguiManager_->End();
@@ -74,8 +78,6 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
-	//ポストエフェクト
-	delete postEffect_;
 	//scene
 	sceneManager_->Finalize();
 	delete sceneFactory_;
