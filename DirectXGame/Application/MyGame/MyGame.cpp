@@ -30,16 +30,21 @@ void MyGame::Update()
 
 void MyGame::Draw()
 {
-	PostEffect::PreDraw(dxCommon_->GetCommandList());
+	pe1->PreDraw(dxCommon_->GetCommandList());
 	sceneManager_->Draw();
-	PostEffect::PostDraw(dxCommon_->GetCommandList());
+	pe1->PostDraw(dxCommon_->GetCommandList());
+
+	pe2->PreDraw(dxCommon_->GetCommandList());
+	pe1->Draw(dxCommon_->GetCommandList());
+	pe2->PostDraw(dxCommon_->GetCommandList());
 
 	//描画前処理
 	dxCommon_->PreDraw();
 	
 	//ポストエフェクトの描画
-	PostDraw();
-	
+	//PostDraw();
+	pe2->Draw(dxCommon_->GetCommandList());
+
 	//ImGuiの表示
 	imguiManager_->Draw();
 	//描画後処理
@@ -54,7 +59,7 @@ void MyGame::Finalize()
 
 void MyGame::PostInitialize()
 {
-	pe = new PostEffect[POST_NUM];
+	/*pe = new PostEffect[POST_NUM];
 
 	pe[0].Initialize(sprCommon_);
 	pe[1].Initialize(sprCommon_, "Cold");
@@ -63,20 +68,30 @@ void MyGame::PostInitialize()
 	pe[4].Initialize(sprCommon_, "GaussianBlur");
 	pe[5].Initialize(sprCommon_, "GrayScale");
 	pe[6].Initialize(sprCommon_, "Mosaic");
-	pe[7].Initialize(sprCommon_, "UVShift");
+	pe[7].Initialize(sprCommon_, "UVShift");*/
+
+	pe1 = new PostEffect();
+	pe2 = new PostEffect();
+
+	pe1->Initialize(sprCommon_, "Cold");
+	pe2->Initialize(sprCommon_, "UVShiftBlur");
 }
 
 void MyGame::PostDraw()
 {
-	int Variation = postCount % POST_NUM;
+	//int Variation = postCount % POST_NUM;
 	//ポストエフェクトの描画
-	pe[Variation].Draw(dxCommon_->GetCommandList());
+	//pe[Variation].Draw(dxCommon_->GetCommandList());
+	
+
 	
 }
 
 
 void MyGame::PostDelete()
 {
-	delete[] pe;
+	//delete[] pe;
 
+	delete pe1;
+	delete pe2;
 }

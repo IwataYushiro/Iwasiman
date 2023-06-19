@@ -24,6 +24,9 @@ private:
 	//合計
 	const int POST_NUM = 8;
 	PostEffect* pe;
+
+	PostEffect* pe1 = nullptr;
+	PostEffect* pe2 = nullptr;
 	//切り替え用カウント
 	int postCount = 0;
 

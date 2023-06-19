@@ -169,6 +169,9 @@
     <Filter Include="Shader File\PostEffect\UVShift">
       <UniqueIdentifier>{dd9eb7d1-1f28-4364-8f19-1a266adfd66c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader File\PostEffect\UVShiftBlur">
+      <UniqueIdentifier>{8a449abb-d6da-4b07-a415-7c8b7c9a8b89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -212,6 +215,9 @@
     </None>
     <None Include="Resources\shader\PostEffect\UVShift\UVShift.hlsli">
       <Filter>Shader File\PostEffect\UVShift</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlur.hlsli">
+      <Filter>Shader File\PostEffect\UVShiftBlur</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +307,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\PostEffect\UVShift\UVShiftVS.hlsl">
       <Filter>Shader File\PostEffect\UVShift</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlurPS.hlsl">
+      <Filter>Shader File\PostEffect\UVShiftBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlurVS.hlsl">
+      <Filter>Shader File\PostEffect\UVShiftBlur</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

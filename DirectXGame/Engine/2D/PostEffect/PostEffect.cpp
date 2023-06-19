@@ -14,10 +14,6 @@ const std::string PostEffect::baseDirectory = "Resources/shader/PostEffect/";
 const std::string PostEffect::DirectoryVS = "VS.hlsl";
 const std::string PostEffect::DirectoryPS = "PS.hlsl";
 
-Microsoft::WRL::ComPtr<ID3D12Resource> PostEffect::texBuff;
-Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> PostEffect::descHeapRTV;
-Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> PostEffect::descHeapDSV;
-
 PostEffect::PostEffect()
 {
 }

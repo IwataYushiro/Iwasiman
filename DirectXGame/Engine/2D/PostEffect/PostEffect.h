@@ -77,10 +77,10 @@ public:
     //描画
     void Draw(ID3D12GraphicsCommandList* cmdList);
     //描画前処理
-    static void PreDraw(ID3D12GraphicsCommandList* cmdList);
+    void PreDraw(ID3D12GraphicsCommandList* cmdList);
 
     //描画後処理
-    static void PostDraw(ID3D12GraphicsCommandList* cmdList);
+    void PostDraw(ID3D12GraphicsCommandList* cmdList);
 
 private:
     //頂点データ
@@ -107,15 +107,15 @@ private:
     //頂点バッファビュー
     D3D12_VERTEX_BUFFER_VIEW vbView{};
     //テクスチャバッファ
-    static ComPtr<ID3D12Resource> texBuff;
+    ComPtr<ID3D12Resource> texBuff;
     //SRV用デスクリプタヒープ
     ComPtr<ID3D12DescriptorHeap> descHeapSRV;
     //深度バッファ
     ComPtr<ID3D12Resource> depthBuff;
     //RTV用デスクリプタヒープ
-    static ComPtr<ID3D12DescriptorHeap> descHeapRTV;
+    ComPtr<ID3D12DescriptorHeap> descHeapRTV;
     //DSV用デスクリプタヒープ
-    static ComPtr<ID3D12DescriptorHeap> descHeapDSV;
+    ComPtr<ID3D12DescriptorHeap> descHeapDSV;
     //グラフィックスパイプライン
     ComPtr<ID3D12PipelineState> pipelineState;
     //ルートシグネチャ
