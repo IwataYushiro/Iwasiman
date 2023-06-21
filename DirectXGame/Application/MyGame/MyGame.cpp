@@ -59,10 +59,10 @@ void MyGame::PostInitialize()
 	pe = new PostEffect[POST_NUM];
 
 	pe[0].Initialize(sprCommon_);
-	pe[1].Initialize(sprCommon_, "Cold");
+	pe[1].Initialize(sprCommon_, "GaussianBlur");
 	pe[2].Initialize(sprCommon_, "Sepia");
-	pe[3].Initialize(sprCommon_, "NegaPozi");
-	pe[4].Initialize(sprCommon_, "GaussianBlur");
+	pe[3].Initialize(sprCommon_, "Cold");
+	pe[4].Initialize(sprCommon_, "NegaPozi");
 	pe[5].Initialize(sprCommon_, "GrayScale");
 	pe[6].Initialize(sprCommon_, "Mosaic");
 	pe[7].Initialize(sprCommon_, "UVShift");
