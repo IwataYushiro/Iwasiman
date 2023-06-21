@@ -107,7 +107,7 @@ private:
     //頂点バッファビュー
     D3D12_VERTEX_BUFFER_VIEW vbView{};
     //テクスチャバッファ
-    ComPtr<ID3D12Resource> texBuff;
+    ComPtr<ID3D12Resource> texBuff[2];
     //SRV用デスクリプタヒープ
     ComPtr<ID3D12DescriptorHeap> descHeapSRV;
     //深度バッファ

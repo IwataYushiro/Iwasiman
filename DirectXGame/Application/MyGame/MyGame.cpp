@@ -34,16 +34,12 @@ void MyGame::Draw()
 	sceneManager_->Draw();
 	pe1->PostDraw(dxCommon_->GetCommandList());
 
-	pe2->PreDraw(dxCommon_->GetCommandList());
-	pe1->Draw(dxCommon_->GetCommandList());
-	pe2->PostDraw(dxCommon_->GetCommandList());
-
 	//描画前処理
 	dxCommon_->PreDraw();
 	
 	//ポストエフェクトの描画
 	//PostDraw();
-	pe2->Draw(dxCommon_->GetCommandList());
+	pe1->Draw(dxCommon_->GetCommandList());
 
 	//ImGuiの表示
 	imguiManager_->Draw();
@@ -59,22 +55,10 @@ void MyGame::Finalize()
 
 void MyGame::PostInitialize()
 {
-	/*pe = new PostEffect[POST_NUM];
-
-	pe[0].Initialize(sprCommon_);
-	pe[1].Initialize(sprCommon_, "Cold");
-	pe[2].Initialize(sprCommon_, "Sepia");
-	pe[3].Initialize(sprCommon_, "NegaPozi");
-	pe[4].Initialize(sprCommon_, "GaussianBlur");
-	pe[5].Initialize(sprCommon_, "GrayScale");
-	pe[6].Initialize(sprCommon_, "Mosaic");
-	pe[7].Initialize(sprCommon_, "UVShift");*/
-
 	pe1 = new PostEffect();
-	pe2 = new PostEffect();
 
-	pe1->Initialize(sprCommon_, "Cold");
-	pe2->Initialize(sprCommon_, "UVShiftBlur");
+	pe1->Initialize(sprCommon_, "Test");
+
 }
 
 void MyGame::PostDraw()
