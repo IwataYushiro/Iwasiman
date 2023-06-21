@@ -2,6 +2,8 @@
 #include <d3dx12.h>
 #include "WinApp.h"
 #include <d3dcompiler.h>
+#include "Input.h"
+
 
 #pragma comment(lib,"d3dcompiler.lib")
 
@@ -500,7 +502,22 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 
 void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	
+	if (Input::GetInstance()->TriggerKey(DIK_0))
+	{
+		//デスクリプタヒープにSRV作成
+		static int tex = 0;
+		//テクスチャ番号切り替え
+		tex = (tex + 1) % 2;
+		//設定
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+		srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = 1;
+		spCommon_->GetDxCommon()->GetDevice()->CreateShaderResourceView(
+			texBuff[tex].Get(), &srvDesc, descHeapSRV->GetCPUDescriptorHandleForHeapStart());
+
+	}
 	//パイプラインステートとルートシグネチャの設定
 	spCommon_->GetDxCommon()->GetCommandList()->SetPipelineState(pipelineState.Get());
 	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());

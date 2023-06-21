@@ -63,7 +63,7 @@ void TitleScene::Update()
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
-		sceneManager_->ChangeScene("GAMEPLAY");
+		//sceneManager_->ChangeScene("GAMEPLAY");
 	}
 	camera_->Update();
 	light_->Update();
@@ -78,7 +78,7 @@ void TitleScene::Draw()
 	//背景スプライト描画前処理
 	spCommon_->PreDraw();
 	//スプライト描画
-	spriteTitle_->Draw();
+	//spriteTitle_->Draw();
 
 
 	//エフェクト描画前処理
