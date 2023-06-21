@@ -22,14 +22,14 @@ public:
 	
 private:
 	//合計
-	const int POST_NUM = 8;
+	const int POST_NUM = 9;
 	PostEffect* pe;
 
 	PostEffect* pe1 = nullptr;
 	PostEffect* pe2 = nullptr;
 	//切り替え用カウント
 	int postCount = 0;
-
+	int Variation = 0;
 private:
 	void PostInitialize();
 	void PostDraw();

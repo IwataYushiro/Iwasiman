@@ -23,14 +23,14 @@ void TitleScene::Initialize()
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
 
 	//3Dオブジェクト生成
-	//object3DPlayer_ = Object3d::Create();
+	object3DPlayer_ = Object3d::Create();
 	//OBJファイルからモデルデータを読み込む
-	//modelPlayer_ = Model::LoadFromOBJ("chr_sword",true);
+	modelPlayer_ = Model::LoadFromOBJ("player",true);
 	//オブジェクトにモデル紐付ける
-	//object3DPlayer_->SetModel(modelPlayer_);
+	object3DPlayer_->SetModel(modelPlayer_);
 	////カメラも紐づけ
-	//object3DPlayer_->SetCamera(camera_);
-	//object3DPlayer_->SetPosition({ 0.0f,0.0f,-15.0f });
+	object3DPlayer_->SetCamera(camera_);
+	object3DPlayer_->SetPosition({ 10.0f,0.0f,-9.0f });
 	//ライトを生成
 	light_ = DirectionalLight::Create();
 	light_->SetLightColor({ 1.0f,1.0f,1.0f });
@@ -68,7 +68,7 @@ void TitleScene::Update()
 	camera_->Update();
 	light_->Update();
 	//pm1_->Update();
-	//object3DPlayer_->Update();
+	object3DPlayer_->Update();
 	
 	objF->Update();
 }
@@ -92,7 +92,7 @@ void TitleScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
-	//object3DPlayer_->Draw();
+	object3DPlayer_->Draw();
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -113,8 +113,8 @@ void TitleScene::Finalize()
 	//スプライト
 	delete spriteTitle_;
 	//プレイヤー
-	//delete object3DPlayer_;
-	//delete modelPlayer_;
+	delete object3DPlayer_;
+	delete modelPlayer_;
 	//ライト
 	delete light_;
 	//パーティクル
