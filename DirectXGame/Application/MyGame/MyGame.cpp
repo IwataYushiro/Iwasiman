@@ -60,13 +60,14 @@ void MyGame::PostInitialize()
 
 	pe[0].Initialize(sprCommon_);
 	pe[1].Initialize(sprCommon_, "GaussianBlur");
-	pe[2].Initialize(sprCommon_, "Sepia");
-	pe[3].Initialize(sprCommon_, "Cold");
-	pe[4].Initialize(sprCommon_, "NegaPozi");
-	pe[5].Initialize(sprCommon_, "GrayScale");
-	pe[6].Initialize(sprCommon_, "Mosaic");
-	pe[7].Initialize(sprCommon_, "UVShift");
-	pe[8].Initialize(sprCommon_, "UVShiftBlur");
+	pe[2].Initialize(sprCommon_, "Bloom");
+	pe[3].Initialize(sprCommon_, "Sepia");
+	pe[4].Initialize(sprCommon_, "Cold");
+	pe[5].Initialize(sprCommon_, "NegaPozi");
+	pe[6].Initialize(sprCommon_, "GrayScale");
+	pe[7].Initialize(sprCommon_, "Mosaic");
+	pe[8].Initialize(sprCommon_, "UVShift");
+	pe[9].Initialize(sprCommon_, "UVShiftBlur");
 	
 	
 }
