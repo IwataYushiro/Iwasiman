@@ -1,11 +1,10 @@
 #include "Bloom.hlsli"
 
-Texture2D<float4> tex0 : register(t0);	//0番スロットに設定されたテクスチャ
-Texture2D<float4> tex1 : register(t1); //0番スロットに設定されたテクスチャ
+Texture2D<float4> tex : register(t0);	//0番スロットに設定されたテクスチャ
 
 SamplerState smp      : register(s0);	//0番スロットに設定されたサンプラー
 
-float4 highLumi(Texture2D<float4> tex, VSOutput input)
+float4 highLumi(VSOutput input)
 {
     float4 col = tex.Sample(smp, input.uv);
     float grayScale = col.r * 0.299f + col.g * 0.587f + col.b * 0.114f;
@@ -19,7 +18,7 @@ float Gaussian(float2 drawUV, float2 pickUV, float sigma)
     return exp(-(d * d) / (2 * sigma * sigma));
 }
 
-float4 GaussianBlur(Texture2D<float4> tex, VSOutput input) : SV_TARGET
+float4 GaussianBlur(VSOutput input) : SV_TARGET
 {
     float totalWeight = 0.0f, _Sigma = 0.005f, _StepWidth = 0.001f;
     float4 col = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -43,8 +42,8 @@ float4 GaussianBlur(Texture2D<float4> tex, VSOutput input) : SV_TARGET
 
 float4 main(VSOutput input) : SV_TARGET
 {
-    float4 texcolor0 = GaussianBlur(tex0, input);
-    float4 texcolor1 = highLumi(tex1, input);
+    float4 texcolor0 = GaussianBlur(input);
+    float4 texcolor1 = highLumi(input);
     return texcolor0 + texcolor1;
 }
 
