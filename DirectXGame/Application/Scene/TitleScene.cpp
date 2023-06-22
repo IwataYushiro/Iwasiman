@@ -37,7 +37,7 @@ void TitleScene::Initialize()
 	Object3d::SetLight(light_);
 
 	UINT titleTex = 00;
-	spCommon_->LoadTexture(titleTex, "texture/title.png");
+	spCommon_->LoadTexture(titleTex, "texture.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
 
 	//FBX
@@ -78,7 +78,7 @@ void TitleScene::Draw()
 	//背景スプライト描画前処理
 	spCommon_->PreDraw();
 	//スプライト描画
-	//spriteTitle_->Draw();
+	spriteTitle_->Draw();
 
 
 	//エフェクト描画前処理
