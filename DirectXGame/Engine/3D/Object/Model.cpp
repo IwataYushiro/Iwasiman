@@ -337,7 +337,8 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 		//先頭文字列がfならポリゴン(三角形)
 		if (key == "f")
 		{
-			
+			//インデックスカウント
+			int faceIndexCount = 0;
 			//半角スペース区切りで行の続きを読み込む
 			string index_string;
 			while (getline(line_stream, index_string, ' '))
@@ -409,8 +410,6 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 					}
 				}
 				//インデックスデータの追加
-				//インデックスカウント
-				int faceIndexCount = 0;
 				if (faceIndexCount >= 3)
 				{
 					// 四角形ポリゴンの4点目なので、

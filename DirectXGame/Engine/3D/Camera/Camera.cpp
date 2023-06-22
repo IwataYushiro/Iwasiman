@@ -1,5 +1,7 @@
 #include "Camera.h"
 #include "WinApp.h"
+#include "Input.h"
+#include "ImGuiManager.h"
 
 using namespace DirectX;
 Camera::Camera()
@@ -16,6 +18,7 @@ Camera::Camera()
 
 Camera::~Camera()
 {
+	
 }
 
 void Camera::Reset()
@@ -166,6 +169,55 @@ void Camera::CameraMoveVectorEye(const XMFLOAT3& move)
 	eye_moved.z += move.z;
 
 	SetEye(eye_moved);
+}
+
+void Camera::CameraMoveVectorTarget(const XMFLOAT3& move)
+{
+	XMFLOAT3 target_moved = target_;
+
+	target_moved.x += move.x;
+	target_moved.y += move.y;
+	target_moved.z += move.z;
+
+	SetTarget(target_moved);
+}
+
+void Camera::DebugCamera()
+{
+	Input* input_ = Input::GetInstance();
+	ImGuiManager* imguiManager_ = ImGuiManager::GetInstance();
+	const int VECTOR3COUNT = 3;
+
+	//ImGui‚É“n‚·—p‚Ì•Ï”
+	float ieye[VECTOR3COUNT] = { eye_.x,eye_.y,eye_.z };
+	float itarget[VECTOR3COUNT] = { target_.x,target_.y,target_.z };
+
+	//Ž‹“_
+	if (input_->PushKey(DIK_W))CameraMoveVectorEye({ 0.0f,1.0f,0.0f });
+	else if (input_->PushKey(DIK_S))CameraMoveVectorEye({ 0.0f,-1.0f,0.0f });
+	else if (input_->PushKey(DIK_A))CameraMoveVectorEye({ -1.0f,0.0f,0.0f });
+	else if (input_->PushKey(DIK_D))CameraMoveVectorEye({ 1.0f,0.0f,0.0f });
+	else if (input_->PushKey(DIK_Z))CameraMoveVectorEye({ 0.0f,0.0f,1.0f });
+	else if (input_->PushKey(DIK_X))CameraMoveVectorEye({ 0.0f,0.0f,-1.0f });
+
+	//’Ž‹“_
+	if (input_->PushKey(DIK_UP))CameraMoveVectorTarget({ 0.0f,1.0f,0.00001f });
+	else if (input_->PushKey(DIK_DOWN))CameraMoveVectorTarget({ 0.0f,-1.0f,0.00001f });
+	else if (input_->PushKey(DIK_LEFT))CameraMoveVectorTarget({ -1.0f,0.0f,0.00001f });
+	else if (input_->PushKey(DIK_RIGHT))CameraMoveVectorTarget({ 1.0f,0.0f,0.00001f });
+	else if (input_->PushKey(DIK_Q))CameraMoveVectorTarget({ 0.0f,0.0f,1.0f });
+	else if (input_->PushKey(DIK_E))CameraMoveVectorTarget({ 0.0f,0.0f,-1.0f });
+
+	ImGui::Begin("Camera");
+	ImGui::SetWindowPos(ImVec2(700, 0));
+	ImGui::SetWindowSize(ImVec2(560, 150));
+	ImGui::InputFloat3("Eye", ieye);
+	ImGui::Text("eye W += x S -= x  D += y A -= y Z += z X -= z");
+	ImGui::InputFloat3("Target", itarget);
+	ImGui::Text("target RIGHT += x LEFT -= x  UP += y DOWN -= y Q += z E -= z");
+	ImGui::Text("WARNING eye.x = target.x & eye.y = target.y & eye.z = target.z -> SYSTEM DOWN");
+	ImGui::End();
+
 }
 
 

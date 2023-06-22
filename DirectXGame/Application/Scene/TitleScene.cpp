@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include "FbxLoader.h"
 
+
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 SpriteCommon* TitleScene::spCommon_ = SpriteCommon::GetInstance();
 Input* TitleScene::input_ = Input::GetInstance();
@@ -14,20 +15,27 @@ void TitleScene::Initialize()
 {
 	//オーディオ
 	audio_->Initialize();
-	
-	//プレイヤー関係
-	player_ = new Player();
+
+	//カメラ
+	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
+	camera_->SetTarget({ 90.0f,0.0f,0.0f });
+	camera_->SetEye({ -10.0f,2.0f,0.0f });
+	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
+
 	//3Dオブジェクト生成
 	object3DPlayer_ = Object3d::Create();
 	//OBJファイルからモデルデータを読み込む
-	modelPlayer_ = Model::LoadFromOBJ("sphere");
+	modelPlayer_ = Model::LoadFromOBJ("player",true);
 	//オブジェクトにモデル紐付ける
 	object3DPlayer_->SetModel(modelPlayer_);
-	//カメラも紐づけ
+	////カメラも紐づけ
 	object3DPlayer_->SetCamera(camera_);
-	//プレイヤー初期化
-	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
-	
+	object3DPlayer_->SetPosition({ 10.0f,0.0f,-9.0f });
+	//ライトを生成
+	light_ = DirectionalLight::Create();
+	light_->SetLightColor({ 1.0f,1.0f,1.0f });
+	Object3d::SetLight(light_);
+
 	UINT titleTex = 00;
 	spCommon_->LoadTexture(titleTex, "texture/title.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
@@ -37,44 +45,31 @@ void TitleScene::Initialize()
 	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
-	camera_->SetEye({ 0.0f,0.0f,-75.0f });
-	//camera_->SetTarget({ 0.0f,20.0f,0.0f });*/
-
+	objF->PlayAnimation();//更新で呼ぶと止まるから注意
+	
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle2.png");
+	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);
+	pm1_->SetCamera(camera_);*/
+	
 }
 
 void TitleScene::Update()
 {
+
+	spriteTitle_->Update();
+	
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
-		sceneManager_->ChangeScene("GAMEPLAY");
+		//sceneManager_->ChangeScene("GAMEPLAY");
 	}
-
-	//spriteTitle_->Update();
-	//横方向の風
-	//pm1_->ActiveX(particle1_, { 25.0f ,10.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
-	//横方向の風(ワイド)
-	//pm1_->ActiveX(particle1_, { 25.0f ,100.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
-	//縦方向の風
-	//pm1_->ActiveY(particle1_, { 10.0f ,25.0f,0.0f }, { 0.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
-	//全方位にはじける(クリア演出に使えそう)
-	//pm1_->ActiveZ(particle1_, { 0.0f ,0.0f,25.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 10, { 3.0f, 0.0f });
-	
-	//ばらけるような
-	//pm1_->ActiveY(particle1_, { 10.0f ,25.0f,0.0f }, { 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
-	
-	//雪とか雨
-	//pm1_->ActiveY(particle1_, { 150.0f ,100.0f,0.0f }, { 0.0f,-5.2f,0.0f }, { 0.0f,0.001f,0.0f }, 5, { 5.0f, 0.0f });
-
-	player_->Update();
-	pm1_->Update();
-
 	camera_->Update();
+	light_->Update();
+	//pm1_->Update();
+	object3DPlayer_->Update();
+	
 	objF->Update();
 }
 
@@ -89,7 +84,7 @@ void TitleScene::Draw()
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
-	pm1_->Draw();
+	//pm1_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -97,7 +92,7 @@ void TitleScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
-	player_->Draw();
+	object3DPlayer_->Draw();
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -110,8 +105,7 @@ void TitleScene::Draw()
 
 	//前景スプライト
 
-	//ImGuiの表示
-	imguiManager_->Draw();
+	
 }
 
 void TitleScene::Finalize()
@@ -121,12 +115,13 @@ void TitleScene::Finalize()
 	//プレイヤー
 	delete object3DPlayer_;
 	delete modelPlayer_;
-	delete player_;
-
+	//ライト
+	delete light_;
 	//パーティクル
-	delete particle1_;
-	delete pm1_;
+	//delete particle1_;
+	//delete pm1_;
 	//FBX
 	delete objF;
 	delete modelF;
 }
+

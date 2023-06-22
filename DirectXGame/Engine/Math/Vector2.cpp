@@ -46,7 +46,7 @@ Vector2 Vector2::operator+() const
 
 Vector2 Vector2::operator-() const
 {
-	return Vector2(-*this);
+	return Vector2(-x,-y);
 }
 
 Vector2& Vector2::operator+=(const Vector2& v)
@@ -106,5 +106,8 @@ const Vector2 operator*(float s,const Vector2& v)
 const Vector2 operator/(const Vector2& v, float s)
 {
 	Vector2 temp(v);
-	return v / s;
+	float x = temp.x / s;
+	float y = temp.y / s;
+
+	return Vector2(x, y);
 }

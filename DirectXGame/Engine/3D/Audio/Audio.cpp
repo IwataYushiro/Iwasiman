@@ -98,7 +98,7 @@ Audio::SoundData Audio::SoundLoadWave(const char* filename)
 }
 
 //音声再生
-void Audio::SoundPlayWave(IXAudio2* xAudio2, const Audio::SoundData& soundData)
+void Audio::SoundPlayWave(IXAudio2* xAudio2, const Audio::SoundData& soundData, bool loop)
 {
 	HRESULT result;
 
@@ -112,6 +112,10 @@ void Audio::SoundPlayWave(IXAudio2* xAudio2, const Audio::SoundData& soundData)
 	buf.pAudioData = soundData.pBuffer;
 	buf.AudioBytes = soundData.bufferSize;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
+	if (loop)
+	{
+		buf.LoopCount = XAUDIO2_LOOP_INFINITE;
+	}
 
 	//波形データの再生
 	result = pSourceVoice->SubmitSourceBuffer(&buf);

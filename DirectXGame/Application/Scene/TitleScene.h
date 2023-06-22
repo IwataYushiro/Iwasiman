@@ -1,10 +1,10 @@
 #pragma once
 #include "Audio.h"
+#include "DirectionalLight.h"
 #include "DirectXCommon.h"
 #include "ImGuiManager.h"
 #include "Object3d.h"
 #include "ObjectFbx.h"
-#include "Player.h"
 
 #include "ParticleManager.h"
 #include "Sprite.h"
@@ -48,10 +48,10 @@ private://メンバ変数
 	ObjectFbx* objF = nullptr;
 
 	//モデル
-	Player* player_ = nullptr;
 	Model* modelPlayer_ = nullptr;
 	Object3d* object3DPlayer_ = nullptr;
-
+	//ライト
+	DirectionalLight* light_ = nullptr;
 	//パーティクル
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm1_ = nullptr;

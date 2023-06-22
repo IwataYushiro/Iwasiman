@@ -73,6 +73,8 @@ private://カプセル化メンバ関数
 		diffuse = { 0.0f,0.0f,0.0f };
 		specular = { 0.0f,0.0f,0.0f };
 		alpha = 1.0f;
+		cpuDescHandleSRV = {};
+		gpuDescHandleSRV = {};
 	}
 
 	//初期化

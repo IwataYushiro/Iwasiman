@@ -27,7 +27,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 
 	//頂点シェーダ読み込み
 	result = D3DCompileFromFile(
-		L"Resources/shader/SpriteVS.hlsl",					//シェーダファイル名
+		L"Resources/shader/Sprite/SpriteVS.hlsl",					//シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,					//インクルード出来るように
 		"main", "vs_5_0",									//エントリーポイント名、シェーダモデル
@@ -49,7 +49,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 
 	//ピクセルシェーダ読み込み
 	result = D3DCompileFromFile(
-		L"Resources/shader/SpritePS.hlsl",					//シェーダファイル名
+		L"Resources/shader/Sprite/SpritePS.hlsl",					//シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,					//インクルード出来るように
 		"main", "ps_5_0",									//エントリーポイント名、シェーダモデル
