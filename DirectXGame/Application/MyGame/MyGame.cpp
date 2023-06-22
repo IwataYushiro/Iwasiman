@@ -61,7 +61,7 @@ void MyGame::PostInitialize()
 	pe[0].Initialize(sprCommon_);
 	pe[1].Initialize(sprCommon_, "GaussianBlur");
 	pe[2].Initialize(sprCommon_, "Bloom");
-	pe[3].Initialize(sprCommon_, "Sepia");
+	pe[3].Initialize(sprCommon_, "CrossFilter");
 	pe[4].Initialize(sprCommon_, "Cold");
 	pe[5].Initialize(sprCommon_, "NegaPozi");
 	pe[6].Initialize(sprCommon_, "GrayScale");
