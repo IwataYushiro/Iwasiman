@@ -20,9 +20,9 @@ void GamePlayScene::Initialize()
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
-	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
+	sound = audio_->SoundLoadWave("Resources/Alarm01.wav");
 	//音声再生呼び出し例
-	audio_->SoundPlayWave(audio_->GetXAudio2(), sound);
+	audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
 	UINT gameClearTex = 02;
 	spCommon_->LoadTexture(gameClearTex, "texture/gameclear.png");
@@ -50,6 +50,10 @@ void GamePlayScene::Initialize()
 	//カメラも紐づけ
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
+	//ライトを生成
+	light_ = DirectionalLight::Create();
+	light_->SetLightColor({ 1.0f,1.0f,1.0f });
+	Object3d::SetLight(light_);
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
 	pm1_ = ParticleManager::Create();
@@ -71,9 +75,8 @@ void GamePlayScene::Initialize()
 
 void GamePlayScene::Update()
 {
-	pm1_->Active(particle1_, { 120.0f ,120.0f,120.0f }, { 0.2f,0.2f,0.2f }, { 0.0f,0.001f,0.0f }, 15, { 10.0f, 0.0f });
-	pm2_->Active(particle2_, { 100.0f,120.0f,120.0f }, { 0.2f,0.2f,0.2f }, { 0.0f,0.001f,0.0f }, 5, { 6.0f,0.0f });
-
+	//全方位にはじける(クリア演出に使えそう)
+	pm1_->ActiveZ(particle1_,{object3DPlayer_->GetPosition()}, {0.0f ,0.0f,25.0f}, {4.2f,4.2f,0.0f}, {0.0f,0.001f,0.0f}, 10, {3.0f, 0.0f});
 	//モデル呼び出し例
 	player_->Update();
 	enemy_->Update();
@@ -85,7 +88,7 @@ void GamePlayScene::Update()
 
 	//カメラ
 	camera_->Update();
-
+light_->Update();
 	pm1_->Update();
 	pm2_->Update();
 
@@ -94,6 +97,7 @@ void GamePlayScene::Update()
 		camera_->Reset();
 		sceneManager_->ChangeScene("TITLE");
 	}
+	
 }
 
 void GamePlayScene::Draw()
@@ -131,8 +135,6 @@ void GamePlayScene::Draw()
 	//前景スプライト
 
 	//ImGuiの表示
-
-	imguiManager_->Draw();
 }
 
 void GamePlayScene::Finalize()
@@ -152,6 +154,8 @@ void GamePlayScene::Finalize()
 	delete pm1_;
 	delete particle2_;
 	delete pm2_;
+	//ライト
+	delete light_;
 	//モデル
 	//3Dオブジェクト
 	delete object3DPlayer_;

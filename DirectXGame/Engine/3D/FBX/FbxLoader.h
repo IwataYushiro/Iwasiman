@@ -16,14 +16,16 @@ private://エイリアス
 public://定数
 	static const string baseDirectory;
 
-public:
+public://静的メンバ関数
 	/// <summary>
 	/// シングルトンインスタンスの取得
 	/// </summary>
 	/// <returns>インスタンス</returns>
 	static FbxLoader* GetInstance();
 
-public:
+	//FBXの行列をXMMATRIXに変換
+	static void ConvertMatrixFromFBX(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
+public://メンバ関数
 	//初期化
 	void Initialize(ID3D12Device* device);
 
@@ -45,6 +47,8 @@ public:
 	void ParseMaterial(ModelFbx* modelF, FbxNode* fbxNode);
 	//テクスチャ読み取り
 	void LoadTexture(ModelFbx* modelF, const std::string& fullpath);
+	//スキニング情報読み取り
+	void ParseSkin(ModelFbx* modelF, FbxMesh* fbxMesh);
 	//ディレクトリを含んだファイルパスからファイル名を抽出する
 	std::string ExtractFileName(const std::string path);
 

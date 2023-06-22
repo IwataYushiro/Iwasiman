@@ -82,7 +82,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/ParticleVS.hlsl",	// シェーダファイル名
+		L"Resources/shader/Particle/ParticleVS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -105,7 +105,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 
 	// ジオメトリシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/ParticleGS.hlsl",	// シェーダファイル名
+		L"Resources/shader/Particle/ParticleGS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "gs_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -127,7 +127,7 @@ void ParticleManager::InitializeGraphicsPipeline()
 	}
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/ParticlePS.hlsl",	// シェーダファイル名
+		L"Resources/shader/Particle/ParticlePS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -302,16 +302,17 @@ void ParticleManager::Draw()
 	particle_->Draw(cmdList);
 }
 
-void ParticleManager::Active(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
+void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
 {
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
+		const XMFLOAT3 md_move = setmove;
 		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f) + setmove.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f) + setmove.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f) + setmove.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
@@ -327,16 +328,16 @@ void ParticleManager::Active(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3
 		p->Add(60, pos, vel, acc, setscale.x, setscale.y);
 	}
 }
-void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
+void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
 {
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
 		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * md_pos.x / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x / 2.0f) + setmove.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f) + setmove.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f) + setmove.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
@@ -353,16 +354,16 @@ void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setpos, const XMFLOAT
 	}
 }
 
-void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
+void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
 {
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
 		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * md_pos.y / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f) + setmove.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y / 2.0f) + setmove.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f) + setmove.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
@@ -379,16 +380,16 @@ void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setpos, const XMFLOAT
 	}
 }
 
-void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
+void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)
 {
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
 		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f;
-		pos.y = (float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f;
-		pos.z = (float)rand() / RAND_MAX * md_pos.z / 2.0f;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f) + setmove.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f) + setmove.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z / 2.0f) + setmove.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};

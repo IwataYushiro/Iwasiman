@@ -1,4 +1,5 @@
 #include "Framework.h"
+#include "DirectionalLight.h"
 #include "Object3d.h"
 #include "ObjectFbx.h"
 #include "ParticleManager.h"
@@ -38,6 +39,11 @@ void Framework::Initialize()
 	Object3d::StaticInitialize(dxCommon_->GetDevice());
 	ObjectFbx::StaticInitialize(dxCommon_->GetDevice());
 	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
+	//ライト
+	DirectionalLight::StaticInitialize(dxCommon_->GetDevice());
+	
+	
+
 }
 
 void Framework::Update()
@@ -48,10 +54,25 @@ void Framework::Update()
 		//ゲーム終了
 		EndGame_ = true;
 	}
+	//ポストエフェクト
+	//postEffect_->Update();
+
 	//入力の更新
 	input_->Update();
 	sceneManager_->Update();
 	imguiManager_->Begin();
+#ifdef _DEBUG
+	camera_->DebugCamera();
+	ImGui::Begin("Post Loop");
+	ImGui::SetWindowPos(ImVec2(0, 600));
+	ImGui::SetWindowSize(ImVec2(800, 100));
+	ImGui::Text("0 change");
+	ImGui::Text(" test -> gaussianblur -> bloom -> sepia -> cold -> ");
+	ImGui::Text(" nagapozi -> grayscale -> mosaic -> uv shift -> uv shift blur");
+
+	ImGui::End();
+#endif // DEBUG
+
 	imguiManager_->End();
 	
 }

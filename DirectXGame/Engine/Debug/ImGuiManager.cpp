@@ -107,12 +107,12 @@ void ImGuiManager::ImGuiMyFirstToolColor()
 
 	// Generate samples and plot them
 	float samples[100];
-	for (int n = 0; n < 100; n++)
-		samples[n] = sinf(n * 0.2f + ImGui::GetTime() * 1.5f);
+	for (float n = 0.0f; n < 100.0f; n++)
+		samples[(int)n] = sinf(n * 0.2f + (float)ImGui::GetTime() * 1.5f);
 	ImGui::PlotLines("Samples", samples, 100);
 
 	// Display contents in a scrolling region
-	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Important Stuff");
 	ImGui::BeginChild("Scrolling");
 	for (int n = 0; n < 50; n++)
 		ImGui::Text("%04d: Some text", n);

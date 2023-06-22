@@ -20,7 +20,12 @@ protected://エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
+public://定数
+	//ボーンの最大数
+	static const int MAX_BONES = 32;
+
 public://サブクラス
+	
 	//定数バッファ構造体(座標変換行列)
 	struct ConstBufferDataTransform
 	{
@@ -28,6 +33,12 @@ public://サブクラス
 		XMMATRIX world;			//ワールド行列
 		XMFLOAT3 cameraPos;		//カメラ座標
 	};
+	//スキニング情報
+	struct ConstBufferDataSkin
+	{
+		XMMATRIX bones[MAX_BONES];
+	};
+
 
 public://静的メンバ関数
 	//静的初期化
@@ -65,7 +76,8 @@ public://メンバ関数
 	void Update();
 	//描画
 	void Draw();
-
+	//アニメーション開始
+	void PlayAnimation();
 
 protected://メンバ変数
 	//ローカルスケール
@@ -75,13 +87,27 @@ protected://メンバ変数
 	// ローカル座標
 	XMFLOAT3 position_ = { 0.0f,0.0f,0.0f };
 	// ローカルワールド行列
-	XMMATRIX matWorld_;
+	XMMATRIX matWorld_ = {};
 	// モデル
 	ModelFbx* modelF_ = nullptr;
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBufferTransform;
+	//スキン
+	ComPtr<ID3D12Resource> constBufferSkin;
+
+	//1フレームの時間
+	FbxTime frameTime;
+	// アニメーション開始時間
+	FbxTime startTime;
+	// アニメーション終了時間
+	FbxTime endTime;
+	//アニメーション現在時間
+	FbxTime currentTime;
+	//アニメーション再生中フラグ
+	bool isPlayAnimation = false;
+
 	//カメラ
-	Camera* camera_;
+	Camera* camera_ = nullptr;
 public://アクセッサ置き場
 	void SetModelFBX(ModelFbx* modelF) { this->modelF_ = modelF; }
 	void SetCamera(Camera* camera) { this->camera_ = camera; }

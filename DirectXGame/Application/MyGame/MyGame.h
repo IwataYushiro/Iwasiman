@@ -1,5 +1,8 @@
 #pragma once
 #include "Framework.h"
+#include "PostEffect.h"
+#include <list>
+#include <memory>
 
 class MyGame :public Framework
 {
@@ -16,5 +19,21 @@ public:
 
 	//終了
 	void Finalize() override;
+	
+private:
+	//合計
+	const int POST_NUM = 10;
+	PostEffect* pe;
+
+	PostEffect* pe1 = nullptr;
+	PostEffect* pe2 = nullptr;
+	//切り替え用カウント
+	int postCount = 0;
+	int Variation = 0;
+private:
+	void PostInitialize();
+	void PostDraw();
+	void PostDelete();
+		
 };
 

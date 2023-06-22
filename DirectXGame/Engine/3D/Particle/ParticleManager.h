@@ -104,15 +104,16 @@ public: // メンバ関数
 	/// パーティクル発射
 	/// </summary>
 	/// <param name="p">パーティクル</param>
+	/// <param name="setmove">初期位置</param>
 	/// <param name="setpos">位置</param>
 	/// <param name="setvel">移動量</param>
 	/// <param name="setacc">重力分布</param>
 	/// <param name="setnum">一気に何個か</param>
 	///  <param name="setscale">x = 開始スケール , y = 終了スケール</param>
-	void Active(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
-	void ActiveX(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
-	void ActiveY(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
-	void ActiveZ(Particle* p, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
+	void Active(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
+	void ActiveX(Particle* p,const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
+	void ActiveY(Particle* p,const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
+	void ActiveZ(Particle* p,const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
 
 
 private: // メンバ変数

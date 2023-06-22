@@ -7,6 +7,7 @@
 #include <d3dx12.h>
 #include "Model.h"
 #include "Camera.h"
+#include "DirectionalLight.h"
 #include <unordered_map>
 
 /// <summary>
@@ -79,6 +80,9 @@ private: // 静的メンバ変数
 	static ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
 	static ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
 	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
+	//ライト
+	static DirectionalLight* light_;
+
 private:// 静的メンバ関数
 	/// <summary>
 	/// グラフィックパイプライン生成
@@ -149,7 +153,8 @@ public: //アクセッサ置き場
 	
 	//カメラ
 	void SetCamera( Camera* camera) { this->camera_ = camera; }
-
+	//ライト
+	static void SetLight(DirectionalLight* light) { Object3d::light_ = light; }
 	//ビルボード
 	void SetBillboard(bool isBillboard) { this->isBillboard_ = isBillboard; }
 };

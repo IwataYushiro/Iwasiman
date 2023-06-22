@@ -75,10 +75,14 @@ public://アクセッサ
 	DirectXCommon* GetDxCommon() { return dxCommon_; }
 	
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVHandle() { return srvHandle; }
+	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandle() { return srvGpuHandle; }
 
 	ID3D12Resource* GetTextureBuffer(uint32_t index)const
 	{
 		return texBuffs[index].Get();
 	}
-
+	//パイプラインステート
+	ID3D12PipelineState* GetPipelineState() { return pipelineState.Get(); }
+	//ルートシグネチャ
+	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
 };

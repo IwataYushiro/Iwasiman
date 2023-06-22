@@ -25,6 +25,7 @@ ComPtr<ID3DBlob> Object3d::rootSigBlob;
 ComPtr<ID3DBlob> Object3d::vsBlob; // 頂点シェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::psBlob;	// ピクセルシェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::errorBlob; // エラーオブジェクト
+DirectionalLight* Object3d::light_ = nullptr;
 
 void Object3d::StaticInitialize(ID3D12Device* device)
 {
@@ -90,7 +91,7 @@ void Object3d::InitializeGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/Shader/OBJVS.hlsl",	// シェーダファイル名
+		L"Resources/shader/OBJVS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -113,7 +114,7 @@ void Object3d::InitializeGraphicsPipeline()
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/Shader/OBJPS.hlsl",	// シェーダファイル名
+		L"Resources/shader/OBJPS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -201,10 +202,11 @@ void Object3d::InitializeGraphicsPipeline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[3];
+	CD3DX12_ROOT_PARAMETER rootparams[4];
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[3].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -291,7 +293,7 @@ void Object3d::Update()
 		matWorld *= parent->matWorld;
 	}
 	const XMMATRIX& matViewProjection = camera_->GetMatViewProjection();
-	const XMFLOAT3& camerePos = camera_->GetEye();
+	const XMFLOAT3& cameraPos = camera_->GetEye();
 
 	// 定数バッファへデータ転送
 	
@@ -299,7 +301,7 @@ void Object3d::Update()
 	//constMap0->color = color;
 	constMap0->viewproj = matViewProjection;	// 行列の合成
 	constMap0->world = matWorld;
-	constMap0->cameraPos = camerePos;
+	constMap0->cameraPos = cameraPos;
 	constBuffB0->Unmap(0, nullptr);
 }
 
@@ -315,8 +317,9 @@ void Object3d::Draw()
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 
-	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
-	
+	//cmdList->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
+	//ライト描画
+	light_->Draw(cmdList, 3);
 	//モデルを描画
 	model_->Draw(cmdList);
 }
