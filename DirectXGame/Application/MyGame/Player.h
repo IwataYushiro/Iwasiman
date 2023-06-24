@@ -7,6 +7,7 @@
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
+#include <chrono>
 
 class Player
 {
@@ -33,6 +34,8 @@ public:
 	void CameraMove();
 	//ジャンプ
 	void Jump();
+	//奥へ移動
+	void JumpBack();
 	// 奥移動
 	
 	//プレイヤーの攻撃処理
@@ -49,6 +52,9 @@ public:
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
+
+	//ベジェ曲線
+	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//弾リストを取得
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
@@ -76,6 +82,22 @@ private:
 
 	//ジャンプしてるか
 	bool isJump;
+	//奥側に移動
+	bool isJumpBack;
+	bool isBack;
+
+	//時間計測
+	std::chrono::steady_clock::time_point startCount;	//開始時間
+	std::chrono::steady_clock::time_point nowCount;		//現在時間
+	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
+	float	maxTime = 1.0f;					//全体時間
+	float	timeRate;
+	//制御点
+	XMFLOAT3 start;
+	XMFLOAT3 p1;
+	XMFLOAT3 p2;
+	XMFLOAT3 end;
+
 	//ジャンプ力
 	const float power = 2.0f;
 	//重力

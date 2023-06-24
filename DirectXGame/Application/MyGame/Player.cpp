@@ -5,7 +5,7 @@ using namespace DirectX;
 
 Player::~Player() {
 	//モデルの解放
-	
+
 	delete modelBullet_;
 	delete objBullet_;
 }
@@ -29,16 +29,28 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	this->input_ = input;
 
 	//ワールド変換の初期化
-	pos = { -20.0f,-0.0f,-60.0f };
+	pos = { -20.0f,-10.0f,-60.0f };
 	obj_->SetPosition(pos);
-	
+	//ジャンプしたか
 	isJump = false;
+
+	//奥側にいるか
+	isJumpBack = false;
+	//奧にいるか
+	isBack = false;
+
+	//奥側ジャンプに使うベジェ曲線用の時間
+	startCount = std::chrono::steady_clock::now();	//開始時間
+	nowCount = std::chrono::steady_clock::now();		//現在時間
+	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
+	maxTime = 1.0f;					//全体時間
+	timeRate;
 	//重力
 	gravity = 0.0f;
 }
 
 void Player::Reset() {
-	pos = { -20.0f, -0.0f, -60.0f };
+	pos = { -20.0f, -10.0f, -60.0f };
 
 	life_ = 5;
 	isDead_ = false;
@@ -58,6 +70,7 @@ void Player::Update() {
 		CameraMove();
 		//攻撃処理
 		Jump();
+		JumpBack();
 		//Attack();
 
 		//弾更新
@@ -105,9 +118,9 @@ void Player::Move() {
 		move.y -= moveSpeed;
 	}*/
 
-	
+
 	obj_->SetPosition(move);
-	
+
 }
 
 void Player::CameraMove()
@@ -148,7 +161,7 @@ void Player::Jump()
 {
 
 	XMFLOAT3 move = obj_->GetPosition();
-	
+
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (!isJump)
@@ -162,15 +175,67 @@ void Player::Jump()
 	{
 		move.y += power + gravity;
 		gravity -= 0.1f;
-		
+
 		if (gravity <= -4.0f)
 		{
 			gravity = -4.0f;
 		}
 		if (move.y < -10.0f)
 		{
-			
+
 			isJump = false;
+		}
+	}
+	obj_->SetPosition(move);
+}
+
+void Player::JumpBack()
+{
+	XMFLOAT3 move = obj_->GetPosition();
+
+	//制御点
+	start = { move.x,-10.0f,-60.0f };
+	p1 = { move.x,10.0f,-40.0f };
+	p2 = { move.x,10.0f,-20.0f };
+	end = { move.x,-10.0f,0.0f };
+
+	//時間
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
+
+	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	timeRate = min(elapsed / maxTime, 1.0f);
+
+	if (!isJump)
+	{
+		if (!isJumpBack)
+		{
+			if (input_->TriggerKey(DIK_Z))
+			{
+				if (isBack)isBack = false;
+				else isBack = true;
+				isJumpBack = true;
+			}
+		}
+		else
+		{
+			if (isBack)move = Bezier3(end, p2, p1, start, timeRate);
+
+			else move = Bezier3(start, p1, p2, end, timeRate);
+			
+			if (move.z >= end.z)
+			{
+				startCount = std::chrono::steady_clock::now();
+				isJumpBack = false;
+			}
+			if (move.z <= start.z)
+			{
+				startCount = std::chrono::steady_clock::now();
+				isJumpBack = false;
+			}
 		}
 	}
 	obj_->SetPosition(move);
@@ -189,15 +254,15 @@ void Player::Attack() {
 		matVec.r[0].m128_f32[1] = velocity.y;
 		matVec.r[0].m128_f32[2] = velocity.z;
 		matVec.r[0].m128_f32[3] = 0.0f;
-		
+
 		matVec *= obj_->GetWorld();
-		
+
 		//自キャラの座標をコピー
 		XMFLOAT3 position = obj_->GetPosition();
 
 		//弾を生成し初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(modelBullet_,objBullet_, position, velocity);
+		newBullet->Initialize(modelBullet_, objBullet_, position, velocity);
 
 		//弾を登録
 		bullets_.push_back(std::move(newBullet));
@@ -207,16 +272,16 @@ void Player::Attack() {
 }
 
 void Player::Trans() {
-	
+
 	XMMATRIX world;
 	//行列更新
 	world = XMMatrixIdentity();
-	XMMATRIX matWorld =XMMatrixIdentity();
+	XMMATRIX matWorld = XMMatrixIdentity();
 
 	XMMATRIX matScale = XMMatrixScaling(obj_->GetScale().x, obj_->GetScale().y, obj_->GetScale().z);
 
 	XMMATRIX matRot = XMMatrixRotationZ(obj_->GetRotation().z)
-		*XMMatrixRotationX(obj_->GetRotation().x)*XMMatrixRotationY(obj_->GetRotation().y);
+		* XMMatrixRotationX(obj_->GetRotation().x) * XMMatrixRotationY(obj_->GetRotation().y);
 
 	XMMATRIX matTrans = XMMatrixTranslation(obj_->GetPosition().x,
 		obj_->GetPosition().y, obj_->GetPosition().z);
@@ -249,4 +314,17 @@ void Player::OnCollision() {
 	if (life_ <= 0) {
 		isDead_ = true;
 	}
+}
+
+const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
+{
+	XMFLOAT3 ans;
+	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.x + 3 * (1.0f - t) * t * t * p2.x + t * t * t * p3.x;
+	ans.y = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.y + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.y + 3 * (1.0f - t) * t * t * p2.y + t * t * t * p3.y;
+	ans.z = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.z + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.z + 3 * (1.0f - t) * t * t * p2.z + t * t * t * p3.z;
+
+	return ans;
 }
