@@ -62,7 +62,7 @@ void Framework::Update()
 	sceneManager_->Update();
 	imguiManager_->Begin();
 #ifdef _DEBUG
-	camera_->DebugCamera();
+	//camera_->DebugCamera();
 	
 #endif // DEBUG
 ImGui::Begin("Post Loop");

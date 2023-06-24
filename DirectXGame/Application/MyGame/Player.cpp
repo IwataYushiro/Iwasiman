@@ -29,13 +29,16 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	this->input_ = input;
 
 	//ワールド変換の初期化
-	pos = { 0.0f,-5.0f,-60.0f };
+	pos = { -20.0f,-0.0f,-60.0f };
 	obj_->SetPosition(pos);
 	
+	isJump = false;
+	//重力
+	gravity = 0.0f;
 }
 
 void Player::Reset() {
-	pos = { 0.0f, -5.0f, -60.0f };
+	pos = { -20.0f, -0.0f, -60.0f };
 
 	life_ = 5;
 	isDead_ = false;
@@ -54,7 +57,8 @@ void Player::Update() {
 		Move();
 		CameraMove();
 		//攻撃処理
-		Attack();
+		Jump();
+		//Attack();
 
 		//弾更新
 		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
@@ -94,12 +98,12 @@ void Player::Move() {
 	if (input_->PushKey(DIK_D)) {
 		move.x += moveSpeed;
 	}
-	if (input_->PushKey(DIK_W)) {
+	/*if (input_->PushKey(DIK_W)) {
 		move.y += moveSpeed;
 	}
 	if (input_->PushKey(DIK_S)) {
 		move.y -= moveSpeed;
-	}
+	}*/
 
 	
 	obj_->SetPosition(move);
@@ -138,6 +142,38 @@ void Player::CameraMove()
 	obj_->SetPosition(move);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
+}
+
+void Player::Jump()
+{
+
+	XMFLOAT3 move = obj_->GetPosition();
+	
+	//キーボード入力による移動処理
+	XMMATRIX matTrans = XMMatrixIdentity();
+	if (!isJump)
+	{
+		if (input_->TriggerKey(DIK_SPACE)) {
+			isJump = true;
+			gravity = 0.0f;
+		}
+	}
+	else
+	{
+		move.y += power + gravity;
+		gravity -= 0.1f;
+		
+		if (gravity <= -4.0f)
+		{
+			gravity = -4.0f;
+		}
+		if (move.y < -10.0f)
+		{
+			
+			isJump = false;
+		}
+	}
+	obj_->SetPosition(move);
 }
 
 //攻撃処理

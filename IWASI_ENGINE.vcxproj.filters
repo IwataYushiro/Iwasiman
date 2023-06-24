@@ -178,6 +178,9 @@
     <Filter Include="Shader File\PostEffect\CrossFilter">
       <UniqueIdentifier>{cd075a86-342b-4ee7-a5ba-bb2fd283c247}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader File\PostEffect\None">
+      <UniqueIdentifier>{6a3193d3-530c-49d4-a5ee-243288bce00c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -230,6 +233,9 @@
     </None>
     <None Include="Resources\shader\PostEffect\CrossFilter\CrossFilter.hlsli">
       <Filter>Shader File\PostEffect\CrossFilter</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\None\None.hlsli">
+      <Filter>Shader File\PostEffect\None</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -337,6 +343,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\PostEffect\CrossFilter\CrossFilterVS.hlsl">
       <Filter>Shader File\PostEffect\CrossFilter</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\None\NoneVS.hlsl">
+      <Filter>Shader File\PostEffect\None</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\None\NonePS.hlsl">
+      <Filter>Shader File\PostEffect\None</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

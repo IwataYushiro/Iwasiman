@@ -185,6 +185,7 @@
     <None Include="Resources\shader\PostEffect\GrayScale\GrayScale.hlsli" />
     <None Include="Resources\shader\PostEffect\Mosaic\Mosaic.hlsli" />
     <None Include="Resources\shader\PostEffect\NegaPozi\NegaPozi.hlsli" />
+    <None Include="Resources\shader\PostEffect\None\None.hlsli" />
     <None Include="Resources\shader\PostEffect\Sepia\Sepia.hlsli" />
     <None Include="Resources\shader\PostEffect\Test\Test.hlsli" />
     <None Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlur.hlsli" />
@@ -290,6 +291,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\shader\PostEffect\NegaPozi\NegaPoziVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\None\NonePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\None\NoneVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>

@@ -50,7 +50,7 @@ public:
     //コンストラクタ
     PostEffect();
     //初期化
-    void Initialize(SpriteCommon* spCommon, const std::string& fileName="Test");
+    void Initialize(SpriteCommon* spCommon, const std::string& fileName="None");
     //更新
     void Update();
     //頂点バッファ生成
