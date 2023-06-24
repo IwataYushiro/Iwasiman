@@ -22,7 +22,7 @@ public:
 	
 private:
 	//çáåv
-	const int POST_NUM = 10;
+	const int POST_NUM = 12;
 	PostEffect* pe;
 
 	PostEffect* pe1 = nullptr;

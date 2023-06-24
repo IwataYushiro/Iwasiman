@@ -63,16 +63,17 @@ void Framework::Update()
 	imguiManager_->Begin();
 #ifdef _DEBUG
 	camera_->DebugCamera();
-	ImGui::Begin("Post Loop");
+	
+#endif // DEBUG
+ImGui::Begin("Post Loop");
 	ImGui::SetWindowPos(ImVec2(0, 600));
 	ImGui::SetWindowSize(ImVec2(800, 100));
 	ImGui::Text("0 change");
-	ImGui::Text(" test -> gaussianblur -> bloom -> sepia -> cold -> ");
-	ImGui::Text(" nagapozi -> grayscale -> mosaic -> uv shift -> uv shift blur");
+	ImGui::Text(" test -> gaussianblur -> bloom -> Glare -> sepia -> cold -> ");
+	ImGui::Text(" nagapozi -> grayscale -> mosaic -> uv shift -> uv shift blur -> posteffect off");
+	ImGui::Text(" Space Sample Game Start      Enter Return Title");
 
 	ImGui::End();
-#endif // DEBUG
-
 	imguiManager_->End();
 	
 }
