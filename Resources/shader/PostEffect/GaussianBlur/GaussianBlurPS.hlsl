@@ -16,7 +16,6 @@ float4 main(VSOutput input) : SV_TARGET
 
     for (float py = -_Sigma * 1.0f; py <= _Sigma * 1.0f; py += _StepWidth)
     {
-				//[loop]A[unroll]‚Í‘‚©‚È‚­‚Ä‚¢‚¢
         for (float px = -_Sigma * 1.0f; px <= _Sigma * 1.0f; px += _StepWidth)
         {
             float2 pickUV = input.uv + float2(px, py);
