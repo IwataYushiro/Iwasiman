@@ -101,15 +101,37 @@ void Player::Draw() {
 void Player::Move() {
 
 	XMFLOAT3 move = obj_->GetPosition();
-	float moveSpeed = 1.0f;
+	XMFLOAT3 cmove = camera_->GetEye();
+	XMFLOAT3 tmove = camera_->GetTarget();
+	float moveSpeed = 0.5f;
 
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->PushKey(DIK_A)) {
 		move.x -= moveSpeed;
+		cmove.x -= moveSpeed;
+		tmove.x -= moveSpeed;
 	}
 	if (input_->PushKey(DIK_D)) {
 		move.x += moveSpeed;
+		cmove.x += moveSpeed;
+		tmove.x += moveSpeed;
+	}
+
+	
+	//ダッシュ
+	if (input_->PushKey(DIK_LSHIFT)|| input_->PushKey(DIK_RSHIFT))
+	{
+		if (input_->PushKey(DIK_A)) {
+			move.x -= moveSpeed * 2.0f;
+			cmove.x -= moveSpeed * 2.0f;
+			tmove.x -= moveSpeed * 2.0f;
+		}
+		if (input_->PushKey(DIK_D)) {
+			move.x += moveSpeed * 2.0f;
+			cmove.x += moveSpeed * 2.0f;
+			tmove.x += moveSpeed * 2.0f;
+		}
 	}
 	/*if (input_->PushKey(DIK_W)) {
 		move.y += moveSpeed;
@@ -118,8 +140,9 @@ void Player::Move() {
 		move.y -= moveSpeed;
 	}*/
 
-
-	obj_->SetPosition(move);
+obj_->SetPosition(move);
+	camera_->SetEye(cmove);
+	camera_->SetTarget(tmove);
 
 }
 
@@ -142,16 +165,7 @@ void Player::CameraMove()
 		cmove.x += moveSpeed;
 		tmove.x += moveSpeed;
 	}
-	if (input_->PushKey(DIK_UP)) {
-		move.y += moveSpeed;
-		cmove.y += moveSpeed;
-		tmove.y += moveSpeed;
-	}
-	if (input_->PushKey(DIK_DOWN)) {
-		move.y -= moveSpeed;
-		cmove.y -= moveSpeed;
-		tmove.y -= moveSpeed;
-	}
+	
 	obj_->SetPosition(move);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
@@ -180,9 +194,9 @@ void Player::Jump()
 		{
 			gravity = -4.0f;
 		}
-		if (move.y < -10.0f)
+		if (move.y <= -10.0f)
 		{
-
+			move.y = -10.0f;
 			isJump = false;
 		}
 	}
@@ -228,11 +242,13 @@ void Player::JumpBack()
 			
 			if (move.z >= end.z)
 			{
+				move.y = -10.0f;
 				startCount = std::chrono::steady_clock::now();
 				isJumpBack = false;
 			}
 			if (move.z <= start.z)
 			{
+				move.y = -10.0f;
 				startCount = std::chrono::steady_clock::now();
 				isJumpBack = false;
 			}
