@@ -11,6 +11,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "External\imgui\img
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXGame", "IWASI_ENGINE.vcxproj", "{7FE7EFC4-C098-4D92-945D-24FEBEAE27CE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "json", "json", "{38716A19-1AE6-481F-97F1-891D15E4C4E2}"
+	ProjectSection(SolutionItems) = preProject
+		External\json\json.hpp = External\json\json.hpp
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -43,6 +48,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77} = {90C74AD7-3C53-4AC9-9BBC-16AF9385C65C}
 		{02C29ED5-2E61-4F87-94C5-1435C9D389FC} = {90C74AD7-3C53-4AC9-9BBC-16AF9385C65C}
+		{38716A19-1AE6-481F-97F1-891D15E4C4E2} = {90C74AD7-3C53-4AC9-9BBC-16AF9385C65C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E8069F87-2771-43C1-B695-53BC404D562A}
