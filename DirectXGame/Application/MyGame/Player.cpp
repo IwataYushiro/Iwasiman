@@ -67,7 +67,6 @@ void Player::Update() {
 
 		//移動処理
 		Move();
-		CameraMove();
 		//攻撃処理
 		Jump();
 		JumpBack();
@@ -214,15 +213,7 @@ void Player::JumpBack()
 	end = { move.x,-10.0f,0.0f };
 
 	//時間
-	//現在時間を取得する
-	nowCount = std::chrono::steady_clock::now();
-	//前回記録からの経過時間を取得する
-	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
-
-	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
-
-	timeRate = min(elapsed / maxTime, 1.0f);
-
+	
 	if (!isJump)
 	{
 		if (!isJumpBack)
@@ -236,19 +227,26 @@ void Player::JumpBack()
 		}
 		else
 		{
+			//現在時間を取得する
+			nowCount = std::chrono::steady_clock::now();
+			//前回記録からの経過時間を取得する
+			elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
+
+			float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+			timeRate = min(elapsed / maxTime, 1.0f);
+
 			if (isBack)move = Bezier3(end, p2, p1, start, timeRate);
 
 			else move = Bezier3(start, p1, p2, end, timeRate);
 			
 			if (move.z >= end.z)
 			{
-				move.y = -10.0f;
 				startCount = std::chrono::steady_clock::now();
 				isJumpBack = false;
 			}
-			if (move.z <= start.z)
+			else if (move.z <= start.z)
 			{
-				move.y = -10.0f;
 				startCount = std::chrono::steady_clock::now();
 				isJumpBack = false;
 			}
