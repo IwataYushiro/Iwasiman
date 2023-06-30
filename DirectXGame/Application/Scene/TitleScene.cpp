@@ -1,5 +1,9 @@
 #include "TitleScene.h"
 #include "FbxLoader.h"
+#include "LevelLoaderJson.h"
+#include <cassert>
+#include <sstream>
+#include <iomanip>
 
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
@@ -31,6 +35,56 @@ void TitleScene::Initialize()
 	////カメラも紐づけ
 	object3DPlayer_->SetCamera(camera_);
 	object3DPlayer_->SetPosition({ 10.0f,0.0f,-9.0f });
+
+	// レベルデータの読み込み
+	levelData = LevelLoader::LoadFile("testScene");
+
+	// モデル読み込み
+	modelSkydome = Model::LoadFromOBJ("skydome");
+	modelGround = Model::LoadFromOBJ("ground");
+	modelFighter = Model::LoadFromOBJ("chr_sword", true);
+	modelSphere = Model::LoadFromOBJ("sphere", true);
+
+	models.insert(std::make_pair("skydome", modelSkydome));
+	models.insert(std::make_pair("ground", modelGround));
+	models.insert(std::make_pair("chr_sword", modelFighter));
+	models.insert(std::make_pair("sphere", modelSphere));
+
+	// レベルデータからオブジェクトを生成、配置
+	for (auto& objectData : levelData->objects) {
+		// ファイル名から登録済みモデルを検索
+		Model* model = nullptr;
+		decltype(models)::iterator it = models.find(objectData.fileName);
+		if (it != models.end()) {
+			model = it->second;
+		}
+
+		// モデルを指定して3Dオブジェクトを生成
+		Object3d* newObject = Object3d::Create();
+		//オブジェクトにモデル紐付ける
+		newObject->SetModel(model);
+
+		// 座標
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMStoreFloat3(&pos, objectData.trans);
+		newObject->SetPosition(pos);
+
+		// 回転角
+		DirectX::XMFLOAT3 rot;
+		DirectX::XMStoreFloat3(&rot, objectData.rot);
+		newObject->SetRotation(rot);
+
+		// 座標
+		DirectX::XMFLOAT3 scale;
+		DirectX::XMStoreFloat3(&scale, objectData.scale);
+		newObject->SetScale(scale);
+
+		newObject->SetCamera(camera_);
+		// 配列に登録
+		objects.push_back(newObject);
+	}
+
+
 	//ライトを生成
 	light_ = DirectionalLight::Create();
 	light_->SetLightColor({ 1.0f,1.0f,1.0f });
@@ -65,6 +119,10 @@ void TitleScene::Update()
 		camera_->Reset();
 		sceneManager_->ChangeScene("GAMEPLAY");
 	}
+
+	for (auto& object : objects) {
+		object->Update();
+	}
 	camera_->Update();
 	light_->Update();
 	//pm1_->Update();
@@ -93,6 +151,9 @@ void TitleScene::Draw()
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
 	object3DPlayer_->Draw();
+	for (auto& object : objects) {
+		object->Draw();
+	}
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -115,6 +176,16 @@ void TitleScene::Finalize()
 	//プレイヤー
 	delete object3DPlayer_;
 	delete modelPlayer_;
+	//レベルデータ用オブジェクト
+	for (Object3d*& object : objects)
+	{
+		delete object;
+	}
+	delete modelSkydome;
+	delete modelGround;
+	delete modelFighter;
+	delete modelSphere;
+
 	//ライト
 	delete light_;
 	//パーティクル

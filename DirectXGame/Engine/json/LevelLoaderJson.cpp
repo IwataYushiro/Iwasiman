@@ -4,7 +4,7 @@
 #include <fstream>
 #include <cassert>
 
-const std::string LevelLoader::defaultBaseDirectory = "Resources/levels/";
+const std::string LevelLoader::defaultBaseDirectory = "Resources/json/levels/";
 const std::string LevelLoader::extension = ".json";
 
 LevelData* LevelLoader::LoadFile(const std::string& fileName)
@@ -78,8 +78,8 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName)
 			objectData.scale.m128_f32[2] = (float)transform["scaling"][0];
 			objectData.scale.m128_f32[3] = 0.0f;
 		}
-		//オブジェクト走査を再帰関数で走査
+		//オブジェクト走査を再帰関数で走査(一旦後で)
 	}
 
-	return nullptr;
+	return lvData;
 }

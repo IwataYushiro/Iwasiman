@@ -9,7 +9,12 @@
 #include "ParticleManager.h"
 #include "Sprite.h"
 
+#include <map>
+
 #include "SceneManager.h"
+
+//jsonレベルデータ
+struct LevelData;
 
 //タイトルシーン
 class TitleScene :public BaseScene
@@ -50,6 +55,21 @@ private://メンバ変数
 	//モデル
 	Model* modelPlayer_ = nullptr;
 	Object3d* object3DPlayer_ = nullptr;
+
+	LevelData* levelData = nullptr;
+
+	Model* modelSkydome = nullptr;
+	Model* modelGround = nullptr;
+	Model* modelFighter = nullptr;
+	Model* modelSphere = nullptr;
+
+	Object3d* objSkydome = nullptr;
+	Object3d* objGround = nullptr;
+	Object3d* objFighter = nullptr;
+	Object3d* objSphere = nullptr;
+	std::map<std::string, Model*> models;
+	std::vector<Object3d*> objects;
+
 	//ライト
 	DirectionalLight* light_ = nullptr;
 	//パーティクル
