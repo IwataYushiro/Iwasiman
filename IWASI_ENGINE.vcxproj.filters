@@ -181,6 +181,12 @@
     <Filter Include="Shader File\PostEffect\None">
       <UniqueIdentifier>{6a3193d3-530c-49d4-a5ee-243288bce00c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header File\Engine\json">
+      <UniqueIdentifier>{b2693328-4506-49fb-8039-8590696871e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\json">
+      <UniqueIdentifier>{5a70d4cc-1708-48e7-84db-b844d4c6a537}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -460,6 +466,9 @@
     <ClCompile Include="DirectXGame\Engine\2D\PostEffect\PostEffect.cpp">
       <Filter>Source File\Engine\2D\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\json\LevelLoaderJson.cpp">
+      <Filter>Source File\Engine\json</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -569,6 +578,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\2D\PostEffect\PostEffect.h">
       <Filter>Header File\Engine\2D\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\json\LevelLoaderJson.h">
+      <Filter>Header File\Engine\json</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
