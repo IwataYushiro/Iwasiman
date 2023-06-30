@@ -22,29 +22,27 @@ void TitleScene::Initialize()
 
 	//カメラ
 	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
-	camera_->SetTarget({ 90.0f,0.0f,0.0f });
-	camera_->SetEye({ -10.0f,2.0f,0.0f });
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
-
-	//3Dオブジェクト生成
-	object3DPlayer_ = Object3d::Create();
-	//OBJファイルからモデルデータを読み込む
-	modelPlayer_ = Model::LoadFromOBJ("player",true);
-	//オブジェクトにモデル紐付ける
-	object3DPlayer_->SetModel(modelPlayer_);
-	////カメラも紐づけ
-	object3DPlayer_->SetCamera(camera_);
-	object3DPlayer_->SetPosition({ 10.0f,0.0f,-9.0f });
-
+	
+	//camera_->SetTarget({ 90.0f,0.0f,0.0f });
+	//camera_->SetEye({ -10.0f,2.0f,0.0f });
+	
+	// 視点座標
+	camera_->SetEye({ 0.0f, 5.0f, -100.0f });
+	// 注視点座標
+	camera_->SetTarget({ 0.0f,0.0f,0.0f });
+	
 	// レベルデータの読み込み
-	levelData = LevelLoader::LoadFile("testScene");
+	levelData = LevelLoader::LoadFile("test");
 
 	// モデル読み込み
+	modelPlayer_ = Model::LoadFromOBJ("player",true);
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelFighter = Model::LoadFromOBJ("chr_sword", true);
 	modelSphere = Model::LoadFromOBJ("sphere", true);
 
+	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("chr_sword", modelFighter));
@@ -126,7 +124,6 @@ void TitleScene::Update()
 	camera_->Update();
 	light_->Update();
 	//pm1_->Update();
-	object3DPlayer_->Update();
 	
 	objF->Update();
 }
@@ -149,8 +146,6 @@ void TitleScene::Draw()
 
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
-
-	object3DPlayer_->Draw();
 	for (auto& object : objects) {
 		object->Draw();
 	}

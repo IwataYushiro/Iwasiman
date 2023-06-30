@@ -79,6 +79,9 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName)
 			objectData.scale.m128_f32[3] = 0.0f;
 		}
 		//オブジェクト走査を再帰関数で走査(一旦後で)
+		if (object.contains("children")) {
+
+		}
 	}
 
 	return lvData;
