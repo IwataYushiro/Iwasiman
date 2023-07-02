@@ -121,7 +121,7 @@ void GamePlayScene::Draw()
 	//エフェクト描画
 	pm1_->Draw();
 	pm2_->Draw();
-
+	player_->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 

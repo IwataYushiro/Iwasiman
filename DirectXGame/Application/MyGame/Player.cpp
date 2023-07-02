@@ -8,6 +8,8 @@ Player::~Player() {
 
 	delete modelBullet_;
 	delete objBullet_;
+	delete particleDash_;
+	delete pmDash_;
 }
 
 void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera) {
@@ -47,6 +49,13 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	timeRate;
 	//重力
 	gravity = 0.0f;
+
+	//パーティクル
+	particleDash_ = Particle::LoadFromParticleTexture("particle1.png");
+	pmDash_ = ParticleManager::Create();
+	pmDash_->SetParticleModel(particleDash_);
+	pmDash_->SetCamera(camera_);
+
 }
 
 void Player::Reset() {
@@ -79,8 +88,9 @@ void Player::Update() {
 
 		//移動制限
 		Trans();
+		
 	}
-
+	pmDash_->Update();
 	obj_->Update();
 }
 
@@ -94,6 +104,11 @@ void Player::Draw() {
 		}
 
 	}
+}
+
+void Player::DrawParticle()
+{
+	pmDash_->Draw();
 }
 
 //移動処理
@@ -122,11 +137,13 @@ void Player::Move() {
 	if (input_->PushKey(DIK_LSHIFT)|| input_->PushKey(DIK_RSHIFT))
 	{
 		if (input_->PushKey(DIK_A)) {
+			pmDash_->ActiveX(particleDash_, obj_->GetPosition(), {20.0f ,10.0f,0.0f}, {-4.2f,0.2f,0.0f}, {0.0f,0.001f,0.0f}, 1, {3.0f, 0.0f});
 			move.x -= moveSpeed * 2.0f;
 			cmove.x -= moveSpeed * 2.0f;
-			//tmove.x -= moveSpeed * 2.0f;
+			tmove.x -= moveSpeed * 2.0f;
 		}
 		if (input_->PushKey(DIK_D)) {
+			pmDash_->ActiveX(particleDash_, obj_->GetPosition(), { 20.0f ,10.0f,0.0f }, { 4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
 			move.x += moveSpeed * 2.0f;
 			cmove.x += moveSpeed * 2.0f;
 			tmove.x += moveSpeed * 2.0f;

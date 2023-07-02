@@ -4,6 +4,8 @@
 #include "Model.h"
 #include "Object3d.h"
 #include "PlayerBullet.h"
+#include "ParticleManager.h"
+
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
@@ -49,6 +51,7 @@ public:
 
 	//描画
 	void Draw();
+	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
@@ -106,6 +109,10 @@ private:
 	//死亡フラグとライフ
 	bool isDead_ = false;
 	int life_ = 5;
+
+	//パーティクル
+	Particle* particleDash_ = nullptr;
+	ParticleManager* pmDash_ = nullptr;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
