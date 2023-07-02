@@ -125,7 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;$(ProjectDir)DirectXGame\Application\Scene\Factory;$(ProjectDir)DirectXGame\Engine\3D\FBX;$(ProjectDir)DirectXGame\Engine\3D\Light;$(ProjectDir)DirectXGame\Engine\2D\PostEffect;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;$(ProjectDir)DirectXGame\Application\Scene\Factory;$(ProjectDir)DirectXGame\Engine\3D\FBX;$(ProjectDir)DirectXGame\Engine\3D\Light;$(ProjectDir)DirectXGame\Engine\2D\PostEffect;$(ProjectDir)DirectXGame\Engine\json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -147,7 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;$(ProjectDir)DirectXGame\Application\Scene\Factory;$(ProjectDir)DirectXGame\Engine\3D\FBX;$(ProjectDir)DirectXGame\Engine\3D\Light;$(ProjectDir)DirectXGame\Engine\2D\PostEffect;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;$(ProjectDir)DirectXGame\Application\Scene\Factory;$(ProjectDir)DirectXGame\Engine\3D\FBX;$(ProjectDir)DirectXGame\Engine\3D\Light;$(ProjectDir)DirectXGame\Engine\2D\PostEffect;$(ProjectDir)DirectXGame\Engine\json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
@@ -386,6 +386,7 @@
     <ClCompile Include="DirectXGame\Engine\Base\WinApp.cpp" />
     <ClCompile Include="DirectXGame\Engine\Debug\ImGuiManager.cpp" />
     <ClCompile Include="DirectXGame\Engine\Input\Input.cpp" />
+    <ClCompile Include="DirectXGame\Engine\json\LevelLoaderJson.cpp" />
     <ClCompile Include="DirectXGame\Engine\Math\Matrix4.cpp" />
     <ClCompile Include="DirectXGame\Engine\Math\MyMath.cpp" />
     <ClCompile Include="DirectXGame\Engine\Math\Quaternion.cpp" />
@@ -425,6 +426,7 @@
     <ClInclude Include="DirectXGame\Engine\Base\WinApp.h" />
     <ClInclude Include="DirectXGame\Engine\Debug\ImGuiManager.h" />
     <ClInclude Include="DirectXGame\Engine\Input\Input.h" />
+    <ClInclude Include="DirectXGame\Engine\json\LevelLoaderJson.h" />
     <ClInclude Include="DirectXGame\Engine\Math\Matrix4.h" />
     <ClInclude Include="DirectXGame\Engine\Math\MyMath.h" />
     <ClInclude Include="DirectXGame\Engine\Math\Quaternion.h" />
