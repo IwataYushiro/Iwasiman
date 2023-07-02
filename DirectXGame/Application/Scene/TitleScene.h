@@ -29,6 +29,9 @@ public://メンバ関数
 	//終了
 	void Finalize() override;
 
+	//レベルデータ読み込み
+	void LoadLVData();
+
 private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;

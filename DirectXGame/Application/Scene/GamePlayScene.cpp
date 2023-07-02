@@ -1,4 +1,8 @@
 #include "GamePlayScene.h"
+#include "LevelLoaderJson.h"
+#include <cassert>
+#include <sstream>
+#include <iomanip>
 
 using namespace DirectX;
 
@@ -24,18 +28,7 @@ void GamePlayScene::Initialize()
 	//音声再生呼び出し例
 	audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
-	UINT gameClearTex = 02;
-	spCommon_->LoadTexture(gameClearTex, "texture/gameclear.png");
-	spriteGameClear_->Initialize(spCommon_, gameClearTex);
-	spriteGameClear_->SetAnchorPoint({ 0.5f,0.5f });
-
-	UINT gameOverTex = 03;
-	spCommon_->LoadTexture(gameOverTex, "texture/gameover.png");
-	spriteGameOver_->Initialize(spCommon_, gameOverTex);
-	spriteGameOver_->SetAnchorPoint({ -0.5f,-0.5f });
-
 	//3Dオブジェクト関係
-
 	//3Dオブジェクト生成
 	object3DPlayer_ = Object3d::Create();
 	object3DEnemy_ = Object3d::Create();
@@ -50,10 +43,15 @@ void GamePlayScene::Initialize()
 	//カメラも紐づけ
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
+
+	//レベルデータ読み込み
+	LoadLVData();
+
 	//ライトを生成
 	light_ = DirectionalLight::Create();
 	light_->SetLightColor({ 1.0f,1.0f,1.0f });
 	Object3d::SetLight(light_);
+
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
 	pm1_ = ParticleManager::Create();
@@ -75,20 +73,18 @@ void GamePlayScene::Initialize()
 
 void GamePlayScene::Update()
 {
-	//全方位にはじける(クリア演出に使えそう)
-	pm1_->ActiveZ(particle1_,{object3DPlayer_->GetPosition()}, {0.0f ,0.0f,25.0f}, {4.2f,4.2f,0.0f}, {0.0f,0.001f,0.0f}, 10, {3.0f, 0.0f});
 	//モデル呼び出し例
 	player_->Update();
 	enemy_->Update();
 
+	for (auto& object : objects) {
+		object->Update();
+	}
+
 	ChackAllCollisions();
-
-	spriteGameClear_->Update();
-	spriteGameOver_->Update();
-
 	//カメラ
 	camera_->Update();
-light_->Update();
+	light_->Update();
 	pm1_->Update();
 	pm2_->Update();
 
@@ -108,9 +104,6 @@ void GamePlayScene::Draw()
 
 	//背景スプライト
 
-	spriteGameClear_->Draw();
-	spriteGameOver_->Draw();
-
 	//エフェクト
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
@@ -128,7 +121,9 @@ void GamePlayScene::Draw()
 	//モデル描画
 	player_->Draw();
 	enemy_->Draw();
-
+	for (auto& object : objects) {
+		object->Draw();
+	}
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -144,11 +139,7 @@ void GamePlayScene::Finalize()
 	//解放
 	//各種音声
 	audio_->SoundUnLoad(&sound);
-	//スプライト
-	delete spriteTitle_;
-	delete spriteHowToPlay_;
-	delete spriteGameClear_;
-	delete spriteGameOver_;
+
 	//パーティクル
 	delete particle1_;
 	delete pm1_;
@@ -160,11 +151,17 @@ void GamePlayScene::Finalize()
 	//3Dオブジェクト
 	delete object3DPlayer_;
 	delete object3DEnemy_;
-
+	for (Object3d*& object : objects)
+	{
+		delete object;
+	}
+	
 	//3Dモデル
 	delete modelPlayer_;
 	delete modelEnemy_;
-
+delete modelSkydome;
+	delete modelGround;
+	delete modelSphere;
 	//基盤系
 	delete player_;
 	delete enemy_;
@@ -243,5 +240,55 @@ void GamePlayScene::ChackAllCollisions() {
 		}
 	}
 #pragma endregion
+
+}
+
+void GamePlayScene::LoadLVData()
+{
+	// レベルデータの読み込み
+	levelData = LevelLoader::LoadFile("stage1");
+
+	// モデル読み込み
+	modelSkydome = Model::LoadFromOBJ("skydome");
+	modelGround = Model::LoadFromOBJ("ground");
+	modelSphere = Model::LoadFromOBJ("sphere", true);
+	
+	models.insert(std::make_pair("skydome", modelSkydome));
+	models.insert(std::make_pair("ground", modelGround));
+	models.insert(std::make_pair("sphere", modelSphere));
+
+	// レベルデータからオブジェクトを生成、配置
+	for (auto& objectData : levelData->objects) {
+		// ファイル名から登録済みモデルを検索
+		Model* model = nullptr;
+		decltype(models)::iterator it = models.find(objectData.fileName);
+		if (it != models.end()) {
+			model = it->second;
+		}
+
+		// モデルを指定して3Dオブジェクトを生成
+		Object3d* newObject = Object3d::Create();
+		//オブジェクトにモデル紐付ける
+		newObject->SetModel(model);
+
+		// 座標
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMStoreFloat3(&pos, objectData.trans);
+		newObject->SetPosition(pos);
+
+		// 回転角
+		DirectX::XMFLOAT3 rot;
+		DirectX::XMStoreFloat3(&rot, objectData.rot);
+		newObject->SetRotation(rot);
+
+		// 座標
+		DirectX::XMFLOAT3 scale;
+		DirectX::XMStoreFloat3(&scale,objectData.scale);
+		newObject->SetScale(scale);
+
+		newObject->SetCamera(camera_);
+		// 配列に登録
+		objects.push_back(newObject);
+	}
 
 }

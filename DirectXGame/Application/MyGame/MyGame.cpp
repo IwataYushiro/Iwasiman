@@ -45,21 +45,7 @@ void MyGame::Draw()
 	}
 	else
 	{
-		
-		pe[Variation].PreDraw(dxCommon_->GetCommandList());
-		sceneManager_->Draw();
-		pe[Variation].PostDraw(dxCommon_->GetCommandList());
-
-		//描画前処理
-		dxCommon_->PreDraw();
-
-		//ポストエフェクトの描画
-		pe[Variation].Draw(dxCommon_->GetCommandList());
-
-		//ImGuiの表示
-		imguiManager_->Draw();
-		//描画後処理
-		dxCommon_->PostDraw();
+		PostDraw();
 	}
 }
 
@@ -91,10 +77,20 @@ void MyGame::PostInitialize()
 
 void MyGame::PostDraw()
 {
-	//int Variation = postCount % POST_NUM;
-	//ポストエフェクトの描画
-	//
-	
+	pe[Variation].PreDraw(dxCommon_->GetCommandList());
+		sceneManager_->Draw();
+		pe[Variation].PostDraw(dxCommon_->GetCommandList());
+
+		//描画前処理
+		dxCommon_->PreDraw();
+
+		//ポストエフェクトの描画
+		pe[Variation].Draw(dxCommon_->GetCommandList());
+
+		//ImGuiの表示
+		imguiManager_->Draw();
+		//描画後処理
+		dxCommon_->PostDraw();
 
 	
 }
@@ -103,6 +99,4 @@ void MyGame::PostDraw()
 void MyGame::PostDelete()
 {
 	delete[] pe;
-
-	
 }

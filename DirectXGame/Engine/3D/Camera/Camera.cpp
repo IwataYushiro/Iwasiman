@@ -24,7 +24,7 @@ Camera::~Camera()
 void Camera::Reset()
 {
 	// 視点座標
-	eye_ = { 0.0f, 0.0f, -100.0f };
+	eye_ = { 0.0f, 1.0f, -100.0f };
 	// 注視点座標
 	target_ = { 0.0f,0.0f,0.0f };
 	// 上方向ベクトル

@@ -11,7 +11,12 @@
 #include "Player.h"
 #include "Enemy.h"
 
+#include <map>
+
 #include "SceneManager.h"
+
+//jsonレベルデータ
+struct LevelData;
 
 //ゲームプレイ
 class GamePlayScene :public BaseScene
@@ -36,6 +41,8 @@ public:
 	void Finalize() override;
 	//当たり判定
 	void ChackAllCollisions();
+	//レベルデータ読み込み
+	void LoadLVData();
 
 private://静的メンバ変数
 	//DirectX基盤
@@ -54,12 +61,6 @@ private://静的メンバ変数
 	static Camera* camera_;
 private:
 
-	//Sprite
-	Sprite* spriteTitle_ = new Sprite();
-	Sprite* spriteHowToPlay_ = new Sprite();
-	Sprite* spriteGameClear_ = new Sprite();
-	Sprite* spriteGameOver_ = new Sprite();
-
 	//サウンド読み込み
 	Audio::SoundData sound;
 
@@ -73,6 +74,20 @@ private:
 	//3Dオブジェクト
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
+
+
+	LevelData* levelData = nullptr;
+
+	Model* modelSkydome = nullptr;
+	Model* modelGround = nullptr;
+	Model* modelSphere = nullptr;
+	
+	Object3d* objSkydome = nullptr;
+	Object3d* objGround = nullptr;
+	Object3d* objSphere = nullptr;
+
+	std::map<std::string, Model*> models;
+	std::vector<Object3d*> objects;
 
 	//パーティクル
 	Particle* particle1_ = nullptr;
