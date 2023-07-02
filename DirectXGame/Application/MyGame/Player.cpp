@@ -124,7 +124,7 @@ void Player::Move() {
 		if (input_->PushKey(DIK_A)) {
 			move.x -= moveSpeed * 2.0f;
 			cmove.x -= moveSpeed * 2.0f;
-			tmove.x -= moveSpeed * 2.0f;
+			//tmove.x -= moveSpeed * 2.0f;
 		}
 		if (input_->PushKey(DIK_D)) {
 			move.x += moveSpeed * 2.0f;
@@ -139,7 +139,7 @@ void Player::Move() {
 		move.y -= moveSpeed;
 	}*/
 
-obj_->SetPosition(move);
+	obj_->SetPosition(move);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
 

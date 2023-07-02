@@ -188,13 +188,15 @@ void Enemy::Draw() {
 void Enemy::UpdateApproachStage1() {
 	//速度
 	XMFLOAT3 velocity;
+	float cameraMove = camera_->GetEye().x;
+
 	//移動
-	velocity = { 0.0f, 0.0f, -0.3f };
+	velocity = { 0.0f, 0.0f, -0.5f };
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;
 
-	obj_->SetPosition(pos);
+	obj_->SetPosition({ pos.x + cameraMove,pos.y,pos.z });
 	//発射タイマーカウントダウン
 	fireTimer--;
 	//指定時間に達した
@@ -206,7 +208,7 @@ void Enemy::UpdateApproachStage1() {
 	}
 
 	//指定の位置に到達したら攻撃
-	if (pos.z < 30.0f) {
+	if (pos.z < 60.0f) {
 		phase_ = Phase::AttackStage1;
 	}
 }
@@ -215,11 +217,12 @@ void Enemy::UpdateAttackStage1() {
 
 	//速度
 	XMFLOAT3 velocity;
+	float cameraMove = camera_->GetEye().x;
 	//制御点
-	start = { -30.0f,0.0f,0.0f };
-	p1 = { -10.0f,-30.0f,0.0f };
-	p2 = { 10.0f,30.0f,0.0f };
-	end = { 30.0f,0.0f,0.0f };
+	start = { -30.0f+cameraMove,0.0f,60.0f };
+	p1 = { -10.0f+cameraMove,-30.0f,60.0f };
+	p2 = { 10.0f+cameraMove,30.0f,60.0f };
+	end = { 30.0f+cameraMove,0.0f,60.0f };
 	//時間
 
 	//現在時間を取得する
@@ -232,7 +235,7 @@ void Enemy::UpdateAttackStage1() {
 	timeRate = min(elapsed / maxTime, 1.0f);
 
 	//移動
-	velocity = { 0.3f, 0.0f, 0.0f };
+	velocity = { 0.5f, 0.0f, 0.0f };
 	if (isReverse_) {
 		pos = Bezier3(end, p2, p1, start, timeRate);
 	}
@@ -241,11 +244,11 @@ void Enemy::UpdateAttackStage1() {
 	}
 	obj_->SetPosition(pos);
 	//指定の位置に到達したら反転
-	if (pos.x >= 30.0f) {
+	if (pos.x >= 30.0f+cameraMove) {
 		isReverse_ = true;
 		startCount = std::chrono::steady_clock::now();
 	}
-	if (pos.x <= -30.0f) {
+	if (pos.x <= -30.0f+cameraMove) {
 		isReverse_ = false;
 		startCount = std::chrono::steady_clock::now();
 	}

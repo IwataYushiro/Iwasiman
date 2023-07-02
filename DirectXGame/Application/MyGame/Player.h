@@ -105,7 +105,7 @@ private:
 	
 	//死亡フラグとライフ
 	bool isDead_ = false;
-	int life_ = 500;
+	int life_ = 5;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }

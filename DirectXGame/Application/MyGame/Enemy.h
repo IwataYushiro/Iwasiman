@@ -100,7 +100,7 @@ private:
 	std::chrono::steady_clock::time_point startCount;	//開始時間
 	std::chrono::steady_clock::time_point nowCount;		//現在時間
 	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	float	maxTime = 10.0f;					//全体時間
+	float	maxTime = 7.0f;					//全体時間
 	float	timeRate;
 	//制御点
 	XMFLOAT3 start;
