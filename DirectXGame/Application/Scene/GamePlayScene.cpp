@@ -21,6 +21,8 @@ void GamePlayScene::Initialize()
 	//敵関係
 	enemy_ = new Enemy();
 
+	goal_ = new Goal();
+
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
@@ -32,17 +34,22 @@ void GamePlayScene::Initialize()
 	//3Dオブジェクト生成
 	object3DPlayer_ = Object3d::Create();
 	object3DEnemy_ = Object3d::Create();
+	objGoal_ = Object3d::Create();
 
 	//OBJファイルからモデルデータを読み込む
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
+	modelGoal_ = Model::LoadFromOBJ("sphere");
 
 	//オブジェクトにモデル紐付ける
 	object3DPlayer_->SetModel(modelPlayer_);
 	object3DEnemy_->SetModel(modelEnemy_);
+	objGoal_->SetModel(modelGoal_);
+
 	//カメラも紐づけ
 	object3DPlayer_->SetCamera(camera_);
 	object3DEnemy_->SetCamera(camera_);
+	objGoal_->SetCamera(camera_);
 
 	//レベルデータ読み込み
 	LoadLVData();
@@ -66,6 +73,8 @@ void GamePlayScene::Initialize()
 	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
 
 	enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
+
+	goal_->Initialize(modelGoal_, objGoal_, camera_);
 	//敵に自機のアドレスを渡す
 	enemy_->SetPlayer(player_);
 
@@ -76,6 +85,7 @@ void GamePlayScene::Update()
 	//モデル呼び出し例
 	player_->Update();
 	enemy_->Update();
+	goal_->Update();
 
 	for (auto& object : objects) {
 		object->Update();
@@ -121,6 +131,7 @@ void GamePlayScene::Draw()
 	//モデル描画
 	player_->Draw();
 	enemy_->Draw();
+	goal_->Draw();
 	for (auto& object : objects) {
 		object->Draw();
 	}
@@ -151,6 +162,8 @@ void GamePlayScene::Finalize()
 	//3Dオブジェクト
 	delete object3DPlayer_;
 	delete object3DEnemy_;
+	delete objGoal_;
+
 	for (Object3d*& object : objects)
 	{
 		delete object;
@@ -159,12 +172,13 @@ void GamePlayScene::Finalize()
 	//3Dモデル
 	delete modelPlayer_;
 	delete modelEnemy_;
-delete modelSkydome;
+	delete modelSkydome;
 	delete modelGround;
-	delete modelSphere;
+	delete modelGoal_;
 	//基盤系
 	delete player_;
 	delete enemy_;
+	delete goal_;
 
 }
 //衝突判定と応答
@@ -241,6 +255,30 @@ void GamePlayScene::ChackAllCollisions() {
 	}
 #pragma endregion
 
+#pragma region 自機と仮ゴールの当たり判定
+	//それぞれの半径
+	radiusA = 3.0f;
+	radiusB = 10.0f;
+
+	//敵の座標
+	posA = player_->GetWorldPosition();
+	posB = goal_->GetWorldPosition();
+
+	
+		//座標A,Bの距離を求める
+		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
+		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
+		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
+		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+
+		//球と球の交差判定
+		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+			camera_->Reset();
+			sceneManager_->ChangeScene("TITLE");
+		}
+	
+#pragma endregion
+
 }
 
 void GamePlayScene::LoadLVData()
@@ -251,12 +289,10 @@ void GamePlayScene::LoadLVData()
 	// モデル読み込み
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
-	modelSphere = Model::LoadFromOBJ("sphere", true);
 	
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
-	models.insert(std::make_pair("sphere", modelSphere));
-
+	
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
 		// ファイル名から登録済みモデルを検索

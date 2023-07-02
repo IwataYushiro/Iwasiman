@@ -10,6 +10,7 @@
 
 #include "Player.h"
 #include "Enemy.h"
+#include "Goal.h"
 
 #include <map>
 
@@ -75,16 +76,19 @@ private:
 	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
 
+	Goal* goal_ = nullptr;
+	Object3d* objGoal_ = nullptr;
+	Model* modelGoal_ = nullptr;
 
 	LevelData* levelData = nullptr;
 
 	Model* modelSkydome = nullptr;
 	Model* modelGround = nullptr;
-	Model* modelSphere = nullptr;
-	
+
+
 	Object3d* objSkydome = nullptr;
 	Object3d* objGround = nullptr;
-	Object3d* objSphere = nullptr;
+
 
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
