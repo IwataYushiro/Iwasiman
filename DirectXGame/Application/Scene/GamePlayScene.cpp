@@ -26,7 +26,7 @@ void GamePlayScene::Initialize()
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
-	sound = audio_->SoundLoadWave("Resources/Alarm01.wav");
+	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
 	//音声再生呼び出し例
 	audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
