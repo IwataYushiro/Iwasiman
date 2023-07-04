@@ -472,6 +472,9 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Goal.cpp">
       <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Light\LightGroup.cpp">
+      <Filter>Source File\Engine\3D\Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -587,6 +590,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Goal.h">
       <Filter>Header File\Application\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Light\LightGroup.h">
+      <Filter>Header File\Engine\3D\Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

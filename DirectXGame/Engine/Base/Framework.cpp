@@ -30,7 +30,7 @@ void Framework::Initialize()
 	//スプライト基盤
 	sprCommon_->Initialize(dxCommon_);
 	//入力
-	input_->Initialize(winApp_);
+	input_->Initialize();
 	//imgui
 	imguiManager_->Initialize(winApp_, dxCommon_);
 	//FBX

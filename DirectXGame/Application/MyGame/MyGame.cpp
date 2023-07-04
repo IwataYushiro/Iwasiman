@@ -21,7 +21,7 @@ void MyGame::Update()
 	// DirectX毎フレーム処理　ここから
 	// 更新処理ここから
 	Framework::Update();
-	if (input_->TriggerKey(DIK_0))
+	if (input_->ReleaseMouse(0))
 	{
 		postCount++;
 	}
