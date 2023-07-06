@@ -1,6 +1,6 @@
 #pragma once
 #include "Audio.h"
-#include "DirectionalLight.h"
+#include "LightGroup.h"
 #include "DirectXCommon.h"
 #include "ImGuiManager.h"
 #include "Object3d.h"
@@ -74,7 +74,7 @@ private://メンバ変数
 	std::vector<Object3d*> objects;
 
 	//ライト
-	DirectionalLight* light_ = nullptr;
+	LightGroup* lightGroup_ = nullptr;
 	//パーティクル
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm1_ = nullptr;

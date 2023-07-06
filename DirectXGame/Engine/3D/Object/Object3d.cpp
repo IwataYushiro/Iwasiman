@@ -25,7 +25,7 @@ ComPtr<ID3DBlob> Object3d::rootSigBlob;
 ComPtr<ID3DBlob> Object3d::vsBlob; // 頂点シェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::psBlob;	// ピクセルシェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::errorBlob; // エラーオブジェクト
-DirectionalLight* Object3d::light_ = nullptr;
+LightGroup* Object3d::lightGroup_ = nullptr;
 
 void Object3d::StaticInitialize(ID3D12Device* device)
 {
@@ -319,7 +319,7 @@ void Object3d::Draw()
 
 	//cmdList->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	//ライト描画
-	light_->Draw(cmdList, 3);
+	lightGroup_->Draw(cmdList, 3);
 	//モデルを描画
 	model_->Draw(cmdList);
 }

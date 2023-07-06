@@ -1,7 +1,7 @@
 #pragma once
 #include "Audio.h"
 #include "Camera.h"
-#include "DirectionalLight.h"
+#include "LightGroup.h"
 #include "DirectXCommon.h"
 #include "ImGuiManager.h"
 #include "Object3d.h"
@@ -100,6 +100,6 @@ private:
 	Particle* particle2_ = nullptr;
 	ParticleManager* pm2_ = nullptr;
 	//ƒ‰ƒCƒg
-	DirectionalLight* light_ = nullptr;
+	LightGroup* lightGroup_ = nullptr;
 
 };

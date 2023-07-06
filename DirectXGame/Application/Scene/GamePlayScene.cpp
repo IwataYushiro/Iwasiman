@@ -55,9 +55,8 @@ void GamePlayScene::Initialize()
 	LoadLVData();
 
 	//ライトを生成
-	light_ = DirectionalLight::Create();
-	light_->SetLightColor({ 1.0f,1.0f,1.0f });
-	Object3d::SetLight(light_);
+	lightGroup_ = LightGroup::Create();
+	Object3d::SetLightGroup(lightGroup_);
 
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
@@ -94,7 +93,7 @@ void GamePlayScene::Update()
 	ChackAllCollisions();
 	//カメラ
 	camera_->Update();
-	light_->Update();
+	lightGroup_->Update();
 	pm1_->Update();
 	pm2_->Update();
 
@@ -157,7 +156,7 @@ void GamePlayScene::Finalize()
 	delete particle2_;
 	delete pm2_;
 	//ライト
-	delete light_;
+	delete lightGroup_;
 	//モデル
 	//3Dオブジェクト
 	delete object3DPlayer_;
