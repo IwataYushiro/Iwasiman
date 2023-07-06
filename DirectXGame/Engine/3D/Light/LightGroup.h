@@ -1,6 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 #include "DirectionalLight.h"
+#include "PointLight.h"
 
 //ライト
 class LightGroup
@@ -17,6 +18,8 @@ private: // エイリアス
 
 public://定数
 	static const int DirLightNum = 3;
+	//点光源の数
+	static const int PointLightNum = 3;
 
 public://サブクラス
 	//定数バッファ用データ構造体
@@ -27,6 +30,8 @@ public://サブクラス
 		float pad1;
 		//平行光源用
 		DirectionalLight::ConstBufferData dirLights[DirLightNum];
+		//点光源用
+		PointLight::ConstBufferData pointLights[PointLightNum];
 	};
 
 private://静的メンバ変数
@@ -49,6 +54,9 @@ private://メンバ変数
 	//ダーティフラグ
 	bool dirty = false;
 
+	//点光源の配列
+	PointLight pointLights[PointLightNum];
+
 public://メンバ関数
 	//初期化
 	void Initialize();
@@ -70,6 +78,16 @@ public://メンバ関数
 	void SetDirLightDir(int index, const XMVECTOR& lightdir);
 	//平行光源のライト色のセット
 	void SetDirLightColor(int index, const XMFLOAT3& lightcolor);
+
+	//点光源
+	//ライト座標
+	void SetPointLightPos(int index,const XMFLOAT3& lightPos);
+	//ライトの色
+	void SetPointLightColor(int index, const XMFLOAT3& lightColor);
+	//ライト距離の減衰係数
+	void SetPointLightAtten(int index, const XMFLOAT3& lightAtten);
+	//平行光源のライト色のセット
+	void SetPointLightActive(int index, bool active);
 };
 
 

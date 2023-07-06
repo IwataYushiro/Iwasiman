@@ -419,6 +419,7 @@
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ObjectFbx.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Light\DirectionalLight.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Light\LightGroup.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Light\PointLight.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Material.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Mesh.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Model.h" />

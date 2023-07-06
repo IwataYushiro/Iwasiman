@@ -71,6 +71,6 @@ public://メンバ関数
 	//有効フラグのセット
 	inline void SetActive(bool active) { this->active_ = active; }
 	//有効かどうか
-	inline bool isActive() { return active_; }
+	inline bool IsActive() { return active_; }
 };
 

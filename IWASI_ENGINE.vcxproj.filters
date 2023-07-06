@@ -594,5 +594,8 @@
     <ClInclude Include="DirectXGame\Engine\3D\Light\LightGroup.h">
       <Filter>Header File\Engine\3D\Light</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Light\PointLight.h">
+      <Filter>Header File\Engine\3D\Light</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

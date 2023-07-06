@@ -83,12 +83,13 @@ void LightGroup::TransferConstBuffer()
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
+		//ä¬ã´åı
 		constMap->ambientColor = ambientColor;
-
+		//ïΩçsåıåπ
 		for (int i = 0; i < DirLightNum; i++)
 		{
 			//lightÇ™óLå¯Ç»ÇÁê›íËÇì]ëó
-			if (dirLights[i].isActive())
+			if (dirLights[i].IsActive())
 			{
 				constMap->dirLights[i].active = 1;
 				constMap->dirLights[i].lightV = -dirLights[i].GetLightDir();
@@ -98,6 +99,23 @@ void LightGroup::TransferConstBuffer()
 			else
 			{
 				constMap->dirLights[i].active = 0;
+			}
+		}
+		//ì_åıåπ
+		for (int i = 0; i < PointLightNum; i++)
+		{
+			//lightÇ™óLå¯Ç»ÇÁê›íËÇì]ëó
+			if (pointLights[i].IsActive())
+			{
+				constMap->pointLights[i].active = 1;
+				constMap->pointLights[i].lightPos = pointLights[i].GetLightPos();
+				constMap->pointLights[i].lightColor = pointLights[i].GetLightColor();
+				constMap->pointLights[i].lightatten = pointLights[i].GetLightAtten();
+			}
+			//ñ≥å¯Ç»ÇÁì]ëóÇµÇ»Ç¢
+			else
+			{
+				constMap->pointLights[i].active = 0;
 			}
 		}
 		constBuff->Unmap(0, nullptr);
@@ -143,4 +161,32 @@ void LightGroup::SetDirLightColor(int index, const XMFLOAT3& lightcolor)
 	assert(0 <= index && index < DirLightNum);
 	dirLights[index].SetLightColor(lightcolor);
 	dirty = true;
+}
+
+void LightGroup::SetPointLightPos(int index, const XMFLOAT3& lightPos)
+{
+	assert(0 <= index && index < PointLightNum);
+	pointLights[index].SetLightPos(lightPos);
+	dirty = true;
+}
+
+void LightGroup::SetPointLightColor(int index, const XMFLOAT3& lightColor)
+{
+	assert(0 <= index && index < PointLightNum);
+	pointLights[index].SetLightColor(lightColor);
+	dirty = true;
+
+}
+
+void LightGroup::SetPointLightAtten(int index, const XMFLOAT3& lightAtten)
+{
+	assert(0 <= index && index < PointLightNum);
+	pointLights[index].SetLightAtten(lightAtten);
+	dirty = true;
+}
+
+void LightGroup::SetPointLightActive(int index, bool active)
+{
+	assert(0 <= index && index < PointLightNum);
+	pointLights[index].SetActive(active);
 }
