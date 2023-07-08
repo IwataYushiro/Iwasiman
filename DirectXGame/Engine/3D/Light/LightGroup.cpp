@@ -125,16 +125,21 @@ void LightGroup::TransferConstBuffer()
 void LightGroup::DefaultLightSetting()
 {
 	dirLights[0].SetActive(true);
-	dirLights[0].SetLightColor({ 1.0f,1.0f,1.0f });
+	dirLights[0].SetLightColor({ 0.0f,0.0f,1.0f });
 	dirLights[0].SetLightDir({ 0.0f,-1.0f,0.0f,0.0f });
 
 	dirLights[1].SetActive(true);
-	dirLights[1].SetLightColor({ 1.0f,1.0f,1.0f });
+	dirLights[1].SetLightColor({ 0.0f,0.0f,1.0f });
 	dirLights[1].SetLightDir({ 0.5f,0.1f,0.2f,0.0f });
 
 	dirLights[2].SetActive(true);
-	dirLights[2].SetLightColor({ 1.0f,1.0f,1.0f });
+	dirLights[2].SetLightColor({ 0.0f,0.0f,1.0f });
 	dirLights[2].SetLightDir({ -0.5f,0.1f,-0.2f,0.0f });
+
+	pointLights[0].SetActive(false);
+	pointLights[0].SetLightColor({ 1.0f,1.0f,1.0f });
+	pointLights[0].SetLightPos({ 0.0f,0.0f,0.0f });
+	pointLights[0].SetLightAtten({ 1.0f,1.0f,1.0f });
 }
 
 void LightGroup::SetAmbientColor(const XMFLOAT3& color)

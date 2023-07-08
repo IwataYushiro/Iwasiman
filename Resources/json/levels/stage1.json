@@ -85,7 +85,20 @@
                     1.0
                 ]
             },
-            "file_name": "ground"
+            "file_name": "ground",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    200.0,
+                    200.0,
+                    2.0
+                ]
+            }
         }
     ]
 }

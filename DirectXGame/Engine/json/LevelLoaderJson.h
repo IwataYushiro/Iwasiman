@@ -16,6 +16,12 @@ struct LevelData
 		DirectX::XMVECTOR rot;
 		//スケール
 		DirectX::XMVECTOR scale;
+
+		//コライダー
+		//中心点
+		DirectX::XMVECTOR centerCollider;
+		//サイズ
+		DirectX::XMVECTOR sizeCollider;
 	};
 	//オブジェクト配列
 	std::vector<ObjectData> objects;

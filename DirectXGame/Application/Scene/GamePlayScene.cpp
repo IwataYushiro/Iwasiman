@@ -89,7 +89,7 @@ void GamePlayScene::Update()
 	for (auto& object : objects) {
 		object->Update();
 	}
-
+	lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
 	ChackAllCollisions();
 	//ƒJƒƒ‰
 	camera_->Update();

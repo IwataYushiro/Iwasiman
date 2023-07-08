@@ -159,7 +159,6 @@ void Player::Move() {
 	obj_->SetPosition(move);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
-
 }
 
 void Player::CameraMove()

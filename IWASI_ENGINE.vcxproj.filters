@@ -44,9 +44,6 @@
     <Filter Include="Source File\Engine\3D\FBX">
       <UniqueIdentifier>{ac0b00d4-e452-4253-9877-7f6e0f96ea93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source File\Engine\3D\Light">
-      <UniqueIdentifier>{54670238-1e42-4114-bd78-9be17ce69585}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source File\Engine\2D">
       <UniqueIdentifier>{f2774ded-34ff-4376-9a68-652e8d593542}</UniqueIdentifier>
     </Filter>
@@ -186,6 +183,9 @@
     </Filter>
     <Filter Include="Source File\Engine\json">
       <UniqueIdentifier>{5a70d4cc-1708-48e7-84db-b844d4c6a537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\3D\Object\Light">
+      <UniqueIdentifier>{54670238-1e42-4114-bd78-9be17ce69585}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -461,7 +461,7 @@
       <Filter>Source File\Engine\3D\Object</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Light\DirectionalLight.cpp">
-      <Filter>Source File\Engine\3D\Light</Filter>
+      <Filter>Source File\Engine\3D\Object\Light</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\2D\PostEffect\PostEffect.cpp">
       <Filter>Source File\Engine\2D\PostEffect</Filter>
@@ -473,7 +473,7 @@
       <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Light\LightGroup.cpp">
-      <Filter>Source File\Engine\3D\Light</Filter>
+      <Filter>Source File\Engine\3D\Object\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

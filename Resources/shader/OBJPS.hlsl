@@ -8,7 +8,7 @@ float4 Lambert(VSOutput input)
     //ランバート反射
     float3 light = normalize(float3(1, -1, 1)); // 右下奥　向きのライト
     float light_diffuse = saturate(dot(-light, input.normal));
-    float shade_color;
+    float3 shade_color;
     shade_color = m_ambient; //アンビエント値
     shade_color += m_diffuse * light_diffuse; //ディフューズ値
     float4 texcolor = tex.Sample(smp, input.uv);
@@ -46,6 +46,33 @@ float4 Phong(VSOutput input)
             shade_color.a = m_alpha;
         }
     }
+    
+    for (i = 0; i < POINTLIGHT_NUM; i++)
+    {
+        if (pointLights[i].active)
+        {
+	        //ライトへのベクトル
+            float3 lightv = pointLights[i].lightpos - input.worldPos.xyz;
+            //ベクトルの長さ
+            float d = length(lightv);
+            //正規化し、単位ベクトルにする
+            lightv = normalize(lightv);
+            //距離減衰係数
+            float atten = 1.0f / (pointLights[i].lightatten.x
+            + pointLights[i].lightatten.y * d + pointLights[i].lightatten.z * d * d);
+            //ライトに向かうベクトルと法線の内積
+            float3 dotlightnormal = dot(lightv, input.normal);
+            //反射光ベクトル
+            float3 reflect = normalize(-lightv + 2.0f * dotlightnormal * input.normal);
+            //拡散反射光
+            float3 diffuse = dotlightnormal * m_diffuse;
+            //鏡面反射光
+            float3 specular = pow(saturate(dot(reflect, eyeDir)), shininess) * m_specular;
+            //全加算
+            shade_color.rgb += atten * (diffuse + specular) * pointLights[i].lightcolor;
+            shade_color.a = m_alpha;
+        }
+    }
 	//シェーディングカラーで描画
     return shade_color * texcolor;
 }
@@ -75,7 +102,7 @@ float Gaussian(float2 drawUV, float2 pickUV, float sigma)
 
 float4 GaussianBlur(VSOutput input) : SV_TARGET
 {
-    float totalWeight = 0.0f, _Sigma = 0.005f, _StepWidth = 0.005f;
+    float totalWeight = 0.0f, _Sigma = 0.01f, _StepWidth = 0.01f;
     float4 col = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
     for (float py = -_Sigma * 2.0f; py <= _Sigma * 2.0f; py += _StepWidth)
@@ -99,7 +126,8 @@ float4 Bloom(VSOutput input) : SV_TARGET
 {
     float4 texcolor0 = GaussianBlur(input);
     float4 texcolor1 = highLumi(input);
-    return texcolor0 + texcolor1;
+    float4 col = texcolor0 + texcolor1;
+    return col;
 }
 
 float4 Mosaic(VSOutput input) : SV_TARGET
@@ -115,6 +143,6 @@ float4 Mosaic(VSOutput input) : SV_TARGET
 
 float4 main(VSOutput input) : SV_TARGET
 {
-    float4 shade = Phong(input) * Bloom(input);
+    float4 shade = Phong(input);
     return shade;
 }
