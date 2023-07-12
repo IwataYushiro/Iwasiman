@@ -36,9 +36,8 @@ void TitleScene::Initialize()
 	//LoadLVData();
 
 	//ライトを生成
-	light_ = DirectionalLight::Create();
-	light_->SetLightColor({ 1.0f,1.0f,1.0f });
-	Object3d::SetLight(light_);
+	lightGroup_ = LightGroup::Create();
+	Object3d::SetLightGroup(lightGroup_);
 
 	UINT titleTex = 00;
 	spCommon_->LoadTexture(titleTex, "texture/title2.png");
@@ -74,7 +73,7 @@ void TitleScene::Update()
 		object->Update();
 	}*/
 	camera_->Update();
-	light_->Update();
+	lightGroup_->Update();
 	//pm1_->Update();
 	
 	objF->Update();
@@ -134,7 +133,7 @@ void TitleScene::Finalize()
 	delete modelSphere;*/
 
 	//ライト
-	delete light_;
+	delete lightGroup_;
 	//パーティクル
 	//delete particle1_;
 	//delete pm1_;

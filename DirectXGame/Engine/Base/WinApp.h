@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 
-class WinApp
+class WinApp final
 {
 public://定数
 	//ウィンドゥサイズ
@@ -36,4 +36,11 @@ public://アクセッサ置き場
 	HINSTANCE GetHinstance() const { return wndClassEx.hInstance; }
 
 	static WinApp* GetInstance();
+
+private:
+	WinApp()=default;
+	~WinApp() = default;
+public:
+	WinApp(const WinApp& obj) = delete;
+	WinApp& operator=(const WinApp& obj) = delete;
 };

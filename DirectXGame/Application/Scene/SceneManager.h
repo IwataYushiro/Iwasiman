@@ -2,7 +2,7 @@
 #include "BaseScene.h"
 #include "AbstractSceneFactory.h"
 
-class SceneManager
+class SceneManager final
 {
 public://シングルトンインスタンス
 	static SceneManager* GetInstance();
@@ -31,4 +31,10 @@ public://アクセッサ置き場
 	//シーンファクトリーのセッター
 	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { this->sceneFactory_ = sceneFactory; }
 
+private:
+	SceneManager() = default;
+	~SceneManager() = default;
+public:
+	SceneManager(const SceneManager& obj) = delete;
+	SceneManager& operator=(const SceneManager& obj) = delete;
 };

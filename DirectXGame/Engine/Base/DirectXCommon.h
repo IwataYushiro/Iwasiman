@@ -8,7 +8,7 @@
 
 #include "WinApp.h"
 
-class DirectXCommon
+class DirectXCommon final
 {
 public: // 省略
 	//エイリアステンプレート
@@ -87,4 +87,10 @@ private://メンバ関数
 	void UpdateFixFPS();
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point referense_;
+private:
+	DirectXCommon() = default;
+	~DirectXCommon() = default;
+public:
+	DirectXCommon(const DirectXCommon& obj) = delete;
+	DirectXCommon& operator=(const DirectXCommon& obj) = delete;
 };

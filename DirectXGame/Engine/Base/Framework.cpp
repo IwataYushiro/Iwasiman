@@ -1,5 +1,5 @@
 #include "Framework.h"
-#include "DirectionalLight.h"
+#include "LightGroup.h"
 #include "Object3d.h"
 #include "ObjectFbx.h"
 #include "ParticleManager.h"
@@ -30,7 +30,7 @@ void Framework::Initialize()
 	//スプライト基盤
 	sprCommon_->Initialize(dxCommon_);
 	//入力
-	input_->Initialize(winApp_);
+	input_->Initialize();
 	//imgui
 	imguiManager_->Initialize(winApp_, dxCommon_);
 	//FBX
@@ -40,7 +40,7 @@ void Framework::Initialize()
 	ObjectFbx::StaticInitialize(dxCommon_->GetDevice());
 	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 	//ライト
-	DirectionalLight::StaticInitialize(dxCommon_->GetDevice());
+	LightGroup::StaticInitialize(dxCommon_->GetDevice());
 	
 	
 

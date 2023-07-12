@@ -7,7 +7,7 @@
 #include <d3dx12.h>
 #include "Model.h"
 #include "Camera.h"
-#include "DirectionalLight.h"
+#include "LightGroup.h"
 #include <unordered_map>
 
 /// <summary>
@@ -81,7 +81,7 @@ private: // 静的メンバ変数
 	static ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
 	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 	//ライト
-	static DirectionalLight* light_;
+	static LightGroup* lightGroup_;
 
 private:// 静的メンバ関数
 	/// <summary>
@@ -154,7 +154,7 @@ public: //アクセッサ置き場
 	//カメラ
 	void SetCamera( Camera* camera) { this->camera_ = camera; }
 	//ライト
-	static void SetLight(DirectionalLight* light) { Object3d::light_ = light; }
+	static void SetLightGroup(LightGroup* lightGroup) { Object3d::lightGroup_ = lightGroup; }
 	//ビルボード
 	void SetBillboard(bool isBillboard) { this->isBillboard_ = isBillboard; }
 };

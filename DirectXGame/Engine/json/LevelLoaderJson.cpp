@@ -77,6 +77,22 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName)
 			objectData.scale.m128_f32[1] = (float)transform["scaling"][2];
 			objectData.scale.m128_f32[2] = (float)transform["scaling"][0];
 			objectData.scale.m128_f32[3] = 0.0f;
+
+			// コライダーのパラメータ読み込み
+			nlohmann::json& collider = object["collider"];
+			if (type.compare("BOX") == 0)
+			{
+				// 平行移動
+				objectData.centerCollider.m128_f32[0] = (float)collider["center"][1];
+				objectData.centerCollider.m128_f32[1] = (float)collider["center"][2];
+				objectData.centerCollider.m128_f32[2] = -(float)collider["center"][0];
+				objectData.centerCollider.m128_f32[3] = 1.0f;
+				// 回転角
+				objectData.sizeCollider.m128_f32[0] = -(float)collider["size"][1];
+				objectData.sizeCollider.m128_f32[1] = -(float)collider["size"][2];
+				objectData.sizeCollider.m128_f32[2] = (float)collider["size"][0];
+				objectData.sizeCollider.m128_f32[3] = 0.0f;
+			}
 		}
 		//オブジェクト走査を再帰関数で走査(一旦後で)
 		if (object.contains("children")) {

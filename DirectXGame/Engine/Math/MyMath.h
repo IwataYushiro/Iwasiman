@@ -10,6 +10,8 @@ namespace MyMath {
 	using XMMATRIX = DirectX::XMMATRIX;
 	const float PI = 3.141592654f;
 
+	//ランダム生成
+	float RandomMT(float min, float max);
 	// 零ベクトルを返す
 	const XMFLOAT3 MySetVector3Zero();
 	// 2ベクトルが一致しているか調べる
@@ -56,7 +58,7 @@ namespace MyMath {
 	XMMATRIX MyGenMatrix4Translation(XMFLOAT3 translation);
 
 	//ワールド行列の作成
-	XMMATRIX MySynMatrix4WorldTransform(WorldTransform worldTransform);
+	//XMMATRIX MySynMatrix4WorldTransform(WorldTransform worldTransform);
 
 	//視点移動ベクトルを変更
 	XMFLOAT3 MyChanVector3ViewEye(Input* key);

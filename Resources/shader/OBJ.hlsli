@@ -12,12 +12,32 @@ cbuffer cbuff1 : register(b1)
 	float3 m_specular : packoffset(c2);	//スペキュラー係数
 	float  m_alpha : packoffset(c2.w);	//アルファ値
 };
+static const int DIR_LIGHT_NUM = 3;
+
+struct DirLight
+{
+    float3 lightv; //ライトへの方向の単位ベクトル
+    float3 lightcolor; //ライトの色(RGB)
+    uint active;
+};
+
+static const int POINTLIGHT_NUM = 3;
+
+struct PointLight
+{
+    float3 lightpos;
+    float3 lightcolor;
+    float3 lightatten;
+    uint active;
+};
 
 cbuffer cbuff2 : register(b2)
 {
-    float3 lightv;			//ライト方向の単位ベクトル
-    float3 lightcolor;		//ライトの色
+    float3 ambientColor;
+    DirLight dirLights[DIR_LIGHT_NUM];
+    PointLight pointLights[POINTLIGHT_NUM];
 };
+
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
 struct VSOutput
 {

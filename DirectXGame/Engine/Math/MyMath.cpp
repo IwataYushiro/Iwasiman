@@ -1,6 +1,7 @@
-//#include "MyMath.h"
-//
-//using namespace DirectX;
+#include "MyMath.h"
+#include <random>
+
+using namespace DirectX;
 //
 ////—ëƒxƒNƒgƒ‹‚ð•Ô‚·
 //const XMFLOAT3 MyMathUtility::MySetVector3Zero() {
@@ -250,3 +251,12 @@
 //
 //	return vector;
 //}
+
+float MyMath::RandomMT(float min, float max)
+{
+	std::random_device seed;
+	std::mt19937_64 engine(seed());
+	std::uniform_real_distribution<float> dist(min, max);
+
+	return dist(engine);
+}

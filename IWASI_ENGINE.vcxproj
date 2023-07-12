@@ -376,6 +376,7 @@
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ModelFbx.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ObjectFbx.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Light\DirectionalLight.cpp" />
+    <ClCompile Include="DirectXGame\Engine\3D\Light\LightGroup.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Material.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Mesh.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Model.cpp" />
@@ -417,6 +418,8 @@
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ModelFbx.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ObjectFbx.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Light\DirectionalLight.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Light\LightGroup.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Light\PointLight.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Material.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Mesh.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Model.h" />

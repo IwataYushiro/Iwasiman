@@ -4,7 +4,7 @@
 #include <wrl.h>
 
 //音声
-class Audio
+class Audio final
 {
 private://エイリアス
 	// Microsoft::WRL::を省略
@@ -69,4 +69,10 @@ private://メンバ変数
 public://アクセッサ置き場
 	//xAudio2
 	IXAudio2* GetXAudio2() { return xaudio2.Get(); }
+private:
+	Audio() = default;
+	~Audio() = default;
+public:
+	Audio(const Audio& obj) = delete;
+	Audio& operator=(const Audio& obj) = delete;
 };
