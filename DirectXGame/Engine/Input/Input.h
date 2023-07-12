@@ -27,8 +27,6 @@ private://構造体類
 public://シングルトンインスタンス
 	static Input* GetInstance();
 public:
-	//デストラクタ
-	~Input();
 	//初期化
 	void Initialize();
 
@@ -104,7 +102,7 @@ private://メンバ変数
 
 private:
 	Input() = default;
-	~Input() = default;
+	~Input();
 public:
 	Input(const Input& obj) = delete;
 	Input& operator=(const Input& obj) = delete;
