@@ -8,7 +8,7 @@
 
 //スプライト基盤クラス
 
-class SpriteCommon
+class SpriteCommon final
 {
 public:
 	//エイリアステンプレートとかで色々省略
@@ -85,4 +85,10 @@ public://アクセッサ
 	ID3D12PipelineState* GetPipelineState() { return pipelineState.Get(); }
 	//ルートシグネチャ
 	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
+private:
+	SpriteCommon() = default;
+	~SpriteCommon() = default;
+public:
+	SpriteCommon(const SpriteCommon& obj) = delete;
+	SpriteCommon& operator=(const SpriteCommon& obj) = delete;
 };

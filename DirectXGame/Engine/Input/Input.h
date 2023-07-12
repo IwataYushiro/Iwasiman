@@ -9,7 +9,7 @@
 #include <wrl.h>
 
 //入力
-class Input
+class Input final
 {
 public:
 	//エイリアステンプレートでnamespace省略
@@ -102,4 +102,10 @@ private://メンバ変数
 	//マウス座標
 	DirectX::XMFLOAT2 mousePos;
 
+private:
+	Input() = default;
+	~Input() = default;
+public:
+	Input(const Input& obj) = delete;
+	Input& operator=(const Input& obj) = delete;
 };

@@ -143,6 +143,6 @@ float4 Mosaic(VSOutput input) : SV_TARGET
 
 float4 main(VSOutput input) : SV_TARGET
 {
-    float4 shade = Phong(input);
+    float4 shade = Bloom(input);
     return shade;
 }

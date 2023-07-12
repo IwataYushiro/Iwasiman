@@ -7,7 +7,7 @@
 #include <imgui_impl_win32.h>
 
 //ImGui管理
-class ImGuiManager
+class ImGuiManager final
 {
 private://エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -44,4 +44,10 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	//SRV用のデスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> srvHeap_;
+private:
+	ImGuiManager() = default;
+	~ImGuiManager() = default;
+public:
+	ImGuiManager(const ImGuiManager& obj) = delete;
+	ImGuiManager& operator=(const ImGuiManager& obj) = delete;
 };
