@@ -5,6 +5,8 @@
 #include <sstream>
 #include <string>
 #include <Vector>
+#include "BaseCollider.h"
+#include "CollisionManager.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -26,6 +28,16 @@ ComPtr<ID3DBlob> Object3d::vsBlob; // 頂点シェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::psBlob;	// ピクセルシェーダオブジェクト
 ComPtr<ID3DBlob> Object3d::errorBlob; // エラーオブジェクト
 LightGroup* Object3d::lightGroup_ = nullptr;
+
+Object3d::~Object3d()
+{
+	if (collider)
+	{
+		//CollisionManagerから登録解除
+		CollisionManager::GetInstance()->RemoveCollider(collider);
+		delete collider;
+	}
+}
 
 void Object3d::StaticInitialize(ID3D12Device* device)
 {
@@ -303,6 +315,12 @@ void Object3d::Update()
 	constMap0->world = matWorld;
 	constMap0->cameraPos = cameraPos;
 	constBuffB0->Unmap(0, nullptr);
+
+	//当たり判定更新
+	if (collider)
+	{
+		collider->Update();
+	}
 }
 
 void Object3d::Draw()
@@ -322,4 +340,14 @@ void Object3d::Draw()
 	lightGroup_->Draw(cmdList, 3);
 	//モデルを描画
 	model_->Draw(cmdList);
+}
+
+void Object3d::SetCollider(BaseCollider* collider)
+{
+	collider->SetObject(this);
+	this->collider = collider;
+	//コリジョンマネージャーに登録
+	CollisionManager::GetInstance()->AddCollider(collider);
+	//コライダー更新
+	collider->Update();
 }

@@ -184,7 +184,13 @@
     <Filter Include="Source File\Engine\json">
       <UniqueIdentifier>{5a70d4cc-1708-48e7-84db-b844d4c6a537}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source File\Engine\3D\Object\Light">
+    <Filter Include="Source File\Engine\3D\Collider">
+      <UniqueIdentifier>{f96b9866-dfdd-4272-9bff-48e3697bc12b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Engine\3D\Collider">
+      <UniqueIdentifier>{19dbb340-4aca-42b5-b879-2f8f82c6a146}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Engine\3D\Light">
       <UniqueIdentifier>{54670238-1e42-4114-bd78-9be17ce69585}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -461,7 +467,7 @@
       <Filter>Source File\Engine\3D\Object</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Light\DirectionalLight.cpp">
-      <Filter>Source File\Engine\3D\Object\Light</Filter>
+      <Filter>Source File\Engine\3D\Light</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\2D\PostEffect\PostEffect.cpp">
       <Filter>Source File\Engine\2D\PostEffect</Filter>
@@ -473,7 +479,19 @@
       <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Light\LightGroup.cpp">
-      <Filter>Source File\Engine\3D\Object\Light</Filter>
+      <Filter>Source File\Engine\3D\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Collider\Collision.cpp">
+      <Filter>Source File\Engine\3D\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Collider\CollisionManager.cpp">
+      <Filter>Source File\Engine\3D\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Collider\CollisionPrimitive.cpp">
+      <Filter>Source File\Engine\3D\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Collider\SphereCollider.cpp">
+      <Filter>Source File\Engine\3D\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -596,6 +614,27 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Light\PointLight.h">
       <Filter>Header File\Engine\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\BaseCollider.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\Collision.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionInfo.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionManager.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionPrimitive.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionTypes.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\SphereCollider.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,6 +9,9 @@
 #include "Camera.h"
 #include "LightGroup.h"
 #include <unordered_map>
+#include "CollisionInfo.h"
+
+class BaseCollider;
 
 /// <summary>
 /// 3Dオブジェクト
@@ -22,6 +25,10 @@ private: // エイリアス
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+
+public://コンストラクタ等
+	Object3d() = default;
+	virtual ~Object3d();
 
 public: // サブクラス
 	
@@ -82,6 +89,9 @@ private: // 静的メンバ変数
 	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 	//ライト
 	static LightGroup* lightGroup_;
+
+	//コライダー
+	BaseCollider* collider = nullptr;
 
 private:// 静的メンバ関数
 	/// <summary>
@@ -157,5 +167,11 @@ public: //アクセッサ置き場
 	static void SetLightGroup(LightGroup* lightGroup) { Object3d::lightGroup_ = lightGroup; }
 	//ビルボード
 	void SetBillboard(bool isBillboard) { this->isBillboard_ = isBillboard; }
+
+	//コライダーのセット
+	void SetCollider(BaseCollider* collider);
+
+	//衝突時のコールバック
+	virtual void OnCollision(const CollisionInfo& info) {}
 };
 
