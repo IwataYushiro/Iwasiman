@@ -72,9 +72,6 @@ private:
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy_ = nullptr;
 
-	//3Dオブジェクト
-	Object3d* object3DEnemy_ = nullptr;
-
 	Goal* goal_ = nullptr;
 	Model* modelGoal_ = nullptr;
 

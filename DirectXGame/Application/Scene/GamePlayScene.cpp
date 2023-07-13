@@ -18,10 +18,6 @@ ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
 void GamePlayScene::Initialize()
 {
-	
-	//敵関係
-	enemy_ = new Enemy();
-
 	colManager_ = CollisionManager::GetInstance();
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
@@ -29,11 +25,6 @@ void GamePlayScene::Initialize()
 	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
 	//音声再生呼び出し例
 	audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
-
-	//3Dオブジェクト関係
-	//3Dオブジェクト生成
-	
-	object3DEnemy_ = Object3d::Create();
 
 	//OBJファイルからモデルデータを読み込む
 	modelPlayer_ = Model::LoadFromOBJ("player");
@@ -50,12 +41,10 @@ void GamePlayScene::Initialize()
 	goal_->SetCamera(camera_);
 	goal_->Update();
 
-	//オブジェクトにモデル紐付ける
-	object3DEnemy_->SetModel(modelEnemy_);
-	
-	//カメラも紐づけ
-	
-	object3DEnemy_->SetCamera(camera_);
+	//敵初期化
+	enemy_ = Enemy::Create(modelEnemy_);
+	enemy_->SetCamera(camera_);
+	enemy_->Update();
 	
 	//レベルデータ読み込み
 	LoadLVData();
@@ -74,9 +63,7 @@ void GamePlayScene::Initialize()
 	pm2_ = ParticleManager::Create();
 	pm2_->SetParticleModel(particle2_);
 	pm2_->SetCamera(camera_);
-	//ポジション
-	enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
-
+	
 	//敵に自機のアドレスを渡す
 	enemy_->SetPlayer(player_);
 
@@ -167,8 +154,6 @@ void GamePlayScene::Finalize()
 	//ライト
 	delete lightGroup_;
 	//モデル
-	//3Dオブジェクト
-	delete object3DEnemy_;
 	
 	for (Object3d*& object : objects)
 	{

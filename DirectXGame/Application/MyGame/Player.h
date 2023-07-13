@@ -1,5 +1,4 @@
 #pragma once
-#include "Camera.h"
 #include "Input.h"
 #include "Model.h"
 #include "Object3d.h"

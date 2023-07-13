@@ -12,7 +12,7 @@
 class Player;
 
 //敵
-class Enemy {
+class Enemy:public Object3d {
 private:
 	// DirectX::を省略
 	using XMFLOAT2 = DirectX::XMFLOAT2;
@@ -22,10 +22,11 @@ private:
 
 public:
 	~Enemy();
+	static Enemy* Create(Model* model = nullptr);
 	//弾発射間隔
 	static const int kFireIntervalStage1 = 40;
 	//初期化
-	void Initialize(Model* model, Object3d* obj,Camera* camera);
+	bool Initialize()override;
 
 	//リセット処理
 	void Reset();
@@ -33,7 +34,7 @@ public:
 	//パラメータ
 	void Stage1Parameter();
 	//更新
-	void Update();
+	void Update()override;
 	//転送　
 	void Trans();
 	//弾発射
@@ -54,6 +55,7 @@ public:
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数
+	void OnCollision(const CollisionInfo& info)override;
 	void OnCollisionPlayer();
 	
 	//弾リストを取得
@@ -63,14 +65,11 @@ private:
 	
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
-	//モデル
-	Model* model_ = nullptr;	
+	//モデル	
 	Model* modelBullet_ = nullptr;
 
-	Object3d* obj_ = nullptr;
 	Object3d* objBullet_ = nullptr;
-	//カメラ
-	Camera* camera_ = nullptr;
+	
 
 	//行動フェーズ
 	enum class Phase {
@@ -93,7 +92,8 @@ private:
 	XMFLOAT3 pos;
 	//アングル
 	XMFLOAT3 angle;
-
+	//半径
+	float radius_ = 5.0f;
 	//自機
 	Player* player_ = nullptr;
 //時間計測
@@ -114,6 +114,7 @@ private:
 
 	//反転フラグ
 	bool isReverse_ = false;
+
 
 public:
 	bool IsDead() const { return isDead_; }

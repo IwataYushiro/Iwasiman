@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include <cassert>
+#include "SphereCollider.h"
 
 #include "Player.h"
 
@@ -12,20 +13,33 @@ Enemy::~Enemy() {
 	delete objBullet_;
 }
 
-// 初期化
-void Enemy::Initialize(Model* model, Object3d* obj,Camera* camera) {
-	// NULLポインタチェック
-	assert(model);
+Enemy* Enemy::Create(Model* model)
+{
+	//インスタンス生成
+	Enemy* ins = new Enemy();
+	if (ins == nullptr) return nullptr;
 
-	model_ = model;
-	camera_ = camera;
-	obj_ = obj;
+	//初期化
+	if (!ins->Initialize())
+	{
+		delete ins;
+		assert(0);
+	}
+	//モデルのセット
+	if (model) ins->SetModel(model);
+	return ins;
+}
+
+// 初期化
+bool Enemy::Initialize() {
+	
+	if (!Object3d::Initialize()) return false;
 
 	modelBullet_ = Model::LoadFromOBJ("enemybullet");
 	objBullet_ = Object3d::Create();
 
 	objBullet_->SetModel(modelBullet_);
-	objBullet_->SetCamera(camera_);
+	
 	Stage1Parameter();
 
 	startCount= std::chrono::steady_clock::now();	//開始時間
@@ -33,6 +47,11 @@ void Enemy::Initialize(Model* model, Object3d* obj,Camera* camera) {
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 10.0f;					//全体時間
 	timeRate;
+
+	//コライダー追加
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+
+	return true;
 }
 
 //パラメータ
@@ -42,8 +61,8 @@ void Enemy::Stage1Parameter() {
 	//初期ステージ
 	scale = { 3.0f,3.0f,3.0f };
 	pos = { -30.0f,0.0f,100.0f };
-	obj_->SetPosition(pos);
-	obj_->SetScale(scale);
+	Object3d::SetPosition(pos);
+	Object3d::SetScale(scale);
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
 
@@ -66,7 +85,7 @@ void Enemy::Reset() { Stage1Parameter(); }
 //更新
 void Enemy::Update() {
 
-
+objBullet_->SetCamera(camera_);
 	//死亡フラグの立った弾を削除
 	enemyBullets_.remove_if(
 		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
@@ -99,8 +118,8 @@ void Enemy::Update() {
 
 	//行列更新
 	Trans();
-
-	obj_->Update();
+	camera_->Update();
+	Object3d::Update();
 }
 
 //転送
@@ -111,19 +130,19 @@ void Enemy::Trans() {
 	world = XMMatrixIdentity();
 	XMMATRIX matWorld = XMMatrixIdentity();
 
-	XMMATRIX matScale = XMMatrixScaling(obj_->GetScale().x, obj_->GetScale().y, obj_->GetScale().z);
+	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
 
-	XMMATRIX matRot = XMMatrixRotationZ(obj_->GetRotation().z)
-		* XMMatrixRotationX(obj_->GetRotation().x) * XMMatrixRotationY(obj_->GetRotation().y);
+	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
+		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
 
-	XMMATRIX matTrans = XMMatrixTranslation(obj_->GetPosition().x,
-		obj_->GetPosition().y, obj_->GetPosition().z);
+	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
+		Object3d::GetPosition().y, Object3d::GetPosition().z);
 
 	//合成
 	matWorld = matScale * matRot * matTrans;
 
 	world = matWorld;
-	obj_->SetWorld(world);
+	Object3d::SetWorld(world);
 
 }
 //弾発射
@@ -158,7 +177,7 @@ void Enemy::Fire() {
 	velocity.z -= kBulletSpeed;
 
 	//座標をコピー
-	XMFLOAT3 position = obj_->GetPosition();
+	XMFLOAT3 position = Object3d::GetPosition();
 
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
@@ -172,7 +191,7 @@ void Enemy::Fire() {
 void Enemy::Draw() {
 	if (!isDead_) {
 		//モデルの描画
-		obj_->Draw();
+		Object3d::Draw();
 
 		//弾描画
 		for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
@@ -196,7 +215,7 @@ void Enemy::UpdateApproachStage1() {
 	pos.y += velocity.y;
 	pos.z += velocity.z;
 
-	obj_->SetPosition({ pos.x + cameraMove,pos.y,pos.z });
+	Object3d::SetPosition({ pos.x + cameraMove,pos.y,pos.z });
 	//発射タイマーカウントダウン
 	fireTimer--;
 	//指定時間に達した
@@ -242,7 +261,7 @@ void Enemy::UpdateAttackStage1() {
 	else {
 		pos = Bezier3(start, p1, p2, end, timeRate);
 	}
-	obj_->SetPosition(pos);
+	Object3d::SetPosition(pos);
 	//指定の位置に到達したら反転
 	if (pos.x >= 30.0f+cameraMove) {
 		isReverse_ = true;
@@ -283,7 +302,7 @@ void Enemy::UpdateLeave() {
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;
-	obj_->SetPosition(pos);
+	Object3d::SetPosition(pos);
 }
 
 const XMFLOAT3 Enemy::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
@@ -307,11 +326,15 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 	XMFLOAT3 worldPos;
 
 	//ワールド行列の平行移動成分を取得
-	worldPos.x = obj_->GetPosition().x;
-	worldPos.y = obj_->GetPosition().y;
-	worldPos.z = obj_->GetPosition().z;
+	worldPos.x = Object3d::GetPosition().x;
+	worldPos.y = Object3d::GetPosition().y;
+	worldPos.z = Object3d::GetPosition().z;
 
 	return worldPos;
+}
+void Enemy::OnCollision(const CollisionInfo& info)
+{
+	life_--;
 }
 //衝突を検出したら呼び出されるコールバック関数
 void Enemy::OnCollisionPlayer() { life_--; }
