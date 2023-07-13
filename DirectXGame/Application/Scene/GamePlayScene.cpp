@@ -1,5 +1,7 @@
 #include "GamePlayScene.h"
 #include "LevelLoaderJson.h"
+#include "Player.h"
+#include "CollisionManager.h"
 #include <cassert>
 #include <sstream>
 #include <iomanip>
@@ -16,13 +18,13 @@ ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
 void GamePlayScene::Initialize()
 {
-	//プレイヤー関係
-	player_ = new Player();
+	
 	//敵関係
 	enemy_ = new Enemy();
 
 	goal_ = new Goal();
 
+	colManager_ = CollisionManager::GetInstance();
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
@@ -32,25 +34,31 @@ void GamePlayScene::Initialize()
 
 	//3Dオブジェクト関係
 	//3Dオブジェクト生成
-	object3DPlayer_ = Object3d::Create();
+	
 	object3DEnemy_ = Object3d::Create();
-	objGoal_ = Object3d::Create();
 
 	//OBJファイルからモデルデータを読み込む
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 
+	//プレイヤーの初期化
+	player_ = Player::Create(modelPlayer_);
+	player_->SetCamera(camera_);
+	player_->Update();
+
+	//ゴール初期化
+	goal_->Create(modelGoal_);
+	goal_->SetCamera(camera_);
+	goal_->Update();
+
 	//オブジェクトにモデル紐付ける
-	object3DPlayer_->SetModel(modelPlayer_);
 	object3DEnemy_->SetModel(modelEnemy_);
-	objGoal_->SetModel(modelGoal_);
-
+	
 	//カメラも紐づけ
-	object3DPlayer_->SetCamera(camera_);
+	
 	object3DEnemy_->SetCamera(camera_);
-	objGoal_->SetCamera(camera_);
-
+	
 	//レベルデータ読み込み
 	LoadLVData();
 
@@ -69,11 +77,8 @@ void GamePlayScene::Initialize()
 	pm2_->SetParticleModel(particle2_);
 	pm2_->SetCamera(camera_);
 	//ポジション
-	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
-
 	enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
 
-	goal_->Initialize(modelGoal_, objGoal_, camera_);
 	//敵に自機のアドレスを渡す
 	enemy_->SetPlayer(player_);
 
@@ -90,7 +95,7 @@ void GamePlayScene::Update()
 		object->Update();
 	}
 	lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
-	ChackAllCollisions();
+	
 	//カメラ
 	camera_->Update();
 	lightGroup_->Update();
@@ -103,6 +108,7 @@ void GamePlayScene::Update()
 		sceneManager_->ChangeScene("TITLE");
 	}
 	
+	colManager_->CheckAllCollisions();
 }
 
 void GamePlayScene::Draw()
@@ -159,10 +165,8 @@ void GamePlayScene::Finalize()
 	delete lightGroup_;
 	//モデル
 	//3Dオブジェクト
-	delete object3DPlayer_;
 	delete object3DEnemy_;
-	delete objGoal_;
-
+	
 	for (Object3d*& object : objects)
 	{
 		delete object;
@@ -181,104 +185,104 @@ void GamePlayScene::Finalize()
 
 }
 //衝突判定と応答
-void GamePlayScene::ChackAllCollisions() {
+//void GamePlayScene::ChackAllCollisions() {
+//
+//	//判定対象A,Bの座標
+//	XMFLOAT3 posA, posB;
+//	// A,Bの座標の距離用
+//	XMFLOAT3 posAB;
+//	//判定対象A,Bの半径
+//	float radiusA;
+//	float radiusB;
+//	float radiiusAB;
+//
+//	//自機弾リストを取得
+//	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
+//	//敵弾リストを取得
+//	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetEnemyBullets();
+//
+//#pragma region 自機と敵弾の当たり判定
+//	//それぞれの半径
+//	radiusA = 1.0f;
+//	radiusB = 1.0f;
+//
+//	//自機の座標
+//	posA = player_->GetWorldPosition();
+//
+//	//自機と全ての敵弾の当たり判定
+//	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+//		//敵弾の座標
+//		posB = bullet->GetWorldPosition();
+//		//座標A,Bの距離を求める
+//		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
+//		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
+//		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
+//		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+//
+//		//球と球の交差判定
+//		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+//			//自キャラの衝突時コールバック関数を呼び出す
+//			player_->OnCollision();
+//			//敵弾の衝突時コールバック関数を呼び出す
+//			bullet->OnCollision();
+//		}
+//	}
+//
+//#pragma endregion
+//
+//#pragma region 自弾と敵の当たり判定
+//	//それぞれの半径
+//	radiusA = 5.0f;
+//	radiusB = 1.0f;
+//
+//	//敵の座標
+//	posA = enemy_->GetWorldPosition();
+//
+//	//敵と全ての弾の当たり判定
+//	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+//		//弾の座標
+//		posB = bullet->GetWorldPosition();
+//		//座標A,Bの距離を求める
+//		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
+//		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
+//		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
+//		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+//
+//		//球と球の交差判定
+//		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+//			//敵キャラの衝突時コールバック関数を呼び出す
+//			enemy_->OnCollisionPlayer();
+//			//自機弾の衝突時コールバック関数を呼び出す
+//			bullet->OnCollision();
+//		}
+//	}
+//#pragma endregion
 
-	//判定対象A,Bの座標
-	XMFLOAT3 posA, posB;
-	// A,Bの座標の距離用
-	XMFLOAT3 posAB;
-	//判定対象A,Bの半径
-	float radiusA;
-	float radiusB;
-	float radiiusAB;
+//#pragma region 自機と仮ゴールの当たり判定
+//	//それぞれの半径
+//	radiusA = 3.0f;
+//	radiusB = 10.0f;
+//
+//	//敵の座標
+//	posA = player_->GetWorldPosition();
+//	posB = goal_->GetWorldPosition();
+//
+//	
+//		//座標A,Bの距離を求める
+//		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
+//		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
+//		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
+//		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
+//
+//		//球と球の交差判定
+//		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
+//			camera_->Reset();
+//			sceneManager_->ChangeScene("TITLE");
+//		}
+//	
+//#pragma endregion
 
-	//自機弾リストを取得
-	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
-	//敵弾リストを取得
-	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetEnemyBullets();
-
-#pragma region 自機と敵弾の当たり判定
-	//それぞれの半径
-	radiusA = 1.0f;
-	radiusB = 1.0f;
-
-	//自機の座標
-	posA = player_->GetWorldPosition();
-
-	//自機と全ての敵弾の当たり判定
-	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
-		//敵弾の座標
-		posB = bullet->GetWorldPosition();
-		//座標A,Bの距離を求める
-		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
-		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
-		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
-
-		//球と球の交差判定
-		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
-			//自キャラの衝突時コールバック関数を呼び出す
-			player_->OnCollision();
-			//敵弾の衝突時コールバック関数を呼び出す
-			bullet->OnCollision();
-		}
-	}
-
-#pragma endregion
-
-#pragma region 自弾と敵の当たり判定
-	//それぞれの半径
-	radiusA = 5.0f;
-	radiusB = 1.0f;
-
-	//敵の座標
-	posA = enemy_->GetWorldPosition();
-
-	//敵と全ての弾の当たり判定
-	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-		//弾の座標
-		posB = bullet->GetWorldPosition();
-		//座標A,Bの距離を求める
-		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
-		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
-		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
-
-		//球と球の交差判定
-		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
-			//敵キャラの衝突時コールバック関数を呼び出す
-			enemy_->OnCollisionPlayer();
-			//自機弾の衝突時コールバック関数を呼び出す
-			bullet->OnCollision();
-		}
-	}
-#pragma endregion
-
-#pragma region 自機と仮ゴールの当たり判定
-	//それぞれの半径
-	radiusA = 3.0f;
-	radiusB = 10.0f;
-
-	//敵の座標
-	posA = player_->GetWorldPosition();
-	posB = goal_->GetWorldPosition();
-
-	
-		//座標A,Bの距離を求める
-		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
-		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
-		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
-
-		//球と球の交差判定
-		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
-			camera_->Reset();
-			sceneManager_->ChangeScene("TITLE");
-		}
-	
-#pragma endregion
-
-}
+//}
 
 void GamePlayScene::LoadLVData()
 {

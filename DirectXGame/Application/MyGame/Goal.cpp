@@ -1,30 +1,46 @@
 #include "Goal.h"
+#include "SphereCollider.h"
 #include <cassert>
 
 using namespace DirectX;
 
-void Goal::Initialize(Model* model, Object3d* obj, Camera* camera)
+Goal* Goal::Create(Model* model)
 {
-	// NULLポインタチェック
-	assert(model);
+	//インスタンス生成
+	Goal* ins = new Goal();
+	if (ins == nullptr) return nullptr;
 
-	//引数として受け取ったデータをメンバ変数に記録する
-	model_ = model;
-	camera_ = camera;
-	obj_ = obj;
+	//初期化
+	if (!ins->Initialize())
+	{
+		delete ins;
+		assert(0);
+	}
+	//モデルのセット
+	if (model) ins->SetModel(model);
+	return ins;
+}
 
+bool Goal::Initialize()
+{
 	//ワールド変換の初期化
 	pos = { 120.0f,-10.0f,0.0f };
-	obj_->SetPosition(pos);
+	Object3d::SetPosition(pos);
 	scale = { 10.0f,10.0f,10.0f };
-	obj_->SetScale(scale);
+	Object3d::SetScale(scale);
+
+	//コライダー追加
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+
+	return true;
 	
 }
 
 void Goal::Update()
 {
 	Trans();
-	obj_->Update();
+	camera_->Update();
+	Object3d::Update();
 }
 
 void Goal::Trans()
@@ -34,19 +50,19 @@ void Goal::Trans()
 	world = XMMatrixIdentity();
 	XMMATRIX matWorld = XMMatrixIdentity();
 
-	XMMATRIX matScale = XMMatrixScaling(obj_->GetScale().x, obj_->GetScale().y, obj_->GetScale().z);
+	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
 
-	XMMATRIX matRot = XMMatrixRotationZ(obj_->GetRotation().z)
-		* XMMatrixRotationX(obj_->GetRotation().x) * XMMatrixRotationY(obj_->GetRotation().y);
+	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
+		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
 
-	XMMATRIX matTrans = XMMatrixTranslation(obj_->GetPosition().x,
-		obj_->GetPosition().y, obj_->GetPosition().z);
+	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
+		Object3d::GetPosition().y, Object3d::GetPosition().z);
 
 	//合成
 	matWorld = matScale * matRot * matTrans;
 
 	world = matWorld;
-	obj_->SetWorld(world);
+	Object3d::SetWorld(world);
 }
 
 XMFLOAT3 Goal::GetWorldPosition()
@@ -55,19 +71,19 @@ XMFLOAT3 Goal::GetWorldPosition()
 	XMFLOAT3 worldPos;
 
 	//ワールド行列の平行移動成分を取得
-	worldPos.x = obj_->GetPosition().x;
-	worldPos.y = obj_->GetPosition().y;
-	worldPos.z = obj_->GetPosition().z;
+	worldPos.x = Object3d::GetPosition().x;
+	worldPos.y = Object3d::GetPosition().y;
+	worldPos.z = Object3d::GetPosition().z;
 
 	return worldPos;
 }
 
 void Goal::Draw()
 {
-	obj_->Draw();
+	Object3d::Draw();
 }
 
-void Goal::OnCollision()
+void Goal::OnCollision(const CollisionInfo& info)
 {
 	isGoal_ = true;
 }

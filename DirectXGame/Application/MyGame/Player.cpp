@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <cassert>
+#include "SphereCollider.h"
 
 using namespace DirectX;
 
@@ -26,10 +27,12 @@ Player* Player::Create(Model* model)
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
-	return nullptr;
+	return ins;
 }
 
 bool Player::Initialize() {
+
+	if (!Object3d::Initialize()) return false;
 
 	/*modelBullet_ = Model::LoadFromOBJ("playerbullet");
 	objBullet_ = Object3d::Create();
@@ -37,12 +40,9 @@ bool Player::Initialize() {
 	objBullet_->SetModel(modelBullet_);
 	objBullet_->SetCamera(camera_);*/
 
-	//シングルトンインスタンスを取得
-	this->input_ = Input::GetInstance();
-
 	//ワールド変換の初期化
 	pos = { -20.0f,-10.0f,-60.0f };
-	obj_->SetPosition(pos);
+	Object3d::SetPosition(pos);
 	//ジャンプしたか
 	isJump = false;
 
@@ -66,6 +66,9 @@ bool Player::Initialize() {
 	pmDash_->SetParticleModel(particleDash_);
 	pmDash_->SetCamera(camera_);
 
+	//コライダー追加
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+
 	return true;
 }
 
@@ -80,6 +83,7 @@ void Player::Reset() {
 	}
 }
 void Player::Update() {
+	input_ = Input::GetInstance();
 
 	if (!isDead_) {
 		//死亡フラグの立った弾を削除
@@ -92,27 +96,27 @@ void Player::Update() {
 		JumpBack();
 		//Attack();
 
-		//弾更新
-		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-			bullet->Update();
-		}
+		////弾更新
+		//for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		//	bullet->Update();
+		//}
 
 		//移動制限
 		Trans();
 		
 	}
 	pmDash_->Update();
-	obj_->Update();
+	Object3d::Update();
 }
 
 void Player::Draw() {
 	if (!isDead_) {
-		obj_->Draw();
+		Object3d::Draw();
 
-		//弾描画
-		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-			bullet->Draw();
-		}
+		////弾描画
+		//for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		//	bullet->Draw();
+		//}
 
 	}
 }
@@ -125,7 +129,7 @@ void Player::DrawParticle()
 //移動処理
 void Player::Move() {
 
-	XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 move = Object3d::GetPosition();
 	XMFLOAT3 cmove = camera_->GetEye();
 	XMFLOAT3 tmove = camera_->GetTarget();
 	float moveSpeed = 0.5f;
@@ -148,13 +152,13 @@ void Player::Move() {
 	if (input_->PushKey(DIK_LSHIFT)|| input_->PushKey(DIK_RSHIFT))
 	{
 		if (input_->PushKey(DIK_A)) {
-			pmDash_->ActiveX(particleDash_, obj_->GetPosition(), {20.0f ,10.0f,0.0f}, {-4.2f,0.2f,0.0f}, {0.0f,0.001f,0.0f}, 1, {3.0f, 0.0f});
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,10.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
 			move.x -= moveSpeed * 2.0f;
 			cmove.x -= moveSpeed * 2.0f;
 			tmove.x -= moveSpeed * 2.0f;
 		}
 		if (input_->PushKey(DIK_D)) {
-			pmDash_->ActiveX(particleDash_, obj_->GetPosition(), { 20.0f ,10.0f,0.0f }, { 4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,10.0f,0.0f }, { 4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
 			move.x += moveSpeed * 2.0f;
 			cmove.x += moveSpeed * 2.0f;
 			tmove.x += moveSpeed * 2.0f;
@@ -167,14 +171,14 @@ void Player::Move() {
 		move.y -= moveSpeed;
 	}*/
 
-	obj_->SetPosition(move);
+	Object3d::SetPosition(move);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
 }
 
 void Player::CameraMove()
 {
-	XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 move = Object3d::GetPosition();
 	XMFLOAT3 cmove = camera_->GetEye();
 	XMFLOAT3 tmove = camera_->GetTarget();
 	float moveSpeed = 1.0f;
@@ -192,7 +196,7 @@ void Player::CameraMove()
 		tmove.x += moveSpeed;
 	}
 	
-	obj_->SetPosition(move);
+	Object3d::SetPosition(move);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
 }
@@ -200,7 +204,7 @@ void Player::CameraMove()
 void Player::Jump()
 {
 
-	XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 move = Object3d::GetPosition();
 
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
@@ -226,12 +230,12 @@ void Player::Jump()
 			isJump = false;
 		}
 	}
-	obj_->SetPosition(move);
+	Object3d::SetPosition(move);
 }
 
 void Player::JumpBack()
 {
-	XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 move = Object3d::GetPosition();
 
 	//制御点
 	start = { move.x,-10.0f,-60.0f };
@@ -240,7 +244,7 @@ void Player::JumpBack()
 	end = { move.x,-10.0f,0.0f };
 
 	//時間
-	
+
 	if (!isJump)
 	{
 		if (!isJumpBack)
@@ -266,7 +270,7 @@ void Player::JumpBack()
 			if (isBack)move = Bezier3(end, p2, p1, start, timeRate);
 
 			else move = Bezier3(start, p1, p2, end, timeRate);
-			
+
 			if (move.z >= end.z)
 			{
 				startCount = std::chrono::steady_clock::now();
@@ -279,7 +283,7 @@ void Player::JumpBack()
 			}
 		}
 	}
-	obj_->SetPosition(move);
+	Object3d::SetPosition(move);
 }
 
 //攻撃処理
@@ -296,10 +300,10 @@ void Player::Attack() {
 		matVec.r[0].m128_f32[2] = velocity.z;
 		matVec.r[0].m128_f32[3] = 0.0f;
 
-		matVec *= obj_->GetWorld();
+		matVec *= Object3d::GetWorld();
 
 		//自キャラの座標をコピー
-		XMFLOAT3 position = obj_->GetPosition();
+		XMFLOAT3 position = Object3d::GetPosition();
 
 		//弾を生成し初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
@@ -319,19 +323,19 @@ void Player::Trans() {
 	world = XMMatrixIdentity();
 	XMMATRIX matWorld = XMMatrixIdentity();
 
-	XMMATRIX matScale = XMMatrixScaling(obj_->GetScale().x, obj_->GetScale().y, obj_->GetScale().z);
+	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
 
-	XMMATRIX matRot = XMMatrixRotationZ(obj_->GetRotation().z)
-		* XMMatrixRotationX(obj_->GetRotation().x) * XMMatrixRotationY(obj_->GetRotation().y);
+	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
+		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
 
-	XMMATRIX matTrans = XMMatrixTranslation(obj_->GetPosition().x,
-		obj_->GetPosition().y, obj_->GetPosition().z);
+	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
+		Object3d::GetPosition().y, Object3d::GetPosition().z);
 
 	//合成
 	matWorld = matScale * matRot * matTrans;
 
 	world = matWorld;
-	obj_->SetWorld(world);
+	Object3d::SetWorld(world);
 
 }
 
@@ -342,19 +346,23 @@ XMFLOAT3 Player::GetWorldPosition() {
 	XMFLOAT3 worldPos;
 
 	//ワールド行列の平行移動成分を取得
-	worldPos.x = obj_->GetPosition().x;
-	worldPos.y = obj_->GetPosition().y;
-	worldPos.z = obj_->GetPosition().z;
+	worldPos.x = Object3d::GetPosition().x;
+	worldPos.y = Object3d::GetPosition().y;
+	worldPos.z = Object3d::GetPosition().z;
 
 	return worldPos;
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void Player::OnCollision() {
+void Player::OnCollision(const CollisionInfo& info) {
 	life_--;
+	pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+		{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 3.0f, 0.0f });
 	if (life_ <= 0) {
 		isDead_ = true;
 	}
+	pmDash_->Update();
+
 }
 
 const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)

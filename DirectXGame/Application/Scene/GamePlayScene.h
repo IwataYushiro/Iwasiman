@@ -7,17 +7,18 @@
 #include "Object3d.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
-
-#include "Player.h"
 #include "Enemy.h"
 #include "Goal.h"
-
 #include <map>
-
 #include "SceneManager.h"
+#include "CollisionPrimitive.h"
+
 
 //jsonレベルデータ
 struct LevelData;
+//前方宣言
+class Player;
+class CollisionManager;
 
 //ゲームプレイ
 class GamePlayScene :public BaseScene
@@ -40,8 +41,7 @@ public:
 	void Draw() override;
 	//終了
 	void Finalize() override;
-	//当たり判定
-	void ChackAllCollisions();
+	
 	//レベルデータ読み込み
 	void LoadLVData();
 
@@ -73,11 +73,9 @@ private:
 	Model* modelEnemy_ = nullptr;
 
 	//3Dオブジェクト
-	Object3d* object3DPlayer_ = nullptr;
 	Object3d* object3DEnemy_ = nullptr;
 
 	Goal* goal_ = nullptr;
-	Object3d* objGoal_ = nullptr;
 	Model* modelGoal_ = nullptr;
 
 	LevelData* levelData = nullptr;
@@ -101,5 +99,8 @@ private:
 	ParticleManager* pm2_ = nullptr;
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
+
+	//衝突マネージャ
+	CollisionManager* colManager_ = nullptr;
 
 };

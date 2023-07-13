@@ -11,6 +11,7 @@
 #include <memory>
 #include <chrono>
 
+
 class Player:public Object3d
 {
 private:
@@ -55,7 +56,7 @@ public:
 	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision();
+	void OnCollision(const CollisionInfo& info)override;
 
 	//ベジェ曲線
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
@@ -68,14 +69,10 @@ private:
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	
 	//モデル
-	Model* model_ = nullptr;
 	Model* modelBullet_ = nullptr;
 
-	Object3d* obj_ = nullptr;
 	Object3d* objBullet_ = nullptr;
-	//カメラ
-	Camera* camera_ = nullptr;
-
+	
 	//インプット
 	Input* input_ = nullptr;
 	
@@ -102,6 +99,8 @@ private:
 	XMFLOAT3 p2;
 	XMFLOAT3 end;
 
+	//半径
+	float radius_ = 1.0f;
 	//ジャンプ力
 	const float power = 2.0f;
 	//重力
@@ -114,6 +113,7 @@ private:
 	//パーティクル
 	Particle* particleDash_ = nullptr;
 	ParticleManager* pmDash_ = nullptr;
+	
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
