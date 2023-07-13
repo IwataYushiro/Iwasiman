@@ -267,6 +267,9 @@ bool Object3d::Initialize()
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
 	assert(SUCCEEDED(result));
 
+	//クラス名の文字列を取得
+	name = typeid(*this).name();
+
 	return true;
 }
 

@@ -32,7 +32,7 @@ bool Goal::Initialize()
 	Object3d::SetScale(scale);
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 
 	return true;
 	

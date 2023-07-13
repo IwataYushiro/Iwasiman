@@ -90,8 +90,7 @@ private: // 静的メンバ変数
 	//ライト
 	static LightGroup* lightGroup_;
 
-	//コライダー
-	BaseCollider* collider = nullptr;
+	
 
 private:// 静的メンバ関数
 	/// <summary>
@@ -136,6 +135,11 @@ protected: // メンバ変数
 	XMMATRIX matWorld;
 	// 親オブジェクト
 	Object3d* parent = nullptr;
+	
+	//クラス名
+	const char* name = nullptr;
+	//コライダー
+	BaseCollider* collider = nullptr;
 	
 public: //アクセッサ置き場
 	//モデル
