@@ -11,7 +11,7 @@
 #include <memory>
 #include <chrono>
 
-class Player
+class Player:public Object3d
 {
 private:
 	// DirectX::を省略
@@ -23,13 +23,14 @@ private:
 public:
 	~Player();
 
+	static Player* Create(Model* model = nullptr);
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Input* input, Camera* camera);
+	bool Initialize() override;
 	//リセット処理
 	void Reset();
 	
 	//更新
-	void Update();
+	void Update() override;
 
 	//プレイヤーの移動処理
 	void Move();

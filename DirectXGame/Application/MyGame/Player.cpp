@@ -12,23 +12,33 @@ Player::~Player() {
 	delete pmDash_;
 }
 
-void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camera) {
-	// NULLポインタチェック
-	assert(model);
+Player* Player::Create(Model* model)
+{
+	//インスタンス生成
+	Player* ins = new Player();
+	if (ins == nullptr) return nullptr;
 
-	//引数として受け取ったデータをメンバ変数に記録する
-	model_ = model;
-	camera_ = camera;
-	obj_ = obj;
+	//初期化
+	if (!ins->Initialize())
+	{
+		delete ins;
+		assert(0);
+	}
+	//モデルのセット
+	if (model) ins->SetModel(model);
+	return nullptr;
+}
 
-	modelBullet_ = Model::LoadFromOBJ("playerbullet");
+bool Player::Initialize() {
+
+	/*modelBullet_ = Model::LoadFromOBJ("playerbullet");
 	objBullet_ = Object3d::Create();
 
 	objBullet_->SetModel(modelBullet_);
-	objBullet_->SetCamera(camera_);
+	objBullet_->SetCamera(camera_);*/
 
 	//シングルトンインスタンスを取得
-	this->input_ = input;
+	this->input_ = Input::GetInstance();
 
 	//ワールド変換の初期化
 	pos = { -20.0f,-10.0f,-60.0f };
@@ -56,6 +66,7 @@ void Player::Initialize(Model* model, Object3d* obj, Input* input, Camera* camer
 	pmDash_->SetParticleModel(particleDash_);
 	pmDash_->SetCamera(camera_);
 
+	return true;
 }
 
 void Player::Reset() {

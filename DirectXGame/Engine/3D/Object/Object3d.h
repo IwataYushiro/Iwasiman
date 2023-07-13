@@ -101,19 +101,20 @@ private:// 静的メンバ関数
 	static void InitializeGraphicsPipeline();
 
 public: // メンバ関数
-	bool Initialize();
+	virtual bool Initialize();
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update();
+	virtual void Update();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	virtual void Draw();
 
-	
-private: // メンバ変数
+	//衝突時のコールバック
+	virtual void OnCollision(const CollisionInfo& info) {}
+protected: // メンバ変数
 	//モデル
 	Model* model_ = nullptr;
 	//カメラ
@@ -171,7 +172,6 @@ public: //アクセッサ置き場
 	//コライダーのセット
 	void SetCollider(BaseCollider* collider);
 
-	//衝突時のコールバック
-	virtual void OnCollision(const CollisionInfo& info) {}
+	
 };
 
