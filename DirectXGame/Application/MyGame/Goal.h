@@ -43,6 +43,6 @@ private:
 
 	float radius_ = 10.0f;
 public: //アクセッサ、インライン関数
-	bool IsDead() const { return isGoal_; }
+	bool IsGoal() const { return isGoal_; }
 };
 #pragma once

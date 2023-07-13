@@ -59,13 +59,11 @@ bool Player::Initialize() {
 	timeRate;
 	//重力
 	gravity = 0.0f;
-
-	//パーティクル
+//パーティクル
 	particleDash_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmDash_ = ParticleManager::Create();
 	pmDash_->SetParticleModel(particleDash_);
-	pmDash_->SetCamera(camera_);
-
+	
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
 
@@ -84,6 +82,8 @@ void Player::Reset() {
 }
 void Player::Update() {
 	input_ = Input::GetInstance();
+
+	pmDash_->SetCamera(camera_);
 
 	if (!isDead_) {
 		//死亡フラグの立った弾を削除
@@ -106,6 +106,8 @@ void Player::Update() {
 		
 	}
 	pmDash_->Update();
+
+	camera_->Update();
 	Object3d::Update();
 }
 

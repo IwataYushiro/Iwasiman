@@ -23,6 +23,8 @@ Goal* Goal::Create(Model* model)
 
 bool Goal::Initialize()
 {
+	if (!Object3d::Initialize()) return false;
+
 	//ƒ[ƒ‹ƒh•ÏŠ·‚Ì‰Šú‰»
 	pos = { 120.0f,-10.0f,0.0f };
 	Object3d::SetPosition(pos);

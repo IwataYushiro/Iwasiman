@@ -22,8 +22,6 @@ void GamePlayScene::Initialize()
 	//“GŠÖŒW
 	enemy_ = new Enemy();
 
-	goal_ = new Goal();
-
 	colManager_ = CollisionManager::GetInstance();
 	// •`‰æ‰Šú‰»ˆ—@‚±‚±‚©‚ç
 #pragma region •`‰æ‰Šú‰»ˆ—
@@ -48,7 +46,7 @@ void GamePlayScene::Initialize()
 	player_->Update();
 
 	//ƒS[ƒ‹‰Šú‰»
-	goal_->Create(modelGoal_);
+	goal_=Goal::Create(modelGoal_);
 	goal_->SetCamera(camera_);
 	goal_->Update();
 
@@ -109,6 +107,11 @@ void GamePlayScene::Update()
 	}
 	
 	colManager_->CheckAllCollisions();
+	if (goal_->IsGoal())
+	{
+		camera_->Reset();
+		sceneManager_->ChangeScene("TITLE");
+	}
 }
 
 void GamePlayScene::Draw()
