@@ -375,6 +375,7 @@
     <ClCompile Include="DirectXGame\Engine\3D\Collider\Collision.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Collider\CollisionManager.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Collider\CollisionPrimitive.cpp" />
+    <ClCompile Include="DirectXGame\Engine\3D\Collider\MeshCollider.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Collider\SphereCollider.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxLoader.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ModelFbx.cpp" />
@@ -424,6 +425,7 @@
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionManager.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionPrimitive.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionTypes.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\MeshCollider.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\RayCastHit.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\SphereCollider.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxLoader.h" />
