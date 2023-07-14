@@ -175,7 +175,8 @@ public: //アクセッサ置き場
 
 	//コライダーのセット
 	void SetCollider(BaseCollider* collider);
-
+	//モデルの取得
+	inline Model* GetModel() { return model_; }
 	
 };
 
