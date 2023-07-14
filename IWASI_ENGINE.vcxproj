@@ -424,6 +424,7 @@
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionManager.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionPrimitive.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionTypes.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\RayCastHit.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\SphereCollider.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxLoader.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ModelFbx.h" />

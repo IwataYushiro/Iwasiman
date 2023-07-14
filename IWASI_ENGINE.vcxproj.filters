@@ -636,5 +636,8 @@
     <ClInclude Include="DirectXGame\Engine\3D\Collider\SphereCollider.h">
       <Filter>Header File\Engine\3D\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\RayCastHit.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

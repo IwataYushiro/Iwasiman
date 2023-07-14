@@ -1,6 +1,9 @@
 #pragma once
-#include <forward_list>
+#include "CollisionPrimitive.h"
+#include "RayCastHit.h"
 
+#include <forward_list>
+#include <d3d12.h>
 class BaseCollider;
 
 class CollisionManager
@@ -15,6 +18,14 @@ public://メンバ関数
 	inline void RemoveCollider(BaseCollider* collider) { colliders.remove(collider); }
 	//全ての衝突チェック
 	void CheckAllCollisions();
+/// <summary>
+/// レイキャスト
+/// </summary>
+///	<param names="ray">レイ</param>
+///	<param names="hitInfo">衝突情報</param>
+/// <param names="maxDistance">最大距離</param>
+/// <returns>レイが任意のコライダーと交わる場合true,それ以外はfalse</returns>
+	bool RayCast(const Ray& ray, RaycastHit* hitInfo = nullptr, float maxDistance = D3D12_FLOAT32_MAX);
 
 private:
 	CollisionManager() = default;

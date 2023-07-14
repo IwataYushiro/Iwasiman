@@ -80,7 +80,18 @@ void GamePlayScene::Update()
 		object->Update();
 	}
 	lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
-	
+	//“–‚½‚è”»’èƒTƒ“ƒvƒ‹
+	Ray ray;
+	ray.start = { 10.0f,-10.0f,-60.0f,1.0f };
+	ray.dir = { -1.0f,0.0f,0.0f,0.0f };
+	RaycastHit rcHit;
+
+	if (colManager_->RayCast(ray,&rcHit))
+	{
+		pm1_->ActiveZ(particle1_, XMFLOAT3(rcHit.inter.m128_f32), XMFLOAT3(rcHit.inter.m128_f32), XMFLOAT3({ 0.1f,0.1f,0.1f }),
+			XMFLOAT3(), 2, XMFLOAT2({ 1.0f,0.0f }));
+	}
+
 	//ƒJƒƒ‰
 	camera_->Update();
 	lightGroup_->Update();
