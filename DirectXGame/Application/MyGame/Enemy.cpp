@@ -173,7 +173,7 @@ void Enemy::Fire() {
 	XMFLOAT3 position = Object3d::GetPosition();
 
 	//’e‚ğ¶¬‚µ‰Šú‰»
-	std::unique_ptr<EnemyBullet> newBullet = nullptr;
+	std::unique_ptr<EnemyBullet> newBullet;
 	newBullet = EnemyBullet::Create(position, velocity, modelBullet_);
 	newBullet->SetCamera(camera_);
 	newBullet->Update();

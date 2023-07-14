@@ -13,6 +13,7 @@ std::unique_ptr<EnemyBullet> EnemyBullet::Create(const XMFLOAT3& position, const
 	//初期化
 	if (!ins->Initialize(position,velocity))
 	{
+		ins.release();
 		assert(0);
 	}
 	//モデルのセット
@@ -79,7 +80,8 @@ void EnemyBullet::Draw() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void EnemyBullet::OnCollision(const CollisionInfo& info) { isDead_ = true; }
+void EnemyBullet::OnCollision(const CollisionInfo& info) { 
+	isDead_ = true; }
 
 //ワールド座標を取得
 XMFLOAT3 EnemyBullet::GetWorldPosition() {
