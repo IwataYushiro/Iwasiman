@@ -4,17 +4,33 @@
 
 using namespace DirectX;
 
-//初期化
-void EnemyBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model) {
+std::unique_ptr<EnemyBullet> EnemyBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model)
+{
+	//インスタンス生成
+	std::unique_ptr<EnemyBullet> ins = std::make_unique<EnemyBullet>();
+	if (ins == nullptr) return nullptr;
 
-	Object3d::SetModel(model);
-	
+	//初期化
+	if (!ins->Initialize(position,velocity))
+	{
+		assert(0);
+	}
+	//モデルのセット
+	if (model) ins->SetModel(model);
+	return ins;
+}
+
+//初期化
+bool EnemyBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity) {
+	if (!Object3d::Initialize()) return false;
+
 	//引数で受け取った初期座標をセット
 	SetPosition(position);
 	velocity_ = velocity;
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
 
+	return true;
 }
 
 void EnemyBullet::Reset() { isDead_ = true; }

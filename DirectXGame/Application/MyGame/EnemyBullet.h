@@ -13,8 +13,9 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	static std::unique_ptr<EnemyBullet> Create(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model = nullptr);
 	//‰Šú‰»
-	void Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity,Model* model);
+	bool Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity);
 	//ƒŠƒZƒbƒgˆ—
 	void Reset();
 

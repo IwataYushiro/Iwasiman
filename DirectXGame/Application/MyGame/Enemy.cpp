@@ -7,6 +7,7 @@
 using namespace DirectX;
 
 Enemy::~Enemy() {
+	delete modelBullet_;
 }
 
 Enemy* Enemy::Create(Model* model)
@@ -78,10 +79,6 @@ void Enemy::Reset() { Stage1Parameter(); }
 //XV
 void Enemy::Update() {
 
-	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-		
-		bullet->Update();
-	}
 	//€–Sƒtƒ‰ƒO‚Ì—§‚Á‚½’e‚ğíœ
 	enemyBullets_.remove_if(
 		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
@@ -176,9 +173,10 @@ void Enemy::Fire() {
 	XMFLOAT3 position = Object3d::GetPosition();
 
 	//’e‚ğ¶¬‚µ‰Šú‰»
-	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(position, velocity, modelBullet_);
+	std::unique_ptr<EnemyBullet> newBullet = nullptr;
+	newBullet = EnemyBullet::Create(position, velocity, modelBullet_);
 	newBullet->SetCamera(camera_);
+	newBullet->Update();
 
 	//’e‚ğ“o˜^
 	enemyBullets_.push_back(std::move(newBullet));
