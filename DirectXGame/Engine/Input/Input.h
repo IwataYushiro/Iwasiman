@@ -24,6 +24,22 @@ private://構造体類
 		CenterWheel,
 	}MouseButton;
 
+	typedef enum JSButtonNum
+	{
+		jsLeft,
+		jsRight,
+		jsUP,
+		jsDOWN,
+		jsA,
+		jsB,
+		jsX,
+		jsY,
+		jsLB,
+		jsLT,
+		jsRB,
+		jsRT,
+	}JSButton;
+
 public://シングルトンインスタンス
 	static Input* GetInstance();
 public:
@@ -37,6 +53,9 @@ public:
 	void GenerateKeyBoard();
 	//マウスデバイス生成
 	void GenerateMouse();
+	//コントローラーデバイス生成
+	BOOL CALLBACK EnumJoyStickProc(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef);
+	void GenerateJoyStick();
 
 
 	///<summary>
@@ -81,6 +100,8 @@ public:
 	bool ReleaseMouse(int32_t mouseNumber);
 
 	const DirectX::XMFLOAT2& GetMousePosition()const { return mousePos; }
+
+	
 private://メンバ変数
 	//DirectInputの初期化
 	ComPtr<IDirectInput8> directInput = nullptr;
@@ -99,6 +120,12 @@ private://メンバ変数
 	DIMOUSESTATE2 mouseStatePre;
 	//マウス座標
 	DirectX::XMFLOAT2 mousePos;
+
+	//ジョイスティック(コントローラー)
+	ComPtr<IDirectInputDevice8> joyStick = nullptr;
+	//ジョイスティックステート
+	DIJOYSTATE2 joyState;
+	DIJOYSTATE2 joyStatePre;
 
 private:
 	Input() = default;

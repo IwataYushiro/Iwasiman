@@ -68,9 +68,6 @@ private:
 	//モデル	
 	Model* modelBullet_ = nullptr;
 
-	Object3d* objBullet_ = nullptr;
-	
-
 	//行動フェーズ
 	enum class Phase {
 		//ここからステージ1

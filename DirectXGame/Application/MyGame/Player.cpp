@@ -59,7 +59,7 @@ bool Player::Initialize() {
 	timeRate;
 	//重力
 	gravity = 0.0f;
-//パーティクル
+	//パーティクル
 	particleDash_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmDash_ = ParticleManager::Create();
 	pmDash_->SetParticleModel(particleDash_);

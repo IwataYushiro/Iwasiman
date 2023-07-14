@@ -110,15 +110,7 @@ void GamePlayScene::Draw()
 	//背景スプライト
 
 	//エフェクト
-	//エフェクト描画前処理
-	ParticleManager::PreDraw(dxCommon_->GetCommandList());
-
-	//エフェクト描画
-	pm1_->Draw();
-	pm2_->Draw();
-	player_->DrawParticle();
-	//エフェクト描画後処理
-	ParticleManager::PostDraw();
+	
 
 	//モデル
 	//モデル描画前処理
@@ -132,7 +124,15 @@ void GamePlayScene::Draw()
 	}
 	//モデル描画後処理
 	Object3d::PostDraw();
+//エフェクト描画前処理
+	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
+	//エフェクト描画
+	pm1_->Draw();
+	pm2_->Draw();
+	player_->DrawParticle();
+	//エフェクト描画後処理
+	ParticleManager::PostDraw();
 	//前景スプライト
 
 	//ImGuiの表示
