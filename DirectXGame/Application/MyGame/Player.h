@@ -35,12 +35,12 @@ public:
 	//プレイヤーの移動処理
 	void Move();
 	void CameraMove();
-	//ジャンプ
-	void Jump();
+	//落ちる＆ジャンプ
+	void FallAndJump();
 	//奥へ移動
 	void JumpBack();
-	// 奥移動
-	
+	//着地
+	void Landing();
 	//プレイヤーの攻撃処理
 	void Attack();
 
@@ -81,7 +81,9 @@ private:
 	XMFLOAT3 angle;
 
 	//ジャンプしてるか
-	bool isJump;
+	bool onGround;
+	XMFLOAT3 fallVec;
+
 	//奥側に移動
 	bool isJumpBack;
 	bool isBack;
@@ -100,10 +102,6 @@ private:
 
 	//半径
 	float radius_ = 1.0f;
-	//ジャンプ力
-	const float power = 2.0f;
-	//重力
-	float gravity = 0.0f;
 	
 	//死亡フラグとライフ
 	bool isDead_ = false;

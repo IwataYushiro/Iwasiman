@@ -27,6 +27,17 @@ public://メンバ関数
 /// <returns>レイが任意のコライダーと交わる場合true,それ以外はfalse</returns>
 	bool RayCast(const Ray& ray, RaycastHit* hitInfo = nullptr, float maxDistance = D3D12_FLOAT32_MAX);
 
+	/// <summary>
+/// レイキャスト(属性指定版)
+/// </summary>
+///	<param names="ray">レイ</param>
+///	<param names="attribute">衝突属性</param>
+///	<param names="hitInfo">衝突情報</param>
+/// <param names="maxDistance">最大距離</param>
+/// <returns>レイが任意のコライダーと交わる場合true,それ以外はfalse</returns>
+	bool RayCast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo = nullptr,
+		float maxDistance = D3D12_FLOAT32_MAX);
+
 private:
 	CollisionManager() = default;
 	CollisionManager(const CollisionManager&) = delete;

@@ -6,6 +6,9 @@
 //コライダー基盤クラス
 class BaseCollider
 {
+public://フレンドクラス
+	friend class CollisionManager;
+
 public:
 	BaseCollider() = default;
 	//仮想デストラクタ
@@ -24,8 +27,15 @@ public:
 	//衝突時コールバック関数
 	inline void OnCollision(const CollisionInfo& info) { object3d->OnCollision(info); }
 
+	inline void SetAttribute(unsigned short attribute) { this->attribute_ = attribute; }
+
+	inline void AddAttribute(unsigned short attribute) { this->attribute_ |= attribute; }
+
+	inline void RemoveAttribute(unsigned short attribute) { this->attribute_ &= !attribute; }
 protected:
 	Object3d* object3d = nullptr;
 	//形状タイプ
 	CollisionShapeType shapeType = SHAPE_UNKNOWN;
+	//当たり判定属性
+	unsigned short attribute_ = 0b1111111111111111;
 };

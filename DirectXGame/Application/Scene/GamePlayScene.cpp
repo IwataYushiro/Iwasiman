@@ -311,7 +311,39 @@ void GamePlayScene::LoadLVData()
 	
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
-		
+		if ((typeid(objects) == typeid(std::vector<Object3d*>)))
+		{
+			// ファイル名から登録済みモデルを検索
+			Model* model = nullptr;
+				decltype(models)::iterator it = models.find(objectData.fileName);
+				if (it != models.end()) {
+					model = it->second;
+				}
+
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			//オブジェクトにモデル紐付ける
+			newObject->SetModel(model);
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+			// 配列に登録
+			objects.push_back(newObject);
+		}
 		if ((typeid(hitObjects) == typeid(std::vector<TouchableObject*>)))
 		{
 			// ファイル名から登録済みモデルを検索

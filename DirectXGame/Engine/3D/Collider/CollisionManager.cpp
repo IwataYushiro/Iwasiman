@@ -51,7 +51,7 @@ void CollisionManager::CheckAllCollisions()
 					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
 				}
 			}
-			//メッシュと球
+			//球とメッシュ
 			else if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
 				colB->GetShapeType() == COLLISIONSHAPE_MESH)
 			{
@@ -71,6 +71,11 @@ void CollisionManager::CheckAllCollisions()
 
 bool CollisionManager::RayCast(const Ray& ray, RaycastHit* hitInfo, float maxDistance)
 {
+	return RayCast(ray,0xffff,hitInfo,maxDistance);
+}
+
+bool CollisionManager::RayCast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo, float maxDistance)
+{
 	bool result = false;
 	//走査用イテレータ
 	std::forward_list<BaseCollider*>::iterator it;
@@ -85,6 +90,9 @@ bool CollisionManager::RayCast(const Ray& ray, RaycastHit* hitInfo, float maxDis
 	for (; it != colliders.end(); ++it)
 	{
 		BaseCollider* colA = *it;
+		//属性が合わない場合スキップ
+		if (!(colA->attribute_ & attribute))continue;
+
 		//球の場合
 		if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE)
 		{
@@ -101,14 +109,14 @@ bool CollisionManager::RayCast(const Ray& ray, RaycastHit* hitInfo, float maxDis
 			inter = tempInter;
 			it_hit = it;
 		}
-		//球の場合
-		if (colA->GetShapeType() == COLLISIONSHAPE_MESH)
+		//メッシュの場合
+		else if (colA->GetShapeType() == COLLISIONSHAPE_MESH)
 		{
 			MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
 			float tempDistance;
 			XMVECTOR tempInter;
 			//当たらなければ除外
-			if (!meshCollider->CheckCollisionRay(ray,&tempDistance,&tempInter))continue;
+			if (!meshCollider->CheckCollisionRay(ray, &tempDistance, &tempInter))continue;
 			//距離が最小でなければ除外
 			if (tempDistance >= distance)continue;
 			//今までで最も近いので記録を取る

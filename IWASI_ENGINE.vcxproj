@@ -422,6 +422,7 @@
     <ClInclude Include="DirectXGame\Engine\3D\Camera\Camera.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\BaseCollider.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\Collision.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionAttribute.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionInfo.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionManager.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionPrimitive.h" />

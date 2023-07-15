@@ -1,6 +1,8 @@
 #include "Player.h"
 #include <cassert>
 #include "SphereCollider.h"
+#include "CollisionAttribute.h"
+#include "CollisionManager.h"
 
 using namespace DirectX;
 
@@ -44,7 +46,7 @@ bool Player::Initialize() {
 	pos = { -20.0f,-10.0f,-60.0f };
 	Object3d::SetPosition(pos);
 	//ジャンプしたか
-	isJump = false;
+	onGround = true;
 
 	//奥側にいるか
 	isJumpBack = false;
@@ -57,8 +59,7 @@ bool Player::Initialize() {
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 1.0f;					//全体時間
 	timeRate;
-	//重力
-	gravity = 0.0f;
+	
 	//パーティクル
 	particleDash_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmDash_ = ParticleManager::Create();
@@ -66,6 +67,7 @@ bool Player::Initialize() {
 	
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
+	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	return true;
 }
@@ -92,7 +94,7 @@ void Player::Update() {
 		//移動処理
 		Move();
 		//攻撃処理
-		Jump();
+		FallAndJump();
 		JumpBack();
 		//Attack();
 
@@ -203,36 +205,57 @@ void Player::CameraMove()
 	camera_->SetTarget(tmove);
 }
 
-void Player::Jump()
+void Player::FallAndJump()
 {
+	//旧
+	//XMFLOAT3 move = Object3d::GetPosition();
 
-	XMFLOAT3 move = Object3d::GetPosition();
+	////キーボード入力による移動処理
+	//XMMATRIX matTrans = XMMatrixIdentity();
+	//if ()
+	//{
+	//	if (input_->TriggerKey(DIK_SPACE)) {
+	//		isJump = true;
+	//		gravity = 0.0f;
+	//	}
+	//}
+	//else
+	//{
+	//	move.y += power + gravity;
+	//	gravity -= 0.1f;
 
-	//キーボード入力による移動処理
-	XMMATRIX matTrans = XMMatrixIdentity();
-	if (!isJump)
+	//	if (gravity <= -4.0f)
+	//	{
+	//		gravity = -4.0f;
+	//	}
+	//	if (move.y <= -10.0f)
+	//	{
+	//		move.y = -10.0f;
+	//		isJump = false;
+	//	}
+	//}
+	//Object3d::SetPosition(move);
+
+	if (!onGround)
 	{
-		if (input_->TriggerKey(DIK_SPACE)) {
-			isJump = true;
-			gravity = 0.0f;
-		}
+		//下向き加速度
+		const float fallAcc = -0.01f;
+		const float fallVYMin = -0.5f;
+		//加速
+		fallVec.y = max(fallVec.y + fallAcc, fallVYMin);
+		//移動
+		position.x += fallVec.x;
+		position.y += fallVec.y;
+		position.z += fallVec.z;
 	}
-	else
+	//ジャンプ操作
+	else if (input_->TriggerKey(DIK_SPACE))
 	{
-		move.y += power + gravity;
-		gravity -= 0.1f;
-
-		if (gravity <= -4.0f)
-		{
-			gravity = -4.0f;
-		}
-		if (move.y <= -10.0f)
-		{
-			move.y = -10.0f;
-			isJump = false;
-		}
+		onGround = false;
+		const float jumpVYFist = 0.5f;
+		fallVec = { 0.0f,jumpVYFist,0.0f };
 	}
-	Object3d::SetPosition(move);
+
 }
 
 void Player::JumpBack()
@@ -247,7 +270,7 @@ void Player::JumpBack()
 
 	//時間
 
-	if (!isJump)
+	if (onGround)
 	{
 		if (!isJumpBack)
 		{
@@ -286,6 +309,10 @@ void Player::JumpBack()
 		}
 	}
 	Object3d::SetPosition(move);
+}
+
+void Player::Landing()
+{
 }
 
 //攻撃処理
