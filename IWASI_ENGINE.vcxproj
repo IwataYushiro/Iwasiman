@@ -386,6 +386,7 @@
     <ClCompile Include="DirectXGame\Engine\3D\Object\Mesh.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Model.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Object3d.cpp" />
+    <ClCompile Include="DirectXGame\Engine\3D\Object\TouchableObject.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Particle\Particle.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Particle\ParticleManager.cpp" />
     <ClCompile Include="DirectXGame\Engine\Base\DirectXCommon.cpp" />
@@ -438,6 +439,7 @@
     <ClInclude Include="DirectXGame\Engine\3D\Object\Mesh.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Model.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Object3d.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Object\TouchableObject.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Particle\Particle.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Particle\ParticleManager.h" />
     <ClInclude Include="DirectXGame\Engine\Base\DirectXCommon.h" />

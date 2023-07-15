@@ -2,6 +2,10 @@
 #include "LevelLoaderJson.h"
 #include "Player.h"
 #include "CollisionManager.h"
+#include "MeshCollider.h"
+#include "TouchableObject.h"
+#include <typeinfo>
+
 #include <cassert>
 #include <sstream>
 #include <iomanip>
@@ -89,7 +93,7 @@ void GamePlayScene::Update()
 	if (colManager_->RayCast(ray,&rcHit))
 	{
 		pm1_->ActiveZ(particle1_, XMFLOAT3(rcHit.inter.m128_f32), XMFLOAT3(rcHit.inter.m128_f32), XMFLOAT3({ 0.1f,0.1f,0.1f }),
-			XMFLOAT3(), 2, XMFLOAT2({ 1.0f,0.0f }));
+			XMFLOAT3(), 2, XMFLOAT2({ 3.0f,0.0f }));
 	}
 
 	//ÉJÉÅÉâ

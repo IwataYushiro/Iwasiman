@@ -496,6 +496,9 @@
     <ClCompile Include="DirectXGame\Engine\3D\Collider\MeshCollider.cpp">
       <Filter>Source File\Engine\3D\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Object\TouchableObject.cpp">
+      <Filter>Source File\Engine\3D\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -644,6 +647,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Collider\MeshCollider.h">
       <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Object\TouchableObject.h">
+      <Filter>Header File\Engine\3D\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

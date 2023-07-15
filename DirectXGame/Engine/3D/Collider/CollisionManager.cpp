@@ -1,6 +1,7 @@
 #include "CollisionManager.h"
 #include "BaseCollider.h"
 #include "Collision.h"
+#include "MeshCollider.h"
 
 using namespace DirectX;
 
@@ -25,12 +26,39 @@ void CollisionManager::CheckAllCollisions()
 			BaseCollider* colA = *itA;
 			BaseCollider* colB = *itB;
 			//ともに球
-			if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE && colB->GetShapeType() == COLLISIONSHAPE_SPHERE)
+			if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
+				colB->GetShapeType() == COLLISIONSHAPE_SPHERE)
 			{
 				Sphere* SphereA = dynamic_cast<Sphere*>(colA);
 				Sphere* SphereB = dynamic_cast<Sphere*>(colB);
 				DirectX::XMVECTOR inter;
 				if (Collision::ChackSphere2Sphere(*SphereA, *SphereB, &inter))
+				{
+					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
+					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+				}
+			}
+			//メッシュと球
+			else if (colA->GetShapeType() == COLLISIONSHAPE_MESH &&
+				colB->GetShapeType() == COLLISIONSHAPE_SPHERE)
+			{
+				MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
+				Sphere* sphere = dynamic_cast<Sphere*>(colB);
+				DirectX::XMVECTOR inter;
+				if (meshCollider->CheckCollisionSphere(*sphere,&inter))
+				{
+					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
+					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+				}
+			}
+			//メッシュと球
+			else if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
+				colB->GetShapeType() == COLLISIONSHAPE_MESH)
+			{
+				MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colB);
+				Sphere* sphere = dynamic_cast<Sphere*>(colA);
+				DirectX::XMVECTOR inter;
+				if (meshCollider->CheckCollisionSphere(*sphere, &inter))
 				{
 					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
 					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
@@ -65,6 +93,22 @@ bool CollisionManager::RayCast(const Ray& ray, RaycastHit* hitInfo, float maxDis
 			XMVECTOR tempInter;
 			//当たらなければ除外
 			if (!Collision::ChackRay2Sphere(ray, *sphere, &tempDistance, &tempInter))continue;
+			//距離が最小でなければ除外
+			if (tempDistance >= distance)continue;
+			//今までで最も近いので記録を取る
+			result = true;
+			distance = tempDistance;
+			inter = tempInter;
+			it_hit = it;
+		}
+		//球の場合
+		if (colA->GetShapeType() == COLLISIONSHAPE_MESH)
+		{
+			MeshCollider* meshCollider = dynamic_cast<MeshCollider*>(colA);
+			float tempDistance;
+			XMVECTOR tempInter;
+			//当たらなければ除外
+			if (!meshCollider->CheckCollisionRay(ray,&tempDistance,&tempInter))continue;
 			//距離が最小でなければ除外
 			if (tempDistance >= distance)continue;
 			//今までで最も近いので記録を取る

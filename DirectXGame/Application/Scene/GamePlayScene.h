@@ -19,6 +19,7 @@ struct LevelData;
 //前方宣言
 class Player;
 class CollisionManager;
+class TouchableObject;
 
 //ゲームプレイ
 class GamePlayScene :public BaseScene
@@ -87,6 +88,7 @@ private:
 
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
+	std::vector<TouchableObject*> hitObjects;
 
 	//パーティクル
 	Particle* particle1_ = nullptr;
