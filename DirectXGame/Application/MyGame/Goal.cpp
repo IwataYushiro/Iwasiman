@@ -87,5 +87,5 @@ void Goal::Draw()
 
 void Goal::OnCollision(const CollisionInfo& info)
 {
-	isGoal_ = true;
+	//isGoal_ = true;
 }

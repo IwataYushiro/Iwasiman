@@ -83,7 +83,7 @@ private:
 
 
 	Object3d* objSkydome = nullptr;
-	Object3d* objGround = nullptr;
+	TouchableObject* objGround = nullptr;
 
 
 	std::map<std::string, Model*> models;

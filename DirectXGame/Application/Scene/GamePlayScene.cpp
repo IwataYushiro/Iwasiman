@@ -83,11 +83,14 @@ void GamePlayScene::Update()
 	for (auto& object : objects) {
 		object->Update();
 	}
+	for (auto& object : hitObjects) {
+		object->Update();
+	}
 	lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
 	//当たり判定サンプル
 	Ray ray;
 	ray.start = { 10.0f,-10.0f,-60.0f,1.0f };
-	ray.dir = { -1.0f,0.0f,0.0f,0.0f };
+	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
 	RaycastHit rcHit;
 
 	if (colManager_->RayCast(ray,&rcHit))
@@ -108,12 +111,13 @@ void GamePlayScene::Update()
 		sceneManager_->ChangeScene("TITLE");
 	}
 	
-	colManager_->CheckAllCollisions();
+	
 	if (goal_->IsGoal())
 	{
 		camera_->Reset();
 		sceneManager_->ChangeScene("TITLE");
 	}
+	colManager_->CheckAllCollisions();
 }
 
 void GamePlayScene::Draw()
@@ -135,6 +139,9 @@ void GamePlayScene::Draw()
 	enemy_->Draw();
 	goal_->Draw();
 	for (auto& object : objects) {
+		object->Draw();
+	}
+	for (auto& object : hitObjects) {
 		object->Draw();
 	}
 	//モデル描画後処理
@@ -174,7 +181,10 @@ void GamePlayScene::Finalize()
 	{
 		delete object;
 	}
-	
+	for (TouchableObject*& object : hitObjects)
+	{
+		delete object;
+	}
 	//3Dモデル
 	delete modelPlayer_;
 	delete modelEnemy_;
@@ -301,36 +311,39 @@ void GamePlayScene::LoadLVData()
 	
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
-		// ファイル名から登録済みモデルを検索
-		Model* model = nullptr;
-		decltype(models)::iterator it = models.find(objectData.fileName);
-		if (it != models.end()) {
-			model = it->second;
+		
+		if ((typeid(hitObjects) == typeid(std::vector<TouchableObject*>)))
+		{
+			// ファイル名から登録済みモデルを検索
+			Model* model = nullptr;
+			decltype(models)::iterator it = models.find(objectData.fileName);
+			if (it != models.end()) {
+				model = it->second;
+			}
+
+			// モデルを指定して3Dオブジェクトを生成
+			TouchableObject* newObject = TouchableObject::Create(model);
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+			newObject->Update();
+			// 配列に登録
+			hitObjects.push_back(newObject);
 		}
-
-		// モデルを指定して3Dオブジェクトを生成
-		Object3d* newObject = Object3d::Create();
-		//オブジェクトにモデル紐付ける
-		newObject->SetModel(model);
-
-		// 座標
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMStoreFloat3(&pos, objectData.trans);
-		newObject->SetPosition(pos);
-
-		// 回転角
-		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, objectData.rot);
-		newObject->SetRotation(rot);
-
-		// 座標
-		DirectX::XMFLOAT3 scale;
-		DirectX::XMStoreFloat3(&scale,objectData.scale);
-		newObject->SetScale(scale);
-
-		newObject->SetCamera(camera_);
-		// 配列に登録
-		objects.push_back(newObject);
 	}
 
 }

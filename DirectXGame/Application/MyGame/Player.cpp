@@ -65,7 +65,7 @@ bool Player::Initialize() {
 	pmDash_->SetParticleModel(particleDash_);
 	
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 
 	return true;
 }
@@ -166,12 +166,12 @@ void Player::Move() {
 			tmove.x += moveSpeed * 2.0f;
 		}
 	}
-	/*if (input_->PushKey(DIK_W)) {
+	if (input_->PushKey(DIK_W)) {
 		move.y += moveSpeed;
 	}
 	if (input_->PushKey(DIK_S)) {
 		move.y -= moveSpeed;
-	}*/
+	}
 
 	Object3d::SetPosition(move);
 	camera_->SetEye(cmove);
@@ -357,7 +357,7 @@ XMFLOAT3 Player::GetWorldPosition() {
 
 //衝突を検出したら呼び出されるコールバック関数
 void Player::OnCollision(const CollisionInfo& info) {
-	life_--;
+	//life_--;
 	pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 		{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 3.0f, 0.0f });
 	if (life_ <= 0) {
