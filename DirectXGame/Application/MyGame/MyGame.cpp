@@ -21,7 +21,7 @@ void MyGame::Update()
 	// DirectX毎フレーム処理　ここから
 	// 更新処理ここから
 	Framework::Update();
-	if (input_->PressMouse(0))
+	if (input_->TriggerMouse(0))
 	{
 		postCount++;
 	}

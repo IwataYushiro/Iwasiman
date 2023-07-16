@@ -45,7 +45,7 @@ private:
 	//死亡フラグ
 	bool isDead_ = false;
 	//半径
-	float radius_ = 1.0f;
+	float radius_ = 4.0f;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
