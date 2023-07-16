@@ -25,7 +25,8 @@ public:
 	CollisionShapeType GetShapeType() { return shapeType; }
 
 	//衝突時コールバック関数
-	inline void OnCollision(const CollisionInfo& info) { object3d->OnCollision(info); }
+	inline void OnCollision(const CollisionInfo& info, unsigned short attribute
+		) { object3d->OnCollision(info,attribute); }
 
 	inline void SetAttribute(unsigned short attribute) { this->attribute_ = attribute; }
 

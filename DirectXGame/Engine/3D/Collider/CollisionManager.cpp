@@ -25,9 +25,7 @@ void CollisionManager::CheckAllCollisions()
 		{
 			BaseCollider* colA = *itA;
 			BaseCollider* colB = *itB;
-			//属性が合わない場合スキップ
-			if (!(colA->attribute_ & colB->attribute_))continue;
-
+			
 			//ともに球
 			if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
 				colB->GetShapeType() == COLLISIONSHAPE_SPHERE)
@@ -37,8 +35,8 @@ void CollisionManager::CheckAllCollisions()
 				DirectX::XMVECTOR inter;
 				if (Collision::ChackSphere2Sphere(*SphereA, *SphereB, &inter))
 				{
-					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
-					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter),colB->attribute_);
+					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter),colA->attribute_);
 				}
 			}
 			//メッシュと球
@@ -50,8 +48,8 @@ void CollisionManager::CheckAllCollisions()
 				DirectX::XMVECTOR inter;
 				if (meshCollider->CheckCollisionSphere(*sphere,&inter))
 				{
-					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
-					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter), colB->attribute_);
+					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter), colA->attribute_);
 				}
 			}
 			//球とメッシュ
@@ -63,8 +61,8 @@ void CollisionManager::CheckAllCollisions()
 				DirectX::XMVECTOR inter;
 				if (meshCollider->CheckCollisionSphere(*sphere, &inter))
 				{
-					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter));
-					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter));
+					colA->OnCollision(CollisionInfo(colB->GetObject3d(), colB, inter), colB->attribute_);
+					colB->OnCollision(CollisionInfo(colA->GetObject3d(), colA, inter), colA->attribute_);
 				}
 			}
 		}

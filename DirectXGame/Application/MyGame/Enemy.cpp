@@ -58,7 +58,7 @@ void Enemy::Stage1Parameter() {
 	isReverse_ = false;
 	//初期ステージ
 	scale = { 3.0f,3.0f,3.0f };
-	pos = { -30.0f,20.0f,100.0f };
+	pos = { -30.0f,0.0f,150.0f };
 	Object3d::SetPosition(pos);
 	Object3d::SetScale(scale);
 	//初期フェーズ
@@ -226,7 +226,7 @@ void Enemy::UpdateApproachStage1() {
 	}
 
 	//指定の位置に到達したら攻撃
-	if (pos.z < 60.0f) {
+	if (pos.z < 100.0f) {
 		phase_ = Phase::AttackStage1;
 	}
 }
@@ -236,10 +236,10 @@ void Enemy::UpdateAttackStage1() {
 	//速度
 	float cameraMove = camera_->GetEye().x;
 	//制御点
-	start = { -30.0f+cameraMove,20.0f,60.0f };
-	p1 = { -10.0f+cameraMove,0.0f,60.0f };
-	p2 = { 10.0f+cameraMove,40.0f,60.0f };
-	end = { 30.0f+cameraMove,20.0f,60.0f };
+	start = { -30.0f+cameraMove,0.0f,100.0f };
+	p1 = { -10.0f+cameraMove,-30.0f,100.0f };
+	p2 = { 10.0f+cameraMove,30.0f,100.0f };
+	end = { 30.0f+cameraMove,0.0f,100.0f };
 	//時間
 
 	//現在時間を取得する
@@ -328,9 +328,9 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 
 	return worldPos;
 }
-void Enemy::OnCollision(const CollisionInfo& info)
+void Enemy::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
-	life_--;
+	if(attribute==COLLISION_ATTR_ALLIES)life_--;
 }
 //衝突を検出したら呼び出されるコールバック関数
 void Enemy::OnCollisionPlayer() { life_--; }

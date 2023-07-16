@@ -430,14 +430,17 @@ XMFLOAT3 Player::GetWorldPosition() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void Player::OnCollision(const CollisionInfo& info) {
-	//life_--;
-	pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-		{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 3.0f, 0.0f });
-	if (life_ <= 0) {
-		isDead_ = true;
+void Player::OnCollision(const CollisionInfo& info, unsigned short attribute) {
+	if (attribute == COLLISION_ATTR_ENEMYS)
+	{
+		life_--;
+		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 3.0f, 0.0f });
+		if (life_ <= 0) {
+			isDead_ = true;
+		}
+		pmDash_->Update();
 	}
-	pmDash_->Update();
 
 }
 

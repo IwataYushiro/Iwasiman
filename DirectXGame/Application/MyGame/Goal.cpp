@@ -36,7 +36,7 @@ bool Goal::Initialize()
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
+	collider->SetAttribute(COLLISION_ATTR_GOAL);
 
 	return true;
 	
@@ -89,7 +89,8 @@ void Goal::Draw()
 	Object3d::Draw();
 }
 
-void Goal::OnCollision(const CollisionInfo& info)
+void Goal::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
-	isGoal_ = true;
+	if(attribute==COLLISION_ATTR_ALLIES)isGoal_ = true;
+	
 }

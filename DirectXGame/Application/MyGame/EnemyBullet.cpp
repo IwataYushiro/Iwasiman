@@ -85,8 +85,10 @@ void EnemyBullet::Draw() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void EnemyBullet::OnCollision(const CollisionInfo& info) { 
-	isDead_ = true; }
+void EnemyBullet::OnCollision(const CollisionInfo& info, unsigned short attribute) {
+	
+	if (attribute == COLLISION_ATTR_ALLIES)isDead_ = true;
+}
 
 //ワールド座標を取得
 XMFLOAT3 EnemyBullet::GetWorldPosition() {
