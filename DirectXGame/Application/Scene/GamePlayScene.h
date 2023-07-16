@@ -80,11 +80,14 @@ private:
 
 	Model* modelSkydome = nullptr;
 	Model* modelGround = nullptr;
+	Model* modelBox = nullptr;
 
 
 	Object3d* objSkydome = nullptr;
 	TouchableObject* objGround = nullptr;
+	TouchableObject* objGround2 = nullptr;
 
+	TouchableObject* objBox = nullptr;
 
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;

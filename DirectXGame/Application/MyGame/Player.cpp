@@ -159,13 +159,13 @@ void Player::Move() {
 	if (input_->PushKey(DIK_LSHIFT)|| input_->PushKey(DIK_RSHIFT))
 	{
 		if (input_->PushKey(DIK_A)) {
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,10.0f,0.0f }, { -4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,0.0f,0.0f }, { 3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 1.0f, 0.0f });
 			move.x -= moveSpeed * 2.0f;
 			cmove.x -= moveSpeed * 2.0f;
 			tmove.x -= moveSpeed * 2.0f;
 		}
 		if (input_->PushKey(DIK_D)) {
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,10.0f,0.0f }, { 4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,0.0f,0.0f }, { -3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 1.0f, 0.0f });
 			move.x += moveSpeed * 2.0f;
 			cmove.x += moveSpeed * 2.0f;
 			tmove.x += moveSpeed * 2.0f;

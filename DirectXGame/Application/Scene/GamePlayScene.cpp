@@ -112,7 +112,7 @@ void GamePlayScene::Update()
 	}
 	
 	
-	if (goal_->IsGoal())
+	if (goal_->IsGoal() || player_->GetPosition().y <= -60.0f)
 	{
 		camera_->Reset();
 		sceneManager_->ChangeScene("TITLE");
@@ -305,9 +305,11 @@ void GamePlayScene::LoadLVData()
 	// モデル読み込み
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
+	modelBox = Model::LoadFromOBJ("testbox");
 	
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
+	models.insert(std::make_pair("testbox", modelBox));
 	
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {

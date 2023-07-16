@@ -88,6 +88,7 @@ void EnemyBullet::Draw() {
 void EnemyBullet::OnCollision(const CollisionInfo& info, unsigned short attribute) {
 	
 	if (attribute == COLLISION_ATTR_ALLIES)isDead_ = true;
+
 }
 
 //ƒ[ƒ‹ƒhÀ•W‚ğæ“¾

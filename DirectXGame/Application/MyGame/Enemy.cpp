@@ -330,7 +330,8 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 }
 void Enemy::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
-	if(attribute==COLLISION_ATTR_ALLIES)life_--;
+	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
+	else if(attribute==COLLISION_ATTR_ALLIES)life_--;
 }
 //衝突を検出したら呼び出されるコールバック関数
 void Enemy::OnCollisionPlayer() { life_--; }
