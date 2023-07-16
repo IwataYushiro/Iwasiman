@@ -4,6 +4,8 @@
 #include "Object3d.h"
 #include <DirectXMath.h>
 
+class CollisionManager;
+
 class Goal :public Object3d
 {
 private:
@@ -34,7 +36,7 @@ public:
 	void OnCollision(const CollisionInfo& info)override;
 
 private:
-	
+	static CollisionManager* colManager_;
 	//ƒ|ƒWƒVƒ‡ƒ“
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;

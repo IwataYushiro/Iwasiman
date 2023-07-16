@@ -1,8 +1,11 @@
 #include "Goal.h"
 #include "SphereCollider.h"
 #include <cassert>
+#include "CollisionAttribute.h"
+#include "CollisionManager.h"
 
 using namespace DirectX;
+CollisionManager* Goal::colManager_ = CollisionManager::GetInstance();
 
 Goal* Goal::Create(Model* model)
 {
@@ -26,13 +29,14 @@ bool Goal::Initialize()
 	if (!Object3d::Initialize()) return false;
 
 	//ワールド変換の初期化
-	pos = { 120.0f,-10.0f,0.0f };
+	pos = { 120.0f,0.0f,0.0f };
 	Object3d::SetPosition(pos);
 	scale = { 10.0f,10.0f,10.0f };
 	Object3d::SetScale(scale);
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
+	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
 	return true;
 	
@@ -87,5 +91,5 @@ void Goal::Draw()
 
 void Goal::OnCollision(const CollisionInfo& info)
 {
-	//isGoal_ = true;
+	isGoal_ = true;
 }

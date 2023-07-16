@@ -1,10 +1,12 @@
 #include "Enemy.h"
 #include <cassert>
 #include "SphereCollider.h"
-
+#include "CollisionAttribute.h"
+#include "CollisionManager.h"
 #include "Player.h"
 
 using namespace DirectX;
+CollisionManager* Enemy::colManager_ = CollisionManager::GetInstance();
 
 Enemy::~Enemy() {
 	delete modelBullet_;
@@ -24,6 +26,7 @@ Enemy* Enemy::Create(Model* model)
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	
 	return ins;
 }
 
@@ -39,11 +42,12 @@ bool Enemy::Initialize() {
 	startCount= std::chrono::steady_clock::now();	//開始時間
 	nowCount= std::chrono::steady_clock::now();		//現在時間
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	maxTime = 10.0f;					//全体時間
+	maxTime = 5.0f;					//全体時間
 	timeRate;
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 
 	return true;
 }
@@ -54,7 +58,7 @@ void Enemy::Stage1Parameter() {
 	isReverse_ = false;
 	//初期ステージ
 	scale = { 3.0f,3.0f,3.0f };
-	pos = { -30.0f,0.0f,100.0f };
+	pos = { -30.0f,20.0f,100.0f };
 	Object3d::SetPosition(pos);
 	Object3d::SetScale(scale);
 	//初期フェーズ
@@ -230,13 +234,12 @@ void Enemy::UpdateApproachStage1() {
 void Enemy::UpdateAttackStage1() {
 
 	//速度
-	XMFLOAT3 velocity;
 	float cameraMove = camera_->GetEye().x;
 	//制御点
-	start = { -30.0f+cameraMove,0.0f,60.0f };
-	p1 = { -10.0f+cameraMove,-30.0f,60.0f };
-	p2 = { 10.0f+cameraMove,30.0f,60.0f };
-	end = { 30.0f+cameraMove,0.0f,60.0f };
+	start = { -30.0f+cameraMove,20.0f,60.0f };
+	p1 = { -10.0f+cameraMove,0.0f,60.0f };
+	p2 = { 10.0f+cameraMove,40.0f,60.0f };
+	end = { 30.0f+cameraMove,20.0f,60.0f };
 	//時間
 
 	//現在時間を取得する
@@ -248,8 +251,6 @@ void Enemy::UpdateAttackStage1() {
 
 	timeRate = min(elapsed / maxTime, 1.0f);
 
-	//移動
-	velocity = { 0.5f, 0.0f, 0.0f };
 	if (isReverse_) {
 		pos = Bezier3(end, p2, p1, start, timeRate);
 	}
@@ -293,7 +294,7 @@ void Enemy::UpdateLeave() {
 	XMFLOAT3 velocity;
 
 	//移動
-	velocity = { 0.0f, 0.0f, 0.03f };
+	velocity = { 0.0f, 0.0f, 0.05f };
 	pos.x += velocity.x;
 	pos.y += velocity.y;
 	pos.z += velocity.z;

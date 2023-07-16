@@ -3,6 +3,8 @@
 #include "Object3d.h"
 #include <DirectXMath.h>
 
+class CollisionManager;
+
 //“G‚Ì’e
 class EnemyBullet: public Object3d {
 private:
@@ -31,6 +33,8 @@ public:
 	XMFLOAT3 GetWorldPosition();
 
 private:
+	static CollisionManager* colManager_;
+
 	//‘¬“x
 	XMFLOAT3 velocity_;
 

@@ -10,6 +10,7 @@
 #include <memory>
 #include <chrono>
 
+class CollisionManager;
 
 class Player:public Object3d
 {
@@ -64,6 +65,7 @@ public:
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
 private:
+	static CollisionManager* colManager_;
 	//’e
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	

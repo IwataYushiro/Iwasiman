@@ -10,6 +10,7 @@
 
 //自機クラスの前方宣言
 class Player;
+class CollisionManager;
 
 //敵
 class Enemy:public Object3d {
@@ -62,7 +63,7 @@ public:
 	const std::list<std::unique_ptr<EnemyBullet>>& GetEnemyBullets() { return enemyBullets_; }
 
 private:
-	
+	static CollisionManager* colManager_;
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
 	//モデル	
@@ -97,7 +98,7 @@ private:
 	std::chrono::steady_clock::time_point startCount;	//開始時間
 	std::chrono::steady_clock::time_point nowCount;		//現在時間
 	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	float	maxTime = 7.0f;					//全体時間
+	float	maxTime = 5.0f;					//全体時間
 	float	timeRate;
 	//制御点
 	XMFLOAT3 start;

@@ -1,8 +1,12 @@
 #include "EnemyBullet.h"
 #include <cassert>
 #include "SphereCollider.h"
+#include "CollisionAttribute.h"
+#include "CollisionManager.h"
 
 using namespace DirectX;
+CollisionManager* EnemyBullet::colManager_ = CollisionManager::GetInstance();
+
 
 std::unique_ptr<EnemyBullet> EnemyBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model)
 {
@@ -30,6 +34,7 @@ bool EnemyBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity)
 	velocity_ = velocity;
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 
 	return true;
 }

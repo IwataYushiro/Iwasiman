@@ -5,6 +5,7 @@
 #include "CollisionManager.h"
 
 using namespace DirectX;
+CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
 	//モデルの解放
@@ -111,6 +112,8 @@ void Player::Update() {
 
 	camera_->Update();
 	Object3d::Update();
+	//着地処理
+	Landing();
 }
 
 void Player::Draw() {
@@ -239,8 +242,8 @@ void Player::FallAndJump()
 	if (!onGround)
 	{
 		//下向き加速度
-		const float fallAcc = -0.01f;
-		const float fallVYMin = -0.5f;
+		const float fallAcc = -0.1f;
+		const float fallVYMin = -2.0f;
 		//加速
 		fallVec.y = max(fallVec.y + fallAcc, fallVYMin);
 		//移動
@@ -252,7 +255,7 @@ void Player::FallAndJump()
 	else if (input_->TriggerKey(DIK_SPACE))
 	{
 		onGround = false;
-		const float jumpVYFist = 0.5f;
+		const float jumpVYFist = 2.0f;
 		fallVec = { 0.0f,jumpVYFist,0.0f };
 	}
 
@@ -313,6 +316,50 @@ void Player::JumpBack()
 
 void Player::Landing()
 {
+	//球コライダーの取得
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
+	assert(sphereCollider);
+
+	//球の上端から球の下端までのレイキャスト用レイを準備
+	Ray ray;
+	ray.start = sphereCollider->center;
+	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
+	RaycastHit raycastHit;
+	//接地状態
+	if (onGround)
+	{
+		//スムーズに坂を下るための吸着処理
+		const float adsDistance = 0.2f;
+		//接地を維持
+		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
+			sphereCollider->GetRadius() * 2.0f + adsDistance))
+		{
+			onGround = true;
+			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			//行列更新
+			Object3d::Update();
+		}
+		//地面が無いので落下
+		else
+		{
+			onGround = false;
+			fallVec = {};
+		}
+	}
+	//落下状態
+	else if (fallVec.y >= -10.0f)
+	{
+		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
+			sphereCollider->GetRadius() * 2.0f))
+		{
+			//着地
+			onGround = true;
+			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			//行列更新
+			Object3d::Update();
+		}
+	}
 }
 
 //攻撃処理
