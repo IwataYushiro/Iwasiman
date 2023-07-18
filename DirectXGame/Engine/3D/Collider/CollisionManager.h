@@ -1,6 +1,7 @@
 #pragma once
 #include "CollisionPrimitive.h"
 #include "RayCastHit.h"
+#include "QueryCallback.h"
 
 #include <forward_list>
 #include <d3d12.h>
@@ -37,6 +38,15 @@ public://メンバ関数
 /// <returns>レイが任意のコライダーと交わる場合true,それ以外はfalse</returns>
 	bool RayCast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo = nullptr,
 		float maxDistance = D3D12_FLOAT32_MAX);
+
+/// <summary>
+/// 球による衝突全要素
+/// </summary>
+///	<param names="sphere">球</param>
+///	<param names="callback">衝突時コールバック</param>
+/// <param names="attribute">対象の衝突属性</param>
+	void QuerySphere(const Sphere& sphere, QueryCallback* callback,
+		unsigned short attribute = (unsigned short)0xffffffff);
 
 private:
 	CollisionManager() = default;
