@@ -190,6 +190,7 @@ void GamePlayScene::Finalize()
 	delete modelEnemy_;
 	delete modelSkydome;
 	delete modelGround;
+	delete modelBox;
 	delete modelGoal_;
 	//Šî”ÕŒn
 	delete player_;

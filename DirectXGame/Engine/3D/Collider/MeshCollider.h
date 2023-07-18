@@ -17,7 +17,8 @@ public:
 	//XV
 	void Update()override;
 	//‹…‚Æ‚Ì“–‚½‚è”»’è
-	bool CheckCollisionSphere(const Sphere& sphere, DirectX::XMVECTOR* inter = nullptr);
+	bool CheckCollisionSphere(const Sphere& sphere,
+		DirectX::XMVECTOR* inter = nullptr, DirectX::XMVECTOR* reject = nullptr);
 	//ƒŒƒC‚Æ‚Ì“–‚½‚è”»’è
 	bool CheckCollisionRay(const Ray& ray, float* distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
 

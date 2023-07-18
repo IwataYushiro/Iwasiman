@@ -357,5 +357,6 @@ void Object3d::SetCollider(BaseCollider* collider)
 	//コリジョンマネージャーに登録
 	CollisionManager::GetInstance()->AddCollider(collider);
 	//コライダー更新
+	UpdateWorldMatrix();
 	collider->Update();
 }

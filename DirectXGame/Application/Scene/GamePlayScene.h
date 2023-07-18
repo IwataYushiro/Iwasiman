@@ -85,7 +85,7 @@ private:
 
 	Object3d* objSkydome = nullptr;
 	TouchableObject* objGround = nullptr;
-	TouchableObject* objGround2 = nullptr;
+	//TouchableObject* objGround2 = nullptr;
 
 	TouchableObject* objBox = nullptr;
 
