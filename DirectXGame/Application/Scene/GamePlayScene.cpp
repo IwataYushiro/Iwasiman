@@ -28,7 +28,7 @@ void GamePlayScene::Initialize()
 	//音声データ
 	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
 	//音声再生呼び出し例
-	audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
+	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
 	//OBJファイルからモデルデータを読み込む
 	modelPlayer_ = Model::LoadFromOBJ("player");

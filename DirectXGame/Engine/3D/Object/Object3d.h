@@ -106,6 +106,8 @@ public: // メンバ関数
 	/// </summary>
 	virtual void Update();
 
+	//行列更新
+	void UpdateWorldMatrix();
 	/// <summary>
 	/// 描画
 	/// </summary>

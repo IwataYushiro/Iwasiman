@@ -2,7 +2,8 @@
 
 using namespace DirectX;
 
-bool Collision::ChackSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2, DirectX::XMVECTOR* inter)
+bool Collision::ChackSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2,
+	DirectX::XMVECTOR* inter, DirectX::XMVECTOR* reject)
 {
 	//判定対象A,Bの座標
 	XMVECTOR posA = sphere1.center;
@@ -11,19 +12,28 @@ bool Collision::ChackSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2,
 	//判定対象A,Bの半径
 	float radiusA = sphere1.radius;
 	float radiusB = sphere2.radius;
-	float radiiusAB;
+	float radiusAB;
 
 	posAB.m128_f32[0] = (posB.m128_f32[0] - posA.m128_f32[0]) * (posB.m128_f32[0] - posA.m128_f32[0]);
 	posAB.m128_f32[1] = (posB.m128_f32[1] - posA.m128_f32[1]) * (posB.m128_f32[1] - posA.m128_f32[1]);
 	posAB.m128_f32[2] = (posB.m128_f32[2] - posA.m128_f32[2]) * (posB.m128_f32[2] - posA.m128_f32[2]);
 	
-	radiiusAB = (radiusA + radiusB) * (radiusA * radiusB);
+	radiusAB = (radiusA + radiusB) * (radiusA * radiusB);
 
 	if (inter)
 	{
 		*inter = posAB;
 	}
-	if (radiiusAB >= (posAB.m128_f32[0] + posAB.m128_f32[1] + posAB.m128_f32[2])) {
+	if (radiusAB >= (posAB.m128_f32[0] + posAB.m128_f32[1] + posAB.m128_f32[2])) {
+		//押し出すベクトルを計算
+		if (reject)
+		{
+			float rejectLen = radiusA + radiusB -
+				sqrtf((posAB.m128_f32[0] + posAB.m128_f32[1] + posAB.m128_f32[2]));
+			*reject = XMVector3Normalize(posA - posB);
+			*reject *= rejectLen;
+		}
+
 		return true;
 	}
 
@@ -122,7 +132,8 @@ void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Tr
 	*closest = triangle.p0 + p0_p1 * v + p0_p2 * w;
 }
 
-bool Collision::ChackSphere2Triangle(const Sphere& sphere, const Triangle& triangle,XMVECTOR* inter)
+bool Collision::ChackSphere2Triangle(const Sphere& sphere,
+	const Triangle& triangle,XMVECTOR* inter, DirectX::XMVECTOR* reject)
 {
 	XMVECTOR p;
 	//球の中心に対する最近接点である三角形上にある点pを見つける
@@ -139,6 +150,14 @@ bool Collision::ChackSphere2Triangle(const Sphere& sphere, const Triangle& trian
 	{
 		//三角形上の最近接点pを疑似交点とする
 		*inter = p;
+	}
+	//押し出すベクトルを計算
+	if (reject)
+	{
+		float ds = XMVector3Dot(sphere.center, triangle.normal).m128_f32[0];
+		float dt = XMVector3Dot(triangle.p0, triangle.normal).m128_f32[0];
+		float rejectLen = dt - ds + sphere.radius;
+		*reject = triangle.normal * rejectLen;
 	}
 
 	return true;

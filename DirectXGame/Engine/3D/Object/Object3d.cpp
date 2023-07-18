@@ -276,6 +276,28 @@ bool Object3d::Initialize()
 void Object3d::Update()
 {
 	HRESULT result;
+	UpdateWorldMatrix();
+	const XMMATRIX& matViewProjection = camera_->GetMatViewProjection();
+	const XMFLOAT3& cameraPos = camera_->GetEye();
+
+	// 定数バッファへデータ転送
+	
+	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
+	//constMap0->color = color;
+	constMap0->viewproj = matViewProjection;	// 行列の合成
+	constMap0->world = matWorld;
+	constMap0->cameraPos = cameraPos;
+	constBuffB0->Unmap(0, nullptr);
+
+	//当たり判定更新
+	if (collider)
+	{
+		collider->Update();
+	}
+}
+
+void Object3d::UpdateWorldMatrix()
+{
 	XMMATRIX matScale, matRot, matTrans;
 
 	// スケール、回転、平行移動行列の計算
@@ -306,23 +328,6 @@ void Object3d::Update()
 	if (parent != nullptr) {
 		// 親オブジェクトのワールド行列を掛ける
 		matWorld *= parent->matWorld;
-	}
-	const XMMATRIX& matViewProjection = camera_->GetMatViewProjection();
-	const XMFLOAT3& cameraPos = camera_->GetEye();
-
-	// 定数バッファへデータ転送
-	
-	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
-	//constMap0->color = color;
-	constMap0->viewproj = matViewProjection;	// 行列の合成
-	constMap0->world = matWorld;
-	constMap0->cameraPos = cameraPos;
-	constBuffB0->Unmap(0, nullptr);
-
-	//当たり判定更新
-	if (collider)
-	{
-		collider->Update();
 	}
 }
 
