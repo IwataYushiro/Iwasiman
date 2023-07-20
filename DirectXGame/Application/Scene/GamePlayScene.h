@@ -87,7 +87,7 @@ private:
 	TouchableObject* objGround = nullptr;
 	//TouchableObject* objGround2 = nullptr;
 
-	TouchableObject* objBox = nullptr;
+	Object3d* objBox = nullptr;
 
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;

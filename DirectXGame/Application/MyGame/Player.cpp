@@ -111,7 +111,9 @@ void Player::Update() {
 	pmDash_->Update();
 
 	camera_->Update();
-	Object3d::Update();
+	UpdateWorldMatrix();
+	collider->Update();
+
 	//着地処理
 	Landing();
 }
@@ -320,6 +322,56 @@ void Player::Landing()
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
 	assert(sphereCollider);
 
+	//専用クエリーコールバッククラス定義
+	class PlayerQueryCallback : public QueryCallback
+	{
+	public:
+		PlayerQueryCallback(Sphere* sphere) :sphere_(sphere) {};
+
+	//衝突時のコールバック関数
+		bool OnQueryHit(const QueryHit& info)
+		{
+			//ワールド上方向
+			const XMVECTOR up = { 0.0f,1.0f,0.0f,0.0f };
+			//排斥方向
+			XMVECTOR rejectDir = XMVector3Normalize(info.reject);
+			//上方向と排斥方向の角度差のコサイン値
+			float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
+
+			//地面判定のしきい値角度
+			const float threshold = cosf(XMConvertToRadians(30.0f));
+			//角度差によって天井又は地面と判定される場合を除いて
+			if (-threshold < cos && cos < threshold)
+			{
+				//球を排斥(押し出す)
+				sphere_->center += info.reject;
+				move += info.reject;
+			}
+
+			return true;
+		}
+
+	public:
+		Sphere* sphere_ = nullptr;
+		//排斥による移動量
+		XMVECTOR move = {};
+
+	};
+	
+	// 球クエリー、コライダー更新
+	//クエリーコールバックの関数オブジェクト
+	PlayerQueryCallback callback(sphereCollider);
+
+	//球と地形の交差を全検索
+	colManager_->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
+	//交差による排斥分動かす
+	position.x += callback.move.m128_f32[0];
+	position.y += callback.move.m128_f32[1];
+	position.z += callback.move.m128_f32[2];
+	//コライダー更新
+	UpdateWorldMatrix();
+	collider->Update();
+	
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
 	ray.start = sphereCollider->center;
@@ -360,6 +412,9 @@ void Player::Landing()
 			Object3d::Update();
 		}
 	}
+
+	//行列更新等
+	Object3d::Update();
 }
 
 //攻撃処理
