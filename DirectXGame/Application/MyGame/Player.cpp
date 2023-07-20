@@ -367,9 +367,19 @@ void Player::Landing()
 	//交差による排斥分動かす
 	position.x += callback.move.m128_f32[0];
 	position.y += callback.move.m128_f32[1];
-	position.z += callback.move.m128_f32[2];
+	//position.z += callback.move.m128_f32[2];
+	 
+	XMFLOAT3 eyepos = camera_->GetEye();
+	XMFLOAT3 tarpos = camera_->GetTarget();
+
+	eyepos.x += callback.move.m128_f32[0];
+
+	tarpos.x += callback.move.m128_f32[0];
+	
 	//コライダー更新
 	UpdateWorldMatrix();
+	camera_->SetEye(eyepos);
+	camera_->SetTarget(tarpos);
 	collider->Update();
 	
 	//球の上端から球の下端までのレイキャスト用レイを準備

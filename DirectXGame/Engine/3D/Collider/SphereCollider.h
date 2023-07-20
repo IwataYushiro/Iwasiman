@@ -25,7 +25,7 @@ public://ƒƒ“ƒoŠÖ”
 
 	inline void SetOffset(const XMVECTOR& offset) { this->offset_ = offset; }
 
-	inline const float GetRadius(){return radius_;}
+	inline float GetRadius(){return radius_;}
 
 	inline void SetRadius(float radius) { this->radius_ = radius; }
 

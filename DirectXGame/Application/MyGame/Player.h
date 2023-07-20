@@ -83,7 +83,7 @@ private:
 	XMFLOAT3 angle;
 
 	//ジャンプしてるか
-	bool onGround;
+	bool onGround = true;
 	XMFLOAT3 fallVec;
 
 	//奥側に移動
@@ -108,7 +108,7 @@ private:
 	//死亡フラグとライフ
 	bool isDead_ = false;
 	int life_ = 5;
-
+	bool cameramove = true;
 	//パーティクル
 	Particle* particleDash_ = nullptr;
 	ParticleManager* pmDash_ = nullptr;

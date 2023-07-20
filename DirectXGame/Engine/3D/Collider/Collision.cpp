@@ -5,34 +5,28 @@ using namespace DirectX;
 bool Collision::ChackSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2,
 	DirectX::XMVECTOR* inter, DirectX::XMVECTOR* reject)
 {
-	//判定対象A,Bの座標
-	XMVECTOR posA = sphere1.center;
-	XMVECTOR posB = sphere2.center;
-	XMVECTOR posAB;
-	//判定対象A,Bの半径
-	float radiusA = sphere1.radius;
-	float radiusB = sphere2.radius;
-	float radiusAB;
+	//判定対象の座標
+	float dist = XMVector3LengthSq(sphere1.center - sphere2.center).m128_f32[0];
+	//判定対象の半径
+	float radius12 = sphere1.radius + sphere2.radius;
 
-	posAB.m128_f32[0] = (posB.m128_f32[0] - posA.m128_f32[0]) * (posB.m128_f32[0] - posA.m128_f32[0]);
-	posAB.m128_f32[1] = (posB.m128_f32[1] - posA.m128_f32[1]) * (posB.m128_f32[1] - posA.m128_f32[1]);
-	posAB.m128_f32[2] = (posB.m128_f32[2] - posA.m128_f32[2]) * (posB.m128_f32[2] - posA.m128_f32[2]);
-	
-	radiusAB = (radiusA + radiusB) * (radiusA * radiusB);
+	radius12 *= radius12;
 
+	if (dist <= radius12)
+	{
 	if (inter)
 	{
-		*inter = posAB;
+		//s1の半径が0=s2の中心　s2の半径が0=s1の中心となるよう補完
+		float t = sphere2.radius / (sphere1.radius + sphere2.radius);
+		*inter = XMVectorLerp(sphere1.center, sphere2.center, t);
 	}
-	if (radiusAB >= (posAB.m128_f32[0] + posAB.m128_f32[1] + posAB.m128_f32[2])) {
-		//押し出すベクトルを計算
-		if (reject)
-		{
-			float rejectLen = radiusA + radiusB -
-				sqrtf((posAB.m128_f32[0] + posAB.m128_f32[1] + posAB.m128_f32[2]));
-			*reject = XMVector3Normalize(posA - posB);
-			*reject *= rejectLen;
-		}
+	//押し出すベクトルを計算
+	if (reject)
+	{
+		float rejectLen = sphere1.radius + sphere2.radius -sqrtf(dist);
+		*reject = XMVector3Normalize(sphere1.center - sphere2.center);
+		*reject *= rejectLen;
+	}
 
 		return true;
 	}
@@ -142,9 +136,9 @@ bool Collision::ChackSphere2Triangle(const Sphere& sphere,
 	XMVECTOR v = p - sphere.center;
 	//距離の2乗を求める
 	//(同じベクトル同士の内積は三平方の定理のルート内部の式と一致する)
-	v = XMVector3Dot(v, v);
+	float distanceSquare = XMVector3Dot(v, v).m128_f32[0];
 	//球と三角形の距離が半径以下なら当たっていない
-	if (v.m128_f32[0] > sphere.radius * sphere.radius)	return false;
+	if (distanceSquare > sphere.radius * sphere.radius)	return false;
 	//疑似交点を計算
 	if (inter)
 	{

@@ -9,6 +9,7 @@
 #include "ParticleManager.h"
 #include "Enemy.h"
 #include "Goal.h"
+#include <vector>
 #include <map>
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
@@ -82,17 +83,9 @@ private:
 	Model* modelGround = nullptr;
 	Model* modelBox = nullptr;
 
-
-	Object3d* objSkydome = nullptr;
-	TouchableObject* objGround = nullptr;
-	//TouchableObject* objGround2 = nullptr;
-
-	Object3d* objBox = nullptr;
-
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
-	std::vector<TouchableObject*> hitObjects;
-
+	
 	//パーティクル
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm1_ = nullptr;

@@ -58,7 +58,7 @@ bool MeshCollider::CheckCollisionSphere(const Sphere& sphere,
 	//オブジェクトのローカル座標形での球を得る(半径はXスケールを参照)
 	Sphere localSphere;
 	localSphere.center = XMVector3Transform(sphere.center, invMatWorld);
-	localSphere.radius = XMVector3Length(invMatWorld.r[0]).m128_f32[0];
+	localSphere.radius *= XMVector3Length(invMatWorld.r[0]).m128_f32[0];
 
 	//ローカル座標系で交差チェック
 	std::vector<Triangle>::const_iterator it = triangles.cbegin();
