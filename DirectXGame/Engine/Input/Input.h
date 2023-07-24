@@ -40,6 +40,12 @@ private://構造体類
 		jsRT,
 	}JSButton;
 
+	struct PadParam
+	{
+		ComPtr<IDirectInputDevice8> joyStick;
+		int find;
+	};
+
 public://シングルトンインスタンス
 	static Input* GetInstance();
 public:
@@ -53,8 +59,7 @@ public:
 	void GenerateKeyBoard();
 	//マウスデバイス生成
 	void GenerateMouse();
-	//コントローラーデバイス生成
-	BOOL CALLBACK EnumJoyStickProc(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef);
+	
 	void GenerateJoyStick();
 
 
@@ -103,6 +108,10 @@ public:
 
 	
 private://メンバ変数
+	//コントローラーデバイス生成
+	static BOOL CALLBACK EnumJoyStickProc
+	(const DIDEVICEINSTANCE* lpddi, VOID* pvRef)noexcept;
+	
 	//DirectInputの初期化
 	ComPtr<IDirectInput8> directInput = nullptr;
 	//キーボード
@@ -126,11 +135,15 @@ private://メンバ変数
 	//ジョイスティックステート
 	DIJOYSTATE2 joyState;
 	DIJOYSTATE2 joyStatePre;
-
+	bool isJoyStick = false;
 private:
 	Input() = default;
 	~Input();
 public:
 	Input(const Input& obj) = delete;
 	Input& operator=(const Input& obj) = delete;
+
+public://アクセッサ
+
+	IDirectInput8* GetDirectInput()const { return directInput.Get(); }
 };
