@@ -13,7 +13,6 @@
 using namespace DirectX;
 
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
-SpriteCommon* GamePlayScene::spCommon_ = SpriteCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
 Audio* GamePlayScene::audio_ = Audio::GetInstance();
 Camera* GamePlayScene::camera_ = Camera::GetInstance();
@@ -22,11 +21,15 @@ ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
 void GamePlayScene::Initialize()
 {
+	spCommon_ = SpriteCommon::GetInstance();
 	colManager_ = CollisionManager::GetInstance();
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
 	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
+	//スプライト
+	LoadSprite();
+
 	//音声再生呼び出し例
 	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
@@ -71,59 +74,72 @@ void GamePlayScene::Initialize()
 	//敵に自機のアドレスを渡す
 	enemy_->SetPlayer(player_);
 
+	isPause_ = false;
 }
 
 void GamePlayScene::Update()
 {
-	//モデル呼び出し例
-	player_->Update();
 	enemy_->Update();
-	goal_->Update();
-
-	for (auto& object : objects) {
-		object->Update();
-	}
-
-	lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
-	////当たり判定サンプル
-	//Ray ray;
-	//ray.start = { 10.0f,-10.0f,-60.0f,1.0f };
-	//ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
-	//RaycastHit rcHit;
-
-	//if (colManager_->RayCast(ray,&rcHit))
-	//{
-	//	pm1_->ActiveZ(particle1_, XMFLOAT3(rcHit.inter.m128_f32), XMFLOAT3(rcHit.inter.m128_f32), XMFLOAT3({ 0.1f,0.1f,0.1f }),
-	//		XMFLOAT3(), 2, XMFLOAT2({ 3.0f,0.0f }));
-	//}
-
-	//カメラ
-	camera_->Update();
-	lightGroup_->Update();
-	pm1_->Update();
-	pm2_->Update();
-
-	if (input_->TriggerKey(DIK_RETURN))
+	if (!isPause_)
 	{
-		camera_->Reset();
-		sceneManager_->ChangeScene("TITLE");
+		//モデル呼び出し例
+		player_->Update();
+		
+		goal_->Update();
+
+		for (auto& object : objects) {
+			object->Update();
+		}
+
+		lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
+		
+		//カメラ
+		camera_->Update();
+		lightGroup_->Update();
+		pm1_->Update();
+		pm2_->Update();
+
+		if (input_->TriggerKey(DIK_RETURN))
+		{
+			camera_->Reset();
+			sceneManager_->ChangeScene("TITLE");
+		}
+
+
+		if (goal_->IsGoal() || player_->GetPosition().y <= -60.0f)
+		{
+			camera_->Reset();
+			sceneManager_->ChangeScene("TITLE");
+		}
+		colManager_->CheckAllCollisions();
+
+		//Pause機能
+		if (input_->TriggerKey(DIK_Q))
+		{
+			isPause_ = true;
+		}
 	}
-
-
-	if (goal_->IsGoal() || player_->GetPosition().y <= -60.0f)
+	else if (isPause_)
 	{
-		camera_->Reset();
-		sceneManager_->ChangeScene("TITLE");
+		if (input_->TriggerKey(DIK_W))
+		{
+			sceneManager_->ChangeScene("TITLE");
+			isPause_ = false;
+		}
+		if (input_->TriggerKey(DIK_Q))
+		{
+			
+			isPause_ = false;
+		}
+
 	}
-	colManager_->CheckAllCollisions();
+	spritePause_->Update();
 }
 
 void GamePlayScene::Draw()
 {
 
-	//スプライト描画前処理
-	spCommon_->PreDraw();
-
+	
 	//背景スプライト
 
 	//エフェクト
@@ -151,8 +167,14 @@ void GamePlayScene::Draw()
 	player_->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
-	//前景スプライト
 
+	//スプライト描画前処理
+	spCommon_->PreDraw();
+	//前景スプライト
+	if (isPause_)
+	{
+		spritePause_->Draw();
+	}
 	//ImGuiの表示
 }
 
@@ -186,6 +208,8 @@ void GamePlayScene::Finalize()
 	delete modelGround;
 	delete modelBox;
 	delete modelGoal_;
+	//スプライト
+	delete spritePause_;
 	//基盤系
 	delete player_;
 	delete enemy_;
@@ -241,5 +265,15 @@ void GamePlayScene::LoadLVData()
 		// 配列に登録
 		objects.push_back(newObject);
 	}
+
+}
+
+void GamePlayScene::LoadSprite()
+{
+	//スプライト
+	spCommon_->LoadTexture(10, "texture/pausep.png");
+	spritePause_->Initialize(spCommon_,10);
+	spritePause_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
+
 
 }

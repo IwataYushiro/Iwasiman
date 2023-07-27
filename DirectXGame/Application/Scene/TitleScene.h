@@ -36,7 +36,7 @@ private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤
-	static SpriteCommon* spCommon_;
+	SpriteCommon* spCommon_=nullptr;
 	//インプット
 	static Input* input_;
 	//オーディオ

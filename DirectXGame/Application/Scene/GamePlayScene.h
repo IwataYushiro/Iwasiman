@@ -51,7 +51,7 @@ private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤
-	static SpriteCommon* spCommon_;
+	SpriteCommon* spCommon_=nullptr;
 	//インプット
 	static Input* input_;
 	//オーディオ
@@ -67,6 +67,9 @@ private:
 	//サウンド読み込み
 	Audio::SoundData sound;
 
+	Sprite* spritePause_ = new Sprite();
+	//ポーズしたか
+	bool isPause_ = false;
 	//モデル
 	Player* player_ = nullptr;
 	Model* modelPlayer_ = nullptr;
@@ -98,4 +101,7 @@ private:
 	//衝突マネージャ
 	CollisionManager* colManager_ = nullptr;
 
+private:
+	//スプライト読み込み
+	void LoadSprite();
 };
