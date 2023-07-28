@@ -284,6 +284,7 @@ void Player::JumpBack()
 				if (isBack)isBack = false;
 				else isBack = true;
 				isJumpBack = true;
+				onGround = false;
 			}
 		}
 		else
@@ -305,11 +306,13 @@ void Player::JumpBack()
 			{
 				startCount = std::chrono::steady_clock::now();
 				isJumpBack = false;
+				onGround = true;
 			}
 			else if (move.z <= start.z)
 			{
 				startCount = std::chrono::steady_clock::now();
 				isJumpBack = false;
+				onGround = true;
 			}
 		}
 	}

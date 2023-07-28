@@ -51,7 +51,7 @@ private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤
-	SpriteCommon* spCommon_=nullptr;
+	SpriteCommon* spCommon_ = nullptr;
 	//インプット
 	static Input* input_;
 	//オーディオ
@@ -91,10 +91,10 @@ private:
 	
 	//パーティクル
 	Particle* particle1_ = nullptr;
-	ParticleManager* pm1_ = nullptr;
+	ParticleManager* pm_ = nullptr;
 
 	Particle* particle2_ = nullptr;
-	ParticleManager* pm2_ = nullptr;
+	
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
 

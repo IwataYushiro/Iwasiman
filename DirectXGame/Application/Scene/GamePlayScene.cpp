@@ -53,6 +53,15 @@ void GamePlayScene::Initialize()
 	enemy_->SetCamera(camera_);
 	enemy_->Update();
 
+	// モデル読み込み
+	modelSkydome = Model::LoadFromOBJ("skydome");
+	modelGround = Model::LoadFromOBJ("ground");
+	modelBox = Model::LoadFromOBJ("sphere2");
+
+	models.insert(std::make_pair("skydome", modelSkydome));
+	models.insert(std::make_pair("ground", modelGround));
+	models.insert(std::make_pair("sphere2", modelBox));
+
 	//レベルデータ読み込み
 	LoadLVData();
 
@@ -62,14 +71,10 @@ void GamePlayScene::Initialize()
 
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
-	pm1_ = ParticleManager::Create();
-	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);
-
 	particle2_ = Particle::LoadFromParticleTexture("particle5.png");
-	pm2_ = ParticleManager::Create();
-	pm2_->SetParticleModel(particle2_);
-	pm2_->SetCamera(camera_);
+	pm_ = ParticleManager::Create();
+	pm_->SetParticleModel(particle1_);
+	pm_->SetCamera(camera_);
 
 	//敵に自機のアドレスを渡す
 	enemy_->SetPlayer(player_);
@@ -96,8 +101,7 @@ void GamePlayScene::Update()
 		//カメラ
 		camera_->Update();
 		lightGroup_->Update();
-		pm1_->Update();
-		pm2_->Update();
+		pm_->Update();
 
 		if (input_->TriggerKey(DIK_RETURN))
 		{
@@ -162,8 +166,7 @@ void GamePlayScene::Draw()
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
 	//エフェクト描画
-	pm1_->Draw();
-	pm2_->Draw();
+	pm_->Draw();
 	player_->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
@@ -188,9 +191,8 @@ void GamePlayScene::Finalize()
 
 	//パーティクル
 	delete particle1_;
-	delete pm1_;
 	delete particle2_;
-	delete pm2_;
+	delete pm_;
 	//ライト
 	delete lightGroup_;
 	//モデル
@@ -221,15 +223,6 @@ void GamePlayScene::LoadLVData()
 {
 	// レベルデータの読み込み
 	levelData = LevelLoader::LoadFile("stage1");
-
-	// モデル読み込み
-	modelSkydome = Model::LoadFromOBJ("skydome");
-	modelGround = Model::LoadFromOBJ("ground");
-	modelBox = Model::LoadFromOBJ("sphere2");
-
-	models.insert(std::make_pair("skydome", modelSkydome));
-	models.insert(std::make_pair("ground", modelGround));
-	models.insert(std::make_pair("sphere2", modelBox));
 
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
