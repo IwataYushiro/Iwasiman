@@ -78,6 +78,7 @@ private:
 	Audio::SoundData sound;
 
 	Sprite* spritePause_ = new Sprite();
+	Sprite* spriteClear_ = new Sprite();
 	//ポーズしたか
 	bool isPause_ = false;
 	//モデル
@@ -118,7 +119,7 @@ private:
 	std::stringstream enemyPopCommands;
 
 	
-
+	bool isclear = false;
 private:
 	//スプライト読み込み
 	void LoadSprite();

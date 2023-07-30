@@ -117,23 +117,28 @@ void GamePlayScene::Update()
 		lightGroup_->Update();
 		pm_->Update();
 
-		if (input_->TriggerKey(DIK_RETURN))
+		if (player_->GetPosition().y <= -60.0f)
 		{
 			camera_->Reset();
 			sceneManager_->ChangeScene("TITLE");
 		}
-
-
-		if (goal_->IsGoal() || player_->GetPosition().y <= -60.0f)
+		else if (goal_->IsGoal())
 		{
-			camera_->Reset();
-			sceneManager_->ChangeScene("TITLE");
+			isclear = true;
+		}
+		if (isclear)
+		{
+			if (input_->TriggerKey(DIK_SPACE))
+			{
+				camera_->Reset();
+				sceneManager_->ChangeScene("TITLE");
+			}
 		}
 		colManager_->CheckAllCollisions();
 
 		//Pause機能
-		if (input_->TriggerKey(DIK_Q))
-		{
+		if (input_->TriggerKey(DIK_Q) && !isclear)
+		{ 
 			isPause_ = true;
 		}
 	}
@@ -151,7 +156,7 @@ void GamePlayScene::Update()
 		}
 
 	}
-	spritePause_->Update();
+	
 }
 
 void GamePlayScene::Draw()
@@ -198,6 +203,10 @@ void GamePlayScene::Draw()
 	{
 		spritePause_->Draw();
 	}
+	if (isclear)
+	{
+		spriteClear_->Draw();
+	}
 	//ImGuiの表示
 }
 
@@ -232,6 +241,7 @@ void GamePlayScene::Finalize()
 	delete modelGoal_;
 	//スプライト
 	delete spritePause_;
+	delete spriteClear_;
 	//基盤系
 	delete player_;
 	delete goal_;
@@ -357,5 +367,9 @@ void GamePlayScene::LoadSprite()
 	spritePause_->Initialize(spCommon_,10);
 	spritePause_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 
-
+	spCommon_->LoadTexture(11, "texture/gameclear.png");
+	spriteClear_->Initialize(spCommon_, 11);
+	
+	spritePause_->Update();
+	spriteClear_->Update();
 }
