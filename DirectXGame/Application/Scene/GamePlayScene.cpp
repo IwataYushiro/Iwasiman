@@ -89,15 +89,11 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
-
-	for (std::unique_ptr<Enemy>& enemy : enemys_) {
-		enemy->Update();
-
-	}
+	
+	//敵更新
+	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Update();
 	//弾更新
-	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-		bullet->Update();
-	}
+	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
 
 	if (!isPause_)
 	{
@@ -106,9 +102,7 @@ void GamePlayScene::Update()
 
 		goal_->Update();
 
-		for (auto& object : objects) {
-			object->Update();
-		}
+		for (auto& object : objects) object->Update();
 
 		lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
 
@@ -117,11 +111,20 @@ void GamePlayScene::Update()
 		lightGroup_->Update();
 		pm_->Update();
 
+		//かめおべら
 		if (player_->GetPosition().y <= -60.0f)
 		{
-			camera_->Reset();
-			sceneManager_->ChangeScene("TITLE");
+			isGameover = true;
 		}
+		if (isGameover)
+		{
+			if (input_->TriggerKey(DIK_SPACE))
+			{
+				camera_->Reset();
+				sceneManager_->ChangeScene("TITLE");
+			}
+		}
+		//クリア
 		else if (goal_->IsGoal())
 		{
 			isclear = true;
@@ -151,7 +154,6 @@ void GamePlayScene::Update()
 		}
 		if (input_->TriggerKey(DIK_Q))
 		{
-
 			isPause_ = false;
 		}
 
@@ -166,20 +168,14 @@ void GamePlayScene::Draw()
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	//モデル描画
 	player_->Draw();
-	for (std::unique_ptr<Enemy>& enemy : enemys_) {
-		enemy->Draw();
-	}
-	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_) {
-		ebullet->Draw();
-	}
-
+	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Draw();
+	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
 	goal_->Draw();
-	for (auto& object : objects) {
-		object->Draw();
-	}
-
+	for (auto& object : objects)object->Draw();
+	
 	//モデル描画後処理
 	Object3d::PostDraw();
+
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
@@ -194,6 +190,7 @@ void GamePlayScene::Draw()
 	//前景スプライト
 	if (isPause_)spritePause_->Draw();
 	else if (isclear)spriteClear_->Draw();
+	else if (isGameover)spriteGameover_->Draw();
 	else spritePauseInfo_->Draw();
 	//ImGuiの表示
 }
@@ -231,6 +228,7 @@ void GamePlayScene::Finalize()
 	delete spritePause_;
 	delete spriteClear_;
 	delete spritePauseInfo_;
+	delete spriteGameover_;
 	//基盤系
 	delete player_;
 	delete goal_;
@@ -362,7 +360,11 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(12, "texture/pauseinfo.png");
 	spritePauseInfo_->Initialize(spCommon_, 12);
 	
+	spCommon_->LoadTexture(13, "texture/gameover.png");
+	spriteGameover_->Initialize(spCommon_, 13);
+
 	spritePause_->Update();
 	spriteClear_->Update();
 	spritePauseInfo_->Update();
+	spriteGameover_->Update();
 }

@@ -80,8 +80,13 @@ private:
 	Sprite* spritePause_ = new Sprite();
 	Sprite* spriteClear_ = new Sprite();
 	Sprite* spritePauseInfo_ = new Sprite();
+	Sprite* spriteGameover_ = new Sprite();
+	
 	//ポーズしたか
 	bool isPause_ = false;
+	bool isclear = false;
+	bool isGameover = false;
+
 	//モデル
 	Player* player_ = nullptr;
 	Model* modelPlayer_ = nullptr;
@@ -120,7 +125,7 @@ private:
 	std::stringstream enemyPopCommands;
 
 	
-	bool isclear = false;
+	
 private:
 	//スプライト読み込み
 	void LoadSprite();
