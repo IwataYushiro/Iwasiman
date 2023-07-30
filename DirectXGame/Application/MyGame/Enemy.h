@@ -24,18 +24,18 @@ private:
 
 public:
 	~Enemy();
-	static std::unique_ptr<Enemy> Create(XMFLOAT3 pos,Model* model = nullptr,
+	static std::unique_ptr<Enemy> Create(Model* model = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 	//弾発射間隔
 	static const int kFireIntervalStage1 = 40;
 	//初期化
-	bool Initialize(XMFLOAT3 pos);
+	bool Initialize()override;
 
 	//リセット処理
-	void Reset(XMFLOAT3 pos);
+	void Reset();
 	
 	//パラメータ
-	void Stage1Parameter(XMFLOAT3 pos);
+	void Stage1Parameter();
 	//更新
 	void Update()override;
 	//転送　

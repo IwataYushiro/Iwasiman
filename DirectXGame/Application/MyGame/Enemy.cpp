@@ -13,14 +13,14 @@ Enemy::~Enemy() {
 	delete modelBullet_;
 }
 
-std::unique_ptr<Enemy> Enemy::Create(XMFLOAT3 pos, Model* model,Player* player,GamePlayScene* gamescene)
+std::unique_ptr<Enemy> Enemy::Create(Model* model,Player* player,GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy> ins = std::make_unique<Enemy>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
-	if (!ins->Initialize(pos))
+	if (!ins->Initialize())
 	{
 		ins.release();
 		assert(0);
@@ -33,13 +33,13 @@ std::unique_ptr<Enemy> Enemy::Create(XMFLOAT3 pos, Model* model,Player* player,G
 }
 
 // 初期化
-bool Enemy::Initialize(XMFLOAT3 pos) {
+bool Enemy::Initialize() {
 	
 	if (!Object3d::Initialize()) return false;
 
 	modelBullet_ = Model::LoadFromOBJ("enemybullet");
 
-	Stage1Parameter(pos);
+	Stage1Parameter();
 
 	startCount= std::chrono::steady_clock::now();	//開始時間
 	nowCount= std::chrono::steady_clock::now();		//現在時間
@@ -55,15 +55,14 @@ bool Enemy::Initialize(XMFLOAT3 pos) {
 }
 
 //パラメータ
-void Enemy::Stage1Parameter(XMFLOAT3 pos) {
+void Enemy::Stage1Parameter() {
 
 	isReverse_ = false;
 	//初期ステージ
 	scale = { 3.0f,3.0f,3.0f };
-	position = pos;
 
 	Object3d::SetScale(scale);
-	Object3d::SetPosition(position);
+
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
 
@@ -78,7 +77,7 @@ void Enemy::Stage1Parameter(XMFLOAT3 pos) {
 }
 
 //リセット
-void Enemy::Reset(XMFLOAT3 pos) { Stage1Parameter(pos); }
+void Enemy::Reset() { Stage1Parameter(); }
 
 //更新
 void Enemy::Update() {

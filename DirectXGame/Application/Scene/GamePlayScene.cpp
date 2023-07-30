@@ -331,7 +331,8 @@ void GamePlayScene::UpdateEnemyPopCommands()
 			//“G”­¶
 			//“G‰Šú‰»
 	std::unique_ptr<Enemy> newenemy;
-	newenemy = Enemy::Create(XMFLOAT3(x, y, z), modelEnemy_, player_, this);
+	newenemy = Enemy::Create(modelEnemy_, player_, this);
+	newenemy->SetPosition(XMFLOAT3(x, y, z));
 	newenemy->SetCamera(camera_);
 	
 	newenemy->Update();
