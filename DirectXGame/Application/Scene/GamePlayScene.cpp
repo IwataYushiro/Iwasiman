@@ -37,7 +37,7 @@ void GamePlayScene::Initialize()
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
-
+	
 	//プレイヤーの初期化
 	player_ = Player::Create(modelPlayer_);
 	player_->SetCamera(camera_);
@@ -48,11 +48,12 @@ void GamePlayScene::Initialize()
 	goal_->SetCamera(camera_);
 	goal_->Update();
 
-	//敵初期化
-	enemy_ = Enemy::Create(modelEnemy_);
-	enemy_->SetCamera(camera_);
-	enemy_->Update();
+	UpdateEnemyPopCommands();
 
+	//弾リセット
+	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
+		bullet->Reset();
+	}
 	// モデル読み込み
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
@@ -76,15 +77,28 @@ void GamePlayScene::Initialize()
 	pm_->SetParticleModel(particle1_);
 	pm_->SetCamera(camera_);
 
-	//敵に自機のアドレスを渡す
-	enemy_->SetPlayer(player_);
+	
 
 	isPause_ = false;
 }
 
 void GamePlayScene::Update()
 {
-	enemy_->Update();
+	//死亡フラグの立った弾を削除
+	enemyBullets_.remove_if(
+		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
+	enemys_.remove_if(
+		[](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
+	
+	for (std::unique_ptr<Enemy>& enemy : enemys_) {
+		enemy->Update();
+			
+	}
+	//弾更新
+	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
+		bullet->Update();
+	}
+
 	if (!isPause_)
 	{
 		//モデル呼び出し例
@@ -154,7 +168,13 @@ void GamePlayScene::Draw()
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	//モデル描画
 	player_->Draw();
-	enemy_->Draw();
+	for (std::unique_ptr<Enemy>& enemy : enemys_) {
+		enemy->Draw();
+	}
+	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_) {
+		ebullet->Draw();
+	}
+
 	goal_->Draw();
 	for (auto& object : objects) {
 		object->Draw();
@@ -214,7 +234,6 @@ void GamePlayScene::Finalize()
 	delete spritePause_;
 	//基盤系
 	delete player_;
-	delete enemy_;
 	delete goal_;
 
 }
@@ -259,6 +278,75 @@ void GamePlayScene::LoadLVData()
 		objects.push_back(newObject);
 	}
 
+}
+
+void GamePlayScene::LoadEnemyPopData()
+{
+	//ファイルを開く
+	std::ifstream file;
+	file.open("Resources/csv/enemyPop.csv");
+	assert(file.is_open());
+
+	//ファイルの内容を文字列ストリームにコピー
+	enemyPopCommands << file.rdbuf();
+
+	//ファイルを閉じる
+	file.close();
+}
+
+void GamePlayScene::UpdateEnemyPopCommands()
+{
+	LoadEnemyPopData();
+	//1行分の文字列を入れる関数
+	std::string line;
+
+	//コマンド実行ループ
+	while (getline(enemyPopCommands, line))
+	{
+		//1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream line_stream(line);
+
+		std::string word;
+		//,区切りで行の戦闘文字列を取得
+		getline(line_stream, word, ',');
+
+		// "//"=コメント
+		if (word.find("//")==0)
+		{
+			//コメント行を飛ばす
+			continue;
+		}
+		//POP
+		if (word.find("POP")==0)
+		{
+			//x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+			//y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+			//z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+			//敵発生
+			//敵初期化
+	std::unique_ptr<Enemy> newenemy;
+	newenemy = Enemy::Create(XMFLOAT3(x, y, z), modelEnemy_, player_, this);
+	newenemy->SetCamera(camera_);
+	
+	newenemy->Update();
+
+	//リストに登録
+	enemys_.push_back(std::move(newenemy));
+
+		}
+	}
+}
+
+void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
+{
+	//リストに登録
+	enemyBullets_.push_back(std::move(enemyBullet));
 }
 
 void GamePlayScene::LoadSprite()

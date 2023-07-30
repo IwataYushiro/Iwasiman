@@ -4,6 +4,7 @@
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
 #include "Player.h"
+#include "GamePlayScene.h"
 
 using namespace DirectX;
 CollisionManager* Enemy::colManager_ = CollisionManager::GetInstance();
@@ -12,32 +13,33 @@ Enemy::~Enemy() {
 	delete modelBullet_;
 }
 
-Enemy* Enemy::Create(Model* model)
+std::unique_ptr<Enemy> Enemy::Create(XMFLOAT3 pos, Model* model,Player* player,GamePlayScene* gamescene)
 {
 	//インスタンス生成
-	Enemy* ins = new Enemy();
+	std::unique_ptr<Enemy> ins = std::make_unique<Enemy>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
-	if (!ins->Initialize())
+	if (!ins->Initialize(pos))
 	{
-		delete ins;
+		ins.release();
 		assert(0);
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
-	
+	if(player)ins->SetPlayer(player);
+	if(gamescene)ins->SetGameScene(gamescene);
 	return ins;
 }
 
 // 初期化
-bool Enemy::Initialize() {
+bool Enemy::Initialize(XMFLOAT3 pos) {
 	
 	if (!Object3d::Initialize()) return false;
 
 	modelBullet_ = Model::LoadFromOBJ("enemybullet");
-	
-	Stage1Parameter();
+
+	Stage1Parameter(pos);
 
 	startCount= std::chrono::steady_clock::now();	//開始時間
 	nowCount= std::chrono::steady_clock::now();		//現在時間
@@ -53,14 +55,15 @@ bool Enemy::Initialize() {
 }
 
 //パラメータ
-void Enemy::Stage1Parameter() {
+void Enemy::Stage1Parameter(XMFLOAT3 pos) {
 
 	isReverse_ = false;
 	//初期ステージ
 	scale = { 3.0f,3.0f,3.0f };
-	pos = { -30.0f,0.0f,150.0f };
-	Object3d::SetPosition(pos);
+	position = pos;
+
 	Object3d::SetScale(scale);
+	Object3d::SetPosition(position);
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
 
@@ -71,22 +74,16 @@ void Enemy::Stage1Parameter() {
 	isDead_ = false;
 
 	isReverse_ = false;
-	//弾リセット
-	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-		bullet->Reset();
-	}
+	
 }
 
 //リセット
-void Enemy::Reset() { Stage1Parameter(); }
+void Enemy::Reset(XMFLOAT3 pos) { Stage1Parameter(pos); }
 
 //更新
 void Enemy::Update() {
 
-	//死亡フラグの立った弾を削除
-	enemyBullets_.remove_if(
-		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
-
+	
 	//座標を移動させる
 	switch (phase_) {
 	case Enemy::Phase::ApproachStage1:
@@ -100,10 +97,7 @@ void Enemy::Update() {
 
 		break;
 	}
-	//弾更新
-	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-		bullet->Update();
-	}
+	
 
 	//座標を移動させる
 	switch (phase_) {
@@ -144,7 +138,6 @@ void Enemy::Trans() {
 }
 //弾発射
 void Enemy::Fire() {
-
 	assert(player_);
 
 	//弾の速度
@@ -174,7 +167,7 @@ void Enemy::Fire() {
 	velocity.z -= kBulletSpeed;
 
 	//座標をコピー
-	XMFLOAT3 position = Object3d::GetPosition();
+	XMFLOAT3 position = GetPosition();
 
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet;
@@ -183,7 +176,8 @@ void Enemy::Fire() {
 	newBullet->Update();
 
 	//弾を登録
-	enemyBullets_.push_back(std::move(newBullet));
+	gameScene_->AddEnemyBullet(std::move(newBullet));
+	
 }
 
 //描画
@@ -193,9 +187,7 @@ void Enemy::Draw() {
 		Object3d::Draw();
 
 		//弾描画
-		for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-			bullet->Draw();
-		}
+		
 	}
 
 }

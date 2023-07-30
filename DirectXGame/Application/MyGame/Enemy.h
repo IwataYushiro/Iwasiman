@@ -11,6 +11,7 @@
 //自機クラスの前方宣言
 class Player;
 class CollisionManager;
+class GamePlayScene;
 
 //敵
 class Enemy:public Object3d {
@@ -23,17 +24,18 @@ private:
 
 public:
 	~Enemy();
-	static Enemy* Create(Model* model = nullptr);
+	static std::unique_ptr<Enemy> Create(XMFLOAT3 pos,Model* model = nullptr,
+		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 	//弾発射間隔
 	static const int kFireIntervalStage1 = 40;
 	//初期化
-	bool Initialize()override;
+	bool Initialize(XMFLOAT3 pos);
 
 	//リセット処理
-	void Reset();
+	void Reset(XMFLOAT3 pos);
 	
 	//パラメータ
-	void Stage1Parameter();
+	void Stage1Parameter(XMFLOAT3 pos);
 	//更新
 	void Update()override;
 	//転送　
@@ -59,13 +61,9 @@ public:
 	void OnCollision(const CollisionInfo& info, unsigned short attribute)override;
 	void OnCollisionPlayer();
 	
-	//弾リストを取得
-	const std::list<std::unique_ptr<EnemyBullet>>& GetEnemyBullets() { return enemyBullets_; }
-
 private:
 	static CollisionManager* colManager_;
-	//弾
-	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
+	
 	//モデル	
 	Model* modelBullet_ = nullptr;
 
@@ -94,6 +92,10 @@ private:
 	float radius_ = 5.0f;
 	//自機
 	Player* player_ = nullptr;
+
+	//ゲームシーン
+	GamePlayScene* gameScene_ = nullptr;
+
 //時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
 	std::chrono::steady_clock::time_point nowCount;		//現在時間
@@ -117,4 +119,5 @@ private:
 public:
 	bool IsDead() const { return isDead_; }
 	void SetPlayer(Player* player) { player_ = player; }
+	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

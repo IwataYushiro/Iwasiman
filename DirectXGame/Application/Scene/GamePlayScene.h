@@ -11,6 +11,7 @@
 #include "Goal.h"
 #include <vector>
 #include <map>
+#include <sstream>
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
 
@@ -47,6 +48,15 @@ public:
 	//レベルデータ読み込み
 	void LoadLVData();
 
+	//敵発生データの読み込み
+	void LoadEnemyPopData();
+	//敵発生コマンドの更新
+	void UpdateEnemyPopCommands();
+
+public:
+	//敵弾追加
+	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
+
 private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
@@ -74,7 +84,7 @@ private:
 	Player* player_ = nullptr;
 	Model* modelPlayer_ = nullptr;
 
-	Enemy* enemy_ = nullptr;
+	std::list<std::unique_ptr<Enemy>> enemys_;
 	Model* modelEnemy_ = nullptr;
 
 	Goal* goal_ = nullptr;
@@ -102,6 +112,15 @@ private:
 	CollisionManager* colManager_ = nullptr;
 
 private:
+	//敵弾
+	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
+	//敵発生コマンド
+	std::stringstream enemyPopCommands;
+
+	
+
+private:
 	//スプライト読み込み
 	void LoadSprite();
+	
 };
