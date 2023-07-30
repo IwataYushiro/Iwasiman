@@ -79,6 +79,7 @@ private:
 
 	Sprite* spritePause_ = new Sprite();
 	Sprite* spriteClear_ = new Sprite();
+	Sprite* spritePauseInfo_ = new Sprite();
 	//ポーズしたか
 	bool isPause_ = false;
 	//モデル

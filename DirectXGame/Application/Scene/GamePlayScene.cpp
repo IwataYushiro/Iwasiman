@@ -192,14 +192,9 @@ void GamePlayScene::Draw()
 	//スプライト描画前処理
 	spCommon_->PreDraw();
 	//前景スプライト
-	if (isPause_)
-	{
-		spritePause_->Draw();
-	}
-	if (isclear)
-	{
-		spriteClear_->Draw();
-	}
+	if (isPause_)spritePause_->Draw();
+	else if (isclear)spriteClear_->Draw();
+	else spritePauseInfo_->Draw();
 	//ImGuiの表示
 }
 
@@ -235,6 +230,7 @@ void GamePlayScene::Finalize()
 	//スプライト
 	delete spritePause_;
 	delete spriteClear_;
+	delete spritePauseInfo_;
 	//基盤系
 	delete player_;
 	delete goal_;
@@ -363,6 +359,10 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(11, "texture/gameclear.png");
 	spriteClear_->Initialize(spCommon_, 11);
 
+	spCommon_->LoadTexture(12, "texture/pauseinfo.png");
+	spritePauseInfo_->Initialize(spCommon_, 12);
+	
 	spritePause_->Update();
 	spriteClear_->Update();
+	spritePauseInfo_->Update();
 }
