@@ -37,7 +37,7 @@ void GamePlayScene::Initialize()
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
-	
+
 	//プレイヤーの初期化
 	player_ = Player::Create(modelPlayer_);
 	player_->SetCamera(camera_);
@@ -57,7 +57,7 @@ void GamePlayScene::Initialize()
 	// モデル読み込み
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
-	modelBox = Model::LoadFromOBJ("sphere2");
+	modelBox = Model::LoadFromOBJ("sphere2", true);
 
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
@@ -77,7 +77,7 @@ void GamePlayScene::Initialize()
 	pm_->SetParticleModel(particle1_);
 	pm_->SetCamera(camera_);
 
-	
+
 
 	isPause_ = false;
 }
@@ -89,10 +89,10 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
-	
+
 	for (std::unique_ptr<Enemy>& enemy : enemys_) {
 		enemy->Update();
-			
+
 	}
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
@@ -103,7 +103,7 @@ void GamePlayScene::Update()
 	{
 		//モデル呼び出し例
 		player_->Update();
-		
+
 		goal_->Update();
 
 		for (auto& object : objects) {
@@ -111,7 +111,7 @@ void GamePlayScene::Update()
 		}
 
 		lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
-		
+
 		//カメラ
 		camera_->Update();
 		lightGroup_->Update();
@@ -138,7 +138,7 @@ void GamePlayScene::Update()
 
 		//Pause機能
 		if (input_->TriggerKey(DIK_Q) && !isclear)
-		{ 
+		{
 			isPause_ = true;
 		}
 	}
@@ -151,23 +151,16 @@ void GamePlayScene::Update()
 		}
 		if (input_->TriggerKey(DIK_Q))
 		{
-			
+
 			isPause_ = false;
 		}
 
 	}
-	
+
 }
 
 void GamePlayScene::Draw()
 {
-
-	
-	//背景スプライト
-
-	//エフェクト
-
-
 	//モデル
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
@@ -265,7 +258,7 @@ void GamePlayScene::LoadLVData()
 
 		// モデルを指定して3Dオブジェクトを生成
 		TouchableObject* newObject = TouchableObject::Create(model);
-		
+
 
 		// 座標
 		DirectX::XMFLOAT3 pos;
@@ -321,13 +314,13 @@ void GamePlayScene::UpdateEnemyPopCommands()
 		getline(line_stream, word, ',');
 
 		// "//"=コメント
-		if (word.find("//")==0)
+		if (word.find("//") == 0)
 		{
 			//コメント行を飛ばす
 			continue;
 		}
 		//POP
-		if (word.find("POP")==0)
+		if (word.find("POP") == 0)
 		{
 			//x座標
 			getline(line_stream, word, ',');
@@ -340,15 +333,15 @@ void GamePlayScene::UpdateEnemyPopCommands()
 			float z = (float)std::atof(word.c_str());
 			//敵発生
 			//敵初期化
-	std::unique_ptr<Enemy> newenemy;
-	newenemy = Enemy::Create(modelEnemy_, player_, this);
-	newenemy->SetPosition(XMFLOAT3(x, y, z));
-	newenemy->SetCamera(camera_);
-	
-	newenemy->Update();
+			std::unique_ptr<Enemy> newenemy;
+			newenemy = Enemy::Create(modelEnemy_, player_, this);
+			newenemy->SetPosition(XMFLOAT3(x, y, z));
+			newenemy->SetCamera(camera_);
 
-	//リストに登録
-	enemys_.push_back(std::move(newenemy));
+			newenemy->Update();
+
+			//リストに登録
+			enemys_.push_back(std::move(newenemy));
 
 		}
 	}
@@ -364,12 +357,12 @@ void GamePlayScene::LoadSprite()
 {
 	//スプライト
 	spCommon_->LoadTexture(10, "texture/pausep.png");
-	spritePause_->Initialize(spCommon_,10);
+	spritePause_->Initialize(spCommon_, 10);
 	spritePause_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 
 	spCommon_->LoadTexture(11, "texture/gameclear.png");
 	spriteClear_->Initialize(spCommon_, 11);
-	
+
 	spritePause_->Update();
 	spriteClear_->Update();
 }
