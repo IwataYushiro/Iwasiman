@@ -4,7 +4,9 @@
 #include "Object3d.h"
 #include <DirectXMath.h>
 
-class Goal
+class CollisionManager;
+
+class Goal :public Object3d
 {
 private:
 	// DirectX::を省略
@@ -15,10 +17,11 @@ private:
 
 public:
 	
+	static Goal* Create(Model* model = nullptr);
 	//初期化
-	void Initialize(Model* model, Object3d* obj, Camera* camera);
+	bool Initialize()override;
 	//更新
-	void Update();
+	void Update()override;
 
 	//転送
 	void Trans();
@@ -30,23 +33,18 @@ public:
 	void Draw();
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision();
+	void OnCollision(const CollisionInfo& info, unsigned short attribute)override;
 
 private:
-	
-	//モデル
-	Model* model_ = nullptr;
-
-	Object3d* obj_ = nullptr;
-	//カメラ
-	Camera* camera_ = nullptr;
-
+	static CollisionManager* colManager_;
 	//ポジション
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 
 	bool isGoal_ = false;
+
+	float radius_ = 10.0f;
 public: //アクセッサ、インライン関数
-	bool IsDead() const { return isGoal_; }
+	bool IsGoal() const { return isGoal_; }
 };
 #pragma once

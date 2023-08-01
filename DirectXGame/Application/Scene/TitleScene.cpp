@@ -7,7 +7,6 @@
 
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
-SpriteCommon* TitleScene::spCommon_ = SpriteCommon::GetInstance();
 Input* TitleScene::input_ = Input::GetInstance();
 Audio* TitleScene::audio_ = Audio::GetInstance();
 SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
@@ -17,6 +16,7 @@ Camera* TitleScene::camera_ = Camera::GetInstance();
 
 void TitleScene::Initialize()
 {
+	spCommon_ = SpriteCommon::GetInstance();
 	//オーディオ
 	audio_->Initialize();
 

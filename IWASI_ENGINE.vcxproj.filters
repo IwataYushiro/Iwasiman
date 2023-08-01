@@ -493,6 +493,15 @@
     <ClCompile Include="DirectXGame\Engine\3D\Collider\SphereCollider.cpp">
       <Filter>Source File\Engine\3D\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Collider\MeshCollider.cpp">
+      <Filter>Source File\Engine\3D\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Object\TouchableObject.cpp">
+      <Filter>Source File\Engine\3D\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Engine\3D\Collider\QueryCallback.cpp">
+      <Filter>Source File\Engine\3D\Collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -634,6 +643,21 @@
       <Filter>Header File\Engine\3D\Collider</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Collider\SphereCollider.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\RayCastHit.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\MeshCollider.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Object\TouchableObject.h">
+      <Filter>Header File\Engine\3D\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionAttribute.h">
+      <Filter>Header File\Engine\3D\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\QueryCallback.h">
       <Filter>Header File\Engine\3D\Collider</Filter>
     </ClInclude>
   </ItemGroup>

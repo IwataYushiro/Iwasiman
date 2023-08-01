@@ -13,13 +13,11 @@ Input* Input::GetInstance()
 Input::~Input()
 {
 	//入力情報の取得を終了
-	if (keyboard)
+	if (keyboard)keyboard->Unacquire();
+	if (mouse)mouse->Unacquire();
+	if (isJoyStick)
 	{
-		keyboard->Unacquire();
-	}
-	if (mouse)
-	{
-		mouse->Unacquire();
+		if (joyStick)joyStick->Unacquire();
 	}
 }
 
@@ -40,6 +38,8 @@ void Input::Initialize()
 	GenerateKeyBoard();
 	//マウスデバイス
 	GenerateMouse();
+	//コントローラーデバイス
+	GenerateJoyStick();
 }
 
 //更新
@@ -49,6 +49,8 @@ void Input::Update()
 	memcpy(preKeys, keys, sizeof(keys));
 	//マウス
 	mouseStatePre = mouseState;
+	//ジョイスティック
+	joyStatePre = joyState;
 
 	//キーボード情報の取得開始
 	keyboard->Acquire();
@@ -68,6 +70,18 @@ void Input::Update()
 	ScreenToClient(WinApp::GetInstance()->GetHwnd(), &mouseScreenPos);
 	mousePos.x = static_cast<float>(mouseScreenPos.x);
 	mousePos.y = static_cast<float>(mouseScreenPos.y);
+
+	if (isJoyStick)
+	{
+		joyStick->Acquire();
+		joyStick->Poll();
+		//全コントローラーの入力状態を取得する
+		joyStick->GetDeviceState(sizeof(joyState), &joyState);
+		if (joyState.rgdwPOV[0] != 0xFFFFFFFF)
+		{
+			OutputDebugStringA("ok");
+		}
+	}
 }
 
 void Input::GenerateKeyBoard()
@@ -102,6 +116,19 @@ void Input::GenerateMouse()
 	result = mouse->SetCooperativeLevel(
 		WinApp::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	assert(SUCCEEDED(result));
+}
+
+
+
+void Input::GenerateJoyStick()
+{
+	HRESULT result;
+	
+	//ジョイスティック列挙
+	result = directInput->EnumDevices(DI8DEVTYPE_GAMEPAD,
+		EnumJoyStickProc,this, DIEDFL_ATTACHEDONLY);
+	if (joyStick) isJoyStick = true;
+
 }
 
 //キーが押されているか
@@ -173,4 +200,66 @@ bool Input::ReleaseMouse(int32_t mouseNumber)
 		return true;
 	}
 	return false;
+}
+
+BOOL Input::EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef) noexcept
+{
+	HRESULT result;
+	
+	Input* input = (Input*)pvRef;
+	//デバイス生成
+	result = input->GetDirectInput()->CreateDevice(GUID_Joystick, &input->joyStick, NULL);
+	assert(SUCCEEDED(result));
+
+	//入力データ形式のセット
+	result = input->joyStick->SetDataFormat(&c_dfDIJoystick2); //標準形式(拡張8ボタン)
+	assert(SUCCEEDED(result));
+
+	//軸モード
+	// 軸モードを絶対値モードとして設定
+	DIPROPDWORD diprop;
+	ZeroMemory(&diprop, sizeof(diprop));
+	diprop.diph.dwSize = sizeof(diprop);
+	diprop.diph.dwHeaderSize = sizeof(diprop.diph);
+	diprop.diph.dwHow = DIPH_DEVICE;
+	diprop.diph.dwObj = 0;
+	diprop.dwData = DIPROPAXISMODE_ABS;
+	input->joyStick->SetProperty(DIPROP_AXISMODE, &diprop.diph);
+
+	//入力範囲のセット
+	DIPROPRANGE diprg;
+	diprg.diph.dwSize = sizeof(diprg);
+	diprg.diph.dwHeaderSize = sizeof(diprg.diph);
+	diprg.diph.dwHow = DIPH_BYOFFSET;
+	diprg.lMax = 1000;
+	diprg.lMin = -1000;
+
+	//X軸
+	diprg.diph.dwObj = DIJOFS_X;
+	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	//Y軸
+	diprg.diph.dwObj = DIJOFS_Y;
+	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	//Z軸
+	diprg.diph.dwObj = DIJOFS_Z;
+	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	//RX軸
+	diprg.diph.dwObj = DIJOFS_RX;
+	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	//RY軸
+	diprg.diph.dwObj = DIJOFS_RY;
+	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	//RZ軸
+	diprg.diph.dwObj = DIJOFS_RZ;
+	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+	//排他制御レベルのセット
+	result = input->joyStick->SetCooperativeLevel(
+		WinApp::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	assert(SUCCEEDED(result));
+
+
+
+
+	return DIENUM_STOP;
 }

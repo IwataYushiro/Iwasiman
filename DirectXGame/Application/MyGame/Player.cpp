@@ -1,7 +1,11 @@
 #include "Player.h"
 #include <cassert>
+#include "SphereCollider.h"
+#include "CollisionAttribute.h"
+#include "CollisionManager.h"
 
 using namespace DirectX;
+CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
 	//モデルの解放
@@ -26,10 +30,12 @@ Player* Player::Create(Model* model)
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
-	return nullptr;
+	return ins;
 }
 
 bool Player::Initialize() {
+
+	if (!Object3d::Initialize()) return false;
 
 	/*modelBullet_ = Model::LoadFromOBJ("playerbullet");
 	objBullet_ = Object3d::Create();
@@ -37,14 +43,11 @@ bool Player::Initialize() {
 	objBullet_->SetModel(modelBullet_);
 	objBullet_->SetCamera(camera_);*/
 
-	//シングルトンインスタンスを取得
-	this->input_ = Input::GetInstance();
-
 	//ワールド変換の初期化
 	pos = { -20.0f,-10.0f,-60.0f };
-	obj_->SetPosition(pos);
+	Object3d::SetPosition(pos);
 	//ジャンプしたか
-	isJump = false;
+	onGround = true;
 
 	//奥側にいるか
 	isJumpBack = false;
@@ -57,14 +60,15 @@ bool Player::Initialize() {
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 1.0f;					//全体時間
 	timeRate;
-	//重力
-	gravity = 0.0f;
-
+	
 	//パーティクル
 	particleDash_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmDash_ = ParticleManager::Create();
 	pmDash_->SetParticleModel(particleDash_);
-	pmDash_->SetCamera(camera_);
+	
+	//コライダー追加
+	SetCollider(new SphereCollider(XMVECTOR(), radius_));
+	collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	return true;
 }
@@ -80,6 +84,9 @@ void Player::Reset() {
 	}
 }
 void Player::Update() {
+	input_ = Input::GetInstance();
+
+	pmDash_->SetCamera(camera_);
 
 	if (!isDead_) {
 		//死亡フラグの立った弾を削除
@@ -88,31 +95,37 @@ void Player::Update() {
 		//移動処理
 		Move();
 		//攻撃処理
-		Jump();
+		FallAndJump();
 		JumpBack();
 		//Attack();
 
-		//弾更新
-		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-			bullet->Update();
-		}
+		////弾更新
+		//for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		//	bullet->Update();
+		//}
 
 		//移動制限
 		Trans();
 		
 	}
 	pmDash_->Update();
-	obj_->Update();
+
+	camera_->Update();
+	UpdateWorldMatrix();
+	collider->Update();
+
+	//着地処理
+	Landing();
 }
 
 void Player::Draw() {
 	if (!isDead_) {
-		obj_->Draw();
+		Object3d::Draw();
 
-		//弾描画
-		for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-			bullet->Draw();
-		}
+		////弾描画
+		//for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		//	bullet->Draw();
+		//}
 
 	}
 }
@@ -125,7 +138,7 @@ void Player::DrawParticle()
 //移動処理
 void Player::Move() {
 
-	XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 move = Object3d::GetPosition();
 	XMFLOAT3 cmove = camera_->GetEye();
 	XMFLOAT3 tmove = camera_->GetTarget();
 	float moveSpeed = 0.5f;
@@ -148,33 +161,33 @@ void Player::Move() {
 	if (input_->PushKey(DIK_LSHIFT)|| input_->PushKey(DIK_RSHIFT))
 	{
 		if (input_->PushKey(DIK_A)) {
-			pmDash_->ActiveX(particleDash_, obj_->GetPosition(), {20.0f ,10.0f,0.0f}, {-4.2f,0.2f,0.0f}, {0.0f,0.001f,0.0f}, 1, {3.0f, 0.0f});
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,0.0f,0.0f }, { 3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 1.0f, 0.0f });
 			move.x -= moveSpeed * 2.0f;
 			cmove.x -= moveSpeed * 2.0f;
 			tmove.x -= moveSpeed * 2.0f;
 		}
 		if (input_->PushKey(DIK_D)) {
-			pmDash_->ActiveX(particleDash_, obj_->GetPosition(), { 20.0f ,10.0f,0.0f }, { 4.2f,0.2f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 3.0f, 0.0f });
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,0.0f,0.0f }, { -3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 1, { 1.0f, 0.0f });
 			move.x += moveSpeed * 2.0f;
 			cmove.x += moveSpeed * 2.0f;
 			tmove.x += moveSpeed * 2.0f;
 		}
 	}
-	/*if (input_->PushKey(DIK_W)) {
+	if (input_->PushKey(DIK_W)) {
 		move.y += moveSpeed;
 	}
 	if (input_->PushKey(DIK_S)) {
 		move.y -= moveSpeed;
-	}*/
+	}
 
-	obj_->SetPosition(move);
+	Object3d::SetPosition(move);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
 }
 
 void Player::CameraMove()
 {
-	XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 move = Object3d::GetPosition();
 	XMFLOAT3 cmove = camera_->GetEye();
 	XMFLOAT3 tmove = camera_->GetTarget();
 	float moveSpeed = 1.0f;
@@ -192,46 +205,67 @@ void Player::CameraMove()
 		tmove.x += moveSpeed;
 	}
 	
-	obj_->SetPosition(move);
+	Object3d::SetPosition(move);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
 }
 
-void Player::Jump()
+void Player::FallAndJump()
 {
+	//旧
+	//XMFLOAT3 move = Object3d::GetPosition();
 
-	XMFLOAT3 move = obj_->GetPosition();
+	////キーボード入力による移動処理
+	//XMMATRIX matTrans = XMMatrixIdentity();
+	//if ()
+	//{
+	//	if (input_->TriggerKey(DIK_SPACE)) {
+	//		isJump = true;
+	//		gravity = 0.0f;
+	//	}
+	//}
+	//else
+	//{
+	//	move.y += power + gravity;
+	//	gravity -= 0.1f;
 
-	//キーボード入力による移動処理
-	XMMATRIX matTrans = XMMatrixIdentity();
-	if (!isJump)
+	//	if (gravity <= -4.0f)
+	//	{
+	//		gravity = -4.0f;
+	//	}
+	//	if (move.y <= -10.0f)
+	//	{
+	//		move.y = -10.0f;
+	//		isJump = false;
+	//	}
+	//}
+	//Object3d::SetPosition(move);
+
+	if (!onGround)
 	{
-		if (input_->TriggerKey(DIK_SPACE)) {
-			isJump = true;
-			gravity = 0.0f;
-		}
+		//下向き加速度
+		const float fallAcc = -0.1f;
+		const float fallVYMin = -2.0f;
+		//加速
+		fallVec.y = max(fallVec.y + fallAcc, fallVYMin);
+		//移動
+		position.x += fallVec.x;
+		position.y += fallVec.y;
+		position.z += fallVec.z;
 	}
-	else
+	//ジャンプ操作
+	else if (input_->TriggerKey(DIK_SPACE))
 	{
-		move.y += power + gravity;
-		gravity -= 0.1f;
-
-		if (gravity <= -4.0f)
-		{
-			gravity = -4.0f;
-		}
-		if (move.y <= -10.0f)
-		{
-			move.y = -10.0f;
-			isJump = false;
-		}
+		onGround = false;
+		const float jumpVYFist = 2.0f;
+		fallVec = { 0.0f,jumpVYFist,0.0f };
 	}
-	obj_->SetPosition(move);
+
 }
 
 void Player::JumpBack()
 {
-	XMFLOAT3 move = obj_->GetPosition();
+	XMFLOAT3 move = Object3d::GetPosition();
 
 	//制御点
 	start = { move.x,-10.0f,-60.0f };
@@ -240,8 +274,8 @@ void Player::JumpBack()
 	end = { move.x,-10.0f,0.0f };
 
 	//時間
-	
-	if (!isJump)
+
+	if (onGround)
 	{
 		if (!isJumpBack)
 		{
@@ -266,7 +300,7 @@ void Player::JumpBack()
 			if (isBack)move = Bezier3(end, p2, p1, start, timeRate);
 
 			else move = Bezier3(start, p1, p2, end, timeRate);
-			
+
 			if (move.z >= end.z)
 			{
 				startCount = std::chrono::steady_clock::now();
@@ -279,7 +313,118 @@ void Player::JumpBack()
 			}
 		}
 	}
-	obj_->SetPosition(move);
+	Object3d::SetPosition(move);
+}
+
+void Player::Landing()
+{
+	//球コライダーの取得
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
+	assert(sphereCollider);
+
+	//専用クエリーコールバッククラス定義
+	class PlayerQueryCallback : public QueryCallback
+	{
+	public:
+		PlayerQueryCallback(Sphere* sphere) :sphere_(sphere) {};
+
+	//衝突時のコールバック関数
+		bool OnQueryHit(const QueryHit& info)
+		{
+			//ワールド上方向
+			const XMVECTOR up = { 0.0f,1.0f,0.0f,0.0f };
+			//排斥方向
+			XMVECTOR rejectDir = XMVector3Normalize(info.reject);
+			//上方向と排斥方向の角度差のコサイン値
+			float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
+
+			//地面判定のしきい値角度
+			const float threshold = cosf(XMConvertToRadians(30.0f));
+			//角度差によって天井又は地面と判定される場合を除いて
+			if (-threshold < cos && cos < threshold)
+			{
+				//球を排斥(押し出す)
+				sphere_->center += info.reject;
+				move += info.reject;
+			}
+
+			return true;
+		}
+
+	public:
+		Sphere* sphere_ = nullptr;
+		//排斥による移動量
+		XMVECTOR move = {};
+
+	};
+	
+	// 球クエリー、コライダー更新
+	//クエリーコールバックの関数オブジェクト
+	PlayerQueryCallback callback(sphereCollider);
+
+	//球と地形の交差を全検索
+	colManager_->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
+	//交差による排斥分動かす
+	position.x += callback.move.m128_f32[0];
+	position.y += callback.move.m128_f32[1];
+	//position.z += callback.move.m128_f32[2];
+	 
+	XMFLOAT3 eyepos = camera_->GetEye();
+	XMFLOAT3 tarpos = camera_->GetTarget();
+
+	eyepos.x += callback.move.m128_f32[0];
+
+	tarpos.x += callback.move.m128_f32[0];
+	
+	//コライダー更新
+	UpdateWorldMatrix();
+	camera_->SetEye(eyepos);
+	camera_->SetTarget(tarpos);
+	collider->Update();
+	
+	//球の上端から球の下端までのレイキャスト用レイを準備
+	Ray ray;
+	ray.start = sphereCollider->center;
+	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
+	RaycastHit raycastHit;
+	//接地状態
+	if (onGround)
+	{
+		//スムーズに坂を下るための吸着処理
+		const float adsDistance = 0.2f;
+		//接地を維持
+		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
+			sphereCollider->GetRadius() * 2.0f + adsDistance))
+		{
+			onGround = true;
+			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			//行列更新
+			Object3d::Update();
+		}
+		//地面が無いので落下
+		else
+		{
+			onGround = false;
+			fallVec = {};
+		}
+	}
+	//落下状態
+	else if (fallVec.y >= -10.0f)
+	{
+		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
+			sphereCollider->GetRadius() * 2.0f))
+		{
+			//着地
+			onGround = true;
+			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			//行列更新
+			Object3d::Update();
+		}
+	}
+
+	//行列更新等
+	Object3d::Update();
 }
 
 //攻撃処理
@@ -296,10 +441,10 @@ void Player::Attack() {
 		matVec.r[0].m128_f32[2] = velocity.z;
 		matVec.r[0].m128_f32[3] = 0.0f;
 
-		matVec *= obj_->GetWorld();
+		matVec *= Object3d::GetWorld();
 
 		//自キャラの座標をコピー
-		XMFLOAT3 position = obj_->GetPosition();
+		XMFLOAT3 position = Object3d::GetPosition();
 
 		//弾を生成し初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
@@ -319,19 +464,19 @@ void Player::Trans() {
 	world = XMMatrixIdentity();
 	XMMATRIX matWorld = XMMatrixIdentity();
 
-	XMMATRIX matScale = XMMatrixScaling(obj_->GetScale().x, obj_->GetScale().y, obj_->GetScale().z);
+	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
 
-	XMMATRIX matRot = XMMatrixRotationZ(obj_->GetRotation().z)
-		* XMMatrixRotationX(obj_->GetRotation().x) * XMMatrixRotationY(obj_->GetRotation().y);
+	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
+		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
 
-	XMMATRIX matTrans = XMMatrixTranslation(obj_->GetPosition().x,
-		obj_->GetPosition().y, obj_->GetPosition().z);
+	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
+		Object3d::GetPosition().y, Object3d::GetPosition().z);
 
 	//合成
 	matWorld = matScale * matRot * matTrans;
 
 	world = matWorld;
-	obj_->SetWorld(world);
+	Object3d::SetWorld(world);
 
 }
 
@@ -342,19 +487,26 @@ XMFLOAT3 Player::GetWorldPosition() {
 	XMFLOAT3 worldPos;
 
 	//ワールド行列の平行移動成分を取得
-	worldPos.x = obj_->GetPosition().x;
-	worldPos.y = obj_->GetPosition().y;
-	worldPos.z = obj_->GetPosition().z;
+	worldPos.x = Object3d::GetPosition().x;
+	worldPos.y = Object3d::GetPosition().y;
+	worldPos.z = Object3d::GetPosition().z;
 
 	return worldPos;
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void Player::OnCollision() {
-	life_--;
-	if (life_ <= 0) {
-		isDead_ = true;
+void Player::OnCollision(const CollisionInfo& info, unsigned short attribute) {
+	if (attribute == COLLISION_ATTR_ENEMYS)
+	{
+		life_--;
+		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+		if (life_ <= 0) {
+			isDead_ = true;
+		}
+		pmDash_->Update();
 	}
+
 }
 
 const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)

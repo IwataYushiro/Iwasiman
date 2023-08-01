@@ -63,6 +63,8 @@ private:
 public://アクセッサ置き場
 	//デバイス
 	static void SetDevice(ID3D12Device* device) { Model::device_ = device; }
+	//メッシュコンテナ取得
+	inline const std::vector<Mesh*>& GetMeshes() { return meshes; }
 
 private://メンバ関数(カプセル化)
 	//OBJファイルから3Dモデルを読み込む(非公開)

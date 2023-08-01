@@ -90,8 +90,7 @@ private: // 静的メンバ変数
 	//ライト
 	static LightGroup* lightGroup_;
 
-	//コライダー
-	BaseCollider* collider = nullptr;
+	
 
 private:// 静的メンバ関数
 	/// <summary>
@@ -107,13 +106,16 @@ public: // メンバ関数
 	/// </summary>
 	virtual void Update();
 
+	//行列更新
+	void UpdateWorldMatrix();
 	/// <summary>
 	/// 描画
 	/// </summary>
 	virtual void Draw();
 
 	//衝突時のコールバック
-	virtual void OnCollision(const CollisionInfo& info) {}
+	virtual void OnCollision(const CollisionInfo& info,
+		unsigned short attribute) {}
 protected: // メンバ変数
 	//モデル
 	Model* model_ = nullptr;
@@ -136,6 +138,11 @@ protected: // メンバ変数
 	XMMATRIX matWorld;
 	// 親オブジェクト
 	Object3d* parent = nullptr;
+	
+	//クラス名
+	const char* name = nullptr;
+	//コライダー
+	BaseCollider* collider = nullptr;
 	
 public: //アクセッサ置き場
 	//モデル
@@ -171,7 +178,8 @@ public: //アクセッサ置き場
 
 	//コライダーのセット
 	void SetCollider(BaseCollider* collider);
-
+	//モデルの取得
+	inline Model* GetModel() { return model_; }
 	
 };
 
