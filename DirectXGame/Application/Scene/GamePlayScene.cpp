@@ -1,5 +1,11 @@
 #include "GamePlayScene.h"
 #include "LevelLoaderJson.h"
+#include "Player.h"
+#include "CollisionManager.h"
+#include "MeshCollider.h"
+#include "TouchableObject.h"
+#include <typeinfo>
+
 #include <cassert>
 #include <sstream>
 #include <iomanip>
@@ -7,7 +13,6 @@
 using namespace DirectX;
 
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
-SpriteCommon* GamePlayScene::spCommon_ = SpriteCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
 Audio* GamePlayScene::audio_ = Audio::GetInstance();
 Camera* GamePlayScene::camera_ = Camera::GetInstance();
@@ -16,40 +21,47 @@ ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
 void GamePlayScene::Initialize()
 {
-	//プレイヤー関係
-	player_ = new Player();
-	//敵関係
-	enemy_ = new Enemy();
-
-	goal_ = new Goal();
-
+	spCommon_ = SpriteCommon::GetInstance();
+	colManager_ = CollisionManager::GetInstance();
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
 	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
-	//音声再生呼び出し例
-	audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
+	//スプライト
+	LoadSprite();
 
-	//3Dオブジェクト関係
-	//3Dオブジェクト生成
-	object3DPlayer_ = Object3d::Create();
-	object3DEnemy_ = Object3d::Create();
-	objGoal_ = Object3d::Create();
+	//音声再生呼び出し例
+	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
 	//OBJファイルからモデルデータを読み込む
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 
-	//オブジェクトにモデル紐付ける
-	object3DPlayer_->SetModel(modelPlayer_);
-	object3DEnemy_->SetModel(modelEnemy_);
-	objGoal_->SetModel(modelGoal_);
+	//プレイヤーの初期化
+	player_ = Player::Create(modelPlayer_);
+	player_->SetCamera(camera_);
+	player_->Update();
 
-	//カメラも紐づけ
-	object3DPlayer_->SetCamera(camera_);
-	object3DEnemy_->SetCamera(camera_);
-	objGoal_->SetCamera(camera_);
+	//ゴール初期化
+	goal_ = Goal::Create(modelGoal_);
+	goal_->SetCamera(camera_);
+	goal_->Update();
+
+	UpdateEnemyPopCommands();
+
+	//弾リセット
+	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
+		bullet->Reset();
+	}
+	// モデル読み込み
+	modelSkydome = Model::LoadFromOBJ("skydome");
+	modelGround = Model::LoadFromOBJ("ground");
+	modelBox = Model::LoadFromOBJ("sphere2", true);
+
+	models.insert(std::make_pair("skydome", modelSkydome));
+	models.insert(std::make_pair("ground", modelGround));
+	models.insert(std::make_pair("sphere2", modelBox));
 
 	//レベルデータ読み込み
 	LoadLVData();
@@ -60,85 +72,126 @@ void GamePlayScene::Initialize()
 
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
-	pm1_ = ParticleManager::Create();
-	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);
-
 	particle2_ = Particle::LoadFromParticleTexture("particle5.png");
-	pm2_ = ParticleManager::Create();
-	pm2_->SetParticleModel(particle2_);
-	pm2_->SetCamera(camera_);
-	//ポジション
-	player_->Initialize(modelPlayer_, object3DPlayer_, input_, camera_);
+	pm_ = ParticleManager::Create();
+	pm_->SetParticleModel(particle1_);
+	pm_->SetCamera(camera_);
 
-	enemy_->Initialize(modelEnemy_, object3DEnemy_, camera_);
 
-	goal_->Initialize(modelGoal_, objGoal_, camera_);
-	//敵に自機のアドレスを渡す
-	enemy_->SetPlayer(player_);
 
+	isPause_ = false;
 }
 
 void GamePlayScene::Update()
 {
-	//モデル呼び出し例
-	player_->Update();
-	enemy_->Update();
-	goal_->Update();
-
-	for (auto& object : objects) {
-		object->Update();
-	}
-	lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
-	ChackAllCollisions();
-	//カメラ
-	camera_->Update();
-	lightGroup_->Update();
-	pm1_->Update();
-	pm2_->Update();
-
-	if (input_->TriggerKey(DIK_RETURN))
-	{
-		camera_->Reset();
-		sceneManager_->ChangeScene("TITLE");
-	}
+	//死亡フラグの立った弾を削除
+	enemyBullets_.remove_if(
+		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
+	enemys_.remove_if(
+		[](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
 	
+	//敵更新
+	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Update();
+	//弾更新
+	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
+
+	if (!isPause_)
+	{
+		//モデル呼び出し例
+		player_->Update();
+
+		goal_->Update();
+
+		for (auto& object : objects) object->Update();
+
+		lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
+
+		//カメラ
+		camera_->Update();
+		lightGroup_->Update();
+		pm_->Update();
+
+		//かめおべら
+		if (player_->GetPosition().y <= -60.0f)
+		{
+			isGameover = true;
+		}
+		if (isGameover)
+		{
+			if (input_->TriggerKey(DIK_SPACE))
+			{
+				camera_->Reset();
+				sceneManager_->ChangeScene("TITLE");
+			}
+		}
+		//クリア
+		else if (goal_->IsGoal())
+		{
+			isclear = true;
+		}
+		if (isclear)
+		{
+			if (input_->TriggerKey(DIK_SPACE))
+			{
+				camera_->Reset();
+				sceneManager_->ChangeScene("TITLE");
+			}
+		}
+		colManager_->CheckAllCollisions();
+
+		//Pause機能
+		if (input_->TriggerKey(DIK_Q) && !isclear)
+		{
+			isPause_ = true;
+		}
+	}
+	else if (isPause_)
+	{
+		if (input_->TriggerKey(DIK_W))
+		{
+			sceneManager_->ChangeScene("TITLE");
+			isPause_ = false;
+		}
+		if (input_->TriggerKey(DIK_Q))
+		{
+			isPause_ = false;
+		}
+
+	}
+
 }
 
 void GamePlayScene::Draw()
 {
-
-	//スプライト描画前処理
-	spCommon_->PreDraw();
-
-	//背景スプライト
-
-	//エフェクト
-	//エフェクト描画前処理
-	ParticleManager::PreDraw(dxCommon_->GetCommandList());
-
-	//エフェクト描画
-	pm1_->Draw();
-	pm2_->Draw();
-	player_->DrawParticle();
-	//エフェクト描画後処理
-	ParticleManager::PostDraw();
-
 	//モデル
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	//モデル描画
 	player_->Draw();
-	enemy_->Draw();
+	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Draw();
+	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
 	goal_->Draw();
-	for (auto& object : objects) {
-		object->Draw();
-	}
+	for (auto& object : objects)object->Draw();
+	
 	//モデル描画後処理
 	Object3d::PostDraw();
 
-	//前景スプライト
+	//エフェクト描画前処理
+	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
+	//エフェクト描画
+	pm_->Draw();
+	player_->DrawParticle();
+	//エフェクト描画後処理
+	ParticleManager::PostDraw();
+
+	//スプライト描画前処理
+	spCommon_->PreDraw();
+	//前景スプライト
+	if (isPause_)spritePause_->Draw();
+	else if (isclear)spriteClear_->Draw();
+	else if (isGameover)spriteGameover_->Draw();
+	else spritePauseInfo_->Draw();
 	//ImGuiの表示
 }
 
@@ -152,131 +205,33 @@ void GamePlayScene::Finalize()
 
 	//パーティクル
 	delete particle1_;
-	delete pm1_;
 	delete particle2_;
-	delete pm2_;
+	delete pm_;
 	//ライト
 	delete lightGroup_;
 	//モデル
-	//3Dオブジェクト
-	delete object3DPlayer_;
-	delete object3DEnemy_;
-	delete objGoal_;
 
 	for (Object3d*& object : objects)
 	{
 		delete object;
 	}
-	
+	objects.clear();
+
 	//3Dモデル
 	delete modelPlayer_;
 	delete modelEnemy_;
 	delete modelSkydome;
 	delete modelGround;
+	delete modelBox;
 	delete modelGoal_;
+	//スプライト
+	delete spritePause_;
+	delete spriteClear_;
+	delete spritePauseInfo_;
+	delete spriteGameover_;
 	//基盤系
 	delete player_;
-	delete enemy_;
 	delete goal_;
-
-}
-//衝突判定と応答
-void GamePlayScene::ChackAllCollisions() {
-
-	//判定対象A,Bの座標
-	XMFLOAT3 posA, posB;
-	// A,Bの座標の距離用
-	XMFLOAT3 posAB;
-	//判定対象A,Bの半径
-	float radiusA;
-	float radiusB;
-	float radiiusAB;
-
-	//自機弾リストを取得
-	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
-	//敵弾リストを取得
-	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetEnemyBullets();
-
-#pragma region 自機と敵弾の当たり判定
-	//それぞれの半径
-	radiusA = 1.0f;
-	radiusB = 1.0f;
-
-	//自機の座標
-	posA = player_->GetWorldPosition();
-
-	//自機と全ての敵弾の当たり判定
-	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
-		//敵弾の座標
-		posB = bullet->GetWorldPosition();
-		//座標A,Bの距離を求める
-		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
-		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
-		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
-
-		//球と球の交差判定
-		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
-			//自キャラの衝突時コールバック関数を呼び出す
-			player_->OnCollision();
-			//敵弾の衝突時コールバック関数を呼び出す
-			bullet->OnCollision();
-		}
-	}
-
-#pragma endregion
-
-#pragma region 自弾と敵の当たり判定
-	//それぞれの半径
-	radiusA = 5.0f;
-	radiusB = 1.0f;
-
-	//敵の座標
-	posA = enemy_->GetWorldPosition();
-
-	//敵と全ての弾の当たり判定
-	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-		//弾の座標
-		posB = bullet->GetWorldPosition();
-		//座標A,Bの距離を求める
-		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
-		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
-		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
-
-		//球と球の交差判定
-		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
-			//敵キャラの衝突時コールバック関数を呼び出す
-			enemy_->OnCollisionPlayer();
-			//自機弾の衝突時コールバック関数を呼び出す
-			bullet->OnCollision();
-		}
-	}
-#pragma endregion
-
-#pragma region 自機と仮ゴールの当たり判定
-	//それぞれの半径
-	radiusA = 3.0f;
-	radiusB = 10.0f;
-
-	//敵の座標
-	posA = player_->GetWorldPosition();
-	posB = goal_->GetWorldPosition();
-
-	
-		//座標A,Bの距離を求める
-		posAB.x = (posB.x - posA.x) * (posB.x - posA.x);
-		posAB.y = (posB.y - posA.y) * (posB.y - posA.y);
-		posAB.z = (posB.z - posA.z) * (posB.z - posA.z);
-		radiiusAB = (radiusA + radiusB) * (radiusA + radiusB);
-
-		//球と球の交差判定
-		if (radiiusAB >= (posAB.x + posAB.y + posAB.z)) {
-			camera_->Reset();
-			sceneManager_->ChangeScene("TITLE");
-		}
-	
-#pragma endregion
 
 }
 
@@ -285,15 +240,9 @@ void GamePlayScene::LoadLVData()
 	// レベルデータの読み込み
 	levelData = LevelLoader::LoadFile("stage1");
 
-	// モデル読み込み
-	modelSkydome = Model::LoadFromOBJ("skydome");
-	modelGround = Model::LoadFromOBJ("ground");
-	
-	models.insert(std::make_pair("skydome", modelSkydome));
-	models.insert(std::make_pair("ground", modelGround));
-	
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
+
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
 		decltype(models)::iterator it = models.find(objectData.fileName);
@@ -302,9 +251,8 @@ void GamePlayScene::LoadLVData()
 		}
 
 		// モデルを指定して3Dオブジェクトを生成
-		Object3d* newObject = Object3d::Create();
-		//オブジェクトにモデル紐付ける
-		newObject->SetModel(model);
+		TouchableObject* newObject = TouchableObject::Create(model);
+
 
 		// 座標
 		DirectX::XMFLOAT3 pos;
@@ -318,12 +266,105 @@ void GamePlayScene::LoadLVData()
 
 		// 座標
 		DirectX::XMFLOAT3 scale;
-		DirectX::XMStoreFloat3(&scale,objectData.scale);
+		DirectX::XMStoreFloat3(&scale, objectData.scale);
 		newObject->SetScale(scale);
 
 		newObject->SetCamera(camera_);
+		newObject->Update();
 		// 配列に登録
 		objects.push_back(newObject);
 	}
 
+}
+
+void GamePlayScene::LoadEnemyPopData()
+{
+	//ファイルを開く
+	std::ifstream file;
+	file.open("Resources/csv/enemyPop.csv");
+	assert(file.is_open());
+
+	//ファイルの内容を文字列ストリームにコピー
+	enemyPopCommands << file.rdbuf();
+
+	//ファイルを閉じる
+	file.close();
+}
+
+void GamePlayScene::UpdateEnemyPopCommands()
+{
+	LoadEnemyPopData();
+	//1行分の文字列を入れる関数
+	std::string line;
+
+	//コマンド実行ループ
+	while (getline(enemyPopCommands, line))
+	{
+		//1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream line_stream(line);
+
+		std::string word;
+		//,区切りで行の戦闘文字列を取得
+		getline(line_stream, word, ',');
+
+		// "//"=コメント
+		if (word.find("//") == 0)
+		{
+			//コメント行を飛ばす
+			continue;
+		}
+		//POP
+		if (word.find("POP") == 0)
+		{
+			//x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+			//y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+			//z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+			//敵発生
+			//敵初期化
+			std::unique_ptr<Enemy> newenemy;
+			newenemy = Enemy::Create(modelEnemy_, player_, this);
+			newenemy->SetPosition(XMFLOAT3(x, y, z));
+			newenemy->SetCamera(camera_);
+
+			newenemy->Update();
+
+			//リストに登録
+			enemys_.push_back(std::move(newenemy));
+
+		}
+	}
+}
+
+void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
+{
+	//リストに登録
+	enemyBullets_.push_back(std::move(enemyBullet));
+}
+
+void GamePlayScene::LoadSprite()
+{
+	//スプライト
+	spCommon_->LoadTexture(10, "texture/pausep.png");
+	spritePause_->Initialize(spCommon_, 10);
+	spritePause_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
+
+	spCommon_->LoadTexture(11, "texture/gameclear.png");
+	spriteClear_->Initialize(spCommon_, 11);
+
+	spCommon_->LoadTexture(12, "texture/pauseinfo.png");
+	spritePauseInfo_->Initialize(spCommon_, 12);
+	
+	spCommon_->LoadTexture(13, "texture/gameover.png");
+	spriteGameover_->Initialize(spCommon_, 13);
+
+	spritePause_->Update();
+	spriteClear_->Update();
+	spritePauseInfo_->Update();
+	spriteGameover_->Update();
 }

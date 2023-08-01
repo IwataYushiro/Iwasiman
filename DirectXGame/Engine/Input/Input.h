@@ -24,6 +24,28 @@ private://構造体類
 		CenterWheel,
 	}MouseButton;
 
+	typedef enum JSButtonNum
+	{
+		jsLeft,
+		jsRight,
+		jsUP,
+		jsDOWN,
+		jsA,
+		jsB,
+		jsX,
+		jsY,
+		jsLB,
+		jsLT,
+		jsRB,
+		jsRT,
+	}JSButton;
+
+	struct PadParam
+	{
+		ComPtr<IDirectInputDevice8> joyStick;
+		int find;
+	};
+
 public://シングルトンインスタンス
 	static Input* GetInstance();
 public:
@@ -37,6 +59,8 @@ public:
 	void GenerateKeyBoard();
 	//マウスデバイス生成
 	void GenerateMouse();
+	
+	void GenerateJoyStick();
 
 
 	///<summary>
@@ -81,7 +105,13 @@ public:
 	bool ReleaseMouse(int32_t mouseNumber);
 
 	const DirectX::XMFLOAT2& GetMousePosition()const { return mousePos; }
+
+	
 private://メンバ変数
+	//コントローラーデバイス生成
+	static BOOL CALLBACK EnumJoyStickProc
+	(const DIDEVICEINSTANCE* lpddi, VOID* pvRef)noexcept;
+	
 	//DirectInputの初期化
 	ComPtr<IDirectInput8> directInput = nullptr;
 	//キーボード
@@ -100,10 +130,20 @@ private://メンバ変数
 	//マウス座標
 	DirectX::XMFLOAT2 mousePos;
 
+	//ジョイスティック(コントローラー)
+	ComPtr<IDirectInputDevice8> joyStick = nullptr;
+	//ジョイスティックステート
+	DIJOYSTATE2 joyState;
+	DIJOYSTATE2 joyStatePre;
+	bool isJoyStick = false;
 private:
 	Input() = default;
 	~Input();
 public:
 	Input(const Input& obj) = delete;
 	Input& operator=(const Input& obj) = delete;
+
+public://アクセッサ
+
+	IDirectInput8* GetDirectInput()const { return directInput.Get(); }
 };

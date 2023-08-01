@@ -375,6 +375,8 @@
     <ClCompile Include="DirectXGame\Engine\3D\Collider\Collision.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Collider\CollisionManager.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Collider\CollisionPrimitive.cpp" />
+    <ClCompile Include="DirectXGame\Engine\3D\Collider\MeshCollider.cpp" />
+    <ClCompile Include="DirectXGame\Engine\3D\Collider\QueryCallback.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Collider\SphereCollider.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxLoader.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ModelFbx.cpp" />
@@ -385,6 +387,7 @@
     <ClCompile Include="DirectXGame\Engine\3D\Object\Mesh.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Model.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Object3d.cpp" />
+    <ClCompile Include="DirectXGame\Engine\3D\Object\TouchableObject.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Particle\Particle.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Particle\ParticleManager.cpp" />
     <ClCompile Include="DirectXGame\Engine\Base\DirectXCommon.cpp" />
@@ -420,10 +423,14 @@
     <ClInclude Include="DirectXGame\Engine\3D\Camera\Camera.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\BaseCollider.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\Collision.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionAttribute.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionInfo.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionManager.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionPrimitive.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\CollisionTypes.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\MeshCollider.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\QueryCallback.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Collider\RayCastHit.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Collider\SphereCollider.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxLoader.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ModelFbx.h" />
@@ -435,6 +442,7 @@
     <ClInclude Include="DirectXGame\Engine\3D\Object\Mesh.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Model.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Object\Object3d.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Object\TouchableObject.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Particle\Particle.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Particle\ParticleManager.h" />
     <ClInclude Include="DirectXGame\Engine\Base\DirectXCommon.h" />

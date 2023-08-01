@@ -64,6 +64,10 @@ public://アクセッサ置き場
 	const D3D12_VERTEX_BUFFER_VIEW& GetVBView() { return vbView; }
 	//インデックスバッファゲット
 	const D3D12_INDEX_BUFFER_VIEW& GetIBView() { return ibView; }
+	//頂点配列ゲット
+	inline const std::vector<VertexPosNormalUv>& GetVertices() { return vertices; }
+	//インデックス配列ゲット
+	inline const std::vector<unsigned short>& GetIndices() { return indices; }
 
 private://メンバ変数
 	//名前

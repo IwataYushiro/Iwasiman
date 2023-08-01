@@ -11,9 +11,10 @@ public:
 	/// <param name="sphere">球</param>
 	/// <param name="sphere2">球2</param>
 	/// <param name="inter">交点</param>
+	/// <param name="reject">排斥ベクトル</param>
 	/// <returns>交差しているか否か</returns>
 	static bool ChackSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2,
-		DirectX::XMVECTOR* inter = nullptr);
+		DirectX::XMVECTOR* inter = nullptr, DirectX::XMVECTOR* reject = nullptr);
 	/// <summary>
 	/// 球と平面の当たり判定
 	/// </summary>
@@ -40,9 +41,10 @@ public:
 	/// <param name="sphere">球</param>
 	/// <param name="triangle">三角形</param>
 	/// <param name="inter">交点(三角形上の最近接点)</param>
+	/// <param name="reject">排斥ベクトル</param>
 	/// <returns>交差しているか否か</returns>
 	static bool ChackSphere2Triangle(const Sphere& sphere, const Triangle& triangle,
-		DirectX::XMVECTOR* inter = nullptr);
+		DirectX::XMVECTOR* inter = nullptr, DirectX::XMVECTOR* reject = nullptr);
 
 	/// <summary>
 	/// レイと平面の当たり判定

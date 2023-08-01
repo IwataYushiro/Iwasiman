@@ -57,19 +57,19 @@ void ParticleManager::PostDraw()
 ParticleManager* ParticleManager::Create()
 {
 	// 3Dオブジェクトのインスタンスを生成
-	ParticleManager* object3d = new ParticleManager();
-	if (object3d == nullptr) {
+	ParticleManager* ins = new ParticleManager();
+	if (ins == nullptr) {
 		return nullptr;
 	}
 
 	// 初期化
-	if (!object3d->Initialize()) {
-		delete object3d;
+	if (!ins->Initialize()) {
+		delete ins;
 		assert(0);
 		return nullptr;
 	}
 
-	return object3d;
+	return ins;
 }
 
 void ParticleManager::InitializeGraphicsPipeline()
