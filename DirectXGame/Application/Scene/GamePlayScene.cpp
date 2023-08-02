@@ -147,6 +147,17 @@ void GamePlayScene::Update()
 	}
 	else if (isPause_)
 	{
+		
+		float t = min(0.0f, TIME_END);
+		float b = X_START;
+		float c = X_END - X_START;
+		float d = TIME_END;
+		pos_x = ease_in(t, b, c, d);
+		spritePause_->SetPosition({ pos_x,0.0f });
+		spritePause_->Update();
+		UpdateVelPos();
+
+
 		if (input_->TriggerKey(DIK_W))
 		{
 			sceneManager_->ChangeScene("TITLE");

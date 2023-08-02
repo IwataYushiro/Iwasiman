@@ -124,8 +124,40 @@ private:
 	//敵発生コマンド
 	std::stringstream enemyPopCommands;
 
-	
-	
+public:
+	const float MAX_SPEED = 10.0f;
+	const float X_START = -(float)WinApp::GetInstance()->window_width;
+	const float X_END = 0.0f;
+	const float TIME_END = 1.0f;
+
+	void UpdateVelPos()
+	{
+		vel_x = min(vel_x, MAX_SPEED);
+
+		vel_x += acc_x;
+		pos_x += vel_x;
+
+	}
+
+	float ease_in(float t, float b, float c, float d)
+	{
+		float x = t / d;
+		float v = ease_in_cubic(x);
+		float ret = c * v + b;
+		return ret;
+	}
+	float ease_in_cubic(float x)
+	{
+		return x * x * x;
+	}
+private:
+	//位置
+	float pos_x;
+	//速度
+	float vel_x;
+	//加速度
+	float acc_x;
+
 private:
 	//スプライト読み込み
 	void LoadSprite();
