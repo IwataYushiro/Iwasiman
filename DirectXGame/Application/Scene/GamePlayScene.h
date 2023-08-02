@@ -12,6 +12,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <chrono>
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
 
@@ -125,15 +126,17 @@ private:
 	std::stringstream enemyPopCommands;
 
 public:
-	const float MAX_SPEED = 10.0f;
-	const float X_START = -(float)WinApp::GetInstance()->window_width;
+	//時間計測
+	std::chrono::steady_clock::time_point startCount;	//開始時間
+	std::chrono::steady_clock::time_point nowCount;		//現在時間
+	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
+	float elapsed;
+	const float X_START = (float)WinApp::GetInstance()->window_width;
 	const float X_END = 0.0f;
 	const float TIME_END = 1.0f;
 
 	void UpdateVelPos()
 	{
-		vel_x = min(vel_x, MAX_SPEED);
-
 		vel_x += acc_x;
 		pos_x += vel_x;
 
@@ -141,7 +144,7 @@ public:
 
 	float ease_in(float t, float b, float c, float d)
 	{
-		float x = t / d;
+		float x = min(t / d,1.0f);
 		float v = ease_in_cubic(x);
 		float ret = c * v + b;
 		return ret;
@@ -157,6 +160,11 @@ private:
 	float vel_x;
 	//加速度
 	float acc_x;
+	//
+	float t;
+	float b = X_START;
+	float c = X_END - X_START;
+	float d = TIME_END;
 
 private:
 	//スプライト読み込み

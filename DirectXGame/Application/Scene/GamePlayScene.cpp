@@ -77,7 +77,9 @@ void GamePlayScene::Initialize()
 	pm_->SetParticleModel(particle1_);
 	pm_->SetCamera(camera_);
 
-
+	startCount = std::chrono::steady_clock::now();	//開始時間
+	nowCount = std::chrono::steady_clock::now();		//現在時間
+	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 
 	isPause_ = false;
 }
@@ -95,6 +97,7 @@ void GamePlayScene::Update()
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
 
+	
 	if (!isPause_)
 	{
 		//モデル呼び出し例
@@ -148,26 +151,35 @@ void GamePlayScene::Update()
 	else if (isPause_)
 	{
 		
-		float t = min(0.0f, TIME_END);
-		float b = X_START;
-		float c = X_END - X_START;
-		float d = TIME_END;
-		pos_x = ease_in(t, b, c, d);
+	//現在時間を取得する
+		nowCount = std::chrono::steady_clock::now();
+		//前回記録からの経過時間を取得する
+		elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>
+			(nowCount - startCount);
+
+		 elapsed = std::chrono::duration_cast<std::chrono::microseconds>
+			 (elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+		 pos_x = ease_in(elapsed, b, c, d);
+	
 		spritePause_->SetPosition({ pos_x,0.0f });
 		spritePause_->Update();
-		UpdateVelPos();
-
+		
 
 		if (input_->TriggerKey(DIK_W))
 		{
 			sceneManager_->ChangeScene("TITLE");
+			//時間
+			startCount = std::chrono::steady_clock::now();
 			isPause_ = false;
 		}
 		if (input_->TriggerKey(DIK_Q))
 		{
+			//時間
+			startCount = std::chrono::steady_clock::now();
 			isPause_ = false;
 		}
-
+		
 	}
 
 }
