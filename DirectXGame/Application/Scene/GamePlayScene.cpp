@@ -144,7 +144,9 @@ void GamePlayScene::Update()
 
 		//Pause‹@”\
 		if (input_->TriggerKey(DIK_Q) && !isclear)
-		{
+		{//ŽžŠÔ
+			startCount = std::chrono::steady_clock::now();
+			spritePause_->SetPosition({ X_START,0.0f });
 			isPause_ = true;
 		}
 	}
@@ -163,25 +165,24 @@ void GamePlayScene::Update()
 		 pos_x = ease_in(elapsed, b, c, d);
 	
 		spritePause_->SetPosition({ pos_x,0.0f });
-		spritePause_->Update();
+		
 		
 
 		if (input_->TriggerKey(DIK_W))
 		{
 			sceneManager_->ChangeScene("TITLE");
-			//ŽžŠÔ
-			startCount = std::chrono::steady_clock::now();
+			
 			isPause_ = false;
 		}
 		if (input_->TriggerKey(DIK_Q))
 		{
-			//ŽžŠÔ
-			startCount = std::chrono::steady_clock::now();
+			
 			isPause_ = false;
 		}
-		
-	}
+		UpdateVelPos();
 
+	}
+	spritePause_->Update();
 }
 
 void GamePlayScene::Draw()

@@ -145,7 +145,7 @@ public:
 	float ease_in(float t, float b, float c, float d)
 	{
 		float x = min(t / d,1.0f);
-		float v = ease_in_cubic(x);
+		float v = ease_in_out_cric(x);
 		float ret = c * v + b;
 		return ret;
 	}
@@ -153,6 +153,13 @@ public:
 	{
 		return x * x * x;
 	}
+	float ease_in_out_cric(float x)
+	{
+		return x < 0.5f ?
+			(1.0f - sqrtf(1.0f - powf(2.0f * x, 2.0f))) / 2.0f
+			: (sqrtf(1.0f - powf(-2.0f * x + 2.0f, 2.0f)) + 1.0f) / 2.0f;
+	}
+
 private:
 	//ˆÊ’u
 	float pos_x;
