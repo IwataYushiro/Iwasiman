@@ -15,7 +15,7 @@
 #include <chrono>
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
-
+#include "EasingManager.h"
 
 //jsonレベルデータ
 struct LevelData;
@@ -125,53 +125,7 @@ private:
 	//敵発生コマンド
 	std::stringstream enemyPopCommands;
 
-public:
-	//時間計測
-	std::chrono::steady_clock::time_point startCount;	//開始時間
-	std::chrono::steady_clock::time_point nowCount;		//現在時間
-	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	float elapsed;
-	const float X_START = (float)WinApp::GetInstance()->window_width;
-	const float X_END = 0.0f;
-	const float TIME_END = 1.0f;
-
-	void UpdateVelPos()
-	{
-		vel_x += acc_x;
-		pos_x += vel_x;
-
-	}
-
-	float ease_in(float time, float startpos, float differencepos, float totaltime)
-	{
-		float x = min(time / totaltime, 1.0f);
-		float v = ease_in_out_cric(x);
-		float ret = differencepos * v + startpos;
-		return ret;
-	}
-	float ease_in_cubic(float x)
-	{
-		return x * x * x;
-	}
-	float ease_in_out_cric(float x)
-	{
-		return x < 0.5f ?
-			(1.0f - sqrtf(1.0f - powf(2.0f * x, 2.0f))) / 2.0f
-			: (sqrtf(1.0f - powf(-2.0f * x + 2.0f, 2.0f)) + 1.0f) / 2.0f;
-	}
-
-private:
-	//位置
-	float pos_x;
-	//速度
-	float vel_x;
-	//加速度
-	float acc_x;
-	//イージングプロパティ
-	float t;					//時間
-	float b = X_START;			//開始位置
-	float c = X_END - X_START;	//開始位置-終了位置の差
-	float d = TIME_END;			//合計時間
+	EasingManager es = { (float)WinApp::GetInstance()->window_width,0.0f,1.0f };
 
 private:
 	//スプライト読み込み
