@@ -143,26 +143,26 @@ void GamePlayScene::Update()
 		{
 			//ここでイージングの準備
 			es.Standby();
-			
+			spritePause_->SetPosition({ es.start,0.0f });
 			isPause_ = true;
 		}
 	}
 	else if (isPause_)
 	{
 		//イージングサンプル
-		es.ease_in_out_cric(es.t, es.b, es.c, es.d);
+		es.ease_out_sine(es.t, es.b, es.c, es.d);
 	
 		spritePause_->SetPosition({ es.num_X,0.0f });
 
 		if (input_->TriggerKey(DIK_W))
 		{
 			sceneManager_->ChangeScene("TITLE");
-			spritePause_->SetPosition({ es.start,0.0f });
+			
 			isPause_ = false;
 		}
 		if (input_->TriggerKey(DIK_Q))
 		{
-			spritePause_->SetPosition({ es.start,0.0f });
+			
 			isPause_ = false;
 		}
 
