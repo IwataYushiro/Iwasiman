@@ -14,23 +14,38 @@ public:
 	float num_X = 0.0f;//返す用
 
 public://関数
-	void Standby() { startCount = std::chrono::steady_clock::now(); }
+	void Standby(bool reverse);
 
 	//イージング関数
 	// sine
-	float ease_in_sine(float time, float startpos, float differencepos, float totaltime);
-	float ease_out_sine(float time, float startpos, float differencepos, float totaltime);
-	float ease_in_out_sine(float time, float startpos, float differencepos, float totaltime);
+	float ease_in_sine();
+	float ease_out_sine();
+	float ease_in_out_sine();
 
 	// quad
-	
+	float ease_in_quad();
+	float ease_out_quad();
+	float ease_in_out_quad();
 	// cubic
-	float ease_in_cubic(float time, float startpos, float differencepos, float totaltime);
-	float ease_out_cubic(float time, float startpos, float differencepos, float totaltime);
-	float ease_in_out_cubic(float time, float startpos, float differencepos, float totaltime);
+	float ease_in_cubic();
+	float ease_out_cubic();
+	float ease_in_out_cubic();
+	// quart
+	float ease_in_quart();
+	float ease_out_quart();
+	float ease_in_out_quart();
+	// quint
 	
-	// cric
-	float ease_in_out_cric(float time, float startpos, float differencepos, float totaltime);
+	// expo
+	
+	// circ
+	float ease_in_out_circ();
+	
+	// back
+	
+	// elastic
+	
+	// bounce
 
 public:
 	//時間計測
@@ -39,11 +54,12 @@ public:
 	std::chrono::microseconds elapsedCount;				//経過時間 経過時間=現在時間-開始時間
 
 	//イージングプロパティ
-	float t;					//時間
-	float b;					//開始位置
-	float c;					//開始位置-終了位置の差
-	float d;					//合計時間
+	float timeNow;					//時間
+	float startpos;					//開始位置
+	float differencepos;					//開始位置-終了位置の差
+	float totaltime;					//合計時間
 
+	bool isReverse = false;
 public://定数
 	const float PI = 3.141592f;
 

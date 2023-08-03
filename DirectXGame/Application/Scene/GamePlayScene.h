@@ -126,9 +126,9 @@ private:
 	std::stringstream enemyPopCommands;
 
 	EasingManager es = { -(float)WinApp::GetInstance()->window_width,0.0f,1.0f };
+	
 
 private:
 	//スプライト読み込み
 	void LoadSprite();
-	
 };

@@ -142,27 +142,37 @@ void GamePlayScene::Update()
 		if (input_->TriggerKey(DIK_Q) && !isclear)
 		{
 			//ここでイージングの準備
-			es.Standby();
+			es.Standby(false);
 			spritePause_->SetPosition({ es.start,0.0f });
+			
 			isPause_ = true;
 		}
 	}
 	else if (isPause_)
 	{
-		//イージングサンプル
-		es.ease_out_sine(es.t, es.b, es.c, es.d);
-	
+		//イージングサンプル(解除してもここがやってくれる)
+		es.ease_in_out_circ();
 		spritePause_->SetPosition({ es.num_X,0.0f });
 
 		if (input_->TriggerKey(DIK_W))
 		{
 			sceneManager_->ChangeScene("TITLE");
-			
 			isPause_ = false;
 		}
+
 		if (input_->TriggerKey(DIK_Q))
 		{
-			
+			//終了座標に到達していないと受け付けない
+			if (spritePause_->GetPosition().x == es.end)
+			{
+				//ここでイージングの準備
+				es.Standby(true);
+			}
+		}
+		//到達したら
+		if (spritePause_->GetPosition().x == es.start)
+		{
+			//Pause解除
 			isPause_ = false;
 		}
 
