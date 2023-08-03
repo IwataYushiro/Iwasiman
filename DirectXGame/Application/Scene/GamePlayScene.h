@@ -142,11 +142,11 @@ public:
 
 	}
 
-	float ease_in(float t, float b, float c, float d)
+	float ease_in(float time, float startpos, float differencepos, float totaltime)
 	{
-		float x = min(t / d,1.0f);
+		float x = min(time / totaltime, 1.0f);
 		float v = ease_in_out_cric(x);
-		float ret = c * v + b;
+		float ret = differencepos * v + startpos;
 		return ret;
 	}
 	float ease_in_cubic(float x)
@@ -167,11 +167,11 @@ private:
 	float vel_x;
 	//加速度
 	float acc_x;
-	//
-	float t;
-	float b = X_START;
-	float c = X_END - X_START;
-	float d = TIME_END;
+	//イージングプロパティ
+	float t;					//時間
+	float b = X_START;			//開始位置
+	float c = X_END - X_START;	//開始位置-終了位置の差
+	float d = TIME_END;			//合計時間
 
 private:
 	//スプライト読み込み
