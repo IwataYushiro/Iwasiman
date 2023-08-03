@@ -26,26 +26,40 @@ public://ŠÖ”
 	float ease_in_quad();
 	float ease_out_quad();
 	float ease_in_out_quad();
+
 	// cubic
 	float ease_in_cubic();
 	float ease_out_cubic();
 	float ease_in_out_cubic();
+	
 	// quart
 	float ease_in_quart();
 	float ease_out_quart();
 	float ease_in_out_quart();
+	
 	// quint
+	float ease_in_quint();
+	float ease_out_quint();
+	float ease_in_out_quint();
 	
 	// expo
+	float ease_in_expo();
+	float ease_out_expo();
+	float ease_in_out_expo();
 	
 	// circ
+	float ease_in_circ();
+	float ease_out_circ();
 	float ease_in_out_circ();
 	
 	// back
 	
+
 	// elastic
 	
+
 	// bounce
+
 
 public:
 	//ŠÔŒv‘ª

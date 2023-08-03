@@ -317,6 +317,183 @@ float EasingManager::ease_in_out_quart()
 	return num_X;
 }
 
+float EasingManager::ease_in_quint()
+{
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>
+		(nowCount - startCount);
+
+	timeNow = std::chrono::duration_cast<std::chrono::microseconds>
+		(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	float x = min(timeNow / totaltime, 1.0f);
+
+	float v = x * x * x * x * x;
+
+	float ret = differencepos * v + startpos;
+
+	num_X = ret;
+
+	return num_X;
+}
+
+float EasingManager::ease_out_quint()
+{
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>
+		(nowCount - startCount);
+
+	timeNow = std::chrono::duration_cast<std::chrono::microseconds>
+		(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	float x = min(timeNow / totaltime, 1.0f);
+
+	float v = 1.0f - powf(1.0f - x, 5.0f);
+
+	float ret = differencepos * v + startpos;
+
+	num_X = ret;
+
+	return num_X;
+}
+
+float EasingManager::ease_in_out_quint()
+{
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>
+		(nowCount - startCount);
+
+	timeNow = std::chrono::duration_cast<std::chrono::microseconds>
+		(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	float x = min(timeNow / totaltime, 1.0f);
+
+	float v = x < 0.5f ? 16.0f * x * x * x * x * x : 1.0f - powf(-2.0f * x + 2.0f, 5.0f) / 2.0f;
+
+	float ret = differencepos * v + startpos;
+
+	num_X = ret;
+
+	return num_X;
+}
+
+float EasingManager::ease_in_expo()
+{
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>
+		(nowCount - startCount);
+
+	timeNow = std::chrono::duration_cast<std::chrono::microseconds>
+		(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	float x = min(timeNow / totaltime, 1.0f);
+
+	float v = x == 0.0f ? 0.0f : powf(2.0f, 10.0f * x - 10.0f);
+
+	float ret = differencepos * v + startpos;
+
+	num_X = ret;
+
+	return num_X;
+}
+
+float EasingManager::ease_out_expo()
+{
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>
+		(nowCount - startCount);
+
+	timeNow = std::chrono::duration_cast<std::chrono::microseconds>
+		(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	float x = min(timeNow / totaltime, 1.0f);
+
+	float v = x == 1.0f ? 1.0f : 1.0f - powf(2.0f, -10.0f * x);
+
+	float ret = differencepos * v + startpos;
+
+	num_X = ret;
+
+	return num_X;
+}
+
+float EasingManager::ease_in_out_expo()
+{
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>
+		(nowCount - startCount);
+
+	timeNow = std::chrono::duration_cast<std::chrono::microseconds>
+		(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	float x = min(timeNow / totaltime, 1.0f);
+
+	float v = x == 0.0f ? 0.0f : x == 1.0f ? 1.0f : x < 0.5f ? powf(2.0f, 20.0f * x - 10.0f) / 2.0f
+		: (2.0f - powf(2.0f, -20.0f * x + 10.0f)) / 2.0f;
+
+	float ret = differencepos * v + startpos;
+
+	num_X = ret;
+
+	return num_X;
+}
+
+float EasingManager::ease_in_circ()
+{
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>
+		(nowCount - startCount);
+
+	timeNow = std::chrono::duration_cast<std::chrono::microseconds>
+		(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	float x = min(timeNow / totaltime, 1.0f);
+
+	float v = 1.0f - sqrtf(1.0f - powf(x, 2.0f));
+
+	float ret = differencepos * v + startpos;
+
+	num_X = ret;
+
+	return num_X;
+}
+
+float EasingManager::ease_out_circ()
+{
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>
+		(nowCount - startCount);
+
+	timeNow = std::chrono::duration_cast<std::chrono::microseconds>
+		(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	float x = min(timeNow / totaltime, 1.0f);
+
+	float v = sqrtf(1.0f - powf(x - 1.0f, 2.0f));
+
+	float ret = differencepos * v + startpos;
+
+	num_X = ret;
+
+	return num_X;
+}
+
 float EasingManager::ease_in_out_circ()
 {
 	//現在時間を取得する

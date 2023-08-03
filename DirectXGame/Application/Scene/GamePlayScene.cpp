@@ -143,6 +143,7 @@ void GamePlayScene::Update()
 		{
 			//ここでイージングの準備
 			es.Standby(false);
+			isBack = false;
 			spritePause_->SetPosition({ es.start,0.0f });
 			
 			isPause_ = true;
@@ -151,7 +152,7 @@ void GamePlayScene::Update()
 	else if (isPause_)
 	{
 		//イージングサンプル(ポーズ中に準備してもここがやってくれる)
-		es.ease_in_out_circ();
+		es.ease_in_circ();
 		spritePause_->SetPosition({ es.num_X,0.0f });
 
 		if (input_->TriggerKey(DIK_W))
@@ -164,10 +165,13 @@ void GamePlayScene::Update()
 		{
 			//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
 			if (spritePause_->GetPosition().x == es.end) es.Standby(true);
+			isBack = true;
 		}
 		//到達したらPause解除
-		if (spritePause_->GetPosition().x == es.start) isPause_ = false;
-
+		if (spritePause_->GetPosition().x == es.start)
+		{
+			if (isBack)isPause_ = false;
+		}
 	}
 	spritePause_->Update();
 }
