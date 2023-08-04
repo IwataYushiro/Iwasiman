@@ -152,7 +152,7 @@ void GamePlayScene::Update()
 	else if (isPause_)
 	{
 		//イージングサンプル(ポーズ中に準備してもここがやってくれる)
-		es.ease_in_circ();
+		es.ease_out_bounce();
 		spritePause_->SetPosition({ es.num_X,0.0f });
 
 		if (input_->TriggerKey(DIK_W))
