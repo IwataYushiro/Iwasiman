@@ -15,7 +15,7 @@
 #include <chrono>
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
-#include "EasingManager.h"
+#include "Easing.h"
 
 //jsonレベルデータ
 struct LevelData;
@@ -125,7 +125,7 @@ private:
 	//敵発生コマンド
 	std::stringstream enemyPopCommands;
 	//イージングマネージャー(左から右へ)
-	EasingManager es = { -(float)WinApp::GetInstance()->window_width,0.0f,1.0f };
+	Easing es = { -(float)WinApp::GetInstance()->window_width,0.0f,1.0f };
 	//○○した瞬間に○○解除を防ぐ用のフラグ
 	bool isBack = false;
 

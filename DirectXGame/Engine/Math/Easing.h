@@ -2,15 +2,15 @@
 #include "WinApp.h"
 #include <chrono>
 
-class EasingManager
+class Easing
 {
 public:
 	float start;
 	float end;
 	float maxtime;
 public:
-	EasingManager();
-	EasingManager(float start, float end, float time);
+	Easing();
+	Easing(float start, float end, float time);
 	float num_X = 0.0f;//•Ô‚·—p
 
 public://ŠÖ”

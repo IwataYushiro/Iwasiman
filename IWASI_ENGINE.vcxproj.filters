@@ -502,7 +502,7 @@
     <ClCompile Include="DirectXGame\Engine\3D\Collider\QueryCallback.cpp">
       <Filter>Source File\Engine\3D\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Engine\Math\EasingManager.cpp">
+    <ClCompile Include="DirectXGame\Engine\Math\Easing.cpp">
       <Filter>Source File\Engine\Math</Filter>
     </ClCompile>
   </ItemGroup>
@@ -663,7 +663,7 @@
     <ClInclude Include="DirectXGame\Engine\3D\Collider\QueryCallback.h">
       <Filter>Header File\Engine\3D\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\Engine\Math\EasingManager.h">
+    <ClInclude Include="DirectXGame\Engine\Math\Easing.h">
       <Filter>Header File\Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>

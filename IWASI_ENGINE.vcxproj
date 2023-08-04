@@ -396,7 +396,7 @@
     <ClCompile Include="DirectXGame\Engine\Debug\ImGuiManager.cpp" />
     <ClCompile Include="DirectXGame\Engine\Input\Input.cpp" />
     <ClCompile Include="DirectXGame\Engine\json\LevelLoaderJson.cpp" />
-    <ClCompile Include="DirectXGame\Engine\Math\EasingManager.cpp" />
+    <ClCompile Include="DirectXGame\Engine\Math\Easing.cpp" />
     <ClCompile Include="DirectXGame\Engine\Math\Matrix4.cpp" />
     <ClCompile Include="DirectXGame\Engine\Math\MyMath.cpp" />
     <ClCompile Include="DirectXGame\Engine\Math\Quaternion.cpp" />
@@ -452,7 +452,7 @@
     <ClInclude Include="DirectXGame\Engine\Debug\ImGuiManager.h" />
     <ClInclude Include="DirectXGame\Engine\Input\Input.h" />
     <ClInclude Include="DirectXGame\Engine\json\LevelLoaderJson.h" />
-    <ClInclude Include="DirectXGame\Engine\Math\EasingManager.h" />
+    <ClInclude Include="DirectXGame\Engine\Math\Easing.h" />
     <ClInclude Include="DirectXGame\Engine\Math\Matrix4.h" />
     <ClInclude Include="DirectXGame\Engine\Math\MyMath.h" />
     <ClInclude Include="DirectXGame\Engine\Math\Quaternion.h" />

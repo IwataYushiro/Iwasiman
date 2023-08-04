@@ -130,6 +130,14 @@ void GamePlayScene::Update()
 		}
 		if (isclear)
 		{
+			//ここでイージングの準備
+			es.Standby(false);
+			isBack = false;
+			spriteClear_->SetPosition({ es.start,0.0f });
+
+			//イージングサンプル(ポーズ中に準備してもここがやってくれる)
+			es.ease_in_cubic();
+			spriteClear_->SetPosition({ es.num_X,0.0f });
 			if (input_->TriggerKey(DIK_SPACE))
 			{
 				camera_->Reset();
@@ -139,7 +147,7 @@ void GamePlayScene::Update()
 		colManager_->CheckAllCollisions();
 
 		//Pause機能
-		if (input_->TriggerKey(DIK_Q) && !isclear)
+		if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
 		{
 			//ここでイージングの準備
 			es.Standby(false);
@@ -148,11 +156,13 @@ void GamePlayScene::Update()
 			
 			isPause_ = true;
 		}
+		spriteClear_->Update();
+		spriteGameover_->Update();
 	}
 	else if (isPause_)
 	{
 		//イージングサンプル(ポーズ中に準備してもここがやってくれる)
-		es.ease_in_out_bounce();
+		es.ease_in_out_circ();
 		spritePause_->SetPosition({ es.num_X,0.0f });
 
 		if (input_->TriggerKey(DIK_W))
@@ -174,6 +184,8 @@ void GamePlayScene::Update()
 		}
 	}
 	spritePause_->Update();
+	
+
 }
 
 void GamePlayScene::Draw()

@@ -1,7 +1,7 @@
-#include "EasingManager.h"
+#include "Easing.h"
 #include <cmath>
 
-EasingManager::EasingManager()
+Easing::Easing()
 {
 	startCount = std::chrono::steady_clock::now();	//開始時間
 	nowCount = std::chrono::steady_clock::now();		//現在時間
@@ -19,7 +19,7 @@ EasingManager::EasingManager()
 	isReverse = false;
 }
 
-EasingManager::EasingManager(float start, float end, float time)
+Easing::Easing(float start, float end, float time)
 {
 	startCount = std::chrono::steady_clock::now();	//開始時間
 	nowCount = std::chrono::steady_clock::now();		//現在時間
@@ -36,7 +36,7 @@ EasingManager::EasingManager(float start, float end, float time)
 	isReverse = false;
 }
 
-void EasingManager::Standby(bool reverse)
+void Easing::Standby(bool reverse)
 {
 	startCount = std::chrono::steady_clock::now();
 	isReverse = reverse;
@@ -53,7 +53,7 @@ void EasingManager::Standby(bool reverse)
 }
 
 
-float EasingManager::ease_in_sine()
+float Easing::ease_in_sine()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -75,7 +75,7 @@ float EasingManager::ease_in_sine()
 	return num_X;
 }
 
-float EasingManager::ease_out_sine()
+float Easing::ease_out_sine()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -97,7 +97,7 @@ float EasingManager::ease_out_sine()
 	return num_X;
 }
 
-float EasingManager::ease_in_out_sine()
+float Easing::ease_in_out_sine()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -119,7 +119,7 @@ float EasingManager::ease_in_out_sine()
 	return num_X;
 }
 
-float EasingManager::ease_in_quad()
+float Easing::ease_in_quad()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -141,7 +141,7 @@ float EasingManager::ease_in_quad()
 	return num_X;
 }
 
-float EasingManager::ease_out_quad()
+float Easing::ease_out_quad()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -163,7 +163,7 @@ float EasingManager::ease_out_quad()
 	return num_X;
 }
 
-float EasingManager::ease_in_out_quad()
+float Easing::ease_in_out_quad()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -185,7 +185,7 @@ float EasingManager::ease_in_out_quad()
 	return num_X;
 }
 
-float EasingManager::ease_in_cubic()
+float Easing::ease_in_cubic()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -207,7 +207,7 @@ float EasingManager::ease_in_cubic()
 	return num_X;
 }
 
-float EasingManager::ease_out_cubic()
+float Easing::ease_out_cubic()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -229,7 +229,7 @@ float EasingManager::ease_out_cubic()
 	return num_X;
 }
 
-float EasingManager::ease_in_out_cubic()
+float Easing::ease_in_out_cubic()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -251,7 +251,7 @@ float EasingManager::ease_in_out_cubic()
 	return num_X;
 }
 
-float EasingManager::ease_in_quart()
+float Easing::ease_in_quart()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -273,7 +273,7 @@ float EasingManager::ease_in_quart()
 	return num_X;
 }
 
-float EasingManager::ease_out_quart()
+float Easing::ease_out_quart()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -295,7 +295,7 @@ float EasingManager::ease_out_quart()
 	return num_X;
 }
 
-float EasingManager::ease_in_out_quart()
+float Easing::ease_in_out_quart()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -317,7 +317,7 @@ float EasingManager::ease_in_out_quart()
 	return num_X;
 }
 
-float EasingManager::ease_in_quint()
+float Easing::ease_in_quint()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -339,7 +339,7 @@ float EasingManager::ease_in_quint()
 	return num_X;
 }
 
-float EasingManager::ease_out_quint()
+float Easing::ease_out_quint()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -361,7 +361,7 @@ float EasingManager::ease_out_quint()
 	return num_X;
 }
 
-float EasingManager::ease_in_out_quint()
+float Easing::ease_in_out_quint()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -383,7 +383,7 @@ float EasingManager::ease_in_out_quint()
 	return num_X;
 }
 
-float EasingManager::ease_in_expo()
+float Easing::ease_in_expo()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -405,7 +405,7 @@ float EasingManager::ease_in_expo()
 	return num_X;
 }
 
-float EasingManager::ease_out_expo()
+float Easing::ease_out_expo()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -427,7 +427,7 @@ float EasingManager::ease_out_expo()
 	return num_X;
 }
 
-float EasingManager::ease_in_out_expo()
+float Easing::ease_in_out_expo()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -450,7 +450,7 @@ float EasingManager::ease_in_out_expo()
 	return num_X;
 }
 
-float EasingManager::ease_in_circ()
+float Easing::ease_in_circ()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -472,7 +472,7 @@ float EasingManager::ease_in_circ()
 	return num_X;
 }
 
-float EasingManager::ease_out_circ()
+float Easing::ease_out_circ()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -494,7 +494,7 @@ float EasingManager::ease_out_circ()
 	return num_X;
 }
 
-float EasingManager::ease_in_out_circ()
+float Easing::ease_in_out_circ()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -517,7 +517,7 @@ float EasingManager::ease_in_out_circ()
 	return num_X;
 }
 
-float EasingManager::ease_in_back()
+float Easing::ease_in_back()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -541,7 +541,7 @@ float EasingManager::ease_in_back()
 	return num_X;;
 }
 
-float EasingManager::ease_out_back()
+float Easing::ease_out_back()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -565,7 +565,7 @@ float EasingManager::ease_out_back()
 	return num_X;;
 }
 
-float EasingManager::ease_in_out_back()
+float Easing::ease_in_out_back()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -591,7 +591,7 @@ float EasingManager::ease_in_out_back()
 	return num_X;;
 }
 
-float EasingManager::ease_in_elastic()
+float Easing::ease_in_elastic()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -616,7 +616,7 @@ float EasingManager::ease_in_elastic()
 	return num_X;
 }
 
-float EasingManager::ease_out_elastic()
+float Easing::ease_out_elastic()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -641,7 +641,7 @@ float EasingManager::ease_out_elastic()
 	return num_X;
 }
 
-float EasingManager::ease_in_out_elastic()
+float Easing::ease_in_out_elastic()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -667,7 +667,7 @@ float EasingManager::ease_in_out_elastic()
 	return num_X;
 }
 
-float EasingManager::ease_in_bounce()
+float Easing::ease_in_bounce()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -689,7 +689,7 @@ float EasingManager::ease_in_bounce()
 	return num_X;
 }
 
-float EasingManager::ease_out_bounce()
+float Easing::ease_out_bounce()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -711,7 +711,7 @@ float EasingManager::ease_out_bounce()
 	return num_X;
 }
 
-float EasingManager::ease_in_out_bounce()
+float Easing::ease_in_out_bounce()
 {
 	//現在時間を取得する
 	nowCount = std::chrono::steady_clock::now();
@@ -735,7 +735,7 @@ float EasingManager::ease_in_out_bounce()
 	return num_X;
 }
 
-float EasingManager::bounceCalculation(float x)
+float Easing::bounceCalculation(float x)
 {
 	float v;
 
