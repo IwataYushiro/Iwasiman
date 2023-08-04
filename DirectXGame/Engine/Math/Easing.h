@@ -57,7 +57,7 @@ public://関数
 	float ease_out_bounce();
 	float ease_in_out_bounce();
 
-public:
+private:
 	//時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
 	std::chrono::steady_clock::time_point nowCount;		//現在時間
@@ -70,7 +70,7 @@ public:
 	float totaltime;					//合計時間
 
 	bool isReverse = false;
-public://定数
+private://定数
 	const float PI = 3.141592f;
 
 private:
