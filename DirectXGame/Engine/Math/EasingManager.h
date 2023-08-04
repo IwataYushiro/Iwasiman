@@ -74,5 +74,9 @@ public:
 public://’è”
 	const float PI = 3.141592f;
 
+private:
+	//bounce_easingŒvZ—p
+	float bounceCalculation(float x);
+
 };
 

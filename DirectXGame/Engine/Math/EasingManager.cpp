@@ -680,7 +680,7 @@ float EasingManager::ease_in_bounce()
 
 	float x = min(timeNow / totaltime, 1.0f);
 
-	float v = x * x;
+	float v = 1.0f - bounceCalculation(1.0f - x);
 
 	float ret = differencepos * v + startpos;
 
@@ -702,15 +702,7 @@ float EasingManager::ease_out_bounce()
 
 	float x = min(timeNow / totaltime, 1.0f);
 
-	const float n1 = 7.5625f;
-	const float d1 = 2.75f;
-
-	float v;
-
-	if (x < 1.0f / d1)v = n1 * x * x;
-	else if (x < 2.0f / d1)v = n1 * (x -= 1.5f / d1) * x + 0.75f;
-	else if (x < 2.5f / d1)v = n1 * (x -= 2.25f / d1) * x + 0.9375f;
-	else v = n1 * (x -= 2.625f / d1) * x + 0.984375f;
+	float v = bounceCalculation(x);
 
 	float ret = differencepos * v + startpos;
 
@@ -732,11 +724,27 @@ float EasingManager::ease_in_out_bounce()
 
 	float x = min(timeNow / totaltime, 1.0f);
 
-	float v = x * x;
+	float v = x < 0.5f
+		? (1.0f - bounceCalculation(1.0f - 2.0f * x)) / 2.0f
+		: (1.0f + bounceCalculation(2.0f * x - 1.0f)) / 2.0f;
 
 	float ret = differencepos * v + startpos;
 
 	num_X = ret;
 
 	return num_X;
+}
+
+float EasingManager::bounceCalculation(float x)
+{
+	float v;
+
+	const float n1 = 7.5625f;
+	const float d1 = 2.75f;
+	if (x < 1.0f / d1)v = n1 * x * x;
+	else if (x < 2.0f / d1)v = n1 * (x -= 1.5f / d1) * x + 0.75f;
+	else if (x < 2.5f / d1)v = n1 * (x -= 2.25f / d1) * x + 0.9375f;
+	else v = n1 * (x -= 2.625f / d1) * x + 0.984375f;
+
+	return v;
 }
