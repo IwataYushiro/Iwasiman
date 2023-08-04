@@ -126,18 +126,12 @@ void GamePlayScene::Update()
 		//クリア
 		else if (goal_->IsGoal())
 		{
+			
 			isclear = true;
 		}
 		if (isclear)
 		{
-			//ここでイージングの準備
-			es.Standby(false);
-			isBack = false;
-			spriteClear_->SetPosition({ es.start,0.0f });
-
-			//イージングサンプル(ポーズ中に準備してもここがやってくれる)
-			es.ease_in_cubic();
-			spriteClear_->SetPosition({ es.num_X,0.0f });
+			
 			if (input_->TriggerKey(DIK_SPACE))
 			{
 				camera_->Reset();
@@ -156,8 +150,6 @@ void GamePlayScene::Update()
 			
 			isPause_ = true;
 		}
-		spriteClear_->Update();
-		spriteGameover_->Update();
 	}
 	else if (isPause_)
 	{
@@ -184,7 +176,6 @@ void GamePlayScene::Update()
 		}
 	}
 	spritePause_->Update();
-	
 
 }
 

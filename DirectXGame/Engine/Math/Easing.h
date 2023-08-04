@@ -1,5 +1,4 @@
 #pragma once
-#include "WinApp.h"
 #include <chrono>
 
 class Easing
