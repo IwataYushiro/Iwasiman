@@ -48,7 +48,7 @@ public:
 	void Finalize() override;
 	
 	//レベルデータ読み込み
-	void LoadLVData();
+	void LoadLVData(const std::string& stagePath);
 
 	//敵発生データの読み込み
 	void LoadEnemyPopData(const std::string& fileName);

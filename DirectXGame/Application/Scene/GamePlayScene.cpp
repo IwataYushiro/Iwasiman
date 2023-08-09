@@ -67,7 +67,7 @@ void GamePlayScene::Initialize()
 	models.insert(std::make_pair("sphere2", modelBox));
 
 	//レベルデータ読み込み
-	LoadLVData();
+	LoadLVData("stage1");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
@@ -256,10 +256,10 @@ void GamePlayScene::Finalize()
 
 }
 
-void GamePlayScene::LoadLVData()
+void GamePlayScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
-	levelData = LevelLoader::LoadFile("stage1");
+	levelData = LevelLoader::LoadFile(stagePath);
 
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
