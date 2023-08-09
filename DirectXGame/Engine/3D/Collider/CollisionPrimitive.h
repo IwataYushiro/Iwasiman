@@ -1,6 +1,13 @@
 #pragma once
 #include <DirectXMath.h>
 
+//AABB(” )
+struct AABB
+{
+	DirectX::XMVECTOR center = { 0.0f,0.0f,0.0f,1.0f };
+	float radius[3];
+};
+
 //‹…
 struct Sphere
 {

@@ -13,6 +13,7 @@
 #include <map>
 #include <sstream>
 #include <chrono>
+#include <string>
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
 #include "Easing.h"
@@ -50,15 +51,18 @@ public:
 	void LoadLVData();
 
 	//敵発生データの読み込み
-	void LoadEnemyPopData();
+	void LoadEnemyPopData(const std::string& fileName);
 	//敵発生コマンドの更新
-	void UpdateEnemyPopCommands();
+	void UpdateEnemyPopCommands(const std::string& fileName);
 
 public:
 	//敵弾追加
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
 
 private://静的メンバ変数
+	//デフォルトテクスチャ格納ディレクトリ
+	static std::string DefaultEnemyPath;
+
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤

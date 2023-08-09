@@ -12,6 +12,9 @@
 
 using namespace DirectX;
 
+//デフォルトテクスチャ格納ディレクトリ
+std::string GamePlayScene::DefaultEnemyPath = "Resources/csv/";
+
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
 Audio* GamePlayScene::audio_ = Audio::GetInstance();
@@ -48,7 +51,7 @@ void GamePlayScene::Initialize()
 	goal_->SetCamera(camera_);
 	goal_->Update();
 
-	UpdateEnemyPopCommands();
+	UpdateEnemyPopCommands("enemyPop.csv");
 
 	//弾リセット
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
@@ -154,7 +157,7 @@ void GamePlayScene::Update()
 	else if (isPause_)
 	{
 		//イージングサンプル(ポーズ中に準備してもここがやってくれる)
-		es.ease_in_out_circ();
+		es.ease_in_out_elastic();
 		spritePause_->SetPosition({ es.num_X,0.0f });
 
 		if (input_->TriggerKey(DIK_W))
@@ -295,11 +298,21 @@ void GamePlayScene::LoadLVData()
 
 }
 
-void GamePlayScene::LoadEnemyPopData()
+void GamePlayScene::LoadEnemyPopData(const std::string& fileName)
 {
+	//ディレクトリパスとファイル名を連結してフルパスを得る
+	std::string fullPath = DefaultEnemyPath + fileName;
+
+	//ワイド文字列に変換した際の文字列バッファサイズを計算
+	int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
+
+	//ワイド文字列に変換
+	std::vector<wchar_t> wfilePath(filePathBufferSize);
+	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath.data(), filePathBufferSize);
+
 	//ファイルを開く
 	std::ifstream file;
-	file.open("Resources/csv/enemyPop.csv");
+	file.open(wfilePath.data());
 	assert(file.is_open());
 
 	//ファイルの内容を文字列ストリームにコピー
@@ -309,9 +322,9 @@ void GamePlayScene::LoadEnemyPopData()
 	file.close();
 }
 
-void GamePlayScene::UpdateEnemyPopCommands()
+void GamePlayScene::UpdateEnemyPopCommands(const std::string& fileName)
 {
-	LoadEnemyPopData();
+	LoadEnemyPopData(fileName);
 	//1行分の文字列を入れる関数
 	std::string line;
 
