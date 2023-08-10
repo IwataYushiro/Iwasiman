@@ -50,11 +50,6 @@ public:
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
 
-	//敵発生データの読み込み
-	void LoadEnemyPopData(const std::string& fileName);
-	//敵発生コマンドの更新
-	void UpdateEnemyPopCommands(const std::string& fileName);
-
 public:
 	//敵弾追加
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
