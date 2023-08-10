@@ -51,8 +51,6 @@ void GamePlayScene::Initialize()
 	goal_->SetCamera(camera_);
 	goal_->Update();
 
-	UpdateEnemyPopCommands("enemyPop.csv");
-
 	//弾リセット
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
 		bullet->Reset();
@@ -271,29 +269,58 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			model = it->second;
 		}
 
-		// モデルを指定して3Dオブジェクトを生成
-		TouchableObject* newObject = TouchableObject::Create(model);
+		if (objectData.objectType.find("Enemy") == 0)
+		{
+			//敵初期化
+			std::unique_ptr<Enemy> newenemy;
+			newenemy = Enemy::Create(modelEnemy_, player_, this);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newenemy->SetPosition(pos);
 
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newenemy->SetRotation(rot);
 
-		// 座標
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMStoreFloat3(&pos, objectData.trans);
-		newObject->SetPosition(pos);
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newenemy->SetScale(scale);
+			
+			newenemy->SetCamera(camera_);
+			newenemy->Update();
+			//リストに登録
+			enemys_.push_back(std::move(newenemy));
+		}
+		else//地形
+		{
 
-		// 回転角
-		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, objectData.rot);
-		newObject->SetRotation(rot);
+			// モデルを指定して3Dオブジェクトを生成
+			TouchableObject* newObject = TouchableObject::Create(model);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
 
-		// 座標
-		DirectX::XMFLOAT3 scale;
-		DirectX::XMStoreFloat3(&scale, objectData.scale);
-		newObject->SetScale(scale);
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
 
-		newObject->SetCamera(camera_);
-		newObject->Update();
-		// 配列に登録
-		objects.push_back(newObject);
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+			newObject->Update();
+			
+			// 配列に登録
+			objects.push_back(newObject);
+		}
+		
 	}
 
 }

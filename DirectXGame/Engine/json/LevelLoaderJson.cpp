@@ -59,6 +59,10 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName)
 				// ファイル名
 				objectData.fileName = object["file_name"];
 			}
+			if (object.contains("objecttype")) {
+				// タイプ名
+				objectData.objectType = object["objecttype"];
+			}
 
 			// トランスフォームのパラメータ読み込み
 			nlohmann::json& transform = object["transform"];
