@@ -12,9 +12,6 @@
 
 using namespace DirectX;
 
-//デフォルトテクスチャ格納ディレクトリ
-std::string GamePlayScene::DefaultEnemyPath = "Resources/csv/";
-
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
 Audio* GamePlayScene::audio_ = Audio::GetInstance();
@@ -38,7 +35,7 @@ void GamePlayScene::Initialize()
 
 	//OBJファイルからモデルデータを読み込む
 	modelPlayer_ = Model::LoadFromOBJ("player");
-	modelEnemy_ = Model::LoadFromOBJ("enemy1");
+	
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 
 	//プレイヤーの初期化
@@ -56,10 +53,12 @@ void GamePlayScene::Initialize()
 		bullet->Reset();
 	}
 	// モデル読み込み
+	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
 
+	models.insert(std::make_pair("enemy1", modelEnemy_));
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("sphere2", modelBox));

@@ -55,8 +55,6 @@ public:
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
 
 private://静的メンバ変数
-	//デフォルトテクスチャ格納ディレクトリ
-	static std::string DefaultEnemyPath;
 
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
