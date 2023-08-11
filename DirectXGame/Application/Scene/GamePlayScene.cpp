@@ -111,7 +111,7 @@ void GamePlayScene::Update()
 		pm_->Update();
 
 		//‚©‚ß‚¨‚×‚ç
-		if (player_->GetPosition().y <= -60.0f)
+		if (player_->GetPosition().y <= -60.0f || player_->IsDead())
 		{
 			isGameover = true;
 		}
