@@ -1,6 +1,6 @@
 #include "GamePlayScene.h"
 #include "LevelLoaderJson.h"
-#include "Player.h"
+
 #include "CollisionManager.h"
 #include "MeshCollider.h"
 #include "TouchableObject.h"
@@ -34,14 +34,9 @@ void GamePlayScene::Initialize()
 	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
 	//OBJファイルからモデルデータを読み込む
-	modelPlayer_ = Model::LoadFromOBJ("player");
+	
 	
 	modelGoal_ = Model::LoadFromOBJ("sphere");
-
-	//プレイヤーの初期化
-	player_ = Player::Create(modelPlayer_);
-	player_->SetCamera(camera_);
-	player_->Update();
 
 	//ゴール初期化
 	goal_ = Goal::Create(modelGoal_);
@@ -53,11 +48,13 @@ void GamePlayScene::Initialize()
 		bullet->Reset();
 	}
 	// モデル読み込み
+	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
 
+	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("enemy1", modelEnemy_));
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
@@ -97,58 +94,61 @@ void GamePlayScene::Update()
 	if (!isPause_)
 	{
 		//モデル呼び出し例
-		player_->Update();
-
-		goal_->Update();
-
-		for (auto& object : objects) object->Update();
-
-		lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
-
-		//カメラ
-		camera_->Update();
-		lightGroup_->Update();
-		pm_->Update();
-
-		//かめおべら
-		if (player_->GetPosition().y <= -60.0f || player_->IsDead())
+		for (std::unique_ptr<Player>& player : players_)
 		{
-			isGameover = true;
-		}
-		if (isGameover)
-		{
-			if (input_->TriggerKey(DIK_SPACE))
+			player->Update();
+
+			goal_->Update();
+
+			for (auto& object : objects) object->Update();
+
+			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
+
+			//カメラ
+			camera_->Update();
+			lightGroup_->Update();
+			pm_->Update();
+
+			//かめおべら
+			if (player->GetPosition().y <= -60.0f || player->IsDead())
 			{
-				camera_->Reset();
-				sceneManager_->ChangeScene("TITLE");
+				isGameover = true;
 			}
-		}
-		//クリア
-		else if (goal_->IsGoal())
-		{
-			
-			isclear = true;
-		}
-		if (isclear)
-		{
-			
-			if (input_->TriggerKey(DIK_SPACE))
+			if (isGameover)
 			{
-				camera_->Reset();
-				sceneManager_->ChangeScene("TITLE");
+				if (input_->TriggerKey(DIK_SPACE))
+				{
+					camera_->Reset();
+					sceneManager_->ChangeScene("TITLE");
+				}
 			}
-		}
-		colManager_->CheckAllCollisions();
+			//クリア
+			else if (goal_->IsGoal())
+			{
 
-		//Pause機能
-		if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
-		{
-			//ここでイージングの準備
-			es.Standby(false);
-			isBack = false;
-			spritePause_->SetPosition({ es.start,0.0f });
-			
-			isPause_ = true;
+				isclear = true;
+			}
+			if (isclear)
+			{
+
+				if (input_->TriggerKey(DIK_SPACE))
+				{
+					camera_->Reset();
+					sceneManager_->ChangeScene("TITLE");
+				}
+			}
+			colManager_->CheckAllCollisions();
+
+			//Pause機能
+			if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
+			{
+				//ここでイージングの準備
+				es.Standby(false);
+				isBack = false;
+				spritePause_->SetPosition({ es.start,0.0f });
+
+				isPause_ = true;
+			}
 		}
 	}
 	else if (isPause_)
@@ -185,7 +185,7 @@ void GamePlayScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	//モデル描画
-	player_->Draw();
+	for (std::unique_ptr<Player>& player : players_)player->Draw();
 	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
 	goal_->Draw();
@@ -199,7 +199,7 @@ void GamePlayScene::Draw()
 
 	//エフェクト描画
 	pm_->Draw();
-	player_->DrawParticle();
+	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -248,7 +248,6 @@ void GamePlayScene::Finalize()
 	delete spritePauseInfo_;
 	delete spriteGameover_;
 	//基盤系
-	delete player_;
 	delete goal_;
 
 }
@@ -268,11 +267,37 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			model = it->second;
 		}
 
-		if (objectData.objectType.find("Enemy") == 0)
+		if (objectData.objectType.find("PLAYER") == 0)
+		{
+			//プレイヤー初期化
+			std::unique_ptr<Player> newplayer;
+			newplayer = Player::Create(modelPlayer_);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newplayer->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newplayer->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newplayer->SetScale(scale);
+
+			newplayer->SetCamera(camera_);
+			newplayer->Update();
+			//リストに登録
+			players_.push_back(std::move(newplayer));
+		}
+		else if (objectData.objectType.find("ENEMY") == 0)
 		{
 			//敵初期化
 			std::unique_ptr<Enemy> newenemy;
-			newenemy = Enemy::Create(modelEnemy_, player_, this);
+			std::unique_ptr<Player>& player = players_.front();
+			newenemy = Enemy::Create(modelEnemy_, player.get(), this);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -293,6 +318,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			enemys_.push_back(std::move(newenemy));
 		}
+		
 		else//地形
 		{
 

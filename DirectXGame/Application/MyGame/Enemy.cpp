@@ -227,10 +227,10 @@ void Enemy::UpdateAttackStage1() {
 	//‘¬“x
 	float cameraMove = camera_->GetEye().x;
 	//§Œä“_
-	start = { -30.0f+cameraMove,20.0f,100.0f };
-	p1 = { -10.0f+cameraMove,-10.0f,100.0f };
-	p2 = { 10.0f+cameraMove,50.0f,100.0f };
-	end = { 30.0f+cameraMove,20.0f,100.0f };
+	start = { -30.0f+cameraMove,10.0f,100.0f };
+	p1 = { -10.0f+cameraMove,-20.0f,100.0f };
+	p2 = { 10.0f+cameraMove,40.0f,100.0f };
+	end = { 30.0f+cameraMove,10.0f,100.0f };
 	//ŠÔ
 
 	//Œ»İŠÔ‚ğæ“¾‚·‚é

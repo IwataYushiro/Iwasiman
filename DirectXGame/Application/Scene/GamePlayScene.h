@@ -17,11 +17,11 @@
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
 #include "Easing.h"
+#include "Player.h"
 
 //jsonレベルデータ
 struct LevelData;
-//前方宣言
-class Player;
+
 class CollisionManager;
 class TouchableObject;
 
@@ -86,7 +86,7 @@ private:
 	bool isGameover = false;
 
 	//モデル
-	Player* player_ = nullptr;
+	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
 
 	std::list<std::unique_ptr<Enemy>> enemys_;

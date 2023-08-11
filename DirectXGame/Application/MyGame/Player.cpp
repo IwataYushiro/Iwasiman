@@ -16,16 +16,16 @@ Player::~Player() {
 	delete pmDash_;
 }
 
-Player* Player::Create(Model* model)
+std::unique_ptr<Player> Player::Create(Model* model)
 {
 	//インスタンス生成
-	Player* ins = new Player();
+	std::unique_ptr<Player> ins = std::make_unique<Player>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
 	if (!ins->Initialize())
 	{
-		delete ins;
+		ins.release();
 		assert(0);
 	}
 	//モデルのセット
@@ -43,9 +43,6 @@ bool Player::Initialize() {
 	objBullet_->SetModel(modelBullet_);
 	objBullet_->SetCamera(camera_);*/
 
-	//ワールド変換の初期化
-	pos = { -20.0f,-10.0f,-60.0f };
-	Object3d::SetPosition(pos);
 	//ジャンプしたか
 	onGround = true;
 

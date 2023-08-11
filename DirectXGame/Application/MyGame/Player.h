@@ -24,7 +24,7 @@ private:
 public:
 	~Player();
 
-	static Player* Create(Model* model = nullptr);
+	static std::unique_ptr<Player> Create(Model* model = nullptr);
 	//‰Šú‰»
 	bool Initialize() override;
 	//ƒŠƒZƒbƒgˆ—

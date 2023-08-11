@@ -164,7 +164,7 @@
                 "translation": [
                     -150.0,
                     30.0,
-                    20.0
+                    10.0
                 ],
                 "rotation": [
                     0.0,
@@ -178,7 +178,30 @@
                 ]
             },
             "file_name": "enemy1",
-            "objecttype": "Enemy"
+            "objecttype": "ENEMY"
+        },
+        {
+            "type": "MESH",
+            "name": "Player",
+            "transform": {
+                "translation": [
+                    60.0,
+                    -20.0,
+                    -8.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "player",
+            "objecttype": "PLAYER"
         }
     ]
 }
