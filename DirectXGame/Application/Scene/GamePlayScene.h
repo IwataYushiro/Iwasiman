@@ -92,7 +92,7 @@ private:
 	std::list<std::unique_ptr<Enemy>> enemys_;
 	Model* modelEnemy_ = nullptr;
 
-	Goal* goal_ = nullptr;
+	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;
 
 	LevelData* levelData = nullptr;

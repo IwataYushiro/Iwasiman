@@ -159,12 +159,12 @@
         },
         {
             "type": "MESH",
-            "name": "Enemy1",
+            "name": "Goal",
             "transform": {
                 "translation": [
-                    -150.0,
-                    30.0,
-                    10.0
+                    0.0,
+                    150.0,
+                    0.0
                 ],
                 "rotation": [
                     0.0,
@@ -172,13 +172,13 @@
                     0.0
                 ],
                 "scaling": [
-                    3.0,
-                    3.0,
-                    3.0
+                    10.0,
+                    10.0,
+                    10.0
                 ]
             },
-            "file_name": "enemy1",
-            "objecttype": "ENEMY"
+            "file_name": "sphere",
+            "objecttype": "GOAL"
         },
         {
             "type": "MESH",
@@ -202,6 +202,29 @@
             },
             "file_name": "player",
             "objecttype": "PLAYER"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1",
+            "transform": {
+                "translation": [
+                    -150.0,
+                    30.0,
+                    10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    3.0,
+                    3.0,
+                    3.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY"
         }
     ]
 }

@@ -7,16 +7,16 @@
 using namespace DirectX;
 CollisionManager* Goal::colManager_ = CollisionManager::GetInstance();
 
-Goal* Goal::Create(Model* model)
+std::unique_ptr<Goal> Goal::Create(Model* model)
 {
 	//インスタンス生成
-	Goal* ins = new Goal();
+	std::unique_ptr<Goal> ins = std::make_unique<Goal>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
 	if (!ins->Initialize())
 	{
-		delete ins;
+		ins.release();
 		assert(0);
 	}
 	//モデルのセット
@@ -27,12 +27,6 @@ Goal* Goal::Create(Model* model)
 bool Goal::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
-
-	//ワールド変換の初期化
-	pos = { 120.0f,0.0f,0.0f };
-	Object3d::SetPosition(pos);
-	scale = { 10.0f,10.0f,10.0f };
-	Object3d::SetScale(scale);
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));

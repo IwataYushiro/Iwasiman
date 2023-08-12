@@ -3,6 +3,8 @@
 #include "Model.h"
 #include "Object3d.h"
 #include <DirectXMath.h>
+#include <list>
+#include <memory>
 
 class CollisionManager;
 
@@ -17,7 +19,7 @@ private:
 
 public:
 	
-	static Goal* Create(Model* model = nullptr);
+	static std::unique_ptr<Goal> Create(Model* model = nullptr);
 	//‰Šú‰»
 	bool Initialize()override;
 	//XV
