@@ -127,4 +127,6 @@ private:
 private:
 	//スプライト読み込み
 	void LoadSprite();
+	//モデル読み込み
+	void LoadModel();
 };

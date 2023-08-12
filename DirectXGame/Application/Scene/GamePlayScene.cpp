@@ -38,20 +38,8 @@ void GamePlayScene::Initialize()
 		bullet->Reset();
 	}
 
-	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("player");
-	modelEnemy_ = Model::LoadFromOBJ("enemy1");
-	modelGoal_ = Model::LoadFromOBJ("sphere");
-	modelSkydome = Model::LoadFromOBJ("skydome");
-	modelGround = Model::LoadFromOBJ("ground");
-	modelBox = Model::LoadFromOBJ("sphere2", true);
-
-	models.insert(std::make_pair("player", modelPlayer_));
-	models.insert(std::make_pair("enemy1", modelEnemy_));
-	models.insert(std::make_pair("skydome", modelSkydome));
-	models.insert(std::make_pair("ground", modelGround));
-	models.insert(std::make_pair("sphere2", modelBox));
-
+	//モデル読み込み
+	LoadModel();
 	//レベルデータ読み込み
 	LoadLVData("stage1");
 
@@ -366,6 +354,25 @@ void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
 {
 	//リストに登録
 	enemyBullets_.push_back(std::move(enemyBullet));
+}
+
+void GamePlayScene::LoadModel()
+{
+	// モデル読み込み
+	modelPlayer_ = Model::LoadFromOBJ("player");
+	modelEnemy_ = Model::LoadFromOBJ("enemy1");
+	modelGoal_ = Model::LoadFromOBJ("sphere");
+	modelSkydome = Model::LoadFromOBJ("skydome");
+	modelGround = Model::LoadFromOBJ("ground");
+	modelBox = Model::LoadFromOBJ("sphere2", true);
+
+	models.insert(std::make_pair("player", modelPlayer_));
+	models.insert(std::make_pair("enemy1", modelEnemy_));
+	models.insert(std::make_pair("sphere", modelGoal_));
+	models.insert(std::make_pair("skydome", modelSkydome));
+	models.insert(std::make_pair("ground", modelGround));
+	models.insert(std::make_pair("sphere2", modelBox));
+
 }
 
 void GamePlayScene::LoadSprite()
