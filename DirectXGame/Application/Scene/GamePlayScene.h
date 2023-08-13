@@ -18,6 +18,7 @@
 #include "CollisionPrimitive.h"
 #include "Easing.h"
 #include "Player.h"
+#include "ItemJump.h"
 
 //jsonレベルデータ
 struct LevelData;
@@ -94,6 +95,9 @@ private:
 
 	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;
+
+	std::list<std::unique_ptr<ItemJump>> jItems_;
+	Model* modelItemJump_ = nullptr;
 
 	LevelData* levelData = nullptr;
 

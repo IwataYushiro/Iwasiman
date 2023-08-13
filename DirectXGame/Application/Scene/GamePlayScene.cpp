@@ -93,6 +93,7 @@ void GamePlayScene::Update()
 				isclear = true;
 			}
 		}
+		for (std::unique_ptr<ItemJump>& itemj : jItems_)itemj->Update();
 		for (auto& object : objects) object->Update();
 		
 		//カメラ
@@ -167,6 +168,7 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
+	for (std::unique_ptr<ItemJump>& itemj : jItems_)itemj->Draw();
 	for (auto& object : objects)object->Draw();
 
 	//モデル描画後処理
@@ -217,6 +219,7 @@ void GamePlayScene::Finalize()
 	delete modelPlayer_;
 	delete modelEnemy_;
 	delete modelSkydome;
+	delete modelItemJump_;
 	delete modelGround;
 	delete modelBox;
 	delete modelGoal_;
@@ -296,7 +299,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		}
 		else if (objectData.objectType.find("GOAL") == 0)
 		{
-			//敵初期化
+			//ゴール初期化
 			std::unique_ptr<Goal> newgoal;
 			newgoal = Goal::Create(modelGoal_);
 			// 座標
@@ -318,6 +321,31 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			newgoal->Update();
 			//リストに登録
 			goals_.push_back(std::move(newgoal));
+		}
+		else if (objectData.objectType.find("ITEMJUMP") == 0)
+		{
+			//アイテム初期化
+			std::unique_ptr<ItemJump> newitemj;
+			newitemj = ItemJump::Create(modelItemJump_);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newitemj->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newitemj->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newitemj->SetScale(scale);
+
+			newitemj->SetCamera(camera_);
+			newitemj->Update();
+			//リストに登録
+			jItems_.push_back(std::move(newitemj));
 		}
 		else//地形
 		{
@@ -362,6 +390,7 @@ void GamePlayScene::LoadModel()
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy_ = Model::LoadFromOBJ("enemy1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
+	modelItemJump_ = Model::LoadFromOBJ("itemjump");
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
@@ -369,6 +398,7 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("enemy1", modelEnemy_));
 	models.insert(std::make_pair("sphere", modelGoal_));
+	models.insert(std::make_pair("itemjump", modelItemJump_));
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("sphere2", modelBox));

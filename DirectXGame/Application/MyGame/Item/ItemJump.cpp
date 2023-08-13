@@ -1,16 +1,16 @@
-#include "Goal.h"
+#include "ItemJump.h"
 #include "SphereCollider.h"
 #include <cassert>
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
 
 using namespace DirectX;
-CollisionManager* Goal::colManager_ = CollisionManager::GetInstance();
+CollisionManager* ItemJump::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<Goal> Goal::Create(Model* model)
+std::unique_ptr<ItemJump> ItemJump::Create(Model* model)
 {
 	//インスタンス生成
-	std::unique_ptr<Goal> ins = std::make_unique<Goal>();
+	std::unique_ptr<ItemJump> ins = std::make_unique<ItemJump>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
@@ -24,26 +24,35 @@ std::unique_ptr<Goal> Goal::Create(Model* model)
 	return ins;
 }
 
-bool Goal::Initialize()
+bool ItemJump::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_GOAL);
+	collider->SetAttribute(COLLISION_ATTR_ITEM);
 
 	return true;
-	
+
 }
 
-void Goal::Update()
+void ItemJump::Update()
 {
+	if (isGet_)	count--;
+	
+	if (count <= 0.0f)
+	{
+		isGet_ = false;
+		count = 200.0f;
+	}
+	rotation.y += 2.0f;
+
 	Trans();
 	camera_->Update();
 	Object3d::Update();
 }
 
-void Goal::Trans()
+void ItemJump::Trans()
 {
 	XMMATRIX world;
 	//行列更新
@@ -65,7 +74,7 @@ void Goal::Trans()
 	Object3d::SetWorld(world);
 }
 
-XMFLOAT3 Goal::GetWorldPosition()
+XMFLOAT3 ItemJump::GetWorldPosition()
 {
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -78,13 +87,13 @@ XMFLOAT3 Goal::GetWorldPosition()
 	return worldPos;
 }
 
-void Goal::Draw()
+void ItemJump::Draw()
 {
-	Object3d::Draw();
+	if (!isGet_)Object3d::Draw();
 }
 
-void Goal::OnCollision(const CollisionInfo& info, unsigned short attribute)
+void ItemJump::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
-	if(attribute==COLLISION_ATTR_ALLIES)isGoal_ = true;
-	
+	if (attribute == COLLISION_ATTR_ALLIES)isGet_ = true;
+
 }

@@ -193,6 +193,12 @@
     <Filter Include="Source File\Engine\3D\Light">
       <UniqueIdentifier>{54670238-1e42-4114-bd78-9be17ce69585}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header File\Application\MyGame\Item">
+      <UniqueIdentifier>{29be73ed-b734-4c89-a8d4-ccd9c94612f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Application\MyGame\Item">
+      <UniqueIdentifier>{351f495c-f53f-48c4-91ee-deed59fd40aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -505,6 +511,9 @@
     <ClCompile Include="DirectXGame\Engine\Math\Easing.cpp">
       <Filter>Source File\Engine\Math</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemJump.cpp">
+      <Filter>Source File\Application\MyGame\Item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -665,6 +674,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\Math\Easing.h">
       <Filter>Header File\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemJump.h">
+      <Filter>Header File\Application\MyGame\Item</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -112,7 +112,6 @@ private:
 	//パーティクル
 	Particle* particleDash_ = nullptr;
 	ParticleManager* pmDash_ = nullptr;
-	
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
