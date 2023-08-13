@@ -84,6 +84,7 @@ private:
 
 	//ジャンプしてるか
 	bool onGround = true;
+	float jumpVYFist = 2.0f;
 	XMFLOAT3 fallVec;
 
 	//奥側に移動
@@ -115,4 +116,6 @@ private:
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
+	bool OnGround()const { return onGround; }
+	void SetJumpVYFist(float jumpFist) { this->jumpVYFist = jumpFist; }
 };

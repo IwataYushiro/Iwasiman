@@ -254,7 +254,7 @@ void Player::FallAndJump()
 	else if (input_->TriggerKey(DIK_SPACE))
 	{
 		onGround = false;
-		const float jumpVYFist = 2.0f;
+		
 		fallVec = { 0.0f,jumpVYFist,0.0f };
 	}
 

@@ -326,7 +326,8 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		{
 			//アイテム初期化
 			std::unique_ptr<ItemJump> newitemj;
-			newitemj = ItemJump::Create(modelItemJump_);
+			std::unique_ptr<Player>& player = players_.front();
+			newitemj = ItemJump::Create(modelItemJump_,player.get());
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);

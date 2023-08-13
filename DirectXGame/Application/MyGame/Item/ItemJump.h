@@ -7,6 +7,7 @@
 #include <list>
 #include <memory>
 
+class Player;
 class CollisionManager;
 
 class ItemJump :public Object3d
@@ -20,7 +21,7 @@ private:
 
 public:
 
-	static std::unique_ptr<ItemJump> Create(Model* model = nullptr);
+	static std::unique_ptr<ItemJump> Create(Model* model = nullptr, Player* player = nullptr);
 	//初期化
 	bool Initialize()override;
 	//更新
@@ -49,7 +50,10 @@ private:
 	bool isGet_ = false;
 
 	float radius_ =3.0f;
+
+	Player* player_ = nullptr;
 public: //アクセッサ、インライン関数
 	bool IsGet() const { return isGet_; }
+	void SetPlayer(Player* player) { player_ = player; }
 };
 #pragma once

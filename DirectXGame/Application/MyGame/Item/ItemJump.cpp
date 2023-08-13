@@ -1,4 +1,5 @@
 #include "ItemJump.h"
+#include "Player.h"
 #include "SphereCollider.h"
 #include <cassert>
 #include "CollisionAttribute.h"
@@ -7,10 +8,11 @@
 using namespace DirectX;
 CollisionManager* ItemJump::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<ItemJump> ItemJump::Create(Model* model)
+std::unique_ptr<ItemJump> ItemJump::Create(Model* model, Player* player)
 {
 	//インスタンス生成
 	std::unique_ptr<ItemJump> ins = std::make_unique<ItemJump>();
+	
 	if (ins == nullptr) return nullptr;
 
 	//初期化
@@ -21,6 +23,7 @@ std::unique_ptr<ItemJump> ItemJump::Create(Model* model)
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	if (player)ins->SetPlayer(player);
 	return ins;
 }
 
@@ -38,10 +41,19 @@ bool ItemJump::Initialize()
 
 void ItemJump::Update()
 {
-	if (isGet_)	count--;
+	if (isGet_)
+	{
+		if (player_->OnGround())player_->SetJumpVYFist(4.0f);
+		count--;
+	}
+	else 
+	{
+		if (player_->OnGround())player_->SetJumpVYFist(2.0f);
+	}
 	
 	if (count <= 0.0f)
 	{
+		
 		isGet_ = false;
 		count = 200.0f;
 	}
