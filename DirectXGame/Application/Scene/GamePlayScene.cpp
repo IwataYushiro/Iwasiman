@@ -93,7 +93,24 @@ void GamePlayScene::Update()
 				isclear = true;
 			}
 		}
-		for (std::unique_ptr<ItemJump>& itemj : jItems_)itemj->Update();
+		for (std::unique_ptr<ItemJump>& itemj : jItems_)
+		{
+			const float timer = itemj->MAX_TIME / 60.0f;
+			Easing spriteEase = { 1.0f,0.0f,timer };
+			if (itemj->IsGet())
+			{	
+				spriteEase.ease_out_cubic();
+				spriteItemJumpBar_->SetColor({spriteEase.num_X, spriteEase.num_X, spriteEase.num_X,1.0f});
+			}
+			else
+			{
+				//ここでイージングの準備
+				spriteEase.Standby(false);
+				spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,spriteEase.start });
+			}
+			itemj->Update();
+			
+		}
 		for (auto& object : objects) object->Update();
 		
 		//カメラ
@@ -155,7 +172,7 @@ void GamePlayScene::Update()
 		}
 	}
 	spritePause_->Update();
-
+	spriteItemJumpBar_->Update();
 }
 
 void GamePlayScene::Draw()
@@ -189,7 +206,17 @@ void GamePlayScene::Draw()
 	if (isPause_)spritePause_->Draw();
 	else if (isclear)spriteClear_->Draw();
 	else if (isGameover)spriteGameover_->Draw();
-	else spritePauseInfo_->Draw();
+	else
+	{
+		spritePauseInfo_->Draw();
+		for (std::unique_ptr<ItemJump>& itemj : jItems_)
+		{
+			if (itemj->IsGet())
+			{
+				spriteItemJumpBar_->Draw();
+			}
+		}
+	}
 	//ImGuiの表示
 }
 
@@ -228,6 +255,7 @@ void GamePlayScene::Finalize()
 	delete spriteClear_;
 	delete spritePauseInfo_;
 	delete spriteGameover_;
+	delete spriteItemJumpBar_;
 
 }
 
@@ -426,4 +454,11 @@ void GamePlayScene::LoadSprite()
 	spriteClear_->Update();
 	spritePauseInfo_->Update();
 	spriteGameover_->Update();
+
+	//アイテム関係
+	spCommon_->LoadTexture(30, "itemtex/itemjumpbar.png");
+	spriteItemJumpBar_->Initialize(spCommon_, 30);
+	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f});
+
+	spriteItemJumpBar_->Update();
 }

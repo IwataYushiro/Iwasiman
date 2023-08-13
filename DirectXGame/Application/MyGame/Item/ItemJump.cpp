@@ -35,6 +35,7 @@ bool ItemJump::Initialize()
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ITEM);
 
+
 	return true;
 
 }
@@ -44,18 +45,18 @@ void ItemJump::Update()
 	if (isGet_)
 	{
 		if (player_->OnGround())player_->SetJumpVYFist(4.0f);
-		count--;
+		count++;
 	}
 	else 
 	{
 		if (player_->OnGround())player_->SetJumpVYFist(2.0f);
 	}
 	
-	if (count <= 0.0f)
+	if (count >= MAX_TIME)
 	{
 		
 		isGet_ = false;
-		count = 200.0f;
+		count = 0.0f;
 	}
 	rotation.y += 2.0f;
 

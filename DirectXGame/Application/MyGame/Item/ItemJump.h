@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Object3d.h"
 #include <DirectXMath.h>
+#include "Sprite.h"
 #include <list>
 #include <memory>
 
@@ -19,6 +20,8 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
+public://定数
+	const float MAX_TIME = 200.0f;
 public:
 
 	static std::unique_ptr<ItemJump> Create(Model* model = nullptr, Player* player = nullptr);
@@ -45,13 +48,15 @@ private:
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 
-	float count = 200.0f;
+	float count = 0.0f;
 
 	bool isGet_ = false;
 
 	float radius_ =3.0f;
 
 	Player* player_ = nullptr;
+
+
 public: //アクセッサ、インライン関数
 	bool IsGet() const { return isGet_; }
 	void SetPlayer(Player* player) { player_ = player; }
