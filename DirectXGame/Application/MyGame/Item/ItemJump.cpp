@@ -44,6 +44,7 @@ void ItemJump::Update()
 {
 	if (isGet_)
 	{
+		ease.ease_out_cubic();
 		if (player_->OnGround())player_->SetJumpVYFist(4.0f);
 		count++;
 	}
@@ -107,6 +108,9 @@ void ItemJump::Draw()
 
 void ItemJump::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
-	if (attribute == COLLISION_ATTR_ALLIES)isGet_ = true;
-
+	if (attribute == COLLISION_ATTR_ALLIES)
+	{
+		ease.Standby(false);
+		isGet_ = true;
+	}
 }

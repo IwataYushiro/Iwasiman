@@ -1,6 +1,6 @@
 #pragma once
-#pragma once
 #include "Camera.h"
+#include "Easing.h"
 #include "Model.h"
 #include "Object3d.h"
 #include <DirectXMath.h>
@@ -56,9 +56,12 @@ private:
 
 	Player* player_ = nullptr;
 
+	const float timer = MAX_TIME / 60.0f;
+	Easing ease = Easing(1.0f, 0.0f, timer);
 
 public: //アクセッサ、インライン関数
 	bool IsGet() const { return isGet_; }
 	void SetPlayer(Player* player) { player_ = player; }
+	Easing GetEasing() { return ease; }
 };
-#pragma once
+

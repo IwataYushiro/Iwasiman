@@ -95,18 +95,16 @@ void GamePlayScene::Update()
 		}
 		for (std::unique_ptr<ItemJump>& itemj : jItems_)
 		{
-			const float timer = itemj->MAX_TIME / 60.0f;
-			Easing spriteEase = Easing(1.0f, 0.0f, timer);
+			
 			if (itemj->IsGet())
 			{
-				spriteEase.ease_out_cubic();
-				spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, spriteEase.num_X });
+				
+				spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, itemj->GetEasing().num_X});
 			}
 			else
 			{
 				//ここでイージングの準備
-				spriteEase.Standby(false);
-				spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,spriteEase.start });
+				spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,itemj->GetEasing().start});
 			}
 			itemj->Update();
 
