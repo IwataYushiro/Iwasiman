@@ -247,7 +247,8 @@
                 ]
             },
             "file_name": "itemjump",
-            "objecttype": "ITEMJUMP"
+            "objecttype": "ITEM",
+            "objectpattern": "JUMP"
         }
     ]
 }

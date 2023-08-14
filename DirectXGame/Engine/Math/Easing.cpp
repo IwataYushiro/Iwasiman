@@ -14,6 +14,7 @@ Easing::Easing()
 	this->maxtime = 1.0f;
 
 	//イージングプロパティ
+	num_X = 0.0f;
 	timeNow = 0.0f;					//時間
 	startpos = start;				//開始位置
 	differencepos = end - start;			//開始位置-終了位置の差
@@ -31,6 +32,7 @@ Easing::Easing(float start, float end, float time)
 	this->maxtime = time;
 
 	//イージングプロパティ
+	num_X = 0.0f;
 	timeNow = 0.0f;					//時間
 	totaltime = time;				//合計時間
 	startpos = start;				//開始位置
@@ -42,6 +44,7 @@ void Easing::Standby(bool reverse)
 {
 	startCount = chrono::steady_clock::now();
 	isReverse = reverse;
+	num_X = 0.0f;
 	if (isReverse)
 	{
 		startpos = end;				//開始位置

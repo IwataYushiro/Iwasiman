@@ -10,7 +10,7 @@ public:
 public:
 	Easing();
 	Easing(float start, float end, float time);
-	float num_X = 0.0f;//•Ô‚·—p
+	float num_X;//•Ô‚·—p
 
 public://ŠÖ”
 	void Standby(bool reverse);

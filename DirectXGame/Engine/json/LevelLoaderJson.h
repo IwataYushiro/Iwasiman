@@ -12,6 +12,8 @@ struct LevelData
 		std::string fileName;
 		//オブジェクトタイプ
 		std::string objectType;
+		//オブジェクトパターン
+		std::string objectPattern;
 		//平行移動
 		DirectX::XMVECTOR trans;
 		//回転角

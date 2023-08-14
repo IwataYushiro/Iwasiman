@@ -125,7 +125,7 @@ private:
 	//敵弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
 	//イージングマネージャー(左から右へ)
-	Easing es = { -(float)WinApp::GetInstance()->window_width,0.0f,1.0f };
+	Easing es = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
 	//○○した瞬間に○○解除を防ぐ用のフラグ
 	bool isBack = false;
 

@@ -96,11 +96,11 @@ void GamePlayScene::Update()
 		for (std::unique_ptr<ItemJump>& itemj : jItems_)
 		{
 			const float timer = itemj->MAX_TIME / 60.0f;
-			Easing spriteEase = { 1.0f,0.0f,timer };
+			Easing spriteEase = Easing(1.0f, 0.0f, timer);
 			if (itemj->IsGet())
-			{	
+			{
 				spriteEase.ease_out_cubic();
-				spriteItemJumpBar_->SetColor({spriteEase.num_X, spriteEase.num_X, spriteEase.num_X,1.0f});
+				spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, spriteEase.num_X });
 			}
 			else
 			{
@@ -109,10 +109,10 @@ void GamePlayScene::Update()
 				spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,spriteEase.start });
 			}
 			itemj->Update();
-			
+
 		}
 		for (auto& object : objects) object->Update();
-		
+
 		//カメラ
 		camera_->Update();
 		lightGroup_->Update();
@@ -350,31 +350,35 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			goals_.push_back(std::move(newgoal));
 		}
-		else if (objectData.objectType.find("ITEMJUMP") == 0)
+		else if (objectData.objectType.find("ITEM") == 0)
 		{
-			//アイテム初期化
-			std::unique_ptr<ItemJump> newitemj;
-			std::unique_ptr<Player>& player = players_.front();
-			newitemj = ItemJump::Create(modelItemJump_,player.get());
-			// 座標
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMStoreFloat3(&pos, objectData.trans);
-			newitemj->SetPosition(pos);
+			if (objectData.objectPattern.find("JUMP") == 0)
+			{
+				//アイテム初期化
+				std::unique_ptr<ItemJump> newitemj;
+				std::unique_ptr<Player>& player = players_.front();
+				newitemj = ItemJump::Create(modelItemJump_, player.get());
+				// 座標
+				DirectX::XMFLOAT3 pos;
+				DirectX::XMStoreFloat3(&pos, objectData.trans);
+				newitemj->SetPosition(pos);
 
-			// 回転角
-			DirectX::XMFLOAT3 rot;
-			DirectX::XMStoreFloat3(&rot, objectData.rot);
-			newitemj->SetRotation(rot);
+				// 回転角
+				DirectX::XMFLOAT3 rot;
+				DirectX::XMStoreFloat3(&rot, objectData.rot);
+				newitemj->SetRotation(rot);
 
-			// 座標
-			DirectX::XMFLOAT3 scale;
-			DirectX::XMStoreFloat3(&scale, objectData.scale);
-			newitemj->SetScale(scale);
+				// 座標
+				DirectX::XMFLOAT3 scale;
+				DirectX::XMStoreFloat3(&scale, objectData.scale);
+				newitemj->SetScale(scale);
 
-			newitemj->SetCamera(camera_);
-			newitemj->Update();
-			//リストに登録
-			jItems_.push_back(std::move(newitemj));
+				newitemj->SetCamera(camera_);
+				newitemj->Update();
+				//リストに登録
+				jItems_.push_back(std::move(newitemj));
+			}
+
 		}
 		else//地形
 		{
@@ -458,7 +462,7 @@ void GamePlayScene::LoadSprite()
 	//アイテム関係
 	spCommon_->LoadTexture(30, "itemtex/itemjumpbar.png");
 	spriteItemJumpBar_->Initialize(spCommon_, 30);
-	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f});
+	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f });
 
 	spriteItemJumpBar_->Update();
 }
