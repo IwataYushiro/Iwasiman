@@ -11,6 +11,7 @@
 #include <chrono>
 
 class CollisionManager;
+class GamePlayScene;
 
 class Player:public Object3d
 {
@@ -24,7 +25,8 @@ private:
 public:
 	~Player();
 
-	static std::unique_ptr<Player> Create(Model* model = nullptr);
+	static std::unique_ptr<Player> Create(Model* model = nullptr,
+		GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
 	//リセット処理
@@ -68,11 +70,9 @@ private:
 	static CollisionManager* colManager_;
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
-	
+	bool isRight_ = true;
 	//モデル
 	Model* modelBullet_ = nullptr;
-
-	Object3d* objBullet_ = nullptr;
 	
 	//インプット
 	Input* input_ = nullptr;
@@ -114,6 +114,9 @@ private:
 	Particle* particleDash_ = nullptr;
 	ParticleManager* pmDash_ = nullptr;
 
+	//ゲームシーン
+	GamePlayScene* gameScene_ = nullptr;
+
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 	bool OnGround()const { return onGround; }
@@ -122,4 +125,6 @@ public: //アクセッサ、インライン関数
 	//ライフ
 	void SetLife(int life) { this->life_ = life; }
 	int GetLife()const { return life_; }
+	//ゲームシーン
+	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

@@ -33,9 +33,9 @@ void GamePlayScene::Initialize()
 	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
 	//弾リセット
-	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-		bullet->Reset();
-	}
+	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Reset();
+	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Reset();
+	
 
 	//モデル読み込み
 	LoadModel();
@@ -59,8 +59,13 @@ void GamePlayScene::Initialize()
 void GamePlayScene::Update()
 {
 	//死亡フラグの立った弾を削除
+	playerBullets_.remove_if(
+		[](std::unique_ptr<PlayerBullet>& pbullet) { return pbullet->IsDead(); });
 	enemyBullets_.remove_if(
-		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
+		[](std::unique_ptr<EnemyBullet>& ebullet) { return ebullet->IsDead(); });
+
+	players_.remove_if(
+		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
 
@@ -80,6 +85,9 @@ void GamePlayScene::Update()
 			//かめおべら
 			if (player->GetPosition().y <= -60.0f || player->IsDead())isGameover = true;
 		}
+		//弾更新
+		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
+
 		for (std::unique_ptr<Goal>& goal : goals_)
 		{
 			goal->Update();
@@ -93,12 +101,10 @@ void GamePlayScene::Update()
 			else spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,itemj->GetEasing().start});
 			itemj->Update();
 		}
-		for (std::unique_ptr<ItemHeal>& itemh : hItems_)
-		{
-			itemh->Update();
-		}
+		for (std::unique_ptr<ItemHeal>& itemh : hItems_)itemh->Update();
+		
 
-		for (auto& object : objects) object->Update();
+		for (Object3d*& object : objects) object->Update();
 
 		//カメラ
 		camera_->Update();
@@ -180,6 +186,7 @@ void GamePlayScene::Draw()
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	//モデル描画
 	for (std::unique_ptr<Player>& player : players_)player->Draw();
+	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Draw();
 	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
@@ -272,7 +279,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		{
 			//プレイヤー初期化
 			std::unique_ptr<Player> newplayer;
-			newplayer = Player::Create(modelPlayer_);
+			newplayer = Player::Create(modelPlayer_, this);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -425,7 +432,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			newObject->SetScale(scale);
 
 			newObject->SetCamera(camera_);
-			newObject->Update();
+
 
 			// 配列に登録
 			objects.push_back(newObject);
@@ -433,6 +440,12 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 
 	}
 
+}
+
+void GamePlayScene::AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet)
+{
+	//リストに登録
+	playerBullets_.push_back(std::move(playerBullet));
 }
 
 void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)

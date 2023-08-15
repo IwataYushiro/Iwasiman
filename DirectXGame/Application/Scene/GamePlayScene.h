@@ -9,17 +9,20 @@
 #include "ParticleManager.h"
 #include "Enemy.h"
 #include "Goal.h"
+#include "Player.h"
+
+#include "SceneManager.h"
+#include "CollisionPrimitive.h"
+#include "Easing.h"
+
+
+#include "ItemJump.h"
+#include "ItemHeal.h"
+
 #include <vector>
 #include <map>
 #include <sstream>
 #include <string>
-#include "SceneManager.h"
-#include "CollisionPrimitive.h"
-#include "Easing.h"
-#include "Player.h"
-#include "ItemJump.h"
-#include "ItemHeal.h"
-
 //jsonレベルデータ
 struct LevelData;
 
@@ -52,6 +55,8 @@ public:
 	void LoadLVData(const std::string& stagePath);
 
 public:
+	//自機弾追加
+	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
 	//敵弾追加
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
 
@@ -125,6 +130,8 @@ private:
 	CollisionManager* colManager_ = nullptr;
 
 private:
+	//自機弾
+	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
 	//敵弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
 	//イージングマネージャー(左から右へ)
