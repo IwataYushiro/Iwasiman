@@ -1,6 +1,6 @@
 #pragma once
 #include "Camera.h"
-#include "Easing.h"
+#include "ParticleManager.h"
 #include "Model.h"
 #include "Object3d.h"
 #include <DirectXMath.h>
@@ -20,9 +20,8 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-public://定数
-	const float MAX_TIME = 200.0f;
 public:
+	~ItemHeal();
 
 	static std::unique_ptr<ItemHeal> Create(Model* model = nullptr, Player* player = nullptr);
 	//初期化
@@ -38,6 +37,8 @@ public:
 
 	//描画
 	void Draw();
+	//パーティクル描画
+	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info, unsigned short attribute)override;
@@ -48,14 +49,14 @@ private:
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 
-	float count = 0.0f;
-
 	bool isGet_ = false;
 
 	float radius_ = 3.0f;
 
 	Player* player_ = nullptr;
 
+	Particle* p = nullptr;
+	ParticleManager* pm_ = nullptr;
 
 public: //アクセッサ、インライン関数
 	bool IsGet() const { return isGet_; }

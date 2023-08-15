@@ -8,6 +8,12 @@
 using namespace DirectX;
 CollisionManager* ItemHeal::colManager_ = CollisionManager::GetInstance();
 
+ItemHeal::~ItemHeal()
+{
+	delete p;
+	delete pm_;
+}
+
 std::unique_ptr<ItemHeal> ItemHeal::Create(Model* model, Player* player)
 {
 	//インスタンス生成
@@ -35,23 +41,23 @@ bool ItemHeal::Initialize()
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ITEM);
 
-
+	//パーティクル
+	p = Particle::LoadFromParticleTexture("particle6.png");
+	pm_ = ParticleManager::Create();
+	pm_->SetParticleModel(p);
+	
 	return true;
 
 }
 
 void ItemHeal::Update()
 {
-	if (count >= MAX_TIME)
-	{
-
-		isGet_ = false;
-		count = 0.0f;
-	}
+	pm_->SetCamera(camera_);
 	rotation.y += 2.0f;
 
 	Trans();
 	camera_->Update();
+	pm_->Update();
 	Object3d::Update();
 }
 
@@ -95,11 +101,18 @@ void ItemHeal::Draw()
 	if (!isGet_)Object3d::Draw();
 }
 
+void ItemHeal::DrawParticle()
+{
+	pm_->Draw();
+}
+
 void ItemHeal::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
 	if (isGet_)return;//多重ヒットを防止
 	if (attribute == COLLISION_ATTR_ALLIES)
 	{
+		pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
+		
 		player_->SetLife(player_->GetLife() + 1);
 		isGet_ = true;
 	}

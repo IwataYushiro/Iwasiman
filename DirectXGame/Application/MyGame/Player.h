@@ -121,5 +121,5 @@ public: //アクセッサ、インライン関数
 	void SetJumpVYFist(float jumpFist) { this->jumpVYFist = jumpFist; }
 	//ライフ
 	void SetLife(int life) { this->life_ = life; }
-	int GetLife() { return life_; }
+	int GetLife()const { return life_; }
 };

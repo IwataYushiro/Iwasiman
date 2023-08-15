@@ -4,7 +4,6 @@
 #include "CollisionManager.h"
 #include "MeshCollider.h"
 #include "TouchableObject.h"
-#include <typeinfo>
 
 #include <cassert>
 #include <sstream>
@@ -161,6 +160,17 @@ void GamePlayScene::Update()
 	}
 	spritePause_->Update();
 	spriteItemJumpBar_->Update();
+	
+		//ImGui	
+		imguiManager_->Begin();
+		int plife[1] = { players_.front()->GetLife() };
+		ImGui::Begin("Player");
+		ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
+		ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
+		ImGui::InputInt("plife", plife);
+		ImGui::End();
+		imguiManager_->End();
+	
 }
 
 void GamePlayScene::Draw()
@@ -186,6 +196,7 @@ void GamePlayScene::Draw()
 	//エフェクト描画
 	pm_->Draw();
 	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();
+	for (std::unique_ptr<ItemHeal>& itemh : hItems_)itemh->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -203,7 +214,6 @@ void GamePlayScene::Draw()
 			if (itemj->IsGet())spriteItemJumpBar_->Draw();
 		}
 	}
-	//ImGuiの表示
 }
 
 void GamePlayScene::Finalize()
