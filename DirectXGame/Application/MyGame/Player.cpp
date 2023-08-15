@@ -76,9 +76,8 @@ void Player::Reset() {
 	life_ = 5;
 	isDead_ = false;
 	//’eƒŠƒZƒbƒg
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-		bullet->Reset();
-	}
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) bullet->Reset();
+	
 }
 void Player::Update() {
 	input_ = Input::GetInstance();

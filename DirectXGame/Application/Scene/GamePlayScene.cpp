@@ -259,7 +259,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 	levelData = LevelLoader::LoadFile(stagePath);
 
 	// レベルデータからオブジェクトを生成、配置
-	for (auto& objectData : levelData->objects) {
+	for (LevelData::ObjectData& objectData : levelData->objects) {
 
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
@@ -267,7 +267,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		if (it != models.end()) {
 			model = it->second;
 		}
-
+		//プレイヤー
 		if (objectData.objectType.find("PLAYER") == 0)
 		{
 			//プレイヤー初期化
@@ -293,6 +293,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			players_.push_back(std::move(newplayer));
 		}
+		//敵
 		else if (objectData.objectType.find("ENEMY") == 0)
 		{
 			//敵初期化
@@ -319,6 +320,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			enemys_.push_back(std::move(newenemy));
 		}
+		//ゴール
 		else if (objectData.objectType.find("GOAL") == 0)
 		{
 			//ゴール初期化
@@ -344,8 +346,10 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			goals_.push_back(std::move(newgoal));
 		}
+		//アイテム
 		else if (objectData.objectType.find("ITEM") == 0)
 		{
+			//ジャンプ
 			if (objectData.objectPattern.find("JUMP") == 0)
 			{
 				//アイテム初期化
@@ -372,6 +376,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 				//リストに登録
 				jItems_.push_back(std::move(newitemj));
 			}
+			//回復アイテム
 			else if (objectData.objectPattern.find("HEAL") == 0)
 			{
 				//アイテム初期化
@@ -399,9 +404,9 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 				hItems_.push_back(std::move(newitemh));
 			}
 		}
-		else//地形
+		//地形
+		else
 		{
-
 			// モデルを指定して3Dオブジェクトを生成
 			TouchableObject* newObject = TouchableObject::Create(model);
 			// 座標

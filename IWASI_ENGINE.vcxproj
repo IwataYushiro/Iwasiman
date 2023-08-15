@@ -359,6 +359,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\EnemyBullet.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Goal.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemAttack.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemHeal.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemJump.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp" />
@@ -410,6 +411,7 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\EnemyBullet.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Goal.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemAttack.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemHeal.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemJump.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h" />
