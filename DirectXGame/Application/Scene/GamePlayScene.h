@@ -19,6 +19,7 @@
 #include "Easing.h"
 #include "Player.h"
 #include "ItemJump.h"
+#include "ItemHeal.h"
 
 //jsonレベルデータ
 struct LevelData;
@@ -99,6 +100,9 @@ private:
 
 	std::list<std::unique_ptr<ItemJump>> jItems_;
 	Model* modelItemJump_ = nullptr;
+
+	std::list<std::unique_ptr<ItemHeal>> hItems_;
+	Model* modelItemHeal_ = nullptr;
 
 	LevelData* levelData = nullptr;
 

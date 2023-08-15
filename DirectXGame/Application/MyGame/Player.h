@@ -117,5 +117,9 @@ private:
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 	bool OnGround()const { return onGround; }
+	//ジャンプ力
 	void SetJumpVYFist(float jumpFist) { this->jumpVYFist = jumpFist; }
+	//ライフ
+	void SetLife(int life) { this->life_ = life; }
+	int GetLife() { return life_; }
 };

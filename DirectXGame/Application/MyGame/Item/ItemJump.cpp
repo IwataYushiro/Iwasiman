@@ -108,7 +108,7 @@ void ItemJump::Draw()
 
 void ItemJump::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
-	if (isGet_)return;
+	if (isGet_)return;//‘½dƒqƒbƒg‚ğ–h~
 	if (attribute == COLLISION_ATTR_ALLIES)
 	{
 		ease.Standby(false);
