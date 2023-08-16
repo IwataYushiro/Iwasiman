@@ -40,12 +40,12 @@ bool ItemHeal::Initialize()
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ITEM);
-
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	//パーティクル
 	p = Particle::LoadFromParticleTexture("particle6.png");
 	pm_ = ParticleManager::Create();
 	pm_->SetParticleModel(p);
-	
+
 	return true;
 
 }
@@ -106,14 +106,18 @@ void ItemHeal::DrawParticle()
 	pm_->Draw();
 }
 
-void ItemHeal::OnCollision(const CollisionInfo& info, unsigned short attribute)
+void ItemHeal::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (isGet_)return;//多重ヒットを防止
 	if (attribute == COLLISION_ATTR_PLAYERS)
 	{
-		pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
-		
-		player_->SetLife(player_->GetLife() + 1);
-		isGet_ = true;
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)
+		{
+			pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
+
+			player_->SetLife(player_->GetLife() + 1);
+			isGet_ = true;
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 	}
 }

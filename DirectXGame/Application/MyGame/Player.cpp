@@ -64,6 +64,7 @@ bool Player::Initialize() {
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 	collider->SetAttribute(COLLISION_ATTR_PLAYERS);
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 
 	return true;
 }
@@ -476,7 +477,7 @@ XMFLOAT3 Player::GetWorldPosition() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void Player::OnCollision(const CollisionInfo& info, unsigned short attribute) {
+void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
 		life_--;

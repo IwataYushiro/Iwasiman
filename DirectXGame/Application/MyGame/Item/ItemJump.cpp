@@ -34,7 +34,7 @@ bool ItemJump::Initialize()
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ITEM);
-
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 
 	return true;
 
@@ -106,12 +106,16 @@ void ItemJump::Draw()
 	if (!isGet_)Object3d::Draw();
 }
 
-void ItemJump::OnCollision(const CollisionInfo& info, unsigned short attribute)
+void ItemJump::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (isGet_)return;//多重ヒットを防止
 	if (attribute == COLLISION_ATTR_PLAYERS)
 	{
-		ease.Standby(false);
-		isGet_ = true;
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)
+		{
+			ease.Standby(false);
+			isGet_ = true;
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 	}
 }

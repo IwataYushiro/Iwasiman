@@ -9,5 +9,5 @@ const unsigned short COLLISION_ATTR_GOAL = 0b1 << 3;//ゴール
 const unsigned short COLLISION_ATTR_ITEM = 0b1 << 4;//アイテム
 
 //サブ属性
-const unsigned short COLLISION_ATTR_SUB_NONE = (0b1 << 15) + 1;//サブ属性なし
-const unsigned short COLLISION_ATTR_SUB_PLAYERBULLET = (0b1 << 15) + 2;//弾
+const unsigned short SUBCOLLISION_ATTR_NONE = (0b1 << 15) + 1;//サブ属性なし
+const unsigned short SUBCOLLISION_ATTR_BULLET = (0b1 << 15) + 2;//弾

@@ -31,7 +31,7 @@ bool Goal::Initialize()
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_GOAL);
-
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	return true;
 	
 }
@@ -83,8 +83,13 @@ void Goal::Draw()
 	Object3d::Draw();
 }
 
-void Goal::OnCollision(const CollisionInfo& info, unsigned short attribute)
+void Goal::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
-	if(attribute==COLLISION_ATTR_PLAYERS)isGoal_ = true;
+	if (attribute == COLLISION_ATTR_PLAYERS)
+	{
+		if (subAttribute == SUBCOLLISION_ATTR_NONE) isGoal_ = true;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+	}
+		
 	
 }

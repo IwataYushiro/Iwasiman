@@ -50,6 +50,7 @@ bool Enemy::Initialize() {
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 
 	return true;
 }
@@ -319,8 +320,13 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 
 	return worldPos;
 }
-void Enemy::OnCollision(const CollisionInfo& info, unsigned short attribute)
+void Enemy::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
-	else if(attribute==COLLISION_ATTR_PLAYERS)life_--;
+	else if (attribute == COLLISION_ATTR_PLAYERS)
+	{
+		if(subAttribute==SUBCOLLISION_ATTR_NONE) return;
+		else if(subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+	}
+		
 }

@@ -41,7 +41,7 @@ public:
 	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision(const CollisionInfo& info, unsigned short attribute)override;
+	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
 
 private:
 	static CollisionManager* colManager_;

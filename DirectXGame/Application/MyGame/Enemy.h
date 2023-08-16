@@ -58,7 +58,8 @@ public:
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision(const CollisionInfo& info, unsigned short attribute)override;
+	void OnCollision(const CollisionInfo& info, unsigned short attribute,
+		unsigned short subAttribute)override;
 	
 private:
 	static CollisionManager* colManager_;

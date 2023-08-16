@@ -35,6 +35,7 @@ bool PlayerBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_PLAYERS);
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
 
 	return true;
 }
@@ -83,11 +84,15 @@ void PlayerBullet::Draw() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void PlayerBullet::OnCollision(const CollisionInfo& info, unsigned short attribute) {
+void PlayerBullet::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 
 	if (attribute == COLLISION_ATTR_LANDSHAPE)isDead_ = true;
-	else if (attribute == COLLISION_ATTR_ENEMYS)isDead_ = true;
-	else if (attribute == COLLISION_ATTR_ITEM)return;
+	else if (attribute == COLLISION_ATTR_ENEMYS) 
+	{
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)isDead_ = true;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+	}
+	
 }
 //ワールド座標を取得
 XMFLOAT3 PlayerBullet::GetWorldPosition() {
