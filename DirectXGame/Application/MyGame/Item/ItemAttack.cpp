@@ -92,7 +92,7 @@ void ItemAttack::Draw()
 void ItemAttack::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
 	if (isGet_)return;//‘½dƒqƒbƒg‚ğ–h~
-	if (attribute == COLLISION_ATTR_ALLIES)
+	if (attribute == COLLISION_ATTR_PLAYERS)
 	{
 		isGet_ = true;
 	}

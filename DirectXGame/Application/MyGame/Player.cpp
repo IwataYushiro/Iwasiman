@@ -63,7 +63,7 @@ bool Player::Initialize() {
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
-	collider->SetAttribute(COLLISION_ATTR_ALLIES);
+	collider->SetAttribute(COLLISION_ATTR_PLAYERS);
 
 	return true;
 }

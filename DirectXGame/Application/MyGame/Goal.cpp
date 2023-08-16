@@ -85,6 +85,6 @@ void Goal::Draw()
 
 void Goal::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
-	if(attribute==COLLISION_ATTR_ALLIES)isGoal_ = true;
+	if(attribute==COLLISION_ATTR_PLAYERS)isGoal_ = true;
 	
 }

@@ -322,5 +322,5 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 void Enemy::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
-	else if(attribute==COLLISION_ATTR_ALLIES)life_--;
+	else if(attribute==COLLISION_ATTR_PLAYERS)life_--;
 }

@@ -109,7 +109,7 @@ void ItemHeal::DrawParticle()
 void ItemHeal::OnCollision(const CollisionInfo& info, unsigned short attribute)
 {
 	if (isGet_)return;//‘½dƒqƒbƒg‚ð–hŽ~
-	if (attribute == COLLISION_ATTR_ALLIES)
+	if (attribute == COLLISION_ATTR_PLAYERS)
 	{
 		pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
 		

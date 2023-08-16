@@ -87,7 +87,7 @@ void EnemyBullet::Draw() {
 //衝突を検出したら呼び出されるコールバック関数
 void EnemyBullet::OnCollision(const CollisionInfo& info, unsigned short attribute) {
 	
-	if (attribute == COLLISION_ATTR_ALLIES)isDead_ = true;
+	if (attribute == COLLISION_ATTR_PLAYERS)isDead_ = true;
 
 }
 
