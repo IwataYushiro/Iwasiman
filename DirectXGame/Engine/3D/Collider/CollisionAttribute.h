@@ -7,3 +7,7 @@ const unsigned short COLLISION_ATTR_PLAYERS= 0b1 << 1;//–¡•ûw‰c
 const unsigned short COLLISION_ATTR_ENEMYS = 0b1 << 2;//“Gw‰c
 const unsigned short COLLISION_ATTR_GOAL = 0b1 << 3;//ƒS[ƒ‹
 const unsigned short COLLISION_ATTR_ITEM = 0b1 << 4;//ƒAƒCƒeƒ€
+
+//ƒTƒu‘®«
+const unsigned short COLLISION_ATTR_SUB_NONE = (0b1 << 15) + 1;//ƒTƒu‘®«‚È‚µ
+const unsigned short COLLISION_ATTR_SUB_PLAYERBULLET = (0b1 << 15) + 2;//’e
