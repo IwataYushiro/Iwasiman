@@ -115,7 +115,7 @@ public: // メンバ関数
 
 	//衝突時のコールバック
 	virtual void OnCollision(const CollisionInfo& info,
-		unsigned short attribute) {}
+		unsigned short attribute, unsigned short subAttribute) {}
 protected: // メンバ変数
 	//モデル
 	Model* model_ = nullptr;

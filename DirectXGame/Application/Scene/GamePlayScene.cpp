@@ -1,10 +1,10 @@
 #include "GamePlayScene.h"
 #include "LevelLoaderJson.h"
-#include "Player.h"
+
 #include "CollisionManager.h"
 #include "MeshCollider.h"
 #include "TouchableObject.h"
-#include <typeinfo>
+#include "CollisionAttribute.h"
 
 #include <cassert>
 #include <sstream>
@@ -33,38 +33,15 @@ void GamePlayScene::Initialize()
 	//音声再生呼び出し例
 	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
-	//OBJファイルからモデルデータを読み込む
-	modelPlayer_ = Model::LoadFromOBJ("player");
-	modelEnemy_ = Model::LoadFromOBJ("enemy1");
-	modelGoal_ = Model::LoadFromOBJ("sphere");
-
-	//プレイヤーの初期化
-	player_ = Player::Create(modelPlayer_);
-	player_->SetCamera(camera_);
-	player_->Update();
-
-	//ゴール初期化
-	goal_ = Goal::Create(modelGoal_);
-	goal_->SetCamera(camera_);
-	goal_->Update();
-
-	UpdateEnemyPopCommands();
-
 	//弾リセット
-	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) {
-		bullet->Reset();
-	}
-	// モデル読み込み
-	modelSkydome = Model::LoadFromOBJ("skydome");
-	modelGround = Model::LoadFromOBJ("ground");
-	modelBox = Model::LoadFromOBJ("sphere2", true);
+	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Reset();
+	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Reset();
 
-	models.insert(std::make_pair("skydome", modelSkydome));
-	models.insert(std::make_pair("ground", modelGround));
-	models.insert(std::make_pair("sphere2", modelBox));
 
+	//モデル読み込み
+	LoadModel();
 	//レベルデータ読み込み
-	LoadLVData();
+	LoadLVData("stage1");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
@@ -77,45 +54,62 @@ void GamePlayScene::Initialize()
 	pm_->SetParticleModel(particle1_);
 	pm_->SetCamera(camera_);
 
-
-
 	isPause_ = false;
 }
 
 void GamePlayScene::Update()
 {
 	//死亡フラグの立った弾を削除
+	playerBullets_.remove_if(
+		[](std::unique_ptr<PlayerBullet>& pbullet) { return pbullet->IsDead(); });
 	enemyBullets_.remove_if(
-		[](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
+		[](std::unique_ptr<EnemyBullet>& ebullet) { return ebullet->IsDead(); });
+
+	players_.remove_if(
+		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
-	
+
 	//敵更新
 	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Update();
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
 
+
 	if (!isPause_)
 	{
 		//モデル呼び出し例
-		player_->Update();
+		for (std::unique_ptr<Player>& player : players_)
+		{
+			if (!isclear || !isGameover) player->Update();
+			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
+			//かめおべら
+			if (player->GetPosition().y <= -60.0f || player->IsDead())isGameover = true;
+		}
+		//弾更新
+		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
 
-		goal_->Update();
+		for (std::unique_ptr<Goal>& goal : goals_)
+		{
+			goal->Update();
+			//クリア
+			if (goal->IsGoal()) isclear = true;
+		}
+		for (std::unique_ptr<Item>& item : items_)
+		{
 
-		for (auto& object : objects) object->Update();
 
-		lightGroup_->SetPointLightPos(0, player_->GetWorldPosition());
+			item->Update();
+		}
+
+
+		for (Object3d*& object : objects) object->Update();
 
 		//カメラ
 		camera_->Update();
 		lightGroup_->Update();
 		pm_->Update();
 
-		//かめおべら
-		if (player_->GetPosition().y <= -60.0f)
-		{
-			isGameover = true;
-		}
 		if (isGameover)
 		{
 			if (input_->TriggerKey(DIK_SPACE))
@@ -123,11 +117,6 @@ void GamePlayScene::Update()
 				camera_->Reset();
 				sceneManager_->ChangeScene("TITLE");
 			}
-		}
-		//クリア
-		else if (goal_->IsGoal())
-		{
-			isclear = true;
 		}
 		if (isclear)
 		{
@@ -140,24 +129,51 @@ void GamePlayScene::Update()
 		colManager_->CheckAllCollisions();
 
 		//Pause機能
-		if (input_->TriggerKey(DIK_Q) && !isclear)
+		if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
 		{
+			//ここでイージングの準備
+			es.Standby(false);
+			isBack = false;
+			spritePause_->SetPosition({ es.start,0.0f });
+
 			isPause_ = true;
 		}
 	}
 	else if (isPause_)
 	{
+		//イージングサンプル(ポーズ中に準備してもここがやってくれる)
+		es.ease_in_out_elastic();
+		spritePause_->SetPosition({ es.num_X,0.0f });
+
 		if (input_->TriggerKey(DIK_W))
 		{
 			sceneManager_->ChangeScene("TITLE");
 			isPause_ = false;
 		}
+
 		if (input_->TriggerKey(DIK_Q))
 		{
-			isPause_ = false;
+			//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
+			if (spritePause_->GetPosition().x == es.end) es.Standby(true);
+			isBack = true;
 		}
-
+		//到達したらPause解除
+		if (spritePause_->GetPosition().x == es.start)
+		{
+			if (isBack)isPause_ = false;
+		}
 	}
+	spritePause_->Update();
+
+	//ImGui	
+	imguiManager_->Begin();
+	int plife[1] = { players_.front()->GetLife() };
+	ImGui::Begin("Player");
+	ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
+	ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
+	ImGui::InputInt("plife", plife);
+	ImGui::End();
+	imguiManager_->End();
 
 }
 
@@ -167,12 +183,14 @@ void GamePlayScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	//モデル描画
-	player_->Draw();
+	for (std::unique_ptr<Player>& player : players_)player->Draw();
+	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Draw();
 	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
-	goal_->Draw();
+	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
+	for (std::unique_ptr<Item>& item : items_)item->Draw();
 	for (auto& object : objects)object->Draw();
-	
+
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -181,7 +199,8 @@ void GamePlayScene::Draw()
 
 	//エフェクト描画
 	pm_->Draw();
-	player_->DrawParticle();
+	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();
+	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -191,8 +210,14 @@ void GamePlayScene::Draw()
 	if (isPause_)spritePause_->Draw();
 	else if (isclear)spriteClear_->Draw();
 	else if (isGameover)spriteGameover_->Draw();
-	else spritePauseInfo_->Draw();
-	//ImGuiの表示
+	else
+	{
+		spritePauseInfo_->Draw();
+		for (std::unique_ptr<Item>& item : items_)
+		{
+			item->DrawSprite();
+		}
+	}
 }
 
 void GamePlayScene::Finalize()
@@ -211,16 +236,15 @@ void GamePlayScene::Finalize()
 	delete lightGroup_;
 	//モデル
 
-	for (Object3d*& object : objects)
-	{
-		delete object;
-	}
+	for (Object3d*& object : objects)delete object;
 	objects.clear();
 
 	//3Dモデル
 	delete modelPlayer_;
 	delete modelEnemy_;
 	delete modelSkydome;
+	delete modelItemJump_;
+	delete modelItemHeal_;
 	delete modelGround;
 	delete modelBox;
 	delete modelGoal_;
@@ -229,19 +253,16 @@ void GamePlayScene::Finalize()
 	delete spriteClear_;
 	delete spritePauseInfo_;
 	delete spriteGameover_;
-	//基盤系
-	delete player_;
-	delete goal_;
 
 }
 
-void GamePlayScene::LoadLVData()
+void GamePlayScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
-	levelData = LevelLoader::LoadFile("stage1");
+	levelData = LevelLoader::LoadFile(stagePath);
 
 	// レベルデータからオブジェクトを生成、配置
-	for (auto& objectData : levelData->objects) {
+	for (LevelData::ObjectData& objectData : levelData->objects) {
 
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
@@ -249,102 +270,182 @@ void GamePlayScene::LoadLVData()
 		if (it != models.end()) {
 			model = it->second;
 		}
-
-		// モデルを指定して3Dオブジェクトを生成
-		TouchableObject* newObject = TouchableObject::Create(model);
-
-
-		// 座標
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMStoreFloat3(&pos, objectData.trans);
-		newObject->SetPosition(pos);
-
-		// 回転角
-		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, objectData.rot);
-		newObject->SetRotation(rot);
-
-		// 座標
-		DirectX::XMFLOAT3 scale;
-		DirectX::XMStoreFloat3(&scale, objectData.scale);
-		newObject->SetScale(scale);
-
-		newObject->SetCamera(camera_);
-		newObject->Update();
-		// 配列に登録
-		objects.push_back(newObject);
-	}
-
-}
-
-void GamePlayScene::LoadEnemyPopData()
-{
-	//ファイルを開く
-	std::ifstream file;
-	file.open("Resources/csv/enemyPop.csv");
-	assert(file.is_open());
-
-	//ファイルの内容を文字列ストリームにコピー
-	enemyPopCommands << file.rdbuf();
-
-	//ファイルを閉じる
-	file.close();
-}
-
-void GamePlayScene::UpdateEnemyPopCommands()
-{
-	LoadEnemyPopData();
-	//1行分の文字列を入れる関数
-	std::string line;
-
-	//コマンド実行ループ
-	while (getline(enemyPopCommands, line))
-	{
-		//1行分の文字列をストリームに変換して解析しやすくする
-		std::istringstream line_stream(line);
-
-		std::string word;
-		//,区切りで行の戦闘文字列を取得
-		getline(line_stream, word, ',');
-
-		// "//"=コメント
-		if (word.find("//") == 0)
+		//プレイヤー
+		if (objectData.objectType.find("PLAYER") == 0)
 		{
-			//コメント行を飛ばす
-			continue;
+			//プレイヤー初期化
+			std::unique_ptr<Player> newplayer;
+			newplayer = Player::Create(modelPlayer_, this);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newplayer->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newplayer->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newplayer->SetScale(scale);
+
+			newplayer->SetCamera(camera_);
+			newplayer->Update();
+			//リストに登録
+			players_.push_back(std::move(newplayer));
 		}
-		//POP
-		if (word.find("POP") == 0)
+		//敵
+		else if (objectData.objectType.find("ENEMY") == 0)
 		{
-			//x座標
-			getline(line_stream, word, ',');
-			float x = (float)std::atof(word.c_str());
-			//y座標
-			getline(line_stream, word, ',');
-			float y = (float)std::atof(word.c_str());
-			//z座標
-			getline(line_stream, word, ',');
-			float z = (float)std::atof(word.c_str());
-			//敵発生
 			//敵初期化
 			std::unique_ptr<Enemy> newenemy;
-			newenemy = Enemy::Create(modelEnemy_, player_, this);
-			newenemy->SetPosition(XMFLOAT3(x, y, z));
+			std::unique_ptr<Player>& player = players_.front();
+			if (objectData.objectPattern.find("BOSS") == 0)
+				newenemy = Enemy::Create(modelEnemy_, player.get(), this);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newenemy->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newenemy->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newenemy->SetScale(scale);
+
 			newenemy->SetCamera(camera_);
-
 			newenemy->Update();
-
 			//リストに登録
 			enemys_.push_back(std::move(newenemy));
-
 		}
+		//ゴール
+		else if (objectData.objectType.find("GOAL") == 0)
+		{
+			//ゴール初期化
+			std::unique_ptr<Goal> newgoal;
+			newgoal = Goal::Create(modelGoal_);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newgoal->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newgoal->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newgoal->SetScale(scale);
+
+			newgoal->SetCamera(camera_);
+			newgoal->Update();
+			//リストに登録
+			goals_.push_back(std::move(newgoal));
+		}
+		//アイテム
+		else if (objectData.objectType.find("ITEM") == 0)
+		{
+			//アイテム初期化
+			std::unique_ptr<Item> newitem;
+			std::unique_ptr<Player>& player = players_.front();
+			//ジャンプ
+			if (objectData.objectPattern.find("JUMP") == 0)
+				newitem = Item::Create(modelItemJump_, player.get(), SUBCOLLISION_ATTR_ITEM_JUMP);
+			//回復アイテム
+			else if (objectData.objectPattern.find("HEAL") == 0)
+				newitem = Item::Create(modelItemHeal_, player.get(), SUBCOLLISION_ATTR_ITEM_HEAL);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newitem->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newitem->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newitem->SetScale(scale);
+
+			newitem->SetCamera(camera_);
+			newitem->Update();
+			//リストに登録
+			items_.push_back(std::move(newitem));
+		}
+		//地形
+		else
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			TouchableObject* newObject = TouchableObject::Create(model);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+
+
+			// 配列に登録
+			objects.push_back(newObject);
+		}
+
 	}
+
+}
+
+void GamePlayScene::AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet)
+{
+	//リストに登録
+	playerBullets_.push_back(std::move(playerBullet));
 }
 
 void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
 {
 	//リストに登録
 	enemyBullets_.push_back(std::move(enemyBullet));
+}
+
+void GamePlayScene::LoadModel()
+{
+	// モデル読み込み
+	modelPlayer_ = Model::LoadFromOBJ("player");
+	modelEnemy_ = Model::LoadFromOBJ("enemy1");
+	modelGoal_ = Model::LoadFromOBJ("sphere");
+	modelItemJump_ = Model::LoadFromOBJ("itemjump");
+	modelItemHeal_ = Model::LoadFromOBJ("itemheal");
+	modelSkydome = Model::LoadFromOBJ("skydome");
+	modelGround = Model::LoadFromOBJ("ground");
+	modelBox = Model::LoadFromOBJ("sphere2", true);
+
+	models.insert(std::make_pair("player", modelPlayer_));
+	models.insert(std::make_pair("enemy1", modelEnemy_));
+	models.insert(std::make_pair("sphere", modelGoal_));
+	models.insert(std::make_pair("Itemjump", modelItemJump_));
+	models.insert(std::make_pair("itemheal", modelItemHeal_));
+	models.insert(std::make_pair("skydome", modelSkydome));
+	models.insert(std::make_pair("ground", modelGround));
+	models.insert(std::make_pair("sphere2", modelBox));
+
 }
 
 void GamePlayScene::LoadSprite()
@@ -359,7 +460,7 @@ void GamePlayScene::LoadSprite()
 
 	spCommon_->LoadTexture(12, "texture/pauseinfo.png");
 	spritePauseInfo_->Initialize(spCommon_, 12);
-	
+
 	spCommon_->LoadTexture(13, "texture/gameover.png");
 	spriteGameover_->Initialize(spCommon_, 13);
 
@@ -367,4 +468,6 @@ void GamePlayScene::LoadSprite()
 	spriteClear_->Update();
 	spritePauseInfo_->Update();
 	spriteGameover_->Update();
+
+
 }

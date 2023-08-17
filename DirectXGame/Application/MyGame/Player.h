@@ -11,6 +11,7 @@
 #include <chrono>
 
 class CollisionManager;
+class GamePlayScene;
 
 class Player:public Object3d
 {
@@ -21,10 +22,12 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
+
 public:
 	~Player();
 
-	static Player* Create(Model* model = nullptr);
+	static std::unique_ptr<Player> Create(Model* model = nullptr,
+		GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
 	//リセット処理
@@ -32,7 +35,7 @@ public:
 	
 	//更新
 	void Update() override;
-
+	void ItemUpdate();
 	//プレイヤーの移動処理
 	void Move();
 	void CameraMove();
@@ -56,7 +59,7 @@ public:
 	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision(const CollisionInfo& info, unsigned short attribute)override;
+	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
 
 	//ベジェ曲線
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
@@ -68,11 +71,9 @@ private:
 	static CollisionManager* colManager_;
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
-	
+	bool isRight_ = true;
 	//モデル
 	Model* modelBullet_ = nullptr;
-
-	Object3d* objBullet_ = nullptr;
 	
 	//インプット
 	Input* input_ = nullptr;
@@ -84,6 +85,7 @@ private:
 
 	//ジャンプしてるか
 	bool onGround = true;
+	float jumpVYFist = 2.0f;
 	XMFLOAT3 fallVec;
 
 	//奥側に移動
@@ -112,8 +114,18 @@ private:
 	//パーティクル
 	Particle* particleDash_ = nullptr;
 	ParticleManager* pmDash_ = nullptr;
-	
+
+	//ゲームシーン
+	GamePlayScene* gameScene_ = nullptr;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
+	bool OnGround()const { return onGround; }
+	//ジャンプ力
+	void SetJumpVYFist(float jumpFist) { this->jumpVYFist = jumpFist; }
+	//ライフ
+	void SetLife(int life) { this->life_ = life; }
+	int GetLife()const { return life_; }
+	//ゲームシーン
+	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

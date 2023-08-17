@@ -1,14 +1,17 @@
 #pragma once
 #include "Camera.h"
+#include "ParticleManager.h"
 #include "Model.h"
 #include "Object3d.h"
 #include <DirectXMath.h>
+#include "Sprite.h"
 #include <list>
 #include <memory>
 
+class Player;
 class CollisionManager;
 
-class Goal :public Object3d
+class ItemHeal :public Object3d
 {
 private:
 	// DirectX::を省略
@@ -18,8 +21,9 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	
-	static std::unique_ptr<Goal> Create(Model* model = nullptr);
+	~ItemHeal();
+
+	static std::unique_ptr<ItemHeal> Create(Model* model = nullptr, Player* player = nullptr);
 	//初期化
 	bool Initialize()override;
 	//更新
@@ -33,6 +37,8 @@ public:
 
 	//描画
 	void Draw();
+	//パーティクル描画
+	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
@@ -43,10 +49,18 @@ private:
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 
-	bool isGoal_ = false;
+	bool isGet_ = false;
 
-	float radius_ = 10.0f;
+	float radius_ = 3.0f;
+
+	Player* player_ = nullptr;
+
+	Particle* p = nullptr;
+	ParticleManager* pm_ = nullptr;
+
 public: //アクセッサ、インライン関数
-	bool IsGoal() const { return isGoal_; }
+	bool IsGet() const { return isGet_; }
+	void SetPlayer(Player* player) { player_ = player; }
 };
-#pragma once
+
+

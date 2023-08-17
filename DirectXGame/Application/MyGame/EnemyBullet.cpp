@@ -35,6 +35,7 @@ bool EnemyBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity)
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
 
 	return true;
 }
@@ -85,10 +86,13 @@ void EnemyBullet::Draw() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void EnemyBullet::OnCollision(const CollisionInfo& info, unsigned short attribute) {
+void EnemyBullet::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	
-	if (attribute == COLLISION_ATTR_ALLIES)isDead_ = true;
-
+	if (attribute == COLLISION_ATTR_PLAYERS)
+	{
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)isDead_ = true;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+	}
 }
 
 //ワールド座標を取得

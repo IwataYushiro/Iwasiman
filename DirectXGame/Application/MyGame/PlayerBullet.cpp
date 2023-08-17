@@ -1,52 +1,76 @@
 #include "PlayerBullet.h"
 #include <cassert>
+#include "SphereCollider.h"
+#include "CollisionAttribute.h"
+#include "CollisionManager.h"
 
 using namespace DirectX;
+CollisionManager* PlayerBullet::colManager_ = CollisionManager::GetInstance();
+
+std::unique_ptr<PlayerBullet> PlayerBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model)
+{
+	//インスタンス生成
+	std::unique_ptr<PlayerBullet> ins = std::make_unique<PlayerBullet>();
+	if (ins == nullptr) return nullptr;
+
+	//初期化
+	if (!ins->Initialize(position, velocity))
+	{
+		ins.release();
+		assert(0);
+	}
+	//モデルのセット
+	if (model) ins->SetModel(model);
+	return ins;
+}
 
 //初期化
-void PlayerBullet::Initialize(Model* model, Object3d* obj, const XMFLOAT3& position, const XMFLOAT3& velocity) {
-	// NULLポインタチェック
-	assert(model);
+bool PlayerBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity)
+{
+	if (!Object3d::Initialize()) return false;
 
-	model_ = model;
-	obj_ = obj;
-	
 	//引数で受け取った初期座標をセット
-	obj_->SetPosition(position);
+	SetPosition(position);
 	velocity_ = velocity;
+	//コライダー追加
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+	collider->SetAttribute(COLLISION_ATTR_PLAYERS);
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
+
+	return true;
 }
 
 void PlayerBullet::Reset() { isDead_ = true; }
 //更新
 void PlayerBullet::Update() {
 	//座標を移動させる
-	XMFLOAT3 pos = obj_->GetPosition();
+	XMFLOAT3 pos = Object3d::GetPosition();
 
 	pos.x += velocity_.x;
 	pos.y += velocity_.y;
 	pos.z += velocity_.z;
 
-	obj_->SetPosition(pos);
+	Object3d::SetPosition(pos);
 	//行列更新
 	XMMATRIX world;
 
 	world = XMMatrixIdentity();
 	XMMATRIX matWorld = XMMatrixIdentity();
 
-	XMMATRIX matScale = XMMatrixScaling(obj_->GetScale().x, obj_->GetScale().y, obj_->GetScale().z);
+	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
 
-	XMMATRIX matRot = XMMatrixRotationZ(obj_->GetRotation().z)
-		* XMMatrixRotationX(obj_->GetRotation().x) * XMMatrixRotationY(obj_->GetRotation().y);
+	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
+		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
 
-	XMMATRIX matTrans = XMMatrixTranslation(obj_->GetPosition().x,
-		obj_->GetPosition().y, obj_->GetPosition().z);
+	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
+		Object3d::GetPosition().y, Object3d::GetPosition().z);
 
 	//合成
 	matWorld = matScale * matRot * matTrans;
 
-	obj_->SetWorld(matWorld);
-	obj_->Update();
-
+	Object3d::SetWorld(matWorld);
+	camera_->Update();
+	Object3d::Update();
 	//時間経過で死亡
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
@@ -56,12 +80,20 @@ void PlayerBullet::Update() {
 //描画
 void PlayerBullet::Draw() {
 	//モデルの描画
-	obj_->Draw();
+	Object3d::Draw();
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void PlayerBullet::OnCollision() { isDead_ = true; }
+void PlayerBullet::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 
+	if (attribute == COLLISION_ATTR_LANDSHAPE)isDead_ = true;
+	else if (attribute == COLLISION_ATTR_ENEMYS) 
+	{
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)isDead_ = true;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+	}
+	
+}
 //ワールド座標を取得
 XMFLOAT3 PlayerBullet::GetWorldPosition() {
 
@@ -69,9 +101,9 @@ XMFLOAT3 PlayerBullet::GetWorldPosition() {
 	XMFLOAT3 worldPos;
 
 	//ワールド行列の平行移動成分を取得
-	worldPos.x = obj_->GetPosition().x;
-	worldPos.y = obj_->GetPosition().y;
-	worldPos.z = obj_->GetPosition().z;
+	worldPos.x = Object3d::GetPosition().x;
+	worldPos.y = Object3d::GetPosition().y;
+	worldPos.z = Object3d::GetPosition().z;
 
 	return worldPos;
 }

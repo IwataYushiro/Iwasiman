@@ -22,7 +22,7 @@ void Framework::Initialize()
 	imguiManager_ = ImGuiManager::GetInstance();
 	//カメラ
 	camera_ = Camera::GetInstance();
-	
+
 	//WinApp初期化
 	winApp_->Initialize();
 	//DirectX初期化
@@ -35,14 +35,14 @@ void Framework::Initialize()
 	imguiManager_->Initialize(winApp_, dxCommon_);
 	//FBX
 	FbxLoader::GetInstance()->Initialize(dxCommon_->GetDevice());
-	
+
 	Object3d::StaticInitialize(dxCommon_->GetDevice());
 	ObjectFbx::StaticInitialize(dxCommon_->GetDevice());
 	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 	//ライト
 	LightGroup::StaticInitialize(dxCommon_->GetDevice());
-	
-	
+
+
 
 }
 
@@ -59,15 +59,15 @@ void Framework::Update()
 
 	//入力の更新
 	input_->Update();
-	sceneManager_->Update();
+
 	imguiManager_->Begin();
 #ifdef _DEBUG
 	//camera_->DebugCamera();
-	
+
 #endif // DEBUG
-ImGui::Begin("Prototype");
-	ImGui::SetWindowPos(ImVec2(0, 600));
-	ImGui::SetWindowSize(ImVec2(800, 100));
+	ImGui::Begin("Prototype");
+	ImGui::SetWindowPos(ImVec2(0.0f, 600.0f));
+	ImGui::SetWindowSize(ImVec2(800.0f, 100.0f));
 	ImGui::Text("How To Play");
 	ImGui::Text("WASD Move + SHIFT Dash  SPACE Jump Z Move Back");
 	//ImGui::Text(" test -> gaussianblur -> bloom -> Glare -> sepia -> cold -> ");
@@ -76,7 +76,10 @@ ImGui::Begin("Prototype");
 
 	ImGui::End();
 	imguiManager_->End();
-	
+
+	sceneManager_->Update();
+
+
 }
 
 void Framework::Finalize()

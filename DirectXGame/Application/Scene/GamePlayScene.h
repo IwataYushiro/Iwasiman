@@ -9,17 +9,22 @@
 #include "ParticleManager.h"
 #include "Enemy.h"
 #include "Goal.h"
+#include "Player.h"
+
+#include "SceneManager.h"
+#include "CollisionPrimitive.h"
+#include "Easing.h"
+
+
+#include "Item.h"
+
 #include <vector>
 #include <map>
 #include <sstream>
-#include "SceneManager.h"
-#include "CollisionPrimitive.h"
-
-
+#include <string>
 //jsonレベルデータ
 struct LevelData;
-//前方宣言
-class Player;
+
 class CollisionManager;
 class TouchableObject;
 
@@ -46,18 +51,16 @@ public:
 	void Finalize() override;
 	
 	//レベルデータ読み込み
-	void LoadLVData();
-
-	//敵発生データの読み込み
-	void LoadEnemyPopData();
-	//敵発生コマンドの更新
-	void UpdateEnemyPopCommands();
+	void LoadLVData(const std::string& stagePath);
 
 public:
+	//自機弾追加
+	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
 	//敵弾追加
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
 
 private://静的メンバ変数
+
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤
@@ -82,20 +85,25 @@ private:
 	Sprite* spritePauseInfo_ = new Sprite();
 	Sprite* spriteGameover_ = new Sprite();
 	
+	
 	//ポーズしたか
 	bool isPause_ = false;
 	bool isclear = false;
 	bool isGameover = false;
 
 	//モデル
-	Player* player_ = nullptr;
+	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
 
 	std::list<std::unique_ptr<Enemy>> enemys_;
 	Model* modelEnemy_ = nullptr;
 
-	Goal* goal_ = nullptr;
+	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;
+
+	std::list<std::unique_ptr<Item>> items_;
+	Model* modelItemJump_ = nullptr;
+	Model* modelItemHeal_ = nullptr;
 
 	LevelData* levelData = nullptr;
 
@@ -119,15 +127,18 @@ private:
 	CollisionManager* colManager_ = nullptr;
 
 private:
+	//自機弾
+	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
 	//敵弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
-	//敵発生コマンド
-	std::stringstream enemyPopCommands;
+	//イージングマネージャー(左から右へ)
+	Easing es = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
+	//○○した瞬間に○○解除を防ぐ用のフラグ
+	bool isBack = false;
 
-	
-	
 private:
 	//スプライト読み込み
 	void LoadSprite();
-	
+	//モデル読み込み
+	void LoadModel();
 };

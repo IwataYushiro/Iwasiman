@@ -1,14 +1,17 @@
 #pragma once
 #include "Camera.h"
+#include "Easing.h"
 #include "Model.h"
 #include "Object3d.h"
 #include <DirectXMath.h>
+#include "Sprite.h"
 #include <list>
 #include <memory>
 
+class Player;
 class CollisionManager;
 
-class Goal :public Object3d
+class ItemAttack :public Object3d
 {
 private:
 	// DirectX::を省略
@@ -17,9 +20,11 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
+public://定数
+	const int MAX_BULLET = 5;
 public:
-	
-	static std::unique_ptr<Goal> Create(Model* model = nullptr);
+
+	static std::unique_ptr<ItemAttack> Create(Model* model = nullptr, Player* player = nullptr);
 	//初期化
 	bool Initialize()override;
 	//更新
@@ -43,10 +48,13 @@ private:
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 
-	bool isGoal_ = false;
+	bool isGet_ = false;
 
-	float radius_ = 10.0f;
+	float radius_ = 3.0f;
+
+	Player* player_ = nullptr;
+
 public: //アクセッサ、インライン関数
-	bool IsGoal() const { return isGoal_; }
+	bool IsGet() const { return isGet_; }
+	void SetPlayer(Player* player) { player_ = player; }
 };
-#pragma once

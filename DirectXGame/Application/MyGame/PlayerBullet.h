@@ -3,8 +3,10 @@
 #include "Model.h"
 #include <DirectXMath.h>
 
+class CollisionManager;
 //自キャラの弾
-class PlayerBullet {
+class PlayerBullet:public Object3d
+{
 private:
 	// DirectX::を省略
 	using XMFLOAT3 = DirectX::XMFLOAT3;
@@ -13,37 +15,38 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-
+	static std::unique_ptr<PlayerBullet> Create
+	(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model = nullptr);
 	//初期化
-	void Initialize(Model* model, Object3d* obj, const XMFLOAT3& position, const XMFLOAT3& velocity);
+	bool Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity);
 	//リセット処理
 	void Reset();
 
 	//更新
-	void Update();
+	void Update()override;
 
 	//描画
 	void Draw();
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision();
+	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
 
 	//ワールド座標を取得
 	XMFLOAT3 GetWorldPosition();
 
 private:
-	
-	//モデル
-	Model* model_ = nullptr;
-	Object3d* obj_ = nullptr;
+	static CollisionManager* colManager_;
+
 	//速度
 	XMFLOAT3 velocity_;
 	//寿命<frm>
-	static const int32_t kLifeTime = 60 * 5;
+	static const int32_t kLifeTime = 60;
 	//死亡時間
 	int32_t deathTimer_ = kLifeTime;
 	//死亡フラグ
 	bool isDead_ = false;
+	//半径
+	float radius_ = 4.0f;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }

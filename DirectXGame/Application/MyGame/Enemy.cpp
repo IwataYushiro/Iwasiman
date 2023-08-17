@@ -50,6 +50,7 @@ bool Enemy::Initialize() {
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 
 	return true;
 }
@@ -227,10 +228,10 @@ void Enemy::UpdateAttackStage1() {
 	//速度
 	float cameraMove = camera_->GetEye().x;
 	//制御点
-	start = { -30.0f+cameraMove,0.0f,100.0f };
-	p1 = { -10.0f+cameraMove,-30.0f,100.0f };
-	p2 = { 10.0f+cameraMove,30.0f,100.0f };
-	end = { 30.0f+cameraMove,0.0f,100.0f };
+	start = { -30.0f+cameraMove,10.0f,100.0f };
+	p1 = { -10.0f+cameraMove,-20.0f,100.0f };
+	p2 = { 10.0f+cameraMove,40.0f,100.0f };
+	end = { 30.0f+cameraMove,10.0f,100.0f };
 	//時間
 
 	//現在時間を取得する
@@ -319,10 +320,13 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 
 	return worldPos;
 }
-void Enemy::OnCollision(const CollisionInfo& info, unsigned short attribute)
+void Enemy::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
-	else if(attribute==COLLISION_ATTR_ALLIES)life_--;
+	else if (attribute == COLLISION_ATTR_PLAYERS)
+	{
+		if(subAttribute==SUBCOLLISION_ATTR_NONE) return;
+		else if(subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+	}
+		
 }
-//衝突を検出したら呼び出されるコールバック関数
-void Enemy::OnCollisionPlayer() { life_--; }
