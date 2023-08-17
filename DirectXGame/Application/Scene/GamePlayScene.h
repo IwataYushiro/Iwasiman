@@ -85,7 +85,7 @@ private:
 	Sprite* spritePauseInfo_ = new Sprite();
 	Sprite* spriteGameover_ = new Sprite();
 	
-	Sprite* spriteItemJumpBar_ = new Sprite();
+	
 	//É|Å[ÉYÇµÇΩÇ©
 	bool isPause_ = false;
 	bool isclear = false;

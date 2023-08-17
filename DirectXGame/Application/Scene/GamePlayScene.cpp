@@ -98,8 +98,7 @@ void GamePlayScene::Update()
 		for (std::unique_ptr<Item>& item : items_)
 		{
 			
-			if (item->IsGetJump()) spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, item->GetEasing().num_X });
-			else spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,item->GetEasing().start});
+		
 			item->Update();
 		}
 		
@@ -165,7 +164,6 @@ void GamePlayScene::Update()
 		}
 	}
 	spritePause_->Update();
-	spriteItemJumpBar_->Update();
 	
 		//ImGui	
 		imguiManager_->Begin();
@@ -217,7 +215,7 @@ void GamePlayScene::Draw()
 		spritePauseInfo_->Draw();
 		for (std::unique_ptr<Item>& item : items_)
 		{
-			if (item->IsGetJump())spriteItemJumpBar_->Draw();
+			item->DrawSprite();
 		}
 	}
 }
@@ -255,7 +253,6 @@ void GamePlayScene::Finalize()
 	delete spriteClear_;
 	delete spritePauseInfo_;
 	delete spriteGameover_;
-	delete spriteItemJumpBar_;
 
 }
 
@@ -475,10 +472,5 @@ void GamePlayScene::LoadSprite()
 	spritePauseInfo_->Update();
 	spriteGameover_->Update();
 
-	//ƒAƒCƒeƒ€ŠÖŒW
-	spCommon_->LoadTexture(30, "itemtex/itemjumpbar.png");
-	spriteItemJumpBar_->Initialize(spCommon_, 30);
-	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f });
-
-	spriteItemJumpBar_->Update();
+	
 }

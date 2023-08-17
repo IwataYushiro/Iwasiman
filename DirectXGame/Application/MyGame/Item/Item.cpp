@@ -12,6 +12,8 @@ Item::~Item()
 {
 	delete p;
 	delete pm_;
+
+	delete spriteItemJumpBar_;
 }
 
 std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short subAttribute)
@@ -48,6 +50,8 @@ bool Item::Initialize(unsigned short subAttribute)
 	pm_ = ParticleManager::Create();
 	pm_->SetParticleModel(p);
 
+	LoadSprite();
+
 	return true;
 
 }
@@ -63,6 +67,8 @@ void Item::Update()
 	camera_->Update();
 	pm_->Update();
 	Object3d::Update();
+	
+	spriteItemJumpBar_->Update();
 }
 
 void Item::UpdateJumpPowerup()
@@ -71,21 +77,24 @@ void Item::UpdateJumpPowerup()
 	{
 		ease.ease_out_cubic();
 		if (player_->OnGround())player_->SetJumpVYFist(4.0f);
+		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, ease.num_X });
 		count++;
 	}
 	else
 	{
 		if (player_->OnGround())player_->SetJumpVYFist(2.0f);
+		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,ease.start });
 	}
 
 	if (count >= MAX_TIME)
 	{
-
+		count = 0.0f;
 		isGet_ = false;
 		isGetJump_ = false;
 		
-		count = 0.0f;
 	}
+
+	
 }
 
 void Item::Trans()
@@ -133,6 +142,11 @@ void Item::DrawParticle()
 	pm_->Draw();
 }
 
+void Item::DrawSprite()
+{
+	if (isGetJump_)spriteItemJumpBar_->Draw();
+}
+
 void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (isGet_)return;//‘½dƒqƒbƒg‚ð–hŽ~
@@ -141,7 +155,7 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			isGet_ = true;
+			
 			if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP)
 			{
 				ease.Standby(false);
@@ -154,8 +168,18 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 				player_->SetLife(player_->GetLife() + 1);
 
 			}
-			
+			isGet_ = true;
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 	}
+}
+
+void Item::LoadSprite()
+{
+	//ƒAƒCƒeƒ€ŠÖŒW
+	spCommon_->LoadTexture(30, "itemtex/itemjumpbar.png");
+	spriteItemJumpBar_->Initialize(spCommon_, 30);
+	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f });
+
+	spriteItemJumpBar_->Update();
 }

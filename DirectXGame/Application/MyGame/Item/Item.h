@@ -47,6 +47,8 @@ public:
 	void Draw();
 	//パーティクル描画
 	void DrawParticle();
+	//スプライト描画
+	void DrawSprite();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info, unsigned short attribute,unsigned short subAttribute)override;
@@ -79,5 +81,12 @@ public: //アクセッサ、インライン関数
 
 	void SetPlayer(Player* player) { player_ = player; }
 	Easing GetEasing()const { return ease; }
+
+private:
+	SpriteCommon* spCommon_ = SpriteCommon::GetInstance();
+	Sprite* spriteItemJumpBar_ = new Sprite();
+
+private:
+	void LoadSprite();
 };
 
