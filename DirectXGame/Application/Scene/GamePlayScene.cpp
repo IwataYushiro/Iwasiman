@@ -36,7 +36,7 @@ void GamePlayScene::Initialize()
 	//弾リセット
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Reset();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Reset();
-	
+
 
 	//モデル読み込み
 	LoadModel();
@@ -97,11 +97,11 @@ void GamePlayScene::Update()
 		}
 		for (std::unique_ptr<Item>& item : items_)
 		{
-			
-		
+
+
 			item->Update();
 		}
-		
+
 
 		for (Object3d*& object : objects) object->Update();
 
@@ -164,17 +164,17 @@ void GamePlayScene::Update()
 		}
 	}
 	spritePause_->Update();
-	
-		//ImGui	
-		imguiManager_->Begin();
-		int plife[1] = { players_.front()->GetLife() };
-		ImGui::Begin("Player");
-		ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
-		ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
-		ImGui::InputInt("plife", plife);
-		ImGui::End();
-		imguiManager_->End();
-	
+
+	//ImGui	
+	imguiManager_->Begin();
+	int plife[1] = { players_.front()->GetLife() };
+	ImGui::Begin("Player");
+	ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
+	ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
+	ImGui::InputInt("plife", plife);
+	ImGui::End();
+	imguiManager_->End();
+
 }
 
 void GamePlayScene::Draw()
@@ -302,7 +302,8 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//敵初期化
 			std::unique_ptr<Enemy> newenemy;
 			std::unique_ptr<Player>& player = players_.front();
-			newenemy = Enemy::Create(modelEnemy_, player.get(), this);
+			if (objectData.objectPattern.find("BOSS") == 0)
+				newenemy = Enemy::Create(modelEnemy_, player.get(), this);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -357,33 +358,29 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			std::unique_ptr<Player>& player = players_.front();
 			//ジャンプ
 			if (objectData.objectPattern.find("JUMP") == 0)
-			{
-				newitem = Item::Create(modelItemJump_, player.get(),SUBCOLLISION_ATTR_ITEM_JUMP);
-			}
+				newitem = Item::Create(modelItemJump_, player.get(), SUBCOLLISION_ATTR_ITEM_JUMP);
 			//回復アイテム
 			else if (objectData.objectPattern.find("HEAL") == 0)
-			{
 				newitem = Item::Create(modelItemHeal_, player.get(), SUBCOLLISION_ATTR_ITEM_HEAL);
-			}
 			// 座標
-				DirectX::XMFLOAT3 pos;
-				DirectX::XMStoreFloat3(&pos, objectData.trans);
-				newitem->SetPosition(pos);
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newitem->SetPosition(pos);
 
-				// 回転角
-				DirectX::XMFLOAT3 rot;
-				DirectX::XMStoreFloat3(&rot, objectData.rot);
-				newitem->SetRotation(rot);
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newitem->SetRotation(rot);
 
-				// 座標
-				DirectX::XMFLOAT3 scale;
-				DirectX::XMStoreFloat3(&scale, objectData.scale);
-				newitem->SetScale(scale);
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newitem->SetScale(scale);
 
-				newitem->SetCamera(camera_);
-				newitem->Update();
-				//リストに登録
-				items_.push_back(std::move(newitem));
+			newitem->SetCamera(camera_);
+			newitem->Update();
+			//リストに登録
+			items_.push_back(std::move(newitem));
 		}
 		//地形
 		else
@@ -472,5 +469,5 @@ void GamePlayScene::LoadSprite()
 	spritePauseInfo_->Update();
 	spriteGameover_->Update();
 
-	
+
 }

@@ -205,7 +205,7 @@
         },
         {
             "type": "MESH",
-            "name": "Enemy1",
+            "name": "Boss1",
             "transform": {
                 "translation": [
                     -150.0,
@@ -224,7 +224,8 @@
                 ]
             },
             "file_name": "enemy1",
-            "objecttype": "ENEMY"
+            "objecttype": "ENEMY",
+            "objectpattern": "BOSS"
         },
         {
             "type": "MESH",
