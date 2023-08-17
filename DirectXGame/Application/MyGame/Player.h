@@ -22,6 +22,7 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
+
 public:
 	~Player();
 
@@ -34,7 +35,7 @@ public:
 	
 	//更新
 	void Update() override;
-
+	void ItemUpdate();
 	//プレイヤーの移動処理
 	void Move();
 	void CameraMove();

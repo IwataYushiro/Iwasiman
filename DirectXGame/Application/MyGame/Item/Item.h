@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "Easing.h"
+#include "ParticleManager.h"
 #include "Model.h"
 #include "Object3d.h"
 #include <DirectXMath.h>
@@ -11,7 +12,8 @@
 class Player;
 class CollisionManager;
 
-class ItemJump :public Object3d
+//アイテム管理
+class Item :public Object3d
 {
 private:
 	// DirectX::を省略
@@ -23,12 +25,17 @@ private:
 public://定数
 	const float MAX_TIME = 200.0f;
 public:
-
-	static std::unique_ptr<ItemJump> Create(Model* model = nullptr, Player* player = nullptr);
+	~Item();
+	
+	static std::unique_ptr<Item> Create(Model* model = nullptr, Player* player = nullptr
+		, unsigned short subAttribute = 0b1000000000000000);
 	//初期化
-	bool Initialize()override;
+	bool Initialize(unsigned short subAttribute);
 	//更新
 	void Update()override;
+	//ジャンプ強化
+	void UpdateJumpPowerup();
+	//ライフ回復(は別にupdate無くてもよさそう)
 
 	//転送
 	void Trans();
@@ -38,6 +45,8 @@ public:
 
 	//描画
 	void Draw();
+	//パーティクル描画
+	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info, unsigned short attribute,unsigned short subAttribute)override;
@@ -48,20 +57,27 @@ private:
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 
-	float count = 0.0f;
-
 	bool isGet_ = false;
+	//ジャンプ
+	bool isGetJump_ = false;
 
-	float radius_ =3.0f;
+	float radius_ = 3.0f;
 
 	Player* player_ = nullptr;
 
+	//イージング
+	float count = 0.0f;
 	const float timer = MAX_TIME / 60.0f;
 	Easing ease = Easing(1.0f, 0.0f, timer);
 
+	//パーティクル
+	Particle* p = nullptr;
+	ParticleManager* pm_ = nullptr;
+
 public: //アクセッサ、インライン関数
-	bool IsGet() const { return isGet_; }
+	bool IsGetJump() const { return isGetJump_; }
+
 	void SetPlayer(Player* player) { player_ = player; }
-	Easing GetEasing() { return ease; }
+	Easing GetEasing()const { return ease; }
 };
 

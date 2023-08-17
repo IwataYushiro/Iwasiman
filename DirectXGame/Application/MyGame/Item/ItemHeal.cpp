@@ -41,10 +41,7 @@ bool ItemHeal::Initialize()
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ITEM);
 	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
-	//パーティクル
-	p = Particle::LoadFromParticleTexture("particle6.png");
-	pm_ = ParticleManager::Create();
-	pm_->SetParticleModel(p);
+
 
 	return true;
 

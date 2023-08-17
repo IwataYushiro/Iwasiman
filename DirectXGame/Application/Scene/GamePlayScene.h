@@ -16,8 +16,7 @@
 #include "Easing.h"
 
 
-#include "ItemJump.h"
-#include "ItemHeal.h"
+#include "Item.h"
 
 #include <vector>
 #include <map>
@@ -102,10 +101,8 @@ private:
 	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;
 
-	std::list<std::unique_ptr<ItemJump>> jItems_;
+	std::list<std::unique_ptr<Item>> items_;
 	Model* modelItemJump_ = nullptr;
-
-	std::list<std::unique_ptr<ItemHeal>> hItems_;
 	Model* modelItemHeal_ = nullptr;
 
 	LevelData* levelData = nullptr;

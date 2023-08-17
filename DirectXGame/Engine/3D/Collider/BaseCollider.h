@@ -32,11 +32,15 @@ public:
 
 	inline void SetAttribute(unsigned short attribute) { this->attribute_ = attribute; }
 
+	inline unsigned short GetAttribute() { return attribute_; }
+
 	inline void AddAttribute(unsigned short attribute) { this->attribute_ |= attribute; }
 
 	inline void RemoveAttribute(unsigned short attribute) { this->attribute_ &= !attribute; }
 
 	inline void SetSubAttribute(unsigned short subAttribute) { this->subAttribute_ = subAttribute; }
+
+	inline unsigned short GetSubAttribute() { return subAttribute_; }
 
 	inline void AddSubAttribute(unsigned short subAttribute) { this->subAttribute_ |= subAttribute; }
 

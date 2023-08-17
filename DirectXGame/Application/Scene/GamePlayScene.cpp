@@ -4,6 +4,7 @@
 #include "CollisionManager.h"
 #include "MeshCollider.h"
 #include "TouchableObject.h"
+#include "CollisionAttribute.h"
 
 #include <cassert>
 #include <sstream>
@@ -94,14 +95,13 @@ void GamePlayScene::Update()
 			//クリア
 			if (goal->IsGoal()) isclear = true;
 		}
-		for (std::unique_ptr<ItemJump>& itemj : jItems_)
+		for (std::unique_ptr<Item>& item : items_)
 		{
 			
-			if (itemj->IsGet())spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, itemj->GetEasing().num_X});
-			else spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,itemj->GetEasing().start});
-			itemj->Update();
+			if (item->IsGetJump()) spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, item->GetEasing().num_X });
+			else spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,item->GetEasing().start});
+			item->Update();
 		}
-		for (std::unique_ptr<ItemHeal>& itemh : hItems_)itemh->Update();
 		
 
 		for (Object3d*& object : objects) object->Update();
@@ -190,8 +190,7 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
-	for (std::unique_ptr<ItemJump>& itemj : jItems_)itemj->Draw();
-	for (std::unique_ptr<ItemHeal>& itemh : hItems_)itemh->Draw();
+	for (std::unique_ptr<Item>& item : items_)item->Draw();
 	for (auto& object : objects)object->Draw();
 
 	//モデル描画後処理
@@ -203,7 +202,7 @@ void GamePlayScene::Draw()
 	//エフェクト描画
 	pm_->Draw();
 	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();
-	for (std::unique_ptr<ItemHeal>& itemh : hItems_)itemh->DrawParticle();
+	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -216,9 +215,9 @@ void GamePlayScene::Draw()
 	else
 	{
 		spritePauseInfo_->Draw();
-		for (std::unique_ptr<ItemJump>& itemj : jItems_)
+		for (std::unique_ptr<Item>& item : items_)
 		{
-			if (itemj->IsGet())spriteItemJumpBar_->Draw();
+			if (item->IsGetJump())spriteItemJumpBar_->Draw();
 		}
 	}
 }
@@ -356,60 +355,38 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		//アイテム
 		else if (objectData.objectType.find("ITEM") == 0)
 		{
+			//アイテム初期化
+			std::unique_ptr<Item> newitem;
+			std::unique_ptr<Player>& player = players_.front();
 			//ジャンプ
 			if (objectData.objectPattern.find("JUMP") == 0)
 			{
-				//アイテム初期化
-				std::unique_ptr<ItemJump> newitemj;
-				std::unique_ptr<Player>& player = players_.front();
-				newitemj = ItemJump::Create(modelItemJump_, player.get());
-				// 座標
-				DirectX::XMFLOAT3 pos;
-				DirectX::XMStoreFloat3(&pos, objectData.trans);
-				newitemj->SetPosition(pos);
-
-				// 回転角
-				DirectX::XMFLOAT3 rot;
-				DirectX::XMStoreFloat3(&rot, objectData.rot);
-				newitemj->SetRotation(rot);
-
-				// 座標
-				DirectX::XMFLOAT3 scale;
-				DirectX::XMStoreFloat3(&scale, objectData.scale);
-				newitemj->SetScale(scale);
-
-				newitemj->SetCamera(camera_);
-				newitemj->Update();
-				//リストに登録
-				jItems_.push_back(std::move(newitemj));
+				newitem = Item::Create(modelItemJump_, player.get(),SUBCOLLISION_ATTR_ITEM_JUMP);
 			}
 			//回復アイテム
 			else if (objectData.objectPattern.find("HEAL") == 0)
 			{
-				//アイテム初期化
-				std::unique_ptr<ItemHeal> newitemh;
-				std::unique_ptr<Player>& player = players_.front();
-				newitemh = ItemHeal::Create(modelItemHeal_, player.get());
-				// 座標
+				newitem = Item::Create(modelItemHeal_, player.get(), SUBCOLLISION_ATTR_ITEM_HEAL);
+			}
+			// 座標
 				DirectX::XMFLOAT3 pos;
 				DirectX::XMStoreFloat3(&pos, objectData.trans);
-				newitemh->SetPosition(pos);
+				newitem->SetPosition(pos);
 
 				// 回転角
 				DirectX::XMFLOAT3 rot;
 				DirectX::XMStoreFloat3(&rot, objectData.rot);
-				newitemh->SetRotation(rot);
+				newitem->SetRotation(rot);
 
 				// 座標
 				DirectX::XMFLOAT3 scale;
 				DirectX::XMStoreFloat3(&scale, objectData.scale);
-				newitemh->SetScale(scale);
+				newitem->SetScale(scale);
 
-				newitemh->SetCamera(camera_);
-				newitemh->Update();
+				newitem->SetCamera(camera_);
+				newitem->Update();
 				//リストに登録
-				hItems_.push_back(std::move(newitemh));
-			}
+				items_.push_back(std::move(newitem));
 		}
 		//地形
 		else
@@ -469,7 +446,7 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("enemy1", modelEnemy_));
 	models.insert(std::make_pair("sphere", modelGoal_));
-	models.insert(std::make_pair("itemjump", modelItemJump_));
+	models.insert(std::make_pair("Itemjump", modelItemJump_));
 	models.insert(std::make_pair("itemheal", modelItemHeal_));
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
