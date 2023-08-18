@@ -39,7 +39,7 @@ bool EnemyBoss::Initialize() {
 
 	modelBullet_ = Model::LoadFromOBJ("enemybullet");
 
-	Stage1Parameter();
+	Parameter();
 
 	startCount= std::chrono::steady_clock::now();	//開始時間
 	nowCount= std::chrono::steady_clock::now();		//現在時間
@@ -56,7 +56,7 @@ bool EnemyBoss::Initialize() {
 }
 
 //パラメータ
-void EnemyBoss::Stage1Parameter() {
+void EnemyBoss::Parameter() {
 
 	isReverse_ = false;
 	//初期ステージ
@@ -68,9 +68,9 @@ void EnemyBoss::Stage1Parameter() {
 	phase_ = Phase::ApproachStage1;
 
 	//発射タイマー初期化
-	fireTimer = kFireIntervalStage1;
+	fireTimer = kFireInterval;
 
-	life_ = 40;
+	life_ = 10;
 	isDead_ = false;
 
 	isReverse_ = false;
@@ -78,7 +78,7 @@ void EnemyBoss::Stage1Parameter() {
 }
 
 //リセット
-void EnemyBoss::Reset() { Stage1Parameter(); }
+void EnemyBoss::Reset() { Parameter(); }
 
 //更新
 void EnemyBoss::Update() {
@@ -88,12 +88,12 @@ void EnemyBoss::Update() {
 	switch (phase_) {
 	case EnemyBoss::Phase::ApproachStage1:
 
-		UpdateApproachStage1();
+		UpdateApproach();
 		break;
 
 	case EnemyBoss::Phase::AttackStage1:
 
-		UpdateAttackStage1();
+		UpdateAttack();
 
 		break;
 	}
@@ -195,7 +195,7 @@ void EnemyBoss::Draw() {
 
 //状態変化用の更新関数
 //接近
-void EnemyBoss::UpdateApproachStage1() {
+void EnemyBoss::UpdateApproach() {
 	//速度
 	XMFLOAT3 velocity;
 	float cameraMove = camera_->GetEye().x;
@@ -214,7 +214,7 @@ void EnemyBoss::UpdateApproachStage1() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = kFireIntervalStage1;
+		fireTimer = kFireInterval;
 	}
 
 	//指定の位置に到達したら攻撃
@@ -223,7 +223,7 @@ void EnemyBoss::UpdateApproachStage1() {
 	}
 }
 //攻撃
-void EnemyBoss::UpdateAttackStage1() {
+void EnemyBoss::UpdateAttack() {
 
 	//速度
 	float cameraMove = camera_->GetEye().x;
@@ -267,7 +267,7 @@ void EnemyBoss::UpdateAttackStage1() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = kFireIntervalStage1;
+		fireTimer = kFireInterval;
 	}
 	//死んだら
 	if (life_ <= 0) {

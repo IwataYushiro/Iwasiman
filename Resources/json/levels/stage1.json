@@ -224,8 +224,8 @@
                 ]
             },
             "file_name": "boss1",
-            "objecttype": "ENEMY",
-            "objectpattern": "BOSS"
+            "objecttype": "BOSS",
+            "objectpattern": "STAGE1"
         },
         {
             "type": "MESH",

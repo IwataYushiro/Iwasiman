@@ -297,12 +297,38 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			players_.push_back(std::move(newplayer));
 		}
 		//“G
-		else if (objectData.objectType.find("ENEMY") == 0)
+		//else if (objectData.objectType.find("ENEMY") == 0)
+		//{
+		//	//“G‰Šú‰»
+		//	std::unique_ptr<EnemyBoss> newenemy;
+		//	std::unique_ptr<Player>& player = players_.front();
+		//	// À•W
+		//	DirectX::XMFLOAT3 pos;
+		//	DirectX::XMStoreFloat3(&pos, objectData.trans);
+		//	newenemy->SetPosition(pos);
+
+		//	// ‰ñ“]Šp
+		//	DirectX::XMFLOAT3 rot;
+		//	DirectX::XMStoreFloat3(&rot, objectData.rot);
+		//	newenemy->SetRotation(rot);
+
+		//	// À•W
+		//	DirectX::XMFLOAT3 scale;
+		//	DirectX::XMStoreFloat3(&scale, objectData.scale);
+		//	newenemy->SetScale(scale);
+
+		//	newenemy->SetCamera(camera_);
+		//	newenemy->Update();
+		//	//ƒŠƒXƒg‚É“o˜^
+		//	enemys_.push_back(std::move(newenemy));
+		//}
+		//ƒ{ƒX
+		else if (objectData.objectType.find("BOSS") == 0)
 		{
 			//“G‰Šú‰»
 			std::unique_ptr<EnemyBoss> newboss;
 			std::unique_ptr<Player>& player = players_.front();
-			if (objectData.objectPattern.find("BOSS") == 0)
+			if (objectData.objectPattern.find("STAGE1") == 0)
 				newboss = EnemyBoss::Create(modelBoss1_, player.get(), this);
 			// À•W
 			DirectX::XMFLOAT3 pos;

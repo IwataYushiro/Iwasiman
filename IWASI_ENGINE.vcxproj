@@ -356,6 +356,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Enemy1.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyBoss.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Goal.cpp" />
@@ -409,6 +410,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\BaseEnemy.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Enemy1.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyBoss.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyBullet.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Goal.h" />

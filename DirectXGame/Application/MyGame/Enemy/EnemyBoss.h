@@ -27,7 +27,7 @@ public:
 	static std::unique_ptr<EnemyBoss> Create(Model* model = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 	//弾発射間隔
-	static const int kFireIntervalStage1 = 40;
+	static const int kFireInterval = 40;
 	//初期化
 	bool Initialize()override;
 
@@ -35,7 +35,7 @@ public:
 	void Reset();
 	
 	//パラメータ
-	void Stage1Parameter();
+	void Parameter();
 	//更新
 	void Update()override;
 	//転送　
@@ -49,9 +49,9 @@ public:
 
 	//状態変化用の更新関数
 	//接近
-	void UpdateApproachStage1();
+	void UpdateApproach();
 	//攻撃
-	void UpdateAttackStage1();
+	void UpdateAttack();
 	//離脱
 	void UpdateLeave();
 
