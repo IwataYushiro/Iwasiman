@@ -14,7 +14,7 @@ class CollisionManager;
 class GamePlayScene;
 
 //ìG
-class Enemy:public Object3d {
+class EnemyBoss:public Object3d {
 private:
 	// DirectX::Çè»ó™
 	using XMFLOAT2 = DirectX::XMFLOAT2;
@@ -23,8 +23,8 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	~Enemy();
-	static std::unique_ptr<Enemy> Create(Model* model = nullptr,
+	~EnemyBoss();
+	static std::unique_ptr<EnemyBoss> Create(Model* model = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 	//íeî≠éÀä‘äu
 	static const int kFireIntervalStage1 = 40;

@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "EnemyBoss.h"
 #include <cassert>
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
@@ -7,16 +7,16 @@
 #include "GamePlayScene.h"
 
 using namespace DirectX;
-CollisionManager* Enemy::colManager_ = CollisionManager::GetInstance();
+CollisionManager* EnemyBoss::colManager_ = CollisionManager::GetInstance();
 
-Enemy::~Enemy() {
+EnemyBoss::~EnemyBoss() {
 	delete modelBullet_;
 }
 
-std::unique_ptr<Enemy> Enemy::Create(Model* model,Player* player,GamePlayScene* gamescene)
+std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model,Player* player,GamePlayScene* gamescene)
 {
 	//インスタンス生成
-	std::unique_ptr<Enemy> ins = std::make_unique<Enemy>();
+	std::unique_ptr<EnemyBoss> ins = std::make_unique<EnemyBoss>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
@@ -33,7 +33,7 @@ std::unique_ptr<Enemy> Enemy::Create(Model* model,Player* player,GamePlayScene* 
 }
 
 // 初期化
-bool Enemy::Initialize() {
+bool EnemyBoss::Initialize() {
 	
 	if (!Object3d::Initialize()) return false;
 
@@ -56,7 +56,7 @@ bool Enemy::Initialize() {
 }
 
 //パラメータ
-void Enemy::Stage1Parameter() {
+void EnemyBoss::Stage1Parameter() {
 
 	isReverse_ = false;
 	//初期ステージ
@@ -78,20 +78,20 @@ void Enemy::Stage1Parameter() {
 }
 
 //リセット
-void Enemy::Reset() { Stage1Parameter(); }
+void EnemyBoss::Reset() { Stage1Parameter(); }
 
 //更新
-void Enemy::Update() {
+void EnemyBoss::Update() {
 
 	
 	//座標を移動させる
 	switch (phase_) {
-	case Enemy::Phase::ApproachStage1:
+	case EnemyBoss::Phase::ApproachStage1:
 
 		UpdateApproachStage1();
 		break;
 
-	case Enemy::Phase::AttackStage1:
+	case EnemyBoss::Phase::AttackStage1:
 
 		UpdateAttackStage1();
 
@@ -101,7 +101,7 @@ void Enemy::Update() {
 
 	//座標を移動させる
 	switch (phase_) {
-	case Enemy::Phase::Leave:
+	case EnemyBoss::Phase::Leave:
 		UpdateLeave();
 		break;
 
@@ -114,7 +114,7 @@ void Enemy::Update() {
 }
 
 //転送
-void Enemy::Trans() {
+void EnemyBoss::Trans() {
 
 	XMMATRIX world;
 	//行列更新
@@ -137,7 +137,7 @@ void Enemy::Trans() {
 
 }
 //弾発射
-void Enemy::Fire() {
+void EnemyBoss::Fire() {
 	assert(player_);
 
 	//弾の速度
@@ -181,7 +181,7 @@ void Enemy::Fire() {
 }
 
 //描画
-void Enemy::Draw() {
+void EnemyBoss::Draw() {
 	if (!isDead_) {
 		//モデルの描画
 		Object3d::Draw();
@@ -195,7 +195,7 @@ void Enemy::Draw() {
 
 //状態変化用の更新関数
 //接近
-void Enemy::UpdateApproachStage1() {
+void EnemyBoss::UpdateApproachStage1() {
 	//速度
 	XMFLOAT3 velocity;
 	float cameraMove = camera_->GetEye().x;
@@ -223,7 +223,7 @@ void Enemy::UpdateApproachStage1() {
 	}
 }
 //攻撃
-void Enemy::UpdateAttackStage1() {
+void EnemyBoss::UpdateAttackStage1() {
 
 	//速度
 	float cameraMove = camera_->GetEye().x;
@@ -281,7 +281,7 @@ void Enemy::UpdateAttackStage1() {
 }
 
 //離脱
-void Enemy::UpdateLeave() {
+void EnemyBoss::UpdateLeave() {
 	//速度
 	XMFLOAT3 velocity;
 
@@ -293,7 +293,7 @@ void Enemy::UpdateLeave() {
 	Object3d::SetPosition(pos);
 }
 
-const XMFLOAT3 Enemy::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
+const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
 	XMFLOAT3 ans;
 	ans.x=(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
@@ -308,7 +308,7 @@ const XMFLOAT3 Enemy::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFL
 
 
 //ワールド座標を取得
-XMFLOAT3 Enemy::GetWorldPosition() {
+XMFLOAT3 EnemyBoss::GetWorldPosition() {
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -320,7 +320,7 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 
 	return worldPos;
 }
-void Enemy::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void EnemyBoss::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)

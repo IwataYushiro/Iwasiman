@@ -520,7 +520,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemAttack.cpp">
       <Filter>Source File\Application\MyGame\Item</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Enemy.cpp">
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyBoss.cpp">
       <Filter>Source File\Application\MyGame\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyBullet.cpp">
@@ -690,10 +690,13 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemAttack.h">
       <Filter>Header File\Application\MyGame\Item</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Enemy.h">
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyBoss.h">
       <Filter>Header File\Application\MyGame\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyBullet.h">
+      <Filter>Header File\Application\MyGame\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\BaseEnemy.h">
       <Filter>Header File\Application\MyGame\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

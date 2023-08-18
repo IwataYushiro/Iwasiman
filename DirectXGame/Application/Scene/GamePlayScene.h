@@ -7,7 +7,7 @@
 #include "Object3d.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
-#include "Enemy.h"
+#include "EnemyBoss.h"
 #include "Goal.h"
 #include "Player.h"
 
@@ -95,8 +95,8 @@ private:
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
 
-	std::list<std::unique_ptr<Enemy>> enemys_;
-	Model* modelEnemy_ = nullptr;
+	std::list<std::unique_ptr<EnemyBoss>> enemys_;
+	Model* modelBoss1_ = nullptr;
 
 	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;

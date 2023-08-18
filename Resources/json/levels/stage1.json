@@ -223,7 +223,7 @@
                     3.0
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "boss1",
             "objecttype": "ENEMY",
             "objectpattern": "BOSS"
         },
