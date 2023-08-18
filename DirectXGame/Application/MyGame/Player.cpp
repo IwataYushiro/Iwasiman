@@ -266,7 +266,8 @@ void Player::JumpBack()
 				isJumpBack = true;
 			}
 		}
-		else
+	}
+	if (isJumpBack)
 		{
 			//Œ»İŠÔ‚ğæ“¾‚·‚é
 			nowCount = std::chrono::steady_clock::now();
@@ -292,7 +293,7 @@ void Player::JumpBack()
 				isJumpBack = false;
 			}
 		}
-	}
+	
 	Object3d::SetPosition(move);
 }
 

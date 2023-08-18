@@ -67,11 +67,11 @@ void GamePlayScene::Update()
 
 	players_.remove_if(
 		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
-	enemys_.remove_if(
+	bosss_.remove_if(
 		[](std::unique_ptr<EnemyBoss>& enemy) { return enemy->IsDead(); });
 
 	//“GXV
-	for (std::unique_ptr<EnemyBoss>& enemy : enemys_) enemy->Update();
+	for (std::unique_ptr<EnemyBoss>& boss : bosss_) boss->Update();
 	//’eXV
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
 
@@ -185,7 +185,7 @@ void GamePlayScene::Draw()
 	//ƒ‚ƒfƒ‹•`‰æ
 	for (std::unique_ptr<Player>& player : players_)player->Draw();
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Draw();
-	for (std::unique_ptr<EnemyBoss>& enemy : enemys_) enemy->Draw();
+	for (std::unique_ptr<EnemyBoss>& boss : bosss_) boss->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
 	for (std::unique_ptr<Item>& item : items_)item->Draw();
@@ -300,29 +300,29 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		else if (objectData.objectType.find("ENEMY") == 0)
 		{
 			//“G‰Šú‰»
-			std::unique_ptr<EnemyBoss> newenemy;
+			std::unique_ptr<EnemyBoss> newboss;
 			std::unique_ptr<Player>& player = players_.front();
 			if (objectData.objectPattern.find("BOSS") == 0)
-				newenemy = EnemyBoss::Create(modelBoss1_, player.get(), this);
+				newboss = EnemyBoss::Create(modelBoss1_, player.get(), this);
 			// À•W
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
-			newenemy->SetPosition(pos);
+			newboss->SetPosition(pos);
 
 			// ‰ñ“]Šp
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
-			newenemy->SetRotation(rot);
+			newboss->SetRotation(rot);
 
 			// À•W
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
-			newenemy->SetScale(scale);
+			newboss->SetScale(scale);
 
-			newenemy->SetCamera(camera_);
-			newenemy->Update();
+			newboss->SetCamera(camera_);
+			newboss->Update();
 			//ƒŠƒXƒg‚É“o˜^
-			enemys_.push_back(std::move(newenemy));
+			bosss_.push_back(std::move(newboss));
 		}
 		//ƒS[ƒ‹
 		else if (objectData.objectType.find("GOAL") == 0)

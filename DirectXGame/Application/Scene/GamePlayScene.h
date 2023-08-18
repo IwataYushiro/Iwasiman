@@ -95,7 +95,7 @@ private:
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
 
-	std::list<std::unique_ptr<EnemyBoss>> enemys_;
+	std::list<std::unique_ptr<EnemyBoss>> bosss_;
 	Model* modelBoss1_ = nullptr;
 
 	std::list<std::unique_ptr<Goal>> goals_;
