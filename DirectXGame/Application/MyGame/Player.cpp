@@ -83,12 +83,12 @@ void Player::Update() {
 
 	pmDash_->SetCamera(camera_);
 
-	if (!isDead_) {
-		//死亡フラグの立った弾を削除
-		bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
-
+	if (!isDead_) 
+	{
+		if (life_ <= 0) isDead_ = true;
+		
 		//移動処理
-		Move();
+		if (!isJumpBack)Move();
 		//攻撃処理
 		FallAndJump();
 		JumpBack();
@@ -261,6 +261,7 @@ void Player::JumpBack()
 		{
 			if (input_->TriggerKey(DIK_Z))
 			{
+
 				if (isBack)isBack = false;
 				else isBack = true;
 				isJumpBack = true;
@@ -268,32 +269,32 @@ void Player::JumpBack()
 		}
 	}
 	if (isJumpBack)
+	{
+		//現在時間を取得する
+		nowCount = std::chrono::steady_clock::now();
+		//前回記録からの経過時間を取得する
+		elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
+
+		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+		timeRate = min(elapsed / maxTime, 1.0f);
+
+		if (isBack)move = Bezier3(end, p2, p1, start, timeRate);
+
+		else move = Bezier3(start, p1, p2, end, timeRate);
+
+		if (move.z >= end.z)
 		{
-			//現在時間を取得する
-			nowCount = std::chrono::steady_clock::now();
-			//前回記録からの経過時間を取得する
-			elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
-
-			float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
-
-			timeRate = min(elapsed / maxTime, 1.0f);
-
-			if (isBack)move = Bezier3(end, p2, p1, start, timeRate);
-
-			else move = Bezier3(start, p1, p2, end, timeRate);
-
-			if (move.z >= end.z)
-			{
-				startCount = std::chrono::steady_clock::now();
-				isJumpBack = false;
-			}
-			else if (move.z <= start.z)
-			{
-				startCount = std::chrono::steady_clock::now();
-				isJumpBack = false;
-			}
+			startCount = std::chrono::steady_clock::now();
+			isJumpBack = false;
 		}
-	
+		else if (move.z <= start.z)
+		{
+			startCount = std::chrono::steady_clock::now();
+			isJumpBack = false;
+		}
+	}
+
 	Object3d::SetPosition(move);
 }
 
@@ -417,7 +418,7 @@ void Player::Attack() {
 		XMFLOAT3 velocity;
 		if (isRight_)velocity = { kBulletSpeed, 0.0f, 0.0f };
 		else velocity = { -kBulletSpeed, 0.0f, 0.0f };
-		
+
 		XMMATRIX matVec = XMMatrixIdentity();
 		matVec.r[0].m128_f32[0] = velocity.x;
 		matVec.r[0].m128_f32[1] = velocity.y;
@@ -484,9 +485,7 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 		life_--;
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
-		if (life_ <= 0) {
-			isDead_ = true;
-		}
+		
 		pmDash_->Update();
 	}
 
