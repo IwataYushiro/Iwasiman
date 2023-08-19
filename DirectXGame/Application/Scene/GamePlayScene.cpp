@@ -19,8 +19,12 @@ Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
+
+GamePlayScene::GamePlayScene(int stagenum) :stageNum(stagenum){}
+
 void GamePlayScene::Initialize()
 {
+	
 	spCommon_ = SpriteCommon::GetInstance();
 	colManager_ = CollisionManager::GetInstance();
 	// 描画初期化処理　ここから
@@ -41,7 +45,8 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	LoadLVData("stage1");
+	if (stageNum == 1)LoadLVData("stage1");
+	else if (stageNum == 2)LoadLVData("stage2");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
@@ -109,7 +114,7 @@ void GamePlayScene::Update()
 		camera_->Update();
 		lightGroup_->Update();
 		pm_->Update();
-
+		
 		if (isGameover)
 		{
 			if (input_->TriggerKey(DIK_SPACE))
@@ -120,14 +125,10 @@ void GamePlayScene::Update()
 		}
 		if (isclear)
 		{
-			if (input_->TriggerKey(DIK_SPACE))
-			{
-				camera_->Reset();
-				sceneManager_->ChangeScene("TITLE");
-			}
+			sceneManager_->ChangeScene("STAGECLEAR", stageNum);
+			isclear = false;
 		}
 		colManager_->CheckAllCollisions();
-
 		//Pause機能
 		if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
 		{
@@ -260,7 +261,6 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
 	levelData = LevelLoader::LoadFile(stagePath);
-
 	// レベルデータからオブジェクトを生成、配置
 	for (LevelData::ObjectData& objectData : levelData->objects) {
 
@@ -275,6 +275,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		{
 			//プレイヤー初期化
 			std::unique_ptr<Player> newplayer;
+
 			newplayer = Player::Create(modelPlayer_, this);
 			// 座標
 			DirectX::XMFLOAT3 pos;

@@ -45,6 +45,9 @@ bool Item::Initialize(unsigned short subAttribute)
 	collider->SetAttribute(COLLISION_ATTR_ITEM);
 	collider->SetSubAttribute(subAttribute);
 
+	isGet_ = false;
+	isGetJump_ = false;
+
 	//パーティクル
 	p = Particle::LoadFromParticleTexture("particle6.png");
 	pm_ = ParticleManager::Create();
@@ -54,6 +57,12 @@ bool Item::Initialize(unsigned short subAttribute)
 
 	return true;
 
+}
+
+void Item::Reset()
+{
+	isGet_ = false;
+	isGetJump_ = false;
 }
 
 void Item::Update()
@@ -177,8 +186,8 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 void Item::LoadSprite()
 {
 	//アイテム関係
-	spCommon_->LoadTexture(30, "itemtex/itemjumpbar.png");
-	spriteItemJumpBar_->Initialize(spCommon_, 30);
+	spCommon_->LoadTexture(1000, "itemtex/itemjumpbar.png");
+	spriteItemJumpBar_->Initialize(spCommon_, 1000);
 	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f });
 
 	spriteItemJumpBar_->Update();

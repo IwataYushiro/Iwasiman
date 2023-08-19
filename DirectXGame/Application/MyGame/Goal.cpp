@@ -27,7 +27,7 @@ std::unique_ptr<Goal> Goal::Create(Model* model)
 bool Goal::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
-
+	isGoal_ = false;
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_GOAL);
@@ -35,6 +35,8 @@ bool Goal::Initialize()
 	return true;
 	
 }
+
+void Goal::Reset() { isGoal_ = false; }
 
 void Goal::Update()
 {

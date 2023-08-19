@@ -31,6 +31,8 @@ public:
 		, unsigned short subAttribute = 0b1000000000000000);
 	//初期化
 	bool Initialize(unsigned short subAttribute);
+	//リセット
+	void Reset();
 	//更新
 	void Update()override;
 	//ジャンプ強化

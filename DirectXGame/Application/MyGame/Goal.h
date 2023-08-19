@@ -22,6 +22,7 @@ public:
 	static std::unique_ptr<Goal> Create(Model* model = nullptr);
 	//‰Šú‰»
 	bool Initialize()override;
+	void Reset();
 	//XV
 	void Update()override;
 

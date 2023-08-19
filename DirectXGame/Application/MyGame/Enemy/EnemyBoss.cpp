@@ -60,11 +60,7 @@ bool EnemyBoss::Initialize() {
 void EnemyBoss::Parameter() {
 
 	isReverse_ = false;
-	//初期ステージ
-	scale = { 3.0f,3.0f,3.0f };
-
-	Object3d::SetScale(scale);
-
+	
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
 

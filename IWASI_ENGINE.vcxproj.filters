@@ -529,6 +529,9 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Enemy1.cpp">
       <Filter>Source File\Application\MyGame\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\StageClearScene.cpp">
+      <Filter>Source File\Application\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -704,6 +707,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Enemy1.h">
       <Filter>Header File\Application\MyGame\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\StageClearScene.h">
+      <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

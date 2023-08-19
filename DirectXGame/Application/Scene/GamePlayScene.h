@@ -32,17 +32,17 @@ class TouchableObject;
 class GamePlayScene :public BaseScene
 {
 public://構造体類
+	GamePlayScene(int stagenum);
 	enum Scene { //シーンID
-		title,
-		howtoplay,
-		stage,
-		clear,
-		gameover,
+		tutorial,
+		stage1,
+		stage2,
 	};
 
 public:
+	
 	//初期化
-	void Initialize() override;
+	void Initialize()override;
 	//更新
 	void Update() override;
 	//描画
@@ -60,7 +60,7 @@ public:
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
 
 private://静的メンバ変数
-
+	
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤
@@ -127,6 +127,7 @@ private:
 	CollisionManager* colManager_ = nullptr;
 
 private:
+	int stageNum;
 	//自機弾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
 	//敵弾
@@ -141,4 +142,5 @@ private:
 	void LoadSprite();
 	//モデル読み込み
 	void LoadModel();
+
 };

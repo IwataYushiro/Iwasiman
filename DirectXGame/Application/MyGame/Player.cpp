@@ -40,6 +40,9 @@ bool Player::Initialize() {
 
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 
+	life_ = 5;
+	isDead_ = false;
+
 	isRight_ = true;
 	//ジャンプしたか
 	onGround = true;
@@ -70,13 +73,25 @@ bool Player::Initialize() {
 }
 
 void Player::Reset() {
-	pos = { -20.0f, -10.0f, -60.0f };
-
+	
 	life_ = 5;
 	isDead_ = false;
-	//弾リセット
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) bullet->Reset();
 
+	isRight_ = true;
+	//ジャンプしたか
+	onGround = true;
+
+	//奥側にいるか
+	isJumpBack = false;
+	//奧にいるか
+	isBack = false;
+
+	//奥側ジャンプに使うベジェ曲線用の時間
+	startCount = std::chrono::steady_clock::now();	//開始時間
+	nowCount = std::chrono::steady_clock::now();		//現在時間
+	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
+	maxTime = 1.0f;					//全体時間
+	
 }
 void Player::Update() {
 	input_ = Input::GetInstance();
