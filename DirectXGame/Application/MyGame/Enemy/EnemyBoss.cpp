@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "GamePlayScene.h"
 
+#include "MyMath.h"
 using namespace DirectX;
 CollisionManager* EnemyBoss::colManager_ = CollisionManager::GetInstance();
 
@@ -214,7 +215,7 @@ void EnemyBoss::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = kFireInterval;
+		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
 	}
 
 	//指定の位置に到達したら攻撃
@@ -267,7 +268,7 @@ void EnemyBoss::UpdateAttack() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = kFireInterval;
+		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval*2);
 	}
 	//死んだら
 	if (life_ <= 0) {
