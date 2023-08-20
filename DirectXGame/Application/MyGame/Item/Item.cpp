@@ -85,7 +85,7 @@ void Item::UpdateJumpPowerup()
 	if (isGetJump_)
 	{
 		ease.ease_out_cubic();
-		if (player_->OnGround())player_->SetJumpVYFist(4.0f);
+		if (player_->OnGround())player_->SetJumpVYFist(3.0f);
 		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, ease.num_X });
 		count++;
 	}
@@ -164,7 +164,7 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			
+			pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
 			if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP)
 			{
 				ease.Standby(false);
@@ -172,7 +172,7 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 			}
 			else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_HEAL)
 			{
-				pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
+				
 
 				player_->SetLife(player_->GetLife() + 1);
 

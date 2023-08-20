@@ -37,7 +37,8 @@ void StageClearScene::Initialize()
 	Object3d::SetLightGroup(lightGroup_);
 
 	UINT StageTex = 00;
-	spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
+	if (stageNum == 2)spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
+	else spCommon_->LoadTexture(StageTex, "texture/stageclear.png");
 	spriteStageClear_->Initialize(spCommon_, StageTex);
 
 }

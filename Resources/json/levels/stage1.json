@@ -205,30 +205,6 @@
         },
         {
             "type": "MESH",
-            "name": "Boss1",
-            "transform": {
-                "translation": [
-                    -150.0,
-                    30.0,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    3.0,
-                    3.0,
-                    3.0
-                ]
-            },
-            "file_name": "boss1",
-            "objecttype": "BOSS",
-            "objectpattern": "STAGE1"
-        },
-        {
-            "type": "MESH",
             "name": "ItemJump",
             "transform": {
                 "translation": [
@@ -298,6 +274,30 @@
             "file_name": "itemheal",
             "objecttype": "ITEM",
             "objectpattern": "HEAL"
+        },
+        {
+            "type": "MESH",
+            "name": "boss1",
+            "transform": {
+                "translation": [
+                    -150.0,
+                    30.0,
+                    10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    3.0,
+                    3.0,
+                    3.0
+                ]
+            },
+            "file_name": "boss1",
+            "objecttype": "BOSS",
+            "objectpattern": "STAGE1"
         }
     ]
 }
