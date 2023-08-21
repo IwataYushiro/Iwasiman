@@ -72,6 +72,8 @@ void GamePlayScene::Update()
 
 	players_.remove_if(
 		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
+	enemys_.remove_if(
+		[](std::unique_ptr<Enemy1>& enemy) {return enemy->IsDead(); });
 	bosss_.remove_if(
 		[](std::unique_ptr<EnemyBoss>& enemy) { return enemy->IsDead(); });
 
@@ -94,6 +96,7 @@ void GamePlayScene::Update()
 		//íeçXêV
 		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
 
+		for (std::unique_ptr<Enemy1>& enemy : enemys_) enemy->Update();
 		for (std::unique_ptr<Goal>& goal : goals_)
 		{
 			goal->Update();
@@ -186,6 +189,7 @@ void GamePlayScene::Draw()
 	//ÉÇÉfÉãï`âÊ
 	for (std::unique_ptr<Player>& player : players_)player->Draw();
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Draw();
+	for(std::unique_ptr<Enemy1>& enemy : enemys_) enemy->Draw();
 	for (std::unique_ptr<EnemyBoss>& boss : bosss_) boss->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
@@ -242,6 +246,7 @@ void GamePlayScene::Finalize()
 
 	//3DÉÇÉfÉã
 	delete modelPlayer_;
+	delete modelEnemy1_;
 	delete modelBoss1_;
 	delete modelSkydome;
 	delete modelItemJump_;
@@ -298,31 +303,32 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			players_.push_back(std::move(newplayer));
 		}
 		//ìG
-		//else if (objectData.objectType.find("ENEMY") == 0)
-		//{
-		//	//ìGèâä˙âª
-		//	std::unique_ptr<EnemyBoss> newenemy;
-		//	std::unique_ptr<Player>& player = players_.front();
-		//	// ç¿ïW
-		//	DirectX::XMFLOAT3 pos;
-		//	DirectX::XMStoreFloat3(&pos, objectData.trans);
-		//	newenemy->SetPosition(pos);
+		else if (objectData.objectType.find("ENEMY") == 0)
+		{
+			//ìGèâä˙âª
+			std::unique_ptr<Enemy1> newenemy;
+			std::unique_ptr<Player>& player = players_.front();
+			newenemy = Enemy1::Create(modelEnemy1_, player.get(), this);
+			// ç¿ïW
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newenemy->SetPosition(pos);
 
-		//	// âÒì]äp
-		//	DirectX::XMFLOAT3 rot;
-		//	DirectX::XMStoreFloat3(&rot, objectData.rot);
-		//	newenemy->SetRotation(rot);
+			// âÒì]äp
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newenemy->SetRotation(rot);
 
-		//	// ç¿ïW
-		//	DirectX::XMFLOAT3 scale;
-		//	DirectX::XMStoreFloat3(&scale, objectData.scale);
-		//	newenemy->SetScale(scale);
+			// ç¿ïW
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newenemy->SetScale(scale);
 
-		//	newenemy->SetCamera(camera_);
-		//	newenemy->Update();
-		//	//ÉäÉXÉgÇ…ìoò^
-		//	enemys_.push_back(std::move(newenemy));
-		//}
+			newenemy->SetCamera(camera_);
+			newenemy->Update();
+			//ÉäÉXÉgÇ…ìoò^
+			enemys_.push_back(std::move(newenemy));
+		}
 		//É{ÉX
 		else if (objectData.objectType.find("BOSS") == 0)
 		{
@@ -456,6 +462,7 @@ void GamePlayScene::LoadModel()
 {
 	// ÉÇÉfÉãì«Ç›çûÇ›
 	modelPlayer_ = Model::LoadFromOBJ("player");
+	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 	modelItemJump_ = Model::LoadFromOBJ("itemjump");
@@ -465,6 +472,7 @@ void GamePlayScene::LoadModel()
 	modelBox = Model::LoadFromOBJ("sphere2", true);
 
 	models.insert(std::make_pair("player", modelPlayer_));
+	models.insert(std::make_pair("enemy1", modelEnemy1_));
 	models.insert(std::make_pair("boss1", modelBoss1_));
 	models.insert(std::make_pair("sphere", modelGoal_));
 	models.insert(std::make_pair("Itemjump", modelItemJump_));

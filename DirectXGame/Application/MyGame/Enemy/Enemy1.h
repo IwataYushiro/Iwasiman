@@ -14,7 +14,7 @@ class CollisionManager;
 class GamePlayScene;
 
 //敵
-class EnemyBoss :public Object3d {
+class Enemy1 :public Object3d {
 private:
 	// DirectX::を省略
 	using XMFLOAT2 = DirectX::XMFLOAT2;
@@ -23,11 +23,11 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	~EnemyBoss();
-	static std::unique_ptr<EnemyBoss> Create(Model* model = nullptr,
+	~Enemy1();
+	static std::unique_ptr<Enemy1> Create(Model* model = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 	//弾発射間隔
-	static const int kFireIntervalS = 150;
+	static const int kFireInterval = 150;
 	//初期化
 	bool Initialize()override;
 
@@ -42,6 +42,8 @@ public:
 	void Trans();
 	//弾発射
 	void Fire();
+	//着地処理
+	void Landing();
 	//ワールド座標を取得
 	XMFLOAT3 GetWorldPosition();
 	//描画
@@ -50,12 +52,8 @@ public:
 	//状態変化用の更新関数
 	//接近
 	void UpdateApproach();
-	//攻撃
-	void UpdateAttack();
 	//離脱
 	void UpdateLeave();
-
-	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info, unsigned short attribute,
@@ -70,10 +68,7 @@ private:
 	//行動フェーズ
 	enum class Phase {
 		//ここからステージ1
-		ApproachStage1, //接近
-		AttackStage1,   //攻撃
-
-		//全体
+		Approach,
 		Leave, //離脱
 
 	};
@@ -89,28 +84,19 @@ private:
 	//アングル
 	XMFLOAT3 angle;
 	//半径
-	float radius_ = 5.0f;
+	float radius_ = 1.0f;
 	//自機
 	Player* player_ = nullptr;
 
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;
 
-	//時間計測
-	std::chrono::steady_clock::time_point startCount;	//開始時間
-	std::chrono::steady_clock::time_point nowCount;		//現在時間
-	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	float	maxTime = 5.0f;					//全体時間
-	float	timeRate;
-	//制御点
-	XMFLOAT3 start;
-	XMFLOAT3 p1;
-	XMFLOAT3 p2;
-	XMFLOAT3 end;
-
 	//死亡フラグとライフ
 	bool isDead_;
 	int life_;
+
+	bool onGround = true;
+	XMFLOAT3 fallVec;
 
 	//反転フラグ
 	bool isReverse_ = false;

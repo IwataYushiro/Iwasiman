@@ -170,30 +170,6 @@
         },
         {
             "type": "MESH",
-            "name": "Boss1",
-            "transform": {
-                "translation": [
-                    -150.0,
-                    30.0,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    3.0,
-                    3.0,
-                    3.0
-                ]
-            },
-            "file_name": "boss1",
-            "objecttype": "BOSS",
-            "objectpattern": "STAGE1"
-        },
-        {
-            "type": "MESH",
             "name": "ItemJump",
             "transform": {
                 "translation": [
@@ -287,6 +263,53 @@
             "file_name": "itemjump",
             "objecttype": "ITEM",
             "objectpattern": "JUMP"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1",
+            "transform": {
+                "translation": [
+                    60.0,
+                    55.86119842529297,
+                    -8.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY"
+        },
+        {
+            "type": "MESH",
+            "name": "Boss1",
+            "transform": {
+                "translation": [
+                    -150.0,
+                    30.0,
+                    10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    3.0,
+                    3.0,
+                    3.0
+                ]
+            },
+            "file_name": "boss1",
+            "objecttype": "BOSS",
+            "objectpattern": "STAGE1"
         }
     ]
 }
