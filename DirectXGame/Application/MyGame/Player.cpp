@@ -42,6 +42,8 @@ bool Player::Initialize() {
 
 	life_ = 5;
 	isDead_ = false;
+	ishit = false;
+	mutekiCount = 0;
 
 	isRight_ = true;
 	//ƒWƒƒƒ“ƒv‚µ‚½‚©
@@ -102,6 +104,12 @@ void Player::Update() {
 	{
 		if (life_ <= 0) isDead_ = true;
 		
+		if (ishit) mutekiCount++; 
+		if (mutekiCount == MUTEKI_COUNT)
+		{
+			ishit = false;
+			mutekiCount = 0;
+		}
 		//ˆÚ“®ˆ—
 		if (!isJumpBack)Move();
 		//UŒ‚ˆ—
@@ -497,11 +505,13 @@ XMFLOAT3 Player::GetWorldPosition() {
 void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
+		if (ishit)return;
 		life_--;
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 		
 		pmDash_->Update();
+		ishit = true;
 	}
 
 

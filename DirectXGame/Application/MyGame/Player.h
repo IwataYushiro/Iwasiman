@@ -22,7 +22,8 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-
+public:
+	const int MUTEKI_COUNT = 60;
 public:
 	~Player();
 
@@ -108,7 +109,9 @@ private:
 	
 	//死亡フラグとライフ
 	bool isDead_ = false;
+	int mutekiCount = 0;
 	int life_ = 5;
+	bool ishit = false;
 	bool cameramove = true;
 	//パーティクル
 	Particle* particleDash_ = nullptr;
