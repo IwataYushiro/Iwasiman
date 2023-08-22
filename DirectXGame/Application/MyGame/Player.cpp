@@ -103,7 +103,8 @@ void Player::Update() {
 	if (!isDead_) 
 	{
 		if (life_ <= 0) isDead_ = true;
-		
+		if (position.y <= -60.0f)isDead_ = true;
+
 		if (ishit) mutekiCount++; 
 		if (mutekiCount == MUTEKI_COUNT)
 		{
@@ -118,7 +119,7 @@ void Player::Update() {
 		Attack();
 		//ˆÚ“®§ŒÀ
 		Trans();
-
+		
 	}
 	pmDash_->Update();
 

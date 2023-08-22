@@ -10,6 +10,7 @@
 using namespace DirectX;
 CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
 
+
 Enemy1::~Enemy1() {
 	delete modelBullet_;
 }
@@ -65,7 +66,7 @@ void Enemy1::Parameter() {
 	life_ = 3;
 	isDead_ = false;
 
-
+	kFireInterval = MyMath::RandomMTInt(100, 150);
 }
 
 //リセット
@@ -303,7 +304,7 @@ void Enemy1::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
+		fireTimer = MyMath::RandomMTInt(kFireInterval/2, kFireInterval);
 	}
 
 	if (!onGround)
@@ -324,7 +325,7 @@ void Enemy1::UpdateApproach() {
 		isDead_ = true;
 		life_ = 0;
 	}
-
+	if (position.y <= -60.0f)isDead_ = true;
 }
 
 //離脱

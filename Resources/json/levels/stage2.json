@@ -310,6 +310,75 @@
             "file_name": "boss1",
             "objecttype": "BOSS",
             "objectpattern": "STAGE1"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.001",
+            "transform": {
+                "translation": [
+                    0.0,
+                    51.988834381103516,
+                    -8.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.002",
+            "transform": {
+                "translation": [
+                    0.0,
+                    33.4109992980957,
+                    -8.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.003",
+            "transform": {
+                "translation": [
+                    0.0,
+                    102.51907348632812,
+                    22.401914596557617
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY"
         }
     ]
 }

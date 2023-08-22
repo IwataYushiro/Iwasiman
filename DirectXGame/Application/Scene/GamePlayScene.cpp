@@ -91,7 +91,7 @@ void GamePlayScene::Update()
 			if (!isclear || !isGameover) player->Update();
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 			//‚©‚ß‚¨‚×‚ç
-			if (player->GetPosition().y <= -60.0f || player->IsDead())isGameover = true;
+			if (player->IsDead())isGameover = true;
 		}
 		//’eXV
 		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();

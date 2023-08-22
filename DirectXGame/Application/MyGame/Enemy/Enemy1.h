@@ -27,7 +27,7 @@ public:
 	static std::unique_ptr<Enemy1> Create(Model* model = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 	//’e”­ËŠÔŠu
-	static const int kFireInterval = 150;
+	int kFireInterval;
 	//‰Šú‰»
 	bool Initialize()override;
 
