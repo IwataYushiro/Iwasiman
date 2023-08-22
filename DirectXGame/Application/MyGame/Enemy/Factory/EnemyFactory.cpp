@@ -2,22 +2,20 @@
 #include "Enemy1.h"
 #include "EnemyBoss.h"
 
-std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyName,Model* model, Player* player, GamePlayScene* gamescene)
+std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyName,
+	Model* model, Player* player, GamePlayScene* gamescene)
 {
-	//次のシーンを生成
-	std::unique_ptr<BaseEnemy> newenemy;
-
-	if (enemyName == "ENEMY1")
+	if (enemyName.find("ENEMY1") == 0)
 	{
 		//クリボー風雑魚
-		newenemy = Enemy1::Create(model, player, gamescene);
+		return Enemy1::Create(model, player, gamescene);
 	}
-	
-	else if (enemyName == "BOSS1")
+
+	else if (enemyName.find("BOSS1") == 0)
 	{
 		//ベジェ曲線で動くボス
-		newenemy = EnemyBoss::Create(model, player, gamescene);
+		return EnemyBoss::Create(model, player, gamescene);
 	}
 	
-	return newenemy;
+	return nullptr;
 }

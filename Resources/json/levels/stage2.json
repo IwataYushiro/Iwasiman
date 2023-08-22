@@ -285,7 +285,8 @@
                 ]
             },
             "file_name": "enemy1",
-            "objecttype": "ENEMY"
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
         },
         {
             "type": "MESH",
@@ -308,8 +309,8 @@
                 ]
             },
             "file_name": "boss1",
-            "objecttype": "BOSS",
-            "objectpattern": "STAGE1"
+            "objecttype": "ENEMY",
+            "objectpattern": "BOSS1"
         },
         {
             "type": "MESH",
@@ -332,7 +333,8 @@
                 ]
             },
             "file_name": "enemy1",
-            "objecttype": "ENEMY"
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
         },
         {
             "type": "MESH",
@@ -355,7 +357,8 @@
                 ]
             },
             "file_name": "enemy1",
-            "objecttype": "ENEMY"
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
         },
         {
             "type": "MESH",
@@ -378,7 +381,8 @@
                 ]
             },
             "file_name": "enemy1",
-            "objecttype": "ENEMY"
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
         }
     ]
 }

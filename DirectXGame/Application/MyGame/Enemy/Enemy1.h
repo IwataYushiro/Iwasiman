@@ -2,7 +2,7 @@
 #include "BaseEnemy.h"
 
 #include "Camera.h"
-#include "EnemyBullet.h"
+
 #include "Model.h"
 #include <chrono>
 #include <DirectXMath.h>
@@ -22,6 +22,7 @@ public:
 	~Enemy1();
 	static std::unique_ptr<Enemy1> Create(Model* model = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
+
 	//’e”­ËŠÔŠu
 	int kFireInterval;
 	//‰Šú‰»
@@ -82,10 +83,7 @@ private:
 	//”¼Œa
 	float radius_ = 1.0f;
 	
-	//€–Sƒtƒ‰ƒO‚Æƒ‰ƒCƒt
-	bool isDead_;
-	int life_;
-
+	
 	bool onGround = true;
 	XMFLOAT3 fallVec;
 
@@ -94,7 +92,7 @@ private:
 
 
 public:
-	bool IsDead() const { return isDead_; }
+	
 	void SetPlayer(Player* player) { player_ = player; }
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

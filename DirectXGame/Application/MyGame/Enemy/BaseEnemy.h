@@ -1,5 +1,6 @@
 #pragma once
 #include "Object3d.h"
+#include "EnemyBullet.h"
 
 //自機クラスの前方宣言
 class Player;
@@ -28,5 +29,10 @@ protected:
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;
 
+	//死亡フラグとライフ
+	bool isDead_;
+	int life_;
+public://アクセッサ
+	bool IsDead() const { return isDead_; }
 };
 
