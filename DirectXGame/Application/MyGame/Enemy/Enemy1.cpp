@@ -8,8 +8,8 @@
 
 #include "MyMath.h"
 using namespace DirectX;
-CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
 
+CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
 
 Enemy1::~Enemy1() {
 	delete modelBullet_;

@@ -1,20 +1,16 @@
 #pragma once
+#include "BaseEnemy.h"
+
 #include "Camera.h"
 #include "EnemyBullet.h"
 #include "Model.h"
-#include "Object3d.h"
 #include <chrono>
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
 
-//自機クラスの前方宣言
-class Player;
-class CollisionManager;
-class GamePlayScene;
-
 //敵
-class EnemyBoss:public Object3d {
+class EnemyBoss :public BaseEnemy {
 private:
 	// DirectX::を省略
 	using XMFLOAT2 = DirectX::XMFLOAT2;
@@ -90,12 +86,7 @@ private:
 	XMFLOAT3 angle;
 	//半径
 	float radius_ = 5.0f;
-	//自機
-	Player* player_ = nullptr;
-
-	//ゲームシーン
-	GamePlayScene* gameScene_ = nullptr;
-
+	
 //時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
 	std::chrono::steady_clock::time_point nowCount;		//現在時間

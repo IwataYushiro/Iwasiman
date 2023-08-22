@@ -205,6 +205,12 @@
     <Filter Include="Source File\Application\MyGame\Enemy">
       <UniqueIdentifier>{73b127bd-98c7-4215-bb9a-e8b354de5615}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source File\Application\MyGame\Enemy\Factory">
+      <UniqueIdentifier>{4c3ff551-f8a3-41b1-be34-ec7277a238ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Application\MyGame\Enemy\Factory">
+      <UniqueIdentifier>{7376208c-2a36-41ba-a660-fde93696e12e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -532,6 +538,9 @@
     <ClCompile Include="DirectXGame\Application\Scene\StageClearScene.cpp">
       <Filter>Source File\Application\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.cpp">
+      <Filter>Source File\Application\MyGame\Enemy\Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -710,6 +719,12 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\StageClearScene.h">
       <Filter>Header File\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Factory\AbstractEnemyFactory.h">
+      <Filter>Header File\Application\MyGame\Enemy\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.h">
+      <Filter>Header File\Application\MyGame\Enemy\Factory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
