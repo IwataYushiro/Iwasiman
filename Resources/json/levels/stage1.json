@@ -296,8 +296,80 @@
                 ]
             },
             "file_name": "boss1",
-            "objecttype": "BOSS",
-            "objectpattern": "STAGE1"
+            "objecttype": "ENEMY",
+            "objectpattern": "BOSS1"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.001",
+            "transform": {
+                "translation": [
+                    60.0,
+                    71.55979919433594,
+                    -8.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.002",
+            "transform": {
+                "translation": [
+                    60.0,
+                    101.38885498046875,
+                    28.986793518066406
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.003",
+            "transform": {
+                "translation": [
+                    0.0,
+                    16.344200134277344,
+                    -8.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
         }
     ]
 }
