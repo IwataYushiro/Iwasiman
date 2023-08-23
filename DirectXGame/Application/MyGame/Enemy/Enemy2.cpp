@@ -56,7 +56,7 @@ void Enemy2::Parameter() {
 
 	isReverse_ = false;
 	//ジャンプしたか
-	onGround = true;
+	onGround = false;
 	//初期フェーズ
 	phase_ = Phase::Approach;
 
@@ -275,6 +275,10 @@ void Enemy2::Landing()
 			onGround = true;	
 		}
 		
+		if (position.y >= 20.0f)
+		{
+			phase_ = Phase::Approach;
+		}
 	}
 	//行列更新等
 	Object3d::Update();
@@ -298,13 +302,16 @@ void Enemy2::UpdateApproach() {
 
 	//移動
 	velocity = { 0.0f, -1.0f, 0.0f };
-	position.x += velocity.x;
-	position.y += velocity.y;
-	position.z += velocity.z;
-
-	if (position.y <= -30.0f)
+	if (!onGround)
 	{
-		upPos = Object3d::GetPosition();
+		position.x += velocity.x;
+		position.y += velocity.y;
+		position.z += velocity.z;
+	}
+
+	if (position.y <= -20.0f)
+	{
+		
 		phase_ = Phase::Leave;
 	}
 }
@@ -320,7 +327,7 @@ void Enemy2::UpdateLeave() {
 	position.y += velocity.y;
 	position.z += velocity.z;
 
-	if (position.y >= upPos.y + 20.0f) phase_ = Phase::Approach;
+	if (position.y >=  20.0f) phase_ = Phase::Approach;
 }
 
 //ワールド座標を取得
