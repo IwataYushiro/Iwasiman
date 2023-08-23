@@ -47,7 +47,7 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("stage1");
+	if (stageNum == 1)LoadLVData("tstage01");
 	else if (stageNum == 2)LoadLVData("stage2");
 
 	//ライトを生成
