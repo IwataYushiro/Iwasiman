@@ -1,4 +1,4 @@
-#include "Enemy1.h"
+#include "Enemy2.h"
 #include <cassert>
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
@@ -9,16 +9,16 @@
 #include "MyMath.h"
 using namespace DirectX;
 
-CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
+CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
 
-Enemy1::~Enemy1() {
+Enemy2::~Enemy2() {
 	delete modelBullet_;
 }
 
-std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Player* player, GamePlayScene* gamescene)
+std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Player* player, GamePlayScene* gamescene)
 {
 	//インスタンス生成
-	std::unique_ptr<Enemy1> ins = std::make_unique<Enemy1>();
+	std::unique_ptr<Enemy2> ins = std::make_unique<Enemy2>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
@@ -35,7 +35,7 @@ std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Player* player, GamePlaySce
 }
 
 // 初期化
-bool Enemy1::Initialize() {
+bool Enemy2::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
 
@@ -52,7 +52,7 @@ bool Enemy1::Initialize() {
 }
 
 //パラメータ
-void Enemy1::Parameter() {
+void Enemy2::Parameter() {
 
 	isReverse_ = false;
 	//ジャンプしたか
@@ -66,28 +66,44 @@ void Enemy1::Parameter() {
 	life_ = 3;
 	isDead_ = false;
 
-	kFireInterval = MyMath::RandomMTInt(100, 150);
+	kFireInterval = MyMath::RandomMTInt(75, 100);
 }
 
 //リセット
-void Enemy1::Reset() { Parameter(); }
+void Enemy2::Reset() { Parameter(); }
 
 //更新
-void Enemy1::Update() {
+void Enemy2::Update() {
 
 
 	//座標を移動させる
 	switch (phase_) {
-	case Enemy1::Phase::Approach:
+	case Enemy2::Phase::Approach:
 
 		UpdateApproach();
 		break;
-	case Enemy1::Phase::Leave:
+	case Enemy2::Phase::Leave:
 		UpdateLeave();
 		break;
 	}
 
-	
+
+	//発射タイマーカウントダウン
+	fireTimer--;
+	//指定時間に達した
+	if (fireTimer <= 0) {
+		//弾発射
+		Fire();
+		//発射タイマー初期化
+		fireTimer = MyMath::RandomMTInt(kFireInterval / 2, kFireInterval);
+	}
+
+	//死んだら
+	if (life_ <= 0) {
+		isDead_ = true;
+		life_ = 0;
+	}
+
 	//行列更新
 	Trans();
 	camera_->Update();
@@ -98,7 +114,7 @@ void Enemy1::Update() {
 }
 
 //転送
-void Enemy1::Trans() {
+void Enemy2::Trans() {
 
 	XMMATRIX world;
 	//行列更新
@@ -121,7 +137,7 @@ void Enemy1::Trans() {
 
 }
 //弾発射
-void Enemy1::Fire() {
+void Enemy2::Fire() {
 	assert(player_);
 
 	//弾の速度
@@ -164,7 +180,7 @@ void Enemy1::Fire() {
 
 }
 
-void Enemy1::Landing()
+void Enemy2::Landing()
 {
 	//球コライダーの取得
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
@@ -239,44 +255,33 @@ void Enemy1::Landing()
 	//接地状態
 	if (onGround)
 	{
-		//スムーズに坂を下るための吸着処理
-		const float adsDistance = 0.2f;
 		//接地を維持
-		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
-			sphereCollider->GetRadius() * 2.0f + adsDistance))
-		{
-			onGround = true;
-			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-			//行列更新
-			Object3d::Update();
-		}
-		//地面が無いので落下
-		else
+		if (count == MAX_GROUND)
 		{
 			onGround = false;
-			fallVec = {};
+			count = 0;
+			upPos = Object3d::GetPosition();
+			phase_ = Phase::Leave;
 		}
+		
+		count++;
 	}
 	//落下状態
-	else if (fallVec.y <= 0.0f)
+	else
 	{
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f))
 		{
-			//着地
-			onGround = true;
-			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-			//行列更新
-			Object3d::Update();
+			onGround = true;	
 		}
+		
 	}
-
 	//行列更新等
 	Object3d::Update();
 }
 
 //描画
-void Enemy1::Draw() {
+void Enemy2::Draw() {
 	if (!isDead_) {
 		//モデルの描画
 		Object3d::Draw();
@@ -287,55 +292,39 @@ void Enemy1::Draw() {
 
 //状態変化用の更新関数
 //接近
-void Enemy1::UpdateApproach() {
+void Enemy2::UpdateApproach() {
 	//速度
 	XMFLOAT3 velocity;
-	
+
 	//移動
-	velocity = { -0.2f, 0.0f, 0.0f };
+	velocity = { 0.0f, -1.0f, 0.0f };
 	position.x += velocity.x;
 	position.y += velocity.y;
 	position.z += velocity.z;
 
-	//発射タイマーカウントダウン
-	fireTimer--;
-	//指定時間に達した
-	if (fireTimer <= 0) {
-		//弾発射
-		Fire();
-		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval/2, kFireInterval);
-	}
-
-	if (!onGround)
+	if (position.y <= -30.0f)
 	{
-		//下向き加速度
-		const float fallAcc = -0.1f;
-		const float fallVYMin = -2.0f;
-		//加速
-		fallVec.y = max(fallVec.y + fallAcc, fallVYMin);
-		//移動
-		position.x += fallVec.x;
-		position.y += fallVec.y;
-		position.z += fallVec.z;
+		upPos = Object3d::GetPosition();
+		phase_ = Phase::Leave;
 	}
-
-	//死んだら
-	if (life_ <= 0) {
-		isDead_ = true;
-		life_ = 0;
-	}
-	if (position.y <= -60.0f)isDead_ = true;
 }
 
 //離脱
-void Enemy1::UpdateLeave() {
+void Enemy2::UpdateLeave() {
 	//速度
-	
+	XMFLOAT3 velocity;
+
+	//移動
+	velocity = { 0.0f, 0.5f, 0.0f };
+	position.x += velocity.x;
+	position.y += velocity.y;
+	position.z += velocity.z;
+
+	if (position.y >= upPos.y + 20.0f) phase_ = Phase::Approach;
 }
 
 //ワールド座標を取得
-XMFLOAT3 Enemy1::GetWorldPosition() {
+XMFLOAT3 Enemy2::GetWorldPosition() {
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -347,7 +336,7 @@ XMFLOAT3 Enemy1::GetWorldPosition() {
 
 	return worldPos;
 }
-void Enemy1::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Enemy2::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)

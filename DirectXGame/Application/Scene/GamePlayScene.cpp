@@ -90,6 +90,16 @@ void GamePlayScene::Update()
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 			//‚©‚ß‚¨‚×‚ç
 			if (player->IsDead())isGameover = true;
+			
+			//ImGui	
+			imguiManager_->Begin();
+			int plife[1] = { player->GetLife() };
+			ImGui::Begin("Player");
+			ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
+			ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
+			ImGui::InputInt("plife", plife);
+			ImGui::End();
+			imguiManager_->End();
 		}
 		//’eXV
 		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
@@ -167,15 +177,7 @@ void GamePlayScene::Update()
 	}
 	spritePause_->Update();
 
-	//ImGui	
-	imguiManager_->Begin();
-	int plife[1] = { players_.front()->GetLife() };
-	ImGui::Begin("Player");
-	ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
-	ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
-	ImGui::InputInt("plife", plife);
-	ImGui::End();
-	imguiManager_->End();
+	
 
 }
 
@@ -309,6 +311,11 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			{
 				newenemy=enemyFactory->CreateEnemy("ENEMY1",
 					modelEnemy1_, player.get(), this );
+			}
+			else if (objectData.objectPattern.find("ENEMY2") == 0)
+			{
+				newenemy = enemyFactory->CreateEnemy("ENEMY2",
+					modelEnemy1_, player.get(), this);
 			}
 			else if (objectData.objectPattern.find("BOSS1") == 0)
 			{

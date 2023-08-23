@@ -102,7 +102,10 @@ void Player::Update() {
 
 	if (!isDead_) 
 	{
-		if (life_ <= 0) isDead_ = true;
+		if (life_ <= 0)
+		{
+			isDead_ = true;
+		}
 		if (position.y <= -60.0f)isDead_ = true;
 
 		if (ishit) mutekiCount++; 
@@ -416,7 +419,7 @@ void Player::Landing()
 		}
 	}
 	//—Ž‰ºó‘Ô
-	else if (fallVec.y >= -10.0f)
+	else if (fallVec.y <= 0.0f)
 	{
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f))

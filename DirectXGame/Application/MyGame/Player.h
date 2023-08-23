@@ -127,7 +127,7 @@ public: //アクセッサ、インライン関数
 	void SetJumpVYFist(float jumpFist) { this->jumpVYFist = jumpFist; }
 	//ライフ
 	void SetLife(int life) { this->life_ = life; }
-	int GetLife()const { return life_; }
+	const int& GetLife()const { return life_; }
 	//ゲームシーン
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

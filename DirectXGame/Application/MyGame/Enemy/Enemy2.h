@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include "BaseEnemy.h"
 
 #include "Camera.h"
@@ -9,17 +10,19 @@
 #include <memory>
 
 //敵
-class Enemy1 :public BaseEnemy {
+class Enemy2 :public BaseEnemy {
 private:
 	// DirectX::を省略
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+public:
+	int MAX_GROUND = 60;
 
 public:
-	~Enemy1();
-	static std::unique_ptr<Enemy1> Create(Model* model = nullptr,
+	~Enemy2();
+	static std::unique_ptr<Enemy2> Create(Model* model = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 
 	//弾発射間隔
@@ -77,21 +80,24 @@ private:
 	XMFLOAT3 scale;
 	//ポジション
 	XMFLOAT3 pos;
+	//地面に当たった時
+	XMFLOAT3 upPos;
 	//アングル
 	XMFLOAT3 angle;
 	//半径
 	float radius_ = 1.0f;
-	
-	
+
+
 	bool onGround = true;
 	XMFLOAT3 fallVec;
 
 	//反転フラグ
 	bool isReverse_ = false;
 
+	int count = 0;
 
 public:
-	
+
 	void SetPlayer(Player* player) { player_ = player; }
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };
