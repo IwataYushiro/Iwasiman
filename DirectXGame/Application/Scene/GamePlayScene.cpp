@@ -20,11 +20,11 @@ SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
 
-GamePlayScene::GamePlayScene(int stagenum) :stageNum(stagenum){}
+GamePlayScene::GamePlayScene(int stagenum) :stageNum(stagenum) {}
 
 void GamePlayScene::Initialize()
 {
-	
+
 	spCommon_ = SpriteCommon::GetInstance();
 	colManager_ = CollisionManager::GetInstance();
 	enemyFactory = std::make_unique<EnemyFactory>();
@@ -76,7 +76,7 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
-	
+
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
 
@@ -90,7 +90,7 @@ void GamePlayScene::Update()
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 			//かめおべら
 			if (player->IsDead())isGameover = true;
-			
+
 			//ImGui	
 			imguiManager_->Begin();
 			int plife[1] = { player->GetLife() };
@@ -125,7 +125,7 @@ void GamePlayScene::Update()
 		camera_->Update();
 		lightGroup_->Update();
 		pm_->Update();
-		
+
 		if (isGameover)
 		{
 			if (input_->TriggerKey(DIK_SPACE))
@@ -177,7 +177,7 @@ void GamePlayScene::Update()
 	}
 	spritePause_->Update();
 
-	
+
 
 }
 
@@ -189,7 +189,7 @@ void GamePlayScene::Draw()
 	//モデル描画
 	for (std::unique_ptr<Player>& player : players_)player->Draw();
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Draw();
-	for(std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->Draw();
+	for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
 	for (std::unique_ptr<Item>& item : items_)item->Draw();
@@ -280,7 +280,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//プレイヤー初期化
 			std::unique_ptr<Player> newplayer;
 
-			newplayer = Player::Create(modelPlayer_, this);
+			newplayer = Player::Create(model, this);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -307,21 +307,10 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//敵初期化
 			std::unique_ptr<BaseEnemy> newenemy;
 			std::unique_ptr<Player>& player = players_.front();
-			if (objectData.objectPattern.find("ENEMY1") == 0)
-			{
-				newenemy=enemyFactory->CreateEnemy("ENEMY1",
-					modelEnemy1_, player.get(), this );
-			}
-			else if (objectData.objectPattern.find("ENEMY2") == 0)
-			{
-				newenemy = enemyFactory->CreateEnemy("ENEMY2",
-					modelEnemy1_, player.get(), this);
-			}
-			else if (objectData.objectPattern.find("BOSS1") == 0)
-			{
-				newenemy = enemyFactory->CreateEnemy("BOSS1",
-					modelBoss1_, player.get(), this);
-			}
+
+			newenemy = enemyFactory->CreateEnemy(objectData.objectPattern,
+				model, player.get(), this);
+
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -342,13 +331,13 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			enemys_.push_back(std::move(newenemy));
 		}
-	
+
 		//ゴール
 		else if (objectData.objectType.find("GOAL") == 0)
 		{
 			//ゴール初期化
 			std::unique_ptr<Goal> newgoal;
-			newgoal = Goal::Create(modelGoal_);
+			newgoal = Goal::Create(model);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);

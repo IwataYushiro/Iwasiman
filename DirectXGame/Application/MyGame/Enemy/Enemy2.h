@@ -85,7 +85,7 @@ private:
 	//ƒAƒ“ƒOƒ‹
 	XMFLOAT3 angle;
 	//”¼Œa
-	float radius_ = 1.0f;
+	float radius_ = 3.0f;
 
 
 	bool onGround = true;
