@@ -21,17 +21,18 @@ private:
 public:
 	~EnemyBoss();
 	static std::unique_ptr<EnemyBoss> Create(Model* model = nullptr,
-		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
+		Player* player = nullptr, GamePlayScene* gamescene = nullptr
+		, unsigned short subAttribute = 0b1000000000000001);
 	//弾発射間隔
 	static const int kFireInterval = 40;
 	//初期化
-	bool Initialize()override;
+	bool Initialize(unsigned short subAttribute);
 
 	//リセット処理
 	void Reset();
 	
 	//パラメータ
-	void Parameter();
+	void Parameter(unsigned short subAttribute);
 	//更新
 	void Update()override;
 	//転送　
@@ -48,6 +49,12 @@ public:
 	void UpdateApproach();
 	//攻撃
 	void UpdateAttack();
+
+	//コア更新
+	void UpdateCore();
+	//コア撃破
+	void UpdateBrackCore();
+
 	//離脱
 	void UpdateLeave();
 
@@ -68,7 +75,9 @@ private:
 		//ここからステージ1
 		ApproachStage1, //接近
 		AttackStage1,   //攻撃
-
+		//コア
+		CoreStage1,
+		CoreBreak,
 		//全体
 		Leave, //離脱
 		

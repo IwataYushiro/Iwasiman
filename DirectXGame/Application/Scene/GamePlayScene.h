@@ -102,6 +102,7 @@ private:
 	Model* modelEnemy1_ = nullptr;
 
 	Model* modelBoss1_ = nullptr;
+	Model* modelBossCore1_ = nullptr;
 
 	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;

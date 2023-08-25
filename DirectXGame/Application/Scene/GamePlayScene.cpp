@@ -49,6 +49,7 @@ void GamePlayScene::Initialize()
 	//レベルデータ読み込み
 	if (stageNum == 1)LoadLVData("tstage01");
 	else if (stageNum == 2)LoadLVData("stage2");
+	else if (stageNum == 3)LoadLVData("stageboss1");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
@@ -439,6 +440,7 @@ void GamePlayScene::LoadModel()
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
+	modelBossCore1_ = Model::LoadFromOBJ("core1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 	modelItemJump_ = Model::LoadFromOBJ("itemjump");
 	modelItemHeal_ = Model::LoadFromOBJ("itemheal");
@@ -449,6 +451,7 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("enemy1", modelEnemy1_));
 	models.insert(std::make_pair("boss1", modelBoss1_));
+	models.insert(std::make_pair("core1", modelBossCore1_));
 	models.insert(std::make_pair("sphere", modelGoal_));
 	models.insert(std::make_pair("Itemjump", modelItemJump_));
 	models.insert(std::make_pair("itemheal", modelItemHeal_));

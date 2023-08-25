@@ -1,4 +1,5 @@
 #include "EnemyFactory.h"
+#include "CollisionAttribute.h"
 #include "Enemy1.h"
 #include "Enemy2.h"
 
@@ -20,8 +21,12 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 	else if (enemyName.find("BOSS1") == 0)
 	{
 		//ベジェ曲線で動くボス
-		return EnemyBoss::Create(model, player, gamescene);
+		return EnemyBoss::Create(model, player, gamescene, SUBCOLLISION_ATTR_NONE);
 	}
-	
+	else if (enemyName.find("CORE1") == 0)
+	{
+		//コア
+		return EnemyBoss::Create(model, player, gamescene, SUBCOLLISION_ATTR_ENEMYCORE);
+	}
 	return nullptr;
 }

@@ -14,14 +14,15 @@ EnemyBoss::~EnemyBoss() {
 	delete modelBullet_;
 }
 
-std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model,Player* player,GamePlayScene* gamescene)
+std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model,Player* player,GamePlayScene* gamescene
+	, unsigned short subAttribute = 0b1000000000000000)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyBoss> ins = std::make_unique<EnemyBoss>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
-	if (!ins->Initialize())
+	if (!ins->Initialize(subAttribute))
 	{
 		ins.release();
 		assert(0);
@@ -34,13 +35,11 @@ std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model,Player* player,GamePla
 }
 
 // 初期化
-bool EnemyBoss::Initialize() {
+bool EnemyBoss::Initialize(unsigned short subAttribute) {
 	
 	if (!Object3d::Initialize()) return false;
 
 	modelBullet_ = Model::LoadFromOBJ("enemybullet");
-
-	Parameter();
 
 	startCount= std::chrono::steady_clock::now();	//開始時間
 	nowCount= std::chrono::steady_clock::now();		//現在時間
@@ -51,26 +50,31 @@ bool EnemyBoss::Initialize() {
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	collider->SetSubAttribute(subAttribute);
+
+	Parameter(subAttribute);
 
 	return true;
 }
 
 //パラメータ
-void EnemyBoss::Parameter() {
+void EnemyBoss::Parameter(unsigned short subAttribute) {
 
 	isReverse_ = false;
 	
 	//初期フェーズ
-	phase_ = Phase::ApproachStage1;
+	if (subAttribute == SUBCOLLISION_ATTR_NONE) phase_ = Phase::ApproachStage1;
+	else if (subAttribute == SUBCOLLISION_ATTR_ENEMYCORE) phase_ = Phase::CoreStage1;
 
 	//発射タイマー初期化
 	fireTimer = kFireInterval;
 
-	life_ = 10;
+	
+	if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ = 2;
+	else if (subAttribute == SUBCOLLISION_ATTR_ENEMYCORE)life_ = 10;
+
 	isDead_ = false;
 
-	isReverse_ = false;
 	
 }
 
@@ -271,10 +275,41 @@ void EnemyBoss::UpdateAttack() {
 		isDead_ = true;
 		life_ = 0;
 	}
-	if (isDead_)
-	{
-		phase_ = Phase::Leave;
+	
+}
+
+void EnemyBoss::UpdateCore()
+{
+
+	//指定の位置に到達したら反転
+	if (pos.x >= 55.0f) {
+		isReverse_ = true;
 	}
+	if (pos.x <= -55.0f) {
+		isReverse_ = false;
+	}
+
+	//発射タイマーカウントダウン
+	fireTimer--;
+	//指定時間に達した
+	if (fireTimer <= 0) {
+		//弾発射
+		Fire();
+		//発射タイマー初期化
+		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
+	}
+	//死んだら自機の弾みたいに
+	if (life_ <= 0) {
+		collider->SetAttribute(COLLISION_ATTR_PLAYERS);
+		collider->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
+
+		life_ = 0;
+	}
+}
+
+void EnemyBoss::UpdateBrackCore()
+{
+	//敵にぶつける
 }
 
 //離脱

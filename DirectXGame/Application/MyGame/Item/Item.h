@@ -28,7 +28,7 @@ public:
 	~Item();
 	
 	static std::unique_ptr<Item> Create(Model* model = nullptr, Player* player = nullptr
-		, unsigned short subAttribute = 0b1000000000000000);
+		, unsigned short subAttribute = 0b1000000000000001);
 	//‰Šú‰»
 	bool Initialize(unsigned short subAttribute);
 	//ƒŠƒZƒbƒg
