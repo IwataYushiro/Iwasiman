@@ -37,7 +37,7 @@ void StageClearScene::Initialize()
 	Object3d::SetLightGroup(lightGroup_);
 
 	UINT StageTex = 00;
-	if (stageNum == 2)spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
+	if (stageNum == 3)spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
 	else spCommon_->LoadTexture(StageTex, "texture/stageclear.png");
 	spriteStageClear_->Initialize(spCommon_, StageTex);
 
@@ -50,9 +50,10 @@ void StageClearScene::Update()
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
-		if (stageNum == 1) sceneManager_->ChangeScene("GAMEPLAY", 2);
-		else if (stageNum == 2)sceneManager_->ChangeScene("TITLE");
+		if (stageNum == 3) sceneManager_->ChangeScene("TITLE");
+		else sceneManager_->ChangeScene("GAMEPLAY", ++stageNum);
 	}
+
 spriteStageClear_->Update();
 
 	camera_->Update();

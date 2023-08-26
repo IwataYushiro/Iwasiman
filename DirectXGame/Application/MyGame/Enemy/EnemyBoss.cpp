@@ -14,8 +14,8 @@ EnemyBoss::~EnemyBoss() {
 	delete modelBullet_;
 }
 
-std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model,Player* player,GamePlayScene* gamescene
-	, unsigned short subAttribute = 0b1000000000000000)
+std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model, Player* player, GamePlayScene* gamescene
+	, unsigned short subAttribute)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyBoss> ins = std::make_unique<EnemyBoss>();
@@ -29,26 +29,26 @@ std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model,Player* player,GamePla
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
-	if(player)ins->SetPlayer(player);
-	if(gamescene)ins->SetGameScene(gamescene);
+	if (player)ins->SetPlayer(player);
+	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
 }
 
 // 初期化
 bool EnemyBoss::Initialize(unsigned short subAttribute) {
-	
+
 	if (!Object3d::Initialize()) return false;
 
 	modelBullet_ = Model::LoadFromOBJ("enemybullet");
 
-	startCount= std::chrono::steady_clock::now();	//開始時間
-	nowCount= std::chrono::steady_clock::now();		//現在時間
+	startCount = std::chrono::steady_clock::now();	//開始時間
+	nowCount = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 5.0f;					//全体時間
 	timeRate;
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 	collider->SetSubAttribute(subAttribute);
 
@@ -60,31 +60,38 @@ bool EnemyBoss::Initialize(unsigned short subAttribute) {
 //パラメータ
 void EnemyBoss::Parameter(unsigned short subAttribute) {
 
-	isReverse_ = false;
 	
-	//初期フェーズ
-	if (subAttribute == SUBCOLLISION_ATTR_NONE) phase_ = Phase::ApproachStage1;
-	else if (subAttribute == SUBCOLLISION_ATTR_ENEMYCORE) phase_ = Phase::CoreStage1;
 
-	//発射タイマー初期化
+	//初期フェーズ
+	if (subAttribute == SUBCOLLISION_ATTR_NONE)
+	{
+		phase_ = Phase::ApproachStage1;
+	maxTime = 5.0f;
+	life_ = 2;
+	}
+	else if (subAttribute == SUBCOLLISION_ATTR_ENEMYCORE)
+	{
+		phase_ = Phase::CoreStage1;
+		maxTime = 2.0f;
+		life_ = 10;
+	}
+
+	isReverse_ = false;
+//発射タイマー初期化
 	fireTimer = kFireInterval;
 
-	
-	if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ = 2;
-	else if (subAttribute == SUBCOLLISION_ATTR_ENEMYCORE)life_ = 10;
-
 	isDead_ = false;
+	bossDead = false;
 
-	
 }
 
 //リセット
-void EnemyBoss::Reset() { Parameter(); }
+void EnemyBoss::Reset() { }
 
 //更新
 void EnemyBoss::Update() {
 
-	
+
 	//座標を移動させる
 	switch (phase_) {
 	case EnemyBoss::Phase::ApproachStage1:
@@ -97,15 +104,17 @@ void EnemyBoss::Update() {
 		UpdateAttack();
 
 		break;
-	}
-	
+	case EnemyBoss::Phase::CoreStage1:
+		UpdateCore();
+		break;
 
-	//座標を移動させる
-	switch (phase_) {
+	case EnemyBoss::Phase::CoreBreak:
+		UpdateBreakCore();
+
+		break;
 	case EnemyBoss::Phase::Leave:
 		UpdateLeave();
 		break;
-
 	}
 
 	//行列更新
@@ -178,7 +187,7 @@ void EnemyBoss::Fire() {
 
 	//弾を登録
 	gameScene_->AddEnemyBullet(std::move(newBullet));
-	
+
 }
 
 //描画
@@ -188,7 +197,7 @@ void EnemyBoss::Draw() {
 		Object3d::Draw();
 
 		//弾描画
-		
+
 	}
 
 }
@@ -199,15 +208,13 @@ void EnemyBoss::Draw() {
 void EnemyBoss::UpdateApproach() {
 	//速度
 	XMFLOAT3 velocity;
-	float cameraMove = camera_->GetEye().x;
 
 	//移動
 	velocity = { 0.0f, 0.0f, -0.5f };
-	pos.x += velocity.x;
-	pos.y += velocity.y;
-	pos.z += velocity.z;
+	position.x += velocity.x;
+	position.y += velocity.y;
+	position.z += velocity.z;
 
-	Object3d::SetPosition({ pos.x + cameraMove,pos.y,pos.z });
 	//発射タイマーカウントダウン
 	fireTimer--;
 	//指定時間に達した
@@ -219,7 +226,7 @@ void EnemyBoss::UpdateApproach() {
 	}
 
 	//指定の位置に到達したら攻撃
-	if (pos.z < 100.0f) {
+	if (position.z < 100.0f) {
 		phase_ = Phase::AttackStage1;
 	}
 }
@@ -229,10 +236,10 @@ void EnemyBoss::UpdateAttack() {
 	//速度
 	float cameraMove = camera_->GetEye().x;
 	//制御点
-	start = { -30.0f+cameraMove,10.0f,100.0f };
-	p1 = { -10.0f+cameraMove,-20.0f,100.0f };
-	p2 = { 10.0f+cameraMove,40.0f,100.0f };
-	end = { 30.0f+cameraMove,10.0f,100.0f };
+	start = { -30.0f + cameraMove,10.0f,100.0f };
+	p1 = { -10.0f + cameraMove,-20.0f,100.0f };
+	p2 = { 10.0f + cameraMove,40.0f,100.0f };
+	end = { 30.0f + cameraMove,10.0f,100.0f };
 	//時間
 
 	//現在時間を取得する
@@ -240,23 +247,22 @@ void EnemyBoss::UpdateAttack() {
 	//前回記録からの経過時間を取得する
 	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
 
-	float elapsed= std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count()/1'000'000.0f;//マイクロ秒を秒に単位変換
+	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
 	timeRate = min(elapsed / maxTime, 1.0f);
 
 	if (isReverse_) {
-		pos = Bezier3(end, p2, p1, start, timeRate);
+		position = Bezier3(end, p2, p1, start, timeRate);
 	}
 	else {
-		pos = Bezier3(start, p1, p2, end, timeRate);
+		position = Bezier3(start, p1, p2, end, timeRate);
 	}
-	Object3d::SetPosition(pos);
 	//指定の位置に到達したら反転
-	if (pos.x >= 30.0f+cameraMove) {
+	if (position.x >= 30.0f + cameraMove) {
 		isReverse_ = true;
 		startCount = std::chrono::steady_clock::now();
 	}
-	if (pos.x <= -30.0f+cameraMove) {
+	if (position.x <= -30.0f + cameraMove) {
 		isReverse_ = false;
 		startCount = std::chrono::steady_clock::now();
 	}
@@ -268,24 +274,35 @@ void EnemyBoss::UpdateAttack() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval*2);
+		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
 	}
 	//死んだら
 	if (life_ <= 0) {
-		isDead_ = true;
 		life_ = 0;
+		isDead_ = true;
+		bossDead = true;
 	}
-	
+
 }
 
 void EnemyBoss::UpdateCore()
 {
+	//速度
+	XMFLOAT3 velocity;
+	//移動
+	if (!isReverse_)velocity = { 0.5f, 0.0f, 0.0f };
+	else velocity = { -0.5f, 0.0f, 0.0f };
+
+	position.x += velocity.x;
+	position.y += velocity.y;
+	position.z += velocity.z;
 
 	//指定の位置に到達したら反転
-	if (pos.x >= 55.0f) {
+	if (position.x >= 65.0f) {
+		//→から←
 		isReverse_ = true;
 	}
-	if (pos.x <= -55.0f) {
+	if (position.x <= -65.0f) {
 		isReverse_ = false;
 	}
 
@@ -299,36 +316,54 @@ void EnemyBoss::UpdateCore()
 		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
 	}
 	//死んだら自機の弾みたいに
-	if (life_ <= 0) {
+	if (life_ == 1) {
+		nowPos = Object3d::GetPosition();
+
 		collider->SetAttribute(COLLISION_ATTR_PLAYERS);
 		collider->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
 
-		life_ = 0;
+		life_ = 1;
+		startCount = std::chrono::steady_clock::now();	//開始時間
+		phase_ = Phase::CoreBreak;
 	}
 }
 
-void EnemyBoss::UpdateBrackCore()
+void EnemyBoss::UpdateBreakCore()
 {
 	//敵にぶつける
+	//速度
+	float cameraMove = camera_->GetEye().x;
+	//制御点
+	start = nowPos;
+	p1 = { -10.0f + cameraMove,40.0f,70.0f };
+	p2 = { 10.0f + cameraMove,25.0f,85.0f };
+	end = { 20.0f + cameraMove,10.0f,100.0f };
+	//時間
+
+	//現在時間を取得する
+	nowCount = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
+
+	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+	timeRate = min(elapsed / maxTime, 1.0f);
+
+	position = Bezier3(start, p1, p2, end, timeRate);
+	if(life_==0)isDead_=true;
 }
 
 //離脱
 void EnemyBoss::UpdateLeave() {
-	//速度
-	XMFLOAT3 velocity;
 
-	//移動
-	velocity = { 0.0f, 0.0f, 0.05f };
-	pos.x += velocity.x;
-	pos.y += velocity.y;
-	pos.z += velocity.z;
-	Object3d::SetPosition(pos);
+	isDead_ = true;
+	bossDead = true;
 }
 
 const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
 	XMFLOAT3 ans;
-	ans.x=(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
+	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
 		p1.x + 3 * (1.0f - t) * t * t * p2.x + t * t * t * p3.x;
 	ans.y = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.y + 3.0f * (1.0f - t) * (1.0f - t) * t *
 		p1.y + 3 * (1.0f - t) * t * t * p2.y + t * t * t * p3.y;
@@ -357,8 +392,11 @@ void EnemyBoss::OnCollision(const CollisionInfo& info, unsigned short attribute,
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
 	{
-		if(subAttribute==SUBCOLLISION_ATTR_NONE) return;
-		else if(subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
+		{
+			life_--;
+		}
 	}
-		
+
 }

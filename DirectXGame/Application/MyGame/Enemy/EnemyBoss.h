@@ -26,7 +26,7 @@ public:
 	//弾発射間隔
 	static const int kFireInterval = 40;
 	//初期化
-	bool Initialize(unsigned short subAttribute);
+	bool Initialize(unsigned short subAttribute)override;
 
 	//リセット処理
 	void Reset();
@@ -42,7 +42,7 @@ public:
 	//ワールド座標を取得
 	XMFLOAT3 GetWorldPosition();
 	//描画
-	void Draw();
+	void Draw()override;
 
 	//状態変化用の更新関数
 	//接近
@@ -53,7 +53,7 @@ public:
 	//コア更新
 	void UpdateCore();
 	//コア撃破
-	void UpdateBrackCore();
+	void UpdateBreakCore();
 
 	//離脱
 	void UpdateLeave();
@@ -87,15 +87,12 @@ private:
 	Phase phase_;
 	//弾発射タイマー
 	int32_t fireTimer = 0;
-	//スケール
-	XMFLOAT3 scale;
-	//ポジション
-	XMFLOAT3 pos;
-	//アングル
-	XMFLOAT3 angle;
+	
 	//半径
 	float radius_ = 5.0f;
-	
+	//ボス死亡
+	bool bossDead = false;
+
 //時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
 	std::chrono::steady_clock::time_point nowCount;		//現在時間
@@ -114,10 +111,12 @@ private:
 
 	//反転フラグ
 	bool isReverse_ = false;
-
+	//現在位置取得
+	XMFLOAT3 nowPos = {};
 
 public:
 	bool IsDead() const { return isDead_; }
 	void SetPlayer(Player* player) { player_ = player; }
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+	bool BossDead()const { return bossDead; }
 };

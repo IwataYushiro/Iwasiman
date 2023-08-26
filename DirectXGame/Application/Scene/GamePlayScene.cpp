@@ -105,7 +105,12 @@ void GamePlayScene::Update()
 		//弾更新
 		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
 
-		for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->Update();
+		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
+		{
+			enemy->Update();
+			//ボス撃破
+			if (enemy->BossDead())isclear = true;
+		}
 		for (std::unique_ptr<Goal>& goal : goals_)
 		{
 			goal->Update();

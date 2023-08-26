@@ -46,7 +46,7 @@ public:
 	//ワールド座標を取得
 	XMFLOAT3 GetWorldPosition();
 	//描画
-	void Draw();
+	void Draw()override;
 
 	//状態変化用の更新関数
 	//接近
