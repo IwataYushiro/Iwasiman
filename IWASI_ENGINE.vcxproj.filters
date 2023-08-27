@@ -544,6 +544,9 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Enemy2.cpp">
       <Filter>Source File\Application\MyGame\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyCore.cpp">
+      <Filter>Source File\Application\MyGame\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -730,6 +733,9 @@
       <Filter>Header File\Application\MyGame\Enemy\Factory</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Enemy2.h">
+      <Filter>Header File\Application\MyGame\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyCore.h">
       <Filter>Header File\Application\MyGame\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

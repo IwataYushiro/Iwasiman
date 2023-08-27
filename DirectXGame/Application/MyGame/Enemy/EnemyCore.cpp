@@ -1,4 +1,4 @@
-#include "EnemyBoss.h"
+#include "EnemyCore.h"
 #include <cassert>
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
@@ -8,16 +8,16 @@
 
 #include "MyMath.h"
 using namespace DirectX;
-CollisionManager* EnemyBoss::colManager_ = CollisionManager::GetInstance();
+CollisionManager* EnemyCore::colManager_ = CollisionManager::GetInstance();
 
-EnemyBoss::~EnemyBoss() {
+EnemyCore::~EnemyCore() {
 	delete modelBullet_;
 }
 
-std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model, Player* player, GamePlayScene* gamescene)
+std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Player* player, GamePlayScene* gamescene, unsigned short stage)
 {
 	//インスタンス生成
-	std::unique_ptr<EnemyBoss> ins = std::make_unique<EnemyBoss>();
+	std::unique_ptr<EnemyCore> ins = std::make_unique<EnemyCore>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
@@ -34,7 +34,7 @@ std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model, Player* player, GameP
 }
 
 // 初期化
-bool EnemyBoss::Initialize() {
+bool EnemyCore::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
 
@@ -57,47 +57,39 @@ bool EnemyBoss::Initialize() {
 }
 
 //パラメータ
-void EnemyBoss::Parameter() {
-
-	
-
-	//初期フェーズ
-	
-	phase_ = Phase::ApproachStage1;
-	maxTime = 5.0f;
-	life_ = 2;
+void EnemyCore::Parameter() {
+	phase_ = Phase::CoreStage1;
+	maxTime = 2.0f;
+	life_ = 10;
 
 
 	isReverse_ = false;
-//発射タイマー初期化
+	//発射タイマー初期化
 	fireTimer = kFireInterval;
 
 	isDead_ = false;
-	bossDead = false;
+
 
 }
 
 //リセット
-void EnemyBoss::Reset() { }
+void EnemyCore::Reset() { Parameter(); }
 
 //更新
-void EnemyBoss::Update() {
+void EnemyCore::Update() {
 
 
 	//座標を移動させる
 	switch (phase_) {
-	case EnemyBoss::Phase::ApproachStage1:
-
-		UpdateApproach();
+	case EnemyCore::Phase::CoreStage1:
+		UpdateCore();
 		break;
 
-	case EnemyBoss::Phase::AttackStage1:
-
-		UpdateAttack();
+	case EnemyCore::Phase::CoreBreak:
+		UpdateBreakCore();
 
 		break;
-
-	case EnemyBoss::Phase::Leave:
+	case EnemyCore::Phase::Leave:
 		UpdateLeave();
 		break;
 	}
@@ -109,7 +101,7 @@ void EnemyBoss::Update() {
 }
 
 //転送
-void EnemyBoss::Trans() {
+void EnemyCore::Trans() {
 
 	XMMATRIX world;
 	//行列更新
@@ -132,7 +124,7 @@ void EnemyBoss::Trans() {
 
 }
 //弾発射
-void EnemyBoss::Fire() {
+void EnemyCore::Fire() {
 	assert(player_);
 
 	//弾の速度
@@ -176,8 +168,8 @@ void EnemyBoss::Fire() {
 }
 
 //描画
-void EnemyBoss::Draw() {
-	if (!bossDead) {
+void EnemyCore::Draw() {
+	if (!isDead_) {
 		//モデルの描画
 		Object3d::Draw();
 
@@ -187,18 +179,26 @@ void EnemyBoss::Draw() {
 
 }
 
-
-//状態変化用の更新関数
-//接近
-void EnemyBoss::UpdateApproach() {
+void EnemyCore::UpdateCore()
+{
 	//速度
 	XMFLOAT3 velocity;
-
 	//移動
-	velocity = { 0.0f, 0.0f, -0.5f };
+	if (!isReverse_)velocity = { 0.5f, 0.0f, 0.0f };
+	else velocity = { -0.5f, 0.0f, 0.0f };
+
 	position.x += velocity.x;
 	position.y += velocity.y;
 	position.z += velocity.z;
+
+	//指定の位置に到達したら反転
+	if (position.x >= 65.0f) {
+		//→から←
+		isReverse_ = true;
+	}
+	if (position.x <= -65.0f) {
+		isReverse_ = false;
+	}
 
 	//発射タイマーカウントダウン
 	fireTimer--;
@@ -209,22 +209,29 @@ void EnemyBoss::UpdateApproach() {
 		//発射タイマー初期化
 		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
 	}
+	//死んだら自機の弾みたいに
+	if (life_ == 0) {
+		nowPos = Object3d::GetPosition();
 
-	//指定の位置に到達したら攻撃
-	if (position.z < 100.0f) {
-		phase_ = Phase::AttackStage1;
+		collider->SetAttribute(COLLISION_ATTR_PLAYERS);
+		collider->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
+
+		life_ = 0;
+		startCount = std::chrono::steady_clock::now();	//開始時間
+		phase_ = Phase::CoreBreak;
 	}
 }
-//攻撃
-void EnemyBoss::UpdateAttack() {
 
+void EnemyCore::UpdateBreakCore()
+{
+	//敵にぶつける
 	//速度
 	float cameraMove = camera_->GetEye().x;
 	//制御点
-	start = { -30.0f + cameraMove,10.0f,100.0f };
-	p1 = { -10.0f + cameraMove,-20.0f,100.0f };
-	p2 = { 10.0f + cameraMove,40.0f,100.0f };
-	end = { 30.0f + cameraMove,10.0f,100.0f };
+	start = nowPos;
+	p1 = { -10.0f + cameraMove,40.0f,70.0f };
+	p2 = { 10.0f + cameraMove,25.0f,85.0f };
+	end = { 20.0f + cameraMove,10.0f,100.0f };
 	//時間
 
 	//現在時間を取得する
@@ -236,48 +243,18 @@ void EnemyBoss::UpdateAttack() {
 
 	timeRate = min(elapsed / maxTime, 1.0f);
 
-	if (isReverse_) {
-		position = Bezier3(end, p2, p1, start, timeRate);
-	}
-	else {
-		position = Bezier3(start, p1, p2, end, timeRate);
-	}
-	//指定の位置に到達したら反転
-	if (position.x >= 30.0f + cameraMove) {
-		isReverse_ = true;
-		startCount = std::chrono::steady_clock::now();
-	}
-	if (position.x <= -30.0f + cameraMove) {
-		isReverse_ = false;
-		startCount = std::chrono::steady_clock::now();
-	}
-
-	//発射タイマーカウントダウン
-	fireTimer--;
-	//指定時間に達した
-	if (fireTimer <= 0) {
-		//弾発射
-		Fire();
-		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
-	}
-	//死んだら
-	if (life_ <= 0) {
-		life_ = 0;
-		isDead_ = true;
-		bossDead = true;
-	}
-
+	position = Bezier3(start, p1, p2, end, timeRate);
+	
 }
 
 //離脱
-void EnemyBoss::UpdateLeave() {
+void EnemyCore::UpdateLeave() {
 
 	isDead_ = true;
 	bossDead = true;
 }
 
-const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
+const XMFLOAT3 EnemyCore::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
 	XMFLOAT3 ans;
 	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
@@ -292,7 +269,7 @@ const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const 
 
 
 //ワールド座標を取得
-XMFLOAT3 EnemyBoss::GetWorldPosition() {
+XMFLOAT3 EnemyCore::GetWorldPosition() {
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -304,14 +281,18 @@ XMFLOAT3 EnemyBoss::GetWorldPosition() {
 
 	return worldPos;
 }
-void EnemyBoss::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void EnemyCore::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
-		
 	}
 
+	else if (attribute == COLLISION_ATTR_ENEMYS)
+	{
+		if (subAttribute == SUBCOLLISION_ATTR_NONE) isDead_ = true;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+	}
 }

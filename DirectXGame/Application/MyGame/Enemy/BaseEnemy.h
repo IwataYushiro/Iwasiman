@@ -36,7 +36,7 @@ protected:
 
 	bool bossDead;
 public://アクセッサ
-	bool IsDead() const { return isDead_; }
-	bool BossDead()const { return bossDead; }
+	virtual bool IsDead() const { return isDead_; }
+	virtual bool BossDead()const { return bossDead; }
 };
 
