@@ -182,10 +182,19 @@ void EnemyCore::Draw() {
 void EnemyCore::UpdateCore()
 {
 	//速度
+	float cameraMove = camera_->GetEye().x;
+
+	//制御点
+	start = nowPos;
+	p1 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
+	p2 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
+	end = { MyMath::RandomMTFloat(-20.0f,20.0f) + cameraMove,10.0f,100.0f };
+
+	//速度
 	XMFLOAT3 velocity;
 	//移動
-	if (!isReverse_)velocity = { 0.5f, 0.0f, 0.0f };
-	else velocity = { -0.5f, 0.0f, 0.0f };
+	if (!isReverse_)velocity = { 0.3f, 0.0f, 0.0f };
+	else velocity = { -0.3f, 0.0f, 0.0f };
 
 	position.x += velocity.x;
 	position.y += velocity.y;
@@ -218,20 +227,15 @@ void EnemyCore::UpdateCore()
 
 		life_ = 0;
 		startCount = std::chrono::steady_clock::now();	//開始時間
+		//敵にぶつける
+	
 		phase_ = Phase::CoreBreak;
 	}
 }
 
 void EnemyCore::UpdateBreakCore()
 {
-	//敵にぶつける
-	//速度
-	float cameraMove = camera_->GetEye().x;
-	//制御点
-	start = nowPos;
-	p1 = { -10.0f + cameraMove,40.0f,70.0f };
-	p2 = { 10.0f + cameraMove,25.0f,85.0f };
-	end = { 20.0f + cameraMove,10.0f,100.0f };
+	
 	//時間
 
 	//現在時間を取得する
