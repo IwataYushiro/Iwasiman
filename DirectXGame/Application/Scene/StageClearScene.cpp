@@ -97,6 +97,7 @@ void StageClearScene::Draw()
 
 void StageClearScene::Finalize()
 {
+	delete lightGroup_;
 	//スプライト
 	delete spriteStageClear_;
 	

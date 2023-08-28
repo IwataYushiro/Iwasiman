@@ -253,12 +253,14 @@ void GamePlayScene::Finalize()
 	delete modelPlayer_;
 	delete modelEnemy1_;
 	delete modelBoss1_;
+	delete modelBossCore1_;
 	delete modelSkydome;
 	delete modelItemJump_;
 	delete modelItemHeal_;
 	delete modelGround;
 	delete modelBox;
 	delete modelGoal_;
+
 	//スプライト
 	delete spritePause_;
 	delete spriteClear_;
