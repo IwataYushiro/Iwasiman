@@ -59,17 +59,17 @@ bool EnemyBoss::Initialize() {
 //パラメータ
 void EnemyBoss::Parameter() {
 
-	
+
 
 	//初期フェーズ
-	
+
 	phase_ = Phase::ApproachStage1;
 	maxTime = 5.0f;
 	life_ = 2;
 
 
 	isReverse_ = false;
-//発射タイマー初期化
+	//発射タイマー初期化
 	fireTimer = kFireInterval;
 
 	isDead_ = false;
@@ -177,14 +177,9 @@ void EnemyBoss::Fire() {
 
 //描画
 void EnemyBoss::Draw() {
-	if (!bossDead) {
-		//モデルの描画
-		Object3d::Draw();
 
-		//弾描画
-
-	}
-
+	//モデルの描画
+	Object3d::Draw();
 }
 
 
@@ -311,7 +306,7 @@ void EnemyBoss::OnCollision(const CollisionInfo& info, unsigned short attribute,
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
-		
+
 	}
 
 }

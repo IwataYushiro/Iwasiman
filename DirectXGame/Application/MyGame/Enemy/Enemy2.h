@@ -1,9 +1,7 @@
 #pragma once
 #pragma once
 #include "BaseEnemy.h"
-
 #include "Camera.h"
-
 #include "Model.h"
 #include <DirectXMath.h>
 #include <list>

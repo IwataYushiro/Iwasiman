@@ -2,7 +2,7 @@
 
 #include "AbstractEnemyFactory.h"
 
-//具体的(このゲーム用)なシーンファクトリー
+//具体的(このゲーム用)な敵ファクトリー
 class EnemyFactory :public AbstractEnemyFactory
 {
 public:

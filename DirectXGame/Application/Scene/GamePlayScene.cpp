@@ -119,8 +119,6 @@ void GamePlayScene::Update()
 		}
 		for (std::unique_ptr<Item>& item : items_)
 		{
-
-
 			item->Update();
 		}
 
@@ -260,6 +258,8 @@ void GamePlayScene::Finalize()
 	delete modelGround;
 	delete modelBox;
 	delete modelGoal_;
+
+	models.clear();
 
 	//スプライト
 	delete spritePause_;

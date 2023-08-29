@@ -286,10 +286,10 @@ void Enemy2::Landing()
 
 //•`‰æ
 void Enemy2::Draw() {
-	if (!isDead_) {
+	
 		//ƒ‚ƒfƒ‹‚Ì•`‰æ
 		Object3d::Draw();
-	}
+	
 
 }
 

@@ -169,13 +169,11 @@ void EnemyCore::Fire() {
 
 //•`‰æ
 void EnemyCore::Draw() {
-	if (!isDead_) {
-		//ƒ‚ƒfƒ‹‚Ì•`‰æ
-		Object3d::Draw();
 
-		//’e•`‰æ
+	//ƒ‚ƒfƒ‹‚Ì•`‰æ
+	Object3d::Draw();
 
-	}
+
 
 }
 
@@ -228,14 +226,14 @@ void EnemyCore::UpdateCore()
 		life_ = 0;
 		startCount = std::chrono::steady_clock::now();	//ŠJnŠÔ
 		//“G‚É‚Ô‚Â‚¯‚é
-	
+
 		phase_ = Phase::CoreBreak;
 	}
 }
 
 void EnemyCore::UpdateBreakCore()
 {
-	
+
 	//ŠÔ
 
 	//Œ»İŠÔ‚ğæ“¾‚·‚é
@@ -248,7 +246,7 @@ void EnemyCore::UpdateBreakCore()
 	timeRate = min(elapsed / maxTime, 1.0f);
 
 	position = Bezier3(start, p1, p2, end, timeRate);
-	
+
 }
 
 //—£’E

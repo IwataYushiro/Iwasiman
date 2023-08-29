@@ -211,6 +211,12 @@
     <Filter Include="Header File\Application\MyGame\Enemy\Factory">
       <UniqueIdentifier>{7376208c-2a36-41ba-a660-fde93696e12e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header File\Application\MyGame\Gimmick">
+      <UniqueIdentifier>{80c773cf-30d1-43b7-a826-f5761a61a676}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Application\MyGame\Gimmick">
+      <UniqueIdentifier>{dc569295-2a6e-4e4f-b415-801eb4088eb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -547,6 +553,9 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyCore.cpp">
       <Filter>Source File\Application\MyGame\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Spike.cpp">
+      <Filter>Source File\Application\MyGame\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -737,6 +746,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyCore.h">
       <Filter>Header File\Application\MyGame\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Spike.h">
+      <Filter>Header File\Application\MyGame\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

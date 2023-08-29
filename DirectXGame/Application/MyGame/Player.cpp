@@ -134,7 +134,7 @@ void Player::Update() {
 	Landing();
 }
 
-void Player::Draw() { if (!isDead_)Object3d::Draw(); }
+void Player::Draw() { Object3d::Draw(); }
 
 void Player::DrawParticle() { pmDash_->Draw(); }
 
