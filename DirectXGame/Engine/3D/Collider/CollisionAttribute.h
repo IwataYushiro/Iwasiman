@@ -16,8 +16,10 @@ const unsigned short SUBCOLLISION_ATTR_NONE = (0b1 << 15) + 1;//サブ属性なし
 const unsigned short SUBCOLLISION_ATTR_BULLET = (0b1 << 15) + 2;//弾
 
 //アイテム属性
-const unsigned short SUBCOLLISION_ATTR_ITEM_JUMP = (0b1 << 15) + 11;//サブ属性なし
-const unsigned short SUBCOLLISION_ATTR_ITEM_HEAL = (0b1 << 15) + 12;//サブ属性なし
-const unsigned short SUBCOLLISION_ATTR_ITEM_ATTACK = (0b1 << 15) + 13;//サブ属性なし
+const unsigned short SUBCOLLISION_ATTR_ITEM_JUMP = (0b1 << 15) + 11;//ジャンプアイテム
+const unsigned short SUBCOLLISION_ATTR_ITEM_HEAL = (0b1 << 15) + 12;//回復アイテム
+const unsigned short SUBCOLLISION_ATTR_ITEM_ATTACK = (0b1 << 15) + 13;//攻撃力強化アイテム
 
-//ボス戦
+//仕掛けの種類
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_SPIKE = (0b1 << 15) + 100;//トゲ
+

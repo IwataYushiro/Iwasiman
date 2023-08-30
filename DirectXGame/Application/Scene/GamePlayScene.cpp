@@ -75,9 +75,7 @@ void GamePlayScene::Update()
 
 	players_.remove_if(
 		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
-	enemys_.remove_if(
-		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
-
+	
 	//íeçXêV
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
 

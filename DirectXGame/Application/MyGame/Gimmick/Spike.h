@@ -23,7 +23,6 @@ public:
 	static std::unique_ptr<Spike> Create(Model* model = nullptr, Player* player = nullptr);
 	//初期化
 	bool Initialize()override;
-	void Reset();
 	//更新
 	void Update()override;
 
@@ -47,8 +46,12 @@ private:
 
 	bool isSpike_ = false;
 
-	float radius_ = 10.0f;
+	float radius_ = 5.0f;
+
+	Player* player_ = nullptr;
+
 public: //アクセッサ、インライン関数
 	bool IsSpike() const { return isSpike_; }
+	void SetPlayer(Player* player) { player_ = player; }
 };
 #pragma once

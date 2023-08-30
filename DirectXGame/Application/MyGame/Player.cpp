@@ -518,7 +518,19 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 		ishit = true;
 	}
 
+	if (attribute == COLLISION_ATTR_GIMMICK)
+	{
+		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
+		{
+			if (ishit)return;
+			life_ -= 3;
+			pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
+			pmDash_->Update();
+			ishit = true;
+		}
+	}
 }
 
 const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
