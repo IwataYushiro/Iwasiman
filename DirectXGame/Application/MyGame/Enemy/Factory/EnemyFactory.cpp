@@ -29,5 +29,6 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 		//ÉRÉA
 		return EnemyCore::Create(model, player, gamescene);
 	}
+
 	return nullptr;
 }

@@ -8,11 +8,6 @@
 using namespace DirectX;
 CollisionManager* Spike::colManager_ = CollisionManager::GetInstance();
 
-Spike::~Spike()
-{
-
-}
-
 std::unique_ptr<Spike> Spike::Create(Model* model, Player* player)
 {
 	//インスタンス生成
