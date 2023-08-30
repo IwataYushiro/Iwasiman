@@ -1,7 +1,9 @@
 #pragma once
+
+#include "BaseGimmick.h"
+
 #include "Camera.h"
 #include "Model.h"
-#include "Object3d.h"
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
@@ -9,7 +11,7 @@
 class Player;
 class CollisionManager;
 
-class Spike :public Object3d
+class Spike :public BaseGimmick
 {
 private:
 	// DirectX::を省略
@@ -33,7 +35,7 @@ public:
 	XMFLOAT3 GetWorldPosition();
 
 	//描画
-	void Draw();
+	void Draw()override;
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;

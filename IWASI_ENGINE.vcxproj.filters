@@ -217,6 +217,12 @@
     <Filter Include="Source File\Application\MyGame\Gimmick">
       <UniqueIdentifier>{dc569295-2a6e-4e4f-b415-801eb4088eb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header File\Application\MyGame\Gimmick\Factory">
+      <UniqueIdentifier>{c3656898-4708-44ba-b26e-15a0f249ac81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Application\MyGame\Gimmick\Factory">
+      <UniqueIdentifier>{4fc7bdaf-f5c4-494f-a521-52af85bde20c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
@@ -748,6 +754,9 @@
       <Filter>Header File\Application\MyGame\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Spike.h">
+      <Filter>Header File\Application\MyGame\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\BaseGimmick.h">
       <Filter>Header File\Application\MyGame\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
