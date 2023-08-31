@@ -27,7 +27,9 @@ void GamePlayScene::Initialize()
 
 	spCommon_ = SpriteCommon::GetInstance();
 	colManager_ = CollisionManager::GetInstance();
+	//çHã∆ínë—
 	enemyFactory = std::make_unique<EnemyFactory>();
+	gimmickFactory = std::make_unique<GimmickFactory>();
 
 	// ï`âÊèâä˙âªèàóùÅ@Ç±Ç±Ç©ÇÁ
 #pragma region ï`âÊèâä˙âªèàóù
@@ -47,7 +49,7 @@ void GamePlayScene::Initialize()
 	//ÉÇÉfÉãì«Ç›çûÇ›
 	LoadModel();
 	//ÉåÉxÉãÉfÅ[É^ì«Ç›çûÇ›
-	if (stageNum == 1)LoadLVData("tstage01");
+	if (stageNum == 1)LoadLVData("tstage_gimmick");
 	else if (stageNum == 2)LoadLVData("stage2");
 	else if (stageNum == 3)LoadLVData("stageboss1");
 
@@ -111,6 +113,9 @@ void GamePlayScene::Update()
 			//É{ÉXåÇîj
 			if (enemy->BossDead())isclear = true;
 		}
+		
+		for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
+		
 		for (std::unique_ptr<Goal>& goal : goals_)
 		{
 			goal->Update();
@@ -195,6 +200,7 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Draw();
 	for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
+	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_) gimmick->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
 	for (std::unique_ptr<Item>& item : items_)item->Draw();
 	for (auto& object : objects)object->Draw();
@@ -339,7 +345,35 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//ÉäÉXÉgÇ…ìoò^
 			enemys_.push_back(std::move(newenemy));
 		}
+		//édä|ÇØ
+		else if (objectData.objectType.find("GIMMICK") == 0)
+		{
+			//ìGèâä˙âª
+			std::unique_ptr<BaseGimmick> newGimmick;
+			std::unique_ptr<Player>& player = players_.front();
 
+			newGimmick = gimmickFactory->CreateGimmick(objectData.objectPattern, model, player.get());
+
+			// ç¿ïW
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newGimmick->SetPosition(pos);
+
+			// âÒì]äp
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newGimmick->SetRotation(rot);
+
+			// ç¿ïW
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newGimmick->SetScale(scale);
+
+			newGimmick->SetCamera(camera_);
+			newGimmick->Update();
+			//ÉäÉXÉgÇ…ìoò^
+			gimmicks_.push_back(std::move(newGimmick));
+		}
 		//ÉSÅ[Éã
 		else if (objectData.objectType.find("GOAL") == 0)
 		{

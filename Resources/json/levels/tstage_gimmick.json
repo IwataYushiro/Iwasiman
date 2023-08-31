@@ -191,7 +191,7 @@
                 ]
             },
             "file_name": "enemy1",
-            "objecttype": "ENEMY",
+            "objecttype": "GIMMICK",
             "objectpattern": "SPIKE"
         },
         {

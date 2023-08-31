@@ -11,11 +11,11 @@
 #include "Goal.h"
 #include "Player.h"
 #include "EnemyFactory.h"
+#include "GimmickFactory.h"
 
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
 #include "Easing.h"
-
 
 #include "Item.h"
 
@@ -103,6 +103,10 @@ private:
 
 	Model* modelBoss1_ = nullptr;
 	Model* modelBossCore1_ = nullptr;
+
+	std::unique_ptr<AbstractGimmickFactory> gimmickFactory;
+
+	std::list<std::unique_ptr<BaseGimmick>> gimmicks_;
 
 	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;

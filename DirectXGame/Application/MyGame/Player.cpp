@@ -518,7 +518,7 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 		ishit = true;
 	}
 
-	if (attribute == COLLISION_ATTR_GIMMICK)
+	else if (attribute == COLLISION_ATTR_GIMMICK)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
 		{

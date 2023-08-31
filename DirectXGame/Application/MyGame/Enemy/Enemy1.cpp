@@ -87,7 +87,7 @@ void Enemy1::Update() {
 		break;
 	}
 
-	
+
 	//行列更新
 	Trans();
 	camera_->Update();
@@ -277,10 +277,10 @@ void Enemy1::Landing()
 
 //描画
 void Enemy1::Draw() {
-	
-		//モデルの描画
-		Object3d::Draw();
-	
+
+	//モデルの描画
+	Object3d::Draw();
+
 
 }
 
@@ -290,7 +290,7 @@ void Enemy1::Draw() {
 void Enemy1::UpdateApproach() {
 	//速度
 	XMFLOAT3 velocity;
-	
+
 	//移動
 	velocity = { -0.2f, 0.0f, 0.0f };
 	position.x += velocity.x;
@@ -304,7 +304,7 @@ void Enemy1::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval/2, kFireInterval);
+		fireTimer = MyMath::RandomMTInt(kFireInterval / 2, kFireInterval);
 	}
 
 	if (!onGround)
@@ -331,7 +331,7 @@ void Enemy1::UpdateApproach() {
 //離脱
 void Enemy1::UpdateLeave() {
 	//速度
-	
+
 }
 
 //ワールド座標を取得
