@@ -43,8 +43,6 @@ bool Spike::Initialize()
 
 void Spike::Update()
 {
-
-
 	Trans();
 	camera_->Update();
 	Object3d::Update();
