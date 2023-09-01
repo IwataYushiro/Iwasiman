@@ -362,6 +362,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyCore.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallSphere.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Spike.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Goal.cpp" />
@@ -425,6 +426,7 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\BaseGimmick.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\AbstractGimmickFactory.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallSphere.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Spike.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Goal.h" />

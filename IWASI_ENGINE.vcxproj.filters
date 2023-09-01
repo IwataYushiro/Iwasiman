@@ -565,6 +565,9 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.cpp">
       <Filter>Source File\Application\MyGame\Gimmick\Factory</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallSphere.cpp">
+      <Filter>Source File\Application\MyGame\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -767,6 +770,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\AbstractGimmickFactory.h">
       <Filter>Header File\Application\MyGame\Gimmick\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallSphere.h">
+      <Filter>Header File\Application\MyGame\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

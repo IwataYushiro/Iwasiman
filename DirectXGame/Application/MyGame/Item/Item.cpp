@@ -32,7 +32,7 @@ std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short 
 	//モデルのセット
 	if (model) ins->SetModel(model);
 	if (player)ins->SetPlayer(player);
-
+	if (subAttribute)ins->collider->SetSubAttribute(subAttribute);
 	return ins;
 }
 
@@ -43,7 +43,7 @@ bool Item::Initialize(unsigned short subAttribute)
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ITEM);
-	collider->SetSubAttribute(subAttribute);
+	
 
 	isGet_ = false;
 	isGetJump_ = false;

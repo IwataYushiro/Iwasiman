@@ -530,6 +530,7 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 			pmDash_->Update();
 			ishit = true;
 		}
+		
 	}
 }
 
