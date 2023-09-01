@@ -27,7 +27,6 @@ public:
 	bool Initialize()override;
 	//XV
 	void Update()override;
-
 	//“]‘—
 	void Trans();
 

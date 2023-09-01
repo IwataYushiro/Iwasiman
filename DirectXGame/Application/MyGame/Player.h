@@ -123,6 +123,8 @@ private:
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 	bool OnGround()const { return onGround; }
+	void SetOnGround(bool og) { this->onGround = og; }
+
 	//ジャンプ力
 	void SetJumpVYFist(float jumpFist) { this->jumpVYFist = jumpFist; }
 	//ライフ
