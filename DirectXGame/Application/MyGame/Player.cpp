@@ -37,6 +37,7 @@ std::unique_ptr<Player> Player::Create(Model* model, GamePlayScene* gamescene)
 bool Player::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
+input_ = Input::GetInstance();
 
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 
@@ -96,8 +97,7 @@ void Player::Reset() {
 	
 }
 void Player::Update() {
-	input_ = Input::GetInstance();
-
+	
 	pmDash_->SetCamera(camera_);
 
 	if (!isDead_) 
@@ -131,7 +131,8 @@ void Player::Update() {
 	collider->Update();
 
 	//着地処理
-	Landing();
+	Landing(COLLISION_ATTR_LANDSHAPE);
+	
 }
 
 void Player::Draw() { Object3d::Draw(); }
@@ -325,7 +326,7 @@ void Player::JumpBack()
 	Object3d::SetPosition(move);
 }
 
-void Player::Landing()
+void Player::Landing(unsigned short attribute)
 {
 	//球コライダーの取得
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
@@ -372,7 +373,7 @@ void Player::Landing()
 	PlayerQueryCallback callback(sphereCollider);
 
 	//球と地形の交差を全検索
-	colManager_->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
+	colManager_->QuerySphere(*sphereCollider, &callback, attribute);
 	//交差による排斥分動かす
 	position.x += callback.move.m128_f32[0];
 	position.y += callback.move.m128_f32[1];
@@ -403,7 +404,7 @@ void Player::Landing()
 		//スムーズに坂を下るための吸着処理
 		const float adsDistance = 0.2f;
 		//接地を維持
-		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
+		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f + adsDistance))
 		{
 			onGround = true;
@@ -421,7 +422,7 @@ void Player::Landing()
 	//落下状態
 	else if (fallVec.y <= 0.0f)
 	{
-		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
+		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f))
 		{
 			//着地
@@ -522,15 +523,14 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
 		{
-			if (ishit)return;
-			life_ -= 3;
+			
 			pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
 			pmDash_->Update();
-			ishit = true;
+			
 		}
-		
+		Landing(COLLISION_ATTR_GIMMICK);
 	}
 }
 

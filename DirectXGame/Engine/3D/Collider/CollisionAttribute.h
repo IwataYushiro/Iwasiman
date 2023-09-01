@@ -23,5 +23,5 @@ const unsigned short SUBCOLLISION_ATTR_ITEM_ATTACK = (0b1 << 15) + 13;//UŒ‚—Í‹­
 //ŽdŠ|‚¯‚ÌŽí—Þ
 const unsigned short SUBCOLLISION_ATTR_GIMMICK_SPIKE = (0b1 << 15) + 100;//ƒgƒQ
 const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE = (0b1 << 15) + 101;//æ‚é‚Æ—Ž‚¿‚é‹…(~‚è‚Ä‚à—Ž‰º‚µ‚½‚Ü‚Ü)
-const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_UP = (0b1 << 15) + 101;//æ‚é‚Æ—Ž‚¿‚é‹…(~‚è‚é‚ÆŒ³‚ÌˆÊ’u‚É–ß‚é)
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_UP = (0b1 << 15) + 102;//æ‚é‚Æ—Ž‚¿‚é‹…(~‚è‚é‚ÆŒ³‚ÌˆÊ’u‚É–ß‚é)
 

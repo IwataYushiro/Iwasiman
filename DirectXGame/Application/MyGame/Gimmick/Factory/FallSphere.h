@@ -22,7 +22,7 @@ private:
 
 public:
 
-	static std::unique_ptr<FallSphere> Create(Model* model = nullptr, Player* player = nullptr);
+	static std::unique_ptr<FallSphere> Create(Model* model = nullptr, Player* player = nullptr, unsigned short subAttribute = 0b1000000000000001);
 	//‰Šú‰»
 	bool Initialize()override;
 	//XV

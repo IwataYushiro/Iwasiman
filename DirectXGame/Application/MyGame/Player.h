@@ -44,7 +44,7 @@ public:
 	//奥へ移動
 	void JumpBack();
 	//着地
-	void Landing();
+	void Landing(unsigned short attribute);
 	//プレイヤーの攻撃処理
 	void Attack();
 
