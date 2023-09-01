@@ -70,7 +70,7 @@
             "name": "Plane.001",
             "transform": {
                 "translation": [
-                    -12.523651123046875,
+                    28.582530975341797,
                     -1.9930801391601562,
                     -10.0
                 ],
@@ -80,7 +80,7 @@
                     0.0
                 ],
                 "scaling": [
-                    1.0832507610321045,
+                    0.699999988079071,
                     0.4933326542377472,
                     1.0
                 ]
@@ -175,7 +175,7 @@
             "name": "Enemy1.001",
             "transform": {
                 "translation": [
-                    60.0,
+                    0.0,
                     -36.196868896484375,
                     -7.307277679443359
                 ],
@@ -265,6 +265,54 @@
             "file_name": "enemy1",
             "objecttype": "ENEMY",
             "objectpattern": "ENEMY2"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere",
+            "transform": {
+                "translation": [
+                    60.0,
+                    -61.30728530883789,
+                    -10.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "sphere2",
+            "objecttype": "GIMMICK",
+            "objectpattern": "FALLSPHERE"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.001",
+            "transform": {
+                "translation": [
+                    60.0,
+                    -80.9620590209961,
+                    -10.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "sphere2",
+            "objecttype": "GIMMICK",
+            "objectpattern": "FALLSPHERE"
         }
     ]
 }

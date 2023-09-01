@@ -37,7 +37,7 @@ std::unique_ptr<Player> Player::Create(Model* model, GamePlayScene* gamescene)
 bool Player::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
-	input_ = Input::GetInstance();
+input_ = Input::GetInstance();
 
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 
@@ -76,7 +76,7 @@ bool Player::Initialize() {
 }
 
 void Player::Reset() {
-
+	
 	life_ = 5;
 	isDead_ = false;
 
@@ -94,13 +94,13 @@ void Player::Reset() {
 	nowCount = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 1.0f;					//全体時間
-
+	
 }
 void Player::Update() {
-
+	
 	pmDash_->SetCamera(camera_);
 
-	if (!isDead_)
+	if (!isDead_) 
 	{
 		if (life_ <= 0)
 		{
@@ -108,7 +108,7 @@ void Player::Update() {
 		}
 		if (position.y <= -60.0f)isDead_ = true;
 
-		if (ishit) mutekiCount++;
+		if (ishit) mutekiCount++; 
 		if (mutekiCount == MUTEKI_COUNT)
 		{
 			ishit = false;
@@ -122,7 +122,7 @@ void Player::Update() {
 		Attack();
 		//移動制限
 		Trans();
-
+		
 	}
 	pmDash_->Update();
 
@@ -132,7 +132,7 @@ void Player::Update() {
 
 	//着地処理
 	Landing(COLLISION_ATTR_LANDSHAPE);
-
+	
 }
 
 void Player::Draw() { Object3d::Draw(); }
@@ -514,23 +514,25 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 		life_--;
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
-
+		
 		pmDash_->Update();
 		ishit = true;
 	}
 
-
-	else if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
+	else if (attribute == COLLISION_ATTR_GIMMICK)
 	{
-		if (ishit)return;
-		//life_ -= 3;
-		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
+		{
+			if (ishit)return;
+			life_ -= 3;
+			pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
-		pmDash_->Update();
-		ishit = true;
+			pmDash_->Update();
+			ishit = true;
+		}
+		
 	}
-
 }
 
 const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)

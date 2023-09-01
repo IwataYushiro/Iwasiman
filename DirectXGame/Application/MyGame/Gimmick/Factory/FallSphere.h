@@ -48,9 +48,13 @@ private:
 
 	bool isFallSphere_ = false;
 
-	float radius_ = 5.0f;
+	float radius_ = 7.0f;
 
 	Player* player_ = nullptr;
+
+	bool isRide = false;
+
+	XMFLOAT3 startPos = {};
 
 public: //アクセッサ、インライン関数
 	bool IsFallSphere() const { return isFallSphere_; }

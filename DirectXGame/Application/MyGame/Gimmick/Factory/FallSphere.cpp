@@ -25,6 +25,7 @@ std::unique_ptr<FallSphere> FallSphere::Create(Model* model, Player* player, uns
 	if (model) ins->SetModel(model);
 	if (player)ins->SetPlayer(player);
 	if (subAttribute)ins->collider->SetSubAttribute(subAttribute);
+	
 
 	return ins;
 }
@@ -35,14 +36,31 @@ bool FallSphere::Initialize()
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_GIMMICK);
+	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
+	
 	return true;
 
 }
 
 void FallSphere::Update()
 {
+	if (isRide)
+	{
+		//XMFLOAT3 eyepos = camera_->GetEye();
+		//XMFLOAT3 tarpos = camera_->GetTarget();
+
+		const float downSpeed = 0.1f;
+		position.y -= downSpeed;
+		//eyepos.y -= downSpeed;
+		//tarpos.y -= downSpeed;
+
+		if (position.y <= startPos.y - 50.0f)
+		{
+			position = startPos;
+			isRide = false;
+		}
+	}
 	Trans();
 	camera_->Update();
 	Object3d::Update();
@@ -90,5 +108,16 @@ void FallSphere::Draw()
 
 void FallSphere::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
+	if (isRide)return;
 
+	if (attribute == COLLISION_ATTR_PLAYERS)
+	{
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)
+		{
+			startPos = GetPosition();
+			isRide = true;
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+
+	}
 }
