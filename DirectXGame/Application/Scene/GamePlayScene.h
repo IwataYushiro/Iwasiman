@@ -107,6 +107,7 @@ private:
 	std::unique_ptr<AbstractGimmickFactory> gimmickFactory;
 
 	std::list<std::unique_ptr<BaseGimmick>> gimmicks_;
+	Model* modelSpike_ = nullptr;
 
 	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;

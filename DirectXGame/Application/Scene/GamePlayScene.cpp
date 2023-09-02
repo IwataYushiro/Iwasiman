@@ -261,6 +261,7 @@ void GamePlayScene::Finalize()
 	delete modelSkydome;
 	delete modelItemJump_;
 	delete modelItemHeal_;
+	delete modelSpike_;
 	delete modelGround;
 	delete modelBox;
 	delete modelGoal_;
@@ -485,6 +486,7 @@ void GamePlayScene::LoadModel()
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 	modelItemJump_ = Model::LoadFromOBJ("itemjump");
 	modelItemHeal_ = Model::LoadFromOBJ("itemheal");
+	modelSpike_ = Model::LoadFromOBJ("spikeball");
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
@@ -496,6 +498,7 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("sphere", modelGoal_));
 	models.insert(std::make_pair("Itemjump", modelItemJump_));
 	models.insert(std::make_pair("itemheal", modelItemHeal_));
+	models.insert(std::make_pair("spikeball", modelSpike_));
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("sphere2", modelBox));
