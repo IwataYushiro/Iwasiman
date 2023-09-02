@@ -27,6 +27,10 @@ public:
 	bool Initialize()override;
 	//更新
 	void Update()override;
+	//更新(おちっぱ)
+	void UpdateFallSphere();
+	//戻る
+	void UpdateFallSphereReturn();
 
 	//転送
 	void Trans();
@@ -52,7 +56,10 @@ private:
 
 	Player* player_ = nullptr;
 
+	//乗るとtrue
 	bool isRide = false;
+	//乗って離れるとtrue
+	bool isReturn = false;
 
 	XMFLOAT3 startPos = {};
 

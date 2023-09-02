@@ -45,15 +45,21 @@ bool FallSphere::Initialize()
 
 void FallSphere::Update()
 {
+	
+	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphere();
+
+	Trans();
+	camera_->Update();
+	Object3d::Update();
+}
+
+void FallSphere::UpdateFallSphere()
+{
 	if (isRide)
 	{
-		//XMFLOAT3 eyepos = camera_->GetEye();
-		//XMFLOAT3 tarpos = camera_->GetTarget();
-
 		const float downSpeed = 0.1f;
 		position.y -= downSpeed;
-		//eyepos.y -= downSpeed;
-		//tarpos.y -= downSpeed;
 
 		if (position.y <= startPos.y - 50.0f)
 		{
@@ -61,9 +67,31 @@ void FallSphere::Update()
 			isRide = false;
 		}
 	}
-	Trans();
-	camera_->Update();
-	Object3d::Update();
+}
+
+void FallSphere::UpdateFallSphereReturn()
+{
+	const float speed = 0.1f;
+	
+	if (isRide)
+	{
+		if (player_->OnGround())position.y -= speed;
+		else
+		{
+			isRide = false;
+			isReturn = true;
+		}
+	}
+	else if (isReturn)
+	{
+		position.y += speed;
+		if (position.y >= startPos.y)
+		{
+			position = startPos;
+			isReturn = false;
+		}
+	}
+	
 }
 
 void FallSphere::Trans()
@@ -114,8 +142,9 @@ void FallSphere::OnCollision(const CollisionInfo& info, unsigned short attribute
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			startPos = GetPosition();
+			if (!isReturn)startPos = position;
 			isRide = true;
+			
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 

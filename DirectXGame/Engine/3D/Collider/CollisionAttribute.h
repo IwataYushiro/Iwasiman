@@ -20,8 +20,12 @@ const unsigned short SUBCOLLISION_ATTR_ITEM_JUMP = (0b1 << 15) + 11;//ƒWƒƒƒ“ƒvƒA
 const unsigned short SUBCOLLISION_ATTR_ITEM_HEAL = (0b1 << 15) + 12;//‰ñ•œƒAƒCƒeƒ€
 const unsigned short SUBCOLLISION_ATTR_ITEM_ATTACK = (0b1 << 15) + 13;//UŒ‚—Í‹­‰»ƒAƒCƒeƒ€
 
+
 //ŽdŠ|‚¯‚ÌŽí—Þ
 const unsigned short SUBCOLLISION_ATTR_GIMMICK_SPIKE = (0b1 << 15) + 100;//ƒgƒQ
-const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE = (0b1 << 15) + 101;//æ‚é‚Æ—Ž‚¿‚é‹…(~‚è‚Ä‚à—Ž‰º‚µ‚½‚Ü‚Ü)
-const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_UP = (0b1 << 15) + 102;//æ‚é‚Æ—Ž‚¿‚é‹…(~‚è‚é‚ÆŒ³‚ÌˆÊ’u‚É–ß‚é)
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE = (0b1 << 15) + 101;//æ‚é‚Æ—Ž‚¿‚é‹…(~‚è‚Ä‚à—Ž‰º‚µ‚Â‚Ã‚¯‚é)
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN = (0b1 << 15) + 102;//æ‚é‚Æ—Ž‚¿‚é‹…(~‚è‚é‚ÆŒ³‚ÌˆÊ’u‚É–ß‚é)
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_UPSPHERE = (0b1 << 15) + 103;//æ‚é‚Æã‚ª‚é‹…(~‚è‚Ä‚àã¸‚µ‘±‚¯‚é)
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_UPSPHERE_RETURN = (0b1 << 15) + 104;//æ‚é‚Æã‚ª‚é‹…(~‚è‚é‚ÆŒ³‚ÌˆÊ’u‚É–ß‚é)
+
 
