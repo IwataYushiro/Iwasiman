@@ -22,7 +22,8 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-
+public:
+	const int MUTEKI_COUNT = 60;
 public:
 	~Player();
 
@@ -35,7 +36,6 @@ public:
 	
 	//更新
 	void Update() override;
-	void ItemUpdate();
 	//プレイヤーの移動処理
 	void Move();
 	void CameraMove();
@@ -44,7 +44,7 @@ public:
 	//奥へ移動
 	void JumpBack();
 	//着地
-	void Landing();
+	void Landing(unsigned short attribute);
 	//プレイヤーの攻撃処理
 	void Attack();
 
@@ -109,7 +109,9 @@ private:
 	
 	//死亡フラグとライフ
 	bool isDead_ = false;
+	int mutekiCount = 0;
 	int life_ = 5;
+	bool ishit = false;
 	bool cameramove = true;
 	//パーティクル
 	Particle* particleDash_ = nullptr;
@@ -121,11 +123,13 @@ private:
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 	bool OnGround()const { return onGround; }
+	void SetOnGround(bool og) { this->onGround = og; }
+
 	//ジャンプ力
 	void SetJumpVYFist(float jumpFist) { this->jumpVYFist = jumpFist; }
 	//ライフ
 	void SetLife(int life) { this->life_ = life; }
-	int GetLife()const { return life_; }
+	const int& GetLife()const { return life_; }
 	//ゲームシーン
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

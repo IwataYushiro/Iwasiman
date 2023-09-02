@@ -32,6 +32,7 @@ bool PlayerBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity
 	//引数で受け取った初期座標をセット
 	SetPosition(position);
 	velocity_ = velocity;
+
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_PLAYERS);

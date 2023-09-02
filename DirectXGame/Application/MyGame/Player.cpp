@@ -37,8 +37,14 @@ std::unique_ptr<Player> Player::Create(Model* model, GamePlayScene* gamescene)
 bool Player::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
+input_ = Input::GetInstance();
 
 	modelBullet_ = Model::LoadFromOBJ("playerbullet");
+
+	life_ = 5;
+	isDead_ = false;
+	ishit = false;
+	mutekiCount = 0;
 
 	isRight_ = true;
 	//ジャンプしたか
@@ -70,32 +76,53 @@ bool Player::Initialize() {
 }
 
 void Player::Reset() {
-	pos = { -20.0f, -10.0f, -60.0f };
-
+	
 	life_ = 5;
 	isDead_ = false;
-	//弾リセット
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) bullet->Reset();
 
+	isRight_ = true;
+	//ジャンプしたか
+	onGround = true;
+
+	//奥側にいるか
+	isJumpBack = false;
+	//奧にいるか
+	isBack = false;
+
+	//奥側ジャンプに使うベジェ曲線用の時間
+	startCount = std::chrono::steady_clock::now();	//開始時間
+	nowCount = std::chrono::steady_clock::now();		//現在時間
+	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
+	maxTime = 1.0f;					//全体時間
+	
 }
 void Player::Update() {
-	input_ = Input::GetInstance();
-
+	
 	pmDash_->SetCamera(camera_);
 
-	if (!isDead_) {
-		//死亡フラグの立った弾を削除
-		bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
+	if (!isDead_) 
+	{
+		if (life_ <= 0)
+		{
+			isDead_ = true;
+		}
+		if (position.y <= -60.0f)isDead_ = true;
 
+		if (ishit) mutekiCount++; 
+		if (mutekiCount == MUTEKI_COUNT)
+		{
+			ishit = false;
+			mutekiCount = 0;
+		}
 		//移動処理
-		Move();
+		if (!isJumpBack)Move();
 		//攻撃処理
 		FallAndJump();
 		JumpBack();
 		Attack();
 		//移動制限
 		Trans();
-
+		
 	}
 	pmDash_->Update();
 
@@ -104,10 +131,11 @@ void Player::Update() {
 	collider->Update();
 
 	//着地処理
-	Landing();
+	Landing(COLLISION_ATTR_LANDSHAPE);
+	
 }
 
-void Player::Draw() { if (!isDead_)Object3d::Draw(); }
+void Player::Draw() { Object3d::Draw(); }
 
 void Player::DrawParticle() { pmDash_->Draw(); }
 
@@ -145,17 +173,17 @@ void Player::Move() {
 			isRight_ = false;
 			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,3.0f,0.0f }, { 3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
 			rot = { 0.0f,-90.0f,0.0f };
-			move.x -= moveSpeed * 2.0f;
-			cmove.x -= moveSpeed * 2.0f;
-			tmove.x -= moveSpeed * 2.0f;
+			move.x -= moveSpeed * 1.5f;
+			cmove.x -= moveSpeed * 1.5f;
+			tmove.x -= moveSpeed * 1.5f;
 		}
 		if (input_->PushKey(DIK_D)) {
 			isRight_ = true;
 			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,3.0f,0.0f }, { -3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
 			rot = { 0.0f,90.0f,0.0f };
-			move.x += moveSpeed * 2.0f;
-			cmove.x += moveSpeed * 2.0f;
-			tmove.x += moveSpeed * 2.0f;
+			move.x += moveSpeed * 1.5f;
+			cmove.x += moveSpeed * 1.5f;
+			tmove.x += moveSpeed * 1.5f;
 		}
 	}
 
@@ -261,42 +289,44 @@ void Player::JumpBack()
 		{
 			if (input_->TriggerKey(DIK_Z))
 			{
+
 				if (isBack)isBack = false;
 				else isBack = true;
 				isJumpBack = true;
 			}
 		}
-		else
+	}
+	if (isJumpBack)
+	{
+		//現在時間を取得する
+		nowCount = std::chrono::steady_clock::now();
+		//前回記録からの経過時間を取得する
+		elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
+
+		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+
+		timeRate = min(elapsed / maxTime, 1.0f);
+
+		if (isBack)move = Bezier3(end, p2, p1, start, timeRate);
+
+		else move = Bezier3(start, p1, p2, end, timeRate);
+
+		if (move.z >= end.z)
 		{
-			//現在時間を取得する
-			nowCount = std::chrono::steady_clock::now();
-			//前回記録からの経過時間を取得する
-			elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
-
-			float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
-
-			timeRate = min(elapsed / maxTime, 1.0f);
-
-			if (isBack)move = Bezier3(end, p2, p1, start, timeRate);
-
-			else move = Bezier3(start, p1, p2, end, timeRate);
-
-			if (move.z >= end.z)
-			{
-				startCount = std::chrono::steady_clock::now();
-				isJumpBack = false;
-			}
-			else if (move.z <= start.z)
-			{
-				startCount = std::chrono::steady_clock::now();
-				isJumpBack = false;
-			}
+			startCount = std::chrono::steady_clock::now();
+			isJumpBack = false;
+		}
+		else if (move.z <= start.z)
+		{
+			startCount = std::chrono::steady_clock::now();
+			isJumpBack = false;
 		}
 	}
+
 	Object3d::SetPosition(move);
 }
 
-void Player::Landing()
+void Player::Landing(unsigned short attribute)
 {
 	//球コライダーの取得
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
@@ -343,7 +373,7 @@ void Player::Landing()
 	PlayerQueryCallback callback(sphereCollider);
 
 	//球と地形の交差を全検索
-	colManager_->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
+	colManager_->QuerySphere(*sphereCollider, &callback, attribute);
 	//交差による排斥分動かす
 	position.x += callback.move.m128_f32[0];
 	position.y += callback.move.m128_f32[1];
@@ -374,7 +404,7 @@ void Player::Landing()
 		//スムーズに坂を下るための吸着処理
 		const float adsDistance = 0.2f;
 		//接地を維持
-		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
+		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f + adsDistance))
 		{
 			onGround = true;
@@ -390,9 +420,9 @@ void Player::Landing()
 		}
 	}
 	//落下状態
-	else if (fallVec.y >= -10.0f)
+	else if (fallVec.y <= 0.0f)
 	{
-		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
+		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f))
 		{
 			//着地
@@ -416,7 +446,7 @@ void Player::Attack() {
 		XMFLOAT3 velocity;
 		if (isRight_)velocity = { kBulletSpeed, 0.0f, 0.0f };
 		else velocity = { -kBulletSpeed, 0.0f, 0.0f };
-		
+
 		XMMATRIX matVec = XMMatrixIdentity();
 		matVec.r[0].m128_f32[0] = velocity.x;
 		matVec.r[0].m128_f32[1] = velocity.y;
@@ -480,16 +510,29 @@ XMFLOAT3 Player::GetWorldPosition() {
 void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
+		if (ishit)return;
 		life_--;
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
-		if (life_ <= 0) {
-			isDead_ = true;
-		}
+		
 		pmDash_->Update();
+		ishit = true;
 	}
 
+	else if (attribute == COLLISION_ATTR_GIMMICK)
+	{
+		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
+		{
+			if (ishit)return;
+			life_ -= 3;
+			pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
+			pmDash_->Update();
+			ishit = true;
+		}
+		
+	}
 }
 
 const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)

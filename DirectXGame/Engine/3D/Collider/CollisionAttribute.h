@@ -7,11 +7,25 @@ const unsigned short COLLISION_ATTR_PLAYERS= 0b1 << 1;//–¡•ûw‰c
 const unsigned short COLLISION_ATTR_ENEMYS = 0b1 << 2;//“Gw‰c
 const unsigned short COLLISION_ATTR_GOAL = 0b1 << 3;//ƒS[ƒ‹
 const unsigned short COLLISION_ATTR_ITEM = 0b1 << 4;//ƒAƒCƒeƒ€
+const unsigned short COLLISION_ATTR_GIMMICK = 0b1 << 5;//ŽdŠ|‚¯
+
 
 //ƒTƒu‘®«
 const unsigned short SUBCOLLISION_ATTR_NONE = (0b1 << 15) + 1;//ƒTƒu‘®«‚È‚µ
+//’e
 const unsigned short SUBCOLLISION_ATTR_BULLET = (0b1 << 15) + 2;//’e
 
-const unsigned short SUBCOLLISION_ATTR_ITEM_JUMP = (0b1 << 15) + 11;//ƒTƒu‘®«‚È‚µ
-const unsigned short SUBCOLLISION_ATTR_ITEM_HEAL = (0b1 << 15) + 12;//ƒTƒu‘®«‚È‚µ
-const unsigned short SUBCOLLISION_ATTR_ITEM_ATTACK = (0b1 << 15) + 13;//ƒTƒu‘®«‚È‚µ
+//ƒAƒCƒeƒ€‘®«
+const unsigned short SUBCOLLISION_ATTR_ITEM_JUMP = (0b1 << 15) + 11;//ƒWƒƒƒ“ƒvƒAƒCƒeƒ€
+const unsigned short SUBCOLLISION_ATTR_ITEM_HEAL = (0b1 << 15) + 12;//‰ñ•œƒAƒCƒeƒ€
+const unsigned short SUBCOLLISION_ATTR_ITEM_ATTACK = (0b1 << 15) + 13;//UŒ‚—Í‹­‰»ƒAƒCƒeƒ€
+
+
+//ŽdŠ|‚¯‚ÌŽí—Þ
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_SPIKE = (0b1 << 15) + 100;//ƒgƒQ
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE = (0b1 << 15) + 101;//æ‚é‚Æ—Ž‚¿‚é‹…(~‚è‚Ä‚à—Ž‰º‚µ‚Â‚Ã‚¯‚é)
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN = (0b1 << 15) + 102;//æ‚é‚Æ—Ž‚¿‚é‹…(~‚è‚é‚ÆŒ³‚ÌˆÊ’u‚É–ß‚é)
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_UPSPHERE = (0b1 << 15) + 103;//æ‚é‚Æã‚ª‚é‹…(~‚è‚Ä‚àã¸‚µ‘±‚¯‚é)
+const unsigned short SUBCOLLISION_ATTR_GIMMICK_UPSPHERE_RETURN = (0b1 << 15) + 104;//æ‚é‚Æã‚ª‚é‹…(~‚è‚é‚ÆŒ³‚ÌˆÊ’u‚É–ß‚é)
+
+

@@ -7,6 +7,7 @@ class BaseScene
 {
 public://ƒƒ“ƒoŠÖ”
 	virtual~BaseScene() = default;
+	
 	//‰Šú‰»
 	virtual void Initialize() = 0;
 	//XV

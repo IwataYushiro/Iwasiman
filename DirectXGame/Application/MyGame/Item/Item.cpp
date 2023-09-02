@@ -32,7 +32,7 @@ std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short 
 	//モデルのセット
 	if (model) ins->SetModel(model);
 	if (player)ins->SetPlayer(player);
-
+	if (subAttribute)ins->collider->SetSubAttribute(subAttribute);
 	return ins;
 }
 
@@ -43,7 +43,10 @@ bool Item::Initialize(unsigned short subAttribute)
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ITEM);
-	collider->SetSubAttribute(subAttribute);
+	
+
+	isGet_ = false;
+	isGetJump_ = false;
 
 	//パーティクル
 	p = Particle::LoadFromParticleTexture("particle6.png");
@@ -54,6 +57,12 @@ bool Item::Initialize(unsigned short subAttribute)
 
 	return true;
 
+}
+
+void Item::Reset()
+{
+	isGet_ = false;
+	isGetJump_ = false;
 }
 
 void Item::Update()
@@ -76,7 +85,7 @@ void Item::UpdateJumpPowerup()
 	if (isGetJump_)
 	{
 		ease.ease_out_cubic();
-		if (player_->OnGround())player_->SetJumpVYFist(4.0f);
+		if (player_->OnGround())player_->SetJumpVYFist(3.0f);
 		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, ease.num_X });
 		count++;
 	}
@@ -155,7 +164,7 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			
+			pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
 			if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP)
 			{
 				ease.Standby(false);
@@ -163,7 +172,7 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 			}
 			else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_HEAL)
 			{
-				pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
+				
 
 				player_->SetLife(player_->GetLife() + 1);
 
@@ -177,8 +186,8 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 void Item::LoadSprite()
 {
 	//アイテム関係
-	spCommon_->LoadTexture(30, "itemtex/itemjumpbar.png");
-	spriteItemJumpBar_->Initialize(spCommon_, 30);
+	spCommon_->LoadTexture(1000, "itemtex/itemjumpbar.png");
+	spriteItemJumpBar_->Initialize(spCommon_, 1000);
 	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f });
 
 	spriteItemJumpBar_->Update();

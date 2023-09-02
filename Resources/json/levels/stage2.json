@@ -71,7 +71,7 @@
             "transform": {
                 "translation": [
                     -14.207741737365723,
-                    128.3446044921875,
+                    74.58598327636719,
                     -10.0
                 ],
                 "rotation": [
@@ -81,42 +81,7 @@
                 ],
                 "scaling": [
                     1.0989434719085693,
-                    0.8443718552589417,
-                    1.0
-                ]
-            },
-            "file_name": "ground",
-            "collider": {
-                "type": "BOX",
-                "center": [
-                    10.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    200.0,
-                    200.0,
-                    2.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Plane.001",
-            "transform": {
-                "translation": [
-                    -12.523651123046875,
-                    -1.9930801391601562,
-                    -10.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0832507610321045,
-                    0.3855021595954895,
+                    1.115439534187317,
                     1.0
                 ]
             },
@@ -140,8 +105,8 @@
             "name": "Cube",
             "transform": {
                 "translation": [
-                    60.0,
-                    100.29376220703125,
+                    0.0,
+                    100.70700073242188,
                     0.005191326141357422
                 ],
                 "rotation": [
@@ -162,7 +127,7 @@
             "name": "Goal",
             "transform": {
                 "translation": [
-                    0.0,
+                    60.0,
                     150.0,
                     0.0
                 ],
@@ -208,7 +173,7 @@
             "name": "ItemJump",
             "transform": {
                 "translation": [
-                    60.0,
+                    0.0,
                     10.0,
                     -8.0
                 ],
@@ -277,7 +242,55 @@
         },
         {
             "type": "MESH",
-            "name": "boss1",
+            "name": "ItemJump.001",
+            "transform": {
+                "translation": [
+                    60.0,
+                    87.85636901855469,
+                    -8.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "itemjump",
+            "objecttype": "ITEM",
+            "objectpattern": "JUMP"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1",
+            "transform": {
+                "translation": [
+                    60.0,
+                    55.86119842529297,
+                    -8.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
+        },
+        {
+            "type": "MESH",
+            "name": "Boss1",
             "transform": {
                 "translation": [
                     -150.0,
@@ -304,8 +317,8 @@
             "name": "Enemy1.001",
             "transform": {
                 "translation": [
-                    60.0,
-                    71.55979919433594,
+                    0.0,
+                    51.988834381103516,
                     -8.0
                 ],
                 "rotation": [
@@ -328,9 +341,9 @@
             "name": "Enemy1.002",
             "transform": {
                 "translation": [
-                    60.0,
-                    101.38885498046875,
-                    28.986793518066406
+                    0.0,
+                    33.4109992980957,
+                    -8.0
                 ],
                 "rotation": [
                     0.0,
@@ -353,8 +366,8 @@
             "transform": {
                 "translation": [
                     0.0,
-                    16.344200134277344,
-                    -8.0
+                    102.51907348632812,
+                    22.401914596557617
                 ],
                 "rotation": [
                     0.0,

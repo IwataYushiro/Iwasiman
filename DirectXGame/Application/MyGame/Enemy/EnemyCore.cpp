@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "EnemyCore.h"
 #include <cassert>
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
@@ -6,17 +6,18 @@
 #include "Player.h"
 #include "GamePlayScene.h"
 
+#include "MyMath.h"
 using namespace DirectX;
-CollisionManager* Enemy::colManager_ = CollisionManager::GetInstance();
+CollisionManager* EnemyCore::colManager_ = CollisionManager::GetInstance();
 
-Enemy::~Enemy() {
+EnemyCore::~EnemyCore() {
 	delete modelBullet_;
 }
 
-std::unique_ptr<Enemy> Enemy::Create(Model* model,Player* player,GamePlayScene* gamescene)
+std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Player* player, GamePlayScene* gamescene, unsigned short stage)
 {
 	//インスタンス生成
-	std::unique_ptr<Enemy> ins = std::make_unique<Enemy>();
+	std::unique_ptr<EnemyCore> ins = std::make_unique<EnemyCore>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
@@ -27,84 +28,70 @@ std::unique_ptr<Enemy> Enemy::Create(Model* model,Player* player,GamePlayScene* 
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
-	if(player)ins->SetPlayer(player);
-	if(gamescene)ins->SetGameScene(gamescene);
+	if (player)ins->SetPlayer(player);
+	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
 }
 
 // 初期化
-bool Enemy::Initialize() {
-	
+bool EnemyCore::Initialize() {
+
 	if (!Object3d::Initialize()) return false;
 
 	modelBullet_ = Model::LoadFromOBJ("enemybullet");
 
-	Stage1Parameter();
-
-	startCount= std::chrono::steady_clock::now();	//開始時間
-	nowCount= std::chrono::steady_clock::now();		//現在時間
+	startCount = std::chrono::steady_clock::now();	//開始時間
+	nowCount = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 5.0f;					//全体時間
 	timeRate;
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,radius_,0.0f,0.0f }, radius_));
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
 	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+
+	Parameter();
 
 	return true;
 }
 
 //パラメータ
-void Enemy::Stage1Parameter() {
+void EnemyCore::Parameter() {
+	phase_ = Phase::CoreStage1;
+	maxTime = 2.0f;
+	life_ = 10;
+
 
 	isReverse_ = false;
-	//初期ステージ
-	scale = { 3.0f,3.0f,3.0f };
-
-	Object3d::SetScale(scale);
-
-	//初期フェーズ
-	phase_ = Phase::ApproachStage1;
-
 	//発射タイマー初期化
-	fireTimer = kFireIntervalStage1;
+	fireTimer = kFireInterval;
 
-	life_ = 40;
 	isDead_ = false;
 
-	isReverse_ = false;
-	
+
 }
 
 //リセット
-void Enemy::Reset() { Stage1Parameter(); }
+void EnemyCore::Reset() { Parameter(); }
 
 //更新
-void Enemy::Update() {
+void EnemyCore::Update() {
 
-	
-	//座標を移動させる
-	switch (phase_) {
-	case Enemy::Phase::ApproachStage1:
-
-		UpdateApproachStage1();
-		break;
-
-	case Enemy::Phase::AttackStage1:
-
-		UpdateAttackStage1();
-
-		break;
-	}
-	
 
 	//座標を移動させる
 	switch (phase_) {
-	case Enemy::Phase::Leave:
+	case EnemyCore::Phase::CoreStage1:
+		UpdateCore();
+		break;
+
+	case EnemyCore::Phase::CoreBreak:
+		UpdateBreakCore();
+
+		break;
+	case EnemyCore::Phase::Leave:
 		UpdateLeave();
 		break;
-
 	}
 
 	//行列更新
@@ -114,7 +101,7 @@ void Enemy::Update() {
 }
 
 //転送
-void Enemy::Trans() {
+void EnemyCore::Trans() {
 
 	XMMATRIX world;
 	//行列更新
@@ -137,7 +124,7 @@ void Enemy::Trans() {
 
 }
 //弾発射
-void Enemy::Fire() {
+void EnemyCore::Fire() {
 	assert(player_);
 
 	//弾の速度
@@ -177,36 +164,49 @@ void Enemy::Fire() {
 
 	//弾を登録
 	gameScene_->AddEnemyBullet(std::move(newBullet));
-	
+
 }
 
 //描画
-void Enemy::Draw() {
-	if (!isDead_) {
-		//モデルの描画
-		Object3d::Draw();
+void EnemyCore::Draw() {
 
-		//弾描画
-		
-	}
+	//モデルの描画
+	Object3d::Draw();
+
+
 
 }
 
-
-//状態変化用の更新関数
-//接近
-void Enemy::UpdateApproachStage1() {
+void EnemyCore::UpdateCore()
+{
 	//速度
-	XMFLOAT3 velocity;
 	float cameraMove = camera_->GetEye().x;
 
-	//移動
-	velocity = { 0.0f, 0.0f, -0.5f };
-	pos.x += velocity.x;
-	pos.y += velocity.y;
-	pos.z += velocity.z;
+	//制御点
+	start = nowPos;
+	p1 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
+	p2 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
+	end = { MyMath::RandomMTFloat(-20.0f,20.0f) + cameraMove,10.0f,100.0f };
 
-	Object3d::SetPosition({ pos.x + cameraMove,pos.y,pos.z });
+	//速度
+	XMFLOAT3 velocity;
+	//移動
+	if (!isReverse_)velocity = { 0.3f, 0.0f, 0.0f };
+	else velocity = { -0.3f, 0.0f, 0.0f };
+
+	position.x += velocity.x;
+	position.y += velocity.y;
+	position.z += velocity.z;
+
+	//指定の位置に到達したら反転
+	if (position.x >= 65.0f) {
+		//→から←
+		isReverse_ = true;
+	}
+	if (position.x <= -65.0f) {
+		isReverse_ = false;
+	}
+
 	//発射タイマーカウントダウン
 	fireTimer--;
 	//指定時間に達した
@@ -214,24 +214,26 @@ void Enemy::UpdateApproachStage1() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = kFireIntervalStage1;
+		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
 	}
+	//死んだら自機の弾みたいに
+	if (life_ == 0) {
+		nowPos = Object3d::GetPosition();
 
-	//指定の位置に到達したら攻撃
-	if (pos.z < 100.0f) {
-		phase_ = Phase::AttackStage1;
+		collider->SetAttribute(COLLISION_ATTR_PLAYERS);
+		collider->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
+
+		life_ = 0;
+		startCount = std::chrono::steady_clock::now();	//開始時間
+		//敵にぶつける
+
+		phase_ = Phase::CoreBreak;
 	}
 }
-//攻撃
-void Enemy::UpdateAttackStage1() {
 
-	//速度
-	float cameraMove = camera_->GetEye().x;
-	//制御点
-	start = { -30.0f+cameraMove,10.0f,100.0f };
-	p1 = { -10.0f+cameraMove,-20.0f,100.0f };
-	p2 = { 10.0f+cameraMove,40.0f,100.0f };
-	end = { 30.0f+cameraMove,10.0f,100.0f };
+void EnemyCore::UpdateBreakCore()
+{
+
 	//時間
 
 	//現在時間を取得する
@@ -239,64 +241,25 @@ void Enemy::UpdateAttackStage1() {
 	//前回記録からの経過時間を取得する
 	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
 
-	float elapsed= std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count()/1'000'000.0f;//マイクロ秒を秒に単位変換
+	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
 	timeRate = min(elapsed / maxTime, 1.0f);
 
-	if (isReverse_) {
-		pos = Bezier3(end, p2, p1, start, timeRate);
-	}
-	else {
-		pos = Bezier3(start, p1, p2, end, timeRate);
-	}
-	Object3d::SetPosition(pos);
-	//指定の位置に到達したら反転
-	if (pos.x >= 30.0f+cameraMove) {
-		isReverse_ = true;
-		startCount = std::chrono::steady_clock::now();
-	}
-	if (pos.x <= -30.0f+cameraMove) {
-		isReverse_ = false;
-		startCount = std::chrono::steady_clock::now();
-	}
+	position = Bezier3(start, p1, p2, end, timeRate);
 
-	//発射タイマーカウントダウン
-	fireTimer--;
-	//指定時間に達した
-	if (fireTimer <= 0) {
-		//弾発射
-		Fire();
-		//発射タイマー初期化
-		fireTimer = kFireIntervalStage1;
-	}
-	//死んだら
-	if (life_ <= 0) {
-		isDead_ = true;
-		life_ = 0;
-	}
-	if (isDead_)
-	{
-		phase_ = Phase::Leave;
-	}
 }
 
 //離脱
-void Enemy::UpdateLeave() {
-	//速度
-	XMFLOAT3 velocity;
+void EnemyCore::UpdateLeave() {
 
-	//移動
-	velocity = { 0.0f, 0.0f, 0.05f };
-	pos.x += velocity.x;
-	pos.y += velocity.y;
-	pos.z += velocity.z;
-	Object3d::SetPosition(pos);
+	isDead_ = true;
+	bossDead = true;
 }
 
-const XMFLOAT3 Enemy::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
+const XMFLOAT3 EnemyCore::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
 	XMFLOAT3 ans;
-	ans.x=(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
+	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
 		p1.x + 3 * (1.0f - t) * t * t * p2.x + t * t * t * p3.x;
 	ans.y = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.y + 3.0f * (1.0f - t) * (1.0f - t) * t *
 		p1.y + 3 * (1.0f - t) * t * t * p2.y + t * t * t * p3.y;
@@ -308,7 +271,7 @@ const XMFLOAT3 Enemy::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFL
 
 
 //ワールド座標を取得
-XMFLOAT3 Enemy::GetWorldPosition() {
+XMFLOAT3 EnemyCore::GetWorldPosition() {
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -320,13 +283,18 @@ XMFLOAT3 Enemy::GetWorldPosition() {
 
 	return worldPos;
 }
-void Enemy::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void EnemyCore::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
 	{
-		if(subAttribute==SUBCOLLISION_ATTR_NONE) return;
-		else if(subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
 	}
-		
+
+	else if (attribute == COLLISION_ATTR_ENEMYS)
+	{
+		if (subAttribute == SUBCOLLISION_ATTR_NONE) isDead_ = true;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+	}
 }

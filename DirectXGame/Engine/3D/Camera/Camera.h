@@ -42,9 +42,9 @@ protected:
 	// Y軸回りビルボード行列
 	XMMATRIX matBillboardY_ = {};
 	// 視点座標
-	XMFLOAT3 eye_ = { 0.0f, 0.0f, -100.0f };
+	XMFLOAT3 eye_ = { -10.0f, 0.0f, -100.0f };
 	// 注視点座標
-	XMFLOAT3 target_ = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 target_ = { -10.0f,0.0f,0.0f };
 	// 上方向ベクトル
 	XMFLOAT3 up_ = { 0.0f,1.0f,0.0f };
 

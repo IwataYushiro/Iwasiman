@@ -28,9 +28,11 @@ public:
 	~Item();
 	
 	static std::unique_ptr<Item> Create(Model* model = nullptr, Player* player = nullptr
-		, unsigned short subAttribute = 0b1000000000000000);
+		, unsigned short subAttribute = 0b1000000000000001);
 	//初期化
 	bool Initialize(unsigned short subAttribute);
+	//リセット
+	void Reset();
 	//更新
 	void Update()override;
 	//ジャンプ強化

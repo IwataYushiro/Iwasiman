@@ -1,14 +1,17 @@
 #pragma once
+
+#include "BaseGimmick.h"
+
 #include "Camera.h"
 #include "Model.h"
-#include "Object3d.h"
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
 
+class Player;
 class CollisionManager;
 
-class Goal :public Object3d
+class Spike :public BaseGimmick
 {
 private:
 	// DirectX::を省略
@@ -18,14 +21,12 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	
-	static std::unique_ptr<Goal> Create(Model* model = nullptr);
+
+	static std::unique_ptr<Spike> Create(Model* model = nullptr, Player* player = nullptr);
 	//初期化
 	bool Initialize()override;
-	void Reset();
 	//更新
 	void Update()override;
-
 	//転送
 	void Trans();
 
@@ -33,7 +34,7 @@ public:
 	XMFLOAT3 GetWorldPosition();
 
 	//描画
-	void Draw();
+	void Draw()override;
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
@@ -44,10 +45,14 @@ private:
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 
-	bool isGoal_ = false;
+	bool isSpike_ = false;
 
-	float radius_ = 10.0f;
+	float radius_ = 5.0f;
+
+	Player* player_ = nullptr;
+
 public: //アクセッサ、インライン関数
-	bool IsGoal() const { return isGoal_; }
+	bool IsSpike() const { return isSpike_; }
+	void SetPlayer(Player* player) { player_ = player; }
 };
 #pragma once

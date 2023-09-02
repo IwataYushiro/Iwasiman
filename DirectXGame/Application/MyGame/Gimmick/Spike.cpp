@@ -1,16 +1,18 @@
-#include "Goal.h"
+#include "Spike.h"
+#include "Player.h"
 #include "SphereCollider.h"
 #include <cassert>
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
 
 using namespace DirectX;
-CollisionManager* Goal::colManager_ = CollisionManager::GetInstance();
+CollisionManager* Spike::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<Goal> Goal::Create(Model* model)
+std::unique_ptr<Spike> Spike::Create(Model* model, Player* player)
 {
 	//インスタンス生成
-	std::unique_ptr<Goal> ins = std::make_unique<Goal>();
+	std::unique_ptr<Spike> ins = std::make_unique<Spike>();
+
 	if (ins == nullptr) return nullptr;
 
 	//初期化
@@ -21,31 +23,32 @@ std::unique_ptr<Goal> Goal::Create(Model* model)
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	if (player)ins->SetPlayer(player);
 	return ins;
 }
 
-bool Goal::Initialize()
+bool Spike::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
-	isGoal_ = false;
+
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_GOAL);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	collider->SetAttribute(COLLISION_ATTR_GIMMICK);
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_GIMMICK_SPIKE);
+
+
 	return true;
-	
+
 }
 
-void Goal::Reset() { isGoal_ = false; }
-
-void Goal::Update()
+void Spike::Update()
 {
 	Trans();
 	camera_->Update();
 	Object3d::Update();
 }
 
-void Goal::Trans()
+void Spike::Trans()
 {
 	XMMATRIX world;
 	//行列更新
@@ -67,7 +70,7 @@ void Goal::Trans()
 	Object3d::SetWorld(world);
 }
 
-XMFLOAT3 Goal::GetWorldPosition()
+XMFLOAT3 Spike::GetWorldPosition()
 {
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -80,18 +83,12 @@ XMFLOAT3 Goal::GetWorldPosition()
 	return worldPos;
 }
 
-void Goal::Draw()
+void Spike::Draw()
 {
 	Object3d::Draw();
 }
 
-void Goal::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Spike::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
-	if (attribute == COLLISION_ATTR_PLAYERS)
-	{
-		if (subAttribute == SUBCOLLISION_ATTR_NONE) isGoal_ = true;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
-	}
-		
 	
 }

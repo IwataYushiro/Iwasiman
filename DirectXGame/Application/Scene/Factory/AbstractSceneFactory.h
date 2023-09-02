@@ -12,7 +12,7 @@ public:
 	virtual ~AbstractSceneFactory() = default;
 
 	//ƒV[ƒ“¶¬
-	virtual BaseScene* CreateScene(const std::string& sceneName) = 0;
+	virtual BaseScene* CreateScene(const std::string& sceneName, int stagenum = 0) = 0;
 private:
 
 };

@@ -19,10 +19,18 @@ Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
+
+GamePlayScene::GamePlayScene(int stagenum) :stageNum(stagenum) {}
+
 void GamePlayScene::Initialize()
 {
+
 	spCommon_ = SpriteCommon::GetInstance();
 	colManager_ = CollisionManager::GetInstance();
+	//工業地帯
+	enemyFactory = std::make_unique<EnemyFactory>();
+	gimmickFactory = std::make_unique<GimmickFactory>();
+
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
@@ -41,7 +49,9 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	LoadLVData("stage1");
+	if (stageNum == 1)LoadLVData("tstage_gimmick");
+	else if (stageNum == 2)LoadLVData("stage2");
+	else if (stageNum == 3)LoadLVData("stageboss1");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
@@ -68,10 +78,8 @@ void GamePlayScene::Update()
 	players_.remove_if(
 		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
-		[](std::unique_ptr<Enemy>& enemy) { return enemy->IsDead(); });
+		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
 
-	//敵更新
-	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Update();
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
 
@@ -84,11 +92,30 @@ void GamePlayScene::Update()
 			if (!isclear || !isGameover) player->Update();
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 			//かめおべら
-			if (player->GetPosition().y <= -60.0f || player->IsDead())isGameover = true;
+			if (player->IsDead())isGameover = true;
+
+			//ImGui	
+			imguiManager_->Begin();
+			int plife[1] = { player->GetLife() };
+			ImGui::Begin("Player");
+			ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
+			ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
+			ImGui::InputInt("plife", plife);
+			ImGui::End();
+			imguiManager_->End();
 		}
 		//弾更新
 		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
 
+		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
+		{
+			enemy->Update();
+			//ボス撃破
+			if (enemy->BossDead())isclear = true;
+		}
+		
+		for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
+		
 		for (std::unique_ptr<Goal>& goal : goals_)
 		{
 			goal->Update();
@@ -97,8 +124,6 @@ void GamePlayScene::Update()
 		}
 		for (std::unique_ptr<Item>& item : items_)
 		{
-
-
 			item->Update();
 		}
 
@@ -120,14 +145,10 @@ void GamePlayScene::Update()
 		}
 		if (isclear)
 		{
-			if (input_->TriggerKey(DIK_SPACE))
-			{
-				camera_->Reset();
-				sceneManager_->ChangeScene("TITLE");
-			}
+			sceneManager_->ChangeScene("STAGECLEAR", stageNum);
+			isclear = false;
 		}
 		colManager_->CheckAllCollisions();
-
 		//Pause機能
 		if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
 		{
@@ -165,15 +186,7 @@ void GamePlayScene::Update()
 	}
 	spritePause_->Update();
 
-	//ImGui	
-	imguiManager_->Begin();
-	int plife[1] = { players_.front()->GetLife() };
-	ImGui::Begin("Player");
-	ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
-	ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
-	ImGui::InputInt("plife", plife);
-	ImGui::End();
-	imguiManager_->End();
+
 
 }
 
@@ -185,8 +198,9 @@ void GamePlayScene::Draw()
 	//モデル描画
 	for (std::unique_ptr<Player>& player : players_)player->Draw();
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Draw();
-	for (std::unique_ptr<Enemy>& enemy : enemys_) enemy->Draw();
+	for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->Draw();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Draw();
+	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_) gimmick->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
 	for (std::unique_ptr<Item>& item : items_)item->Draw();
 	for (auto& object : objects)object->Draw();
@@ -241,13 +255,18 @@ void GamePlayScene::Finalize()
 
 	//3Dモデル
 	delete modelPlayer_;
-	delete modelEnemy_;
+	delete modelEnemy1_;
+	delete modelBoss1_;
+	delete modelBossCore1_;
 	delete modelSkydome;
 	delete modelItemJump_;
 	delete modelItemHeal_;
 	delete modelGround;
 	delete modelBox;
 	delete modelGoal_;
+
+	models.clear();
+
 	//スプライト
 	delete spritePause_;
 	delete spriteClear_;
@@ -260,7 +279,6 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
 	levelData = LevelLoader::LoadFile(stagePath);
-
 	// レベルデータからオブジェクトを生成、配置
 	for (LevelData::ObjectData& objectData : levelData->objects) {
 
@@ -275,7 +293,8 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		{
 			//プレイヤー初期化
 			std::unique_ptr<Player> newplayer;
-			newplayer = Player::Create(modelPlayer_, this);
+
+			newplayer = Player::Create(model, this);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -300,10 +319,12 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		else if (objectData.objectType.find("ENEMY") == 0)
 		{
 			//敵初期化
-			std::unique_ptr<Enemy> newenemy;
+			std::unique_ptr<BaseEnemy> newenemy;
 			std::unique_ptr<Player>& player = players_.front();
-			if (objectData.objectPattern.find("BOSS") == 0)
-				newenemy = Enemy::Create(modelEnemy_, player.get(), this);
+
+			newenemy = enemyFactory->CreateEnemy(objectData.objectPattern,
+				model, player.get(), this);
+
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -324,12 +345,41 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			enemys_.push_back(std::move(newenemy));
 		}
+		//仕掛け
+		else if (objectData.objectType.find("GIMMICK") == 0)
+		{
+			//敵初期化
+			std::unique_ptr<BaseGimmick> newGimmick;
+			std::unique_ptr<Player>& player = players_.front();
+
+			newGimmick = gimmickFactory->CreateGimmick(objectData.objectPattern, model, player.get());
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newGimmick->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newGimmick->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newGimmick->SetScale(scale);
+
+			newGimmick->SetCamera(camera_);
+			newGimmick->Update();
+			//リストに登録
+			gimmicks_.push_back(std::move(newGimmick));
+		}
 		//ゴール
 		else if (objectData.objectType.find("GOAL") == 0)
 		{
 			//ゴール初期化
 			std::unique_ptr<Goal> newgoal;
-			newgoal = Goal::Create(modelGoal_);
+			newgoal = Goal::Create(model);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -429,7 +479,9 @@ void GamePlayScene::LoadModel()
 {
 	// モデル読み込み
 	modelPlayer_ = Model::LoadFromOBJ("player");
-	modelEnemy_ = Model::LoadFromOBJ("enemy1");
+	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
+	modelBoss1_ = Model::LoadFromOBJ("boss1");
+	modelBossCore1_ = Model::LoadFromOBJ("core1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 	modelItemJump_ = Model::LoadFromOBJ("itemjump");
 	modelItemHeal_ = Model::LoadFromOBJ("itemheal");
@@ -438,7 +490,9 @@ void GamePlayScene::LoadModel()
 	modelBox = Model::LoadFromOBJ("sphere2", true);
 
 	models.insert(std::make_pair("player", modelPlayer_));
-	models.insert(std::make_pair("enemy1", modelEnemy_));
+	models.insert(std::make_pair("enemy1", modelEnemy1_));
+	models.insert(std::make_pair("boss1", modelBoss1_));
+	models.insert(std::make_pair("core1", modelBossCore1_));
 	models.insert(std::make_pair("sphere", modelGoal_));
 	models.insert(std::make_pair("Itemjump", modelItemJump_));
 	models.insert(std::make_pair("itemheal", modelItemHeal_));

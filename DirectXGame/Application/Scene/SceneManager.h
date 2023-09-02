@@ -9,7 +9,7 @@ public://シングルトンインスタンス
 
 public://メンバ関数
 	//次のシーンを予約
-	void ChangeScene(const std::string& sceneName);
+	void ChangeScene(const std::string& sceneName, int stagenum = 0);
 	//更新
 	void Update();
 

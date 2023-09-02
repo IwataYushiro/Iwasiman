@@ -7,14 +7,15 @@
 #include "Object3d.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
-#include "Enemy.h"
+
 #include "Goal.h"
 #include "Player.h"
+#include "EnemyFactory.h"
+#include "GimmickFactory.h"
 
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
 #include "Easing.h"
-
 
 #include "Item.h"
 
@@ -32,17 +33,17 @@ class TouchableObject;
 class GamePlayScene :public BaseScene
 {
 public://構造体類
+	GamePlayScene(int stagenum);
 	enum Scene { //シーンID
-		title,
-		howtoplay,
-		stage,
-		clear,
-		gameover,
+		tutorial,
+		stage1,
+		stage2,
 	};
 
 public:
+	
 	//初期化
-	void Initialize() override;
+	void Initialize()override;
 	//更新
 	void Update() override;
 	//描画
@@ -60,7 +61,7 @@ public:
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
 
 private://静的メンバ変数
-
+	
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤
@@ -95,8 +96,17 @@ private:
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
 
-	std::list<std::unique_ptr<Enemy>> enemys_;
-	Model* modelEnemy_ = nullptr;
+	std::unique_ptr<AbstractEnemyFactory> enemyFactory;
+
+	std::list<std::unique_ptr<BaseEnemy>> enemys_;
+	Model* modelEnemy1_ = nullptr;
+
+	Model* modelBoss1_ = nullptr;
+	Model* modelBossCore1_ = nullptr;
+
+	std::unique_ptr<AbstractGimmickFactory> gimmickFactory;
+
+	std::list<std::unique_ptr<BaseGimmick>> gimmicks_;
 
 	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;
@@ -127,6 +137,7 @@ private:
 	CollisionManager* colManager_ = nullptr;
 
 private:
+	int stageNum;
 	//自機弾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
 	//敵弾
@@ -141,4 +152,5 @@ private:
 	void LoadSprite();
 	//モデル読み込み
 	void LoadModel();
+
 };

@@ -125,7 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;$(ProjectDir)DirectXGame\Application\Scene\Factory;$(ProjectDir)DirectXGame\Engine\3D\FBX;$(ProjectDir)DirectXGame\Engine\3D\Light;$(ProjectDir)DirectXGame\Engine\2D\PostEffect;$(ProjectDir)DirectXGame\Engine\json;$(ProjectDir)DirectXGame\Engine\3D\Collider;$(ProjectDir)DirectXGame\Application\MyGame\Item;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;$(ProjectDir)DirectXGame\Application\Scene\Factory;$(ProjectDir)DirectXGame\Engine\3D\FBX;$(ProjectDir)DirectXGame\Engine\3D\Light;$(ProjectDir)DirectXGame\Engine\2D\PostEffect;$(ProjectDir)DirectXGame\Engine\json;$(ProjectDir)DirectXGame\Engine\3D\Collider;$(ProjectDir)DirectXGame\Application\MyGame\Item;$(ProjectDir)DirectXGame\Application\MyGame\Enemy;$(ProjectDir)DirectXGame\Application\MyGame\Enemy\Factory;$(ProjectDir)DirectXGame\Application\MyGame\Gimmick;$(ProjectDir)DirectXGame\Application\MyGame\Gimmick\Factory;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -147,7 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;$(ProjectDir)DirectXGame\Application\Scene\Factory;$(ProjectDir)DirectXGame\Engine\3D\FBX;$(ProjectDir)DirectXGame\Engine\3D\Light;$(ProjectDir)DirectXGame\Engine\2D\PostEffect;$(ProjectDir)DirectXGame\Engine\json;$(ProjectDir)DirectXGame\Engine\3D\Collider;$(ProjectDir)DirectXGame\Application\MyGame\Item;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)DirectXGame\Engine\3D;$(ProjectDir)DirectXGame\Engine\Input;$(ProjectDir)DirectXGame\Engine\Base;$(ProjectDir)DirectXGame\Engine\2D;$(ProjectDir)DirectXGame\Application\MyGame;$(ProjectDir)DirectXGame\Engine\Math;$(ProjectDir)DirectXGame\Engine\3D\Camera;$(ProjectDir)DirectXGame\Engine\3D\Audio;$(ProjectDir)DirectXGame\Engine\3D\Object;$(ProjectDir)DirectXGame\Engine\3D\Particle;$(ProjectDir)DirectXGame\Engine\2D\Sprite;$(ProjectDir)DirectXGame\Engine\Debug;$(ProjectDir)DirectXGame;$(ProjectDir)DirectXGame\Application\Scene;$(ProjectDir)DirectXGame\Application\Scene\Factory;$(ProjectDir)DirectXGame\Engine\3D\FBX;$(ProjectDir)DirectXGame\Engine\3D\Light;$(ProjectDir)DirectXGame\Engine\2D\PostEffect;$(ProjectDir)DirectXGame\Engine\json;$(ProjectDir)DirectXGame\Engine\3D\Collider;$(ProjectDir)DirectXGame\Application\MyGame\Item;$(ProjectDir)DirectXGame\Application\MyGame\Enemy;$(ProjectDir)DirectXGame\Application\MyGame\Enemy\Factory;$(ProjectDir)DirectXGame\Application\MyGame\Gimmick;$(ProjectDir)DirectXGame\Application\MyGame\Gimmick\Factory;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
@@ -356,8 +356,15 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DirectXGame\Application\MyGame\Enemy.cpp" />
-    <ClCompile Include="DirectXGame\Application\MyGame\EnemyBullet.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Enemy1.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Enemy2.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyBoss.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyBullet.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyCore.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallSphere.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Spike.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Goal.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemAttack.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemHeal.cpp" />
@@ -369,6 +376,7 @@
     <ClCompile Include="DirectXGame\Application\Scene\Factory\SceneFactory.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\SceneManager.cpp" />
+    <ClCompile Include="DirectXGame\Application\Scene\StageClearScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\TitleScene.cpp" />
     <ClCompile Include="DirectXGame\Engine\2D\PostEffect\PostEffect.cpp" />
     <ClCompile Include="DirectXGame\Engine\2D\Sprite\Sprite.cpp" />
@@ -408,8 +416,19 @@
     <ClCompile Include="DirectXGame\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectXGame\Application\MyGame\Enemy.h" />
-    <ClInclude Include="DirectXGame\Application\MyGame\EnemyBullet.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\BaseEnemy.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Enemy1.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Enemy2.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyBoss.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyBullet.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyCore.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Factory\AbstractEnemyFactory.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\BaseGimmick.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\AbstractGimmickFactory.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallSphere.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Spike.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Goal.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemAttack.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemHeal.h" />
@@ -422,6 +441,7 @@
     <ClInclude Include="DirectXGame\Application\Scene\Factory\SceneFactory.h" />
     <ClInclude Include="DirectXGame\Application\Scene\GamePlayScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\SceneManager.h" />
+    <ClInclude Include="DirectXGame\Application\Scene\StageClearScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\TitleScene.h" />
     <ClInclude Include="DirectXGame\Engine\2D\PostEffect\PostEffect.h" />
     <ClInclude Include="DirectXGame\Engine\2D\Sprite\Sprite.h" />

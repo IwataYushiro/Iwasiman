@@ -7,13 +7,13 @@ SceneManager* SceneManager::GetInstance()
 	return &instance;
 }
 
-void SceneManager::ChangeScene(const std::string& sceneName)
+void SceneManager::ChangeScene(const std::string& sceneName, int stagenum)
 {
 	assert(sceneFactory_);
 	assert(nextScene_ == nullptr);
 
 	//ŽŸ‚ÌƒV[ƒ“‚ð¶¬
-	nextScene_ = sceneFactory_->CreateScene(sceneName);
+	nextScene_ = sceneFactory_->CreateScene(sceneName, stagenum);
 }
 
 void SceneManager::Update()

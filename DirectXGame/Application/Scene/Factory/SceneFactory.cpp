@@ -1,8 +1,9 @@
 #include "SceneFactory.h"
 #include "TitleScene.h"
 #include "GamePlayScene.h"
+#include "StageClearScene.h"
 
-BaseScene* SceneFactory::CreateScene(const std::string& sceneName)
+BaseScene* SceneFactory::CreateScene(const std::string& sceneName, int stagenum)
 {
 	//éüÇÃÉVÅ[ÉìÇê∂ê¨
 	BaseScene* newScene = nullptr;
@@ -13,7 +14,11 @@ BaseScene* SceneFactory::CreateScene(const std::string& sceneName)
 	}
 	else if (sceneName == "GAMEPLAY")
 	{
-		newScene = new GamePlayScene();
+		newScene = new GamePlayScene(stagenum);
+	}
+	else if (sceneName == "STAGECLEAR")
+	{
+		newScene = new StageClearScene(stagenum);
 	}
 	return newScene;
 }

@@ -67,41 +67,6 @@
         },
         {
             "type": "MESH",
-            "name": "Plane",
-            "transform": {
-                "translation": [
-                    -14.207741737365723,
-                    128.3446044921875,
-                    -10.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0989434719085693,
-                    0.8443718552589417,
-                    1.0
-                ]
-            },
-            "file_name": "ground",
-            "collider": {
-                "type": "BOX",
-                "center": [
-                    10.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    200.0,
-                    200.0,
-                    2.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
             "name": "Plane.001",
             "transform": {
                 "translation": [
@@ -116,7 +81,7 @@
                 ],
                 "scaling": [
                     1.0832507610321045,
-                    0.3855021595954895,
+                    0.4933326542377472,
                     1.0
                 ]
             },
@@ -137,33 +102,11 @@
         },
         {
             "type": "MESH",
-            "name": "Cube",
-            "transform": {
-                "translation": [
-                    60.0,
-                    100.29376220703125,
-                    0.005191326141357422
-                ],
-                "rotation": [
-                    180.0,
-                    -0.0,
-                    -0.0
-                ],
-                "scaling": [
-                    -23.2076358795166,
-                    -21.08832359313965,
-                    -21.12452507019043
-                ]
-            },
-            "file_name": "sphere2"
-        },
-        {
-            "type": "MESH",
             "name": "Goal",
             "transform": {
                 "translation": [
                     0.0,
-                    150.0,
+                    34.59938049316406,
                     0.0
                 ],
                 "rotation": [
@@ -205,78 +148,6 @@
         },
         {
             "type": "MESH",
-            "name": "ItemJump",
-            "transform": {
-                "translation": [
-                    60.0,
-                    10.0,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "itemjump",
-            "objecttype": "ITEM",
-            "objectpattern": "JUMP"
-        },
-        {
-            "type": "MESH",
-            "name": "ItemHeal",
-            "transform": {
-                "translation": [
-                    60.0,
-                    20.0,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "itemheal",
-            "objecttype": "ITEM",
-            "objectpattern": "HEAL"
-        },
-        {
-            "type": "MESH",
-            "name": "ItemHeal.001",
-            "transform": {
-                "translation": [
-                    0.0,
-                    69.08389282226562,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "itemheal",
-            "objecttype": "ITEM",
-            "objectpattern": "HEAL"
-        },
-        {
-            "type": "MESH",
             "name": "boss1",
             "transform": {
                 "translation": [
@@ -305,8 +176,8 @@
             "transform": {
                 "translation": [
                     60.0,
-                    71.55979919433594,
-                    -8.0
+                    15.544934272766113,
+                    10.0
                 ],
                 "rotation": [
                     0.0,
@@ -328,9 +199,9 @@
             "name": "Enemy1.002",
             "transform": {
                 "translation": [
-                    60.0,
-                    101.38885498046875,
-                    28.986793518066406
+                    0.0,
+                    1.930887222290039,
+                    20.0
                 ],
                 "rotation": [
                     0.0,
@@ -353,8 +224,8 @@
             "transform": {
                 "translation": [
                     0.0,
-                    16.344200134277344,
-                    -8.0
+                    20.586894989013672,
+                    20.0
                 ],
                 "rotation": [
                     0.0,
@@ -370,6 +241,54 @@
             "file_name": "enemy1",
             "objecttype": "ENEMY",
             "objectpattern": "ENEMY1"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.004",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -12.710999488830566,
+                    20.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY2"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.005",
+            "transform": {
+                "translation": [
+                    60.0,
+                    33.04875564575195,
+                    10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY2"
         }
     ]
 }
