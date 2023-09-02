@@ -49,9 +49,10 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("tstage_gimmick");
+	if (stageNum == 1)LoadLVData("tstage01");
 	else if (stageNum == 2)LoadLVData("stage2");
-	else if (stageNum == 3)LoadLVData("stageboss1");
+	else if (stageNum == 3)LoadLVData("stage3");
+	else if (stageNum == 4)LoadLVData("stageboss1");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();

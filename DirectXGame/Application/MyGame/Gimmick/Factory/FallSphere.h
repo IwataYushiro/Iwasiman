@@ -52,7 +52,7 @@ private:
 
 	bool isFallSphere_ = false;
 
-	float radius_ = 7.0f;
+	float radius_ = 9.0f;
 
 	Player* player_ = nullptr;
 
