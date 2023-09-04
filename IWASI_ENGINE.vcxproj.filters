@@ -4,12 +4,6 @@
     <Filter Include="Shader File">
       <UniqueIdentifier>{24f0b882-25f2-4b93-927b-58748213ae3a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader File\FBX">
-      <UniqueIdentifier>{3cad425a-1b8f-469e-b032-5897afe78ffd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\Toon">
-      <UniqueIdentifier>{849def26-6782-4675-9c6f-57ed1dfa5832}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source File">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -133,51 +127,6 @@
     <Filter Include="Header File\Engine\2D\PostEffect">
       <UniqueIdentifier>{be1d2d58-4698-434a-b22c-ad9db1f4a85c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader File\Sprite">
-      <UniqueIdentifier>{6d27c446-0827-4366-97d6-fe62470ab58c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\Particle">
-      <UniqueIdentifier>{6246361f-35d3-4cd4-ae65-015e0bd12738}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect">
-      <UniqueIdentifier>{def67072-c1ae-4ba4-afe9-4eebe39ae972}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\Test">
-      <UniqueIdentifier>{5c68dfca-52a2-49e5-9dd1-e49e70ddb044}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\Cold">
-      <UniqueIdentifier>{60f7b92d-132e-414e-8181-595c2f3886a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\Sepia">
-      <UniqueIdentifier>{0ba9181a-c278-4583-86c3-b20cb110fb19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\NegaPozi">
-      <UniqueIdentifier>{389e8e00-97fd-43cc-a208-70e11cc5e737}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\GaussianBlur">
-      <UniqueIdentifier>{d3c1efe1-235c-4238-826a-8ae5a84fd518}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\GrayScale">
-      <UniqueIdentifier>{3b9a2acb-c81f-424c-b0eb-597bf02823b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\Mosaic">
-      <UniqueIdentifier>{e41a2942-1d68-4dac-8d1e-353b365b929b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\UVShift">
-      <UniqueIdentifier>{dd9eb7d1-1f28-4364-8f19-1a266adfd66c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\UVShiftBlur">
-      <UniqueIdentifier>{8a449abb-d6da-4b07-a415-7c8b7c9a8b89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\Bloom">
-      <UniqueIdentifier>{a616b4a7-456b-4f48-a895-755f3d27d1af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\CrossFilter">
-      <UniqueIdentifier>{cd075a86-342b-4ee7-a5ba-bb2fd283c247}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader File\PostEffect\None">
-      <UniqueIdentifier>{6a3193d3-530c-49d4-a5ee-243288bce00c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header File\Engine\json">
       <UniqueIdentifier>{b2693328-4506-49fb-8039-8590696871e9}</UniqueIdentifier>
     </Filter>
@@ -223,175 +172,57 @@
     <Filter Include="Source File\Application\MyGame\Gimmick\Factory">
       <UniqueIdentifier>{4fc7bdaf-f5c4-494f-a521-52af85bde20c}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\CG2\ウィンドゥ表示\Resources\shader\Basic.hlsli">
-      <Filter>Shader File</Filter>
-    </None>
-    <None Include="Resources\shader\OBJ.hlsli">
-      <Filter>Shader File</Filter>
-    </None>
-    <None Include="Resources\shader\FBX\FBX.hlsli">
-      <Filter>Shader File\FBX</Filter>
-    </None>
-    <None Include="Resources\shader\Toon\Toon.hlsli">
-      <Filter>Shader File\Toon</Filter>
-    </None>
-    <None Include="Resources\shader\Sprite\Sprite.hlsli">
-      <Filter>Shader File\Sprite</Filter>
-    </None>
-    <None Include="Resources\shader\Particle\Particle.hlsli">
-      <Filter>Shader File\Particle</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\Test\Test.hlsli">
-      <Filter>Shader File\PostEffect\Test</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\Cold\Cold.hlsli">
-      <Filter>Shader File\PostEffect\Cold</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\Sepia\Sepia.hlsli">
-      <Filter>Shader File\PostEffect\Sepia</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\NegaPozi\NegaPozi.hlsli">
-      <Filter>Shader File\PostEffect\NegaPozi</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\GrayScale\GrayScale.hlsli">
-      <Filter>Shader File\PostEffect\GrayScale</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\GaussianBlur\GaussianBlur.hlsli">
-      <Filter>Shader File\PostEffect\GaussianBlur</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\Mosaic\Mosaic.hlsli">
-      <Filter>Shader File\PostEffect\Mosaic</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\UVShift\UVShift.hlsli">
-      <Filter>Shader File\PostEffect\UVShift</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlur.hlsli">
-      <Filter>Shader File\PostEffect\UVShiftBlur</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\Bloom\Bloom.hlsli">
-      <Filter>Shader File\PostEffect\Bloom</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\CrossFilter\CrossFilter.hlsli">
-      <Filter>Shader File\PostEffect\CrossFilter</Filter>
-    </None>
-    <None Include="Resources\shader\PostEffect\None\None.hlsli">
-      <Filter>Shader File\PostEffect\None</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\..\CG2\ウィンドゥ表示\Resources\shader\BasicPS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\CG2\ウィンドゥ表示\Resources\shader\BasicVS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\OBJPS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\OBJVS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
-      <Filter>Shader File\FBX</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
-      <Filter>Shader File\FBX</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Toon\ToonVS.hlsl">
-      <Filter>Shader File\Toon</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Toon\ToonPS.hlsl">
-      <Filter>Shader File\Toon</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Sprite\SpritePS.hlsl">
-      <Filter>Shader File\Sprite</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Sprite\SpriteVS.hlsl">
-      <Filter>Shader File\Sprite</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Particle\ParticleGS.hlsl">
-      <Filter>Shader File\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Particle\ParticlePS.hlsl">
-      <Filter>Shader File\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Particle\ParticleVS.hlsl">
-      <Filter>Shader File\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Test\TestPS.hlsl">
-      <Filter>Shader File\PostEffect\Test</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Test\TestVS.hlsl">
-      <Filter>Shader File\PostEffect\Test</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Cold\ColdPS.hlsl">
-      <Filter>Shader File\PostEffect\Cold</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Cold\ColdVS.hlsl">
-      <Filter>Shader File\PostEffect\Cold</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Sepia\SepiaPS.hlsl">
-      <Filter>Shader File\PostEffect\Sepia</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Sepia\SepiaVS.hlsl">
-      <Filter>Shader File\PostEffect\Sepia</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\NegaPozi\NegaPoziPS.hlsl">
-      <Filter>Shader File\PostEffect\NegaPozi</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\NegaPozi\NegaPoziVS.hlsl">
-      <Filter>Shader File\PostEffect\NegaPozi</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\GrayScale\GrayScalePS.hlsl">
-      <Filter>Shader File\PostEffect\GrayScale</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\GrayScale\GrayScaleVS.hlsl">
-      <Filter>Shader File\PostEffect\GrayScale</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\GaussianBlur\GaussianBlurPS.hlsl">
-      <Filter>Shader File\PostEffect\GaussianBlur</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\GaussianBlur\GaussianBlurVS.hlsl">
-      <Filter>Shader File\PostEffect\GaussianBlur</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Mosaic\MosaicPS.hlsl">
-      <Filter>Shader File\PostEffect\Mosaic</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Mosaic\MosaicVS.hlsl">
-      <Filter>Shader File\PostEffect\Mosaic</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\UVShift\UVShiftPS.hlsl">
-      <Filter>Shader File\PostEffect\UVShift</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\UVShift\UVShiftVS.hlsl">
-      <Filter>Shader File\PostEffect\UVShift</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlurPS.hlsl">
-      <Filter>Shader File\PostEffect\UVShiftBlur</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlurVS.hlsl">
-      <Filter>Shader File\PostEffect\UVShiftBlur</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Bloom\BloomPS.hlsl">
-      <Filter>Shader File\PostEffect\Bloom</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\Bloom\BloomVS.hlsl">
-      <Filter>Shader File\PostEffect\Bloom</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\CrossFilter\CrossFilterPS.hlsl">
-      <Filter>Shader File\PostEffect\CrossFilter</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\CrossFilter\CrossFilterVS.hlsl">
-      <Filter>Shader File\PostEffect\CrossFilter</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\None\NoneVS.hlsl">
-      <Filter>Shader File\PostEffect\None</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\PostEffect\None\NonePS.hlsl">
-      <Filter>Shader File\PostEffect\None</Filter>
-    </FxCompile>
+    <Filter Include="Shader File\PostEffect">
+      <UniqueIdentifier>{96d7288f-8514-4065-9317-c5b314b00989}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\Bloom">
+      <UniqueIdentifier>{928640fa-d498-401e-81e4-64abbaf199fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\Cold">
+      <UniqueIdentifier>{6a557260-755a-42f2-b12b-c24da45a6417}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\CrossFilter">
+      <UniqueIdentifier>{ed8d70d9-4f43-4f4a-ad38-4b94f1c49b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\GaussianBlur">
+      <UniqueIdentifier>{a29650f0-af5c-49c6-bcf7-35284151c8b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\GrayScale">
+      <UniqueIdentifier>{3fdf370c-b1cc-4d45-a63e-65f2a64d670b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\Mosaic">
+      <UniqueIdentifier>{b049749d-f890-43b8-b90b-9dff92442c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\NegaPozi">
+      <UniqueIdentifier>{f855f2e1-1412-4414-b654-673a472ef6cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\None">
+      <UniqueIdentifier>{1eb08c6f-4a73-45a6-a947-129ee894519d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\Sepia">
+      <UniqueIdentifier>{e4f98514-0b5b-4623-b29a-8bf99f53f0e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\Test">
+      <UniqueIdentifier>{1f5d8492-0320-4bab-9d43-42551becf07e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\UVShift">
+      <UniqueIdentifier>{787478eb-9368-414b-a83d-b78084cf0e57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\UVSHiftBlur">
+      <UniqueIdentifier>{c2efa3e5-e7ec-4ec4-9846-02c5a961eea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\Particle">
+      <UniqueIdentifier>{2992a1e0-1915-43a0-b975-e41698ae0420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\Splite">
+      <UniqueIdentifier>{86ba9192-6dc2-4fb2-99aa-ae6429db0974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\FBX">
+      <UniqueIdentifier>{953b38a2-26ef-45ce-b0b0-1b34ec8a6ad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\Toon">
+      <UniqueIdentifier>{72240c68-f0d5-4fe8-8d4d-adfd97fa77cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp">
@@ -774,5 +605,174 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallSphere.h">
       <Filter>Header File\Application\MyGame\Gimmick</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shader\FBX\FBX.hlsli">
+      <Filter>Shader File\FBX</Filter>
+    </None>
+    <None Include="Resources\shader\Toon\Toon.hlsli">
+      <Filter>Shader File\Toon</Filter>
+    </None>
+    <None Include="Resources\shader\Sprite\Sprite.hlsli">
+      <Filter>Shader File\Splite</Filter>
+    </None>
+    <None Include="Resources\shader\Particle\Particle.hlsli">
+      <Filter>Shader File\Particle</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\Bloom\Bloom.hlsli">
+      <Filter>Shader File\PostEffect\Bloom</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\Cold\Cold.hlsli">
+      <Filter>Shader File\PostEffect\Cold</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\CrossFilter\CrossFilter.hlsli">
+      <Filter>Shader File\PostEffect\CrossFilter</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\GaussianBlur\GaussianBlur.hlsli">
+      <Filter>Shader File\PostEffect\GaussianBlur</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\GrayScale\GrayScale.hlsli">
+      <Filter>Shader File\PostEffect\GrayScale</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\Mosaic\Mosaic.hlsli">
+      <Filter>Shader File\PostEffect\Mosaic</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\NegaPozi\NegaPozi.hlsli">
+      <Filter>Shader File\PostEffect\NegaPozi</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlur.hlsli">
+      <Filter>Shader File\PostEffect\UVSHiftBlur</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\UVShift\UVShift.hlsli">
+      <Filter>Shader File\PostEffect\UVShift</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\Test\Test.hlsli">
+      <Filter>Shader File\PostEffect\Test</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\Sepia\Sepia.hlsli">
+      <Filter>Shader File\PostEffect\Sepia</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\None\None.hlsli">
+      <Filter>Shader File\PostEffect\None</Filter>
+    </None>
+    <None Include="Resources\shader\Basic.hlsli">
+      <Filter>Shader File</Filter>
+    </None>
+    <None Include="Resources\shader\OBJ.hlsli">
+      <Filter>Shader File</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
+      <Filter>Shader File\FBX</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
+      <Filter>Shader File\FBX</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Toon\ToonPS.hlsl">
+      <Filter>Shader File\Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Toon\ToonVS.hlsl">
+      <Filter>Shader File\Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Sprite\SpritePS.hlsl">
+      <Filter>Shader File\Splite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Sprite\SpriteVS.hlsl">
+      <Filter>Shader File\Splite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Particle\ParticleGS.hlsl">
+      <Filter>Shader File\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Particle\ParticlePS.hlsl">
+      <Filter>Shader File\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Particle\ParticleVS.hlsl">
+      <Filter>Shader File\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Bloom\BloomPS.hlsl">
+      <Filter>Shader File\PostEffect\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Bloom\BloomVS.hlsl">
+      <Filter>Shader File\PostEffect\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Cold\ColdPS.hlsl">
+      <Filter>Shader File\PostEffect\Cold</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Cold\ColdVS.hlsl">
+      <Filter>Shader File\PostEffect\Cold</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\CrossFilter\CrossFilterPS.hlsl">
+      <Filter>Shader File\PostEffect\CrossFilter</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\CrossFilter\CrossFilterVS.hlsl">
+      <Filter>Shader File\PostEffect\CrossFilter</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\GaussianBlur\GaussianBlurPS.hlsl">
+      <Filter>Shader File\PostEffect\GaussianBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\GaussianBlur\GaussianBlurVS.hlsl">
+      <Filter>Shader File\PostEffect\GaussianBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\GrayScale\GrayScalePS.hlsl">
+      <Filter>Shader File\PostEffect\GrayScale</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\GrayScale\GrayScaleVS.hlsl">
+      <Filter>Shader File\PostEffect\GrayScale</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Mosaic\MosaicPS.hlsl">
+      <Filter>Shader File\PostEffect\Mosaic</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Mosaic\MosaicVS.hlsl">
+      <Filter>Shader File\PostEffect\Mosaic</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\NegaPozi\NegaPoziPS.hlsl">
+      <Filter>Shader File\PostEffect\NegaPozi</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\NegaPozi\NegaPoziVS.hlsl">
+      <Filter>Shader File\PostEffect\NegaPozi</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlurPS.hlsl">
+      <Filter>Shader File\PostEffect\UVSHiftBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlurVS.hlsl">
+      <Filter>Shader File\PostEffect\UVSHiftBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\UVShift\UVShiftPS.hlsl">
+      <Filter>Shader File\PostEffect\UVShift</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\UVShift\UVShiftVS.hlsl">
+      <Filter>Shader File\PostEffect\UVShift</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Test\TestPS.hlsl">
+      <Filter>Shader File\PostEffect\Test</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Test\TestVS.hlsl">
+      <Filter>Shader File\PostEffect\Test</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Sepia\SepiaPS.hlsl">
+      <Filter>Shader File\PostEffect\Sepia</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Sepia\SepiaVS.hlsl">
+      <Filter>Shader File\PostEffect\Sepia</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\None\NonePS.hlsl">
+      <Filter>Shader File\PostEffect\None</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\None\NoneVS.hlsl">
+      <Filter>Shader File\PostEffect\None</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\BasicPS.hlsl">
+      <Filter>Shader File</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\BasicVS.hlsl">
+      <Filter>Shader File</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\OBJPS.hlsl">
+      <Filter>Shader File</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\OBJVS.hlsl">
+      <Filter>Shader File</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
