@@ -31,6 +31,10 @@ public:
 	void UpdateFallSphere();
 	//–ß‚é
 	void UpdateFallSphereReturn();
+	//XV(‚Ì‚Ú‚è‚Á‚Ï)
+	void UpdateRiseSphere();
+	//–ß‚é
+	void UpdateRiseSphereReturn();
 
 	//“]‘—
 	void Trans();
