@@ -255,7 +255,9 @@ void GamePlayScene::Finalize()
 
 	//3Dモデル
 	delete modelPlayer_;
+	delete modelPlayerBullet_;
 	delete modelEnemy1_;
+	delete modelEnemyBullet_;
 	delete modelBoss1_;
 	delete modelBossCore1_;
 	delete modelSkydome;
@@ -294,7 +296,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//プレイヤー初期化
 			std::unique_ptr<Player> newplayer;
 
-			newplayer = Player::Create(model, this);
+			newplayer = Player::Create(model, modelPlayerBullet_, this);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -323,7 +325,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			std::unique_ptr<Player>& player = players_.front();
 
 			newenemy = enemyFactory->CreateEnemy(objectData.objectPattern,
-				model, player.get(), this);
+				model, modelEnemyBullet_, player.get(), this);
 
 			// 座標
 			DirectX::XMFLOAT3 pos;
@@ -479,7 +481,9 @@ void GamePlayScene::LoadModel()
 {
 	// モデル読み込み
 	modelPlayer_ = Model::LoadFromOBJ("player");
+	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
+	modelEnemyBullet_= Model::LoadFromOBJ("enemybullet");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
 	modelBossCore1_ = Model::LoadFromOBJ("core1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
@@ -490,7 +494,9 @@ void GamePlayScene::LoadModel()
 	modelBox = Model::LoadFromOBJ("sphere2", true);
 
 	models.insert(std::make_pair("player", modelPlayer_));
+	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
 	models.insert(std::make_pair("enemy1", modelEnemy1_));
+	models.insert(std::make_pair("enemybullet", modelEnemyBullet_));
 	models.insert(std::make_pair("boss1", modelBoss1_));
 	models.insert(std::make_pair("core1", modelBossCore1_));
 	models.insert(std::make_pair("sphere", modelGoal_));

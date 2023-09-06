@@ -19,7 +19,7 @@ private:
 
 public:
 	~Enemy1();
-	static std::unique_ptr<Enemy1> Create(Model* model = nullptr,
+	static std::unique_ptr<Enemy1> Create(Model* model = nullptr, Model* bullet_ = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 
 	//’e”­ŽËŠÔŠu

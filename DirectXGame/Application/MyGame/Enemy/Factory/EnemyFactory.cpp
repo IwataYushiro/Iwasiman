@@ -7,12 +7,12 @@
 #include "EnemyCore.h"
 
 std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyName,
-	Model* model, Player* player, GamePlayScene* gamescene)
+	Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
 {
 	if (enemyName.find("ENEMY1") == 0)
 	{
 		//ƒNƒŠƒ{[•—G‹›
-		return Enemy1::Create(model, player, gamescene);
+		return Enemy1::Create(model, bullet, player, gamescene);
 	}
 	else if (enemyName.find("ENEMY2") == 0)
 	{
