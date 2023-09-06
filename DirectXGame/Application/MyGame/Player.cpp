@@ -444,8 +444,8 @@ void Player::Attack() {
 		//’e‚Ì‘¬“x
 		const float kBulletSpeed = 1.0f;
 		XMFLOAT3 velocity;
-		if (isRight_)velocity = { kBulletSpeed, 0.0f, 0.0f };
-		else velocity = { -kBulletSpeed, 0.0f, 0.0f };
+		if (isRight_)velocity = { 0.0f, 0.0f, kBulletSpeed };
+		else velocity = { 0.0f, 0.0f, -kBulletSpeed };
 
 		XMMATRIX matVec = XMMatrixIdentity();
 		matVec.r[0].m128_f32[0] = velocity.x;
