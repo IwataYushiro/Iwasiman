@@ -39,12 +39,6 @@ public:
 	//プレイヤーの移動処理
 	void Move();
 	void CameraMove();
-	//落ちる＆ジャンプ
-	void FallAndJump();
-	//奥へ移動
-	void JumpBack();
-	//着地
-	void Landing(unsigned short attribute);
 	//プレイヤーの攻撃処理
 	void Attack();
 
