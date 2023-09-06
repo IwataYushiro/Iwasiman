@@ -98,8 +98,8 @@ void FallSphere::UpdateRiseSphere()
 {
 	if (isRide)
 	{
-		const float riseSpeed = 0.1f;
-		position.y += riseSpeed;
+		const float Speed = 0.1f;
+		position.y += Speed;
 
 		if (position.y >= startPos.y + 50.0f)
 		{
@@ -183,7 +183,7 @@ void FallSphere::OnCollision(const CollisionInfo& info, unsigned short attribute
 		{
 			if (!isReturn)startPos = position;
 			isRide = true;
-			isReturn = false;
+			
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 

@@ -11,10 +11,9 @@ using namespace DirectX;
 CollisionManager* EnemyCore::colManager_ = CollisionManager::GetInstance();
 
 EnemyCore::~EnemyCore() {
-	delete modelBullet_;
 }
 
-std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Player* player, GamePlayScene* gamescene, unsigned short stage)
+std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene, unsigned short stage)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyCore> ins = std::make_unique<EnemyCore>();
@@ -28,6 +27,7 @@ std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Player* player, GameP
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	if (bullet) ins->modelBullet_ = bullet;
 	if (player)ins->SetPlayer(player);
 	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
@@ -37,8 +37,6 @@ std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Player* player, GameP
 bool EnemyCore::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
-
-	modelBullet_ = Model::LoadFromOBJ("enemybullet");
 
 	startCount = std::chrono::steady_clock::now();	//開始時間
 	nowCount = std::chrono::steady_clock::now();		//現在時間

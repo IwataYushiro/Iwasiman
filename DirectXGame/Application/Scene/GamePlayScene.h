@@ -95,11 +95,13 @@ private:
 	//ƒ‚ƒfƒ‹
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
+	Model* modelPlayerBullet_ = nullptr;
 
 	std::unique_ptr<AbstractEnemyFactory> enemyFactory;
 
 	std::list<std::unique_ptr<BaseEnemy>> enemys_;
 	Model* modelEnemy1_ = nullptr;
+	Model* modelEnemyBullet_ = nullptr;
 
 	Model* modelBoss1_ = nullptr;
 	Model* modelBossCore1_ = nullptr;

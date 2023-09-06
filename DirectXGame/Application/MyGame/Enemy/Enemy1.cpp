@@ -12,10 +12,9 @@ using namespace DirectX;
 CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
 
 Enemy1::~Enemy1() {
-	delete modelBullet_;
 }
 
-std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Player* player, GamePlayScene* gamescene)
+std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy1> ins = std::make_unique<Enemy1>();
@@ -29,6 +28,7 @@ std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Player* player, GamePlaySce
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	if (bullet) ins->modelBullet_ = bullet;
 	if (player)ins->SetPlayer(player);
 	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
@@ -38,9 +38,6 @@ std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Player* player, GamePlaySce
 bool Enemy1::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
-
-	modelBullet_ = Model::LoadFromOBJ("enemybullet");
-
 	Parameter();
 
 	//コライダー追加

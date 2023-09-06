@@ -20,7 +20,7 @@ public:
 
 public:
 	~Enemy2();
-	static std::unique_ptr<Enemy2> Create(Model* model = nullptr,
+	static std::unique_ptr<Enemy2> Create(Model* model = nullptr, Model* bullet = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 
 	//’e”­ŽËŠÔŠu

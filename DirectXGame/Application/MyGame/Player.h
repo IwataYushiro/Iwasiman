@@ -27,7 +27,7 @@ public:
 public:
 	~Player();
 
-	static std::unique_ptr<Player> Create(Model* model = nullptr,
+	static std::unique_ptr<Player> Create(Model* model = nullptr, Model* bullet = nullptr,
 		GamePlayScene* gamescene = nullptr);
 	//‰Šú‰»
 	bool Initialize() override;
