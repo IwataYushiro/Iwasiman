@@ -141,49 +141,26 @@ void Player::Move() {
 
 	XMFLOAT3 move = Object3d::GetPosition();
 	XMFLOAT3 rot = Object3d::GetRotation();
-	XMFLOAT3 cmove = camera_->GetEye();
-	XMFLOAT3 tmove = camera_->GetTarget();
-	float moveSpeed = 0.5f;
+
+	float moveSpeed = 25.0f;
 
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
-	if (input_->PushKey(DIK_A)) {
+	if (input_->TriggerKey(DIK_A)) {
+		if (move.x <= -moveSpeed)return;
+		
 		move.x -= moveSpeed;
-		cmove.x -= moveSpeed;
-		tmove.x -= moveSpeed;
 	}
-	if (input_->PushKey(DIK_D)) {
+	if (input_->TriggerKey(DIK_D)) {
+		if (move.x >= moveSpeed)return;
+		
+		//if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT) || move.x != 0.0f)move.x += moveSpeed * 2.0f;
+		//else move.x += moveSpeed;
 		move.x += moveSpeed;
-		cmove.x += moveSpeed;
-		tmove.x += moveSpeed;
-	}
-
-
-	//ダッシュ
-	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
-	{
-		if (input_->PushKey(DIK_A)) {
-
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,3.0f,0.0f }, { 3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
-
-			move.x -= moveSpeed * 1.5f;
-			cmove.x -= moveSpeed * 1.5f;
-			tmove.x -= moveSpeed * 1.5f;
-		}
-		if (input_->PushKey(DIK_D)) {
-
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,3.0f,0.0f }, { -3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
-
-			move.x += moveSpeed * 1.5f;
-			cmove.x += moveSpeed * 1.5f;
-			tmove.x += moveSpeed * 1.5f;
-		}
 	}
 
 	Object3d::SetPosition(move);
 	Object3d::SetRotation(rot);
-	camera_->SetEye(cmove);
-	camera_->SetTarget(tmove);
 }
 
 void Player::CameraMove()

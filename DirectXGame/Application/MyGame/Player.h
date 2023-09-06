@@ -114,6 +114,10 @@ private:
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;
 
+	bool centralPlayer = true;
+	bool leftPlayer = false;
+	bool RightPlayer = false;
+
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 	bool OnGround()const { return onGround; }
