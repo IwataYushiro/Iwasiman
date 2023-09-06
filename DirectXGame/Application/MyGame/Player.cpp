@@ -10,13 +10,11 @@ CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
 	//モデルの解放
-
-	delete modelBullet_;
 	delete particleDash_;
 	delete pmDash_;
 }
 
-std::unique_ptr<Player> Player::Create(Model* model, GamePlayScene* gamescene)
+std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Player> ins = std::make_unique<Player>();
@@ -30,6 +28,7 @@ std::unique_ptr<Player> Player::Create(Model* model, GamePlayScene* gamescene)
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	if (bullet) ins->modelBullet_ = bullet;
 	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
 }
@@ -38,8 +37,6 @@ bool Player::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
 input_ = Input::GetInstance();
-
-	modelBullet_ = Model::LoadFromOBJ("playerbullet");
 
 	life_ = 5;
 	isDead_ = false;

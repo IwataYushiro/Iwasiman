@@ -7,6 +7,6 @@ class EnemyFactory :public AbstractEnemyFactory
 public:
 	//ìGê∂ê¨
 	std::unique_ptr<BaseEnemy> CreateEnemy(const std::string& enemyName
-		,Model* model, Player* player, GamePlayScene* gamescene) override;
+		,Model* model, Model* bullet, Player* player, GamePlayScene* gamescene) override;
 
 };
