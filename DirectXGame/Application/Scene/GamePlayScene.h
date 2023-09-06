@@ -113,6 +113,8 @@ private:
 	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;
 
+	Model* modelEarth_ = nullptr;
+
 	std::list<std::unique_ptr<Item>> items_;
 	Model* modelItemJump_ = nullptr;
 	Model* modelItemHeal_ = nullptr;

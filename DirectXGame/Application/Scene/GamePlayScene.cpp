@@ -266,6 +266,7 @@ void GamePlayScene::Finalize()
 	delete modelGround;
 	delete modelBox;
 	delete modelGoal_;
+	delete modelEarth_;
 
 	models.clear();
 
@@ -492,6 +493,7 @@ void GamePlayScene::LoadModel()
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
+	modelEarth_ = Model::LoadFromOBJ("earth");
 
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
@@ -505,6 +507,7 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("sphere2", modelBox));
+	models.insert(std::make_pair("earth", modelEarth_));
 
 }
 
