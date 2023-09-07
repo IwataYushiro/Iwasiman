@@ -49,7 +49,7 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("test");
+	if (stageNum == 1)LoadLVData("teste");
 	else if (stageNum == 2)LoadLVData("stage2");
 	else if (stageNum == 3)LoadLVData("stageboss1");
 
@@ -126,7 +126,21 @@ void GamePlayScene::Update()
 		{
 			item->Update();
 		}
+		for (std::unique_ptr<Earth>& earth : earths_)
+		{
+			earth->Update();//かめおべら
+			if (earth->IsDead())isGameover = true;
 
+			//ImGui	
+			imguiManager_->Begin();
+			int life[1] = { earth->GetLife() };
+			ImGui::Begin("Earse");
+			ImGui::SetWindowPos(ImVec2(100.0f, 100.0f));
+			ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
+			ImGui::InputInt("earthlife", life);
+			ImGui::End();
+			imguiManager_->End();
+		}
 
 		for (Object3d*& object : objects) object->Update();
 
@@ -203,6 +217,7 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_) gimmick->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
 	for (std::unique_ptr<Item>& item : items_)item->Draw();
+	for (std::unique_ptr<Earth>& earth : earths_)earth->Draw();
 	for (auto& object : objects)object->Draw();
 
 	//モデル描画後処理
@@ -434,6 +449,32 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			newitem->Update();
 			//リストに登録
 			items_.push_back(std::move(newitem));
+		}
+		//ゴール
+		else if (objectData.objectType.find("EARTH") == 0)
+		{
+			//ゴール初期化
+			std::unique_ptr<Earth> newearth;
+			newearth = Earth::Create(model);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newearth->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newearth->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newearth->SetScale(scale);
+
+			newearth->SetCamera(camera_);
+			newearth->Update();
+			//リストに登録
+			earths_.push_back(std::move(newearth));
 		}
 		//地形
 		else

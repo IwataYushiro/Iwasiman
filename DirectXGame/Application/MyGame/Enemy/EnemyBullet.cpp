@@ -94,6 +94,10 @@ void EnemyBullet::OnCollision(const CollisionInfo& info, unsigned short attribut
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)isDead_ = true;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 	}
+	else if (attribute == COLLISION_ATTR_EARTH)
+	{
+		isDead_ = true;
+	}
 }
 
 //ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
