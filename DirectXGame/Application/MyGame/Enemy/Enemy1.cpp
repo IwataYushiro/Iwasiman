@@ -320,7 +320,7 @@ void Enemy1::UpdateApproach() {
 		isDead_ = true;
 		life_ = 0;
 	}
-	if (position.z <= -100.0f)isDead_ = true;
+	if (position.z <= -200.0f)isDead_ = true;
 }
 
 //—£’E
@@ -349,6 +349,10 @@ void Enemy1::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+	}
+	else if (attribute == COLLISION_ATTR_EARTH)
+	{
+		isDead_ = true;
 	}
 
 }
