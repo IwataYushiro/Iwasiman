@@ -230,6 +230,7 @@ void GamePlayScene::Draw()
 	//エフェクト描画
 	pm_->Draw();
 	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();
+	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->DrawParticle();
 	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
