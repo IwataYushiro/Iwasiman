@@ -79,6 +79,7 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
+	earths_.remove_if([](std::unique_ptr<Earth>& earth) {return earth->IsDead(); });
 
 	//íeçXêV
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
@@ -134,7 +135,7 @@ void GamePlayScene::Update()
 			//ImGui	
 			imguiManager_->Begin();
 			int life[1] = { earth->GetLife() };
-			ImGui::Begin("Earse");
+			ImGui::Begin("Earth");
 			ImGui::SetWindowPos(ImVec2(100.0f, 100.0f));
 			ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
 			ImGui::InputInt("earthlife", life);

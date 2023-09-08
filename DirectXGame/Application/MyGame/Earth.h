@@ -18,7 +18,7 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	const int MUTEKI_COUNT = 30;
+	const int MUTEKI_COUNT = 60;
 public:
 
 	static std::unique_ptr<Earth> Create(Model* model = nullptr);
