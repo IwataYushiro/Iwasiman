@@ -131,7 +131,10 @@ void Player::Update() {
 
 void Player::Draw() { Object3d::Draw(); }
 
-void Player::DrawParticle() { pmDash_->Draw(); }
+void Player::DrawParticle() { 
+	pmDash_->Draw(); 
+	
+}
 
 //ˆÚ“®ˆ—
 void Player::Move() {
@@ -206,7 +209,7 @@ void Player::Attack() {
 
 		//’e‚ğ¶¬‚µ‰Šú‰»
 		std::unique_ptr<PlayerBullet> newBullet;
-		newBullet = PlayerBullet::Create(position, velocity, modelBullet_);
+		newBullet = PlayerBullet::Create(position, velocity, modelBullet_, particleDash_, pmDash_);
 		newBullet->SetCamera(camera_);
 		newBullet->Update();
 
