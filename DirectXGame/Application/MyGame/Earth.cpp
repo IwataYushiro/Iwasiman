@@ -126,8 +126,8 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
 		{
-			life_--;
-			 isHit_ = true;
+			//life_--;
+			// isHit_ = true;
 		}
 	}
 
