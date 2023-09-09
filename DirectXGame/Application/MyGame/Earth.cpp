@@ -27,7 +27,7 @@ std::unique_ptr<Earth> Earth::Create(Model* model)
 bool Earth::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
-	life_ = 5;
+	life_ = 3;
 	isDead_ = false;
 	isHit_ = false;
 	mutekiCount = 0;
@@ -122,7 +122,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
 			life_--;
-			isHit_ = true;
+			//isHit_ = true;
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
 		{
