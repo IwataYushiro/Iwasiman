@@ -1,8 +1,10 @@
 #pragma once
-#pragma once
 #include "Camera.h"
 #include "Model.h"
 #include "Object3d.h"
+#include "Easing.h"
+#include "Sprite.h"
+
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
@@ -18,10 +20,11 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
-	const int MUTEKI_COUNT = 60;
+	const float MUTEKI_COUNT = 60.0f;
 public:
-
+	~Earth();
 	static std::unique_ptr<Earth> Create(Model* model = nullptr);
+	
 	//初期化
 	bool Initialize()override;
 	void Reset();
@@ -36,6 +39,7 @@ public:
 
 	//描画
 	void Draw();
+	void DrawSprite();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
@@ -52,6 +56,15 @@ private:
 	int life_ = 3;
 	
 	float radius_ = 50.0f;
+
+	//イージング
+	float count = 0.0f;
+	const float timer = MUTEKI_COUNT / 60.0f;
+	Easing ease = Easing(1.0f, 0.0f, timer);
+	//スプライト
+	SpriteCommon* spCommon_ = SpriteCommon::GetInstance();
+	Sprite* spriteHit_ = new Sprite();
+
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 	//ライフ
