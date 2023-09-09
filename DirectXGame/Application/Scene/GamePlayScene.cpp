@@ -114,9 +114,9 @@ void GamePlayScene::Update()
 			//ボス撃破
 			if (enemy->BossDead())isclear = true;
 		}
-		
+
 		for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
-		
+
 		for (std::unique_ptr<Goal>& goal : goals_)
 		{
 			goal->Update();
@@ -251,6 +251,11 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::Finalize()
 {
+	//護衛対象の内部スプライトデータなどの後始末
+	for (std::unique_ptr<Earth>& earth : earths_) {
+		earth->Finalize();
+	}
+
 	//終了処理
 	audio_->Finalize();
 	//解放

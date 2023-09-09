@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
+#include "Gauge.h"
 
 class CollisionManager;
 
@@ -24,7 +25,7 @@ public:
 public:
 	~Earth();
 	static std::unique_ptr<Earth> Create(Model* model = nullptr);
-	
+
 	//初期化
 	bool Initialize()override;
 	void Reset();
@@ -39,7 +40,12 @@ public:
 
 	//描画
 	void Draw();
+
+	//UI描画
 	void DrawSprite();
+
+	//後始末
+	void Finalize();
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
@@ -54,7 +60,8 @@ private:
 	bool isDead_ = false;
 	int mutekiCount = 0;
 	int life_ = 3;
-	
+	int maxLife_ = 0;
+
 	float radius_ = 50.0f;
 
 	//イージング
@@ -65,10 +72,24 @@ private:
 	SpriteCommon* spCommon_ = SpriteCommon::GetInstance();
 	Sprite* spriteHit_ = new Sprite();
 
+	//HPゲージ
+	Gauge* hpGauge_ = {};
+
+	//HPゲージの位置(左上角)
+	XMFLOAT2 positionHPGauge_ = {0,0};
+
+	//HP用イージング最大時間
+	float maxTimeHP_ = 30.0f;
+
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
 	//ライフ
 	void SetLife(int life) { this->life_ = life; }
 	const int& GetLife()const { return life_; }
+
+	//HPゲージの取得
+	Gauge* GetHPGauge() const {
+		return hpGauge_;
+	}
 };
 #pragma once
