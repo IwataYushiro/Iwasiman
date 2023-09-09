@@ -244,10 +244,8 @@ void GamePlayScene::Draw()
 	else
 	{
 		spritePauseInfo_->Draw();
-		for (std::unique_ptr<Item>& item : items_)
-		{
-			item->DrawSprite();
-		}
+		for (std::unique_ptr<Item>& item : items_)item->DrawSprite();
+		for (std::unique_ptr<Earth>& earth : earths_)earth->DrawSprite();
 	}
 }
 
