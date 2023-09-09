@@ -15,7 +15,7 @@ public:
 
 	//ìGê∂ê¨
 	virtual std::unique_ptr<BaseEnemy> CreateEnemy(const std::string& enemyName,
-		Model* model, Player* player, GamePlayScene* gamescene) = 0;
+		Model* model, Model* bullet, Player* player, GamePlayScene* gamescene) = 0;
 private:
 
 };

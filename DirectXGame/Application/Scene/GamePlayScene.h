@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "EnemyFactory.h"
 #include "GimmickFactory.h"
+#include "Earth.h"
 
 #include "SceneManager.h"
 #include "CollisionPrimitive.h"
@@ -95,11 +96,13 @@ private:
 	//ƒ‚ƒfƒ‹
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
+	Model* modelPlayerBullet_ = nullptr;
 
 	std::unique_ptr<AbstractEnemyFactory> enemyFactory;
 
 	std::list<std::unique_ptr<BaseEnemy>> enemys_;
 	Model* modelEnemy1_ = nullptr;
+	Model* modelEnemyBullet_ = nullptr;
 
 	Model* modelBoss1_ = nullptr;
 	Model* modelBossCore1_ = nullptr;
@@ -110,6 +113,9 @@ private:
 
 	std::list<std::unique_ptr<Goal>> goals_;
 	Model* modelGoal_ = nullptr;
+
+	std::list<std::unique_ptr<Earth>> earths_;
+	Model* modelEarth_ = nullptr;
 
 	std::list<std::unique_ptr<Item>> items_;
 	Model* modelItemJump_ = nullptr;

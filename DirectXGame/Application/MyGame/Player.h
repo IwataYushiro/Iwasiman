@@ -27,7 +27,7 @@ public:
 public:
 	~Player();
 
-	static std::unique_ptr<Player> Create(Model* model = nullptr,
+	static std::unique_ptr<Player> Create(Model* model = nullptr, Model* bullet = nullptr,
 		GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
@@ -39,12 +39,6 @@ public:
 	//プレイヤーの移動処理
 	void Move();
 	void CameraMove();
-	//落ちる＆ジャンプ
-	void FallAndJump();
-	//奥へ移動
-	void JumpBack();
-	//着地
-	void Landing(unsigned short attribute);
 	//プレイヤーの攻撃処理
 	void Attack();
 
@@ -119,6 +113,10 @@ private:
 
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;
+
+	bool centralPlayer = true;
+	bool leftPlayer = false;
+	bool RightPlayer = false;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }

@@ -49,7 +49,7 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("tstage_gimmick");
+	if (stageNum == 1)LoadLVData("ntest");
 	else if (stageNum == 2)LoadLVData("stage2");
 	else if (stageNum == 3)LoadLVData("stageboss1");
 
@@ -79,6 +79,7 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
+	earths_.remove_if([](std::unique_ptr<Earth>& earth) {return earth->IsDead(); });
 
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
@@ -126,7 +127,21 @@ void GamePlayScene::Update()
 		{
 			item->Update();
 		}
+		for (std::unique_ptr<Earth>& earth : earths_)
+		{
+			earth->Update();//かめおべら
+			if (earth->IsDead())isGameover = true;
 
+			//ImGui	
+			imguiManager_->Begin();
+			int life[1] = { earth->GetLife() };
+			ImGui::Begin("Earth");
+			ImGui::SetWindowPos(ImVec2(100.0f, 100.0f));
+			ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
+			ImGui::InputInt("earthlife", life);
+			ImGui::End();
+			imguiManager_->End();
+		}
 
 		for (Object3d*& object : objects) object->Update();
 
@@ -203,6 +218,7 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_) gimmick->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
 	for (std::unique_ptr<Item>& item : items_)item->Draw();
+	for (std::unique_ptr<Earth>& earth : earths_)earth->Draw();
 	for (auto& object : objects)object->Draw();
 
 	//モデル描画後処理
@@ -214,6 +230,7 @@ void GamePlayScene::Draw()
 	//エフェクト描画
 	pm_->Draw();
 	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();
+	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->DrawParticle();
 	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
@@ -255,7 +272,9 @@ void GamePlayScene::Finalize()
 
 	//3Dモデル
 	delete modelPlayer_;
+	delete modelPlayerBullet_;
 	delete modelEnemy1_;
+	delete modelEnemyBullet_;
 	delete modelBoss1_;
 	delete modelBossCore1_;
 	delete modelSkydome;
@@ -264,6 +283,7 @@ void GamePlayScene::Finalize()
 	delete modelGround;
 	delete modelBox;
 	delete modelGoal_;
+	delete modelEarth_;
 
 	models.clear();
 
@@ -294,7 +314,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//プレイヤー初期化
 			std::unique_ptr<Player> newplayer;
 
-			newplayer = Player::Create(model, this);
+			newplayer = Player::Create(model, modelPlayerBullet_, this);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -323,7 +343,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			std::unique_ptr<Player>& player = players_.front();
 
 			newenemy = enemyFactory->CreateEnemy(objectData.objectPattern,
-				model, player.get(), this);
+				model, modelEnemyBullet_, player.get(), this);
 
 			// 座標
 			DirectX::XMFLOAT3 pos;
@@ -432,6 +452,32 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			items_.push_back(std::move(newitem));
 		}
+		//ゴール
+		else if (objectData.objectType.find("EARTH") == 0)
+		{
+			//ゴール初期化
+			std::unique_ptr<Earth> newearth;
+			newearth = Earth::Create(model);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newearth->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newearth->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newearth->SetScale(scale);
+
+			newearth->SetCamera(camera_);
+			newearth->Update();
+			//リストに登録
+			earths_.push_back(std::move(newearth));
+		}
 		//地形
 		else
 		{
@@ -479,7 +525,9 @@ void GamePlayScene::LoadModel()
 {
 	// モデル読み込み
 	modelPlayer_ = Model::LoadFromOBJ("player");
+	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
+	modelEnemyBullet_= Model::LoadFromOBJ("enemybullet");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
 	modelBossCore1_ = Model::LoadFromOBJ("core1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
@@ -488,9 +536,12 @@ void GamePlayScene::LoadModel()
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
+	modelEarth_ = Model::LoadFromOBJ("earth");
 
 	models.insert(std::make_pair("player", modelPlayer_));
+	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
 	models.insert(std::make_pair("enemy1", modelEnemy1_));
+	models.insert(std::make_pair("enemybullet", modelEnemyBullet_));
 	models.insert(std::make_pair("boss1", modelBoss1_));
 	models.insert(std::make_pair("core1", modelBossCore1_));
 	models.insert(std::make_pair("sphere", modelGoal_));
@@ -499,6 +550,7 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("sphere2", modelBox));
+	models.insert(std::make_pair("earth", modelEarth_));
 
 }
 

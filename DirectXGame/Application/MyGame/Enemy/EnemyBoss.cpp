@@ -65,7 +65,7 @@ void EnemyBoss::Parameter() {
 
 	phase_ = Phase::ApproachStage1;
 	maxTime = 5.0f;
-	life_ = 2;
+	life_ = 200;
 
 
 	isReverse_ = false;

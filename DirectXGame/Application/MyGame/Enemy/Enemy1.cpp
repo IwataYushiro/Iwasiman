@@ -12,10 +12,9 @@ using namespace DirectX;
 CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
 
 Enemy1::~Enemy1() {
-	delete modelBullet_;
 }
 
-std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Player* player, GamePlayScene* gamescene)
+std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy1> ins = std::make_unique<Enemy1>();
@@ -29,6 +28,7 @@ std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Player* player, GamePlaySce
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	if (bullet) ins->modelBullet_ = bullet;
 	if (player)ins->SetPlayer(player);
 	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
@@ -38,9 +38,6 @@ std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Player* player, GamePlaySce
 bool Enemy1::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
-
-	modelBullet_ = Model::LoadFromOBJ("enemybullet");
-
 	Parameter();
 
 	//コライダー追加
@@ -91,10 +88,10 @@ void Enemy1::Update() {
 	//行列更新
 	Trans();
 	camera_->Update();
-	Object3d::Update();
 	collider->Update();
+	//行列更新等
+	Object3d::Update();
 
-	Landing();
 }
 
 //転送
@@ -271,8 +268,6 @@ void Enemy1::Landing()
 		}
 	}
 
-	//行列更新等
-	Object3d::Update();
 }
 
 //描画
@@ -292,7 +287,7 @@ void Enemy1::UpdateApproach() {
 	XMFLOAT3 velocity;
 
 	//移動
-	velocity = { -0.2f, 0.0f, 0.0f };
+	velocity = { 0.0f, 0.0f, -0.2f };
 	position.x += velocity.x;
 	position.y += velocity.y;
 	position.z += velocity.z;
@@ -325,7 +320,7 @@ void Enemy1::UpdateApproach() {
 		isDead_ = true;
 		life_ = 0;
 	}
-	if (position.y <= -60.0f)isDead_ = true;
+	if (position.z <= -200.0f)isDead_ = true;
 }
 
 //離脱
@@ -354,6 +349,10 @@ void Enemy1::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+	}
+	else if (attribute == COLLISION_ATTR_EARTH)
+	{
+		isDead_ = true;
 	}
 
 }

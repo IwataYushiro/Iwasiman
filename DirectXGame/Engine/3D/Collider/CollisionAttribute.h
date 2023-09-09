@@ -8,7 +8,7 @@ const unsigned short COLLISION_ATTR_ENEMYS = 0b1 << 2;//“Gw‰c
 const unsigned short COLLISION_ATTR_GOAL = 0b1 << 3;//ƒS[ƒ‹
 const unsigned short COLLISION_ATTR_ITEM = 0b1 << 4;//ƒAƒCƒeƒ€
 const unsigned short COLLISION_ATTR_GIMMICK = 0b1 << 5;//ŽdŠ|‚¯
-
+const unsigned short COLLISION_ATTR_EARTH = 0b1 << 6;//’n‹…
 
 //ƒTƒu‘®«
 const unsigned short SUBCOLLISION_ATTR_NONE = (0b1 << 15) + 1;//ƒTƒu‘®«‚È‚µ
