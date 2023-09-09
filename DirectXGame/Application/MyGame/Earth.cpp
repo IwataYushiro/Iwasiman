@@ -27,7 +27,7 @@ std::unique_ptr<Earth> Earth::Create(Model* model)
 bool Earth::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
-	life_ = 3;
+	life_ = 5;
 	isDead_ = false;
 	isHit_ = false;
 	mutekiCount = 0;
@@ -56,9 +56,19 @@ void Earth::Update()
 			isDead_ = true;
 		}
 		
-		if (isHit_) mutekiCount++;
+		if (isHit_)
+		{
+			camera_->ShakeEye({ 0.0f, 6.0f, -115.0f }, 10, { -5.0f,1.0f,-130.0f }, { 5.0f,11.0f,-100.0f });
+			camera_->ShakeTarget({ 0.0f,5.0f,0.0f }, 10, { -5.0f,0.0f,-5.0f }, { 5.0f,10.0f,5.0f });
+			camera_->Update();
+
+			mutekiCount++;
+		}
+		else camera_->Reset();
+		
 		if (mutekiCount == MUTEKI_COUNT)
 		{
+			
 			isHit_ = false;
 			mutekiCount = 0;
 		}
@@ -122,7 +132,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
 			life_--;
-			//isHit_ = true;
+			isHit_ = true;
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
 		{

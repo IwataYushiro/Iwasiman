@@ -262,7 +262,7 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
 		if (ishit)return;
-		life_--;
+		//life_--;
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 		
