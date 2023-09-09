@@ -49,7 +49,7 @@ private:
 	bool isHit_ = false;
 	bool isDead_ = false;
 	int mutekiCount = 0;
-	int life_ = 5;
+	int life_ = 3;
 	
 	float radius_ = 50.0f;
 public: //アクセッサ、インライン関数

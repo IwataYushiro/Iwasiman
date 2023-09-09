@@ -15,6 +15,9 @@ public:
 	virtual ~Camera();
 	//初期値にリセット
 	void Reset();
+	//シェイク
+	XMFLOAT3 ShakeEye(XMFLOAT3 eye,int count, XMFLOAT3 min, XMFLOAT3 max);
+	XMFLOAT3 ShakeTarget(XMFLOAT3 target, int count, XMFLOAT3 min, XMFLOAT3 max);
 	//更新
 	virtual void Update();
 	//ビュー行列更新

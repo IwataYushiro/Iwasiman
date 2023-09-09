@@ -56,9 +56,19 @@ void Earth::Update()
 			isDead_ = true;
 		}
 		
-		if (isHit_) mutekiCount++;
+		if (isHit_)
+		{
+			camera_->ShakeEye({ 0.0f, 6.0f, -115.0f }, 10, { -5.0f,1.0f,-130.0f }, { 5.0f,11.0f,-100.0f });
+			camera_->ShakeTarget({ 0.0f,5.0f,0.0f }, 10, { -5.0f,0.0f,-5.0f }, { 5.0f,10.0f,5.0f });
+			camera_->Update();
+
+			mutekiCount++;
+		}
+		else camera_->Reset();
+		
 		if (mutekiCount == MUTEKI_COUNT)
 		{
+			
 			isHit_ = false;
 			mutekiCount = 0;
 		}
