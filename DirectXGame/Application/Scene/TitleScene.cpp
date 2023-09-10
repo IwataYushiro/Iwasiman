@@ -40,7 +40,7 @@ void TitleScene::Initialize()
 	Object3d::SetLightGroup(lightGroup_);
 
 	UINT titleTex = 00;
-	spCommon_->LoadTexture(titleTex, "texture/title2.png");
+	spCommon_->LoadTexture(titleTex, "texture/title3.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
 
 	//FBX
@@ -79,14 +79,14 @@ void TitleScene::Update()
 	objF->Update();
 	imguiManager_->Begin();
 
-	ImGui::Begin("Prototype");
+	ImGui::Begin("Defense Earth");
 	ImGui::SetWindowPos(ImVec2(0.0f, 600.0f));
 	ImGui::SetWindowSize(ImVec2(800.0f, 100.0f));
 	ImGui::Text("How To Play");
-	ImGui::Text("WASD Move + SHIFT Dash  SPACE Jump Z Move Back");
+	ImGui::Text("WD Move X Shot Z");
 	//ImGui::Text(" test -> gaussianblur -> bloom -> Glare -> sepia -> cold -> ");
 	//ImGui::Text(" nagapozi -> grayscale -> mosaic -> uv shift -> uv shift blur -> posteffect off");
-	ImGui::Text(" Space Sample Game Start      Enter Return Title");
+	//ImGui::Text(" Space Sample Game Start      Enter Return Title");
 
 	ImGui::End();
 	imguiManager_->End();
