@@ -60,7 +60,7 @@ void Enemy2::Parameter() {
 	//発射タイマー初期化
 	fireTimer = kFireInterval;
 
-	life_ = 3;
+	life_ = 2;
 	isDead_ = false;
 
 	kFireInterval = MyMath::RandomMTInt(100, 150);
