@@ -3,6 +3,7 @@
 #include "CollisionAttribute.h"
 #include "Enemy1.h"
 #include "Enemy2.h"
+#include "Enemy3.h"
 
 #include "EnemyBoss.h"
 #include "EnemyCore.h"
@@ -29,6 +30,11 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 	{
 		//‰¡‚É‚à“®‚­G‹›
 		return Enemy2::Create(model, bullet, player, gamescene, 1);
+	}
+	else if (enemyName.find("ENEMY3") == 0)
+	{
+		//ƒ[ƒv‚·‚éG‹›
+		return Enemy3::Create(model, bullet, player, gamescene, 1);
 	}
 	else if (enemyName.find("BOSS1") == 0)
 	{
