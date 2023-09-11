@@ -10,7 +10,7 @@
 
 using namespace DirectX;
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-const float PostEffect::clearcolor[4] = { 0.25f,0.5f,0.1f,0.0f };
+const float PostEffect::clearcolor[4] = { 0.0f,0.0f,0.1f,0.0f };
 
 const std::string PostEffect::baseDirectory = "Resources/shader/PostEffect/";
 const std::string PostEffect::DirectoryVS = "VS.hlsl";

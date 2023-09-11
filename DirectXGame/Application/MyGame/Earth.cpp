@@ -7,6 +7,11 @@
 using namespace DirectX;
 CollisionManager* Earth::colManager_ = CollisionManager::GetInstance();
 
+Earth::~Earth()
+{
+	delete spriteHit_;
+}
+
 std::unique_ptr<Earth> Earth::Create(Model* model)
 {
 	//インスタンス生成
@@ -28,6 +33,7 @@ bool Earth::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
 	life_ = 5;
+	maxLife_ = life_;
 	isDead_ = false;
 	isHit_ = false;
 	mutekiCount = 0;
@@ -36,6 +42,25 @@ bool Earth::Initialize()
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_EARTH);
 	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+
+	//スプライト関係
+	spCommon_->LoadTexture(30, "texture/pdamage.png");
+	spriteHit_->Initialize(spCommon_, 30);
+
+	spriteHit_->Update();
+
+#pragma region HPスプライト
+	hpGauge_ = new Gauge();
+	hpGauge_->Initialize();
+
+	hpGauge_->SetRestMax(static_cast<float>(life_));
+	hpGauge_->SetRest(static_cast<float>(life_));
+	hpGauge_->SetMaxTime(maxTimeHP_);
+
+	hpGauge_->SetPosition({ 940,64 });
+	hpGauge_->SetSize({ 1,1 });
+#pragma endregion
+
 	return true;
 }
 
@@ -62,10 +87,17 @@ void Earth::Update()
 			camera_->ShakeTarget({ 0.0f,5.0f,0.0f }, 10, { -5.0f,0.0f,-5.0f }, { 5.0f,10.0f,5.0f });
 			camera_->Update();
 
+			ease.ease_out_cubic();
+			spriteHit_->SetColor({ 1.0f, 1.0f,1.0f, ease.num_X });
+
 			mutekiCount++;
 		}
-		else camera_->Reset();
-		
+		else
+		{
+			camera_->Reset();
+			spriteHit_->SetColor({ 1.0f, 1.0f,1.0f, ease.start });
+		}	
+
 		if (mutekiCount == MUTEKI_COUNT)
 		{
 			
@@ -81,6 +113,22 @@ void Earth::Update()
 
 	//行列更新等
 	Object3d::Update();
+	spriteHit_->Update();
+
+#pragma region HPスプライト
+	hpGauge_->SetRest(static_cast<float>(life_));
+	//通常は緑、ピンチで赤
+	if (life_ <= maxLife_ / 2) {
+		hpGauge_->GetRestSprite()->
+			SetColor({ 0.7f,0.2f,0.2f,1.0f });
+	}
+	else {
+		hpGauge_->GetRestSprite()->
+			SetColor({ 0.2f,0.7f,0.2f,1.0f });
+	}
+
+	hpGauge_->Update();
+#pragma endregion
 }
 
 void Earth::Trans()
@@ -123,6 +171,16 @@ void Earth::Draw()
 	Object3d::Draw();
 }
 
+void Earth::DrawSprite()
+{
+	if (isHit_)spriteHit_->Draw();
+	hpGauge_->Draw();
+}
+
+void Earth::Finalize() {
+	hpGauge_->Finalize();
+}
+
 void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_ENEMYS)
@@ -132,7 +190,13 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
 			life_--;
+			ease.Standby(false);
 			isHit_ = true;
+
+			//ダメージ受けたらHPの変動を実行
+			hpGauge_->SetRest(static_cast<float>(life_));
+			hpGauge_->DecisionFluctuation();
+			hpGauge_->SetIsFluct(true);
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
 		{

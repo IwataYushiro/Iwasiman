@@ -1,7 +1,8 @@
 #pragma once
-#pragma once
 #include "BaseEnemy.h"
+
 #include "Camera.h"
+
 #include "Model.h"
 #include <DirectXMath.h>
 #include <list>
@@ -15,12 +16,10 @@ private:
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
-public:
-	int MAX_GROUND = 60;
 
 public:
 	~Enemy2();
-	static std::unique_ptr<Enemy2> Create(Model* model = nullptr,
+	static std::unique_ptr<Enemy2> Create(Model* model = nullptr, Model* bullet_ = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 
 	//弾発射間隔
@@ -78,13 +77,10 @@ private:
 	XMFLOAT3 scale;
 	//ポジション
 	XMFLOAT3 pos;
-	//地面に当たった時
-	XMFLOAT3 upPos;
 	//アングル
 	XMFLOAT3 angle;
 	//半径
-	float radius_ = 3.0f;
-
+	float radius_ = 1.0f;
 
 	bool onGround = true;
 	XMFLOAT3 fallVec;
@@ -92,7 +88,6 @@ private:
 	//反転フラグ
 	bool isReverse_ = false;
 
-	int count = 0;
 
 public:
 

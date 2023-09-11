@@ -114,9 +114,9 @@ void GamePlayScene::Update()
 			//ボス撃破
 			if (enemy->BossDead())isclear = true;
 		}
-		
+
 		for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
-		
+
 		for (std::unique_ptr<Goal>& goal : goals_)
 		{
 			goal->Update();
@@ -244,15 +244,18 @@ void GamePlayScene::Draw()
 	else
 	{
 		spritePauseInfo_->Draw();
-		for (std::unique_ptr<Item>& item : items_)
-		{
-			item->DrawSprite();
-		}
+		for (std::unique_ptr<Item>& item : items_)item->DrawSprite();
+		for (std::unique_ptr<Earth>& earth : earths_)earth->DrawSprite();
 	}
 }
 
 void GamePlayScene::Finalize()
 {
+	//護衛対象の内部スプライトデータなどの後始末
+	for (std::unique_ptr<Earth>& earth : earths_) {
+		earth->Finalize();
+	}
+
 	//終了処理
 	audio_->Finalize();
 	//解放
@@ -284,6 +287,7 @@ void GamePlayScene::Finalize()
 	delete modelBox;
 	delete modelGoal_;
 	delete modelEarth_;
+	delete modelRail;
 
 	models.clear();
 
@@ -482,7 +486,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		else
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			TouchableObject* newObject = TouchableObject::Create(model);
+			TouchableObject* newObject = TouchableObject::Create(model, false);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -536,6 +540,7 @@ void GamePlayScene::LoadModel()
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
+	modelRail = Model::LoadFromOBJ("rail");
 	modelEarth_ = Model::LoadFromOBJ("earth");
 
 	models.insert(std::make_pair("player", modelPlayer_));
@@ -550,6 +555,7 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("sphere2", modelBox));
+	models.insert(std::make_pair("rail", modelRail));
 	models.insert(std::make_pair("earth", modelEarth_));
 
 }

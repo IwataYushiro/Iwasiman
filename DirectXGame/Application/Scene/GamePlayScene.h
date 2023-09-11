@@ -126,6 +126,7 @@ private:
 	Model* modelSkydome = nullptr;
 	Model* modelGround = nullptr;
 	Model* modelBox = nullptr;
+	Model* modelRail = nullptr;
 
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
