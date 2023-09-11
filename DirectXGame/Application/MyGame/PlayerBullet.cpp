@@ -105,7 +105,9 @@ void PlayerBullet::OnCollision(const CollisionInfo& info, unsigned short attribu
 	if (attribute == COLLISION_ATTR_LANDSHAPE)isDead_ = true;
 	else if (attribute == COLLISION_ATTR_ENEMYS) 
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_NONE)
+		
+		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+		else
 		{
 			pm_->Active(particle_, position, { 0.0f ,0.0f,25.0f },
 				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 20, { 10.0f, 0.0f });
@@ -114,7 +116,6 @@ void PlayerBullet::OnCollision(const CollisionInfo& info, unsigned short attribu
 			
 			isDead_ = true;
 		}
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 	}
 	
 }

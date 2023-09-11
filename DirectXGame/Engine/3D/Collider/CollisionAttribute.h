@@ -12,6 +12,7 @@ const unsigned short COLLISION_ATTR_EARTH = 0b1 << 6;//’n‹…
 
 //ƒTƒu‘®«
 const unsigned short SUBCOLLISION_ATTR_NONE = (0b1 << 15) + 1;//ƒTƒu‘®«‚È‚µ
+
 //’e
 const unsigned short SUBCOLLISION_ATTR_BULLET = (0b1 << 15) + 2;//’e
 
@@ -28,4 +29,8 @@ const unsigned short SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN = (0b1 << 15) +
 const unsigned short SUBCOLLISION_ATTR_GIMMICK_UPSPHERE = (0b1 << 15) + 103;//æ‚é‚Æã‚ª‚é‹…(~‚è‚Ä‚àã¸‚µ‘±‚¯‚é)
 const unsigned short SUBCOLLISION_ATTR_GIMMICK_UPSPHERE_RETURN = (0b1 << 15) + 104;//æ‚é‚Æã‚ª‚é‹…(~‚è‚é‚ÆŒ³‚ÌˆÊ’u‚É–ß‚é)
 
-
+//“G‚ÌŒXŒü
+const unsigned short SUBCOLLISION_ATTR_ENEMY_POWER = (0b1 << 15) + 200;//UŒ‚Œ^
+const unsigned short SUBCOLLISION_ATTR_ENEMY_GUARD = (0b1 << 15) + 201;//UŒ‚Œ^
+const unsigned short SUBCOLLISION_ATTR_ENEMY_SPEED = (0b1 << 15) + 202;//ƒXƒs[ƒhŒ^
+const unsigned short SUBCOLLISION_ATTR_ENEMY_DEATH = (0b1 << 15) + 203;//“–‚½‚é‚ÆŽ€–S

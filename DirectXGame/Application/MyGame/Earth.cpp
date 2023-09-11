@@ -32,7 +32,7 @@ std::unique_ptr<Earth> Earth::Create(Model* model)
 bool Earth::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
-	life_ = 5;
+	life_ = 10;
 	maxLife_ = life_;
 	isDead_ = false;
 	isHit_ = false;
@@ -66,7 +66,7 @@ bool Earth::Initialize()
 
 void Earth::Reset()
 {
-	life_ = 5;
+	life_ = 10;
 	isDead_ = false;
 	isHit_ = false;
 	mutekiCount = 0;
@@ -106,7 +106,7 @@ void Earth::Update()
 		}
 
 	}
-	rotation.y += 2.0f;
+	rotation.y += 1.0f;
 	camera_->Update();
 	UpdateWorldMatrix();
 	collider->Update();
@@ -189,7 +189,51 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			life_--;
+			life_ -= 2;
+			ease.Standby(false);
+			isHit_ = true;
+
+			//ダメージ受けたらHPの変動を実行
+			hpGauge_->SetRest(static_cast<float>(life_));
+			hpGauge_->DecisionFluctuation();
+			hpGauge_->SetIsFluct(true);
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)
+		{
+			life_ -= 4;
+			ease.Standby(false);
+			isHit_ = true;
+
+			//ダメージ受けたらHPの変動を実行
+			hpGauge_->SetRest(static_cast<float>(life_));
+			hpGauge_->DecisionFluctuation();
+			hpGauge_->SetIsFluct(true);
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)
+		{
+			life_ --;
+			ease.Standby(false);
+			isHit_ = true;
+
+			//ダメージ受けたらHPの変動を実行
+			hpGauge_->SetRest(static_cast<float>(life_));
+			hpGauge_->DecisionFluctuation();
+			hpGauge_->SetIsFluct(true);
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)
+		{
+			life_ -= 2;
+			ease.Standby(false);
+			isHit_ = true;
+
+			//ダメージ受けたらHPの変動を実行
+			hpGauge_->SetRest(static_cast<float>(life_));
+			hpGauge_->DecisionFluctuation();
+			hpGauge_->SetIsFluct(true);
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)
+		{
+			life_ -= 9;
 			ease.Standby(false);
 			isHit_ = true;
 
