@@ -18,7 +18,7 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 	else if (enemyName.find("ENEMY2") == 0)
 	{
 		//‰¡‚É‚à“®‚­ŽG‹›
-		return Enemy2::Create(model, bullet, player, gamescene, 5);
+		return Enemy2::Create(model, bullet, player, gamescene, 1);
 	}
 	else if (enemyName.find("BOSS1") == 0)
 	{
