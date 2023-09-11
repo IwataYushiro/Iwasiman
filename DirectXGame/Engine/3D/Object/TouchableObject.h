@@ -7,8 +7,8 @@ public:
 	~TouchableObject() = default;
 
 	//オブジェクトの生成
-	static TouchableObject* Create(Model* model = nullptr);
+	static TouchableObject* Create(Model* model = nullptr, bool Touth = true);
 	//初期化
-	bool Initialize(Model* model);
+	bool Initialize(Model* model, bool Touth);
 
 };

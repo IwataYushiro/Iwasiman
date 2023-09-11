@@ -485,7 +485,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		else
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			TouchableObject* newObject = TouchableObject::Create(model);
+			TouchableObject* newObject = TouchableObject::Create(model, false);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
