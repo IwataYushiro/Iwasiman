@@ -49,7 +49,7 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("enemytest");
+	if (stageNum == 1)LoadLVData("ntest2");
 	else if (stageNum == 2)LoadLVData("stage2");
 	else if (stageNum == 3)LoadLVData("stageboss1");
 
@@ -287,6 +287,7 @@ void GamePlayScene::Finalize()
 	delete modelBox;
 	delete modelGoal_;
 	delete modelEarth_;
+	delete modelRail;
 
 	models.clear();
 
@@ -539,6 +540,7 @@ void GamePlayScene::LoadModel()
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
+	modelRail = Model::LoadFromOBJ("rail");
 	modelEarth_ = Model::LoadFromOBJ("earth");
 
 	models.insert(std::make_pair("player", modelPlayer_));
@@ -553,6 +555,7 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("sphere2", modelBox));
+	models.insert(std::make_pair("rail", modelRail));
 	models.insert(std::make_pair("earth", modelEarth_));
 
 }
