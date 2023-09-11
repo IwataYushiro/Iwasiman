@@ -11,13 +11,13 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 {
 	if (enemyName.find("ENEMY1") == 0)
 	{
-		//クリボー風雑魚
+		//前に進む雑魚
 		return Enemy1::Create(model, bullet, player, gamescene);
 	}
 	else if (enemyName.find("ENEMY2") == 0)
 	{
-		//ドッスン風雑魚
-		return Enemy2::Create(model, player, gamescene);
+		//横にも動く雑魚
+		return Enemy2::Create(model, bullet, player, gamescene);
 	}
 	else if (enemyName.find("BOSS1") == 0)
 	{
