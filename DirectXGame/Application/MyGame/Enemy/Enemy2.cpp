@@ -287,7 +287,7 @@ void Enemy2::UpdateApproach() {
 	XMFLOAT3 velocity;
 
 	//ˆÚ“®
-	velocity = { 0.5f, 0.0f, -0.2f };
+	velocity = { 0.1f, 0.0f, -0.2f };
 	if(isReverse_)position.x -= velocity.x;
 	else position.x += velocity.x;
 
