@@ -7,6 +7,16 @@
 #include "EnemyBoss.h"
 #include "EnemyCore.h"
 
+/*
+Create(model, bullet, player, gamescene, level)のlevelについて;
+	
+	level = 1 -> 通常時
+	level = 2 -> 攻撃力強め　速度遅め
+	level = 3 -> ライフ多め　攻撃力弱め
+	level = 4 -> 速度速め　　ライフ少なめ
+	level = 5 -> 攻撃力ほぼ即死　他弱め
+*/
+
 std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyName,
 	Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
 {
