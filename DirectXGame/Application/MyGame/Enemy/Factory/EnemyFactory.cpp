@@ -24,7 +24,7 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 	if (enemyName.find("ENEMY1") == 0)
 	{
 		//‘O‚Éi‚ŞG‹›
-		return Enemy3::Create(model, bullet, player, gamescene, 1);
+		return Enemy1::Create(model, bullet, player, gamescene, 1);
 	}
 	else if (enemyName.find("ENEMY2") == 0)
 	{
