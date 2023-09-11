@@ -107,8 +107,8 @@ void PlayerBullet::OnCollision(const CollisionInfo& info, unsigned short attribu
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			pm_->ActiveZ(particle_, position, { 0.0f ,0.0f,25.0f },
-				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 50, { 3.0f, 0.0f });
+			pm_->Active(particle_, position, { 0.0f ,0.0f,25.0f },
+				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 20, { 10.0f, 0.0f });
 
 			pm_->Update();
 			
