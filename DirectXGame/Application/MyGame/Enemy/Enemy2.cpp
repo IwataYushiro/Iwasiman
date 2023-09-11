@@ -14,7 +14,7 @@ CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
 Enemy2::~Enemy2() {
 }
 
-std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
+std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene, int level)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy2> ins = std::make_unique<Enemy2>();

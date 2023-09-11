@@ -20,7 +20,7 @@ private:
 public:
 	~Enemy2();
 	static std::unique_ptr<Enemy2> Create(Model* model = nullptr, Model* bullet_ = nullptr,
-		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
+		Player* player = nullptr, GamePlayScene* gamescene = nullptr,int level = 1);
 
 	//’e”­ŽËŠÔŠu
 	int kFireInterval;

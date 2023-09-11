@@ -1,4 +1,5 @@
 #include "EnemyFactory.h"
+#include "MyMath.h"
 #include "CollisionAttribute.h"
 #include "Enemy1.h"
 #include "Enemy2.h"
@@ -12,7 +13,7 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 	if (enemyName.find("ENEMY1") == 0)
 	{
 		//ëOÇ…êiÇﬁéGãõ
-		return Enemy1::Create(model, bullet, player, gamescene);
+		return Enemy1::Create(model, bullet, player, gamescene, 5);
 	}
 	else if (enemyName.find("ENEMY2") == 0)
 	{

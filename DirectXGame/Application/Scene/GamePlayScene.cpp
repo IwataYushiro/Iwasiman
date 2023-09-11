@@ -49,7 +49,7 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("ntest");
+	if (stageNum == 1)LoadLVData("enemytest");
 	else if (stageNum == 2)LoadLVData("stage2");
 	else if (stageNum == 3)LoadLVData("stageboss1");
 
