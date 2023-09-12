@@ -26,7 +26,27 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 		//前に進む雑魚
 		return Enemy1::Create(model, bullet, player, gamescene, 1);
 	}
-	
+	else if (enemyName.find("E1P") == 0)
+	{
+		//前に進む雑魚(攻撃力強め　速度遅め)
+		return Enemy1::Create(model, bullet, player, gamescene, 2);
+	}
+	else if (enemyName.find("E1G") == 0)
+	{
+		//前に進む雑魚(ライフ多め　攻撃力弱め)
+		return Enemy1::Create(model, bullet, player, gamescene, 3);
+	}
+	else if (enemyName.find("E1S") == 0)
+	{
+		//前に進む雑魚(速度速め　ライフ少なめ)
+		return Enemy1::Create(model, bullet, player, gamescene, 4);
+	}
+	else if (enemyName.find("E1D") == 0)
+	{
+		//前に進む雑魚(攻撃力ほぼ即死　他弱め)
+		return Enemy1::Create(model, bullet, player, gamescene, 5);
+	}
+
 	else if (enemyName.find("ENEMY2") == 0)
 	{
 		//横にも動く雑魚
@@ -58,6 +78,27 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 		//ワープする雑魚
 		return Enemy3::Create(model, bullet, player, gamescene, 1);
 	}
+	else if (enemyName.find("E3P") == 0)
+	{
+		//ワープする雑魚(攻撃力強め　速度遅め)
+		return Enemy3::Create(model, bullet, player, gamescene, 2);
+	}
+	else if (enemyName.find("E3G") == 0)
+	{
+		//ワープする雑魚(ライフ多め　攻撃力弱め)
+		return Enemy3::Create(model, bullet, player, gamescene, 3);
+	}
+	else if (enemyName.find("E3S") == 0)
+	{
+		//ワープする雑魚(速度速め　ライフ少なめ)
+		return Enemy3::Create(model, bullet, player, gamescene, 4);
+	}
+	else if (enemyName.find("E3D") == 0)
+	{
+		//ワープする雑魚(攻撃力ほぼ即死　他弱め)
+		return Enemy3::Create(model, bullet, player, gamescene, 5);
+	}
+
 	else if (enemyName.find("BOSS1") == 0)
 	{
 		//ベジェ曲線で動くボス
