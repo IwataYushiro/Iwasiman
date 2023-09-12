@@ -531,6 +531,8 @@ void GamePlayScene::LoadModel()
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
+	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
+
 	modelEnemyBullet_= Model::LoadFromOBJ("enemybullet");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
 	modelBossCore1_ = Model::LoadFromOBJ("core1");

@@ -104,6 +104,13 @@ private:
 	Model* modelEnemy1_ = nullptr;
 	Model* modelEnemyBullet_ = nullptr;
 
+	Model* modelEnemy2_ = nullptr;
+	Model* modelEnemy2Power_ = nullptr;
+	Model* modelEnemy2Guard_ = nullptr;
+	Model* modelEnemy2Speed_ = nullptr;
+	Model* modelEnemy2Death_ = nullptr;
+
+
 	Model* modelBoss1_ = nullptr;
 	Model* modelBossCore1_ = nullptr;
 
