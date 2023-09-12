@@ -277,6 +277,11 @@ void GamePlayScene::Finalize()
 	delete modelPlayer_;
 	delete modelPlayerBullet_;
 	delete modelEnemy1_;
+	delete modelEnemy2_;
+	delete modelEnemy2Power_;
+	delete modelEnemy2Guard_;
+	delete modelEnemy2Speed_;
+	delete modelEnemy2Death_;
 	delete modelEnemyBullet_;
 	delete modelBoss1_;
 	delete modelBossCore1_;
@@ -509,6 +514,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			objects.push_back(newObject);
 		}
 
+
 	}
 
 }
@@ -531,8 +537,11 @@ void GamePlayScene::LoadModel()
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
-	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
-
+	modelEnemy2_ = Model::LoadFromOBJ("enemy2");
+	modelEnemy2Power_ = Model::LoadFromOBJ("enemy2p");
+	modelEnemy2Guard_ = Model::LoadFromOBJ("enemy2g");
+	modelEnemy2Speed_ = Model::LoadFromOBJ("enemy2s");
+	modelEnemy2Death_ = Model::LoadFromOBJ("enemy2d");
 	modelEnemyBullet_= Model::LoadFromOBJ("enemybullet");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
 	modelBossCore1_ = Model::LoadFromOBJ("core1");
@@ -545,9 +554,15 @@ void GamePlayScene::LoadModel()
 	modelRail = Model::LoadFromOBJ("rail");
 	modelEarth_ = Model::LoadFromOBJ("earth");
 
+
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
 	models.insert(std::make_pair("enemy1", modelEnemy1_));
+	models.insert(std::make_pair("enemy2", modelEnemy2_));
+	models.insert(std::make_pair("enemy2p", modelEnemy2Power_));
+	models.insert(std::make_pair("enemy2g", modelEnemy2Guard_));
+	models.insert(std::make_pair("enemy2s", modelEnemy2Speed_));
+	models.insert(std::make_pair("enemy2d", modelEnemy2Death_));
 	models.insert(std::make_pair("enemybullet", modelEnemyBullet_));
 	models.insert(std::make_pair("boss1", modelBoss1_));
 	models.insert(std::make_pair("core1", modelBossCore1_));
