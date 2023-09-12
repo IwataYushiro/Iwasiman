@@ -195,7 +195,8 @@
                     50.0
                 ]
             },
-            "file_name": "earth"
+            "file_name": "earth",
+            "objecttype": "EARTH"
         },
         {
             "type": "MESH",
