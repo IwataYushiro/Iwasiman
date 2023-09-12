@@ -49,9 +49,9 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("enemytest");
-	else if (stageNum == 2)LoadLVData("stage2");
-	else if (stageNum == 3)LoadLVData("stageboss1");
+	if (stageNum == 1)LoadLVData("enemytest2");
+	else if (stageNum == 2)LoadLVData("ntest");
+	else if (stageNum == 3)LoadLVData("ntest2");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
@@ -110,10 +110,9 @@ void GamePlayScene::Update()
 
 		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
 		{
+		
 			enemy->Update();
 			if (enemy->IsDead())EnemyCount--;
-			//ボス撃破
-			if (EnemyCount <= 0) isclear = true;
 		}
 
 		for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
@@ -130,9 +129,11 @@ void GamePlayScene::Update()
 		}
 		for (std::unique_ptr<Earth>& earth : earths_)
 		{
-			earth->Update();//かめおべら
+			if (earth->IsHit())EnemyCount--;
 			if (earth->IsDead())isGameover = true;
 
+			earth->Update();//かめおべら;
+			
 			//ImGui	
 			imguiManager_->Begin();
 			int life[1] = { earth->GetLife() };
@@ -145,7 +146,18 @@ void GamePlayScene::Update()
 		}
 
 		for (Object3d*& object : objects) object->Update();
+		imguiManager_->Begin();
+		int c[1] = { EnemyCount };
+		ImGui::Begin("enemy");
+		ImGui::SetWindowPos(ImVec2(400.0f, 400.0f));
+		ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
+		ImGui::InputInt("count", c);
+		ImGui::End();
+		imguiManager_->End();
 
+		//敵全滅でクリア
+		if (EnemyCount <= 0) isclear = true;
+		
 		//カメラ
 		camera_->Update();
 		lightGroup_->Update();

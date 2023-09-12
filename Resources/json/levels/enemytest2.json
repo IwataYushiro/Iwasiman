@@ -182,7 +182,7 @@
             },
             "file_name": "enemy2s",
             "objecttype": "ENEMY",
-            "objectpattern": "E2S"
+            "objectpattern": "E1S"
         },
         {
             "type": "MESH",
@@ -309,7 +309,7 @@
             "transform": {
                 "translation": [
                     -30.0,
-                    25.0,
+                    0.0,
                     0.0
                 ],
                 "rotation": [
@@ -325,7 +325,7 @@
             },
             "file_name": "enemy2s",
             "objecttype": "ENEMY",
-            "objectpattern": "E2S"
+            "objectpattern": "E1S"
         }
     ]
 }

@@ -60,6 +60,9 @@ public:
 	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
 	//“G’e’Ç‰Á
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
+	
+	int GetEnemyCount() { return EnemyCount; }
+	void SetEnemyCount(int enemycount) { this->EnemyCount = enemycount; }
 
 private://Ã“Iƒƒ“ƒo•Ï”
 	
