@@ -32,8 +32,26 @@ void TitleScene::Initialize()
 	LoadModel();
 
 	//レベルデータ読み込み
-	LoadLVData("enemytest1");
-	
+	LoadLVData("title");
+	XMFLOAT3 eye = camera_->GetEye();
+	eye = { 0.0f, 6.0f, -365.0f };
+	camera_->SetEye(eye);
+	// 注視点座標
+	XMFLOAT3 target = camera_->GetEye();
+	target = { 0.0f,6.0f,-260.0f };
+	camera_->SetTarget(target);
+
+	//制御点
+	startEye = eye;
+	p1Eye = { 0.0f ,105.0f,-250.0f };
+	p2Eye = { 0.0f ,60.0f,100.0f };
+	endEye = { 0.0f ,6.0f,-115.0f };
+
+	startTarget = target;
+	p1Target = { 0.0f ,105.0f,-150.0f };
+	p2Target = { 0.0f ,60.0f,100.0f };
+	endTarget = { 0.0f ,5.0f,0.0f };
+
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
@@ -76,7 +94,7 @@ void TitleScene::Update()
 		camera_->SetEye(Bezier3(startEye, p1Eye, p2Eye, endEye, timeRate));
 		camera_->SetTarget(Bezier3(startTarget, p1Target, p2Target, endTarget, timeRate));
 
-		if (camera_->GetTarget().z >= endTarget.z)
+		if (camera_->GetEye().z == endEye.z&& camera_->GetTarget().z == endTarget.z)
 		{
 			camera_->Reset();
 			sceneManager_->ChangeScene("GAMEPLAY", 1);
@@ -85,27 +103,13 @@ void TitleScene::Update()
 	}
 	else
 	{
-		XMFLOAT3 eye = camera_->GetEye();
-		eye = { 0.0f, 6.0f, -365.0f };
-		camera_->SetEye(eye);
-		// 注視点座標
-		XMFLOAT3 target = camera_->GetEye();
-		target = { 0.0f,6.0f,-260.0f };
-		camera_->SetTarget(target);
-
+	
+		for (std::unique_ptr<Player>& player : players_)player->Update();
 		spriteTitle_->Update();
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			//制御点
-			startEye = eye;
-			p1Eye = { 0.0f ,65.0f,-250.0f };
-			p2Eye = { 0.0f ,30.0f,-175.0f };
-			endEye = { 0.0f ,6.0f,-115.0f };
-
-			startTarget = target;
-			p1Target = { 0.0f ,65.0f,-150.0f };
-			p2Target = { 0.0f ,30.0f,-50.0f };
-			endTarget = { 0.0f ,5.0f,0.0f };
+			
+			for (Object3d*& object : objects) object->Update();
 			startCount = std::chrono::steady_clock::now();
 
 			isStart = true;
@@ -175,6 +179,13 @@ void TitleScene::Finalize()
 	//3Dモデル
 	delete modelPlayer_;
 	delete modelPlayerBullet_;
+	delete modelEnemy1_;
+	delete modelEnemy2_;
+	delete modelEnemy2Power_;
+	delete modelEnemy2Guard_;
+	delete modelEnemy2Speed_;
+	delete modelEnemy2Death_;
+	delete modelEnemyBullet_;
 	delete modelSkydome;
 	delete modelGround;
 	delete modelBox;
@@ -240,7 +251,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 			newplayer->SetScale(scale);
 
 			newplayer->SetCamera(camera_);
-			//newplayer->Update();
+			newplayer->Update();
 			//リストに登録
 			players_.push_back(std::move(newplayer));
 		}
@@ -306,6 +317,13 @@ void TitleScene::LoadModel()
 	// モデル読み込み
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
+	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
+	modelEnemy2_ = Model::LoadFromOBJ("enemy2");
+	modelEnemy2Power_ = Model::LoadFromOBJ("enemy2p");
+	modelEnemy2Guard_ = Model::LoadFromOBJ("enemy2g");
+	modelEnemy2Speed_ = Model::LoadFromOBJ("enemy2s");
+	modelEnemy2Death_ = Model::LoadFromOBJ("enemy2d");
+	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");
 	modelSkydome = Model::LoadFromOBJ("skydome");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
@@ -315,6 +333,13 @@ void TitleScene::LoadModel()
 
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
+	models.insert(std::make_pair("enemy1", modelEnemy1_));
+	models.insert(std::make_pair("enemy2", modelEnemy2_));
+	models.insert(std::make_pair("enemy2p", modelEnemy2Power_));
+	models.insert(std::make_pair("enemy2g", modelEnemy2Guard_));
+	models.insert(std::make_pair("enemy2s", modelEnemy2Speed_));
+	models.insert(std::make_pair("enemy2d", modelEnemy2Death_));
+	models.insert(std::make_pair("enemybullet", modelEnemyBullet_));
 	models.insert(std::make_pair("skydome", modelSkydome));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("sphere2", modelBox));

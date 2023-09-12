@@ -72,6 +72,15 @@ private://ÉÅÉìÉoïœêî
 	Model* modelPlayer_ = nullptr;
 	Model* modelPlayerBullet_ = nullptr;
 
+	Model* modelEnemy1_ = nullptr;
+	Model* modelEnemyBullet_ = nullptr;
+
+	Model* modelEnemy2_ = nullptr;
+	Model* modelEnemy2Power_ = nullptr;
+	Model* modelEnemy2Guard_ = nullptr;
+	Model* modelEnemy2Speed_ = nullptr;
+	Model* modelEnemy2Death_ = nullptr;
+
 	std::list<std::unique_ptr<Earth>> earths_;
 	Model* modelEarth_ = nullptr;
 
