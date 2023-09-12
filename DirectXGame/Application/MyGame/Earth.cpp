@@ -99,13 +99,13 @@ void Earth::Update()
 		}
 		else
 		{
-			camera_->Reset();
+			
 			spriteHit_->SetColor({ 1.0f, 1.0f,1.0f, ease.start });
 		}	
 
 		if (mutekiCount == MUTEKI_COUNT)
 		{
-			
+			camera_->Reset();
 			isEase = false;
 			mutekiCount = 0;
 		}

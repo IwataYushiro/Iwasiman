@@ -85,8 +85,7 @@
                     1.0
                 ]
             },
-            "file_name": "player",
-            "objecttype": "PLAYER"
+            "file_name": "player"
         },
         {
             "type": "MESH",
@@ -174,16 +173,14 @@
                     1.0
                 ]
             },
-            "file_name": "enemy2s",
-            "objecttype": "ENEMY",
-            "objectpattern": "E1S"
+            "file_name": "enemy2s"
         },
         {
             "type": "MESH",
             "name": "Earth",
             "transform": {
                 "translation": [
-                    135.0,
+                    150.0,
                     0.0,
                     0.0
                 ],
@@ -222,7 +219,6 @@
                 ]
             },
             "file_name": "enemy2p",
-            "objecttype": "ENEMY",
             "objectpattern": "E2P"
         },
         {
@@ -245,9 +241,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy2",
-            "objecttype": "ENEMY",
-            "objectpattern": "ENEMY2"
+            "file_name": "enemy2"
         },
         {
             "type": "MESH",
@@ -269,9 +263,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy2s",
-            "objecttype": "ENEMY",
-            "objectpattern": "E2S"
+            "file_name": "enemy2s"
         },
         {
             "type": "MESH",
@@ -293,33 +285,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy2d",
-            "objecttype": "ENEMY",
-            "objectpattern": "E2D"
-        },
-        {
-            "type": "MESH",
-            "name": "Enemy.004",
-            "transform": {
-                "translation": [
-                    -30.0,
-                    0.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    -90.00000762939453
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "enemy2s",
-            "objecttype": "ENEMY",
-            "objectpattern": "E1S"
+            "file_name": "enemy2d"
         }
     ]
 }
