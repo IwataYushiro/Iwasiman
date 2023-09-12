@@ -12,10 +12,10 @@
 Create(model, bullet, player, gamescene, level)のlevelについて;
 	
 	level = 1 -> 通常時
-	level = 2 -> 攻撃力強め　速度遅め		ENEMY2P
-	level = 3 -> ライフ多め　攻撃力弱め		ENEMY2G
-	level = 4 -> 速度速め　　ライフ少なめ	ENEMY2S
-	level = 5 -> 攻撃力ほぼ即死　他弱め		ENEMY2D
+	level = 2 -> 攻撃力強め　速度遅め		E2P
+	level = 3 -> ライフ多め　攻撃力弱め		E2G
+	level = 4 -> 速度速め　　ライフ少なめ	E2S
+	level = 5 -> 攻撃力ほぼ即死　他弱め		E2D
 */
 
 std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyName,
@@ -32,22 +32,22 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 		//横にも動く雑魚
 		return Enemy2::Create(model, bullet, player, gamescene, 1);
 	}
-	else if (enemyName.find("ENEMY2P") == 0)
+	else if (enemyName.find("E2P") == 0)
 	{
 		//横にも動く雑魚(攻撃力強め　速度遅め)
 		return Enemy2::Create(model, bullet, player, gamescene, 2);
 	}
-	else if (enemyName.find("ENEMY2G") == 0)
+	else if (enemyName.find("E2G") == 0)
 	{
 		//横にも動く雑魚(ライフ多め　攻撃力弱め)
 		return Enemy2::Create(model, bullet, player, gamescene, 3);
 	}
-	else if (enemyName.find("ENEMY2S") == 0)
+	else if (enemyName.find("E2S") == 0)
 	{
 		//横にも動く雑魚(速度速め　ライフ少なめ)
 		return Enemy2::Create(model, bullet, player, gamescene, 4);
 	}
-	else if (enemyName.find("ENEMY2D") == 0)
+	else if (enemyName.find("E2D") == 0)
 	{
 		//横にも動く雑魚(攻撃力ほぼ即死　他弱め)
 		return Enemy2::Create(model, bullet, player, gamescene, 5);
