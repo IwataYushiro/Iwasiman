@@ -80,8 +80,13 @@ void Earth::Update()
 		{
 			isDead_ = true;
 		}
-		
 		if (isHit_)
+		{
+			isEase = true;
+			isHit_ = false;
+		}
+
+		if (isEase)
 		{
 			camera_->ShakeEye({ 0.0f, 6.0f, -115.0f }, 10, { -5.0f,1.0f,-130.0f }, { 5.0f,11.0f,-100.0f });
 			camera_->ShakeTarget({ 0.0f,5.0f,0.0f }, 10, { -5.0f,0.0f,-5.0f }, { 5.0f,10.0f,5.0f });
@@ -101,7 +106,7 @@ void Earth::Update()
 		if (mutekiCount == MUTEKI_COUNT)
 		{
 			
-			isHit_ = false;
+			isEase = false;
 			mutekiCount = 0;
 		}
 
@@ -185,13 +190,15 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
-		if (isHit_)return;
+		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+		isHit_ = true;
+		if (isEase)return;
 
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
 			life_ -= 2;
 			ease.Standby(false);
-			isHit_ = true;
+			
 
 			//ダメージ受けたらHPの変動を実行
 			hpGauge_->SetRest(static_cast<float>(life_));
@@ -202,7 +209,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		{
 			life_ -= 4;
 			ease.Standby(false);
-			isHit_ = true;
+			//isHit_ = true;
 
 			//ダメージ受けたらHPの変動を実行
 			hpGauge_->SetRest(static_cast<float>(life_));
@@ -213,7 +220,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		{
 			life_ --;
 			ease.Standby(false);
-			isHit_ = true;
+			//isHit_ = true;
 
 			//ダメージ受けたらHPの変動を実行
 			hpGauge_->SetRest(static_cast<float>(life_));
@@ -224,7 +231,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		{
 			life_ -= 2;
 			ease.Standby(false);
-			isHit_ = true;
+			//isHit_ = true;
 
 			//ダメージ受けたらHPの変動を実行
 			hpGauge_->SetRest(static_cast<float>(life_));
@@ -235,17 +242,12 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		{
 			life_ -= 9;
 			ease.Standby(false);
-			isHit_ = true;
+			//isHit_ = true;
 
 			//ダメージ受けたらHPの変動を実行
 			hpGauge_->SetRest(static_cast<float>(life_));
 			hpGauge_->DecisionFluctuation();
 			hpGauge_->SetIsFluct(true);
-		}
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
-		{
-			//life_--;
-			// isHit_ = true;
 		}
 	}
 

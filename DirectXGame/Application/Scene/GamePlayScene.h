@@ -60,6 +60,9 @@ public:
 	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
 	//敵弾追加
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
+	
+	int GetEnemyCount() { return EnemyCount; }
+	void SetEnemyCount(int enemycount) { this->EnemyCount = enemycount; }
 
 private://静的メンバ変数
 	
@@ -160,6 +163,8 @@ private:
 	Easing es = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
 	//○○した瞬間に○○解除を防ぐ用のフラグ
 	bool isBack = false;
+	//敵カウント
+	int EnemyCount = 0;
 
 private:
 	//スプライト読み込み

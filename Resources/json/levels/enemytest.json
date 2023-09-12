@@ -90,30 +90,6 @@
         },
         {
             "type": "MESH",
-            "name": "boss1",
-            "transform": {
-                "translation": [
-                    -150.0,
-                    30.0,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    3.0,
-                    3.0,
-                    3.0
-                ]
-            },
-            "file_name": "boss1",
-            "objecttype": "ENEMY",
-            "objectpattern": "BOSS1"
-        },
-        {
-            "type": "MESH",
             "name": "fallsphere",
             "transform": {
                 "translation": [
@@ -204,9 +180,9 @@
                     1.0
                 ]
             },
-            "file_name": "enemy2d",
+            "file_name": "enemy2s",
             "objecttype": "ENEMY",
-            "objectpattern": "E2D"
+            "objectpattern": "E2S"
         },
         {
             "type": "MESH",
@@ -326,6 +302,30 @@
             "file_name": "enemy2d",
             "objecttype": "ENEMY",
             "objectpattern": "E2D"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy.004",
+            "transform": {
+                "translation": [
+                    -30.0,
+                    25.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy2s",
+            "objecttype": "ENEMY",
+            "objectpattern": "E2S"
         }
     ]
 }
