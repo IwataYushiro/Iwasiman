@@ -111,8 +111,9 @@ void GamePlayScene::Update()
 		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
 		{
 			enemy->Update();
+			if (enemy->IsDead())EnemyCount--;
 			//ƒ{ƒXŒ‚”j
-			if (enemy->BossDead())isclear = true;
+			if (EnemyCount <= 0) isclear = true;
 		}
 
 		for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
@@ -373,6 +374,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			newenemy->Update();
 			//ƒŠƒXƒg‚É“o˜^
 			enemys_.push_back(std::move(newenemy));
+			EnemyCount++;
 		}
 		//ŽdŠ|‚¯
 		else if (objectData.objectType.find("GIMMICK") == 0)
