@@ -7,7 +7,6 @@
 #include "CollisionAttribute.h"
 
 #include <cassert>
-#include <sstream>
 #include <iomanip>
 
 using namespace DirectX;

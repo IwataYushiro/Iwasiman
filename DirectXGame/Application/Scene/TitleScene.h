@@ -4,14 +4,21 @@
 #include "DirectXCommon.h"
 #include "ImGuiManager.h"
 #include "Object3d.h"
-#include "ObjectFbx.h"
 
 #include "ParticleManager.h"
 #include "Sprite.h"
 
+#include "Player.h"
+#include "Earth.h"
+
+#include <vector>
 #include <map>
+#include <sstream>
+#include <string>
 
 #include "SceneManager.h"
+#include <DirectXMath.h>
+#include <chrono>
 
 //jsonレベルデータ
 struct LevelData;
@@ -19,6 +26,12 @@ struct LevelData;
 //タイトルシーン
 class TitleScene :public BaseScene
 {
+private:
+	// DirectX::を省略
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+public://定数
+	//int MAX_TIME = 120;
+
 public://メンバ関数
 	//初期化
 	void Initialize() override;
@@ -29,8 +42,10 @@ public://メンバ関数
 	//終了
 	void Finalize() override;
 
+	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
+
 	//レベルデータ読み込み
-	void LoadLVData();
+	void LoadLVData(const std::string& stagePath);
 
 private://静的メンバ変数
 	//DirectX基盤
@@ -51,31 +66,51 @@ private://静的メンバ変数
 private://メンバ変数
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
-	//FBX
-	ModelFbx* modelF = nullptr;
-	ObjectFbx* objF = nullptr;
 
 	//モデル
+	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
-	Object3d* object3DPlayer_ = nullptr;
+	Model* modelPlayerBullet_ = nullptr;
+
+	std::list<std::unique_ptr<Earth>> earths_;
+	Model* modelEarth_ = nullptr;
 
 	LevelData* levelData = nullptr;
 
 	Model* modelSkydome = nullptr;
 	Model* modelGround = nullptr;
-	Model* modelFighter = nullptr;
-	Model* modelSphere = nullptr;
-
-	Object3d* objSkydome = nullptr;
-	Object3d* objGround = nullptr;
-	Object3d* objFighter = nullptr;
-	Object3d* objSphere = nullptr;
+	Model* modelBox = nullptr;
+	Model* modelRail = nullptr;
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
+
+	//自機弾
+	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
+
+	//時間計測
+	std::chrono::steady_clock::time_point startCount;	//開始時間
+	std::chrono::steady_clock::time_point nowCount;		//現在時間
+	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
+	float	maxTime = 2.0f;					//全体時間
+	float	timeRate;
+	//制御点(視点)
+	XMFLOAT3 startEye;
+	XMFLOAT3 p1Eye;
+	XMFLOAT3 p2Eye;
+	XMFLOAT3 endEye;
+	//制御点(注視点)
+	XMFLOAT3 startTarget;
+	XMFLOAT3 p1Target;
+	XMFLOAT3 p2Target;
+	XMFLOAT3 endTarget;
+
+	bool isStart = false;
 
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
 	//パーティクル
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm1_ = nullptr;
+	//モデル読み込み
+	void LoadModel();
 };
