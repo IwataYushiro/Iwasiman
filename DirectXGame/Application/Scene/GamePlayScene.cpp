@@ -48,7 +48,7 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("ntest3");//enemytest2　バグ版
+	if (stageNum == 1)LoadLVData("stage1");//enemytest2　バグ版
 	else if (stageNum == 2)LoadLVData("ntest");
 	else if (stageNum == 3)LoadLVData("ntest2");
 
@@ -78,7 +78,7 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
-	earths_.remove_if([](std::unique_ptr<Earth>& earth) {return earth->IsDead(); });
+	//earths_.remove_if([](std::unique_ptr<Earth>& earth) {return earth->IsDead(); });
 
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
@@ -128,11 +128,14 @@ void GamePlayScene::Update()
 		}
 		for (std::unique_ptr<Earth>& earth : earths_)
 		{
-			if (earth->IsHit())EnemyCount--;
-			if (earth->IsDead())isGameover = true;
+			if (!isGameover)
+			{
+				if (earth->IsDead())isGameover = true;
 
-			earth->Update();//かめおべら;
-			
+				if (earth->IsHit())EnemyCount--;
+
+				earth->Update();//かめおべら;
+			}
 			//ImGui	
 			imguiManager_->Begin();
 			int life[1] = { earth->GetLife() };
@@ -155,8 +158,8 @@ void GamePlayScene::Update()
 		imguiManager_->End();
 
 		//敵全滅でクリア
-		if (EnemyCount <= 0) isclear = true;
-		
+		if (!isGameover && EnemyCount <= 0) isclear = true;
+
 		//カメラ
 		camera_->Update();
 		lightGroup_->Update();
@@ -289,6 +292,10 @@ void GamePlayScene::Finalize()
 	delete modelPlayer_;
 	delete modelPlayerBullet_;
 	delete modelEnemy1_;
+	delete modelEnemy1Power_;
+	delete modelEnemy1Guard_;
+	delete modelEnemy1Speed_;
+	delete modelEnemy1Death_;
 	delete modelEnemy2_;
 	delete modelEnemy2Power_;
 	delete modelEnemy2Guard_;
@@ -550,6 +557,10 @@ void GamePlayScene::LoadModel()
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
+	modelEnemy1Power_ = Model::LoadFromOBJ("enemy1p");
+	modelEnemy1Guard_ = Model::LoadFromOBJ("enemy1g");
+	modelEnemy1Speed_ = Model::LoadFromOBJ("enemy1s");
+	modelEnemy1Death_ = Model::LoadFromOBJ("enemy1d");
 	modelEnemy2_ = Model::LoadFromOBJ("enemy2");
 	modelEnemy2Power_ = Model::LoadFromOBJ("enemy2p");
 	modelEnemy2Guard_ = Model::LoadFromOBJ("enemy2g");
@@ -571,6 +582,10 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
 	models.insert(std::make_pair("enemy1", modelEnemy1_));
+	models.insert(std::make_pair("enemy1p", modelEnemy1Power_));
+	models.insert(std::make_pair("enemy1g", modelEnemy1Guard_));
+	models.insert(std::make_pair("enemy1s", modelEnemy1Speed_));
+	models.insert(std::make_pair("enemy1d", modelEnemy1Death_));
 	models.insert(std::make_pair("enemy2", modelEnemy2_));
 	models.insert(std::make_pair("enemy2p", modelEnemy2Power_));
 	models.insert(std::make_pair("enemy2g", modelEnemy2Guard_));
