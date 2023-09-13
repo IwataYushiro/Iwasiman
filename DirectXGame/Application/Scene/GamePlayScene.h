@@ -24,92 +24,92 @@
 #include <map>
 #include <sstream>
 #include <string>
-//jsonãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿
+//jsonƒŒƒxƒ‹ƒf[ƒ^
 struct LevelData;
 
 class CollisionManager;
 class TouchableObject;
 
-//ã‚²ãƒ¼ãƒ ãƒ—ãƒ¬ã‚¤
+//ƒQ[ƒ€ƒvƒŒƒC
 class GamePlayScene :public BaseScene
 {
 private:
-	// DirectX::ã‚’çœç•¥
+	// DirectX::‚ğÈ—ª
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 
-public://æ§‹é€ ä½“é¡
+public://\‘¢‘Ì—Ş
 	GamePlayScene(int stagenum);
-	enum Scene { //ã‚·ãƒ¼ãƒ³ID
+	enum Scene { //ƒV[ƒ“ID
 		tutorial,
 		stage1,
 		stage2,
 	};
 
-	//ã‚­ãƒ¼ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæ§‹é€ 
+	//ƒL[ƒXƒvƒ‰ƒCƒg\‘¢
 	struct KeySprite {
 	public:
 		void Initialize();
 		void Update();
 		void Draw();
 		void Finalize();
-		//ã‚­ãƒ¼éƒ¨åˆ†
+		//ƒL[•”•ª
 		Sprite* key_ = nullptr;
-		//ãƒ©ãƒ™ãƒ«
+		//ƒ‰ƒxƒ‹
 		Sprite* label_ = nullptr;
 
-		//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®å·¦ä¸Šã®ç‚¹
+		//ƒeƒNƒXƒ`ƒƒ‚Ì¶ã‚Ì“_
 		XMFLOAT2 leftTop_ = { 0,0 };
-		//ä½ç½®
+		//ˆÊ’u
 		XMFLOAT2 position_ = { 0,0 };
-		//ã‚µã‚¤ã‚º
+		//ƒTƒCƒY
 		XMFLOAT2 size_ = { 0,0 };
-		//æŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ï¼Ÿ
+		//‰Ÿ‚³‚ê‚Ä‚¢‚é‚©H
 		bool isPress_ = false;
 	};
 
 public:
 
-	//åˆæœŸåŒ–
+	//‰Šú‰»
 	void Initialize()override;
-	//æ›´æ–°
+	//XV
 	void Update() override;
-	//æç”»
+	//•`‰æ
 	void Draw() override;
-	//çµ‚äº†
+	//I—¹
 	void Finalize() override;
 
-	//ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
+	//ƒŒƒxƒ‹ƒf[ƒ^“Ç‚İ‚İ
 	void LoadLVData(const std::string& stagePath);
 
 public:
-	//è‡ªæ©Ÿå¼¾è¿½åŠ 
+	//©‹@’e’Ç‰Á
 	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
-	//æ•µå¼¾è¿½åŠ 
+	//“G’e’Ç‰Á
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
 
 	int GetEnemyCount() { return EnemyCount; }
 	void SetEnemyCount(int enemycount) { this->EnemyCount = enemycount; }
 
-private://é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
+private://Ã“Iƒƒ“ƒo•Ï”
 
-	//DirectXåŸºç›¤
+	//DirectXŠî”Õ
 	static DirectXCommon* dxCommon_;
-	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆåŸºç›¤
+	//ƒXƒvƒ‰ƒCƒgŠî”Õ
 	SpriteCommon* spCommon_ = nullptr;
-	//ã‚¤ãƒ³ãƒ—ãƒƒãƒˆ
+	//ƒCƒ“ƒvƒbƒg
 	static Input* input_;
-	//ã‚ªãƒ¼ãƒ‡ã‚£ã‚ª
+	//ƒI[ƒfƒBƒI
 	Audio* audio_=nullptr;
-	//ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
+	//ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
-	//ã‚«ãƒ¡ãƒ©
+	//ƒJƒƒ‰
 	static Camera* camera_;
 private:
 
-	//ã‚µã‚¦ãƒ³ãƒ‰èª­ã¿è¾¼ã¿
+	//ƒTƒEƒ“ƒh“Ç‚İ‚İ
 	Audio::SoundData stageBGM;
 	Audio::SoundData doneSE;
 	Sprite* spritePause_ = new Sprite();
@@ -118,18 +118,18 @@ private:
 	Sprite* spriteGameover_ = new Sprite();
 #pragma endregion
 
-#pragma region ã‚­ãƒ¼ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+#pragma region ƒL[ƒXƒvƒ‰ƒCƒg
 	KeySprite* keySpriteA_ = nullptr;
 	KeySprite* keySpriteD_ = nullptr;
-	KeySprite* keySpriteX_ = nullptr;
+	KeySprite* keySpriteSpace_ = nullptr;
 #pragma endregion
 
-	//ãƒãƒ¼ã‚ºã—ãŸã‹
+	//ƒ|[ƒY‚µ‚½‚©
 	bool isPause_ = false;
 	bool isclear = false;
 	bool isGameover = false;
 
-	//ãƒ¢ãƒ‡ãƒ«
+	//ƒ‚ƒfƒ‹
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
 	Model* modelPlayerBullet_ = nullptr;
@@ -178,35 +178,35 @@ private:
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
 
-	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+	//ƒp[ƒeƒBƒNƒ‹
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm_ = nullptr;
 
 	Particle* particle2_ = nullptr;
 
-	//ãƒ©ã‚¤ãƒˆ
+	//ƒ‰ƒCƒg
 	LightGroup* lightGroup_ = nullptr;
 
-	//è¡çªãƒãƒãƒ¼ã‚¸ãƒ£
+	//Õ“Ëƒ}ƒl[ƒWƒƒ
 	CollisionManager* colManager_ = nullptr;
 
 private:
 	int stageNum;
-	//è‡ªæ©Ÿå¼¾
+	//©‹@’e
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
-	//æ•µå¼¾
+	//“G’e
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
-	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼(å·¦ã‹ã‚‰å³ã¸)
+	//ƒC[ƒWƒ“ƒOƒ}ƒl[ƒWƒƒ[(¶‚©‚ç‰E‚Ö)
 	Easing es = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
-	//â—‹â—‹ã—ãŸç¬é–“ã«â—‹â—‹è§£é™¤ã‚’é˜²ãç”¨ã®ãƒ•ãƒ©ã‚°
+	//››‚µ‚½uŠÔ‚É››‰ğœ‚ğ–h‚®—p‚Ìƒtƒ‰ƒO
 	bool isBack = false;
-	//æ•µã‚«ã‚¦ãƒ³ãƒˆ
+	//“GƒJƒEƒ“ƒg
 	int EnemyCount = 0;
 
 private:
-	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆèª­ã¿è¾¼ã¿
+	//ƒXƒvƒ‰ƒCƒg“Ç‚İ‚İ
 	void LoadSprite();
-	//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
+	//ƒ‚ƒfƒ‹“Ç‚İ‚İ
 	void LoadModel();
 
 };
