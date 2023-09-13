@@ -18,14 +18,13 @@ Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
-
 GamePlayScene::GamePlayScene(int stagenum) :stageNum(stagenum) {}
 
 void GamePlayScene::Initialize()
 {
-
 	spCommon_ = SpriteCommon::GetInstance();
 	colManager_ = CollisionManager::GetInstance();
+
 	//工業地帯
 	enemyFactory = std::make_unique<EnemyFactory>();
 	gimmickFactory = std::make_unique<GimmickFactory>();
@@ -83,7 +82,6 @@ void GamePlayScene::Update()
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
 
-
 	if (!isPause_)
 	{
 		//モデル呼び出し例
@@ -91,8 +89,8 @@ void GamePlayScene::Update()
 		{
 			if (!isclear || !isGameover) player->Update();
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
-			//かめおべら
-			if (player->IsDead())isGameover = true;
+				//かめおべら
+				if (player->IsDead())isGameover = true;
 #ifdef	_DEBUG		
 			//ImGui	
 			imguiManager_->Begin();
@@ -110,7 +108,7 @@ void GamePlayScene::Update()
 
 		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
 		{
-		
+
 			enemy->Update();
 			if (enemy->IsDead())EnemyCount--;
 		}
@@ -130,8 +128,8 @@ void GamePlayScene::Update()
 		for (std::unique_ptr<Earth>& earth : earths_)
 		{
 			if (earth->IsHit())EnemyCount--;
-			if (earth->IsDead())isGameover = true;
-
+				if (earth->IsDead())isGameover = true;
+			
 			earth->Update();//かめおべら;
 #ifdef	_DEBUG		
 			//ImGui	
@@ -159,7 +157,7 @@ void GamePlayScene::Update()
 
 		//敵全滅でクリア
 		if (EnemyCount <= 0) isclear = true;
-		
+
 		//カメラ
 		camera_->Update();
 		lightGroup_->Update();
@@ -189,8 +187,28 @@ void GamePlayScene::Update()
 
 			isPause_ = true;
 		}
+
+		// キースプライトの押されているかどうかの条件分岐
+		if (input_->PushKey(DIK_A))
+			keySpriteA_->isPress_ = true;
+		else if(input_->ReleaseKey(DIK_A))
+			keySpriteA_->isPress_ = false;
+
+		if (input_->PushKey(DIK_D))
+			keySpriteD_->isPress_ = true;
+		else if(input_->ReleaseKey(DIK_D))
+			keySpriteD_->isPress_ = false;
+
+		if (input_->PushKey(DIK_X))
+			keySpriteX_->isPress_ = true;
+		else if(input_->ReleaseKey(DIK_X))
+			keySpriteX_->isPress_ = false;
+
+		keySpriteA_->Update();
+		keySpriteD_->Update();
+		keySpriteX_->Update();
 	}
-	else if (isPause_)
+	else
 	{
 		//イージングサンプル(ポーズ中に準備してもここがやってくれる)
 		es.ease_in_out_elastic();
@@ -215,9 +233,6 @@ void GamePlayScene::Update()
 		}
 	}
 	spritePause_->Update();
-
-
-
 }
 
 void GamePlayScene::Draw()
@@ -260,6 +275,11 @@ void GamePlayScene::Draw()
 	{
 		spritePauseInfo_->Draw();
 		for (std::unique_ptr<Item>& item : items_)item->DrawSprite();
+
+		keySpriteA_->Draw();
+		keySpriteD_->Draw();
+		keySpriteX_->Draw();
+
 		for (std::unique_ptr<Earth>& earth : earths_)earth->DrawSprite();
 	}
 }
@@ -317,6 +337,12 @@ void GamePlayScene::Finalize()
 	delete spritePauseInfo_;
 	delete spriteGameover_;
 
+	keySpriteA_->Finalize();
+	delete keySpriteA_;
+	keySpriteD_->Finalize();
+	delete keySpriteD_;
+	keySpriteX_->Finalize();
+	delete keySpriteX_;
 }
 
 void GamePlayScene::LoadLVData(const std::string& stagePath)
@@ -525,14 +551,10 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 
 			newObject->SetCamera(camera_);
 
-
 			// 配列に登録
 			objects.push_back(newObject);
 		}
-
-
 	}
-
 }
 
 void GamePlayScene::AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet)
@@ -543,8 +565,8 @@ void GamePlayScene::AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet)
 
 void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
 {
-	//リストに登録
-	enemyBullets_.push_back(std::move(enemyBullet));
+		//リストに登録
+		enemyBullets_.push_back(std::move(enemyBullet));
 }
 
 void GamePlayScene::LoadModel()
@@ -558,7 +580,7 @@ void GamePlayScene::LoadModel()
 	modelEnemy2Guard_ = Model::LoadFromOBJ("enemy2g");
 	modelEnemy2Speed_ = Model::LoadFromOBJ("enemy2s");
 	modelEnemy2Death_ = Model::LoadFromOBJ("enemy2d");
-	modelEnemyBullet_= Model::LoadFromOBJ("enemybullet");
+	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
 	modelBossCore1_ = Model::LoadFromOBJ("core1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
@@ -569,7 +591,6 @@ void GamePlayScene::LoadModel()
 	modelBox = Model::LoadFromOBJ("sphere2", true);
 	modelRail = Model::LoadFromOBJ("rail");
 	modelEarth_ = Model::LoadFromOBJ("earth");
-
 
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
@@ -590,11 +611,11 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("sphere2", modelBox));
 	models.insert(std::make_pair("rail", modelRail));
 	models.insert(std::make_pair("earth", modelEarth_));
-
 }
 
 void GamePlayScene::LoadSprite()
 {
+#pragma region シーンスプライト
 	//スプライト
 	spCommon_->LoadTexture(10, "texture/pausep.png");
 	spritePause_->Initialize(spCommon_, 10);
@@ -613,6 +634,105 @@ void GamePlayScene::LoadSprite()
 	spriteClear_->Update();
 	spritePauseInfo_->Update();
 	spriteGameover_->Update();
+#pragma endregion
 
+#pragma region キースプライト
+	//キー部分と
+	spCommon_->LoadTexture(22, "texture/key.png");
 
+	XMFLOAT2 defaultPos = { 160,150 };
+	XMFLOAT2 defaultSize = { 64,64 };
+
+	keySpriteA_ = new KeySprite();
+	keySpriteA_->size_ = defaultSize;
+	keySpriteA_->position_ = {
+		defaultPos.x - defaultSize.x,
+		defaultPos.y
+	};
+	keySpriteA_->leftTop_ = { 64,0 };
+	keySpriteA_->Initialize();
+
+	keySpriteD_ = new KeySprite();
+	keySpriteD_->size_ = defaultSize;
+	keySpriteD_->position_ = {
+		defaultPos.x + defaultSize.x,
+		defaultPos.y
+	};
+	keySpriteD_->leftTop_ = { 96,0 };
+	keySpriteD_->Initialize();
+
+	keySpriteX_ = new KeySprite();
+	keySpriteX_->size_ = defaultSize;
+	keySpriteX_->position_ = {
+		defaultPos.x,
+		defaultPos.y + defaultSize.y
+	};
+	keySpriteX_->leftTop_ = { 64,32 };
+	keySpriteX_->Initialize();
+
+#pragma endregion
+}
+
+void GamePlayScene::KeySprite::Initialize() {
+	//ラベルスプライトの初期化
+	this->label_ = new Sprite();
+	label_->Initialize(SpriteCommon::GetInstance(), 22);
+	label_->SetColor({ 1.0f,1.0f,1.0f,0.7f });
+	label_->SetTextureSize({ 32,32 });
+	label_->SetTextureLeftTop(leftTop_);
+	label_->SetAnchorPoint({ 0.5f,0.5f });
+	label_->SetPosition({
+		position_.x,
+		position_.y - 4.0f
+		});
+	label_->SetSize({
+		size_.x / 2,
+		size_.y / 2
+		});
+
+	//キー部分スプライトの初期化
+	this->key_ = new Sprite();
+	key_->Initialize(SpriteCommon::GetInstance(), 22);
+	key_->SetColor({ 1.0f,1.0f,1.0f,0.7f });
+	key_->SetTextureSize(size_);
+	key_->SetTextureLeftTop({ 0,0 });
+	key_->SetAnchorPoint({ 0.5f,0.5f });
+	key_->SetPosition(position_);
+	key_->SetSize(size_);
+}
+
+void GamePlayScene::KeySprite::Update() {
+	XMFLOAT2 movePos = label_->GetPosition();
+	XMFLOAT2 moveLeftTop = key_->GetTextureLeftTop();
+
+	if (isPress_) {
+		movePos = {
+			position_.x,
+			position_.y + 12.0f
+		};
+		moveLeftTop.y = 64;
+	}
+	else {
+		movePos = {
+			position_.x,
+			position_.y - 4.0f
+		};
+		moveLeftTop.y = 0;
+	}
+
+	label_->SetPosition(movePos);
+	key_->SetTextureLeftTop(moveLeftTop);
+
+	label_->Update();
+	key_->Update();
+}
+
+void GamePlayScene::KeySprite::Draw() {
+	key_->Draw();
+	label_->Draw();
+}
+
+void GamePlayScene::KeySprite::Finalize() {
+	delete label_;
+	delete key_;
 }

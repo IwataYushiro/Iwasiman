@@ -33,6 +33,11 @@ class TouchableObject;
 //ゲームプレイ
 class GamePlayScene :public BaseScene
 {
+private:
+	// DirectX::を省略
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+
 public://構造体類
 	GamePlayScene(int stagenum);
 	enum Scene { //シーンID
@@ -41,8 +46,30 @@ public://構造体類
 		stage2,
 	};
 
+	//キースプライト構造
+	struct KeySprite {
+	public:
+		void Initialize();
+		void Update();
+		void Draw();
+		void Finalize();
+		//キー部分
+		Sprite* key_ = nullptr;
+		//ラベル
+		Sprite* label_ = nullptr;
+
+		//テクスチャの左上の点
+		XMFLOAT2 leftTop_ = { 0,0 };
+		//位置
+		XMFLOAT2 position_ = { 0,0 };
+		//サイズ
+		XMFLOAT2 size_ = { 0,0 };
+		//押されているか？
+		bool isPress_ = false;
+	};
+
 public:
-	
+
 	//初期化
 	void Initialize()override;
 	//更新
@@ -51,7 +78,7 @@ public:
 	void Draw() override;
 	//終了
 	void Finalize() override;
-	
+
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
 
@@ -60,12 +87,12 @@ public:
 	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
 	//敵弾追加
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
-	
+
 	int GetEnemyCount() { return EnemyCount; }
 	void SetEnemyCount(int enemycount) { this->EnemyCount = enemycount; }
 
 private://静的メンバ変数
-	
+
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤
@@ -84,13 +111,19 @@ private:
 
 	//サウンド読み込み
 	Audio::SoundData sound;
-
+#pragma region シーンスプライト
 	Sprite* spritePause_ = new Sprite();
 	Sprite* spriteClear_ = new Sprite();
 	Sprite* spritePauseInfo_ = new Sprite();
 	Sprite* spriteGameover_ = new Sprite();
-	
-	
+#pragma endregion
+
+#pragma region キースプライト
+	KeySprite* keySpriteA_ = nullptr;
+	KeySprite* keySpriteD_ = nullptr;
+	KeySprite* keySpriteX_ = nullptr;
+#pragma endregion
+
 	//ポーズしたか
 	bool isPause_ = false;
 	bool isclear = false;
@@ -140,13 +173,13 @@ private:
 
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
-	
+
 	//パーティクル
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm_ = nullptr;
 
 	Particle* particle2_ = nullptr;
-	
+
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
 
