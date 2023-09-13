@@ -93,7 +93,7 @@ void GamePlayScene::Update()
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 			//かめおべら
 			if (player->IsDead())isGameover = true;
-
+#ifdef	_DEBUG		
 			//ImGui	
 			imguiManager_->Begin();
 			int plife[1] = { player->GetLife() };
@@ -103,6 +103,7 @@ void GamePlayScene::Update()
 			ImGui::InputInt("plife", plife);
 			ImGui::End();
 			imguiManager_->End();
+#endif
 		}
 		//弾更新
 		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
@@ -132,7 +133,7 @@ void GamePlayScene::Update()
 			if (earth->IsDead())isGameover = true;
 
 			earth->Update();//かめおべら;
-			
+#ifdef	_DEBUG		
 			//ImGui	
 			imguiManager_->Begin();
 			int life[1] = { earth->GetLife() };
@@ -142,8 +143,9 @@ void GamePlayScene::Update()
 			ImGui::InputInt("earthlife", life);
 			ImGui::End();
 			imguiManager_->End();
+#endif			
 		}
-
+#ifdef	_DEBUG		
 		for (Object3d*& object : objects) object->Update();
 		imguiManager_->Begin();
 		int c[1] = { EnemyCount };
@@ -153,6 +155,7 @@ void GamePlayScene::Update()
 		ImGui::InputInt("count", c);
 		ImGui::End();
 		imguiManager_->End();
+#endif
 
 		//敵全滅でクリア
 		if (EnemyCount <= 0) isclear = true;

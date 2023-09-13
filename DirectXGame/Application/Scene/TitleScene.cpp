@@ -124,18 +124,15 @@ void TitleScene::Update()
 	lightGroup_->Update();
 	//pm1_->Update();
 	imguiManager_->Begin();
-
+#ifdef	_DEBUG
 	ImGui::Begin("Defense Earth");
 	ImGui::SetWindowPos(ImVec2(0.0f, 600.0f));
 	ImGui::SetWindowSize(ImVec2(800.0f, 100.0f));
 	ImGui::Text("How To Play");
 	ImGui::Text("WD Move X Shot Z");
 	ImGui::End();
-
-	
-
+#endif
 	imguiManager_->End();
-	
 }
 
 void TitleScene::Draw()
