@@ -8,8 +8,13 @@
 
 #include "ParticleManager.h"
 #include "Sprite.h"
+#include "Earth.h"
 
+#include <vector>
 #include <map>
+#include <sstream>
+#include <string>
+#include <DirectXMath.h>
 
 #include "SceneManager.h"
 
@@ -19,6 +24,10 @@ struct LevelData;
 //タイトルシーン
 class GameClearScene :public BaseScene
 {
+private:
+	// DirectX::を省略
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+
 public://メンバ関数
 	//初期化
 	void Initialize() override;
@@ -29,6 +38,8 @@ public://メンバ関数
 	//終了
 	void Finalize() override;
 
+	//レベルデータ読み込み
+	void LoadLVData(const std::string& stagePath);
 
 private://静的メンバ変数
 	//DirectX基盤
@@ -53,8 +64,18 @@ private://メンバ変数
 	//Sprite
 	Sprite* spriteGameClear_ = new Sprite();
 
+	std::list<std::unique_ptr<Earth>> earths_;
+	Model* modelEarth_ = nullptr;
+
+	LevelData* levelData = nullptr;
+
+	Model* modelSkydome = nullptr;
+
+	std::map<std::string, Model*> models;
+	std::vector<Object3d*> objects;
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
-
+	//モデル読み込み
+	void LoadModel();
 };
 
