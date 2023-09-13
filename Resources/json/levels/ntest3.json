@@ -48,7 +48,7 @@
             "name": "Skydome",
             "transform": {
                 "translation": [
-                    0.0,
+                    -19.868606567382812,
                     0.0,
                     0.0
                 ],
@@ -188,7 +188,7 @@
             "name": "Cube.006",
             "transform": {
                 "translation": [
-                    -60.0,
+                    -79.86860656738281,
                     0.0,
                     0.0
                 ],
@@ -203,16 +203,16 @@
                     2.0
                 ]
             },
-            "file_name": "enemy2g",
+            "file_name": "enemy2s",
             "objecttype": "ENEMY",
-            "objectpattern": "ENEMY2"
+            "objectpattern": "ENEMY3"
         },
         {
             "type": "MESH",
             "name": "Cube.012",
             "transform": {
                 "translation": [
-                    -105.90972900390625,
+                    -125.77833557128906,
                     0.0,
                     0.0
                 ],
@@ -236,7 +236,7 @@
             "name": "Cube.013",
             "transform": {
                 "translation": [
-                    -70.0,
+                    -89.86860656738281,
                     25.0,
                     0.0
                 ],
@@ -260,8 +260,8 @@
             "name": "Cube.014",
             "transform": {
                 "translation": [
-                    -70.0,
-                    -25.50890350341797,
+                    -89.86860656738281,
+                    -25.0,
                     0.0
                 ],
                 "rotation": [
@@ -284,7 +284,7 @@
             "name": "円柱",
             "transform": {
                 "translation": [
-                    -8.208085060119629,
+                    -8.557348251342773,
                     0.0,
                     0.0
                 ],
@@ -350,7 +350,7 @@
             "name": "立方体_立方体.001",
             "transform": {
                 "translation": [
-                    -10.0,
+                    -29.868606567382812,
                     25.0,
                     0.0
                 ],
@@ -374,7 +374,7 @@
             "name": "立方体_立方体.003",
             "transform": {
                 "translation": [
-                    -10.0,
+                    -29.868606567382812,
                     -25.0,
                     0.0
                 ],
@@ -398,7 +398,7 @@
             "name": "Cube.001",
             "transform": {
                 "translation": [
-                    -40.0,
+                    -59.86860656738281,
                     25.0,
                     0.0
                 ],
@@ -422,7 +422,7 @@
             "name": "Cube.004",
             "transform": {
                 "translation": [
-                    -30.05154800415039,
+                    -60.647438049316406,
                     -25.0,
                     0.0
                 ],
@@ -446,7 +446,31 @@
             "name": "立方体_立方体.011",
             "transform": {
                 "translation": [
-                    -40.0,
+                    -59.86860656738281,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "file_name": "enemy2s",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY3"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体_立方体.002",
+            "transform": {
+                "translation": [
+                    -104.75139617919922,
                     0.0,
                     0.0
                 ],
@@ -462,6 +486,150 @@
                 ]
             },
             "file_name": "enemy2",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体_立方体.004",
+            "transform": {
+                "translation": [
+                    -224.35589599609375,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "file_name": "enemy2d",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体_立方体.005",
+            "transform": {
+                "translation": [
+                    -173.5745849609375,
+                    -25.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "file_name": "enemy2p",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY2"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体_立方体.006",
+            "transform": {
+                "translation": [
+                    -150.0504150390625,
+                    25.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "file_name": "enemy2s",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY3"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体_立方体.007",
+            "transform": {
+                "translation": [
+                    -163.29388427734375,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "file_name": "enemy2",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体_立方体.008",
+            "transform": {
+                "translation": [
+                    -189.69342041015625,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "file_name": "enemy2",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMY1"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体_立方体.009",
+            "transform": {
+                "translation": [
+                    -189.69342041015625,
+                    25.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "file_name": "enemy2d",
             "objecttype": "ENEMY",
             "objectpattern": "ENEMY1"
         }

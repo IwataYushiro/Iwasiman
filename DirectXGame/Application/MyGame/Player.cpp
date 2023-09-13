@@ -191,7 +191,7 @@ void Player::CameraMove()
 //UŒ‚ˆ—
 void Player::Attack() {
 
-	if (input_->TriggerKey(DIK_X)) {
+	if (input_->TriggerKey(DIK_SPACE)) {
 		//’e‚Ì‘¬“x
 		const float kBulletSpeed = 1.0f;
 		XMFLOAT3 velocity;

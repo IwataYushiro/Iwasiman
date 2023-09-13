@@ -11,9 +11,9 @@
                     5.903861999511719
                 ],
                 "rotation": [
-                    37.261043548583984,
-                    3.1637072563171387,
-                    106.93630981445312
+                    37.26104736328125,
+                    3.1637091636657715,
+                    106.93632507324219
                 ],
                 "scaling": [
                     1.0,
@@ -32,9 +32,9 @@
                     4.958309173583984
                 ],
                 "rotation": [
-                    63.559303283691406,
-                    -2.664711473698844e-06,
-                    46.69194793701172
+                    63.559295654296875,
+                    2.2983238068263745e-07,
+                    46.69194412231445
                 ],
                 "scaling": [
                     1.0,
@@ -48,7 +48,7 @@
             "name": "Skydome",
             "transform": {
                 "translation": [
-                    0.0,
+                    40.0,
                     0.0,
                     0.0
                 ],
@@ -98,7 +98,7 @@
                     -10.0
                 ],
                 "rotation": [
-                    89.99999237060547,
+                    0.0,
                     -0.0,
                     0.0
                 ],
@@ -108,9 +108,7 @@
                     10.0
                 ]
             },
-            "file_name": "sphere2",
-            "objecttype": "GIMMICK",
-            "objectpattern": "FALLSPHERERETURN"
+            "file_name": "sphere2"
         },
         {
             "type": "MESH",
@@ -122,7 +120,7 @@
                     -10.0
                 ],
                 "rotation": [
-                    89.99999237060547,
+                    0.0,
                     -0.0,
                     0.0
                 ],
@@ -132,9 +130,7 @@
                     10.0
                 ]
             },
-            "file_name": "sphere2",
-            "objecttype": "GIMMICK",
-            "objectpattern": "FALLSPHERE"
+            "file_name": "sphere2"
         },
         {
             "type": "MESH",
@@ -146,7 +142,7 @@
                     -10.0
                 ],
                 "rotation": [
-                    89.99999237060547,
+                    0.0,
                     -0.0,
                     0.0
                 ],
@@ -156,13 +152,35 @@
                     10.0
                 ]
             },
-            "file_name": "sphere2",
-            "objecttype": "GIMMICK",
-            "objectpattern": "FALLSPHERERETURN"
+            "file_name": "sphere2"
         },
         {
             "type": "MESH",
-            "name": "球.001",
+            "name": "Enemy.001",
+            "transform": {
+                "translation": [
+                    -30.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy2s",
+            "objecttype": "ENEMY",
+            "objectpattern": "E1S"
+        },
+        {
+            "type": "MESH",
+            "name": "Earth",
             "transform": {
                 "translation": [
                     135.0,
@@ -185,7 +203,7 @@
         },
         {
             "type": "MESH",
-            "name": "Cube.006",
+            "name": "Enemy.006",
             "transform": {
                 "translation": [
                     -60.0,
@@ -194,61 +212,37 @@
                 ],
                 "rotation": [
                     0.0,
-                    0.0,
+                    -0.0,
                     -90.00000762939453
                 ],
                 "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             },
-            "file_name": "enemy2g",
+            "file_name": "enemy2p",
             "objecttype": "ENEMY",
-            "objectpattern": "ENEMY2"
+            "objectpattern": "E1P"
         },
         {
             "type": "MESH",
-            "name": "Cube.012",
+            "name": "Enemy.009",
             "transform": {
                 "translation": [
-                    -105.90972900390625,
-                    0.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    -90.00000762939453
-                ],
-                "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            },
-            "file_name": "enemy2",
-            "objecttype": "ENEMY",
-            "objectpattern": "ENEMY1"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.013",
-            "transform": {
-                "translation": [
-                    -70.0,
+                    -120.0,
                     25.0,
                     0.0
                 ],
                 "rotation": [
                     0.0,
-                    0.0,
+                    -0.0,
                     -90.00000762939453
                 ],
                 "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             },
             "file_name": "enemy2",
@@ -257,40 +251,64 @@
         },
         {
             "type": "MESH",
-            "name": "Cube.014",
+            "name": "Enemy.002",
             "transform": {
                 "translation": [
-                    -70.0,
-                    -25.50890350341797,
+                    -80.0,
+                    -25.0,
                     0.0
                 ],
                 "rotation": [
                     0.0,
-                    0.0,
+                    -0.0,
                     -90.00000762939453
                 ],
                 "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             },
-            "file_name": "enemy2",
+            "file_name": "enemy2s",
             "objecttype": "ENEMY",
-            "objectpattern": "ENEMY1"
+            "objectpattern": "E1S"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy.003",
+            "transform": {
+                "translation": [
+                    -100.0,
+                    -25.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy2d",
+            "objecttype": "ENEMY",
+            "objectpattern": "E1D"
         },
         {
             "type": "MESH",
             "name": "円柱",
             "transform": {
                 "translation": [
-                    -8.208085060119629,
-                    0.0,
+                    -10.0,
+                    25.0,
                     0.0
                 ],
                 "rotation": [
                     0.0,
-                    0.0,
+                    -0.0,
                     -90.00000762939453
                 ],
                 "scaling": [
@@ -307,12 +325,12 @@
             "transform": {
                 "translation": [
                     -10.0,
-                    25.0,
+                    -25.0,
                     0.0
                 ],
                 "rotation": [
                     0.0,
-                    0.0,
+                    -0.0,
                     -90.00000762939453
                 ],
                 "scaling": [
@@ -329,12 +347,12 @@
             "transform": {
                 "translation": [
                     -10.0,
-                    -25.0,
+                    0.0,
                     0.0
                 ],
                 "rotation": [
                     0.0,
-                    0.0,
+                    -0.0,
                     -90.00000762939453
                 ],
                 "scaling": [
@@ -344,126 +362,6 @@
                 ]
             },
             "file_name": "rail"
-        },
-        {
-            "type": "MESH",
-            "name": "立方体_立方体.001",
-            "transform": {
-                "translation": [
-                    -10.0,
-                    25.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            },
-            "file_name": "enemy2",
-            "objecttype": "ENEMY",
-            "objectpattern": "ENEMY1"
-        },
-        {
-            "type": "MESH",
-            "name": "立方体_立方体.003",
-            "transform": {
-                "translation": [
-                    -10.0,
-                    -25.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            },
-            "file_name": "enemy2",
-            "objecttype": "ENEMY",
-            "objectpattern": "ENEMY1"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.001",
-            "transform": {
-                "translation": [
-                    -40.0,
-                    25.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    -90.00000762939453
-                ],
-                "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            },
-            "file_name": "enemy2g",
-            "objecttype": "ENEMY",
-            "objectpattern": "ENEMY2"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.004",
-            "transform": {
-                "translation": [
-                    -30.05154800415039,
-                    -25.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    -90.00000762939453
-                ],
-                "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            },
-            "file_name": "enemy2g",
-            "objecttype": "ENEMY",
-            "objectpattern": "ENEMY2"
-        },
-        {
-            "type": "MESH",
-            "name": "立方体_立方体.011",
-            "transform": {
-                "translation": [
-                    -40.0,
-                    0.0,
-                    0.0
-                ],
-                "rotation": [
-                    90.00000762939453,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            },
-            "file_name": "enemy2",
-            "objecttype": "ENEMY",
-            "objectpattern": "ENEMY1"
         }
     ]
 }

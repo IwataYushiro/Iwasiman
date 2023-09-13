@@ -286,6 +286,72 @@
                 ]
             },
             "file_name": "enemy2d"
+        },
+        {
+            "type": "MESH",
+            "name": "円柱",
+            "transform": {
+                "translation": [
+                    -10.0,
+                    25.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    10.0,
+                    1.0
+                ]
+            },
+            "file_name": "rail"
+        },
+        {
+            "type": "MESH",
+            "name": "円柱.001",
+            "transform": {
+                "translation": [
+                    -10.0,
+                    -25.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    10.0,
+                    1.0
+                ]
+            },
+            "file_name": "rail"
+        },
+        {
+            "type": "MESH",
+            "name": "円柱.002",
+            "transform": {
+                "translation": [
+                    -10.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    10.0,
+                    1.0
+                ]
+            },
+            "file_name": "rail"
         }
     ]
 }
