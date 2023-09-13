@@ -10,6 +10,7 @@ CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
 	//モデルの解放
+	Finalize();
 	delete particleDash_;
 	delete pmDash_;
 }
@@ -36,7 +37,11 @@ std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScen
 bool Player::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
-input_ = Input::GetInstance();
+	input_ = Input::GetInstance();
+	audio_ = Audio::GetInstance();
+
+	shotSE = audio_->SoundLoadWave("Resources/sound/se/shot.wav");
+	moveSE = audio_->SoundLoadWave("Resources/sound/se/move.wav");
 
 	life_ = 5;
 	isDead_ = false;
@@ -72,8 +77,17 @@ input_ = Input::GetInstance();
 	return true;
 }
 
+void Player::Finalize()
+{
+	//終了処理
+	audio_->Finalize();
+	//解放
+	//各種音声
+	audio_->SoundUnLoad(&shotSE);
+}
+
 void Player::Reset() {
-	
+
 	life_ = 5;
 	isDead_ = false;
 
@@ -91,7 +105,7 @@ void Player::Reset() {
 	nowCount = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 1.0f;					//全体時間
-	
+
 }
 void Player::Update() {
 
@@ -131,9 +145,9 @@ void Player::Update() {
 
 void Player::Draw() { Object3d::Draw(); }
 
-void Player::DrawParticle() { 
-	pmDash_->Draw(); 
-	
+void Player::DrawParticle() {
+	pmDash_->Draw();
+
 }
 
 //移動処理
@@ -148,12 +162,13 @@ void Player::Move() {
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->TriggerKey(DIK_A)) {
 		if (move.x <= -moveSpeed)return;
-		
+		audio_->SoundPlayWave(audio_->GetXAudio2(), moveSE, false);
+
 		move.x -= moveSpeed;
 	}
 	if (input_->TriggerKey(DIK_D)) {
 		if (move.x >= moveSpeed)return;
-		
+		audio_->SoundPlayWave(audio_->GetXAudio2(), moveSE, false);
 		//if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT) || move.x != 0.0f)move.x += moveSpeed * 2.0f;
 		//else move.x += moveSpeed;
 		move.x += moveSpeed;
@@ -192,6 +207,8 @@ void Player::CameraMove()
 void Player::Attack() {
 
 	if (input_->TriggerKey(DIK_SPACE)) {
+		audio_->SoundPlayWave(audio_->GetXAudio2(), shotSE, false);
+
 		//弾の速度
 		const float kBulletSpeed = 1.0f;
 		XMFLOAT3 velocity;
@@ -265,7 +282,7 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 		//life_--;
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
-		
+
 		pmDash_->Update();
 		ishit = true;
 	}
@@ -282,7 +299,7 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 			pmDash_->Update();
 			ishit = true;
 		}
-		
+
 	}
 }
 

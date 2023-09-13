@@ -56,7 +56,7 @@ private://静的メンバ変数
 	//インプット
 	static Input* input_;
 	//オーディオ
-	static Audio* audio_;
+	Audio* audio_ = nullptr;
 	//シーンマネージャー
 	static SceneManager* sceneManager_;
 	//imgui
@@ -65,6 +65,11 @@ private://静的メンバ変数
 	static Camera* camera_;
 
 private://メンバ変数
+	//音
+	Audio::SoundData titleBGM;
+	Audio::SoundData doneSE;
+	Audio::SoundData startSE;
+
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
 	Sprite* spriteHTP_ = new Sprite();

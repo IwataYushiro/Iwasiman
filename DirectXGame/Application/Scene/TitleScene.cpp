@@ -9,7 +9,6 @@ using namespace DirectX;
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* TitleScene::input_ = Input::GetInstance();
-Audio* TitleScene::audio_ = Audio::GetInstance();
 SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* TitleScene::camera_ = Camera::GetInstance();
@@ -18,6 +17,7 @@ Camera* TitleScene::camera_ = Camera::GetInstance();
 void TitleScene::Initialize()
 {
 	spCommon_ = SpriteCommon::GetInstance();
+	audio_ = Audio::GetInstance();
 	//オーディオ
 	audio_->Initialize();
 
@@ -76,6 +76,12 @@ void TitleScene::Initialize()
 	maxTime = 2.0f;					//全体時間
 	timeRate;
 
+	//音
+	titleBGM = audio_->SoundLoadWave("Resources/sound/bgm/title.wav");
+	doneSE = audio_->SoundLoadWave("Resources/sound/se/done.wav");
+	startSE = audio_->SoundLoadWave("Resources/sound/se/wind.wav");
+	audio_->SoundPlayWave(audio_->GetXAudio2(), titleBGM, true);
+
 	isStart = false;
 }
 
@@ -114,6 +120,8 @@ void TitleScene::Update()
 		spriteHTP_->SetPosition({ 0.0f,easeHTPPosY.num_X });
 		if (input_->TriggerKey(DIK_SPACE))
 		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
+			audio_->SoundPlayWave(audio_->GetXAudio2(), startSE, false);
 			easeHTPPosY.Standby(true);
 			isStart = true;
 			startCount = std::chrono::steady_clock::now();
@@ -125,6 +133,7 @@ void TitleScene::Update()
 		for (std::unique_ptr<Player>& player : players_)player->Update();
 		if (input_->TriggerKey(DIK_SPACE))
 		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
 			easeTitlePosY.Standby(false);
 			easeHTPPosY.Standby(false);
 		
@@ -182,6 +191,12 @@ void TitleScene::Draw()
 
 void TitleScene::Finalize()
 {
+	//音声
+	audio_->Finalize();
+	audio_->SoundUnLoad(&titleBGM);
+	audio_->SoundUnLoad(&doneSE);
+	audio_->SoundUnLoad(&startSE);
+
 	//スプライト
 	delete spriteTitle_;
 	delete spriteHTP_;
