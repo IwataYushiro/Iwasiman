@@ -78,7 +78,7 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
-	earths_.remove_if([](std::unique_ptr<Earth>& earth) {return earth->IsDead(); });
+	//earths_.remove_if([](std::unique_ptr<Earth>& earth) {return earth->IsDead(); });
 
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
@@ -128,11 +128,14 @@ void GamePlayScene::Update()
 		}
 		for (std::unique_ptr<Earth>& earth : earths_)
 		{
-			if (earth->IsHit())EnemyCount--;
-			if (earth->IsDead())isGameover = true;
+			if (!isGameover)
+			{
+				if (earth->IsDead())isGameover = true;
 
-			earth->Update();//かめおべら;
-			
+				if (earth->IsHit())EnemyCount--;
+
+				earth->Update();//かめおべら;
+			}
 			//ImGui	
 			imguiManager_->Begin();
 			int life[1] = { earth->GetLife() };
@@ -155,8 +158,8 @@ void GamePlayScene::Update()
 		imguiManager_->End();
 
 		//敵全滅でクリア
-		if (EnemyCount <= 0) isclear = true;
-		
+		if (!isGameover && EnemyCount <= 0) isclear = true;
+
 		//カメラ
 		camera_->Update();
 		lightGroup_->Update();
