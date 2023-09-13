@@ -19,6 +19,9 @@ struct LevelData;
 //タイトルシーン
 class StageClearScene :public BaseScene
 {
+public: 
+	const int MAX_STAGE = 4;
+
 public://メンバ関数
 	StageClearScene(int stagenum);
 	//初期化
