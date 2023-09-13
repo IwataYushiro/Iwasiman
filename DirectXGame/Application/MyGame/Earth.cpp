@@ -9,6 +9,7 @@ CollisionManager* Earth::colManager_ = CollisionManager::GetInstance();
 
 Earth::~Earth()
 {
+	hpGauge_->Finalize();
 	delete spriteHit_;
 }
 
@@ -183,7 +184,7 @@ void Earth::DrawSprite()
 }
 
 void Earth::Finalize() {
-	hpGauge_->Finalize();
+	
 }
 
 void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
@@ -196,6 +197,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
+			if (life_ <= 2)isDead_ = true;
 			life_ -= 2;
 			ease.Standby(false);
 			
@@ -207,6 +209,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)
 		{
+			if (life_ <= 4)isDead_ = true;
 			life_ -= 4;
 			ease.Standby(false);
 			//isHit_ = true;
@@ -218,6 +221,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)
 		{
+			if (life_ <= 1)isDead_ = true;
 			life_ --;
 			ease.Standby(false);
 			//isHit_ = true;
@@ -229,6 +233,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)
 		{
+			if (life_ <= 2)isDead_ = true;
 			life_ -= 2;
 			ease.Standby(false);
 			//isHit_ = true;
@@ -240,6 +245,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)
 		{
+			if (life_ <= 9)isDead_ = true;
 			life_ -= 9;
 			ease.Standby(false);
 			//isHit_ = true;

@@ -73,6 +73,10 @@ private://ƒƒ“ƒo•Ï”
 	Model* modelPlayerBullet_ = nullptr;
 
 	Model* modelEnemy1_ = nullptr;
+	Model* modelEnemy1Power_ = nullptr;
+	Model* modelEnemy1Guard_ = nullptr;
+	Model* modelEnemy1Speed_ = nullptr;
+	Model* modelEnemy1Death_ = nullptr;
 	Model* modelEnemyBullet_ = nullptr;
 
 	Model* modelEnemy2_ = nullptr;
