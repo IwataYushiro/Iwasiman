@@ -17,46 +17,45 @@ Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
-
 GamePlayScene::GamePlayScene(int stagenum) :stageNum(stagenum) {}
 
 void GamePlayScene::Initialize()
 {
-
 	spCommon_ = SpriteCommon::GetInstance();
 	colManager_ = CollisionManager::GetInstance();
-	//H‹Æ’n‘Ñ
+
+	//å·¥æ¥­åœ°å¸¯
 	enemyFactory = std::make_unique<EnemyFactory>();
 	gimmickFactory = std::make_unique<GimmickFactory>();
 
-	// •`‰æ‰Šú‰»ˆ—@‚±‚±‚©‚ç
-#pragma region •`‰æ‰Šú‰»ˆ—
+	// æç”»åˆæœŸåŒ–å‡¦ç†ã€€ã“ã“ã‹ã‚‰
+#pragma region æç”»åˆæœŸåŒ–å‡¦ç†
 	
 audio_ = Audio::GetInstance();
-	//ƒI[ƒfƒBƒI
+	//ã‚ªãƒ¼ãƒ‡ã‚£ã‚ª
 	audio_->Initialize();
 
-	//ƒXƒvƒ‰ƒCƒg
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	LoadSprite();
 
-	//’eƒŠƒZƒbƒg
+	//å¼¾ãƒªã‚»ãƒƒãƒˆ
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Reset();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Reset();
 
 
-	//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 	LoadModel();
-	//ƒŒƒxƒ‹ƒf[ƒ^“Ç‚İ‚İ
-	if (stageNum == 1)LoadLVData("stage1");//enemytest2@ƒoƒO”Å
+	//ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
+	if (stageNum == 1)LoadLVData("stage1");//enemytest2ã€€ãƒã‚°ç‰ˆ
 	else if (stageNum == 2)LoadLVData("ntest");
 	else if (stageNum == 3)LoadLVData("ntest2");
 	else if (stageNum == 4)LoadLVData("ntest3");
 
-	//ƒ‰ƒCƒg‚ğ¶¬
+	//ãƒ©ã‚¤ãƒˆã‚’ç”Ÿæˆ
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
 	particle2_ = Particle::LoadFromParticleTexture("particle5.png");
 	pm_ = ParticleManager::Create();
@@ -65,7 +64,7 @@ audio_ = Audio::GetInstance();
 
 	isPause_ = false;
 	
-	//‰¹
+	//éŸ³
 	if (stageNum == 1)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage.wav");
 	else if (stageNum == 2)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage2.wav");
 	else if (stageNum == 3)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage3.wav");
@@ -79,7 +78,7 @@ audio_ = Audio::GetInstance();
 
 void GamePlayScene::Update()
 {
-	//€–Sƒtƒ‰ƒO‚Ì—§‚Á‚½’e‚ğíœ
+	//æ­»äº¡ãƒ•ãƒ©ã‚°ã®ç«‹ã£ãŸå¼¾ã‚’å‰Šé™¤
 	playerBullets_.remove_if(
 		[](std::unique_ptr<PlayerBullet>& pbullet) { return pbullet->IsDead(); });
 	enemyBullets_.remove_if(
@@ -89,20 +88,18 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
 	//earths_.remove_if([](std::unique_ptr<Earth>& earth) {return earth->IsDead(); });
 
-	//’eXV
+	//å¼¾æ›´æ–°
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
-
 
 	if (!isPause_)
 	{
-		//ƒ‚ƒfƒ‹ŒÄ‚Ño‚µ—á
+		//ãƒ¢ãƒ‡ãƒ«å‘¼ã³å‡ºã—ä¾‹
 		for (std::unique_ptr<Player>& player : players_)
 		{
 			if (!isclear || !isGameover) player->Update();
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
-			//‚©‚ß‚¨‚×‚ç
-			if (player->IsDead())isGameover = true;
-
+				//ã‹ã‚ãŠã¹ã‚‰
+				if (player->IsDead())isGameover = true;
 			//ImGui	
 			imguiManager_->Begin();
 			int plife[1] = { player->GetLife() };
@@ -113,7 +110,7 @@ void GamePlayScene::Update()
 			ImGui::End();
 			imguiManager_->End();
 		}
-		//’eXV
+		//å¼¾æ›´æ–°
 		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
 
 		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
@@ -128,7 +125,7 @@ void GamePlayScene::Update()
 		for (std::unique_ptr<Goal>& goal : goals_)
 		{
 			goal->Update();
-			//ƒNƒŠƒA
+			//ã‚¯ãƒªã‚¢
 			if (goal->IsGoal()) isclear = true;
 		}
 		for (std::unique_ptr<Item>& item : items_)
@@ -143,8 +140,9 @@ void GamePlayScene::Update()
 
 				if (earth->IsHit())EnemyCount--;
 
-				earth->Update();//‚©‚ß‚¨‚×‚ç;
+				earth->Update();//ã‹ã‚ãŠã¹ã‚‰;
 			}
+  #ifdef	_DEBUG		
 			//ImGui	
 			imguiManager_->Begin();
 			int life[1] = { earth->GetLife() };
@@ -154,8 +152,9 @@ void GamePlayScene::Update()
 			ImGui::InputInt("earthlife", life);
 			ImGui::End();
 			imguiManager_->End();
+#endif			
 		}
-
+#ifdef	_DEBUG		
 		for (Object3d*& object : objects) object->Update();
 		imguiManager_->Begin();
 		int c[1] = { EnemyCount };
@@ -165,11 +164,12 @@ void GamePlayScene::Update()
 		ImGui::InputInt("count", c);
 		ImGui::End();
 		imguiManager_->End();
+#endif
 
-		//“G‘S–Å‚ÅƒNƒŠƒA
+		//æ•µå…¨æ»…ã§ã‚¯ãƒªã‚¢
 		if (!isGameover && EnemyCount <= 0) isclear = true;
 
-		//ƒJƒƒ‰
+		//ã‚«ãƒ¡ãƒ©
 		camera_->Update();
 		lightGroup_->Update();
 		pm_->Update();
@@ -185,21 +185,41 @@ void GamePlayScene::Update()
 			isclear = false;
 		}
 		colManager_->CheckAllCollisions();
-		//Pause‹@”\
+		//Pauseæ©Ÿèƒ½
 		if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
 		{
 			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
-			//‚±‚±‚ÅƒC[ƒWƒ“ƒO‚Ì€”õ
+			//ã“ã“ã§ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®æº–å‚™
 			es.Standby(false);
 			isBack = false;
 			spritePause_->SetPosition({ es.start,0.0f });
 
 			isPause_ = true;
 		}
+
+		// ã‚­ãƒ¼ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®æŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã®æ¡ä»¶åˆ†å²
+		if (input_->PushKey(DIK_A))
+			keySpriteA_->isPress_ = true;
+		else if(input_->ReleaseKey(DIK_A))
+			keySpriteA_->isPress_ = false;
+
+		if (input_->PushKey(DIK_D))
+			keySpriteD_->isPress_ = true;
+		else if(input_->ReleaseKey(DIK_D))
+			keySpriteD_->isPress_ = false;
+
+		if (input_->PushKey(DIK_X))
+			keySpriteX_->isPress_ = true;
+		else if(input_->ReleaseKey(DIK_X))
+			keySpriteX_->isPress_ = false;
+
+		keySpriteA_->Update();
+		keySpriteD_->Update();
+		keySpriteX_->Update();
 	}
-	else if (isPause_)
+	else
 	{
-		//ƒC[ƒWƒ“ƒOƒTƒ“ƒvƒ‹(ƒ|[ƒY’†‚É€”õ‚µ‚Ä‚à‚±‚±‚ª‚â‚Á‚Ä‚­‚ê‚é)
+		//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã‚µãƒ³ãƒ—ãƒ«(ãƒãƒ¼ã‚ºä¸­ã«æº–å‚™ã—ã¦ã‚‚ã“ã“ãŒã‚„ã£ã¦ãã‚Œã‚‹)
 		es.ease_in_out_elastic();
 		spritePause_->SetPosition({ es.num_X,0.0f });
 
@@ -213,28 +233,25 @@ void GamePlayScene::Update()
 		if (input_->TriggerKey(DIK_Q))
 		{
 			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
-			//‚±‚±‚ÅƒC[ƒWƒ“ƒO‚Ì€”õB‚µ‚©‚µI—¹À•W‚É“’B‚µ‚Ä‚¢‚È‚¢‚Æó‚¯•t‚¯‚È‚¢
+			//ã“ã“ã§ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®æº–å‚™ã€‚ã—ã‹ã—çµ‚äº†åº§æ¨™ã«åˆ°é”ã—ã¦ã„ãªã„ã¨å—ã‘ä»˜ã‘ãªã„
 			if (spritePause_->GetPosition().x == es.end) es.Standby(true);
 			isBack = true;
 		}
-		//“’B‚µ‚½‚çPause‰ğœ
+		//åˆ°é”ã—ãŸã‚‰Pauseè§£é™¤
 		if (spritePause_->GetPosition().x == es.start)
 		{
 			if (isBack)isPause_ = false;
 		}
 	}
 	spritePause_->Update();
-
-
-
 }
 
 void GamePlayScene::Draw()
 {
-	//ƒ‚ƒfƒ‹
-	//ƒ‚ƒfƒ‹•`‰æ‘Oˆ—
+	//ãƒ¢ãƒ‡ãƒ«
+	//ãƒ¢ãƒ‡ãƒ«æç”»å‰å‡¦ç†
 	Object3d::PreDraw(dxCommon_->GetCommandList());
-	//ƒ‚ƒfƒ‹•`‰æ
+	//ãƒ¢ãƒ‡ãƒ«æç”»
 	for (std::unique_ptr<Player>& player : players_)player->Draw();
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Draw();
 	for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->Draw();
@@ -245,23 +262,23 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<Earth>& earth : earths_)earth->Draw();
 	for (auto& object : objects)object->Draw();
 
-	//ƒ‚ƒfƒ‹•`‰æŒãˆ—
+	//ãƒ¢ãƒ‡ãƒ«æç”»å¾Œå‡¦ç†
 	Object3d::PostDraw();
 
-	//ƒGƒtƒFƒNƒg•`‰æ‘Oˆ—
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»å‰å‡¦ç†
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
-	//ƒGƒtƒFƒNƒg•`‰æ
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
 	pm_->Draw();
 	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->DrawParticle();
 	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();
-	//ƒGƒtƒFƒNƒg•`‰æŒãˆ—
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»å¾Œå‡¦ç†
 	ParticleManager::PostDraw();
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æ‘Oˆ—
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‰å‡¦ç†
 	spCommon_->PreDraw();
-	//‘OŒiƒXƒvƒ‰ƒCƒg
+	//å‰æ™¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	if (isPause_)spritePause_->Draw();
 	else if (isclear)spriteClear_->Draw();
 	else if (isGameover)spriteGameover_->Draw();
@@ -269,13 +286,18 @@ void GamePlayScene::Draw()
 	{
 		spritePauseInfo_->Draw();
 		for (std::unique_ptr<Item>& item : items_)item->DrawSprite();
+
+		keySpriteA_->Draw();
+		keySpriteD_->Draw();
+		keySpriteX_->Draw();
+
 		for (std::unique_ptr<Earth>& earth : earths_)earth->DrawSprite();
 	}
 }
 
 void GamePlayScene::Finalize()
 {
-	//Œì‰q‘ÎÛ‚Ì“à•”ƒXƒvƒ‰ƒCƒgƒf[ƒ^‚È‚Ç‚ÌŒãn––
+	//è­·è¡›å¯¾è±¡ã®å†…éƒ¨ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ãªã©ã®å¾Œå§‹æœ«
 	for (std::unique_ptr<Player>& player : players_) {
 		player->Finalize();
 	}
@@ -283,25 +305,25 @@ void GamePlayScene::Finalize()
 		earth->Finalize();
 	}
 
-	//I—¹ˆ—
+	//çµ‚äº†å‡¦ç†
 	audio_->Finalize();
-	//‰ğ•ú
-	//Šeí‰¹º
+	//è§£æ”¾
+	//å„ç¨®éŸ³å£°
 	audio_->SoundUnLoad(&stageBGM);
 	audio_->SoundUnLoad(&doneSE);
 
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	delete particle1_;
 	delete particle2_;
 	delete pm_;
-	//ƒ‰ƒCƒg
+	//ãƒ©ã‚¤ãƒˆ
 	delete lightGroup_;
-	//ƒ‚ƒfƒ‹
+	//ãƒ¢ãƒ‡ãƒ«
 
 	for (Object3d*& object : objects)delete object;
 	objects.clear();
 
-	//3Dƒ‚ƒfƒ‹
+	//3Dãƒ¢ãƒ‡ãƒ«
 	delete modelPlayer_;
 	delete modelPlayerBullet_;
 	delete modelEnemy1_;
@@ -328,245 +350,247 @@ void GamePlayScene::Finalize()
 
 	models.clear();
 
-	//ƒXƒvƒ‰ƒCƒg
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	delete spritePause_;
 	delete spriteClear_;
 	delete spritePauseInfo_;
 	delete spriteGameover_;
 
+	keySpriteA_->Finalize();
+	delete keySpriteA_;
+	keySpriteD_->Finalize();
+	delete keySpriteD_;
+	keySpriteX_->Finalize();
+	delete keySpriteX_;
 }
 
 void GamePlayScene::LoadLVData(const std::string& stagePath)
 {
-	// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 	levelData = LevelLoader::LoadFile(stagePath);
-	// ƒŒƒxƒ‹ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ğ¶¬A”z’u
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã€é…ç½®
 	for (LevelData::ObjectData& objectData : levelData->objects) {
 
-		// ƒtƒ@ƒCƒ‹–¼‚©‚ç“o˜^Ï‚İƒ‚ƒfƒ‹‚ğŒŸõ
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ç™»éŒ²æ¸ˆã¿ãƒ¢ãƒ‡ãƒ«ã‚’æ¤œç´¢
 		Model* model = nullptr;
 		decltype(models)::iterator it = models.find(objectData.fileName);
 		if (it != models.end()) {
 			model = it->second;
 		}
-		//ƒvƒŒƒCƒ„[
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 		if (objectData.objectType.find("PLAYER") == 0)
 		{
-			//ƒvƒŒƒCƒ„[‰Šú‰»
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åˆæœŸåŒ–
 			std::unique_ptr<Player> newplayer;
 
 			newplayer = Player::Create(model, modelPlayerBullet_, this);
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newplayer->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newplayer->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newplayer->SetScale(scale);
 
 			newplayer->SetCamera(camera_);
 			newplayer->Update();
-			//ƒŠƒXƒg‚É“o˜^
+			//ãƒªã‚¹ãƒˆã«ç™»éŒ²
 			players_.push_back(std::move(newplayer));
 		}
-		//“G
+		//æ•µ
 		else if (objectData.objectType.find("ENEMY") == 0)
 		{
-			//“G‰Šú‰»
+			//æ•µåˆæœŸåŒ–
 			std::unique_ptr<BaseEnemy> newenemy;
 			std::unique_ptr<Player>& player = players_.front();
 
 			newenemy = enemyFactory->CreateEnemy(objectData.objectPattern,
 				model, modelEnemyBullet_, player.get(), this);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newenemy->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newenemy->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newenemy->SetScale(scale);
 
 			newenemy->SetCamera(camera_);
 			newenemy->Update();
-			//ƒŠƒXƒg‚É“o˜^
+			//ãƒªã‚¹ãƒˆã«ç™»éŒ²
 			enemys_.push_back(std::move(newenemy));
 			EnemyCount++;
 		}
-		//dŠ|‚¯
+		//ä»•æ›ã‘
 		else if (objectData.objectType.find("GIMMICK") == 0)
 		{
-			//“G‰Šú‰»
+			//æ•µåˆæœŸåŒ–
 			std::unique_ptr<BaseGimmick> newGimmick;
 			std::unique_ptr<Player>& player = players_.front();
 
 			newGimmick = gimmickFactory->CreateGimmick(objectData.objectPattern, model, player.get());
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newGimmick->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newGimmick->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newGimmick->SetScale(scale);
 
 			newGimmick->SetCamera(camera_);
 			newGimmick->Update();
-			//ƒŠƒXƒg‚É“o˜^
+			//ãƒªã‚¹ãƒˆã«ç™»éŒ²
 			gimmicks_.push_back(std::move(newGimmick));
 		}
-		//ƒS[ƒ‹
+		//ã‚´ãƒ¼ãƒ«
 		else if (objectData.objectType.find("GOAL") == 0)
 		{
-			//ƒS[ƒ‹‰Šú‰»
+			//ã‚´ãƒ¼ãƒ«åˆæœŸåŒ–
 			std::unique_ptr<Goal> newgoal;
 			newgoal = Goal::Create(model);
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newgoal->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newgoal->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newgoal->SetScale(scale);
 
 			newgoal->SetCamera(camera_);
 			newgoal->Update();
-			//ƒŠƒXƒg‚É“o˜^
+			//ãƒªã‚¹ãƒˆã«ç™»éŒ²
 			goals_.push_back(std::move(newgoal));
 		}
-		//ƒAƒCƒeƒ€
+		//ã‚¢ã‚¤ãƒ†ãƒ 
 		else if (objectData.objectType.find("ITEM") == 0)
 		{
-			//ƒAƒCƒeƒ€‰Šú‰»
+			//ã‚¢ã‚¤ãƒ†ãƒ åˆæœŸåŒ–
 			std::unique_ptr<Item> newitem;
 			std::unique_ptr<Player>& player = players_.front();
-			//ƒWƒƒƒ“ƒv
+			//ã‚¸ãƒ£ãƒ³ãƒ—
 			if (objectData.objectPattern.find("JUMP") == 0)
 				newitem = Item::Create(modelItemJump_, player.get(), SUBCOLLISION_ATTR_ITEM_JUMP);
-			//‰ñ•œƒAƒCƒeƒ€
+			//å›å¾©ã‚¢ã‚¤ãƒ†ãƒ 
 			else if (objectData.objectPattern.find("HEAL") == 0)
 				newitem = Item::Create(modelItemHeal_, player.get(), SUBCOLLISION_ATTR_ITEM_HEAL);
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newitem->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newitem->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newitem->SetScale(scale);
 
 			newitem->SetCamera(camera_);
 			newitem->Update();
-			//ƒŠƒXƒg‚É“o˜^
+			//ãƒªã‚¹ãƒˆã«ç™»éŒ²
 			items_.push_back(std::move(newitem));
 		}
-		//ƒS[ƒ‹
+		//ã‚´ãƒ¼ãƒ«
 		else if (objectData.objectType.find("EARTH") == 0)
 		{
-			//ƒS[ƒ‹‰Šú‰»
+			//ã‚´ãƒ¼ãƒ«åˆæœŸåŒ–
 			std::unique_ptr<Earth> newearth;
 			newearth = Earth::Create(model);
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newearth->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newearth->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newearth->SetScale(scale);
 
 			newearth->SetCamera(camera_);
 			newearth->Update();
-			//ƒŠƒXƒg‚É“o˜^
+			//ãƒªã‚¹ãƒˆã«ç™»éŒ²
 			earths_.push_back(std::move(newearth));
 		}
-		//’nŒ`
+		//åœ°å½¢
 		else
 		{
-			// ƒ‚ƒfƒ‹‚ğw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+			// ãƒ¢ãƒ‡ãƒ«ã‚’æŒ‡å®šã—ã¦3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 			TouchableObject* newObject = TouchableObject::Create(model, false);
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newObject->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
 			newObject->SetCamera(camera_);
 
-
-			// ”z—ñ‚É“o˜^
+			// é…åˆ—ã«ç™»éŒ²
 			objects.push_back(newObject);
 		}
-
-
 	}
-
 }
 
 void GamePlayScene::AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet)
 {
-	//ƒŠƒXƒg‚É“o˜^
+	//ãƒªã‚¹ãƒˆã«ç™»éŒ²
 	playerBullets_.push_back(std::move(playerBullet));
 }
 
 void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
 {
-	//ƒŠƒXƒg‚É“o˜^
-	enemyBullets_.push_back(std::move(enemyBullet));
+		//ãƒªã‚¹ãƒˆã«ç™»éŒ²
+		enemyBullets_.push_back(std::move(enemyBullet));
 }
 
 void GamePlayScene::LoadModel()
 {
-	// ƒ‚ƒfƒ‹“Ç‚İ‚İ
+	// ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
@@ -591,7 +615,6 @@ void GamePlayScene::LoadModel()
 	modelRail = Model::LoadFromOBJ("rail");
 	modelEarth_ = Model::LoadFromOBJ("earth");
 
-
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
 	models.insert(std::make_pair("enemy1", modelEnemy1_));
@@ -615,12 +638,12 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("sphere2", modelBox));
 	models.insert(std::make_pair("rail", modelRail));
 	models.insert(std::make_pair("earth", modelEarth_));
-
 }
 
 void GamePlayScene::LoadSprite()
 {
-	//ƒXƒvƒ‰ƒCƒg
+#pragma region ã‚·ãƒ¼ãƒ³ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(10, "texture/pausep.png");
 	spritePause_->Initialize(spCommon_, 10);
 	spritePause_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
@@ -638,6 +661,105 @@ void GamePlayScene::LoadSprite()
 	spriteClear_->Update();
 	spritePauseInfo_->Update();
 	spriteGameover_->Update();
+#pragma endregion
 
+#pragma region ã‚­ãƒ¼ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	//ã‚­ãƒ¼éƒ¨åˆ†ã¨
+	spCommon_->LoadTexture(22, "texture/key.png");
 
+	XMFLOAT2 defaultPos = { 160,150 };
+	XMFLOAT2 defaultSize = { 64,64 };
+
+	keySpriteA_ = new KeySprite();
+	keySpriteA_->size_ = defaultSize;
+	keySpriteA_->position_ = {
+		defaultPos.x - defaultSize.x,
+		defaultPos.y
+	};
+	keySpriteA_->leftTop_ = { 64,0 };
+	keySpriteA_->Initialize();
+
+	keySpriteD_ = new KeySprite();
+	keySpriteD_->size_ = defaultSize;
+	keySpriteD_->position_ = {
+		defaultPos.x + defaultSize.x,
+		defaultPos.y
+	};
+	keySpriteD_->leftTop_ = { 96,0 };
+	keySpriteD_->Initialize();
+
+	keySpriteX_ = new KeySprite();
+	keySpriteX_->size_ = defaultSize;
+	keySpriteX_->position_ = {
+		defaultPos.x,
+		defaultPos.y + defaultSize.y
+	};
+	keySpriteX_->leftTop_ = { 64,32 };
+	keySpriteX_->Initialize();
+
+#pragma endregion
+}
+
+void GamePlayScene::KeySprite::Initialize() {
+	//ãƒ©ãƒ™ãƒ«ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–
+	this->label_ = new Sprite();
+	label_->Initialize(SpriteCommon::GetInstance(), 22);
+	label_->SetColor({ 1.0f,1.0f,1.0f,0.7f });
+	label_->SetTextureSize({ 32,32 });
+	label_->SetTextureLeftTop(leftTop_);
+	label_->SetAnchorPoint({ 0.5f,0.5f });
+	label_->SetPosition({
+		position_.x,
+		position_.y - 4.0f
+		});
+	label_->SetSize({
+		size_.x / 2,
+		size_.y / 2
+		});
+
+	//ã‚­ãƒ¼éƒ¨åˆ†ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–
+	this->key_ = new Sprite();
+	key_->Initialize(SpriteCommon::GetInstance(), 22);
+	key_->SetColor({ 1.0f,1.0f,1.0f,0.7f });
+	key_->SetTextureSize(size_);
+	key_->SetTextureLeftTop({ 0,0 });
+	key_->SetAnchorPoint({ 0.5f,0.5f });
+	key_->SetPosition(position_);
+	key_->SetSize(size_);
+}
+
+void GamePlayScene::KeySprite::Update() {
+	XMFLOAT2 movePos = label_->GetPosition();
+	XMFLOAT2 moveLeftTop = key_->GetTextureLeftTop();
+
+	if (isPress_) {
+		movePos = {
+			position_.x,
+			position_.y + 12.0f
+		};
+		moveLeftTop.y = 64;
+	}
+	else {
+		movePos = {
+			position_.x,
+			position_.y - 4.0f
+		};
+		moveLeftTop.y = 0;
+	}
+
+	label_->SetPosition(movePos);
+	key_->SetTextureLeftTop(moveLeftTop);
+
+	label_->Update();
+	key_->Update();
+}
+
+void GamePlayScene::KeySprite::Draw() {
+	key_->Draw();
+	label_->Draw();
+}
+
+void GamePlayScene::KeySprite::Finalize() {
+	delete label_;
+	delete key_;
 }

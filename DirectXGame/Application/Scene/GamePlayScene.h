@@ -24,80 +24,112 @@
 #include <map>
 #include <sstream>
 #include <string>
-//jsonƒŒƒxƒ‹ƒf[ƒ^
+//jsonãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿
 struct LevelData;
 
 class CollisionManager;
 class TouchableObject;
 
-//ƒQ[ƒ€ƒvƒŒƒC
+//ã‚²ãƒ¼ãƒ ãƒ—ãƒ¬ã‚¤
 class GamePlayScene :public BaseScene
 {
-public://\‘¢‘Ì—Ş
+private:
+	// DirectX::ã‚’çœç•¥
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+
+public://æ§‹é€ ä½“é¡
 	GamePlayScene(int stagenum);
-	enum Scene { //ƒV[ƒ“ID
+	enum Scene { //ã‚·ãƒ¼ãƒ³ID
 		tutorial,
 		stage1,
 		stage2,
 	};
 
+	//ã‚­ãƒ¼ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæ§‹é€ 
+	struct KeySprite {
+	public:
+		void Initialize();
+		void Update();
+		void Draw();
+		void Finalize();
+		//ã‚­ãƒ¼éƒ¨åˆ†
+		Sprite* key_ = nullptr;
+		//ãƒ©ãƒ™ãƒ«
+		Sprite* label_ = nullptr;
+
+		//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®å·¦ä¸Šã®ç‚¹
+		XMFLOAT2 leftTop_ = { 0,0 };
+		//ä½ç½®
+		XMFLOAT2 position_ = { 0,0 };
+		//ã‚µã‚¤ã‚º
+		XMFLOAT2 size_ = { 0,0 };
+		//æŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ï¼Ÿ
+		bool isPress_ = false;
+	};
+
 public:
-	
-	//‰Šú‰»
+
+	//åˆæœŸåŒ–
 	void Initialize()override;
-	//XV
+	//æ›´æ–°
 	void Update() override;
-	//•`‰æ
+	//æç”»
 	void Draw() override;
-	//I—¹
+	//çµ‚äº†
 	void Finalize() override;
-	
-	//ƒŒƒxƒ‹ƒf[ƒ^“Ç‚İ‚İ
+
+	//ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 	void LoadLVData(const std::string& stagePath);
 
 public:
-	//©‹@’e’Ç‰Á
+	//è‡ªæ©Ÿå¼¾è¿½åŠ 
 	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
-	//“G’e’Ç‰Á
+	//æ•µå¼¾è¿½åŠ 
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
-	
+
 	int GetEnemyCount() { return EnemyCount; }
 	void SetEnemyCount(int enemycount) { this->EnemyCount = enemycount; }
 
-private://Ã“Iƒƒ“ƒo•Ï”
-	
-	//DirectXŠî”Õ
+private://é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
+
+	//DirectXåŸºç›¤
 	static DirectXCommon* dxCommon_;
-	//ƒXƒvƒ‰ƒCƒgŠî”Õ
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆåŸºç›¤
 	SpriteCommon* spCommon_ = nullptr;
-	//ƒCƒ“ƒvƒbƒg
+	//ã‚¤ãƒ³ãƒ—ãƒƒãƒˆ
 	static Input* input_;
-	//ƒI[ƒfƒBƒI
+	//ã‚ªãƒ¼ãƒ‡ã‚£ã‚ª
 	Audio* audio_=nullptr;
-	//ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[
+	//ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
-	//ƒJƒƒ‰
+	//ã‚«ãƒ¡ãƒ©
 	static Camera* camera_;
 private:
 
-	//ƒTƒEƒ“ƒh“Ç‚İ‚İ
+	//ã‚µã‚¦ãƒ³ãƒ‰èª­ã¿è¾¼ã¿
 	Audio::SoundData stageBGM;
 	Audio::SoundData doneSE;
-
 	Sprite* spritePause_ = new Sprite();
 	Sprite* spriteClear_ = new Sprite();
 	Sprite* spritePauseInfo_ = new Sprite();
 	Sprite* spriteGameover_ = new Sprite();
-	
-	
-	//ƒ|[ƒY‚µ‚½‚©
+#pragma endregion
+
+#pragma region ã‚­ãƒ¼ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	KeySprite* keySpriteA_ = nullptr;
+	KeySprite* keySpriteD_ = nullptr;
+	KeySprite* keySpriteX_ = nullptr;
+#pragma endregion
+
+	//ãƒãƒ¼ã‚ºã—ãŸã‹
 	bool isPause_ = false;
 	bool isclear = false;
 	bool isGameover = false;
 
-	//ƒ‚ƒfƒ‹
+	//ãƒ¢ãƒ‡ãƒ«
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
 	Model* modelPlayerBullet_ = nullptr;
@@ -145,36 +177,36 @@ private:
 
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
-	
-	//ƒp[ƒeƒBƒNƒ‹
+
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm_ = nullptr;
 
 	Particle* particle2_ = nullptr;
-	
-	//ƒ‰ƒCƒg
+
+	//ãƒ©ã‚¤ãƒˆ
 	LightGroup* lightGroup_ = nullptr;
 
-	//Õ“Ëƒ}ƒl[ƒWƒƒ
+	//è¡çªãƒãƒãƒ¼ã‚¸ãƒ£
 	CollisionManager* colManager_ = nullptr;
 
 private:
 	int stageNum;
-	//©‹@’e
+	//è‡ªæ©Ÿå¼¾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
-	//“G’e
+	//æ•µå¼¾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
-	//ƒC[ƒWƒ“ƒOƒ}ƒl[ƒWƒƒ[(¶‚©‚ç‰E‚Ö)
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼(å·¦ã‹ã‚‰å³ã¸)
 	Easing es = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
-	//››‚µ‚½uŠÔ‚É››‰ğœ‚ğ–h‚®—p‚Ìƒtƒ‰ƒO
+	//â—‹â—‹ã—ãŸç¬é–“ã«â—‹â—‹è§£é™¤ã‚’é˜²ãç”¨ã®ãƒ•ãƒ©ã‚°
 	bool isBack = false;
-	//“GƒJƒEƒ“ƒg
+	//æ•µã‚«ã‚¦ãƒ³ãƒˆ
 	int EnemyCount = 0;
 
 private:
-	//ƒXƒvƒ‰ƒCƒg“Ç‚İ‚İ
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆèª­ã¿è¾¼ã¿
 	void LoadSprite();
-	//ƒ‚ƒfƒ‹“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 	void LoadModel();
 
 };
