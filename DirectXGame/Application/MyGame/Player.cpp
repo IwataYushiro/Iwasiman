@@ -43,7 +43,7 @@ bool Player::Initialize() {
 	shotSE = audio_->SoundLoadWave("Resources/sound/se/shot.wav");
 	moveSE = audio_->SoundLoadWave("Resources/sound/se/move.wav");
 
-	life_ = 5;
+	life_ = 10;
 	isDead_ = false;
 	ishit = false;
 	mutekiCount = 0;
@@ -88,7 +88,7 @@ void Player::Finalize()
 
 void Player::Reset() {
 
-	life_ = 5;
+	life_ = 10;
 	isDead_ = false;
 
 	isRight_ = true;
@@ -111,27 +111,25 @@ void Player::Update() {
 
 	pmDash_->SetCamera(camera_);
 
-	if (!isDead_)
+	if (!ishit)
 	{
-		if (life_ <= 0)
-		{
-			isDead_ = true;
-		}
-		if (position.y <= -60.0f)isDead_ = true;
-
-		if (ishit) mutekiCount++;
-		if (mutekiCount == MUTEKI_COUNT)
-		{
-			ishit = false;
-			mutekiCount = 0;
-		}
-		//ˆÚ“®ˆ—
+		 
 		if (!isJumpBack)Move();
 		//UŒ‚ˆ—
 		Attack();
 		//ˆÚ“®§ŒÀ
 		Trans();
 
+	}
+	else
+	{
+		mutekiCount++;
+		if (mutekiCount == MUTEKI_COUNT)
+		{
+			life_ = 10;
+			ishit = false;
+			mutekiCount = 0;
+		}
 	}
 	pmDash_->Update();
 
@@ -143,7 +141,7 @@ void Player::Update() {
 	Object3d::Update();
 }
 
-void Player::Draw() { Object3d::Draw(); }
+void Player::Draw() { if(!ishit)Object3d::Draw(); }
 
 void Player::DrawParticle() {
 	pmDash_->Draw();
@@ -278,28 +276,14 @@ XMFLOAT3 Player::GetWorldPosition() {
 void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
+		if (life_ <= 0)ishit = true;
 		if (ishit)return;
-		//life_--;
+		life_--;
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
 		pmDash_->Update();
-		ishit = true;
-	}
-
-	else if (attribute == COLLISION_ATTR_GIMMICK)
-	{
-		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
-		{
-			if (ishit)return;
-			life_ -= 3;
-			pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
-
-			pmDash_->Update();
-			ishit = true;
-		}
-
+		
 	}
 }
 

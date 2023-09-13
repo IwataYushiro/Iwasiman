@@ -15,7 +15,7 @@ Camera* StageClearScene::camera_ = Camera::GetInstance();
 
 
 StageClearScene::StageClearScene(int stagenum) :stageNum(stagenum)
-{	
+{
 }
 
 void StageClearScene::Initialize()
@@ -24,10 +24,6 @@ void StageClearScene::Initialize()
 	//オーディオ
 	audio_->Initialize();
 
-	BGM = audio_->SoundLoadWave("Resources/sound/bgm/stageclear.wav");
-	doneSE = audio_->SoundLoadWave("Resources/sound/se/done.wav");
-
-	audio_->SoundPlayWave(audio_->GetXAudio2(), BGM, false);
 
 	// 視点座標
 	camera_->SetEye({ 0.0f, 5.0f, -100.0f });
@@ -45,12 +41,17 @@ void StageClearScene::Initialize()
 	spCommon_->LoadTexture(StageTex, "texture/stageclear.png");
 	spriteStageClear_->Initialize(spCommon_, StageTex);
 
+	BGM = audio_->SoundLoadWave("Resources/sound/bgm/stageclear.wav");
+	doneSE = audio_->SoundLoadWave("Resources/sound/se/done.wav");
+
+	audio_->SoundPlayWave(audio_->GetXAudio2(), BGM, false);
+
 }
 
 void StageClearScene::Update()
 {
 
-	
+
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
@@ -66,11 +67,11 @@ void StageClearScene::Update()
 		}
 	}
 
-spriteStageClear_->Update();
+	spriteStageClear_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
-	
+
 }
 
 void StageClearScene::Draw()
@@ -98,7 +99,7 @@ void StageClearScene::Draw()
 	//Fbxモデル描画前処理
 	ObjectFbx::PreDraw(dxCommon_->GetCommandList());
 
-	
+
 	//Fbxモデル描画後処理
 	ObjectFbx::PostDraw();
 
@@ -117,7 +118,7 @@ void StageClearScene::Finalize()
 	delete lightGroup_;
 	//スプライト
 	delete spriteStageClear_;
-	
+
 }
 
 
