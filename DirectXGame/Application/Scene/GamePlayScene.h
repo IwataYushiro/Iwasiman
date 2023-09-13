@@ -73,7 +73,7 @@ private://静的メンバ変数
 	//インプット
 	static Input* input_;
 	//オーディオ
-	static Audio* audio_;
+	Audio* audio_=nullptr;
 	//シーンマネージャー
 	static SceneManager* sceneManager_;
 	//imgui
@@ -83,7 +83,8 @@ private://静的メンバ変数
 private:
 
 	//サウンド読み込み
-	Audio::SoundData sound;
+	Audio::SoundData stageBGM;
+	Audio::SoundData doneSE;
 
 	Sprite* spritePause_ = new Sprite();
 	Sprite* spriteClear_ = new Sprite();

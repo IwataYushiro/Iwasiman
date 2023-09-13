@@ -24,6 +24,11 @@ void StageClearScene::Initialize()
 	//オーディオ
 	audio_->Initialize();
 
+	BGM = audio_->SoundLoadWave("Resources/sound/bgm/stageclear.wav");
+	doneSE = audio_->SoundLoadWave("Resources/sound/se/done.wav");
+
+	audio_->SoundPlayWave(audio_->GetXAudio2(), BGM, false);
+
 	// 視点座標
 	camera_->SetEye({ 0.0f, 5.0f, -100.0f });
 	// 注視点座標
@@ -37,8 +42,7 @@ void StageClearScene::Initialize()
 	Object3d::SetLightGroup(lightGroup_);
 
 	UINT StageTex = 00;
-	if (stageNum == MAX_STAGE)spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
-	else spCommon_->LoadTexture(StageTex, "texture/stageclear.png");
+	spCommon_->LoadTexture(StageTex, "texture/stageclear.png");
 	spriteStageClear_->Initialize(spCommon_, StageTex);
 
 }
@@ -50,8 +54,16 @@ void StageClearScene::Update()
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
-		if (stageNum == MAX_STAGE) sceneManager_->ChangeScene("TITLE");
-		else sceneManager_->ChangeScene("GAMEPLAY", ++stageNum);
+		if (stageNum == MAX_STAGE)
+		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
+			sceneManager_->ChangeScene("GAMECLEAR");
+		}
+		else
+		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
+			sceneManager_->ChangeScene("GAMEPLAY", ++stageNum);
+		}
 	}
 
 spriteStageClear_->Update();
@@ -97,6 +109,11 @@ void StageClearScene::Draw()
 
 void StageClearScene::Finalize()
 {
+	//音声
+	audio_->Finalize();
+	audio_->SoundUnLoad(&BGM);
+	audio_->SoundUnLoad(&doneSE);
+
 	delete lightGroup_;
 	//スプライト
 	delete spriteStageClear_;

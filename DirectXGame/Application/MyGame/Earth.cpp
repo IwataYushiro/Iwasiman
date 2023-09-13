@@ -9,6 +9,7 @@ CollisionManager* Earth::colManager_ = CollisionManager::GetInstance();
 
 Earth::~Earth()
 {
+	Finalize();
 	hpGauge_->Finalize();
 	delete spriteHit_;
 }
@@ -33,6 +34,12 @@ std::unique_ptr<Earth> Earth::Create(Model* model)
 bool Earth::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
+	
+	audio_ = Audio::GetInstance();
+	//オーディオ
+	audio_->Initialize();
+	hitSE = audio_->SoundLoadWave("Resources/sound/se/earthHit.wav");
+
 	life_ = 10;
 	maxLife_ = life_;
 	isDead_ = false;
@@ -184,7 +191,11 @@ void Earth::DrawSprite()
 }
 
 void Earth::Finalize() {
-	
+	//終了処理
+	audio_->Finalize();
+	//解放
+	//各種音声
+	audio_->SoundUnLoad(&hitSE);
 }
 
 void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
@@ -193,6 +204,8 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 		isHit_ = true;
+		audio_->SoundPlayWave(audio_->GetXAudio2(), hitSE, false);
+
 		if (isEase)return;
 
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)

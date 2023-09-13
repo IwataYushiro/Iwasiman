@@ -1,4 +1,5 @@
 #pragma once
+#include "Audio.h"
 #include "Camera.h"
 #include "Model.h"
 #include "Object3d.h"
@@ -56,6 +57,9 @@ private:
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 
+	Audio* audio_ = nullptr;
+	Audio::SoundData hitSE;
+	
 	bool isHit_ = false;
 	bool isEase = false;
 

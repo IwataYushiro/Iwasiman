@@ -13,7 +13,6 @@ using namespace DirectX;
 
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
-Audio* GamePlayScene::audio_ = Audio::GetInstance();
 Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
@@ -32,13 +31,13 @@ void GamePlayScene::Initialize()
 
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
-	//音声データ
-	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
+	
+audio_ = Audio::GetInstance();
+	//オーディオ
+	audio_->Initialize();
+
 	//スプライト
 	LoadSprite();
-
-	//音声再生呼び出し例
-	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
 	//弾リセット
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Reset();
@@ -65,6 +64,17 @@ void GamePlayScene::Initialize()
 	pm_->SetCamera(camera_);
 
 	isPause_ = false;
+	
+	//音
+	if (stageNum == 1)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage.wav");
+	else if (stageNum == 2)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage2.wav");
+	else if (stageNum == 3)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage3.wav");
+	else if (stageNum == 4)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage4.wav");
+
+	doneSE = audio_->SoundLoadWave("Resources/sound/se/done.wav");
+
+	audio_->SoundPlayWave(audio_->GetXAudio2(), stageBGM, true);
+
 }
 
 void GamePlayScene::Update()
@@ -75,8 +85,6 @@ void GamePlayScene::Update()
 	enemyBullets_.remove_if(
 		[](std::unique_ptr<EnemyBullet>& ebullet) { return ebullet->IsDead(); });
 
-	players_.remove_if(
-		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
 	//earths_.remove_if([](std::unique_ptr<Earth>& earth) {return earth->IsDead(); });
@@ -110,7 +118,7 @@ void GamePlayScene::Update()
 
 		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
 		{
-		
+
 			enemy->Update();
 			if (enemy->IsDead())EnemyCount--;
 		}
@@ -168,11 +176,8 @@ void GamePlayScene::Update()
 
 		if (isGameover)
 		{
-			if (input_->TriggerKey(DIK_SPACE))
-			{
-				camera_->Reset();
-				sceneManager_->ChangeScene("TITLE");
-			}
+			sceneManager_->ChangeScene("GAMEOVER");
+			isGameover = false;
 		}
 		if (isclear)
 		{
@@ -183,6 +188,7 @@ void GamePlayScene::Update()
 		//Pause機能
 		if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
 		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
 			//ここでイージングの準備
 			es.Standby(false);
 			isBack = false;
@@ -199,12 +205,14 @@ void GamePlayScene::Update()
 
 		if (input_->TriggerKey(DIK_W))
 		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
 			sceneManager_->ChangeScene("TITLE");
 			isPause_ = false;
 		}
 
 		if (input_->TriggerKey(DIK_Q))
 		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
 			//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
 			if (spritePause_->GetPosition().x == es.end) es.Standby(true);
 			isBack = true;
@@ -268,6 +276,9 @@ void GamePlayScene::Draw()
 void GamePlayScene::Finalize()
 {
 	//護衛対象の内部スプライトデータなどの後始末
+	for (std::unique_ptr<Player>& player : players_) {
+		player->Finalize();
+	}
 	for (std::unique_ptr<Earth>& earth : earths_) {
 		earth->Finalize();
 	}
@@ -276,7 +287,8 @@ void GamePlayScene::Finalize()
 	audio_->Finalize();
 	//解放
 	//各種音声
-	audio_->SoundUnLoad(&sound);
+	audio_->SoundUnLoad(&stageBGM);
+	audio_->SoundUnLoad(&doneSE);
 
 	//パーティクル
 	delete particle1_;
@@ -567,7 +579,7 @@ void GamePlayScene::LoadModel()
 	modelEnemy2Guard_ = Model::LoadFromOBJ("enemy2g");
 	modelEnemy2Speed_ = Model::LoadFromOBJ("enemy2s");
 	modelEnemy2Death_ = Model::LoadFromOBJ("enemy2d");
-	modelEnemyBullet_= Model::LoadFromOBJ("enemybullet");
+	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
 	modelBossCore1_ = Model::LoadFromOBJ("core1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");

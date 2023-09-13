@@ -51,6 +51,8 @@ private://Ã“Iƒƒ“ƒo•Ï”
 	static Camera* camera_;
 
 private://ƒƒ“ƒo•Ï”
+	Audio::SoundData BGM;
+	Audio::SoundData doneSE;
 	int stageNum;
 	//Sprite
 	Sprite* spriteStageClear_ = new Sprite();
