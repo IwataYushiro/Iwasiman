@@ -105,6 +105,10 @@ private:
 
 	std::list<std::unique_ptr<BaseEnemy>> enemys_;
 	Model* modelEnemy1_ = nullptr;
+	Model* modelEnemy1Power_ = nullptr;
+	Model* modelEnemy1Guard_ = nullptr;
+	Model* modelEnemy1Speed_ = nullptr;
+	Model* modelEnemy1Death_ = nullptr;
 	Model* modelEnemyBullet_ = nullptr;
 
 	Model* modelEnemy2_ = nullptr;

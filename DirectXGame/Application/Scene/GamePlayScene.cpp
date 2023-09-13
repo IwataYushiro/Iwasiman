@@ -289,6 +289,10 @@ void GamePlayScene::Finalize()
 	delete modelPlayer_;
 	delete modelPlayerBullet_;
 	delete modelEnemy1_;
+	delete modelEnemy1Power_;
+	delete modelEnemy1Guard_;
+	delete modelEnemy1Speed_;
+	delete modelEnemy1Death_;
 	delete modelEnemy2_;
 	delete modelEnemy2Power_;
 	delete modelEnemy2Guard_;
@@ -550,6 +554,10 @@ void GamePlayScene::LoadModel()
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
+	modelEnemy1Power_ = Model::LoadFromOBJ("enemy1p");
+	modelEnemy1Guard_ = Model::LoadFromOBJ("enemy1g");
+	modelEnemy1Speed_ = Model::LoadFromOBJ("enemy1s");
+	modelEnemy1Death_ = Model::LoadFromOBJ("enemy1d");
 	modelEnemy2_ = Model::LoadFromOBJ("enemy2");
 	modelEnemy2Power_ = Model::LoadFromOBJ("enemy2p");
 	modelEnemy2Guard_ = Model::LoadFromOBJ("enemy2g");
@@ -571,6 +579,10 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
 	models.insert(std::make_pair("enemy1", modelEnemy1_));
+	models.insert(std::make_pair("enemy1p", modelEnemy1Power_));
+	models.insert(std::make_pair("enemy1g", modelEnemy1Guard_));
+	models.insert(std::make_pair("enemy1s", modelEnemy1Speed_));
+	models.insert(std::make_pair("enemy1d", modelEnemy1Death_));
 	models.insert(std::make_pair("enemy2", modelEnemy2_));
 	models.insert(std::make_pair("enemy2p", modelEnemy2Power_));
 	models.insert(std::make_pair("enemy2g", modelEnemy2Guard_));
