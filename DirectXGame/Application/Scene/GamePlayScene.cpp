@@ -51,6 +51,7 @@ void GamePlayScene::Initialize()
 	if (stageNum == 1)LoadLVData("stage1");//enemytest2　バグ版
 	else if (stageNum == 2)LoadLVData("ntest");
 	else if (stageNum == 3)LoadLVData("ntest2");
+	else if (stageNum == 4)LoadLVData("ntest3");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
