@@ -169,12 +169,12 @@
                     -90.00000762939453
                 ],
                 "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ]
             },
-            "file_name": "enemy2s",
+            "file_name": "enemy1s",
             "objecttype": "ENEMY",
             "objectpattern": "E1S"
         },
@@ -216,12 +216,12 @@
                     -90.00000762939453
                 ],
                 "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ]
             },
-            "file_name": "enemy2p",
+            "file_name": "enemy1p",
             "objecttype": "ENEMY",
             "objectpattern": "E1P"
         },
@@ -240,12 +240,12 @@
                     -90.00000762939453
                 ],
                 "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ]
             },
-            "file_name": "enemy2",
+            "file_name": "enemy1",
             "objecttype": "ENEMY",
             "objectpattern": "ENEMY1"
         },
@@ -264,12 +264,12 @@
                     -90.00000762939453
                 ],
                 "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ]
             },
-            "file_name": "enemy2s",
+            "file_name": "enemy1s",
             "objecttype": "ENEMY",
             "objectpattern": "E1S"
         },
@@ -288,12 +288,12 @@
                     -90.00000762939453
                 ],
                 "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ]
             },
-            "file_name": "enemy2d",
+            "file_name": "enemy1d",
             "objecttype": "ENEMY",
             "objectpattern": "E1D"
         },
