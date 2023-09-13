@@ -9,6 +9,8 @@ CollisionManager* Earth::colManager_ = CollisionManager::GetInstance();
 
 Earth::~Earth()
 {
+	Finalize();
+	hpGauge_->Finalize();
 	delete spriteHit_;
 }
 
@@ -32,7 +34,13 @@ std::unique_ptr<Earth> Earth::Create(Model* model)
 bool Earth::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
-	life_ = 5;
+	
+	audio_ = Audio::GetInstance();
+	//オーディオ
+	audio_->Initialize();
+	hitSE = audio_->SoundLoadWave("Resources/sound/se/earthHit.wav");
+
+	life_ = 10;
 	maxLife_ = life_;
 	isDead_ = false;
 	isHit_ = false;
@@ -66,7 +74,7 @@ bool Earth::Initialize()
 
 void Earth::Reset()
 {
-	life_ = 5;
+	life_ = 10;
 	isDead_ = false;
 	isHit_ = false;
 	mutekiCount = 0;
@@ -80,8 +88,13 @@ void Earth::Update()
 		{
 			isDead_ = true;
 		}
-		
 		if (isHit_)
+		{
+			isEase = true;
+			isHit_ = false;
+		}
+
+		if (isEase)
 		{
 			camera_->ShakeEye({ 0.0f, 6.0f, -115.0f }, 10, { -5.0f,1.0f,-130.0f }, { 5.0f,11.0f,-100.0f });
 			camera_->ShakeTarget({ 0.0f,5.0f,0.0f }, 10, { -5.0f,0.0f,-5.0f }, { 5.0f,10.0f,5.0f });
@@ -94,19 +107,19 @@ void Earth::Update()
 		}
 		else
 		{
-			camera_->Reset();
+			
 			spriteHit_->SetColor({ 1.0f, 1.0f,1.0f, ease.start });
 		}	
 
 		if (mutekiCount == MUTEKI_COUNT)
 		{
-			
-			isHit_ = false;
+			camera_->Reset();
+			isEase = false;
 			mutekiCount = 0;
 		}
 
 	}
-	rotation.y += 2.0f;
+	rotation.y += 1.0f;
 	camera_->Update();
 	UpdateWorldMatrix();
 	collider->Update();
@@ -178,30 +191,82 @@ void Earth::DrawSprite()
 }
 
 void Earth::Finalize() {
-	hpGauge_->Finalize();
+	//終了処理
+	audio_->Finalize();
+	//解放
+	//各種音声
+	audio_->SoundUnLoad(&hitSE);
 }
 
 void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
-		if (isHit_)return;
+		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+		isHit_ = true;
+		audio_->SoundPlayWave(audio_->GetXAudio2(), hitSE, false);
+
+		if (isEase)return;
 
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			life_--;
+			if (life_ <= 2)isDead_ = true;
+			life_ -= 2;
 			ease.Standby(false);
-			isHit_ = true;
+			
 
 			//ダメージ受けたらHPの変動を実行
 			hpGauge_->SetRest(static_cast<float>(life_));
 			hpGauge_->DecisionFluctuation();
 			hpGauge_->SetIsFluct(true);
 		}
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)
 		{
-			//life_--;
-			// isHit_ = true;
+			if (life_ <= 4)isDead_ = true;
+			life_ -= 4;
+			ease.Standby(false);
+			//isHit_ = true;
+
+			//ダメージ受けたらHPの変動を実行
+			hpGauge_->SetRest(static_cast<float>(life_));
+			hpGauge_->DecisionFluctuation();
+			hpGauge_->SetIsFluct(true);
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)
+		{
+			if (life_ <= 1)isDead_ = true;
+			life_ --;
+			ease.Standby(false);
+			//isHit_ = true;
+
+			//ダメージ受けたらHPの変動を実行
+			hpGauge_->SetRest(static_cast<float>(life_));
+			hpGauge_->DecisionFluctuation();
+			hpGauge_->SetIsFluct(true);
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)
+		{
+			if (life_ <= 2)isDead_ = true;
+			life_ -= 2;
+			ease.Standby(false);
+			//isHit_ = true;
+
+			//ダメージ受けたらHPの変動を実行
+			hpGauge_->SetRest(static_cast<float>(life_));
+			hpGauge_->DecisionFluctuation();
+			hpGauge_->SetIsFluct(true);
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)
+		{
+			if (life_ <= 9)isDead_ = true;
+			life_ -= 9;
+			ease.Standby(false);
+			//isHit_ = true;
+
+			//ダメージ受けたらHPの変動を実行
+			hpGauge_->SetRest(static_cast<float>(life_));
+			hpGauge_->DecisionFluctuation();
+			hpGauge_->SetIsFluct(true);
 		}
 	}
 

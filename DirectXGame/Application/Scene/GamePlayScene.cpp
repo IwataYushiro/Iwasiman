@@ -7,14 +7,12 @@
 #include "CollisionAttribute.h"
 
 #include <cassert>
-#include <sstream>
 #include <iomanip>
 
 using namespace DirectX;
 
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
-Audio* GamePlayScene::audio_ = Audio::GetInstance();
 Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
@@ -33,13 +31,13 @@ void GamePlayScene::Initialize()
 
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
-	//音声データ
-	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
+	
+audio_ = Audio::GetInstance();
+	//オーディオ
+	audio_->Initialize();
+
 	//スプライト
 	LoadSprite();
-
-	//音声再生呼び出し例
-	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
 	//弾リセット
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Reset();
@@ -49,9 +47,10 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("ntest");
-	else if (stageNum == 2)LoadLVData("stage2");
-	else if (stageNum == 3)LoadLVData("stageboss1");
+	if (stageNum == 1)LoadLVData("stage1");//enemytest2　バグ版
+	else if (stageNum == 2)LoadLVData("ntest");
+	else if (stageNum == 3)LoadLVData("ntest2");
+	else if (stageNum == 4)LoadLVData("ntest3");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
@@ -65,6 +64,17 @@ void GamePlayScene::Initialize()
 	pm_->SetCamera(camera_);
 
 	isPause_ = false;
+	
+	//音
+	if (stageNum == 1)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage.wav");
+	else if (stageNum == 2)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage2.wav");
+	else if (stageNum == 3)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage3.wav");
+	else if (stageNum == 4)stageBGM = audio_->SoundLoadWave("Resources/sound/bgm/stage4.wav");
+
+	doneSE = audio_->SoundLoadWave("Resources/sound/se/done.wav");
+
+	audio_->SoundPlayWave(audio_->GetXAudio2(), stageBGM, true);
+
 }
 
 void GamePlayScene::Update()
@@ -75,12 +85,9 @@ void GamePlayScene::Update()
 	enemyBullets_.remove_if(
 		[](std::unique_ptr<EnemyBullet>& ebullet) { return ebullet->IsDead(); });
 
-	players_.remove_if(
-		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
-	earths_.remove_if([](std::unique_ptr<Earth>& earth) {return earth->IsDead(); });
-
+	
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
 
@@ -94,25 +101,15 @@ void GamePlayScene::Update()
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 			//かめおべら
 			if (player->IsDead())isGameover = true;
-
-			//ImGui	
-			imguiManager_->Begin();
-			int plife[1] = { player->GetLife() };
-			ImGui::Begin("Player");
-			ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
-			ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
-			ImGui::InputInt("plife", plife);
-			ImGui::End();
-			imguiManager_->End();
 		}
 		//弾更新
 		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
 
 		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
 		{
+
 			enemy->Update();
-			//ボス撃破
-			if (enemy->BossDead())isclear = true;
+			if (enemy->IsDead())EnemyCount--;
 		}
 
 		for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
@@ -129,21 +126,20 @@ void GamePlayScene::Update()
 		}
 		for (std::unique_ptr<Earth>& earth : earths_)
 		{
-			earth->Update();//かめおべら
-			if (earth->IsDead())isGameover = true;
+			if (!isGameover)
+			{
+				if (earth->IsDead())isGameover = true;
 
-			//ImGui	
-			imguiManager_->Begin();
-			int life[1] = { earth->GetLife() };
-			ImGui::Begin("Earth");
-			ImGui::SetWindowPos(ImVec2(100.0f, 100.0f));
-			ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
-			ImGui::InputInt("earthlife", life);
-			ImGui::End();
-			imguiManager_->End();
+				if (earth->IsHit())EnemyCount--;
+
+				earth->Update();//かめおべら;
+			}
 		}
 
 		for (Object3d*& object : objects) object->Update();
+		
+		//敵全滅でクリア
+		if (!isGameover && EnemyCount <= 0) isclear = true;
 
 		//カメラ
 		camera_->Update();
@@ -152,11 +148,8 @@ void GamePlayScene::Update()
 
 		if (isGameover)
 		{
-			if (input_->TriggerKey(DIK_SPACE))
-			{
-				camera_->Reset();
-				sceneManager_->ChangeScene("TITLE");
-			}
+			sceneManager_->ChangeScene("GAMEOVER");
+			isGameover = false;
 		}
 		if (isclear)
 		{
@@ -167,6 +160,7 @@ void GamePlayScene::Update()
 		//Pause機能
 		if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
 		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
 			//ここでイージングの準備
 			es.Standby(false);
 			isBack = false;
@@ -183,12 +177,14 @@ void GamePlayScene::Update()
 
 		if (input_->TriggerKey(DIK_W))
 		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
 			sceneManager_->ChangeScene("TITLE");
 			isPause_ = false;
 		}
 
 		if (input_->TriggerKey(DIK_Q))
 		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
 			//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
 			if (spritePause_->GetPosition().x == es.end) es.Standby(true);
 			isBack = true;
@@ -200,6 +196,9 @@ void GamePlayScene::Update()
 		}
 	}
 	spritePause_->Update();
+imguiManager_->Begin();
+		
+		imguiManager_->End();
 
 
 
@@ -252,6 +251,9 @@ void GamePlayScene::Draw()
 void GamePlayScene::Finalize()
 {
 	//護衛対象の内部スプライトデータなどの後始末
+	for (std::unique_ptr<Player>& player : players_) {
+		player->Finalize();
+	}
 	for (std::unique_ptr<Earth>& earth : earths_) {
 		earth->Finalize();
 	}
@@ -260,7 +262,8 @@ void GamePlayScene::Finalize()
 	audio_->Finalize();
 	//解放
 	//各種音声
-	audio_->SoundUnLoad(&sound);
+	audio_->SoundUnLoad(&stageBGM);
+	audio_->SoundUnLoad(&doneSE);
 
 	//パーティクル
 	delete particle1_;
@@ -277,6 +280,15 @@ void GamePlayScene::Finalize()
 	delete modelPlayer_;
 	delete modelPlayerBullet_;
 	delete modelEnemy1_;
+	delete modelEnemy1Power_;
+	delete modelEnemy1Guard_;
+	delete modelEnemy1Speed_;
+	delete modelEnemy1Death_;
+	delete modelEnemy2_;
+	delete modelEnemy2Power_;
+	delete modelEnemy2Guard_;
+	delete modelEnemy2Speed_;
+	delete modelEnemy2Death_;
 	delete modelEnemyBullet_;
 	delete modelBoss1_;
 	delete modelBossCore1_;
@@ -368,6 +380,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			newenemy->Update();
 			//リストに登録
 			enemys_.push_back(std::move(newenemy));
+			EnemyCount++;
 		}
 		//仕掛け
 		else if (objectData.objectType.find("GIMMICK") == 0)
@@ -509,6 +522,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			objects.push_back(newObject);
 		}
 
+
 	}
 
 }
@@ -531,7 +545,16 @@ void GamePlayScene::LoadModel()
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
-	modelEnemyBullet_= Model::LoadFromOBJ("enemybullet");
+	modelEnemy1Power_ = Model::LoadFromOBJ("enemy1p");
+	modelEnemy1Guard_ = Model::LoadFromOBJ("enemy1g");
+	modelEnemy1Speed_ = Model::LoadFromOBJ("enemy1s");
+	modelEnemy1Death_ = Model::LoadFromOBJ("enemy1d");
+	modelEnemy2_ = Model::LoadFromOBJ("enemy2");
+	modelEnemy2Power_ = Model::LoadFromOBJ("enemy2p");
+	modelEnemy2Guard_ = Model::LoadFromOBJ("enemy2g");
+	modelEnemy2Speed_ = Model::LoadFromOBJ("enemy2s");
+	modelEnemy2Death_ = Model::LoadFromOBJ("enemy2d");
+	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
 	modelBossCore1_ = Model::LoadFromOBJ("core1");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
@@ -543,9 +566,19 @@ void GamePlayScene::LoadModel()
 	modelRail = Model::LoadFromOBJ("rail");
 	modelEarth_ = Model::LoadFromOBJ("earth");
 
+
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
 	models.insert(std::make_pair("enemy1", modelEnemy1_));
+	models.insert(std::make_pair("enemy1p", modelEnemy1Power_));
+	models.insert(std::make_pair("enemy1g", modelEnemy1Guard_));
+	models.insert(std::make_pair("enemy1s", modelEnemy1Speed_));
+	models.insert(std::make_pair("enemy1d", modelEnemy1Death_));
+	models.insert(std::make_pair("enemy2", modelEnemy2_));
+	models.insert(std::make_pair("enemy2p", modelEnemy2Power_));
+	models.insert(std::make_pair("enemy2g", modelEnemy2Guard_));
+	models.insert(std::make_pair("enemy2s", modelEnemy2Speed_));
+	models.insert(std::make_pair("enemy2d", modelEnemy2Death_));
 	models.insert(std::make_pair("enemybullet", modelEnemyBullet_));
 	models.insert(std::make_pair("boss1", modelBoss1_));
 	models.insert(std::make_pair("core1", modelBossCore1_));

@@ -60,6 +60,9 @@ public:
 	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
 	//敵弾追加
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
+	
+	int GetEnemyCount() { return EnemyCount; }
+	void SetEnemyCount(int enemycount) { this->EnemyCount = enemycount; }
 
 private://静的メンバ変数
 	
@@ -70,7 +73,7 @@ private://静的メンバ変数
 	//インプット
 	static Input* input_;
 	//オーディオ
-	static Audio* audio_;
+	Audio* audio_=nullptr;
 	//シーンマネージャー
 	static SceneManager* sceneManager_;
 	//imgui
@@ -80,7 +83,8 @@ private://静的メンバ変数
 private:
 
 	//サウンド読み込み
-	Audio::SoundData sound;
+	Audio::SoundData stageBGM;
+	Audio::SoundData doneSE;
 
 	Sprite* spritePause_ = new Sprite();
 	Sprite* spriteClear_ = new Sprite();
@@ -102,7 +106,18 @@ private:
 
 	std::list<std::unique_ptr<BaseEnemy>> enemys_;
 	Model* modelEnemy1_ = nullptr;
+	Model* modelEnemy1Power_ = nullptr;
+	Model* modelEnemy1Guard_ = nullptr;
+	Model* modelEnemy1Speed_ = nullptr;
+	Model* modelEnemy1Death_ = nullptr;
 	Model* modelEnemyBullet_ = nullptr;
+
+	Model* modelEnemy2_ = nullptr;
+	Model* modelEnemy2Power_ = nullptr;
+	Model* modelEnemy2Guard_ = nullptr;
+	Model* modelEnemy2Speed_ = nullptr;
+	Model* modelEnemy2Death_ = nullptr;
+
 
 	Model* modelBoss1_ = nullptr;
 	Model* modelBossCore1_ = nullptr;
@@ -153,6 +168,8 @@ private:
 	Easing es = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
 	//○○した瞬間に○○解除を防ぐ用のフラグ
 	bool isBack = false;
+	//敵カウント
+	int EnemyCount = 0;
 
 private:
 	//スプライト読み込み

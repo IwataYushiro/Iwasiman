@@ -405,6 +405,15 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Gauge.cpp">
       <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Enemy3.cpp">
+      <Filter>Source File\Application\MyGame\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\GameClearScene.cpp">
+      <Filter>Source File\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\GameOverScene.cpp">
+      <Filter>Source File\Application\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -616,6 +625,15 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Gauge.h">
       <Filter>Header File\Application\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Enemy3.h">
+      <Filter>Header File\Application\MyGame\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\GameOverScene.h">
+      <Filter>Header File\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\GameClearScene.h">
+      <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

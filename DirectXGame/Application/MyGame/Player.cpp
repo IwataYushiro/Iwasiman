@@ -10,6 +10,7 @@ CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
 	//モデルの解放
+	Finalize();
 	delete particleDash_;
 	delete pmDash_;
 }
@@ -36,9 +37,13 @@ std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScen
 bool Player::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
-input_ = Input::GetInstance();
+	input_ = Input::GetInstance();
+	audio_ = Audio::GetInstance();
 
-	life_ = 5;
+	shotSE = audio_->SoundLoadWave("Resources/sound/se/shot.wav");
+	moveSE = audio_->SoundLoadWave("Resources/sound/se/move.wav");
+
+	life_ = 10;
 	isDead_ = false;
 	ishit = false;
 	mutekiCount = 0;
@@ -72,9 +77,18 @@ input_ = Input::GetInstance();
 	return true;
 }
 
+void Player::Finalize()
+{
+	//終了処理
+	audio_->Finalize();
+	//解放
+	//各種音声
+	audio_->SoundUnLoad(&shotSE);
+}
+
 void Player::Reset() {
-	
-	life_ = 5;
+
+	life_ = 10;
 	isDead_ = false;
 
 	isRight_ = true;
@@ -91,33 +105,31 @@ void Player::Reset() {
 	nowCount = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 1.0f;					//全体時間
-	
+
 }
 void Player::Update() {
 
 	pmDash_->SetCamera(camera_);
 
-	if (!isDead_)
+	if (!ishit)
 	{
-		if (life_ <= 0)
-		{
-			isDead_ = true;
-		}
-		if (position.y <= -60.0f)isDead_ = true;
-
-		if (ishit) mutekiCount++;
-		if (mutekiCount == MUTEKI_COUNT)
-		{
-			ishit = false;
-			mutekiCount = 0;
-		}
-		//移動処理
+		 
 		if (!isJumpBack)Move();
 		//攻撃処理
 		Attack();
 		//移動制限
 		Trans();
 
+	}
+	else
+	{
+		mutekiCount++;
+		if (mutekiCount == MUTEKI_COUNT)
+		{
+			life_ = 10;
+			ishit = false;
+			mutekiCount = 0;
+		}
 	}
 	pmDash_->Update();
 
@@ -129,11 +141,11 @@ void Player::Update() {
 	Object3d::Update();
 }
 
-void Player::Draw() { Object3d::Draw(); }
+void Player::Draw() { if(!ishit)Object3d::Draw(); }
 
-void Player::DrawParticle() { 
-	pmDash_->Draw(); 
-	
+void Player::DrawParticle() {
+	pmDash_->Draw();
+
 }
 
 //移動処理
@@ -148,12 +160,13 @@ void Player::Move() {
 	XMMATRIX matTrans = XMMatrixIdentity();
 	if (input_->TriggerKey(DIK_A)) {
 		if (move.x <= -moveSpeed)return;
-		
+		audio_->SoundPlayWave(audio_->GetXAudio2(), moveSE, false);
+
 		move.x -= moveSpeed;
 	}
 	if (input_->TriggerKey(DIK_D)) {
 		if (move.x >= moveSpeed)return;
-		
+		audio_->SoundPlayWave(audio_->GetXAudio2(), moveSE, false);
 		//if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT) || move.x != 0.0f)move.x += moveSpeed * 2.0f;
 		//else move.x += moveSpeed;
 		move.x += moveSpeed;
@@ -191,7 +204,9 @@ void Player::CameraMove()
 //攻撃処理
 void Player::Attack() {
 
-	if (input_->TriggerKey(DIK_X)) {
+	if (input_->TriggerKey(DIK_SPACE)) {
+		audio_->SoundPlayWave(audio_->GetXAudio2(), shotSE, false);
+
 		//弾の速度
 		const float kBulletSpeed = 1.0f;
 		XMFLOAT3 velocity;
@@ -261,27 +276,13 @@ XMFLOAT3 Player::GetWorldPosition() {
 void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
+		if (life_ <= 0)ishit = true;
 		if (ishit)return;
-		//life_--;
+		life_--;
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
-		
+
 		pmDash_->Update();
-		ishit = true;
-	}
-
-	else if (attribute == COLLISION_ATTR_GIMMICK)
-	{
-		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
-		{
-			if (ishit)return;
-			life_ -= 3;
-			pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
-
-			pmDash_->Update();
-			ishit = true;
-		}
 		
 	}
 }

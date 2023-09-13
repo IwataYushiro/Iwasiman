@@ -1,4 +1,5 @@
 #pragma once
+#include "Audio.h"
 #include "Input.h"
 #include "Model.h"
 #include "Object3d.h"
@@ -31,6 +32,7 @@ public:
 		GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
+	void Finalize();
 	//リセット処理
 	void Reset();
 	
@@ -62,6 +64,12 @@ public:
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
 private:
+	//オーディオ
+	Audio* audio_ = nullptr;
+	//サウンド読み込み
+	Audio::SoundData shotSE;
+	Audio::SoundData moveSE;
+
 	static CollisionManager* colManager_;
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
