@@ -176,12 +176,8 @@ void GamePlayScene::Update()
 
 		if (isGameover)
 		{
-			if (input_->TriggerKey(DIK_SPACE))
-			{
-				audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
-				camera_->Reset();
-				sceneManager_->ChangeScene("TITLE");
-			}
+			sceneManager_->ChangeScene("GAMEOVER");
+			isGameover = false;
 		}
 		if (isclear)
 		{

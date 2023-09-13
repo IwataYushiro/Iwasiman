@@ -1,4 +1,4 @@
-#include "StageClearScene.h"
+#include "GameClearScene.h"
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
 #include <cassert>
@@ -6,25 +6,21 @@
 #include <iomanip>
 
 
-DirectXCommon* StageClearScene::dxCommon_ = DirectXCommon::GetInstance();
-Input* StageClearScene::input_ = Input::GetInstance();
-Audio* StageClearScene::audio_ = Audio::GetInstance();
-SceneManager* StageClearScene::sceneManager_ = SceneManager::GetInstance();
-ImGuiManager* StageClearScene::imguiManager_ = ImGuiManager::GetInstance();
-Camera* StageClearScene::camera_ = Camera::GetInstance();
+DirectXCommon* GameClearScene::dxCommon_ = DirectXCommon::GetInstance();
+Input* GameClearScene::input_ = Input::GetInstance();
+Audio* GameClearScene::audio_ = Audio::GetInstance();
+SceneManager* GameClearScene::sceneManager_ = SceneManager::GetInstance();
+ImGuiManager* GameClearScene::imguiManager_ = ImGuiManager::GetInstance();
+Camera* GameClearScene::camera_ = Camera::GetInstance();
 
 
-StageClearScene::StageClearScene(int stagenum) :stageNum(stagenum)
-{	
-}
-
-void StageClearScene::Initialize()
+void GameClearScene::Initialize()
 {
 	spCommon_ = SpriteCommon::GetInstance();
 	//オーディオ
 	audio_->Initialize();
 
-	BGM = audio_->SoundLoadWave("Resources/sound/bgm/stageclear.wav");
+	BGM = audio_->SoundLoadWave("Resources/sound/bgm/ending.wav");
 	doneSE = audio_->SoundLoadWave("Resources/sound/se/done.wav");
 
 	audio_->SoundPlayWave(audio_->GetXAudio2(), BGM, false);
@@ -42,45 +38,31 @@ void StageClearScene::Initialize()
 	Object3d::SetLightGroup(lightGroup_);
 
 	UINT StageTex = 00;
-	spCommon_->LoadTexture(StageTex, "texture/stageclear.png");
-	spriteStageClear_->Initialize(spCommon_, StageTex);
+	spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
+	spriteGameClear_->Initialize(spCommon_, StageTex);
 
 }
 
-void StageClearScene::Update()
+void GameClearScene::Update()
 {
 
-	
+
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
-		if (stageNum == MAX_STAGE)
-		{
-			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
-			sceneManager_->ChangeScene("GAMECLEAR");
-		}
-		else
-		{
-			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
-			sceneManager_->ChangeScene("GAMEPLAY", ++stageNum);
-		}
+		audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
+		sceneManager_->ChangeScene("TITLE");
+		
 	}
-
-spriteStageClear_->Update();
-
+	spriteGameClear_->Update();
 	camera_->Update();
 	lightGroup_->Update();
-	
+
 }
 
-void StageClearScene::Draw()
+void GameClearScene::Draw()
 {
-	//背景スプライト描画前処理
-	spCommon_->PreDraw();
-	//スプライト描画
-	spriteStageClear_->Draw();
-
-
+	
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
@@ -98,16 +80,21 @@ void StageClearScene::Draw()
 	//Fbxモデル描画前処理
 	ObjectFbx::PreDraw(dxCommon_->GetCommandList());
 
-	
+
 	//Fbxモデル描画後処理
 	ObjectFbx::PostDraw();
 
 	//前景スプライト
+//背景スプライト描画前処理
+	spCommon_->PreDraw();
+	//スプライト描画
+	spriteGameClear_->Draw();
+
 
 
 }
 
-void StageClearScene::Finalize()
+void GameClearScene::Finalize()
 {
 	//音声
 	audio_->Finalize();
@@ -116,8 +103,8 @@ void StageClearScene::Finalize()
 
 	delete lightGroup_;
 	//スプライト
-	delete spriteStageClear_;
-	
+	delete spriteGameClear_;
+
 }
 
 
