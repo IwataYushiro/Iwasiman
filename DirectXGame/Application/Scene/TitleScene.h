@@ -16,6 +16,7 @@
 #include <sstream>
 #include <string>
 
+#include "Easing.h"
 #include "SceneManager.h"
 #include <DirectXMath.h>
 #include <chrono>
@@ -66,7 +67,7 @@ private://静的メンバ変数
 private://メンバ変数
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
-
+	Sprite* spriteHTP_ = new Sprite();
 	//モデル
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
@@ -118,7 +119,10 @@ private://メンバ変数
 	XMFLOAT3 endTarget;
 
 	bool isStart = false;
+	bool isHTP = false;
+	Easing easeTitlePosY = Easing(0.0f, 800.0f, 1.0f);
 
+	Easing easeHTPPosY = Easing(800.0f, 0.0f, 1.0f);
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
 	//パーティクル

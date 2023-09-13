@@ -24,11 +24,11 @@ void TitleScene::Initialize()
 	//カメラ
 	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
-	
+
 	//camera_->SetTarget({ 90.0f,0.0f,0.0f });
 	//camera_->SetEye({ -10.0f,2.0f,0.0f });
-	
-	
+
+
 	LoadModel();
 
 	//レベルデータ読み込み
@@ -59,7 +59,12 @@ void TitleScene::Initialize()
 	UINT titleTex = 00;
 	spCommon_->LoadTexture(titleTex, "texture/title3.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
+	UINT htpTex = 01;
+	spCommon_->LoadTexture(htpTex, "texture/howtoplay.png");
+	spriteHTP_->Initialize(spCommon_, htpTex);
 
+	spriteTitle_->SetPosition({ 0.0f,easeTitlePosY.start });
+	spriteHTP_->SetPosition({ 0.0f,easeHTPPosY.start });
 	//パーティクル
 	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
 	pm1_ = ParticleManager::Create();
@@ -76,12 +81,12 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	
-	spriteTitle_->Update();
-	
-	
+
 	if (isStart)
 	{
+		isHTP = false;
+		easeHTPPosY.ease_out_expo();
+		spriteHTP_->SetPosition({ 0.0f,easeHTPPosY.num_X });
 		//時間
 		//現在時間を取得する
 		nowCount = std::chrono::steady_clock::now();
@@ -94,54 +99,61 @@ void TitleScene::Update()
 		camera_->SetEye(Bezier3(startEye, p1Eye, p2Eye, endEye, timeRate));
 		camera_->SetTarget(Bezier3(startTarget, p1Target, p2Target, endTarget, timeRate));
 
-		if (camera_->GetEye().z == endEye.z&& camera_->GetTarget().z == endTarget.z)
+		if (camera_->GetEye().z == endEye.z && camera_->GetTarget().z == endTarget.z)
 		{
 			camera_->Reset();
 			sceneManager_->ChangeScene("GAMEPLAY", 1);
 		}
 
 	}
-	else
+	else if (isHTP)
 	{
-	
-		for (std::unique_ptr<Player>& player : players_)player->Update();
-		spriteTitle_->Update();
+		easeTitlePosY.ease_out_expo();
+		easeHTPPosY.ease_out_expo();
+		spriteTitle_->SetPosition({ 0.0f,easeTitlePosY.num_X });
+		spriteHTP_->SetPosition({ 0.0f,easeHTPPosY.num_X });
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			
-			for (Object3d*& object : objects) object->Update();
-			startCount = std::chrono::steady_clock::now();
-
+			easeHTPPosY.Standby(true);
 			isStart = true;
+			startCount = std::chrono::steady_clock::now();
+		}
+	}
+	else
+	{
+
+		for (std::unique_ptr<Player>& player : players_)player->Update();
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			easeTitlePosY.Standby(false);
+			easeHTPPosY.Standby(false);
+		
+			isHTP = true;
 		}
 	}
 
 	for (std::unique_ptr<Earth>& earth : earths_)earth->Update();
 
 	for (Object3d*& object : objects) object->Update();
-	
+
+
+	spriteTitle_->Update();
+	spriteHTP_->Update();
+
 	camera_->Update();
 	lightGroup_->Update();
 	//pm1_->Update();
+
 	imguiManager_->Begin();
 
-	ImGui::Begin("Defense Earth");
-	ImGui::SetWindowPos(ImVec2(0.0f, 600.0f));
-	ImGui::SetWindowSize(ImVec2(800.0f, 100.0f));
-	ImGui::Text("How To Play");
-	ImGui::Text("WD Move X Shot Z");
-	ImGui::End();
-
-	
-
 	imguiManager_->End();
-	
+
 }
 
 void TitleScene::Draw()
 {
 	//背景スプライト描画前処理
-	
+
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
@@ -164,13 +176,15 @@ void TitleScene::Draw()
 	spCommon_->PreDraw();
 	//スプライト描画
 	if (!isStart)spriteTitle_->Draw();
-
+	spriteHTP_->Draw();
+	
 }
 
 void TitleScene::Finalize()
 {
 	//スプライト
 	delete spriteTitle_;
+	delete spriteHTP_;
 	//モデル
 
 	for (Object3d*& object : objects)delete object;
@@ -203,7 +217,7 @@ void TitleScene::Finalize()
 	//パーティクル
 	//delete particle1_;
 	//delete pm1_;
-	
+
 }
 
 const XMFLOAT3 TitleScene::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
@@ -238,7 +252,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 			//プレイヤー初期化
 			std::unique_ptr<Player> newplayer;
 
-			newplayer = Player::Create(model, modelPlayerBullet_,nullptr);
+			newplayer = Player::Create(model, modelPlayerBullet_, nullptr);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
