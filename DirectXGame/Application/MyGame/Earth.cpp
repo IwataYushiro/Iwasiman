@@ -9,6 +9,8 @@ CollisionManager* Earth::colManager_ = CollisionManager::GetInstance();
 
 Earth::~Earth()
 {
+	Finalize();
+	hpGauge_->Finalize();
 	delete spriteHit_;
 }
 
@@ -32,6 +34,12 @@ std::unique_ptr<Earth> Earth::Create(Model* model)
 bool Earth::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
+	
+	audio_ = Audio::GetInstance();
+	//オーディオ
+	audio_->Initialize();
+	hitSE = audio_->SoundLoadWave("Resources/sound/se/earthHit.wav");
+
 	life_ = 10;
 	maxLife_ = life_;
 	isDead_ = false;
@@ -183,7 +191,11 @@ void Earth::DrawSprite()
 }
 
 void Earth::Finalize() {
-	hpGauge_->Finalize();
+	//終了処理
+	audio_->Finalize();
+	//解放
+	//各種音声
+	audio_->SoundUnLoad(&hitSE);
 }
 
 void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
@@ -192,10 +204,13 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 		isHit_ = true;
+		audio_->SoundPlayWave(audio_->GetXAudio2(), hitSE, false);
+
 		if (isEase)return;
 
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
+			if (life_ <= 2)isDead_ = true;
 			life_ -= 2;
 			ease.Standby(false);
 			
@@ -207,6 +222,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)
 		{
+			if (life_ <= 4)isDead_ = true;
 			life_ -= 4;
 			ease.Standby(false);
 			//isHit_ = true;
@@ -218,6 +234,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)
 		{
+			if (life_ <= 1)isDead_ = true;
 			life_ --;
 			ease.Standby(false);
 			//isHit_ = true;
@@ -229,6 +246,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)
 		{
+			if (life_ <= 2)isDead_ = true;
 			life_ -= 2;
 			ease.Standby(false);
 			//isHit_ = true;
@@ -240,6 +258,7 @@ void Earth::OnCollision(const CollisionInfo& info, unsigned short attribute, uns
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)
 		{
+			if (life_ <= 9)isDead_ = true;
 			life_ -= 9;
 			ease.Standby(false);
 			//isHit_ = true;

@@ -9,7 +9,6 @@ using namespace DirectX;
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* TitleScene::input_ = Input::GetInstance();
-Audio* TitleScene::audio_ = Audio::GetInstance();
 SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* TitleScene::camera_ = Camera::GetInstance();
@@ -18,30 +17,31 @@ Camera* TitleScene::camera_ = Camera::GetInstance();
 void TitleScene::Initialize()
 {
 	spCommon_ = SpriteCommon::GetInstance();
-	//ƒI[ƒfƒBƒI
+	audio_ = Audio::GetInstance();
+	//ã‚ªãƒ¼ãƒ‡ã‚£ã‚ª
 	audio_->Initialize();
 
-	//ƒJƒƒ‰
+	//ã‚«ãƒ¡ãƒ©
 	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
-	
+
 	//camera_->SetTarget({ 90.0f,0.0f,0.0f });
 	//camera_->SetEye({ -10.0f,2.0f,0.0f });
-	
-	
+
+
 	LoadModel();
 
-	//ƒŒƒxƒ‹ƒf[ƒ^“Ç‚İ‚İ
+	//ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 	LoadLVData("title");
 	XMFLOAT3 eye = camera_->GetEye();
 	eye = { 0.0f, 6.0f, -365.0f };
 	camera_->SetEye(eye);
-	// ’‹“_À•W
+	// æ³¨è¦–ç‚¹åº§æ¨™
 	XMFLOAT3 target = camera_->GetEye();
 	target = { 0.0f,6.0f,-260.0f };
 	camera_->SetTarget(target);
 
-	//§Œä“_
+	//åˆ¶å¾¡ç‚¹
 	startEye = eye;
 	p1Eye = { 0.0f ,105.0f,-250.0f };
 	p2Eye = { 0.0f ,60.0f,100.0f };
@@ -52,131 +52,166 @@ void TitleScene::Initialize()
 	p2Target = { 0.0f ,60.0f,100.0f };
 	endTarget = { 0.0f ,5.0f,0.0f };
 
-	//ƒ‰ƒCƒg‚ğ¶¬
+	//ãƒ©ã‚¤ãƒˆã‚’ç”Ÿæˆ
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
 	UINT titleTex = 00;
 	spCommon_->LoadTexture(titleTex, "texture/title3.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
+	UINT htpTex = 01;
+	spCommon_->LoadTexture(htpTex, "texture/howtoplay.png");
+	spriteHTP_->Initialize(spCommon_, htpTex);
 
-	//ƒp[ƒeƒBƒNƒ‹
+	spriteTitle_->SetPosition({ 0.0f,easeTitlePosY.start });
+	spriteHTP_->SetPosition({ 0.0f,easeHTPPosY.start });
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);*/
-	startCount = std::chrono::steady_clock::now();	//ŠJnŠÔ
-	nowCount = std::chrono::steady_clock::now();		//Œ»İŠÔ
-	elapsedCount;	//Œo‰ßŠÔ Œo‰ßŠÔ=Œ»İŠÔ-ŠJnŠÔ
-	maxTime = 2.0f;					//‘S‘ÌŠÔ
+	startCount = std::chrono::steady_clock::now();	//é–‹å§‹æ™‚é–“
+	nowCount = std::chrono::steady_clock::now();		//ç¾åœ¨æ™‚é–“
+	elapsedCount;	//çµŒéæ™‚é–“ çµŒéæ™‚é–“=ç¾åœ¨æ™‚é–“-é–‹å§‹æ™‚é–“
+	maxTime = 2.0f;					//å…¨ä½“æ™‚é–“
 	timeRate;
+
+	//éŸ³
+	titleBGM = audio_->SoundLoadWave("Resources/sound/bgm/title.wav");
+	doneSE = audio_->SoundLoadWave("Resources/sound/se/done.wav");
+	startSE = audio_->SoundLoadWave("Resources/sound/se/wind.wav");
+	audio_->SoundPlayWave(audio_->GetXAudio2(), titleBGM, true);
 
 	isStart = false;
 }
 
 void TitleScene::Update()
 {
-	
-	spriteTitle_->Update();
-	
-	
+
 	if (isStart)
 	{
-		//ŠÔ
-		//Œ»İŠÔ‚ğæ“¾‚·‚é
+		isHTP = false;
+		easeHTPPosY.ease_out_expo();
+		spriteHTP_->SetPosition({ 0.0f,easeHTPPosY.num_X });
+		//æ™‚é–“
+		//ç¾åœ¨æ™‚é–“ã‚’å–å¾—ã™ã‚‹
 		nowCount = std::chrono::steady_clock::now();
-		//‘O‰ñ‹L˜^‚©‚ç‚ÌŒo‰ßŠÔ‚ğæ“¾‚·‚é
+		//å‰å›è¨˜éŒ²ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’å–å¾—ã™ã‚‹
 		elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
 
-		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//ƒ}ƒCƒNƒ•b‚ğ•b‚É’PˆÊ•ÏŠ·
+		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//ãƒã‚¤ã‚¯ãƒ­ç§’ã‚’ç§’ã«å˜ä½å¤‰æ›
 
 		timeRate = min(elapsed / maxTime, 1.0f);
 		camera_->SetEye(Bezier3(startEye, p1Eye, p2Eye, endEye, timeRate));
 		camera_->SetTarget(Bezier3(startTarget, p1Target, p2Target, endTarget, timeRate));
 
-		if (camera_->GetEye().z == endEye.z&& camera_->GetTarget().z == endTarget.z)
+		if (camera_->GetEye().z == endEye.z && camera_->GetTarget().z == endTarget.z)
 		{
 			camera_->Reset();
 			sceneManager_->ChangeScene("GAMEPLAY", 1);
 		}
 
 	}
-	else
+	else if (isHTP)
 	{
-	
-		for (std::unique_ptr<Player>& player : players_)player->Update();
-		spriteTitle_->Update();
+		easeTitlePosY.ease_out_expo();
+		easeHTPPosY.ease_out_expo();
+		spriteTitle_->SetPosition({ 0.0f,easeTitlePosY.num_X });
+		spriteHTP_->SetPosition({ 0.0f,easeHTPPosY.num_X });
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			
-			for (Object3d*& object : objects) object->Update();
-			startCount = std::chrono::steady_clock::now();
-
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
+			audio_->SoundPlayWave(audio_->GetXAudio2(), startSE, false);
+			easeHTPPosY.Standby(true);
 			isStart = true;
+			startCount = std::chrono::steady_clock::now();
+		}
+	}
+	else
+	{
+
+		for (std::unique_ptr<Player>& player : players_)player->Update();
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			audio_->SoundPlayWave(audio_->GetXAudio2(), doneSE, false);
+			easeTitlePosY.Standby(false);
+			easeHTPPosY.Standby(false);
+		
+			isHTP = true;
 		}
 	}
 
 	for (std::unique_ptr<Earth>& earth : earths_)earth->Update();
 
 	for (Object3d*& object : objects) object->Update();
-	
+
+
+	spriteTitle_->Update();
+	spriteHTP_->Update();
+
 	camera_->Update();
 	lightGroup_->Update();
 	//pm1_->Update();
+
 	imguiManager_->Begin();
-#ifdef	_DEBUG
-	ImGui::Begin("Defense Earth");
-	ImGui::SetWindowPos(ImVec2(0.0f, 600.0f));
-	ImGui::SetWindowSize(ImVec2(800.0f, 100.0f));
-	ImGui::Text("How To Play");
-	ImGui::Text("WD Move X Shot Z");
-	ImGui::End();
-#endif
+
 	imguiManager_->End();
 }
 
 void TitleScene::Draw()
 {
-	//”wŒiƒXƒvƒ‰ƒCƒg•`‰æ‘Oˆ—
-	
-	//ƒGƒtƒFƒNƒg•`‰æ‘Oˆ—
+	//èƒŒæ™¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‰å‡¦ç†
+
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»å‰å‡¦ç†
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
 	//pm1_->Draw();
-	//ƒGƒtƒFƒNƒg•`‰æŒãˆ—
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»å¾Œå‡¦ç†
 	ParticleManager::PostDraw();
 
 
-	//ƒ‚ƒfƒ‹•`‰æ‘Oˆ—
+	//ãƒ¢ãƒ‡ãƒ«æç”»å‰å‡¦ç†
 	Object3d::PreDraw(dxCommon_->GetCommandList());
-	//ƒ‚ƒfƒ‹•`‰æ
+	//ãƒ¢ãƒ‡ãƒ«æç”»
 	for (std::unique_ptr<Player>& player : players_)player->Draw();
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Draw();
 	for (std::unique_ptr<Earth>& earth : earths_)earth->Draw();
 	for (auto& object : objects)object->Draw();
-	//ƒ‚ƒfƒ‹•`‰æŒãˆ—
+	//ãƒ¢ãƒ‡ãƒ«æç”»å¾Œå‡¦ç†
 	Object3d::PostDraw();
 
-	//‘OŒiƒXƒvƒ‰ƒCƒg
+	//å‰æ™¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->PreDraw();
-	//ƒXƒvƒ‰ƒCƒg•`‰æ
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 	if (!isStart)spriteTitle_->Draw();
-
+	spriteHTP_->Draw();
+	
 }
 
 void TitleScene::Finalize()
 {
-	//ƒXƒvƒ‰ƒCƒg
+	//éŸ³å£°
+	audio_->Finalize();
+	audio_->SoundUnLoad(&titleBGM);
+	audio_->SoundUnLoad(&doneSE);
+	audio_->SoundUnLoad(&startSE);
+
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	delete spriteTitle_;
-	//ƒ‚ƒfƒ‹
+	delete spriteHTP_;
+	//ãƒ¢ãƒ‡ãƒ«
 
 	for (Object3d*& object : objects)delete object;
 	objects.clear();
 
-	//3Dƒ‚ƒfƒ‹
+	//3Dãƒ¢ãƒ‡ãƒ«
 	delete modelPlayer_;
 	delete modelPlayerBullet_;
 	delete modelEnemy1_;
+	delete modelEnemy1Power_;
+	delete modelEnemy1Guard_;
+	delete modelEnemy1Speed_;
+	delete modelEnemy1Death_;
 	delete modelEnemy2_;
 	delete modelEnemy2Power_;
 	delete modelEnemy2Guard_;
@@ -191,12 +226,12 @@ void TitleScene::Finalize()
 
 	models.clear();
 
-	//ƒ‰ƒCƒg
+	//ãƒ©ã‚¤ãƒˆ
 	delete lightGroup_;
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	//delete particle1_;
 	//delete pm1_;
-	
+
 }
 
 const XMFLOAT3 TitleScene::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
@@ -214,85 +249,85 @@ const XMFLOAT3 TitleScene::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const
 
 void TitleScene::LoadLVData(const std::string& stagePath)
 {
-	// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 	levelData = LevelLoader::LoadFile(stagePath);
-	// ƒŒƒxƒ‹ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ğ¶¬A”z’u
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã€é…ç½®
 	for (LevelData::ObjectData& objectData : levelData->objects) {
 
-		// ƒtƒ@ƒCƒ‹–¼‚©‚ç“o˜^Ï‚İƒ‚ƒfƒ‹‚ğŒŸõ
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ç™»éŒ²æ¸ˆã¿ãƒ¢ãƒ‡ãƒ«ã‚’æ¤œç´¢
 		Model* model = nullptr;
 		decltype(models)::iterator it = models.find(objectData.fileName);
 		if (it != models.end()) {
 			model = it->second;
 		}
-		//ƒvƒŒƒCƒ„[
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 		if (objectData.objectType.find("PLAYER") == 0)
 		{
-			//ƒvƒŒƒCƒ„[‰Šú‰»
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åˆæœŸåŒ–
 			std::unique_ptr<Player> newplayer;
 
-			newplayer = Player::Create(model, modelPlayerBullet_,nullptr);
-			// À•W
+			newplayer = Player::Create(model, modelPlayerBullet_, nullptr);
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newplayer->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newplayer->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newplayer->SetScale(scale);
 
 			newplayer->SetCamera(camera_);
 			newplayer->Update();
-			//ƒŠƒXƒg‚É“o˜^
+			//ãƒªã‚¹ãƒˆã«ç™»éŒ²
 			players_.push_back(std::move(newplayer));
 		}
 		else if (objectData.objectType.find("EARTH") == 0)
 		{
-			//ƒS[ƒ‹‰Šú‰»
+			//ã‚´ãƒ¼ãƒ«åˆæœŸåŒ–
 			std::unique_ptr<Earth> newearth;
 			newearth = Earth::Create(model);
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newearth->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newearth->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newearth->SetScale(scale);
 
 			newearth->SetCamera(camera_);
 			newearth->Update();
-			//ƒŠƒXƒg‚É“o˜^
+			//ãƒªã‚¹ãƒˆã«ç™»éŒ²
 			earths_.push_back(std::move(newearth));
 		}
-		//’nŒ`
+		//åœ°å½¢
 		else
 		{
-			// ƒ‚ƒfƒ‹‚ğw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+			// ãƒ¢ãƒ‡ãƒ«ã‚’æŒ‡å®šã—ã¦3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 			TouchableObject* newObject = TouchableObject::Create(model, false);
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newObject->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
@@ -300,7 +335,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 			newObject->SetCamera(camera_);
 
 
-			// ”z—ñ‚É“o˜^
+			// é…åˆ—ã«ç™»éŒ²
 			objects.push_back(newObject);
 		}
 
@@ -311,10 +346,14 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 
 void TitleScene::LoadModel()
 {
-	// ƒ‚ƒfƒ‹“Ç‚İ‚İ
+	// ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿
 	modelPlayer_ = Model::LoadFromOBJ("player");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
+	modelEnemy1Power_ = Model::LoadFromOBJ("enemy1p");
+	modelEnemy1Guard_ = Model::LoadFromOBJ("enemy1g");
+	modelEnemy1Speed_ = Model::LoadFromOBJ("enemy1s");
+	modelEnemy1Death_ = Model::LoadFromOBJ("enemy1d");
 	modelEnemy2_ = Model::LoadFromOBJ("enemy2");
 	modelEnemy2Power_ = Model::LoadFromOBJ("enemy2p");
 	modelEnemy2Guard_ = Model::LoadFromOBJ("enemy2g");
@@ -331,6 +370,10 @@ void TitleScene::LoadModel()
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
 	models.insert(std::make_pair("enemy1", modelEnemy1_));
+	models.insert(std::make_pair("enemy1p", modelEnemy1Power_));
+	models.insert(std::make_pair("enemy1g", modelEnemy1Guard_));
+	models.insert(std::make_pair("enemy1s", modelEnemy1Speed_));
+	models.insert(std::make_pair("enemy1d", modelEnemy1Death_));
 	models.insert(std::make_pair("enemy2", modelEnemy2_));
 	models.insert(std::make_pair("enemy2p", modelEnemy2Power_));
 	models.insert(std::make_pair("enemy2g", modelEnemy2Guard_));

@@ -16,6 +16,7 @@
 #include <sstream>
 #include <string>
 
+#include "Easing.h"
 #include "SceneManager.h"
 #include <DirectXMath.h>
 #include <chrono>
@@ -55,7 +56,7 @@ private://静的メンバ変数
 	//インプット
 	static Input* input_;
 	//オーディオ
-	static Audio* audio_;
+	Audio* audio_ = nullptr;
 	//シーンマネージャー
 	static SceneManager* sceneManager_;
 	//imgui
@@ -64,15 +65,24 @@ private://静的メンバ変数
 	static Camera* camera_;
 
 private://メンバ変数
+	//音
+	Audio::SoundData titleBGM;
+	Audio::SoundData doneSE;
+	Audio::SoundData startSE;
+
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
-
+	Sprite* spriteHTP_ = new Sprite();
 	//モデル
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
 	Model* modelPlayerBullet_ = nullptr;
 
 	Model* modelEnemy1_ = nullptr;
+	Model* modelEnemy1Power_ = nullptr;
+	Model* modelEnemy1Guard_ = nullptr;
+	Model* modelEnemy1Speed_ = nullptr;
+	Model* modelEnemy1Death_ = nullptr;
 	Model* modelEnemyBullet_ = nullptr;
 
 	Model* modelEnemy2_ = nullptr;
@@ -114,7 +124,10 @@ private://メンバ変数
 	XMFLOAT3 endTarget;
 
 	bool isStart = false;
+	bool isHTP = false;
+	Easing easeTitlePosY = Easing(0.0f, 800.0f, 1.0f);
 
+	Easing easeHTPPosY = Easing(800.0f, 0.0f, 1.0f);
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
 	//パーティクル
