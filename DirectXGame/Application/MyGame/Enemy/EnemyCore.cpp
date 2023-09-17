@@ -47,7 +47,7 @@ bool EnemyCore::Initialize() {
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
 
 	Parameter();
 

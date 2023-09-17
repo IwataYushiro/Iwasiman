@@ -216,7 +216,7 @@
             },
             "file_name": "enemy1",
             "objecttype": "ENEMY",
-            "objectpattern": "E2S"
+            "objectpattern": "E2P"
         },
         {
             "type": "MESH",
@@ -265,6 +265,30 @@
             "file_name": "enemy1",
             "objecttype": "ENEMY",
             "objectpattern": "E2G"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.005",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -19.409080505371094,
+                    20.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "E2S"
         }
     ]
 }

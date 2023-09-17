@@ -38,7 +38,7 @@ bool Player::Initialize() {
 	if (!Object3d::Initialize()) return false;
 	input_ = Input::GetInstance();
 
-	life_ = 5;
+	life_ = 10;
 	isDead_ = false;
 	ishit = false;
 	mutekiCount = 0;
@@ -74,7 +74,7 @@ bool Player::Initialize() {
 
 void Player::Reset() {
 
-	life_ = 5;
+	life_ = 10;
 	isDead_ = false;
 
 	isRight_ = true;
@@ -537,7 +537,14 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
 		if (isShake)return;
-		life_--;
+
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ -= 2;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)life_ -= 4;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)life_--;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)life_--;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)life_ -= 6;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
