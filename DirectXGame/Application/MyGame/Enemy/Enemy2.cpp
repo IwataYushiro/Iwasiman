@@ -14,14 +14,14 @@ CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
 Enemy2::~Enemy2() {
 }
 
-std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
+std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene,int level)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy2> ins = std::make_unique<Enemy2>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
-	if (!ins->Initialize())
+	if (!ins->Initialize(level))
 	{
 		ins.release();
 		assert(0);
@@ -35,21 +35,73 @@ std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Model* bullet, Player* play
 }
 
 // 初期化
-bool Enemy2::Initialize() {
+bool Enemy2::Initialize(int level) {
 
 	if (!Object3d::Initialize()) return false;
-	Parameter();
-
+	
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+
+	InitSubATTR(level);
+
+	Parameter(level);
 
 	return true;
 }
 
+void Enemy2::InitSubATTR(int level)
+{
+	if (level == 1)collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	else if (level == 2)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
+	else if (level == 3)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
+	else if (level == 4)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
+	else if (level == 5)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
+}
+
+void Enemy2::InitSpeed()
+{
+	//移動
+	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_NONE)
+	{
+		speed = { 0.0f, -1.0f, 0.0f };
+		backSpeed = { 0.0f,0.5f,0.0f };
+	}
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER)
+	{
+		speed = { 0.0f, -0.5f, 0.0f };
+		backSpeed = { 0.0f,0.25f,0.0f };
+	}
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD)
+	{
+		speed = { 0.0f, -1.0f, 0.0f };
+		backSpeed = { 0.0f,0.5f,0.0f };
+	}
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED)
+	{
+		speed = { 0.0f, -2.0f, 0.0f };
+		backSpeed = { 0.0f,1.0f,0.0f };
+	}
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH)
+	{
+		speed = { 0.0f, -0.5f, 0.0f };
+		backSpeed = { 0.0f,0.25f,0.0f };
+	}
+
+}
+
+void Enemy2::InitLIfe()
+{
+	//ライフ
+	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = 3;
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) life_ = 3;
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) life_ = 5;
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) life_ = 2;
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) life_ = 2;
+}
+
 //パラメータ
-void Enemy2::Parameter() {
+void Enemy2::Parameter(int level) {
 
 	isReverse_ = false;
 	//ジャンプしたか
@@ -60,14 +112,18 @@ void Enemy2::Parameter() {
 	//発射タイマー初期化
 	fireTimer = kFireInterval;
 
-	life_ = 3;
+	//移動
+	InitSpeed();
+	//ライフ
+	InitLIfe();
+
 	isDead_ = false;
 
 	kFireInterval = MyMath::RandomMTInt(75, 100);
 }
 
 //リセット
-void Enemy2::Reset() { Parameter(); }
+void Enemy2::Reset(int level) { Parameter(level); }
 
 //更新
 void Enemy2::Update() {
@@ -294,16 +350,13 @@ void Enemy2::Draw() {
 //状態変化用の更新関数
 //接近
 void Enemy2::UpdateApproach() {
-	//速度
-	XMFLOAT3 velocity;
 
 	//移動
-	velocity = { 0.0f, -1.0f, 0.0f };
 	if (!onGround)
 	{
-		position.x += velocity.x;
-		position.y += velocity.y;
-		position.z += velocity.z;
+		position.x += speed.x;
+		position.y += speed.y;
+		position.z += speed.z;
 	}
 
 	if (position.y <= -20.0f)
@@ -315,14 +368,9 @@ void Enemy2::UpdateApproach() {
 
 //離脱
 void Enemy2::UpdateLeave() {
-	//速度
-	XMFLOAT3 velocity;
-
-	//移動
-	velocity = { 0.0f, 0.5f, 0.0f };
-	position.x += velocity.x;
-	position.y += velocity.y;
-	position.z += velocity.z;
+	position.x += backSpeed.x;
+	position.y += backSpeed.y;
+	position.z += backSpeed.z;
 
 	if (position.y >=  20.0f) phase_ = Phase::Approach;
 }

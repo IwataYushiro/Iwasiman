@@ -38,8 +38,29 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 	else if (enemyName.find("ENEMY2") == 0)
 	{
 		//ドッスン風雑魚
-		return Enemy2::Create(model,bullet, player, gamescene);
+		return Enemy2::Create(model, bullet, player, gamescene, 1);
 	}
+	else if (enemyName.find("E2P") == 0)
+	{
+		//ドッスン風雑魚(攻撃力強め　速度遅め)
+		return Enemy2::Create(model, bullet, player, gamescene, 2);
+	}
+	else if (enemyName.find("E2G") == 0)
+	{
+		//ドッスン風雑魚(ライフ多め　攻撃力弱め)
+		return Enemy2::Create(model, bullet, player, gamescene, 3);
+	}
+	else if (enemyName.find("E2S") == 0)
+	{
+		//ドッスン風雑魚(速度速め　ライフ少なめ)
+		return Enemy2::Create(model, bullet, player, gamescene, 4);
+	}
+	else if (enemyName.find("E2D") == 0)
+	{
+		//ドッスン風雑魚(攻撃力ほぼ即死　他弱め)
+		return Enemy2::Create(model, bullet, player, gamescene, 5);
+	}
+
 	else if (enemyName.find("BOSS1") == 0)
 	{
 		//ベジェ曲線で動くボス
