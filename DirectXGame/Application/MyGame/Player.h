@@ -119,6 +119,12 @@ private:
 
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;
+	//シェイク機能
+	bool isShake = false;
+	//スタート時
+	XMFLOAT3 nowEye;
+	XMFLOAT3 nowTarget;
+	XMFLOAT3 hitMove;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
@@ -132,4 +138,5 @@ public: //アクセッサ、インライン関数
 	const int& GetLife()const { return life_; }
 	//ゲームシーン
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+
 };

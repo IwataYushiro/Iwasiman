@@ -36,7 +36,7 @@ std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScen
 bool Player::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
-input_ = Input::GetInstance();
+	input_ = Input::GetInstance();
 
 	life_ = 5;
 	isDead_ = false;
@@ -73,7 +73,7 @@ input_ = Input::GetInstance();
 }
 
 void Player::Reset() {
-	
+
 	life_ = 5;
 	isDead_ = false;
 
@@ -91,35 +91,60 @@ void Player::Reset() {
 	nowCount = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
 	maxTime = 1.0f;					//全体時間
-	
+
 }
 void Player::Update() {
-	
+
 	pmDash_->SetCamera(camera_);
 
-	if (!isDead_) 
+	if (!isDead_)
 	{
-		if (life_ <= 0)
-		{
-			isDead_ = true;
-		}
-		if (position.y <= -60.0f)isDead_ = true;
 
-		if (ishit) mutekiCount++; 
-		if (mutekiCount == MUTEKI_COUNT)
-		{
-			ishit = false;
-			mutekiCount = 0;
-		}
 		//移動処理
 		if (!isJumpBack)Move();
 		//攻撃処理
 		FallAndJump();
 		JumpBack();
 		Attack();
+
+		if (life_ <= 0)
+		{
+			isDead_ = true;
+		}
+		if (position.y <= -60.0f)isDead_ = true;
+
+		if (ishit)
+		{
+			nowEye = camera_->GetEye();
+			nowTarget = camera_->GetTarget();
+
+			isShake = true;
+			ishit = false;
+		}
+		if (isShake)
+		{
+			XMFLOAT3 Eye = nowEye + hitMove;
+			XMFLOAT3 Target = nowTarget + hitMove;
+			camera_->ShakeEye(Eye, 10, { Eye.x - 2.0f,Eye.y - 2.0f,Eye.z - 2.0f },
+				{ Eye.x + 2.0f,Eye.y + 2.0f,Eye.z + 2.0f });
+
+			camera_->ShakeTarget(Target, 10, { Target.x - 2.0f,Target.y - 2.0f,Target.z - 2.0f },
+				{ Target.x + 2.0f,Target.y + 2.0f,Target.z + 2.0f });
+			camera_->Update();
+			mutekiCount++;
+		}
+
+		if (mutekiCount == MUTEKI_COUNT)
+		{
+			camera_->SetEye(nowEye + hitMove);
+			camera_->SetTarget(nowTarget + hitMove);
+			isShake = false;
+			mutekiCount = 0;
+			hitMove={0.0f,0.0f,0.0f};
+		}
 		//移動制限
 		Trans();
-		
+
 	}
 	pmDash_->Update();
 
@@ -129,7 +154,7 @@ void Player::Update() {
 
 	//着地処理
 	Landing(COLLISION_ATTR_LANDSHAPE);
-	
+
 }
 
 void Player::Draw() { Object3d::Draw(); }
@@ -153,6 +178,7 @@ void Player::Move() {
 		move.x -= moveSpeed;
 		cmove.x -= moveSpeed;
 		tmove.x -= moveSpeed;
+		if (isShake)hitMove.x -= moveSpeed;
 	}
 	if (input_->PushKey(DIK_D)) {
 		isRight_ = true;
@@ -160,6 +186,7 @@ void Player::Move() {
 		move.x += moveSpeed;
 		cmove.x += moveSpeed;
 		tmove.x += moveSpeed;
+		if (isShake)hitMove.x += moveSpeed;
 	}
 
 
@@ -173,6 +200,7 @@ void Player::Move() {
 			move.x -= moveSpeed * 1.5f;
 			cmove.x -= moveSpeed * 1.5f;
 			tmove.x -= moveSpeed * 1.5f;
+			if (isShake)hitMove.x -= moveSpeed * 1.5f;
 		}
 		if (input_->PushKey(DIK_D)) {
 			isRight_ = true;
@@ -181,6 +209,7 @@ void Player::Move() {
 			move.x += moveSpeed * 1.5f;
 			cmove.x += moveSpeed * 1.5f;
 			tmove.x += moveSpeed * 1.5f;
+			if (isShake)hitMove.x += moveSpeed * 1.5f;
 		}
 	}
 
@@ -507,11 +536,11 @@ XMFLOAT3 Player::GetWorldPosition() {
 void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
-		if (ishit)return;
+		if (isShake)return;
 		life_--;
 		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
-		
+
 		pmDash_->Update();
 		ishit = true;
 	}
@@ -520,7 +549,7 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
 		{
-			if (ishit)return;
+			if (isShake)return;
 			life_ -= 3;
 			pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
@@ -528,7 +557,7 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 			pmDash_->Update();
 			ishit = true;
 		}
-		
+
 	}
 }
 
