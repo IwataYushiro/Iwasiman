@@ -90,8 +90,8 @@ void PlayerBullet::OnCollision(const CollisionInfo& info, unsigned short attribu
 	if (attribute == COLLISION_ATTR_LANDSHAPE)isDead_ = true;
 	else if (attribute == COLLISION_ATTR_ENEMYS) 
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_NONE)isDead_ = true;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+		else isDead_ = true;
 	}
 	
 }

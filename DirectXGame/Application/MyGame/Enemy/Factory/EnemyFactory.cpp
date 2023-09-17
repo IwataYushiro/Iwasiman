@@ -12,8 +12,29 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 	if (enemyName.find("ENEMY1") == 0)
 	{
 		//クリボー風雑魚
-		return Enemy1::Create(model,bullet, player, gamescene);
+		return Enemy1::Create(model, bullet, player, gamescene, 1);
 	}
+	else if (enemyName.find("E1P") == 0)
+	{
+		//クリボー風雑魚(攻撃力強め　速度遅め)
+		return Enemy1::Create(model, bullet, player, gamescene, 2);
+	}
+	else if (enemyName.find("E1G") == 0)
+	{
+		//クリボー風雑魚(ライフ多め　攻撃力弱め)
+		return Enemy1::Create(model, bullet, player, gamescene, 3);
+	}
+	else if (enemyName.find("E1S") == 0)
+	{
+		//クリボー風雑魚(速度速め　ライフ少なめ)
+		return Enemy1::Create(model, bullet, player, gamescene, 4);
+	}
+	else if (enemyName.find("E1D") == 0)
+	{
+		//クリボー風雑魚(攻撃力ほぼ即死　他弱め)
+		return Enemy1::Create(model, bullet, player, gamescene, 5);
+	}
+
 	else if (enemyName.find("ENEMY2") == 0)
 	{
 		//ドッスン風雑魚
