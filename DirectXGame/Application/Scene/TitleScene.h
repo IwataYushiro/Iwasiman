@@ -91,7 +91,8 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.4f),//ステージセレクトへ
 		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
 	};
-
+	int MenuCount = 0;
+	
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
 	//パーティクル

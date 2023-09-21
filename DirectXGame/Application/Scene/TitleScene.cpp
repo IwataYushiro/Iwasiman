@@ -62,8 +62,8 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(titleMenuDoneTex, "texture/titlemenud.png");
 	spriteMenuDone_->Initialize(spCommon_, titleMenuDoneTex);
 	spriteMenuDone_->SetPosition({ easeMenuPosX[3].start,550.0f });
-	
-	
+
+
 	//FBX
 	objF = ObjectFbx::Create();
 	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
@@ -81,6 +81,8 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
+	if (MenuCount <= 0)MenuCount = 0;
+	else if (MenuCount >= 1)MenuCount = 1;
 	if (isMenu)
 	{
 		//イージング
@@ -94,17 +96,35 @@ void TitleScene::Update()
 		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
 		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
 
-		if (input_->TriggerKey(DIK_T))
+		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
+		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
+
+		if (MenuCount == 0)
 		{
-			//チュートリアルステージ
-			camera_->Reset();
-			sceneManager_->ChangeScene("GAMEPLAY", 1);
+			spriteMenuTutorial_->SetColor({ 1.0f,0.1f,0.1f,1.0f });
+			spriteMenuStageSelect_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 		}
-		if (input_->TriggerKey(DIK_S))
+		else if (MenuCount == 1)
 		{
-			//ステージ選択
-			camera_->Reset();
-			sceneManager_->ChangeScene("STAGECLEAR", 1);
+			spriteMenuTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteMenuStageSelect_->SetColor({ 1.0f,0.1f,0.1f,1.0f });
+		}
+
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			if (MenuCount == 0)
+			{
+				//チュートリアルステージ
+				camera_->Reset();
+				sceneManager_->ChangeScene("GAMEPLAY", 1);
+			}
+			else if (MenuCount == 1)
+			{
+				//ステージ選択
+				camera_->Reset();
+				sceneManager_->ChangeScene("STAGECLEAR", 1);
+
+			}
 		}
 	}
 	else
