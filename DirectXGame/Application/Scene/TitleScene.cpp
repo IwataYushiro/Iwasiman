@@ -23,15 +23,15 @@ void TitleScene::Initialize()
 	//カメラ
 	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
-	
+
 	//camera_->SetTarget({ 90.0f,0.0f,0.0f });
 	//camera_->SetEye({ -10.0f,2.0f,0.0f });
-	
+
 	// 視点座標
 	camera_->SetEye({ 0.0f, 5.0f, -100.0f });
 	// 注視点座標
 	camera_->SetTarget({ 0.0f,0.0f,0.0f });
-	
+
 	//レベルデータ読み込み
 	//LoadLVData();
 
@@ -43,31 +43,87 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(titleTex, "texture/title2.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
 
+	UINT titleMenuTex = 01;
+	spCommon_->LoadTexture(titleMenuTex, "texture/titlemenu.png");
+	spriteMenu_->Initialize(spCommon_, titleMenuTex);
+	spriteMenu_->SetPosition({ easeMenuPosX[0].start,0.0f });
+
+	UINT titleMenuTutorialTex = 02;
+	spCommon_->LoadTexture(titleMenuTutorialTex, "texture/titlemenut.png");
+	spriteMenuTutorial_->Initialize(spCommon_, titleMenuTutorialTex);
+	spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].start,150.0f });
+
+	UINT titleMenuStageSerectTex = 03;
+	spCommon_->LoadTexture(titleMenuStageSerectTex, "texture/titlemenus.png");
+	spriteMenuStageSelect_->Initialize(spCommon_, titleMenuStageSerectTex);
+	spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].start,300.0f });
+
+	UINT titleMenuDoneTex = 04;
+	spCommon_->LoadTexture(titleMenuDoneTex, "texture/titlemenud.png");
+	spriteMenuDone_->Initialize(spCommon_, titleMenuDoneTex);
+	spriteMenuDone_->SetPosition({ easeMenuPosX[3].start,550.0f });
+	
+	
 	//FBX
 	objF = ObjectFbx::Create();
 	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
 	objF->PlayAnimation();//更新で呼ぶと止まるから注意
-	
+
 	//パーティクル
 	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);*/
-	
+
 }
 
 void TitleScene::Update()
 {
+	if (isMenu)
+	{
+		//イージング
+		easeTitlePosX.ease_out_expo();
+		for (int i = 0; i < 4; i++)easeMenuPosX[i].ease_out_expo();
+
+		//座標セット
+		spriteTitle_->SetPosition({ easeTitlePosX.num_X,0.0f });
+		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
+		spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
+		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
+		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
+
+		if (input_->TriggerKey(DIK_T))
+		{
+			//チュートリアルステージ
+			camera_->Reset();
+			sceneManager_->ChangeScene("GAMEPLAY", 1);
+		}
+		if (input_->TriggerKey(DIK_S))
+		{
+			//ステージ選択
+			camera_->Reset();
+			sceneManager_->ChangeScene("STAGECLEAR", 1);
+		}
+	}
+	else
+	{
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			easeTitlePosX.Standby(false);
+			for (int i = 0; i < 4; i++)easeMenuPosX[i].Standby(false);
+			isMenu = true;
+
+		}
+
+	}
 
 	spriteTitle_->Update();
-	
-	if (input_->TriggerKey(DIK_SPACE))
-	{
-		camera_->Reset();
-		sceneManager_->ChangeScene("GAMEPLAY", 1);
-	}
+	spriteMenu_->Update();
+	spriteMenuTutorial_->Update();
+	spriteMenuStageSelect_->Update();
+	spriteMenuDone_->Update();
 
 	/*for (auto& object : objects) {
 		object->Update();
@@ -75,7 +131,7 @@ void TitleScene::Update()
 	camera_->Update();
 	lightGroup_->Update();
 	//pm1_->Update();
-	
+
 	objF->Update();
 	imguiManager_->Begin();
 
@@ -95,10 +151,6 @@ void TitleScene::Update()
 void TitleScene::Draw()
 {
 	//背景スプライト描画前処理
-	spCommon_->PreDraw();
-	//スプライト描画
-	spriteTitle_->Draw();
-
 
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
@@ -123,15 +175,27 @@ void TitleScene::Draw()
 	//Fbxモデル描画後処理
 	ObjectFbx::PostDraw();
 
-	//前景スプライト
 
-	
+	spCommon_->PreDraw();
+	//前景スプライト
+	//スプライト描画
+	spriteTitle_->Draw();
+	spriteMenu_->Draw();
+	spriteMenuTutorial_->Draw();
+	spriteMenuStageSelect_->Draw();
+	spriteMenuDone_->Draw();
+
 }
 
 void TitleScene::Finalize()
 {
 	//スプライト
 	delete spriteTitle_;
+	delete spriteMenu_;
+	delete spriteMenuTutorial_;
+	delete spriteMenuStageSelect_;
+	delete spriteMenuDone_;
+
 	//プレイヤー
 	delete object3DPlayer_;
 	delete modelPlayer_;
