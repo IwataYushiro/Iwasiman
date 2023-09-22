@@ -10,6 +10,7 @@
 #include "ParticleManager.h"
 #include "Sprite.h"
 
+#include <DirectXMath.h>
 #include <map>
 
 #include "SceneManager.h"
@@ -31,7 +32,7 @@ public://メンバ関数
 	//終了
 	void Finalize() override;
 	//レベルデータ読み込み
-	void LoadLVData();
+	void LoadLVData(const std::string& stagePath);
 
 private://静的メンバ変数
 	//DirectX基盤
@@ -51,32 +52,25 @@ private://静的メンバ変数
 
 private://メンバ変数
 	//Sprite
-	Sprite* spriteTitle_ = new Sprite();
-
 	Sprite* spriteMenu_ = new Sprite();
-	Sprite* spriteMenuTutorial_ = new Sprite();
-	Sprite* spriteMenuSelect_ = new Sprite();
-	Sprite* spriteMenuDone_ = new Sprite();
+	Sprite* spriteStage_ = new Sprite();
+	Sprite* spriteDone_ = new Sprite();
 
 	//FBX
 	ModelFbx* modelF = nullptr;
 	ObjectFbx* objF = nullptr;
 
 	//モデル
-	Model* modelPlayer_ = nullptr;
-	Object3d* object3DPlayer_ = nullptr;
+	//Model* modelPlayer_ = nullptr;
+	//Object3d* object3DPlayer_ = nullptr;
 
 	LevelData* levelData = nullptr;
 
-	Model* modelSkydome = nullptr;
-	Model* modelGround = nullptr;
-	Model* modelFighter = nullptr;
-	Model* modelSphere = nullptr;
+	Model* modelStage = nullptr;
+	Object3d* objStage = nullptr;
+	//オブジェクト回転用
+	DirectX::XMFLOAT3 rot = { 0.0f,0.0f,0.0f };
 
-	Object3d* objSkydome = nullptr;
-	Object3d* objGround = nullptr;
-	Object3d* objFighter = nullptr;
-	Object3d* objSphere = nullptr;
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
 
@@ -98,5 +92,7 @@ private://メンバ変数
 	//パーティクル
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm1_ = nullptr;
+	//モデル読み込み
+	//void LoadModel();
 
 };

@@ -99,15 +99,27 @@ void TitleScene::Update()
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
 
+		if (isColorReverse_)speedColor -= 0.01f;
+		else speedColor += 0.01f;
+		
+		if (speedColor >= 0.9f)
+		{
+			isColorReverse_ = true;
+		}
+		if (speedColor <= 0.0f)
+		{
+			isColorReverse_ = false;
+		}
+
 		if (MenuCount == 0)
 		{
-			spriteMenuTutorial_->SetColor({ 1.0f,0.1f,0.1f,1.0f });
+			spriteMenuTutorial_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
 			spriteMenuStageSelect_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 		}
 		else if (MenuCount == 1)
 		{
 			spriteMenuTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-			spriteMenuStageSelect_->SetColor({ 1.0f,0.1f,0.1f,1.0f });
+			spriteMenuStageSelect_->SetColor({ 0.1f+speedColor,0.1f,0.1f,1.0f });
 		}
 
 		if (input_->TriggerKey(DIK_SPACE))
@@ -122,7 +134,7 @@ void TitleScene::Update()
 			{
 				//ステージ選択
 				camera_->Reset();
-				sceneManager_->ChangeScene("STAGECLEAR", 1);
+				sceneManager_->ChangeScene("STAGESELECT", 1);
 
 			}
 		}
@@ -209,6 +221,8 @@ void TitleScene::Draw()
 
 void TitleScene::Finalize()
 {
+	//音声
+	audio_->Finalize();
 	//スプライト
 	delete spriteTitle_;
 	delete spriteMenu_;

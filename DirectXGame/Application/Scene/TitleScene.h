@@ -91,8 +91,12 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.4f),//ステージセレクトへ
 		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
 	};
+
 	int MenuCount = 0;
-	
+	//色を変えるスピード
+	float speedColor = 0.0f;
+	//色反転フラグ
+	bool isColorReverse_ = false;
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
 	//パーティクル

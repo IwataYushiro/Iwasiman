@@ -1,0 +1,102 @@
+# Blender 3.5.0 MTL File: 'enemytest.blend'
+# www.blender.org
+
+newmtl Material
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/player/player.jpg
+
+newmtl Material.001
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/enemy1/enemy1.jpg
+
+newmtl Material.005
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/boss1/boss1.jpg
+
+newmtl Material.006
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/enemy1/enemy1.jpg
+
+newmtl Material.011
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/enemy1/enemy1.jpg
+
+newmtl Material.012
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/enemy1/enemy1.jpg
+
+newmtl Material.013
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/enemy1/enemy1.jpg
+
+newmtl Material__25
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.520000
+d 1.000000
+illum 1
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/skydome/Fine_Basin.jpg
+
+newmtl Material__44.001
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.520000
+d 1.000000
+illum 1
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/ground/ground.png
+
+newmtl マテリアル
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/k021g1138/GE3/ウィンドゥ表示/Resources/sphere/sphere.png
