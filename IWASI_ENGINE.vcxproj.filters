@@ -568,6 +568,9 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallSphere.cpp">
       <Filter>Source File\Application\MyGame\Gimmick</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\StageSelectScene.cpp">
+      <Filter>Source File\Application\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -773,6 +776,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallSphere.h">
       <Filter>Header File\Application\MyGame\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\StageSelectScene.h">
+      <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

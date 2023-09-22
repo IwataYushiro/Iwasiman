@@ -102,5 +102,3 @@ void StageClearScene::Finalize()
 	delete spriteStageClear_;
 	
 }
-
-

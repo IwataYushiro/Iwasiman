@@ -377,6 +377,7 @@
     <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\StageClearScene.cpp" />
+    <ClCompile Include="DirectXGame\Application\Scene\StageSelectScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\TitleScene.cpp" />
     <ClCompile Include="DirectXGame\Engine\2D\PostEffect\PostEffect.cpp" />
     <ClCompile Include="DirectXGame\Engine\2D\Sprite\Sprite.cpp" />
@@ -442,6 +443,7 @@
     <ClInclude Include="DirectXGame\Application\Scene\GamePlayScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\SceneManager.h" />
     <ClInclude Include="DirectXGame\Application\Scene\StageClearScene.h" />
+    <ClInclude Include="DirectXGame\Application\Scene\StageSelectScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\TitleScene.h" />
     <ClInclude Include="DirectXGame\Engine\2D\PostEffect\PostEffect.h" />
     <ClInclude Include="DirectXGame\Engine\2D\Sprite\Sprite.h" />
