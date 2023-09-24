@@ -53,7 +53,8 @@ private://静的メンバ変数
 private://メンバ変数
 	//Sprite
 	Sprite* spriteMenu_ = new Sprite();
-	Sprite* spriteStage_ = new Sprite();
+	Sprite* spriteStage1_ = new Sprite();
+	Sprite* spriteStage2_ = new Sprite();
 	Sprite* spriteDone_ = new Sprite();
 
 	//FBX
@@ -66,8 +67,11 @@ private://メンバ変数
 
 	LevelData* levelData = nullptr;
 
-	Model* modelStage = nullptr;
 	Object3d* objStage = nullptr;
+	
+	Model* modelStage1 = nullptr;
+	Model* modelStage2 = nullptr;
+
 	//オブジェクト回転用
 	DirectX::XMFLOAT3 rot = { 0.0f,0.0f,0.0f };
 
@@ -86,6 +90,10 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
 	};
 	int MenuCount = 0;
+	//色を変えるスピード
+	float speedColor = 0.0f;
+	//色反転フラグ
+	bool isColorReverse_ = false;
 
 	//ライト
 	LightGroup* lightGroup_ = nullptr;

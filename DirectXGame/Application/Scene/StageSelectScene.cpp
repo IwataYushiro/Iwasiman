@@ -44,24 +44,32 @@ void StageSelectScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	UINT MenuTex = 01;
+	UINT MenuTex = 00;
 	spCommon_->LoadTexture(MenuTex, "texture/stageselect.png");
 	spriteMenu_->Initialize(spCommon_, MenuTex);
 	spriteMenu_->SetPosition({ easeMenuPosX[0].start,0.0f });
 
-	UINT MenuTutorialTex = 02;
+	UINT MenuTutorialTex = 01;
 	spCommon_->LoadTexture(MenuTutorialTex, "texture/titlemenut.png");
-	spriteStage_->Initialize(spCommon_, MenuTutorialTex);
-	spriteStage_->SetPosition({ easeMenuPosX[1].start,150.0f });
+	spriteStage1_->Initialize(spCommon_, MenuTutorialTex);
+	spriteStage1_->SetPosition({ easeMenuPosX[1].start,150.0f });
+
+	UINT Menustage1Tex = 02;
+	spCommon_->LoadTexture(Menustage1Tex, "texture/stagetower.png");
+	spriteStage2_->Initialize(spCommon_, Menustage1Tex);
+	spriteStage2_->SetPosition({ easeMenuPosX[2].start,300.0f });
 
 	UINT MenuDoneTex = 04;
 	spCommon_->LoadTexture(MenuDoneTex, "texture/titlemenud.png");
 	spriteDone_->Initialize(spCommon_, MenuDoneTex);
 	spriteDone_->SetPosition({ easeMenuPosX[3].start,550.0f });
 
+
+	modelStage1 = Model::LoadFromOBJ("skydome");
+	modelStage2 = Model::LoadFromOBJ("skydome2");
+	
 	objStage = Object3d::Create();
-	modelStage = Model::LoadFromOBJ("skydome");
-	objStage->SetModel(modelStage);
+	objStage->SetModel(modelStage1);
 	objStage->SetCamera(camera_);
 	objStage->SetScale({ 7.0f,7.0f,7.0f });
 
@@ -77,6 +85,9 @@ void StageSelectScene::Initialize()
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);*/
+
+	easeTitlePosX.Standby(false);
+	for (int i = 0; i < 4; i++)easeMenuPosX[i].Standby(false);
 }
 
 void StageSelectScene::Update()
@@ -84,12 +95,70 @@ void StageSelectScene::Update()
 	if (MenuCount <= 0)MenuCount = 0;
 	else if (MenuCount >= 1)MenuCount = 1;
 
+	//イージング
+	easeTitlePosX.ease_out_expo();
+	for (int i = 0; i < 4; i++)easeMenuPosX[i].ease_out_expo();
+
+	//座標セット
+	spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
+	spriteStage1_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
+	spriteStage2_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
+	spriteDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
+
+	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
+	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
+
+	if (isColorReverse_)speedColor -= 0.01f;
+	else speedColor += 0.01f;
+
+	if (speedColor >= 0.9f)
+	{
+		isColorReverse_ = true;
+	}
+	if (speedColor <= 0.0f)
+	{
+		isColorReverse_ = false;
+	}
+
+	if (MenuCount == 0)
+	{
+		objStage->SetModel(modelStage1);
+		spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+		spriteStage1_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
+		spriteStage2_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+	}
+	else if (MenuCount == 1)
+	{
+		objStage->SetModel(modelStage2);
+		spriteMenu_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		spriteStage1_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		spriteStage2_->SetColor({ 1.0f,speedColor + 0.1f,speedColor + 0.1f,1.0f });
+	}
+
+	if (input_->TriggerKey(DIK_SPACE))
+	{
+		if (MenuCount == 0)
+		{
+			//チュートリアルステージ
+			camera_->Reset();
+			sceneManager_->ChangeScene("GAMEPLAY", 1);
+		}
+		else if (MenuCount == 1)
+		{
+			//ステージ1
+			camera_->Reset();
+			sceneManager_->ChangeScene("GAMEPLAY", 4);
+
+		}
+	}
+
 	rot.y += 0.5f;
 
 	objStage->SetRotation(rot);
 
 	spriteMenu_->Update();
-	spriteStage_->Update();
+	spriteStage1_->Update();
+	spriteStage2_->Update();
 	spriteDone_->Update();
 
 	camera_->Update();
@@ -118,7 +187,8 @@ void StageSelectScene::Draw()
 	//前景スプライト
 	//スプライト描画	
 	spriteMenu_->Draw();
-	spriteStage_->Draw();
+	spriteStage1_->Draw();
+	spriteStage2_->Draw();
 	spriteDone_->Draw();
 }
 
@@ -128,11 +198,15 @@ void StageSelectScene::Finalize()
 	audio_->Finalize();
 	//sprite
 	delete spriteMenu_;
-	delete spriteStage_;
+	delete spriteStage1_;
+	delete spriteStage2_;
 	delete spriteDone_;
 	//ステージ
 	delete objStage;
-	delete modelStage;
+
+	delete modelStage1;
+	delete modelStage2;
+	
 	//ライト
 	delete lightGroup_;
 }
