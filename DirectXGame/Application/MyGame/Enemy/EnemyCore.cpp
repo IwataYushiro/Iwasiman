@@ -58,7 +58,7 @@ bool EnemyCore::Initialize() {
 void EnemyCore::Parameter() {
 	phase_ = Phase::CoreStage1;
 	maxTime = 2.0f;
-	life_ = 10;
+	life_ = 5;
 
 
 	isReverse_ = false;

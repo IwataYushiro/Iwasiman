@@ -53,6 +53,7 @@ private://静的メンバ変数
 private://メンバ変数
 	//Sprite
 	Sprite* spriteMenu_ = new Sprite();
+	Sprite* spriteTutorial_ = new Sprite();
 	Sprite* spriteStage1_ = new Sprite();
 	Sprite* spriteStage2_ = new Sprite();
 	Sprite* spriteDone_ = new Sprite();
@@ -69,6 +70,7 @@ private://メンバ変数
 
 	Object3d* objStage = nullptr;
 	
+	Model* modelStageTutorial = nullptr;
 	Model* modelStage1 = nullptr;
 	Model* modelStage2 = nullptr;
 
@@ -82,12 +84,13 @@ private://メンバ変数
 	bool isMenu = false;
 	Easing easeTitlePosX = Easing(0.0f, -1300.0f, 1.0f);
 
-	Easing easeMenuPosX[4] =
+	Easing easeMenuPosX[5] =
 	{
 		Easing(1300.0f, 0.0f, 1.0f),//メニュー
 		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
 		Easing(1300.0f, 0.0f, 1.4f),//ステージセレクトへ
 		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
+		Easing(1300.0f, 0.0f, 1.8f),//スペースで選択
 	};
 	int MenuCount = 0;
 	//色を変えるスピード
