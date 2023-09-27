@@ -374,6 +374,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\PlayerBullet.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\BaseScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\Factory\SceneFactory.cpp" />
+    <ClCompile Include="DirectXGame\Application\Scene\GameOverScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\StageClearScene.cpp" />
@@ -440,6 +441,7 @@
     <ClInclude Include="DirectXGame\Application\Scene\BaseScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\Factory\AbstractSceneFactory.h" />
     <ClInclude Include="DirectXGame\Application\Scene\Factory\SceneFactory.h" />
+    <ClInclude Include="DirectXGame\Application\Scene\GameOverScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\GamePlayScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\SceneManager.h" />
     <ClInclude Include="DirectXGame\Application\Scene\StageClearScene.h" />

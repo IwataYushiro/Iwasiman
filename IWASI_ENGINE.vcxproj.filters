@@ -571,6 +571,9 @@
     <ClCompile Include="DirectXGame\Application\Scene\StageSelectScene.cpp">
       <Filter>Source File\Application\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\Scene\GameOverScene.cpp">
+      <Filter>Source File\Application\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
@@ -778,6 +781,9 @@
       <Filter>Header File\Application\MyGame\Gimmick</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\StageSelectScene.h">
+      <Filter>Header File\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\Scene\GameOverScene.h">
       <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
   </ItemGroup>
