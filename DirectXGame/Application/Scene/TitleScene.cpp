@@ -47,6 +47,7 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(titleMenuTex, "texture/titlemenu.png");
 	spriteMenu_->Initialize(spCommon_, titleMenuTex);
 	spriteMenu_->SetPosition({ easeMenuPosX[0].start,0.0f });
+	spriteMenu_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 
 	UINT titleMenuTutorialTex = 02;
 	spCommon_->LoadTexture(titleMenuTutorialTex, "texture/titlemenut.png");
@@ -62,6 +63,12 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(titleMenuDoneTex, "texture/titlemenud.png");
 	spriteMenuDone_->Initialize(spCommon_, titleMenuDoneTex);
 	spriteMenuDone_->SetPosition({ easeMenuPosX[3].start,550.0f });
+
+	UINT BackTex = 05;
+	spCommon_->LoadTexture(BackTex, "texture/back.png");
+	spriteBack_->Initialize(spCommon_, BackTex);
+	spriteBack_->SetPosition({ easeMenuPosX[4].start,50.0f });
+	spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 
 
 	//FBX
@@ -87,7 +94,7 @@ void TitleScene::Update()
 	{
 		//イージング
 		easeTitlePosX.ease_out_expo();
-		for (int i = 0; i < 4; i++)easeMenuPosX[i].ease_out_expo();
+		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
 
 		//座標セット
 		spriteTitle_->SetPosition({ easeTitlePosX.num_X,0.0f });
@@ -95,13 +102,14 @@ void TitleScene::Update()
 		spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
 		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
 		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX[4].num_X,50.0f });
 
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
 
 		if (isColorReverse_)speedColor -= 0.01f;
 		else speedColor += 0.01f;
-		
+
 		if (speedColor >= 0.9f)
 		{
 			isColorReverse_ = true;
@@ -119,7 +127,7 @@ void TitleScene::Update()
 		else if (MenuCount == 1)
 		{
 			spriteMenuTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-			spriteMenuStageSelect_->SetColor({ 0.1f+speedColor,0.1f,0.1f,1.0f });
+			spriteMenuStageSelect_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
 		}
 
 		if (input_->TriggerKey(DIK_SPACE))
@@ -138,13 +146,49 @@ void TitleScene::Update()
 
 			}
 		}
+		if (easeMenuPosX[4].num_X == easeMenuPosX[4].end)
+		{
+			if (input_->TriggerKey(DIK_Q))
+			{
+				easeTitlePosX.Standby(true);
+				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(true);
+				isBack = true;
+				isMenu = false;
+			}
+		}
+
+	}
+	else if (isBack)
+	{
+		//イージング
+		easeTitlePosX.ease_out_expo();
+		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
+
+		//座標セット
+		spriteTitle_->SetPosition({ easeTitlePosX.num_X,0.0f });
+		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
+		spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
+		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
+		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX[4].num_X,50.0f });
+
+		if (easeMenuPosX[4].num_X == easeMenuPosX[4].start)
+		{
+			if (input_->TriggerKey(DIK_SPACE))
+			{
+				easeTitlePosX.Standby(false);
+				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
+				isMenu = true;
+				isBack = false;
+			}
+		}
 	}
 	else
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{
 			easeTitlePosX.Standby(false);
-			for (int i = 0; i < 4; i++)easeMenuPosX[i].Standby(false);
+			for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
 			isMenu = true;
 
 		}
@@ -156,6 +200,7 @@ void TitleScene::Update()
 	spriteMenuTutorial_->Update();
 	spriteMenuStageSelect_->Update();
 	spriteMenuDone_->Update();
+	spriteBack_->Update();
 
 	/*for (auto& object : objects) {
 		object->Update();
@@ -216,6 +261,7 @@ void TitleScene::Draw()
 	spriteMenuTutorial_->Draw();
 	spriteMenuStageSelect_->Draw();
 	spriteMenuDone_->Draw();
+	spriteBack_->Draw();
 
 }
 
@@ -229,6 +275,7 @@ void TitleScene::Finalize()
 	delete spriteMenuTutorial_;
 	delete spriteMenuStageSelect_;
 	delete spriteMenuDone_;
+	delete spriteBack_;
 
 	//プレイヤー
 	delete object3DPlayer_;

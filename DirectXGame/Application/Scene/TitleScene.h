@@ -57,6 +57,7 @@ private://メンバ変数
 	Sprite* spriteMenuTutorial_ = new Sprite();
 	Sprite* spriteMenuStageSelect_ = new Sprite();
 	Sprite* spriteMenuDone_ = new Sprite();
+	Sprite* spriteBack_ = new Sprite();
 
 	//FBX
 	ModelFbx* modelF = nullptr;
@@ -82,14 +83,16 @@ private://メンバ変数
 
 	bool isStart = false;
 	bool isMenu = false;
+	bool isBack = false;
 	Easing easeTitlePosX = Easing(0.0f, -1300.0f, 1.0f);
 
-	Easing easeMenuPosX[4] = 
+	Easing easeMenuPosX[5] = 
 	{
 		Easing(1300.0f, 0.0f, 1.0f),//メニュー
 		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
 		Easing(1300.0f, 0.0f, 1.4f),//ステージセレクトへ
 		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
+		Easing(1300.0f, 900.0f, 1.8f),//スペースで選択
 	};
 
 	int MenuCount = 0;
