@@ -82,9 +82,7 @@ private:
 	Audio::SoundData sound;
 
 	Sprite* spritePause_ = new Sprite();
-	Sprite* spriteClear_ = new Sprite();
 	Sprite* spritePauseInfo_ = new Sprite();
-	Sprite* spriteGameover_ = new Sprite();
 	
 	
 	//É|Å[ÉYÇµÇΩÇ©

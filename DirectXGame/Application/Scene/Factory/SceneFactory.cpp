@@ -3,6 +3,7 @@
 #include "GamePlayScene.h"
 #include "StageClearScene.h"
 #include "StageSelectScene.h"
+#include "GameOverScene.h"
 
 BaseScene* SceneFactory::CreateScene(const std::string& sceneName, int stagenum)
 {
@@ -24,6 +25,10 @@ BaseScene* SceneFactory::CreateScene(const std::string& sceneName, int stagenum)
 	else if (sceneName == "STAGESELECT")
 	{
 		newScene = new StageSelectScene();
+	}
+	else if (sceneName == "GAMEOVER")
+	{
+		newScene = new GameOverScene(stagenum);
 	}
 	return newScene;
 }

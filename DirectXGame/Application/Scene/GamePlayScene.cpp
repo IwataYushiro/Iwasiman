@@ -138,11 +138,8 @@ void GamePlayScene::Update()
 
 		if (isGameover)
 		{
-			if (input_->TriggerKey(DIK_SPACE))
-			{
-				camera_->Reset();
-				sceneManager_->ChangeScene("TITLE");
-			}
+			sceneManager_->ChangeScene("GAMEOVER", stageNum);
+			isGameover = false;
 		}
 		if (isclear)
 		{
@@ -223,8 +220,6 @@ void GamePlayScene::Draw()
 	spCommon_->PreDraw();
 	//前景スプライト
 	if (isPause_)spritePause_->Draw();
-	else if (isclear)spriteClear_->Draw();
-	else if (isGameover)spriteGameover_->Draw();
 	else
 	{
 		spritePauseInfo_->Draw();
@@ -273,9 +268,7 @@ void GamePlayScene::Finalize()
 
 	//スプライト
 	delete spritePause_;
-	delete spriteClear_;
 	delete spritePauseInfo_;
-	delete spriteGameover_;
 
 }
 
@@ -519,19 +512,10 @@ void GamePlayScene::LoadSprite()
 	spritePause_->Initialize(spCommon_, 10);
 	spritePause_->SetColor({ 1.0f,1.0f,1.0f,0.5f });
 
-	spCommon_->LoadTexture(11, "texture/gameclear.png");
-	spriteClear_->Initialize(spCommon_, 11);
-
 	spCommon_->LoadTexture(12, "texture/pauseinfo.png");
 	spritePauseInfo_->Initialize(spCommon_, 12);
 
-	spCommon_->LoadTexture(13, "texture/gameover.png");
-	spriteGameover_->Initialize(spCommon_, 13);
-
 	spritePause_->Update();
-	spriteClear_->Update();
 	spritePauseInfo_->Update();
-	spriteGameover_->Update();
-
 
 }
