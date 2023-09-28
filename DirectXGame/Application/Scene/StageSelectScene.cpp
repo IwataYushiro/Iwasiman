@@ -69,6 +69,12 @@ void StageSelectScene::Initialize()
 	spriteDone_->Initialize(spCommon_, MenuDoneTex);
 	spriteDone_->SetPosition({ easeMenuPosX[4].start,580.0f });
 
+	UINT BackTex = 05;
+	spCommon_->LoadTexture(BackTex, "texture/back.png");
+	spriteBack_->Initialize(spCommon_, BackTex);
+	spriteBack_->SetPosition({ easeMenuPosX[5].start,50.0f });
+	spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+
 	modelStageTutorial = Model::LoadFromOBJ("skydomet");
 	modelStage1 = Model::LoadFromOBJ("skydome");
 	modelStage2 = Model::LoadFromOBJ("skydome2");
@@ -92,89 +98,125 @@ void StageSelectScene::Initialize()
 	pm1_->SetCamera(camera_);*/
 
 	easeTitlePosX.Standby(false);
-	for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
+	for (int i = 0; i < 6; i++)easeMenuPosX[i].Standby(false);
 }
 
 void StageSelectScene::Update()
 {
 	if (MenuCount <= 0)MenuCount = 0;
 	else if (MenuCount >= 2)MenuCount = 2;
-
-	//イージング
-	easeTitlePosX.ease_out_expo();
-	for (int i = 0; i < 4; i++)easeMenuPosX[i].ease_out_expo();
-
-	//座標セット
-	spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
-	spriteTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
-	spriteStage1_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
-	spriteStage2_->SetPosition({ easeMenuPosX[3].num_X,450.0f });
-	spriteDone_->SetPosition({ easeMenuPosX[4].num_X,550.0f });
-
-	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
-	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
-
-	if (isColorReverse_)speedColor -= 0.01f;
-	else speedColor += 0.01f;
-
-	if (speedColor >= 0.9f)
+	if (!outStageSerect)
 	{
-		isColorReverse_ = true;
-	}
-	if (speedColor <= 0.0f)
-	{
-		isColorReverse_ = false;
-	}
+		//イージング
+		easeTitlePosX.ease_out_expo();
+		for (int i = 0; i < 6; i++)easeMenuPosX[i].ease_out_expo();
 
-	if (MenuCount == 0)
-	{
-		objStage->SetModel(modelStageTutorial);
-		spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteTutorial_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
-		spriteStage1_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteStage2_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-	}
-	else if (MenuCount == 1)
-	{
-		objStage->SetModel(modelStage1);
-		spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteStage1_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
-		spriteStage2_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-	}
-	else if (MenuCount == 2)
-	{
-		objStage->SetModel(modelStage2);
-		spriteMenu_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		spriteTutorial_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		spriteStage1_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		spriteStage2_->SetColor({ 1.0f,speedColor + 0.1f,speedColor + 0.1f,1.0f });
-	}
+		//座標セット
+		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
+		spriteTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
+		spriteStage1_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
+		spriteStage2_->SetPosition({ easeMenuPosX[3].num_X,450.0f });
+		spriteDone_->SetPosition({ easeMenuPosX[4].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX[5].num_X,50.0f });
 
-	if (input_->TriggerKey(DIK_SPACE))
-	{
+		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
+		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
+
+		if (isColorReverse_)speedColor -= 0.01f;
+		else speedColor += 0.01f;
+
+		if (speedColor >= 0.9f)
+		{
+			isColorReverse_ = true;
+		}
+		if (speedColor <= 0.0f)
+		{
+			isColorReverse_ = false;
+		}
+
 		if (MenuCount == 0)
 		{
-			//チュートリアルステージ
-			camera_->Reset();
-			sceneManager_->ChangeScene("GAMEPLAY", 1);
+			objStage->SetModel(modelStageTutorial);
+			spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteTutorial_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
+			spriteStage1_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteStage2_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 		}
 		else if (MenuCount == 1)
 		{
-			//ステージ1
-			camera_->Reset();
-			sceneManager_->ChangeScene("GAMEPLAY", 3);
-
+			objStage->SetModel(modelStage1);
+			spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteStage1_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
+			spriteStage2_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 		}
 		else if (MenuCount == 2)
 		{
-			//ステージ2
-			camera_->Reset();
-			sceneManager_->ChangeScene("GAMEPLAY", 4);
+			objStage->SetModel(modelStage2);
+			spriteMenu_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+			spriteTutorial_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+			spriteStage1_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+			spriteStage2_->SetColor({ 1.0f,speedColor + 0.1f,speedColor + 0.1f,1.0f });
+			spriteDone_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+			spriteBack_->SetColor({ 0.5f,0.5f,1.0f,1.0f });
+		}
 
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			if (MenuCount == 0)
+			{
+				//チュートリアルステージ
+				camera_->Reset();
+				sceneManager_->ChangeScene("GAMEPLAY", 1);
+			}
+			else if (MenuCount == 1)
+			{
+				//ステージ1
+				camera_->Reset();
+				sceneManager_->ChangeScene("GAMEPLAY", 3);
+
+			}
+			else if (MenuCount == 2)
+			{
+				//ステージ2
+				camera_->Reset();
+				sceneManager_->ChangeScene("GAMEPLAY", 4);
+
+			}
+		}
+		if (easeMenuPosX[5].num_X == easeMenuPosX[5].end)
+		{
+			if (input_->TriggerKey(DIK_Q))
+			{
+				easeTitlePosX.Standby(true);
+				for (int i = 0; i < 6; i++)easeMenuPosX[i].Standby(true);
+				outStageSerect = true;
+			}
 		}
 	}
+	else
+	{
+		//イージング
+		easeTitlePosX.ease_out_expo();
+		for (int i = 0; i < 6; i++)easeMenuPosX[i].ease_out_expo();
 
+		//座標セット
+		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
+		spriteTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
+		spriteStage1_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
+		spriteStage2_->SetPosition({ easeMenuPosX[3].num_X,450.0f });
+		spriteDone_->SetPosition({ easeMenuPosX[4].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX[5].num_X,50.0f });
+
+		if (easeMenuPosX[5].num_X == easeMenuPosX[5].start)
+		{
+			sceneManager_->ChangeScene("TITLE");
+		}
+	}
 	rot.y += 0.5f;
 
 	objStage->SetRotation(rot);
@@ -184,6 +226,7 @@ void StageSelectScene::Update()
 	spriteStage1_->Update();
 	spriteStage2_->Update();
 	spriteDone_->Update();
+	spriteBack_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
@@ -215,6 +258,7 @@ void StageSelectScene::Draw()
 	spriteStage1_->Draw();
 	spriteStage2_->Draw();
 	spriteDone_->Draw();
+	spriteBack_->Draw();
 }
 
 void StageSelectScene::Finalize()
@@ -227,6 +271,7 @@ void StageSelectScene::Finalize()
 	delete spriteStage1_;
 	delete spriteStage2_;
 	delete spriteDone_;
+	delete spriteBack_;
 	//ステージ
 	delete objStage;
 

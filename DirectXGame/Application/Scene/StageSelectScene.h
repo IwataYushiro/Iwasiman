@@ -57,6 +57,7 @@ private://メンバ変数
 	Sprite* spriteStage1_ = new Sprite();
 	Sprite* spriteStage2_ = new Sprite();
 	Sprite* spriteDone_ = new Sprite();
+	Sprite* spriteBack_ = new Sprite();
 
 	//FBX
 	ModelFbx* modelF = nullptr;
@@ -84,19 +85,22 @@ private://メンバ変数
 	bool isMenu = false;
 	Easing easeTitlePosX = Easing(0.0f, -1300.0f, 1.0f);
 
-	Easing easeMenuPosX[5] =
+	Easing easeMenuPosX[6] =
 	{
 		Easing(1300.0f, 0.0f, 1.0f),//メニュー
 		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
 		Easing(1300.0f, 0.0f, 1.4f),//ステージセレクトへ
 		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
 		Easing(1300.0f, 0.0f, 1.8f),//スペースで選択
+		Easing(1300.0f, 900.0f, 2.0f),//戻る
 	};
 	int MenuCount = 0;
 	//色を変えるスピード
 	float speedColor = 0.0f;
 	//色反転フラグ
 	bool isColorReverse_ = false;
+	//ステージセレクトから抜ける
+	bool outStageSerect = false;
 
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
