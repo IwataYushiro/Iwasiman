@@ -63,6 +63,7 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(titleMenuDoneTex, "texture/titlemenud.png");
 	spriteMenuDone_->Initialize(spCommon_, titleMenuDoneTex);
 	spriteMenuDone_->SetPosition({ easeMenuPosX[3].start,550.0f });
+	spriteMenuDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 
 	UINT BackTex = 05;
 	spCommon_->LoadTexture(BackTex, "texture/back.png");
@@ -107,8 +108,8 @@ void TitleScene::Update()
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
 
-		if (isColorReverse_)speedColor -= 0.01f;
-		else speedColor += 0.01f;
+		if (isColorReverse_)speedColor -= 0.02f;
+		else speedColor += 0.02f;
 
 		if (speedColor >= 0.9f)
 		{

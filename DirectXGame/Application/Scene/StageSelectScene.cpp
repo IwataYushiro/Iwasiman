@@ -122,8 +122,8 @@ void StageSelectScene::Update()
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
 
-		if (isColorReverse_)speedColor -= 0.01f;
-		else speedColor += 0.01f;
+		if (isColorReverse_)speedColor -= 0.02f;
+		else speedColor += 0.02f;
 
 		if (speedColor >= 0.9f)
 		{
