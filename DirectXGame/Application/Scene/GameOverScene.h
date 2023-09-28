@@ -53,10 +53,10 @@ private://Ã“Iƒƒ“ƒo•Ï”
 private://ƒƒ“ƒo•Ï”
 	int stageNum;
 	//Sprite
-	Sprite* spriteMenu_ = new Sprite();
-	Sprite* spriteTutorial_ = new Sprite();
-	Sprite* spriteStage1_ = new Sprite();
-	Sprite* spriteStage2_ = new Sprite();
+	Sprite* spriteGameOver_ = new Sprite();
+	Sprite* spriteContinue_ = new Sprite();
+	Sprite* spriteStageSelect_ = new Sprite();
+	Sprite* spriteTitle_ = new Sprite();
 	Sprite* spriteDone_ = new Sprite();
 
 	//FBX
