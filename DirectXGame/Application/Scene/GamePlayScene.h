@@ -81,10 +81,34 @@ private:
 	//サウンド読み込み
 	Audio::SoundData sound;
 
+	//スプライト
 	Sprite* spritePause_ = new Sprite();
 	Sprite* spritePauseInfo_ = new Sprite();
 	
+	Sprite* spriteTutorialHTPMove = new Sprite();
+	Sprite* spriteTutorialHTPDash = new Sprite();
+	Sprite* spriteTutorialHTPJump = new Sprite();
 	
+	Sprite* spriteTutorialHTPMoveBack = new Sprite();
+	
+	Sprite* spriteTutorialHTPAttack = new Sprite();
+	
+
+	Sprite* spriteTutorialInfo1 = new Sprite();
+	Sprite* spriteTutorialInfo2 = new Sprite();
+	Sprite* spriteTutorialInfo3 = new Sprite();
+	Sprite* spriteTutorialInfo4 = new Sprite();
+
+	Easing easeInfo[6] =
+	{
+		Easing(1300.0f, 0.0f, 1.0f),//メニュー
+		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
+		Easing(1300.0f, 0.0f, 1.4f),//ステージセレクトへ
+		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
+		Easing(1300.0f, 0.0f, 1.8f),
+		Easing(1300.0f, 0.0f, 2.0f),
+	};
+
 	//ポーズしたか
 	bool isPause_ = false;
 	bool isclear = false;
@@ -156,11 +180,24 @@ private:
 	Easing es = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
 	//○○した瞬間に○○解除を防ぐ用のフラグ
 	bool isBack = false;
-
+	//色を変えるスピード
+	float speedColor = 0.0f;
+	//色反転フラグ
+	bool isColorReverse_ = false;
 private:
 	//スプライト読み込み
 	void LoadSprite();
 	//モデル読み込み
 	void LoadModel();
-
+	/*
+	チュートリアル用のイージング
+	num=0 スタンバイ
+	num=1 イージング中
+	*/
+	void SettingTutorialEase(int num,Sprite* s1, Sprite* s2,
+		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);
+	void UpdateTutorialSprite();
+	//チュートリアル用のスプライト描画
+	void DrawTutorialSprite(Sprite* s1, Sprite* s2,
+		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);
 };

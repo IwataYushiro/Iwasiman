@@ -104,8 +104,8 @@ void Player::Update(bool isBack, bool isAttack) {
 		if (!isJumpBack)Move();
 		//攻撃処理
 		FallAndJump();
-		if(isBack)JumpBack();
-		if(isAttack)Attack();
+		if (isBack)JumpBack();
+		if (isAttack)Attack();
 
 		if (life_ <= 0)
 		{
@@ -140,7 +140,7 @@ void Player::Update(bool isBack, bool isAttack) {
 			camera_->SetTarget(nowTarget + hitMove);
 			isShake = false;
 			mutekiCount = 0;
-			hitMove={0.0f,0.0f,0.0f};
+			hitMove = { 0.0f,0.0f,0.0f };
 		}
 		//移動制限
 		Trans();
@@ -172,23 +172,6 @@ void Player::Move() {
 
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
-	if (input_->PushKey(DIK_A)) {
-		isRight_ = false;//左向き
-		rot = { 0.0f,-90.0f,0.0f };
-		move.x -= moveSpeed;
-		cmove.x -= moveSpeed;
-		tmove.x -= moveSpeed;
-		if (isShake)hitMove.x -= moveSpeed;
-	}
-	if (input_->PushKey(DIK_D)) {
-		isRight_ = true;
-		rot = { 0.0f,90.0f,0.0f };
-		move.x += moveSpeed;
-		cmove.x += moveSpeed;
-		tmove.x += moveSpeed;
-		if (isShake)hitMove.x += moveSpeed;
-	}
-
 
 	//ダッシュ
 	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
@@ -211,6 +194,27 @@ void Player::Move() {
 			tmove.x += moveSpeed * 1.5f;
 			if (isShake)hitMove.x += moveSpeed * 1.5f;
 		}
+	}
+	else
+	{
+		if (input_->PushKey(DIK_A)) {
+			isRight_ = false;//左向き
+			rot = { 0.0f,-90.0f,0.0f };
+			move.x -= moveSpeed;
+			cmove.x -= moveSpeed;
+			tmove.x -= moveSpeed;
+			if (isShake)hitMove.x -= moveSpeed;
+		}
+		if (input_->PushKey(DIK_D)) {
+			isRight_ = true;
+			rot = { 0.0f,90.0f,0.0f };
+			move.x += moveSpeed;
+			cmove.x += moveSpeed;
+			tmove.x += moveSpeed;
+			if (isShake)hitMove.x += moveSpeed;
+		}
+
+
 	}
 
 	Object3d::SetPosition(move);
