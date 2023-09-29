@@ -54,6 +54,11 @@ void GamePlayScene::Initialize()
 	else if (stageNum == 3)LoadLVData("stage3");
 	else if (stageNum == 4)LoadLVData("stageboss1");
 
+	else if (stageNum == 100)LoadLVData("tutorial");
+	else if (stageNum == 101)LoadLVData("tutorial");
+	else if (stageNum == 102)LoadLVData("tutorial");
+	else if (stageNum == 103)LoadLVData("tutorial");
+
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
@@ -90,7 +95,16 @@ void GamePlayScene::Update()
 		//モデル呼び出し例
 		for (std::unique_ptr<Player>& player : players_)
 		{
-			if (!isclear || !isGameover) player->Update();
+			if (!isclear || !isGameover) 
+			{ 
+				//チュートリアル基本操作
+				if (stageNum == 100)player->Update(false, false);
+				//チュートリアル奥側移動→攻撃→応用ステージ
+				else if (stageNum == 101)player->Update(false, true);
+				//基本状態
+				else player->Update();
+			}
+				
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 			//かめおべら
 			if (player->IsDead())isGameover = true;
@@ -256,7 +270,9 @@ void GamePlayScene::Finalize()
 	delete modelEnemyBullet_;
 	delete modelBoss1_;
 	delete modelBossCore1_;
-	delete modelSkydome;
+	delete modelStageT;
+	delete modelStage1;
+	delete modelStage2;
 	delete modelItemJump_;
 	delete modelItemHeal_;
 	delete modelSpike_;
@@ -429,6 +445,31 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			items_.push_back(std::move(newitem));
 		}
+		else if (objectData.objectType.find("NONE") == 0)
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			TouchableObject* newObject = TouchableObject::Create(model, false);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+
+
+			// 配列に登録
+			objects.push_back(newObject);
+		}
 		//地形
 		else
 		{
@@ -485,7 +526,9 @@ void GamePlayScene::LoadModel()
 	modelItemJump_ = Model::LoadFromOBJ("itemjump");
 	modelItemHeal_ = Model::LoadFromOBJ("itemheal");
 	modelSpike_ = Model::LoadFromOBJ("spikeball");
-	modelSkydome = Model::LoadFromOBJ("skydome");
+	modelStageT = Model::LoadFromOBJ("skydomet");
+	modelStage1 = Model::LoadFromOBJ("skydome");
+	modelStage2 = Model::LoadFromOBJ("skydome2");
 	modelGround = Model::LoadFromOBJ("ground");
 	modelBox = Model::LoadFromOBJ("sphere2", true);
 
@@ -499,7 +542,9 @@ void GamePlayScene::LoadModel()
 	models.insert(std::make_pair("Itemjump", modelItemJump_));
 	models.insert(std::make_pair("itemheal", modelItemHeal_));
 	models.insert(std::make_pair("spikeball", modelSpike_));
-	models.insert(std::make_pair("skydome", modelSkydome));
+	models.insert(std::make_pair("skydomet", modelStageT));
+	models.insert(std::make_pair("skydome", modelStage1));
+	models.insert(std::make_pair("skydome2", modelStage2));
 	models.insert(std::make_pair("ground", modelGround));
 	models.insert(std::make_pair("sphere2", modelBox));
 

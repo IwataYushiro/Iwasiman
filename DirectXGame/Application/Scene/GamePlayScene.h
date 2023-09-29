@@ -118,7 +118,10 @@ private:
 
 	LevelData* levelData = nullptr;
 
-	Model* modelSkydome = nullptr;
+	Model* modelStageT = nullptr;
+	Model* modelStage1 = nullptr;
+	Model* modelStage2 = nullptr;
+
 	Model* modelGround = nullptr;
 	Model* modelBox = nullptr;
 
@@ -138,6 +141,12 @@ private:
 	CollisionManager* colManager_ = nullptr;
 
 private:
+	/*
+	stagenumの値
+	1~9		ステージ1
+	10~19	ステージ2
+	100~109	チュートリアル
+	*/
 	int stageNum;
 	//自機弾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;

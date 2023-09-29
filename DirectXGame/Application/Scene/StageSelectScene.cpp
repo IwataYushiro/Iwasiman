@@ -15,7 +15,7 @@ SceneManager* StageSelectScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* StageSelectScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* StageSelectScene::camera_ = Camera::GetInstance();
 
-StageSelectScene::StageSelectScene()
+StageSelectScene::StageSelectScene(int count) :MenuCount(count)
 {
 }
 
@@ -99,6 +99,7 @@ void StageSelectScene::Initialize()
 
 	easeTitlePosX.Standby(false);
 	for (int i = 0; i < 6; i++)easeMenuPosX[i].Standby(false);
+
 }
 
 void StageSelectScene::Update()
@@ -171,13 +172,13 @@ void StageSelectScene::Update()
 			{
 				//チュートリアルステージ
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 1);
+				sceneManager_->ChangeScene("GAMEPLAY", 100);
 			}
 			else if (MenuCount == 1)
 			{
 				//ステージ1
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 3);
+				sceneManager_->ChangeScene("GAMEPLAY", 1);
 
 			}
 			else if (MenuCount == 2)

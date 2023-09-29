@@ -35,7 +35,7 @@ public:
 	void Reset();
 	
 	//更新
-	void Update() override;
+	void Update(bool isBack = true, bool isAttack = true);
 	//プレイヤーの移動処理
 	void Move();
 	void CameraMove();

@@ -24,7 +24,7 @@ BaseScene* SceneFactory::CreateScene(const std::string& sceneName, int stagenum)
 	}
 	else if (sceneName == "STAGESELECT")
 	{
-		newScene = new StageSelectScene();
+		newScene = new StageSelectScene(stagenum);
 	}
 	else if (sceneName == "GAMEOVER")
 	{

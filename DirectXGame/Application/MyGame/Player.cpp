@@ -93,7 +93,7 @@ void Player::Reset() {
 	maxTime = 1.0f;					//‘S‘ÌŠÔ
 
 }
-void Player::Update() {
+void Player::Update(bool isBack, bool isAttack) {
 
 	pmDash_->SetCamera(camera_);
 
@@ -104,8 +104,8 @@ void Player::Update() {
 		if (!isJumpBack)Move();
 		//UŒ‚ˆ—
 		FallAndJump();
-		JumpBack();
-		Attack();
+		if(isBack)JumpBack();
+		if(isAttack)Attack();
 
 		if (life_ <= 0)
 		{

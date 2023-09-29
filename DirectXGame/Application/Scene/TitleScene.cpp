@@ -137,13 +137,13 @@ void TitleScene::Update()
 			{
 				//チュートリアルステージ
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 1);
+				sceneManager_->ChangeScene("GAMEPLAY", 100);
 			}
 			else if (MenuCount == 1)
 			{
 				//ステージ選択
 				camera_->Reset();
-				sceneManager_->ChangeScene("STAGESELECT", 1);
+				sceneManager_->ChangeScene("STAGESELECT", 0);
 
 			}
 		}

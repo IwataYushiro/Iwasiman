@@ -22,7 +22,7 @@ struct LevelData;
 class StageSelectScene :public BaseScene
 {
 public://ƒƒ“ƒoŠÖ”
-	StageSelectScene();
+	StageSelectScene(int count);
 	//‰Šú‰»
 	void Initialize() override;
 	//XV
