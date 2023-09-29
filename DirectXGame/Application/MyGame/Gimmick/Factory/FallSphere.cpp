@@ -46,8 +46,9 @@ bool FallSphere::Initialize()
 void FallSphere::Update()
 {
 	
-	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateRiseSphereReturn();
+	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();
 	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphereReturn();
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE)UpdateRiseSphere();
 
 	Trans();
 	camera_->Update();

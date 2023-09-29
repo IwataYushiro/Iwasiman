@@ -53,9 +53,9 @@ void GamePlayScene::Initialize()
 	else if (stageNum == 4)LoadLVData("stageboss1");
 
 	else if (stageNum == 100)LoadLVData("tutorial");
-	else if (stageNum == 101)LoadLVData("tutorial");
-	else if (stageNum == 102)LoadLVData("tutorial");
-	else if (stageNum == 103)LoadLVData("tutorial");
+	else if (stageNum == 101)LoadLVData("tutorial2");
+	else if (stageNum == 102)LoadLVData("tutorial3");
+	else if (stageNum == 103)LoadLVData("tutorialf");
 
 	//スプライト
 	LoadSprite();
@@ -102,7 +102,7 @@ void GamePlayScene::Update()
 				//チュートリアル基本操作
 				if (stageNum == 100)player->Update(false, false);
 				//チュートリアル奥側移動→攻撃→応用ステージ
-				else if (stageNum == 101)player->Update(false, true);
+				else if (stageNum == 101)player->Update(true, false);
 				//基本状態
 				else player->Update();
 			}
