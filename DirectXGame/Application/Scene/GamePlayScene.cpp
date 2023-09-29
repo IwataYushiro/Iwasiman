@@ -611,21 +611,21 @@ void GamePlayScene::SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
 	switch (num)
 	{
 	case 0:
-		if (s1 != nullptr)s1->SetPosition({ easeInfo[0].start,60.0f });
-		if (s2 != nullptr)s2->SetPosition({ easeInfo[1].start,110.0f });
-		if (s3 != nullptr)s3->SetPosition({ easeInfo[2].start,160.0f });
-		if (s4 != nullptr)s4->SetPosition({ easeInfo[3].start,210.0f });
-		if (s5 != nullptr)s5->SetPosition({ easeInfo[4].start,260.0f });
-		if (s6 != nullptr)s6->SetPosition({ easeInfo[5].start,310.0f });
+		if (s1 != nullptr)s1->SetPosition({ easeInfo[0].start,50.0f });
+		if (s2 != nullptr)s2->SetPosition({ easeInfo[1].start,50.0f });
+		if (s3 != nullptr)s3->SetPosition({ easeInfo[2].start,110.0f });
+		if (s4 != nullptr)s4->SetPosition({ easeInfo[3].start,110.0f });
+		if (s5 != nullptr)s5->SetPosition({ easeInfo[4].start,170.0f });
+		if (s6 != nullptr)s6->SetPosition({ easeInfo[5].start,250.0f });
 		break;
 	case 1:
 		for (int i = 0; i < 6; i++)easeInfo[i].ease_out_expo();
-		if (s1 != nullptr)s1->SetPosition({ easeInfo[0].num_X,60.0f  });
-		if (s2 != nullptr)s2->SetPosition({ easeInfo[1].num_X,110.0f });
-		if (s3 != nullptr)s3->SetPosition({ easeInfo[2].num_X,160.0f });
-		if (s4 != nullptr)s4->SetPosition({ easeInfo[3].num_X,210.0f });
-		if (s5 != nullptr)s5->SetPosition({ easeInfo[4].num_X,260.0f });
-		if (s6 != nullptr)s6->SetPosition({ easeInfo[5].num_X,310.0f });
+		if (s1 != nullptr)s1->SetPosition({ easeInfo[0].num_X,50.0f  });
+		if (s2 != nullptr)s2->SetPosition({ easeInfo[1].num_X,50.0f });
+		if (s3 != nullptr)s3->SetPosition({ easeInfo[2].num_X,110.0f });
+		if (s4 != nullptr)s4->SetPosition({ easeInfo[3].num_X,110.0f });
+		if (s5 != nullptr)s5->SetPosition({ easeInfo[4].num_X,110.0f });
+		if (s6 != nullptr)s6->SetPosition({ easeInfo[5].num_X,200.0f });
 		break;
 	}
 
@@ -645,11 +645,11 @@ void GamePlayScene::UpdateTutorialSprite()
 		isColorReverse_ = false;
 	}
 
-	spriteTutorialHTPDash->SetColor({ 0.5f,0.5f,0.5f,1.0f });
-	spriteTutorialHTPMove->SetColor({ 0.5f,0.5f,0.5f,1.0f });
-	spriteTutorialHTPJump->SetColor({ 0.5f,0.5f,0.5f,1.0f });
-	spriteTutorialHTPMoveBack->SetColor({ 0.5f,0.5f,0.5f,1.0f });
-	spriteTutorialHTPAttack->SetColor({ 0.5f,0.5f,0.5f,1.0f });
+	spriteTutorialHTPDash->SetColor({ 0.1f,0.1f,0.1f,1.0f });
+	spriteTutorialHTPMove->SetColor({ 0.1f,0.1f,0.1f,1.0f });
+	spriteTutorialHTPJump->SetColor({ 0.1f,0.1f,0.1f,1.0f });
+	spriteTutorialHTPMoveBack->SetColor({ 0.1f,0.1f,0.1f,1.0f });
+	spriteTutorialHTPAttack->SetColor({ 0.1f,0.1f,0.1f,1.0f });
 
 	//ƒ_ƒbƒVƒ…
 	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))

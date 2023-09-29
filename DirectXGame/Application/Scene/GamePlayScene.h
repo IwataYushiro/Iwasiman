@@ -41,7 +41,7 @@ public://構造体類
 	};
 
 public:
-	
+
 	//初期化
 	void Initialize()override;
 	//更新
@@ -50,7 +50,7 @@ public:
 	void Draw() override;
 	//終了
 	void Finalize() override;
-	
+
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
 
@@ -61,7 +61,7 @@ public:
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
 
 private://静的メンバ変数
-	
+
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤
@@ -84,15 +84,15 @@ private:
 	//スプライト
 	Sprite* spritePause_ = new Sprite();
 	Sprite* spritePauseInfo_ = new Sprite();
-	
+
 	Sprite* spriteTutorialHTPMove = new Sprite();
 	Sprite* spriteTutorialHTPDash = new Sprite();
 	Sprite* spriteTutorialHTPJump = new Sprite();
-	
+
 	Sprite* spriteTutorialHTPMoveBack = new Sprite();
-	
+
 	Sprite* spriteTutorialHTPAttack = new Sprite();
-	
+
 
 	Sprite* spriteTutorialInfo1 = new Sprite();
 	Sprite* spriteTutorialInfo2 = new Sprite();
@@ -102,10 +102,10 @@ private:
 	Easing easeInfo[6] =
 	{
 		Easing(1300.0f, 0.0f, 1.0f),//メニュー
-		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
+		Easing(1300.0f, 500.0f, 1.2f),//チュートリアルへ
 		Easing(1300.0f, 0.0f, 1.4f),//ステージセレクトへ
-		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
-		Easing(1300.0f, 0.0f, 1.8f),
+		Easing(1300.0f, 500.0f, 1.6f),//スペースで選択
+		Easing(1300.0f, 800.0f, 1.8f) ,
 		Easing(1300.0f, 0.0f, 2.0f),
 	};
 
@@ -151,13 +151,13 @@ private:
 
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
-	
+
 	//パーティクル
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm_ = nullptr;
 
 	Particle* particle2_ = nullptr;
-	
+
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
 
@@ -194,7 +194,7 @@ private:
 	num=0 スタンバイ
 	num=1 イージング中
 	*/
-	void SettingTutorialEase(int num,Sprite* s1, Sprite* s2,
+	void SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
 		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);
 	void UpdateTutorialSprite();
 	//チュートリアル用のスプライト描画

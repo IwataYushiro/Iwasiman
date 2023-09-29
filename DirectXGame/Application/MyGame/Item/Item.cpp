@@ -187,7 +187,7 @@ void Item::LoadSprite()
 {
 	//ƒAƒCƒeƒ€ŠÖŒW
 	spCommon_->LoadTexture(1000, "itemtex/itemjumpbar.png");
-	spriteItemJumpBar_->Initialize(spCommon_, 1000);
+	spriteItemJumpBar_->Initialize(spCommon_, 2000);
 	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f });
 
 	spriteItemJumpBar_->Update();
