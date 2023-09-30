@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "MyMath.h"
 #include "WinApp.h"
 #include "Input.h"
 #include "ImGuiManager.h"
@@ -37,6 +38,66 @@ void Camera::Reset()
 	UpdateProjectionMatrix();
 
 	matViewProjection_ = matView_ * matProjection_;
+}
+
+XMFLOAT3 Camera::ShakeEye(XMFLOAT3 eye, int count, XMFLOAT3 min, XMFLOAT3 max)
+{
+	const XMFLOAT3 nowEye = eye;
+	//プランA
+	// 視点座標
+	for (int i = 0; i < count; i++)
+	{
+		//if (i > count - 1)eye_ = { 0.0f, 6.0f, -115.0f };
+		eye_ = { MyMath::RandomMTFloat(min.x,max.x), MyMath::RandomMTFloat(min.y,max.y), MyMath::RandomMTFloat(min.z,max.z) };
+	}
+
+	/*
+	//プランB
+	// 視点座標
+	eye_ = { 0.0f, 81.0f, -115.0f };
+	// 注視点座標
+	target_ = { 0.0f,-35.0f,0.0f };
+	*/
+
+	// ビュー行列の生成
+	UpdateViewMatrix();
+
+	// 透視投影による射影行列の生成
+	UpdateProjectionMatrix();
+
+	matViewProjection_ = matView_ * matProjection_;
+
+
+	return nowEye;
+}
+
+XMFLOAT3 Camera::ShakeTarget(XMFLOAT3 target, int count, XMFLOAT3 min, XMFLOAT3 max)
+{
+	const XMFLOAT3 nowTarget = target;
+	//プランA
+	// 視点座標
+	for (int i = 0; i < count; i++)
+	{
+		//if (i > count - 1)target_ = { 0.0f, 5.0f, 0.0f };
+		target_ = { MyMath::RandomMTFloat(min.x,max.x), MyMath::RandomMTFloat(min.y,max.y), MyMath::RandomMTFloat(min.z,max.z) };
+	}
+
+	/*
+	//プランB
+	// 視点座標
+	eye_ = { 0.0f, 81.0f, -115.0f };
+	// 注視点座標
+	target_ = { 0.0f,-35.0f,0.0f };
+	*/
+	// ビュー行列の生成
+	UpdateViewMatrix();
+
+	// 透視投影による射影行列の生成
+	UpdateProjectionMatrix();
+
+	matViewProjection_ = matView_ * matProjection_;
+
+	return nowTarget;
 }
 
 void Camera::Update()

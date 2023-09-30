@@ -1,5 +1,6 @@
 #pragma once
 #include "Audio.h"
+#include "Easing.h"
 #include "LightGroup.h"
 #include "DirectXCommon.h"
 #include "ImGuiManager.h"
@@ -51,6 +52,13 @@ private://静的メンバ変数
 private://メンバ変数
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
+
+	Sprite* spriteMenu_ = new Sprite();
+	Sprite* spriteMenuTutorial_ = new Sprite();
+	Sprite* spriteMenuStageSelect_ = new Sprite();
+	Sprite* spriteMenuDone_ = new Sprite();
+	Sprite* spriteBack_ = new Sprite();
+
 	//FBX
 	ModelFbx* modelF = nullptr;
 	ObjectFbx* objF = nullptr;
@@ -73,6 +81,25 @@ private://メンバ変数
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
 
+	bool isStart = false;
+	bool isMenu = false;
+	bool isBack = false;
+	Easing easeTitlePosX = Easing(0.0f, -1300.0f, 1.0f);
+
+	Easing easeMenuPosX[5] = 
+	{
+		Easing(1300.0f, 0.0f, 1.0f),//メニュー
+		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
+		Easing(1300.0f, 0.0f, 1.4f),//ステージセレクトへ
+		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
+		Easing(1300.0f, 900.0f, 1.8f),//戻る
+	};
+
+	int MenuCount = 0;
+	//色を変えるスピード
+	float speedColor = 0.0f;
+	//色反転フラグ
+	bool isColorReverse_ = false;
 	//ライト
 	LightGroup* lightGroup_ = nullptr;
 	//パーティクル

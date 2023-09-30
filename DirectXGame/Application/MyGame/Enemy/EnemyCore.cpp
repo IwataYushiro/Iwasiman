@@ -11,10 +11,9 @@ using namespace DirectX;
 CollisionManager* EnemyCore::colManager_ = CollisionManager::GetInstance();
 
 EnemyCore::~EnemyCore() {
-	delete modelBullet_;
 }
 
-std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Player* player, GamePlayScene* gamescene, unsigned short stage)
+std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene, unsigned short stage)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyCore> ins = std::make_unique<EnemyCore>();
@@ -28,6 +27,7 @@ std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Player* player, GameP
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	if (bullet) ins->modelBullet_ = bullet;
 	if (player)ins->SetPlayer(player);
 	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
@@ -38,8 +38,6 @@ bool EnemyCore::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
 
-	modelBullet_ = Model::LoadFromOBJ("enemybullet");
-
 	startCount = std::chrono::steady_clock::now();	//開始時間
 	nowCount = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
@@ -49,7 +47,7 @@ bool EnemyCore::Initialize() {
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
 
 	Parameter();
 
@@ -60,7 +58,7 @@ bool EnemyCore::Initialize() {
 void EnemyCore::Parameter() {
 	phase_ = Phase::CoreStage1;
 	maxTime = 2.0f;
-	life_ = 10;
+	life_ = 5;
 
 
 	isReverse_ = false;

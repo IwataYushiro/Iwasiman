@@ -21,7 +21,7 @@ private:
 
 public:
 	~EnemyCore();
-	static std::unique_ptr<EnemyCore> Create(Model* model = nullptr,
+	static std::unique_ptr<EnemyCore> Create(Model* model = nullptr, Model* bullet = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr
 		, unsigned short stage = 1);
 

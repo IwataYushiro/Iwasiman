@@ -23,15 +23,15 @@ void TitleScene::Initialize()
 	//カメラ
 	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
 	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
-	
+
 	//camera_->SetTarget({ 90.0f,0.0f,0.0f });
 	//camera_->SetEye({ -10.0f,2.0f,0.0f });
-	
+
 	// 視点座標
 	camera_->SetEye({ 0.0f, 5.0f, -100.0f });
 	// 注視点座標
 	camera_->SetTarget({ 0.0f,0.0f,0.0f });
-	
+
 	//レベルデータ読み込み
 	//LoadLVData();
 
@@ -43,31 +43,165 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(titleTex, "texture/title2.png");
 	spriteTitle_->Initialize(spCommon_, titleTex);
 
+	UINT titleMenuTex = 01;
+	spCommon_->LoadTexture(titleMenuTex, "texture/titlemenu.png");
+	spriteMenu_->Initialize(spCommon_, titleMenuTex);
+	spriteMenu_->SetPosition({ easeMenuPosX[0].start,0.0f });
+	spriteMenu_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+
+	UINT titleMenuTutorialTex = 02;
+	spCommon_->LoadTexture(titleMenuTutorialTex, "texture/titlemenut.png");
+	spriteMenuTutorial_->Initialize(spCommon_, titleMenuTutorialTex);
+	spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].start,150.0f });
+
+	UINT titleMenuStageSerectTex = 03;
+	spCommon_->LoadTexture(titleMenuStageSerectTex, "texture/titlemenus.png");
+	spriteMenuStageSelect_->Initialize(spCommon_, titleMenuStageSerectTex);
+	spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].start,300.0f });
+
+	UINT titleMenuDoneTex = 04;
+	spCommon_->LoadTexture(titleMenuDoneTex, "texture/titlemenud.png");
+	spriteMenuDone_->Initialize(spCommon_, titleMenuDoneTex);
+	spriteMenuDone_->SetPosition({ easeMenuPosX[3].start,550.0f });
+	spriteMenuDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+
+	UINT BackTex = 05;
+	spCommon_->LoadTexture(BackTex, "texture/back.png");
+	spriteBack_->Initialize(spCommon_, BackTex);
+	spriteBack_->SetPosition({ easeMenuPosX[4].start,50.0f });
+	spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+
+
 	//FBX
 	objF = ObjectFbx::Create();
 	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 	objF->SetModelFBX(modelF);
 	objF->SetCamera(camera_);
 	objF->PlayAnimation();//更新で呼ぶと止まるから注意
-	
+
 	//パーティクル
 	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);*/
-	
+
 }
 
 void TitleScene::Update()
 {
+	if (MenuCount <= 0)MenuCount = 0;
+	else if (MenuCount >= 1)MenuCount = 1;
+	if (isMenu)
+	{
+		//イージング
+		easeTitlePosX.ease_out_expo();
+		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
+
+		//座標セット
+		spriteTitle_->SetPosition({ easeTitlePosX.num_X,0.0f });
+		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
+		spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
+		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
+		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX[4].num_X,50.0f });
+
+		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
+		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
+
+		if (isColorReverse_)speedColor -= 0.02f;
+		else speedColor += 0.02f;
+
+		if (speedColor >= 0.9f)
+		{
+			isColorReverse_ = true;
+		}
+		if (speedColor <= 0.0f)
+		{
+			isColorReverse_ = false;
+		}
+
+		if (MenuCount == 0)
+		{
+			spriteMenuTutorial_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
+			spriteMenuStageSelect_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+		}
+		else if (MenuCount == 1)
+		{
+			spriteMenuTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteMenuStageSelect_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
+		}
+
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			if (MenuCount == 0)
+			{
+				//チュートリアルステージ
+				camera_->Reset();
+				sceneManager_->ChangeScene("GAMEPLAY", 100);
+			}
+			else if (MenuCount == 1)
+			{
+				//ステージ選択
+				camera_->Reset();
+				sceneManager_->ChangeScene("STAGESELECT", 0);
+
+			}
+		}
+		if (easeMenuPosX[4].num_X == easeMenuPosX[4].end)
+		{
+			if (input_->TriggerKey(DIK_Q))
+			{
+				easeTitlePosX.Standby(true);
+				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(true);
+				isBack = true;
+				isMenu = false;
+			}
+		}
+
+	}
+	else if (isBack)
+	{
+		//イージング
+		easeTitlePosX.ease_out_expo();
+		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
+
+		//座標セット
+		spriteTitle_->SetPosition({ easeTitlePosX.num_X,0.0f });
+		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
+		spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
+		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
+		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX[4].num_X,50.0f });
+
+		if (easeMenuPosX[4].num_X == easeMenuPosX[4].start)
+		{
+			if (input_->TriggerKey(DIK_SPACE))
+			{
+				easeTitlePosX.Standby(false);
+				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
+				isMenu = true;
+				isBack = false;
+			}
+		}
+	}
+	else
+	{
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			easeTitlePosX.Standby(false);
+			for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
+			isMenu = true;
+
+		}
+
+	}
 
 	spriteTitle_->Update();
-	
-	if (input_->TriggerKey(DIK_SPACE))
-	{
-		camera_->Reset();
-		sceneManager_->ChangeScene("GAMEPLAY", 1);
-	}
+	spriteMenu_->Update();
+	spriteMenuTutorial_->Update();
+	spriteMenuStageSelect_->Update();
+	spriteMenuDone_->Update();
+	spriteBack_->Update();
 
 	/*for (auto& object : objects) {
 		object->Update();
@@ -75,7 +209,7 @@ void TitleScene::Update()
 	camera_->Update();
 	lightGroup_->Update();
 	//pm1_->Update();
-	
+
 	objF->Update();
 	imguiManager_->Begin();
 
@@ -95,10 +229,6 @@ void TitleScene::Update()
 void TitleScene::Draw()
 {
 	//背景スプライト描画前処理
-	spCommon_->PreDraw();
-	//スプライト描画
-	spriteTitle_->Draw();
-
 
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
@@ -123,15 +253,31 @@ void TitleScene::Draw()
 	//Fbxモデル描画後処理
 	ObjectFbx::PostDraw();
 
-	//前景スプライト
 
-	
+	spCommon_->PreDraw();
+	//前景スプライト
+	//スプライト描画
+	spriteTitle_->Draw();
+	spriteMenu_->Draw();
+	spriteMenuTutorial_->Draw();
+	spriteMenuStageSelect_->Draw();
+	spriteMenuDone_->Draw();
+	spriteBack_->Draw();
+
 }
 
 void TitleScene::Finalize()
 {
+	//音声
+	audio_->Finalize();
 	//スプライト
 	delete spriteTitle_;
+	delete spriteMenu_;
+	delete spriteMenuTutorial_;
+	delete spriteMenuStageSelect_;
+	delete spriteMenuDone_;
+	delete spriteBack_;
+
 	//プレイヤー
 	delete object3DPlayer_;
 	delete modelPlayer_;

@@ -19,19 +19,22 @@ private:
 
 public:
 	~Enemy1();
-	static std::unique_ptr<Enemy1> Create(Model* model = nullptr,
-		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
+	static std::unique_ptr<Enemy1> Create(Model* model = nullptr, Model* bullet = nullptr,
+		Player* player = nullptr, GamePlayScene* gamescene = nullptr, int level = 1);
 
 	//弾発射間隔
 	int kFireInterval;
 	//初期化
-	bool Initialize()override;
+	bool Initialize(int level);
+	void InitSubATTR(int level);
+	void InitSpeed();
+	void InitLIfe();
 
 	//リセット処理
-	void Reset();
+	void Reset(int level);
 
 	//パラメータ
-	void Parameter();
+	void Parameter(int level);
 	//更新
 	void Update()override;
 	//転送　
@@ -88,7 +91,6 @@ private:
 
 	//反転フラグ
 	bool isReverse_ = false;
-
 
 public:
 	

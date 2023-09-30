@@ -47,7 +47,8 @@ void FallSphere::Update()
 {
 	
 	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphere();
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphereReturn();
+	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE)UpdateRiseSphere();
 
 	Trans();
 	camera_->Update();
@@ -92,6 +93,45 @@ void FallSphere::UpdateFallSphereReturn()
 		}
 	}
 	
+}
+
+void FallSphere::UpdateRiseSphere()
+{
+	if (isRide)
+	{
+		const float Speed = 0.1f;
+		position.y += Speed;
+
+		if (position.y >= startPos.y + 50.0f)
+		{
+			position = startPos;
+			isRide = false;
+		}
+	}
+}
+
+void FallSphere::UpdateRiseSphereReturn()
+{
+	const float speed = 0.1f;
+
+	if (isRide)
+	{
+		if (player_->OnGround())position.y += speed;
+		else
+		{
+			isRide = false;
+			isReturn = true;
+		}
+	}
+	else if (isReturn)
+	{
+		position.y -= speed;
+		if (position.y <= startPos.y)
+		{
+			position = startPos;
+			isReturn = false;
+		}
+	}
 }
 
 void FallSphere::Trans()

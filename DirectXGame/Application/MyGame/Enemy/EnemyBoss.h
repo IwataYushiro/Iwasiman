@@ -20,7 +20,7 @@ private:
 
 public:
 	~EnemyBoss();
-	static std::unique_ptr<EnemyBoss> Create(Model* model = nullptr,
+	static std::unique_ptr<EnemyBoss> Create(Model* model = nullptr, Model* bullet = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
 	//’e”­ŽËŠÔŠu
 	static const int kFireInterval = 40;

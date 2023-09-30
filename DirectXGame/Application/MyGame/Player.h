@@ -27,7 +27,7 @@ public:
 public:
 	~Player();
 
-	static std::unique_ptr<Player> Create(Model* model = nullptr,
+	static std::unique_ptr<Player> Create(Model* model = nullptr, Model* bullet = nullptr,
 		GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
@@ -35,7 +35,7 @@ public:
 	void Reset();
 	
 	//更新
-	void Update() override;
+	void Update(bool isBack = true, bool isAttack = true);
 	//プレイヤーの移動処理
 	void Move();
 	void CameraMove();
@@ -119,6 +119,12 @@ private:
 
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;
+	//シェイク機能
+	bool isShake = false;
+	//スタート時
+	XMFLOAT3 nowEye;
+	XMFLOAT3 nowTarget;
+	XMFLOAT3 hitMove;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
@@ -132,4 +138,5 @@ public: //アクセッサ、インライン関数
 	const int& GetLife()const { return life_; }
 	//ゲームシーン
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+
 };

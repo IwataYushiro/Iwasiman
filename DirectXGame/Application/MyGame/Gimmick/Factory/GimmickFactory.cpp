@@ -16,6 +16,14 @@ std::unique_ptr<BaseGimmick> GimmickFactory::CreateGimmick(const std::string& gi
 	{
 		return FallSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE);
 	}
+	else if (gimmickName.find("FALLSPHERERETURN") == 0)
+	{
+		return FallSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN);
+	}
+	else if (gimmickName.find("RISESPHERE") == 0)
+	{
+		return FallSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_UPSPHERE);
+	}
 
 	return nullptr;
 }

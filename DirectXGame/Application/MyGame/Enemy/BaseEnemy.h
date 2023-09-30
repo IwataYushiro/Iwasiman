@@ -1,6 +1,7 @@
 #pragma once
 #include "Object3d.h"
 #include "EnemyBullet.h"
+#include <DirectXMath.h>
 
 //自機クラスの前方宣言
 class Player;
@@ -10,6 +11,8 @@ class GamePlayScene;
 //敵基盤クラス
 class BaseEnemy :public Object3d
 {
+private:
+	using XMFLOAT3 = DirectX::XMFLOAT3;
 public:
 	virtual ~BaseEnemy() = default;
 
@@ -33,6 +36,8 @@ protected:
 	//死亡フラグとライフ
 	bool isDead_;
 	int life_;
+	//速度
+	XMFLOAT3 speed;
 
 	bool bossDead;
 public://アクセッサ
