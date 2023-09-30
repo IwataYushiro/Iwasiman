@@ -115,7 +115,7 @@ void GamePlayScene::Update()
 			imguiManager_->Begin();
 			int plife[1] = { player->GetLife() };
 			ImGui::Begin("Player");
-			ImGui::SetWindowPos(ImVec2(200.0f, 200.0f));
+			ImGui::SetWindowPos(ImVec2(1090.0f, 50.0f));
 			ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
 			ImGui::InputInt("plife", plife);
 			ImGui::End();

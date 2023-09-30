@@ -162,6 +162,9 @@ void GameOverScene::Update()
 
 	objStage->SetRotation(rot);
 
+	imguiManager_->Begin();
+	imguiManager_->End();
+
 	spriteGameOver_->Update();
 	spriteContinue_->Update();
 	spriteStageSelect_->Update();

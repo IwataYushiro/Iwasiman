@@ -213,16 +213,6 @@ void TitleScene::Update()
 	objF->Update();
 	imguiManager_->Begin();
 
-	ImGui::Begin("Prototype");
-	ImGui::SetWindowPos(ImVec2(0.0f, 600.0f));
-	ImGui::SetWindowSize(ImVec2(800.0f, 100.0f));
-	ImGui::Text("How To Play");
-	ImGui::Text("WASD Move + SHIFT Dash  SPACE Jump Z Move Back");
-	//ImGui::Text(" test -> gaussianblur -> bloom -> Glare -> sepia -> cold -> ");
-	//ImGui::Text(" nagapozi -> grayscale -> mosaic -> uv shift -> uv shift blur -> posteffect off");
-	ImGui::Text(" Space Sample Game Start      Enter Return Title");
-
-	ImGui::End();
 	imguiManager_->End();
 }
 

@@ -15,7 +15,7 @@ Camera* StageClearScene::camera_ = Camera::GetInstance();
 
 
 StageClearScene::StageClearScene(int stagenum) :stageNum(stagenum)
-{	
+{
 }
 
 void StageClearScene::Initialize()
@@ -47,20 +47,22 @@ void StageClearScene::Initialize()
 void StageClearScene::Update()
 {
 
-	
+
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
-		if (stageNum == 4) sceneManager_->ChangeScene("STAGESELECT",2);
-		else if (stageNum == 103) sceneManager_->ChangeScene("STAGESELECT",1);
+		if (stageNum == 4) sceneManager_->ChangeScene("STAGESELECT", 2);
+		else if (stageNum == 103) sceneManager_->ChangeScene("STAGESELECT", 1);
 		else sceneManager_->ChangeScene("GAMEPLAY", ++stageNum);
 	}
+	imguiManager_->Begin();
+	imguiManager_->End();
 
-spriteStageClear_->Update();
+	spriteStageClear_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
-	
+
 }
 
 void StageClearScene::Draw()
@@ -88,7 +90,7 @@ void StageClearScene::Draw()
 	//Fbxモデル描画前処理
 	ObjectFbx::PreDraw(dxCommon_->GetCommandList());
 
-	
+
 	//Fbxモデル描画後処理
 	ObjectFbx::PostDraw();
 
@@ -102,5 +104,5 @@ void StageClearScene::Finalize()
 	delete lightGroup_;
 	//スプライト
 	delete spriteStageClear_;
-	
+
 }

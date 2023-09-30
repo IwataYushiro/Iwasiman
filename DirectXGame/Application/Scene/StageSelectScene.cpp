@@ -222,6 +222,9 @@ void StageSelectScene::Update()
 
 	objStage->SetRotation(rot);
 
+	imguiManager_->Begin();
+	imguiManager_->End();
+
 	spriteMenu_->Update();
 	spriteTutorial_->Update();
 	spriteStage1_->Update();
