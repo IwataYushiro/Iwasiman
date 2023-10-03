@@ -41,6 +41,11 @@ void TitleScene::Initialize()
 
 	spCommon_->LoadTexture(TITitle, "texture/title2.png");
 	spriteTitle_->Initialize(spCommon_, TITitle);
+	spriteTitle_->SetColor(backTitleColor);
+
+	spCommon_->LoadTexture(TITitleDone, "texture/space.png");
+	spriteTitleDone_->Initialize(spCommon_, TITitleDone);
+	spriteTitleDone_->SetPosition({ 0.0f,550.0f });
 
 	spCommon_->LoadTexture(TIMenu, "texture/titlemenu.png");
 	spriteMenu_->Initialize(spCommon_, TIMenu);
@@ -85,14 +90,23 @@ void TitleScene::Update()
 {
 	if (MenuCount <= Tutorial)MenuCount = Tutorial;
 	else if (MenuCount >= StageSelect)MenuCount = StageSelect;
+
+	
+	DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor.x,0.1f,0.1f,1.0f };
+	DirectX::XMFLOAT4 TitleDoneColor = { 0.0f,0.0f,0.1f + selectColor.z,1.0f };
+	//SetColorより前に呼び出す
+	UpdateChangeColor();
+
+	
 	if (isMenu)
 	{
 		//イージング
-		easeTitlePosX.ease_out_expo();
+		for (int i = 0; i < 2; i++)easeTitlePosX[i].ease_out_expo();
 		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
 
 		//座標セット
-		spriteTitle_->SetPosition({ easeTitlePosX.num_X,0.0f });
+		spriteTitle_->SetPosition({ easeTitlePosX[0].num_X,0.0f});
+		spriteTitleDone_->SetPosition({ easeTitlePosX[1].num_X,550.0f });
 		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
 		spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
 		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
@@ -101,26 +115,6 @@ void TitleScene::Update()
 
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
-
-		
-		//色を変えるスピード
-		float speedColor = 0.02f;
-
-		DirectX::XMFLOAT4 selectMenuColor={ 0.1f + selectColor.x,0.1f + selectColor.y,0.1f + selectColor.z,1.0f };
-		
-		if (isColorReverse_)selectColor.x -= speedColor;
-		else selectColor.x += speedColor;
-
-		const DirectX::XMFLOAT2 maxAndMinSpeedColor = { 0.9f,0.0f };//{max,min}
-
-		if (selectColor.x >= maxAndMinSpeedColor.x)
-		{
-			isColorReverse_ = true;
-		}
-		if (selectColor.x <= maxAndMinSpeedColor.y)
-		{
-			isColorReverse_ = false;
-		}
 
 		if (MenuCount == Tutorial)
 		{
@@ -151,7 +145,7 @@ void TitleScene::Update()
 		{
 			if (input_->TriggerKey(DIK_Q))
 			{
-				easeTitlePosX.Standby(true);
+				for (int i = 0; i < 2; i++)easeTitlePosX[i].Standby(true);
 				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(true);
 				isBack = true;
 				isMenu = false;
@@ -162,11 +156,12 @@ void TitleScene::Update()
 	else if (isBack)
 	{
 		//イージング
-		easeTitlePosX.ease_out_expo();
+		for (int i = 0; i < 2; i++)easeTitlePosX[i].ease_out_expo();
 		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
 
 		//座標セット
-		spriteTitle_->SetPosition({ easeTitlePosX.num_X,0.0f });
+		spriteTitle_->SetPosition({ easeTitlePosX[0].num_X,0.0f });
+		spriteTitleDone_->SetPosition({ easeTitlePosX[1].num_X,550.0f });
 		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
 		spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
 		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
@@ -177,7 +172,7 @@ void TitleScene::Update()
 		{
 			if (input_->TriggerKey(DIK_SPACE))
 			{
-				easeTitlePosX.Standby(false);
+				for (int i = 0; i < 2; i++)easeTitlePosX[i].Standby(false);
 				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
 				isMenu = true;
 				isBack = false;
@@ -188,15 +183,21 @@ void TitleScene::Update()
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			easeTitlePosX.Standby(false);
+			for (int i = 0; i < 2; i++)easeTitlePosX[i].Standby(false);
 			for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
 			isMenu = true;
 
 		}
 
 	}
+	spriteTitleDone_->SetColor(TitleDoneColor);
+	spriteMenu_->SetColor(TitleDoneColor);
+	spriteMenuDone_->SetColor(TitleDoneColor);
+
+
 
 	spriteTitle_->Update();
+	spriteTitleDone_->Update();
 	spriteMenu_->Update();
 	spriteMenuTutorial_->Update();
 	spriteMenuStageSelect_->Update();
@@ -274,6 +275,7 @@ void TitleScene::Draw()
 	//前景スプライト
 	//スプライト描画
 	spriteTitle_->Draw();
+	spriteTitleDone_->Draw();
 	spriteMenu_->Draw();
 	spriteMenuTutorial_->Draw();
 	spriteMenuStageSelect_->Draw();
@@ -288,6 +290,7 @@ void TitleScene::Finalize()
 	audio_->Finalize();
 	//スプライト
 	delete spriteTitle_;
+	delete spriteTitleDone_;
 	delete spriteMenu_;
 	delete spriteMenuTutorial_;
 	delete spriteMenuStageSelect_;
@@ -421,3 +424,35 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 
 }
 
+void TitleScene::UpdateChangeColor()
+{
+	//色を変えるスピード
+	float speedColor = 0.02f;
+
+	if (isColorReverse_)
+	{
+		selectColor.x -= speedColor;
+		selectColor.y -= speedColor;
+		selectColor.z -= speedColor;
+	}
+
+	else
+	{
+		selectColor.x += speedColor;
+		selectColor.y += speedColor;
+		selectColor.z += speedColor;
+
+	}
+
+	const DirectX::XMFLOAT2 maxAndMinSpeedColor = { 0.9f,0.0f };//{max,min}
+
+	if (selectColor.x >= maxAndMinSpeedColor.x)
+	{
+		isColorReverse_ = true;
+	}
+	if (selectColor.x <= maxAndMinSpeedColor.y)
+	{
+		isColorReverse_ = false;
+	}
+
+}

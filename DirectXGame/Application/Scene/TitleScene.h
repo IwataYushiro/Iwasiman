@@ -71,7 +71,7 @@ private://メンバ変数
 
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
-
+	Sprite* spriteTitleDone_ = new Sprite();
 	Sprite* spriteMenu_ = new Sprite();
 	Sprite* spriteMenuTutorial_ = new Sprite();
 	Sprite* spriteMenuStageSelect_ = new Sprite();
@@ -98,7 +98,12 @@ private://メンバ変数
 	bool isStart = false;
 	bool isMenu = false;
 	bool isBack = false;
-	Easing easeTitlePosX = Easing(0.0f, -1300.0f, 1.0f);
+	Easing easeTitlePosX[2] =
+	{
+		Easing(0.0f, -1300.0f, 1.0f),
+		Easing(0.0f, -1300.0f, 1.0f)
+	};
+		
 
 	Easing easeMenuPosX[5] =
 	{
@@ -109,12 +114,9 @@ private://メンバ変数
 		Easing(1300.0f, 900.0f, 1.8f),//戻る
 	};
 
-
-	//色を変えるスピード
-	float speedColor = 0.0f;
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor = { 0.0f,0.0f,0.0f };//xyz=rgb
-	
+
 	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,1.0f };
 	const DirectX::XMFLOAT4 backTitleColor = { 0.0f,0.0f,0.1f,1.0f };
 
@@ -133,4 +135,9 @@ private://メンバ変数
 
 	//天球回転用
 	DirectX::XMFLOAT3 rotSkydome{ 0.0f,0.0f,0.0f };
+
+public:
+	//色が変わる処理
+	void UpdateChangeColor();
+
 };
