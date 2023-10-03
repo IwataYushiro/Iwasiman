@@ -51,6 +51,24 @@ private://静的メンバ変数
 	static Camera* camera_;
 
 private://メンバ変数
+	enum TextureIndex
+	{
+		TITitle = 0,
+		TITitleDone = 1,
+		TIMenu = 2,
+		TIMenuTutorial = 3,
+		TIMenuStageSerect = 4,
+		TIMenuDone = 5,
+		TIBackTitle = 6,
+	};
+
+	enum MenuIndex
+	{
+		Tutorial = 0,
+		StageSelect = 1,
+	};
+	int MenuCount = Tutorial;
+
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
 
@@ -91,9 +109,15 @@ private://メンバ変数
 		Easing(1300.0f, 900.0f, 1.8f),//戻る
 	};
 
-	int MenuCount = 0;
+
 	//色を変えるスピード
 	float speedColor = 0.0f;
+	//選択中の色
+	DirectX::XMFLOAT3 selectColor = { 0.0f,0.0f,0.0f };//xyz=rgb
+	
+	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,1.0f };
+	const DirectX::XMFLOAT4 backTitleColor = { 0.0f,0.0f,0.1f,1.0f };
+
 	//色反転フラグ
 	bool isColorReverse_ = false;
 	//ライト
@@ -108,5 +132,5 @@ private://メンバ変数
 	const float returnPos = -120.0f;
 
 	//天球回転用
-	DirectX::XMFLOAT3 rotSkydome{0.0f,0.0f,0.0f};
+	DirectX::XMFLOAT3 rotSkydome{ 0.0f,0.0f,0.0f };
 };

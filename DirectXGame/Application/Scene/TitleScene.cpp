@@ -39,37 +39,31 @@ void TitleScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	UINT titleTex = 00;
-	spCommon_->LoadTexture(titleTex, "texture/title2.png");
-	spriteTitle_->Initialize(spCommon_, titleTex);
+	spCommon_->LoadTexture(TITitle, "texture/title2.png");
+	spriteTitle_->Initialize(spCommon_, TITitle);
 
-	UINT titleMenuTex = 01;
-	spCommon_->LoadTexture(titleMenuTex, "texture/titlemenu.png");
-	spriteMenu_->Initialize(spCommon_, titleMenuTex);
+	spCommon_->LoadTexture(TIMenu, "texture/titlemenu.png");
+	spriteMenu_->Initialize(spCommon_, TIMenu);
 	spriteMenu_->SetPosition({ easeMenuPosX[0].start,0.0f });
-	spriteMenu_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+	spriteMenu_->SetColor(otherMenuColor);
 
-	UINT titleMenuTutorialTex = 02;
-	spCommon_->LoadTexture(titleMenuTutorialTex, "texture/titlemenut.png");
-	spriteMenuTutorial_->Initialize(spCommon_, titleMenuTutorialTex);
+	spCommon_->LoadTexture(TIMenuTutorial, "texture/titlemenut.png");
+	spriteMenuTutorial_->Initialize(spCommon_, TIMenuTutorial);
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].start,150.0f });
 
-	UINT titleMenuStageSerectTex = 03;
-	spCommon_->LoadTexture(titleMenuStageSerectTex, "texture/titlemenus.png");
-	spriteMenuStageSelect_->Initialize(spCommon_, titleMenuStageSerectTex);
+	spCommon_->LoadTexture(TIMenuStageSerect, "texture/titlemenus.png");
+	spriteMenuStageSelect_->Initialize(spCommon_, TIMenuStageSerect);
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].start,300.0f });
 
-	UINT titleMenuDoneTex = 04;
-	spCommon_->LoadTexture(titleMenuDoneTex, "texture/titlemenud.png");
-	spriteMenuDone_->Initialize(spCommon_, titleMenuDoneTex);
+	spCommon_->LoadTexture(TIMenuDone, "texture/titlemenud.png");
+	spriteMenuDone_->Initialize(spCommon_, TIMenuDone);
 	spriteMenuDone_->SetPosition({ easeMenuPosX[3].start,550.0f });
-	spriteMenuDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+	spriteMenuDone_->SetColor(otherMenuColor);
 
-	UINT BackTex = 05;
-	spCommon_->LoadTexture(BackTex, "texture/back.png");
-	spriteBack_->Initialize(spCommon_, BackTex);
+	spCommon_->LoadTexture(TIBackTitle, "texture/back.png");
+	spriteBack_->Initialize(spCommon_, TIBackTitle);
 	spriteBack_->SetPosition({ easeMenuPosX[4].start,50.0f });
-	spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+	spriteBack_->SetColor(backTitleColor);
 
 
 	//FBX
@@ -89,8 +83,8 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	if (MenuCount <= 0)MenuCount = 0;
-	else if (MenuCount >= 1)MenuCount = 1;
+	if (MenuCount <= Tutorial)MenuCount = Tutorial;
+	else if (MenuCount >= StageSelect)MenuCount = StageSelect;
 	if (isMenu)
 	{
 		//イージング
@@ -108,37 +102,45 @@ void TitleScene::Update()
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
 
-		if (isColorReverse_)speedColor -= 0.02f;
-		else speedColor += 0.02f;
+		
+		//色を変えるスピード
+		float speedColor = 0.02f;
 
-		if (speedColor >= 0.9f)
+		DirectX::XMFLOAT4 selectMenuColor={ 0.1f + selectColor.x,0.1f + selectColor.y,0.1f + selectColor.z,1.0f };
+		
+		if (isColorReverse_)selectColor.x -= speedColor;
+		else selectColor.x += speedColor;
+
+		const DirectX::XMFLOAT2 maxAndMinSpeedColor = { 0.9f,0.0f };//{max,min}
+
+		if (selectColor.x >= maxAndMinSpeedColor.x)
 		{
 			isColorReverse_ = true;
 		}
-		if (speedColor <= 0.0f)
+		if (selectColor.x <= maxAndMinSpeedColor.y)
 		{
 			isColorReverse_ = false;
 		}
 
-		if (MenuCount == 0)
+		if (MenuCount == Tutorial)
 		{
-			spriteMenuTutorial_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
-			spriteMenuStageSelect_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			spriteMenuTutorial_->SetColor(selectMenuColor);
+			spriteMenuStageSelect_->SetColor(otherMenuColor);
 		}
-		else if (MenuCount == 1)
+		else if (MenuCount == StageSelect)
 		{
-			spriteMenuTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-			spriteMenuStageSelect_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
+			spriteMenuTutorial_->SetColor(otherMenuColor);
+			spriteMenuStageSelect_->SetColor(selectMenuColor);
 		}
 
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			if (MenuCount == 0)
+			if (MenuCount == Tutorial)
 			{
 				//チュートリアルステージ
 				sceneManager_->ChangeScene("GAMEPLAY", 100);
 			}
-			else if (MenuCount == 1)
+			else if (MenuCount == StageSelect)
 			{
 				//ステージ選択
 				sceneManager_->ChangeScene("STAGESELECT", 0);
@@ -203,7 +205,8 @@ void TitleScene::Update()
 
 	for (Object3d*& player : objPlayers_)
 	{
-		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f }, { -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
+		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
+			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
 
 		player->Update();
 	}

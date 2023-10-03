@@ -270,7 +270,7 @@ void Camera::DebugCamera(bool eyeTargetMix)
 		else if (input_->PushKey(DIK_Q))CameraMoveVectorTarget({ 0.0f,0.0f,1.0f });
 		else if (input_->PushKey(DIK_E))CameraMoveVectorTarget({ 0.0f,0.0f,-1.0f });
 
-		imguiManager_->Begin();
+		//imguiManager_->Begin();
 		ImGui::Begin("Camera");
 		ImGui::SetWindowPos(ImVec2(700, 0));
 		ImGui::SetWindowSize(ImVec2(560, 150));
@@ -280,7 +280,7 @@ void Camera::DebugCamera(bool eyeTargetMix)
 		ImGui::Text("target RIGHT += x LEFT -= x  UP += y DOWN -= y Q += z E -= z");
 		ImGui::Text("WARNING eye.x = target.x & eye.y = target.y & eye.z = target.z -> SYSTEM DOWN");
 		ImGui::End();
-		imguiManager_->End();
+		//imguiManager_->End();
 	}
 	else
 	{
@@ -316,7 +316,7 @@ void Camera::DebugCamera(bool eyeTargetMix)
 			CameraMoveVectorTarget({ 0.0f,0.0f,-1.00001f });
 		}
 
-		imguiManager_->Begin();
+		//imguiManager_->Begin();
 		ImGui::Begin("Camera Mix Mode");
 		ImGui::SetWindowPos(ImVec2(700, 0));
 		ImGui::SetWindowSize(ImVec2(560, 150));
@@ -324,7 +324,7 @@ void Camera::DebugCamera(bool eyeTargetMix)
 		ImGui::InputFloat3("Target", itarget);
 		ImGui::Text("W += x S -= x  D += y A -= y Z += z X -= z");
 		ImGui::End();
-		imguiManager_->End();
+		//imguiManager_->End();
 	}
 }
 
