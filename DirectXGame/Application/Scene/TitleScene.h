@@ -106,4 +106,7 @@ private://メンバ変数
 	DirectX::XMFLOAT3 startGroundPos;
 	//X値がここまで来たらループ
 	const float returnPos = -120.0f;
+
+	//天球回転用
+	DirectX::XMFLOAT3 rotSkydome{0.0f,0.0f,0.0f};
 };

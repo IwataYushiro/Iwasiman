@@ -313,7 +313,7 @@ void Camera::DebugCamera(bool eyeTargetMix)
 		else if (input_->PushKey(DIK_X))
 		{
 			CameraMoveVectorEye({ 0.0f,0.0f,-1.0f });
-			CameraMoveVectorTarget({ 0.0f,1.0f,-1.00001f });
+			CameraMoveVectorTarget({ 0.0f,0.0f,-1.00001f });
 		}
 
 		imguiManager_->Begin();

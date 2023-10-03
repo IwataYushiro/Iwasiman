@@ -178,7 +178,7 @@ void Player::Move() {
 	{
 		if (input_->PushKey(DIK_A)) {
 			isRight_ = false;
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,3.0f,0.0f }, { 3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { 3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
 			rot = { 0.0f,-90.0f,0.0f };
 			move.x -= moveSpeed * 1.5f;
 			cmove.x -= moveSpeed * 1.5f;
@@ -187,7 +187,7 @@ void Player::Move() {
 		}
 		if (input_->PushKey(DIK_D)) {
 			isRight_ = true;
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,3.0f,0.0f }, { -3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
 			rot = { 0.0f,90.0f,0.0f };
 			move.x += moveSpeed * 1.5f;
 			cmove.x += moveSpeed * 1.5f;

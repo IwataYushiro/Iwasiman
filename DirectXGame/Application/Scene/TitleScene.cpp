@@ -28,9 +28,9 @@ void TitleScene::Initialize()
 	//camera_->SetEye({ -10.0f,2.0f,0.0f });
 
 	// 視点座標
-	camera_->SetEye({ -28.0f, 1.0f, -100.0f });
+	camera_->SetEye({ 0.0f, 1.0f, -50.0f });
 	// 注視点座標
-	camera_->SetTarget({ -28.0f,0.0f,0.0f });
+	camera_->SetTarget({ 0.0f,0.0f,50.0f });
 
 	//レベルデータ読み込み
 	LoadLVData("scene/title");
@@ -80,10 +80,10 @@ void TitleScene::Initialize()
 	//objF->PlayAnimation();//更新で呼ぶと止まるから注意
 
 	//パーティクル
-	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);*/
+	pm1_->SetCamera(camera_);
 
 }
 
@@ -201,41 +201,48 @@ void TitleScene::Update()
 	spriteMenuDone_->Update();
 	spriteBack_->Update();
 
-	for (Object3d*& player : objPlayers_)player->Update();
+	for (Object3d*& player : objPlayers_)
+	{
+		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f }, { -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
+
+		player->Update();
+	}
+
 	for (Object3d*& ground : objGrounds_)
 	{
 		DirectX::XMFLOAT3 move = ground->GetPosition();
-		DirectX::XMFLOAT3 speed = {-1.0f,0.0f,0.0f};
+		DirectX::XMFLOAT3 speed = { -1.0f,0.0f,0.0f };
 
 		move.x += speed.x;
 		ground->SetPosition(move);
 		if (ground->GetPosition().x <= returnPos)ground->SetPosition(startGroundPos);
-		
+
 		ground->Update();
 	}
+
+	for (Object3d*& skydome : objSkydomes_)
+	{
+		const float rotSpeed = -0.2f;
+		rotSkydome.y += rotSpeed;
+		skydome->SetRotation(rotSkydome);
+
+		skydome->Update();
+	}
 		
-	for (Object3d*& skydome : objSkydomes_)skydome->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
-	//pm1_->Update();
+	pm1_->Update();
 
 	//objF->Update();
 	imguiManager_->Begin();
-	//camera_->DebugCamera(true);
+	camera_->DebugCamera(true);
 	imguiManager_->End();
 }
 
 void TitleScene::Draw()
 {
 	//背景スプライト描画前処理
-
-	//エフェクト描画前処理
-	ParticleManager::PreDraw(dxCommon_->GetCommandList());
-
-	//pm1_->Draw();
-	//エフェクト描画後処理
-	ParticleManager::PostDraw();
 
 
 	//モデル描画前処理
@@ -253,6 +260,12 @@ void TitleScene::Draw()
 	//Fbxモデル描画後処理
 	ObjectFbx::PostDraw();
 
+	//エフェクト描画前処理
+	ParticleManager::PreDraw(dxCommon_->GetCommandList());
+
+	pm1_->Draw();
+	//エフェクト描画後処理
+	ParticleManager::PostDraw();
 
 	spCommon_->PreDraw();
 	//前景スプライト
@@ -278,12 +291,12 @@ void TitleScene::Finalize()
 	delete spriteMenuDone_;
 	delete spriteBack_;
 
-	
+
 	//レベルデータ用オブジェクト
 	for (Object3d*& player : objPlayers_)delete player;
 	for (Object3d*& ground : objGrounds_)delete ground;
 	for (Object3d*& skydome : objSkydomes_)delete skydome;
-	
+
 	delete modelPlayer_;
 	delete modelSkydome;
 	delete modelGround;
@@ -291,8 +304,8 @@ void TitleScene::Finalize()
 	//ライト
 	delete lightGroup_;
 	//パーティクル
-	//delete particle1_;
-	//delete pm1_;
+	delete particle1_;
+	delete pm1_;
 	//FBX
 	//delete objF;
 	//delete modelF;
