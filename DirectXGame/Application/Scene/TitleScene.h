@@ -18,6 +18,7 @@
 struct LevelData;
 
 //タイトルシーン
+
 class TitleScene :public BaseScene
 {
 public://メンバ関数
@@ -31,13 +32,13 @@ public://メンバ関数
 	void Finalize() override;
 
 	//レベルデータ読み込み
-	void LoadLVData();
+	void LoadLVData(const std::string& stagePath);
 
 private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
 	//スプライト基盤
-	SpriteCommon* spCommon_=nullptr;
+	SpriteCommon* spCommon_ = nullptr;
 	//インプット
 	static Input* input_;
 	//オーディオ
@@ -60,33 +61,28 @@ private://メンバ変数
 	Sprite* spriteBack_ = new Sprite();
 
 	//FBX
-	ModelFbx* modelF = nullptr;
-	ObjectFbx* objF = nullptr;
-
-	//モデル
-	Model* modelPlayer_ = nullptr;
-	Object3d* object3DPlayer_ = nullptr;
+	//ModelFbx* modelF = nullptr;
+	//ObjectFbx* objF = nullptr;
 
 	LevelData* levelData = nullptr;
 
+	//モデル
+	Model* modelPlayer_ = nullptr;
 	Model* modelSkydome = nullptr;
 	Model* modelGround = nullptr;
-	Model* modelFighter = nullptr;
-	Model* modelSphere = nullptr;
 
-	Object3d* objSkydome = nullptr;
-	Object3d* objGround = nullptr;
-	Object3d* objFighter = nullptr;
-	Object3d* objSphere = nullptr;
+	std::vector<Object3d*> objPlayers_;
+	std::vector<Object3d*> objSkydomes_;
+	std::vector<Object3d*> objGrounds_;
+
 	std::map<std::string, Model*> models;
-	std::vector<Object3d*> objects;
 
 	bool isStart = false;
 	bool isMenu = false;
 	bool isBack = false;
 	Easing easeTitlePosX = Easing(0.0f, -1300.0f, 1.0f);
 
-	Easing easeMenuPosX[5] = 
+	Easing easeMenuPosX[5] =
 	{
 		Easing(1300.0f, 0.0f, 1.0f),//メニュー
 		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
@@ -105,4 +101,9 @@ private://メンバ変数
 	//パーティクル
 	Particle* particle1_ = nullptr;
 	ParticleManager* pm1_ = nullptr;
+
+	//開始時のポジション
+	DirectX::XMFLOAT3 startGroundPos;
+	//X値がここまで来たらループ
+	const float returnPos = -120.0f;
 };

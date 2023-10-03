@@ -39,6 +39,7 @@ void GamePlayScene::Initialize()
 	//音声再生呼び出し例
 	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
+	camera_->Reset();
 	//弾リセット
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Reset();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Reset();

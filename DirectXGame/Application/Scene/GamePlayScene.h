@@ -29,7 +29,8 @@ struct LevelData;
 class CollisionManager;
 class TouchableObject;
 
-//ゲームプレイ
+//ゲームプレイシーン
+
 class GamePlayScene :public BaseScene
 {
 public://構造体類

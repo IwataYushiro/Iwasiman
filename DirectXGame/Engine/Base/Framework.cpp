@@ -60,7 +60,7 @@ void Framework::Update()
 	//“ü—Í‚ÌXV
 	input_->Update();
 #ifdef _DEBUG
-	//camera_->DebugCamera();
+	camera_->DebugCamera();
 
 #endif // DEBUG
 	

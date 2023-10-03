@@ -3,7 +3,8 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 
-//ライト
+//ライトグループ
+
 class LightGroup
 {
 private: // エイリアス

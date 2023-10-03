@@ -31,7 +31,7 @@ public:
 	//カメラ注視点移動
 	void CameraMoveVectorTarget(const XMFLOAT3& move);
 	//デバッグカメラ
-	void DebugCamera();
+	void DebugCamera(bool eyeTargetMix = false);
 protected:
 	// ビュー行列
 	XMMATRIX matView_ = {};
