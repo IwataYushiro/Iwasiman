@@ -186,7 +186,7 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 void Item::LoadSprite()
 {
 	//ƒAƒCƒeƒ€ŠÖŒW
-	spCommon_->LoadTexture(1000, "itemtex/itemjumpbar.png");
+	spCommon_->LoadTexture(2000, "itemtex/itemjumpbar.png");
 	spriteItemJumpBar_->Initialize(spCommon_, 2000);
 	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f });
 
