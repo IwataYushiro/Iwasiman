@@ -28,9 +28,9 @@ void TitleScene::Initialize()
 	//camera_->SetEye({ -10.0f,2.0f,0.0f });
 
 	// 視点座標
-	camera_->SetEye({ 0.0f, 1.0f, -50.0f });
+	camera_->SetEye({ easeEye[0].start, easeEye[1].start, easeEye[2].start });
 	// 注視点座標
-	camera_->SetTarget({ 0.0f,0.0f,50.0f });
+	camera_->SetTarget({ easeTarget[0].start, easeTarget[1].start, easeTarget[2].start });
 
 	//レベルデータ読み込み
 	LoadLVData("scene/title");
@@ -103,6 +103,8 @@ void TitleScene::Update()
 		//イージング
 		for (int i = 0; i < 2; i++)easeTitlePosX[i].ease_out_expo();
 		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeEye[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeTarget[i].ease_out_expo();
 
 		//座標セット
 		spriteTitle_->SetPosition({ easeTitlePosX[0].num_X,0.0f});
@@ -112,6 +114,10 @@ void TitleScene::Update()
 		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
 		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
 		spriteBack_->SetPosition({ easeMenuPosX[4].num_X,50.0f });
+
+		//カメラもセット
+		camera_->SetEye({easeEye[0].num_X, easeEye[1].num_X, easeEye[2].num_X});
+		camera_->SetTarget({easeTarget[0].num_X, easeTarget[1].num_X, easeTarget[2].num_X});
 
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
@@ -147,6 +153,8 @@ void TitleScene::Update()
 			{
 				for (int i = 0; i < 2; i++)easeTitlePosX[i].Standby(true);
 				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(true);
+				for (int i = 0; i < 3; i++)easeEye[i].Standby(true);
+				for (int i = 0; i < 3; i++)easeTarget[i].Standby(true);
 				isBack = true;
 				isMenu = false;
 			}
@@ -158,7 +166,8 @@ void TitleScene::Update()
 		//イージング
 		for (int i = 0; i < 2; i++)easeTitlePosX[i].ease_out_expo();
 		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
-
+		for (int i = 0; i < 3; i++)easeEye[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeTarget[i].ease_out_expo();
 		//座標セット
 		spriteTitle_->SetPosition({ easeTitlePosX[0].num_X,0.0f });
 		spriteTitleDone_->SetPosition({ easeTitlePosX[1].num_X,550.0f });
@@ -168,12 +177,18 @@ void TitleScene::Update()
 		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
 		spriteBack_->SetPosition({ easeMenuPosX[4].num_X,50.0f });
 
+		//カメラもセット
+		camera_->SetEye({ easeEye[0].num_X, easeEye[1].num_X, easeEye[2].num_X });
+		camera_->SetTarget({ easeTarget[0].num_X, easeTarget[1].num_X, easeTarget[2].num_X });
+
 		if (easeMenuPosX[4].num_X == easeMenuPosX[4].start)
 		{
 			if (input_->TriggerKey(DIK_SPACE))
 			{
 				for (int i = 0; i < 2; i++)easeTitlePosX[i].Standby(false);
 				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeEye[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeTarget[i].Standby(false);
 				isMenu = true;
 				isBack = false;
 			}
@@ -185,6 +200,8 @@ void TitleScene::Update()
 		{
 			for (int i = 0; i < 2; i++)easeTitlePosX[i].Standby(false);
 			for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
+			for (int i = 0; i < 3; i++)easeEye[i].Standby(false);
+			for (int i = 0; i < 3; i++)easeTarget[i].Standby(false);
 			isMenu = true;
 
 		}
@@ -240,7 +257,7 @@ void TitleScene::Update()
 
 	//objF->Update();
 	imguiManager_->Begin();
-	camera_->DebugCamera(true);
+	camera_->DebugCamera(false);
 	imguiManager_->End();
 }
 

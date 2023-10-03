@@ -114,6 +114,18 @@ private://ƒƒ“ƒo•Ï”
 		Easing(1300.0f, 900.0f, 1.8f),//–ß‚é
 	};
 
+	Easing easeEye[3]
+	{
+		Easing(0.0f, 21.0f, 1.8f),//X
+		Easing(1.0f, -4.0f, 1.8f),//Y
+		Easing(-50.0f, 0.0f, 1.8f),//Z
+	};
+	Easing easeTarget[3]
+	{
+		Easing(0.0f, -100.0f, 1.8f),//X
+		Easing(0.0f, -10.0f, 1.8f),//Y
+		Easing(50.0f, -2.0f, 1.8f),//Z
+	};
 	//‘I‘ğ’†‚ÌF
 	DirectX::XMFLOAT3 selectColor = { 0.0f,0.0f,0.0f };//xyz=rgb
 
