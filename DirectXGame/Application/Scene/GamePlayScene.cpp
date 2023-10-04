@@ -90,7 +90,7 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
 
 	//弾更新
-	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
+	
 
 
 	if (!isPause_)
@@ -123,14 +123,16 @@ void GamePlayScene::Update()
 			imguiManager_->End();
 		}
 		//弾更新
-		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
-
+		for (std::unique_ptr<PlayerBullet>& playerBullet : playerBullets_) playerBullet->Update();
+		
 		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
 		{
 			enemy->Update();
 			//ボス撃破
 			if (enemy->BossDead())isclear = true;
 		}
+		//弾更新
+		for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
 
 		for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
 
@@ -206,7 +208,6 @@ void GamePlayScene::Update()
 		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 			nullptr, nullptr, spriteTutorialInfo1);
 	}
-
 	else if (stageNum == 101)
 	{
 		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
@@ -223,7 +224,19 @@ void GamePlayScene::Update()
 			spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo4);
 	}
 	UpdateTutorialSprite();
+	//天球ぐるぐる
+	for (Object3d*& skydome : skydomes)
+	{
+		//天球回転用
+		XMFLOAT3 rotSkydome = skydome->GetPosition();
+		const float rotSpeed = -0.2f;
+		rotSkydome.y += rotSpeed;
 
+		skydome->SetRotation(rotSkydome);
+
+		skydome->Update();
+	}
+	
 }
 
 void GamePlayScene::Draw()
@@ -239,6 +252,7 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_) gimmick->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
 	for (std::unique_ptr<Item>& item : items_)item->Draw();
+	for (auto& skydome : skydomes)skydome->Draw();
 	for (auto& object : objects)object->Draw();
 
 	//モデル描画後処理
@@ -307,7 +321,9 @@ void GamePlayScene::Finalize()
 	//モデル
 
 	for (Object3d*& object : objects)delete object;
+	for (Object3d*& skydome : skydomes)delete skydome;
 	objects.clear();
+	skydomes.clear();
 
 	//3Dモデル
 	delete modelPlayer_;
@@ -501,10 +517,11 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			items_.push_back(std::move(newitem));
 		}
+		//当たり判定がないオブジェクト
 		else if (objectData.objectType.find("NONE") == 0)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			TouchableObject* newObject = TouchableObject::Create(model, false);
+			Object3d* newObject = Object3d::Create();
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -525,6 +542,33 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 
 			// 配列に登録
 			objects.push_back(newObject);
+		}
+		//天球
+		else if (objectData.objectType.find("SKYDOME") == 0)
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			//オブジェクトにモデル紐付ける
+			newObject->SetModel(model);
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+			// 配列に登録
+			skydomes.push_back(newObject);
 		}
 		//地形
 		else

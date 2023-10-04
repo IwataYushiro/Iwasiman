@@ -4,7 +4,7 @@
 #include <cassert>
 #include <sstream>
 #include <iomanip>
-
+#include <StageList.h>
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* TitleScene::input_ = Input::GetInstance();
@@ -13,6 +13,8 @@ SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* TitleScene::camera_ = Camera::GetInstance();
 
+
+TitleScene::TitleScene(int stagenum) : stageNum(stagenum){}
 
 void TitleScene::Initialize()
 {
@@ -131,13 +133,14 @@ void TitleScene::Update()
 			if (MenuCount == Tutorial)
 			{
 				//チュートリアルステージ
-				sceneManager_->ChangeScene("GAMEPLAY", 100);
+				sceneManager_->ChangeScene("GAMEPLAY", StageTutorial_Area1);
 			}
 			else if (MenuCount == StageSelect)
 			{
 				//ステージ選択
-				sceneManager_->ChangeScene("STAGESELECT", 0);
-
+				if(stageNum <=Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT",RSSAT_Stage1_SkyStage );
+				else if (stageNum <= Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", RSSAT_Stage2_TowerStage);
+				else if (stageNum <= StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", RSSAT_StageTutorial_Tutorial);
 			}
 		}
 		if (easeMenuPosX[4].num_X == easeMenuPosX[4].end)

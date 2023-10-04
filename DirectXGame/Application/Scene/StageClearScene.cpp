@@ -14,9 +14,7 @@ ImGuiManager* StageClearScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* StageClearScene::camera_ = Camera::GetInstance();
 
 
-StageClearScene::StageClearScene(int stagenum) :stageNum(stagenum)
-{
-}
+StageClearScene::StageClearScene(int stagenum) :stageNum(stagenum){}
 
 void StageClearScene::Initialize()
 {

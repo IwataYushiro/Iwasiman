@@ -21,6 +21,7 @@ struct LevelData;
 class TitleScene :public BaseScene
 {
 public://メンバ関数
+	TitleScene(int stagenum);
 	//初期化
 	void Initialize() override;
 	//更新
@@ -117,13 +118,13 @@ private://メンバ変数
 	{
 		Easing(0.0f, 21.0f, 1.8f),//X
 		Easing(1.0f, -4.0f, 1.8f),//Y
-		Easing(-50.0f, 0.0f, 1.8f),//Z
+		Easing(-110.0f, -60.0f, 1.8f),//Z
 	};
 	Easing easeTarget[3]
 	{
 		Easing(0.0f, -100.0f, 1.8f),//X
 		Easing(0.0f, -10.0f, 1.8f),//Y
-		Easing(50.0f, -2.0f, 1.8f),//Z
+		Easing(-10.0f, -62.0f, 1.8f),//Z
 	};
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor = { 0.0f,0.0f,0.0f };//xyz=rgb
@@ -146,6 +147,9 @@ private://メンバ変数
 
 	//天球回転用
 	DirectX::XMFLOAT3 rotSkydome{ 0.0f,0.0f,0.0f };
+
+	//どのステージにいるのかを受け取るための変数
+	int stageNum = 0;
 
 public:
 	//色が変わる処理

@@ -152,6 +152,7 @@ private:
 
 	std::map<std::string, Model*> models;
 	std::vector<Object3d*> objects;
+	std::vector<Object3d*> skydomes;
 
 	//パーティクル
 	Particle* particle1_ = nullptr;
@@ -168,10 +169,11 @@ private:
 private:
 	/*
 	stagenumの値
-	1~9		ステージ1
-	10~19	ステージ2
-	100~109	チュートリアル
+	0~10		ステージ1
+	11~20		ステージ2
+	101~110		チュートリアル
 	*/
+
 	int stageNum;
 	//自機弾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
