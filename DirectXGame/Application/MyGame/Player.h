@@ -80,18 +80,18 @@ private:
 	Input* input_ = nullptr;
 	
 	//ポジション
-	XMFLOAT3 pos;
+	XMFLOAT3 pos_;
 	//アングル
-	XMFLOAT3 angle;
+	XMFLOAT3 angle_;
 
 	//ジャンプしてるか
-	bool onGround = true;
-	float jumpVYFist = 2.0f;
-	XMFLOAT3 fallVec;
+	bool onGround_ = true;
+	float jumpVYFist_ = 2.0f;
+	XMFLOAT3 fallVec_;
 
 	//奥側に移動
-	bool isJumpBack;
-	bool isBack;
+	bool isJumpBack_;
+	bool isBack_;
 
 	//時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
@@ -110,10 +110,10 @@ private:
 	
 	//死亡フラグとライフ
 	bool isDead_ = false;
-	int mutekiCount = 0;
+	int mutekiCount_ = 0;
 	int life_ = 5;
-	bool ishit = false;
-	bool cameramove = true;
+	bool isHit_ = false;
+	bool cameramove_ = true;
 	//パーティクル
 	Particle* particleDash_ = nullptr;
 	ParticleManager* pmDash_ = nullptr;
@@ -121,19 +121,19 @@ private:
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;
 	//シェイク機能
-	bool isShake = false;
+	bool isShake_ = false;
 	//スタート時
-	XMFLOAT3 nowEye;
-	XMFLOAT3 nowTarget;
-	XMFLOAT3 hitMove;
+	XMFLOAT3 nowEye_;
+	XMFLOAT3 nowTarget_;
+	XMFLOAT3 hitMove_;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
-	bool OnGround()const { return onGround; }
-	void SetOnGround(bool og) { this->onGround = og; }
+	bool OnGround()const { return onGround_; }
+	void SetOnGround(bool og) { this->onGround_ = og; }
 
 	//ジャンプ力
-	void SetJumpVYFist(float jumpFist) { this->jumpVYFist = jumpFist; }
+	void SetJumpVYFist(float jumpFist) { this->jumpVYFist_ = jumpFist; }
 	//ライフ
 	void SetLife(int life) { this->life_ = life; }
 	const int& GetLife()const { return life_; }

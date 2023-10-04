@@ -58,8 +58,8 @@ public:
 private:
 	static CollisionManager* colManager_;
 	//ポジション
-	XMFLOAT3 pos;
-	XMFLOAT3 scale;
+	XMFLOAT3 pos_;
+	XMFLOAT3 scale_;
 
 	bool isGet_ = false;
 	//ジャンプ
@@ -70,19 +70,19 @@ private:
 	Player* player_ = nullptr;
 
 	//イージング
-	float count = 0.0f;
-	const float timer = MAX_TIME / 60.0f;
-	Easing ease = Easing(1.0f, 0.0f, timer);
+	float count_ = 0.0f;
+	const float timer_ = MAX_TIME / 60.0f;
+	Easing ease_ = Easing(1.0f, 0.0f, timer_);
 
 	//パーティクル
-	Particle* p = nullptr;
+	Particle* p_ = nullptr;
 	ParticleManager* pm_ = nullptr;
 
 public: //アクセッサ、インライン関数
 	bool IsGetJump() const { return isGetJump_; }
 
 	void SetPlayer(Player* player) { player_ = player; }
-	Easing GetEasing()const { return ease; }
+	Easing GetEasing()const { return ease_; }
 
 private:
 	SpriteCommon* spCommon_ = SpriteCommon::GetInstance();

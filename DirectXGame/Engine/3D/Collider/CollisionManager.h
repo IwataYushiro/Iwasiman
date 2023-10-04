@@ -46,7 +46,7 @@ public://メンバ関数
 ///	<param names="callback">衝突時コールバック</param>
 /// <param names="attribute">対象の衝突属性</param>
 	void QuerySphere(const Sphere& sphere, QueryCallback* callback,
-		unsigned short attribute = (unsigned short)0xffffffff);
+		unsigned short attribute = 0xffff);
 
 private:
 	CollisionManager() = default;

@@ -46,8 +46,8 @@ bool EnemyBoss::Initialize() {
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 
 	Parameter();
 
@@ -68,10 +68,10 @@ void EnemyBoss::Parameter() {
 
 	isReverse_ = false;
 	//発射タイマー初期化
-	fireTimer = kFireInterval;
+	fireTimer_ = kFireInterval;
 
 	isDead_ = false;
-	bossDead = false;
+	bossDead_ = false;
 
 }
 
@@ -160,11 +160,11 @@ void EnemyBoss::Fire() {
 	velocity.z -= kBulletSpeed;
 
 	//座標をコピー
-	XMFLOAT3 position = GetPosition();
+	XMFLOAT3 pos = GetPosition();
 
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet;
-	newBullet = EnemyBullet::Create(position, velocity, modelBullet_);
+	newBullet = EnemyBullet::Create(pos, velocity, modelBullet_);
 	newBullet->SetCamera(camera_);
 	newBullet->Update();
 
@@ -189,22 +189,22 @@ void EnemyBoss::UpdateApproach() {
 
 	//移動
 	velocity = { 0.0f, 0.0f, -0.5f };
-	position.x += velocity.x;
-	position.y += velocity.y;
-	position.z += velocity.z;
+	position_.x += velocity.x;
+	position_.y += velocity.y;
+	position_.z += velocity.z;
 
 	//発射タイマーカウントダウン
-	fireTimer--;
+	fireTimer_--;
 	//指定時間に達した
-	if (fireTimer <= 0) {
+	if (fireTimer_ <= 0) {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
+		fireTimer_ = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
 	}
 
 	//指定の位置に到達したら攻撃
-	if (position.z < 100.0f) {
+	if (position_.z < 100.0f) {
 		phase_ = Phase::AttackStage1;
 	}
 }
@@ -230,35 +230,35 @@ void EnemyBoss::UpdateAttack() {
 	timeRate = min(elapsed / maxTime, 1.0f);
 
 	if (isReverse_) {
-		position = Bezier3(end, p2, p1, start, timeRate);
+		position_ = Bezier3(end, p2, p1, start, timeRate);
 	}
 	else {
-		position = Bezier3(start, p1, p2, end, timeRate);
+		position_ = Bezier3(start, p1, p2, end, timeRate);
 	}
 	//指定の位置に到達したら反転
-	if (position.x >= 30.0f + cameraMove) {
+	if (position_.x >= 30.0f + cameraMove) {
 		isReverse_ = true;
 		startCount = std::chrono::steady_clock::now();
 	}
-	if (position.x <= -30.0f + cameraMove) {
+	if (position_.x <= -30.0f + cameraMove) {
 		isReverse_ = false;
 		startCount = std::chrono::steady_clock::now();
 	}
 
 	//発射タイマーカウントダウン
-	fireTimer--;
+	fireTimer_--;
 	//指定時間に達した
-	if (fireTimer <= 0) {
+	if (fireTimer_ <= 0) {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
+		fireTimer_ = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
 	}
 	//死んだら
 	if (life_ <= 0) {
 		life_ = 0;
 		isDead_ = true;
-		bossDead = true;
+		bossDead_ = true;
 	}
 
 }
@@ -267,7 +267,7 @@ void EnemyBoss::UpdateAttack() {
 void EnemyBoss::UpdateLeave() {
 
 	isDead_ = true;
-	bossDead = true;
+	bossDead_ = true;
 }
 
 const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)

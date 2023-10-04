@@ -48,7 +48,7 @@ private://Ã“Iƒƒ“ƒo•Ï”
 	static Camera* camera_;
 
 private://ƒƒ“ƒo•Ï”
-	int stageNum;
+	int stageNum_;
 	//Sprite
 	Sprite* spriteStageClear_ = new Sprite();
 	

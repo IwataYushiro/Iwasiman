@@ -80,12 +80,12 @@ private:
 	//フェーズ
 	Phase phase_;
 	//弾発射タイマー
-	int32_t fireTimer = 0;
+	int32_t fireTimer_ = 0;
 
 	//半径
 	float radius_ = 5.0f;
 	//ボス死亡
-	bool bossDead = false;
+	bool bossDead_ = false;
 
 	//時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
@@ -106,7 +106,7 @@ private:
 	//反転フラグ
 	bool isReverse_ = false;
 	//現在位置取得
-	XMFLOAT3 nowPos = {};
+	XMFLOAT3 nowPos_ = {};
 
 public:
 	bool IsDead() const override{ return isDead_; }

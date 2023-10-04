@@ -37,9 +37,9 @@ private://静的メンバ変数
 
 public://メンバ関数
 	//頂点データ追加
-	void AddVertex(const VertexPosNormalUv& vertex) { vertices.emplace_back(vertex); }
+	void AddVertex(const VertexPosNormalUv& vertex) { vertices_.emplace_back(vertex); }
 	//頂点インデックス追加
-	void AddIndex(unsigned short index) { indices.emplace_back(index); }
+	void AddIndex(unsigned short index) { indices_.emplace_back(index); }
 	//エッジ平滑化データ追加
 	void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex);
 	//平滑化された頂点法線の追加
@@ -51,45 +51,45 @@ public://メンバ関数
 
 public://アクセッサ置き場
 	//名前ゲット
-	const std::string& GetName() { return name; }
+	const std::string& GetName() { return name_; }
 	//名前セット
-	void SetName(const std::string& name) { this->name = name; }
+	void SetName(const std::string& name) { this->name_ = name; }
 	//マテリアルゲット
-	Material* GetMaterial() { return material; }
+	Material* GetMaterial() { return material_; }
 	//マテリアルセット
-	void SetMaterial(Material* material) { this->material = material; }
+	void SetMaterial(Material* material) { this->material_ = material; }
 	//頂点データ数ゲット
-	inline size_t GetVertexCount() { return vertices.size(); }
+	inline size_t GetVertexCount() { return vertices_.size(); }
 	//頂点バッファゲット
-	const D3D12_VERTEX_BUFFER_VIEW& GetVBView() { return vbView; }
+	const D3D12_VERTEX_BUFFER_VIEW& GetVBView() { return vbView_; }
 	//インデックスバッファゲット
-	const D3D12_INDEX_BUFFER_VIEW& GetIBView() { return ibView; }
+	const D3D12_INDEX_BUFFER_VIEW& GetIBView() { return ibView_; }
 	//頂点配列ゲット
-	inline const std::vector<VertexPosNormalUv>& GetVertices() { return vertices; }
+	inline const std::vector<VertexPosNormalUv>& GetVertices() { return vertices_; }
 	//インデックス配列ゲット
-	inline const std::vector<unsigned short>& GetIndices() { return indices; }
+	inline const std::vector<unsigned short>& GetIndices() { return indices_; }
 
 private://メンバ変数
 	//名前
-	std::string name;
+	std::string name_;
 	// 頂点データ配列
-	std::vector<VertexPosNormalUv> vertices;
+	std::vector<VertexPosNormalUv> vertices_;
 	// 頂点インデックス配列
-	std::vector<unsigned short> indices;
+	std::vector<unsigned short> indices_;
 	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	// インデックスバッファ
-	ComPtr<ID3D12Resource> indexBuff;
+	ComPtr<ID3D12Resource> indexBuff_;
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
+	D3D12_VERTEX_BUFFER_VIEW vbView_;
 	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView;
+	D3D12_INDEX_BUFFER_VIEW ibView_;
 	//マテリアル
-	Material* material = nullptr;
+	Material* material_ = nullptr;
 	//頂点、インデックスバッファのマッピング
-	VertexPosNormalUv* vertMap = nullptr;
-	unsigned short* indexmap = nullptr;
+	VertexPosNormalUv* vertMap_ = nullptr;
+	unsigned short* indexmap_ = nullptr;
 	//頂点スムージングデータ
-	std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData;
+	std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData_;
 
 };

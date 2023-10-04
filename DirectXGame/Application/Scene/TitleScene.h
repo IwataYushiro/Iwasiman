@@ -53,7 +53,7 @@ private://静的メンバ変数
 
 private://メンバ変数
 	
-	int MenuCount;
+	int menuCount_;
 
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
@@ -72,28 +72,28 @@ private://メンバ変数
 
 	//モデル
 	Model* modelPlayer_ = nullptr;
-	Model* modelSkydome = nullptr;
-	Model* modelSkydomeStage1 = nullptr;
-	Model* modelSkydomeStage2 = nullptr;
-	Model* modelGround = nullptr;
+	Model* modelSkydome_ = nullptr;
+	Model* modelSkydomeStage1_ = nullptr;
+	Model* modelSkydomeStage2_ = nullptr;
+	Model* modelGround_ = nullptr;
 
 	std::vector<Object3d*> objPlayers_;
 	std::vector<Object3d*> objSkydomes_;
 	std::vector<Object3d*> objGrounds_;
 
-	std::map<std::string, Model*> models;
+	std::map<std::string, Model*> models_;
 
-	bool isStart = false;
-	bool isMenu = false;
-	bool isBack = false;
-	Easing easeTitlePosX[2] =
+	bool isStart_ = false;
+	bool isMenu_ = false;
+	bool isBack_ = false;
+	Easing easeTitlePosX_[2] =
 	{
 		Easing(0.0f, -1300.0f, 1.0f),
 		Easing(0.0f, -1300.0f, 1.0f)
 	};
 		
 
-	Easing easeMenuPosX[5] =
+	Easing easeMenuPosX_[5] =
 	{
 		Easing(1300.0f, 0.0f, 1.0f),//メニュー
 		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
@@ -102,23 +102,23 @@ private://メンバ変数
 		Easing(1300.0f, 900.0f, 1.8f),//戻る
 	};
 
-	Easing easeEye[3]
+	Easing easeEye_[3]
 	{
 		Easing(0.0f, 21.0f, 1.8f),//X
 		Easing(1.0f, -4.0f, 1.8f),//Y
 		Easing(-110.0f, -60.0f, 1.8f),//Z
 	};
-	Easing easeTarget[3]
+	Easing easeTarget_[3]
 	{
 		Easing(0.0f, -100.0f, 1.8f),//X
 		Easing(0.0f, -10.0f, 1.8f),//Y
 		Easing(-10.0f, -62.0f, 1.8f),//Z
 	};
 	//選択中の色
-	DirectX::XMFLOAT3 selectColor = { 0.0f,0.0f,0.0f };//xyz=rgb
+	DirectX::XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
 
-	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,1.0f };
-	const DirectX::XMFLOAT4 backTitleColor = { 0.0f,0.0f,0.1f,1.0f };
+	const DirectX::XMFLOAT4 otherMenuColor_ = { 0.0f,0.0f,0.0f,1.0f };
+	const DirectX::XMFLOAT4 backTitleColor_ = { 0.0f,0.0f,0.1f,1.0f };
 
 	//色反転フラグ
 	bool isColorReverse_ = false;
@@ -129,12 +129,12 @@ private://メンバ変数
 	ParticleManager* pm1_ = nullptr;
 
 	//開始時のポジション
-	DirectX::XMFLOAT3 startPos;
+	DirectX::XMFLOAT3 startPos_;
 	//X値がここまで来たらループ
-	const float returnPos = -120.0f;
+	const float returnPos_ = -120.0f;
 	
 	//どのステージにいるのかを受け取るための変数
-	int stageNum;
+	int stageNum_;
 
 public:
 	//色が変わる処理

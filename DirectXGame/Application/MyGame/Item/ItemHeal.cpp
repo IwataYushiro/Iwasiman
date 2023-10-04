@@ -10,7 +10,7 @@ CollisionManager* ItemHeal::colManager_ = CollisionManager::GetInstance();
 
 ItemHeal::~ItemHeal()
 {
-	delete p;
+	delete p_;
 	delete pm_;
 }
 
@@ -39,8 +39,8 @@ bool ItemHeal::Initialize()
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_ITEM);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	collider_->SetAttribute(COLLISION_ATTR_ITEM);
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 
 
 	return true;
@@ -50,7 +50,7 @@ bool ItemHeal::Initialize()
 void ItemHeal::Update()
 {
 	pm_->SetCamera(camera_);
-	rotation.y += 2.0f;
+	rotation_.y += 2.0f;
 
 	Trans();
 	camera_->Update();
@@ -110,7 +110,7 @@ void ItemHeal::OnCollision(const CollisionInfo& info, unsigned short attribute, 
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
+			pm_->ActiveY(p_, position_, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
 
 			player_->SetLife(player_->GetLife() + 1);
 			isGet_ = true;

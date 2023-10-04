@@ -42,7 +42,7 @@ bool Enemy1::Initialize(int level) {
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
-	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 	InitSubATTR(level);
 	Parameter(level);
 
@@ -50,31 +50,31 @@ bool Enemy1::Initialize(int level) {
 }
 void Enemy1::InitSubATTR(int level)
 {
-	if (level == 1)collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
-	else if (level == 2)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
-	else if (level == 3)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
-	else if (level == 4)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
-	else if (level == 5)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
+	if (level == 1)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	else if (level == 2)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
+	else if (level == 3)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
+	else if (level == 4)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
+	else if (level == 5)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
 }
 
 void Enemy1::InitSpeed()
 {//移動
-	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) speed = { -0.2f, 0.0f, 0.0f };
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) speed = { -0.1f,0.0f,0.0f };
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) speed = { -0.2f,0.0f,0.0f };
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) speed = { -0.4f,0.0f,0.0f };
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) speed = { -0.2f,0.0f,0.0f };
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) speed_ = { -0.2f, 0.0f, 0.0f };
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) speed_ = { -0.1f,0.0f,0.0f };
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) speed_ = { -0.2f,0.0f,0.0f };
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) speed_ = { -0.4f,0.0f,0.0f };
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) speed_ = { -0.2f,0.0f,0.0f };
 
 }
 
 void Enemy1::InitLIfe()
 {
 	//ライフ
-	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = 3;
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) life_ = 3;
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) life_ = 5;
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) life_ = 2;
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) life_ = 2;
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = 3;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) life_ = 3;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) life_ = 5;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) life_ = 2;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) life_ = 2;
 }
 
 //パラメータ
@@ -82,12 +82,12 @@ void Enemy1::Parameter(int level) {
 
 	isReverse_ = false;
 	//ジャンプしたか
-	onGround = true;
+	onGround_ = true;
 	//初期フェーズ
 	phase_ = Phase::Approach;
 
 	//発射タイマー初期化
-	fireTimer = kFireInterval;
+	fireTimer_ = kFireInterval;
 
 	//移動
 	InitSpeed();
@@ -122,7 +122,7 @@ void Enemy1::Update() {
 	Trans();
 	camera_->Update();
 	Object3d::Update();
-	collider->Update();
+	collider_->Update();
 
 	Landing();
 }
@@ -181,11 +181,11 @@ void Enemy1::Fire() {
 	velocity.z -= kBulletSpeed;
 
 	//座標をコピー
-	XMFLOAT3 position = GetPosition();
+	XMFLOAT3 pos = GetPosition();
 
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet;
-	newBullet = EnemyBullet::Create(position, velocity, modelBullet_);
+	newBullet = EnemyBullet::Create(pos, velocity, modelBullet_);
 	newBullet->SetCamera(camera_);
 	newBullet->Update();
 
@@ -197,7 +197,7 @@ void Enemy1::Fire() {
 void Enemy1::Landing()
 {
 	//球コライダーの取得
-	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
 	assert(sphereCollider);
 
 	//専用クエリーコールバッククラス定義
@@ -243,9 +243,9 @@ void Enemy1::Landing()
 	//球と地形の交差を全検索
 	colManager_->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
 	//交差による排斥分動かす
-	position.x += callback.move.m128_f32[0];
-	position.y += callback.move.m128_f32[1];
-	//position.z += callback.move.m128_f32[2];
+	position_.x += callback.move.m128_f32[0];
+	position_.y += callback.move.m128_f32[1];
+	//position_.z += callback.move.m128_f32[2];
 
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
@@ -258,7 +258,7 @@ void Enemy1::Landing()
 	UpdateWorldMatrix();
 	camera_->SetEye(eyepos);
 	camera_->SetTarget(tarpos);
-	collider->Update();
+	collider_->Update();
 
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
@@ -267,7 +267,7 @@ void Enemy1::Landing()
 	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
 	RaycastHit raycastHit;
 	//接地状態
-	if (onGround)
+	if (onGround_)
 	{
 		//スムーズに坂を下るための吸着処理
 		const float adsDistance = 0.2f;
@@ -275,27 +275,27 @@ void Enemy1::Landing()
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f + adsDistance))
 		{
-			onGround = true;
-			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			onGround_ = true;
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 			//行列更新
 			Object3d::Update();
 		}
 		//地面が無いので落下
 		else
 		{
-			onGround = false;
-			fallVec = {};
+			onGround_ = false;
+			fallVec_ = {};
 		}
 	}
 	//落下状態
-	else if (fallVec.y <= 0.0f)
+	else if (fallVec_.y <= 0.0f)
 	{
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f))
 		{
 			//着地
-			onGround = true;
-			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			onGround_ = true;
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 			//行列更新
 			Object3d::Update();
 		}
@@ -322,31 +322,31 @@ void Enemy1::UpdateApproach() {
 
 	//移動
 	
-	position.x += speed.x;
-	position.y += speed.y;
-	position.z += speed.z;
+	position_.x += speed_.x;
+	position_.y += speed_.y;
+	position_.z += speed_.z;
 
 	//発射タイマーカウントダウン
-	fireTimer--;
+	fireTimer_--;
 	//指定時間に達した
-	if (fireTimer <= 0) {
+	if (fireTimer_ <= 0) {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval / 2, kFireInterval);
+		fireTimer_ = MyMath::RandomMTInt(kFireInterval / 2, kFireInterval);
 	}
 
-	if (!onGround)
+	if (!onGround_)
 	{
 		//下向き加速度
 		const float fallAcc = -0.1f;
 		const float fallVYMin = -2.0f;
 		//加速
-		fallVec.y = max(fallVec.y + fallAcc, fallVYMin);
+		fallVec_.y = max(fallVec_.y + fallAcc, fallVYMin);
 		//移動
-		position.x += fallVec.x;
-		position.y += fallVec.y;
-		position.z += fallVec.z;
+		position_.x += fallVec_.x;
+		position_.y += fallVec_.y;
+		position_.z += fallVec_.z;
 	}
 
 	//死んだら
@@ -354,7 +354,7 @@ void Enemy1::UpdateApproach() {
 		isDead_ = true;
 		life_ = 0;
 	}
-	if (position.y <= -60.0f)isDead_ = true;
+	if (position_.y <= -60.0f)isDead_ = true;
 }
 
 //離脱

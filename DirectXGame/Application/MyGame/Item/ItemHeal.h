@@ -46,8 +46,8 @@ public:
 private:
 	static CollisionManager* colManager_;
 	//ポジション
-	XMFLOAT3 pos;
-	XMFLOAT3 scale;
+	XMFLOAT3 pos_;
+	XMFLOAT3 scale_;
 
 	bool isGet_ = false;
 
@@ -55,7 +55,7 @@ private:
 
 	Player* player_ = nullptr;
 
-	Particle* p = nullptr;
+	Particle* p_ = nullptr;
 	ParticleManager* pm_ = nullptr;
 
 public: //アクセッサ、インライン関数

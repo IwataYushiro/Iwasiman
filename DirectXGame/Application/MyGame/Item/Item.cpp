@@ -10,7 +10,7 @@ CollisionManager* Item::colManager_ = CollisionManager::GetInstance();
 
 Item::~Item()
 {
-	delete p;
+	delete p_;
 	delete pm_;
 
 	delete spriteItemJumpBar_;
@@ -32,7 +32,7 @@ std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short 
 	//モデルのセット
 	if (model) ins->SetModel(model);
 	if (player)ins->SetPlayer(player);
-	if (subAttribute)ins->collider->SetSubAttribute(subAttribute);
+	if (subAttribute)ins->collider_->SetSubAttribute(subAttribute);
 	return ins;
 }
 
@@ -42,16 +42,16 @@ bool Item::Initialize(unsigned short subAttribute)
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_ITEM);
+	collider_->SetAttribute(COLLISION_ATTR_ITEM);
 	
 
 	isGet_ = false;
 	isGetJump_ = false;
 
 	//パーティクル
-	p = Particle::LoadFromParticleTexture("particle6.png");
+	p_ = Particle::LoadFromParticleTexture("particle6.png");
 	pm_ = ParticleManager::Create();
-	pm_->SetParticleModel(p);
+	pm_->SetParticleModel(p_);
 
 	LoadSprite();
 
@@ -68,10 +68,10 @@ void Item::Reset()
 void Item::Update()
 {
 	pm_->SetCamera(camera_);
-	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP) UpdateJumpPowerup();
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP) UpdateJumpPowerup();
 
 
-	rotation.y += 2.0f;
+	rotation_.y += 2.0f;
 	Trans();
 	camera_->Update();
 	pm_->Update();
@@ -84,20 +84,20 @@ void Item::UpdateJumpPowerup()
 {
 	if (isGetJump_)
 	{
-		ease.ease_out_cubic();
+		ease_.ease_out_cubic();
 		if (player_->OnGround())player_->SetJumpVYFist(3.0f);
-		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, ease.num_X });
-		count++;
+		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, ease_.num_X });
+		count_++;
 	}
 	else
 	{
 		if (player_->OnGround())player_->SetJumpVYFist(2.0f);
-		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,ease.start });
+		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,ease_.start });
 	}
 
-	if (count >= MAX_TIME)
+	if (count_ >= MAX_TIME)
 	{
-		count = 0.0f;
+		count_ = 0.0f;
 		isGet_ = false;
 		isGetJump_ = false;
 		
@@ -164,13 +164,13 @@ void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsi
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			pm_->ActiveY(p, position, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
-			if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP)
+			pm_->ActiveY(p_, position_, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
+			if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP)
 			{
-				ease.Standby(false);
+				ease_.Standby(false);
 				isGetJump_ = true;
 			}
-			else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_HEAL)
+			else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_HEAL)
 			{
 				
 

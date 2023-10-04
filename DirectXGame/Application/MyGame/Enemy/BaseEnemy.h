@@ -37,11 +37,11 @@ protected:
 	bool isDead_;
 	int life_;
 	//速度
-	XMFLOAT3 speed;
+	XMFLOAT3 speed_;
 
-	bool bossDead;
+	bool bossDead_;
 public://アクセッサ
 	virtual bool IsDead() const { return isDead_; }
-	virtual bool BossDead()const { return bossDead; }
+	virtual bool BossDead()const { return bossDead_; }
 };
 

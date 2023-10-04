@@ -52,8 +52,8 @@ public:
 private:
 	static CollisionManager* colManager_;
 	//ポジション
-	XMFLOAT3 pos;
-	XMFLOAT3 scale;
+	XMFLOAT3 pos_;
+	XMFLOAT3 scale_;
 
 	bool isFallSphere_ = false;
 
@@ -62,11 +62,11 @@ private:
 	Player* player_ = nullptr;
 
 	//乗るとtrue
-	bool isRide = false;
+	bool isRide_ = false;
 	//乗って離れるとtrue
-	bool isReturn = false;
+	bool isReturn_ = false;
 
-	XMFLOAT3 startPos = {};
+	XMFLOAT3 startPos_ = {};
 
 public: //アクセッサ、インライン関数
 	bool IsFallSphere() const { return isFallSphere_; }

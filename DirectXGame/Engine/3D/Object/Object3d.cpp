@@ -20,22 +20,22 @@ using namespace Microsoft::WRL;
 const float Object3d::radius = 5.0f;				// 底面の半径
 const float Object3d::prizmHeight = 8.0f;			// 柱の高さ
 ID3D12Device* Object3d::device_ = nullptr;
-ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
-ComPtr<ID3D12RootSignature> Object3d::rootsignature;
-ComPtr<ID3D12PipelineState> Object3d::pipelinestate;
-ComPtr<ID3DBlob> Object3d::rootSigBlob;
-ComPtr<ID3DBlob> Object3d::vsBlob; // 頂点シェーダオブジェクト
-ComPtr<ID3DBlob> Object3d::psBlob;	// ピクセルシェーダオブジェクト
-ComPtr<ID3DBlob> Object3d::errorBlob; // エラーオブジェクト
+ID3D12GraphicsCommandList* Object3d::cmdList_ = nullptr;
+ComPtr<ID3D12RootSignature> Object3d::rootsignature_;
+ComPtr<ID3D12PipelineState> Object3d::pipelinestate_;
+ComPtr<ID3DBlob> Object3d::rootSigBlob_;
+ComPtr<ID3DBlob> Object3d::vsBlob_; // 頂点シェーダオブジェクト
+ComPtr<ID3DBlob> Object3d::psBlob_;	// ピクセルシェーダオブジェクト
+ComPtr<ID3DBlob> Object3d::errorBlob_; // エラーオブジェクト
 LightGroup* Object3d::lightGroup_ = nullptr;
 
 Object3d::~Object3d()
 {
-	if (collider)
+	if (collider_)
 	{
 		//CollisionManagerから登録解除
-		CollisionManager::GetInstance()->RemoveCollider(collider);
-		delete collider;
+		CollisionManager::GetInstance()->RemoveCollider(collider_);
+		delete collider_;
 	}
 }
 
@@ -55,15 +55,15 @@ void Object3d::StaticInitialize(ID3D12Device* device)
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(Object3d::cmdList == nullptr);
+	assert(Object3d::cmdList_ == nullptr);
 
 	// コマンドリストをセット
-	Object3d::cmdList = cmdList;
+	Object3d::cmdList_ = cmdList;
 
 	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipelinestate.Get());
+	cmdList->SetPipelineState(pipelinestate_.Get());
 	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(rootsignature.Get());
+	cmdList->SetGraphicsRootSignature(rootsignature_.Get());
 	// プリミティブ形状を設定
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
@@ -71,7 +71,7 @@ void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 void Object3d::PostDraw()
 {
 	// コマンドリストを解除
-	Object3d::cmdList = nullptr;
+	Object3d::cmdList_ = nullptr;
 }
 
 Object3d* Object3d::Create()
@@ -83,7 +83,7 @@ Object3d* Object3d::Create()
 	}
 	//スケールをセット
 	float scale_val = 1.0f;
-	object3d->scale = { scale_val,scale_val ,scale_val };
+	object3d->scale_ = { scale_val,scale_val ,scale_val };
 	// 初期化
 	if (!object3d->Initialize()) {
 		delete object3d;
@@ -109,14 +109,14 @@ void Object3d::InitializeGraphicsPipeline()
 		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
 		0,
-		&vsBlob, &errorBlob);
+		&vsBlob_, &errorBlob_);
 	if (FAILED(result)) {
 		// errorBlobからエラー内容をstring型にコピー
 		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
+		errstr.resize(errorBlob_->GetBufferSize());
 
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
+		std::copy_n((char*)errorBlob_->GetBufferPointer(),
+			errorBlob_->GetBufferSize(),
 			errstr.begin());
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
@@ -132,14 +132,14 @@ void Object3d::InitializeGraphicsPipeline()
 		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
 		0,
-		&psBlob, &errorBlob);
+		&psBlob_, &errorBlob_);
 	if (FAILED(result)) {
 		// errorBlobからエラー内容をstring型にコピー
 		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
+		errstr.resize(errorBlob_->GetBufferSize());
 
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
+		std::copy_n((char*)errorBlob_->GetBufferPointer(),
+			errorBlob_->GetBufferSize(),
 			errstr.begin());
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
@@ -168,8 +168,8 @@ void Object3d::InitializeGraphicsPipeline()
 
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
-	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob_.Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob_.Get());
 
 	// サンプルマスク
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
@@ -229,15 +229,15 @@ void Object3d::InitializeGraphicsPipeline()
 
 	
 	// バージョン自動判定のシリアライズ
-	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob_, &errorBlob_);
 	// ルートシグネチャの生成
-	result = device_->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature));
+	result = device_->CreateRootSignature(0, rootSigBlob_->GetBufferPointer(), rootSigBlob_->GetBufferSize(), IID_PPV_ARGS(&rootsignature_));
 	assert(SUCCEEDED(result));
 
-	gpipeline.pRootSignature = rootsignature.Get();
+	gpipeline.pRootSignature = rootsignature_.Get();
 
 	// グラフィックスパイプラインの生成
-	result = device_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestate));
+	result = device_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestate_));
 	assert(SUCCEEDED(result));
 
 }
@@ -268,7 +268,7 @@ bool Object3d::Initialize()
 	assert(SUCCEEDED(result));
 
 	//クラス名の文字列を取得
-	name = typeid(*this).name();
+	name_ = typeid(*this).name();
 
 	return true;
 }
@@ -285,14 +285,14 @@ void Object3d::Update()
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
 	//constMap0->color = color;
 	constMap0->viewproj = matViewProjection;	// 行列の合成
-	constMap0->world = matWorld;
+	constMap0->world = matWorld_;
 	constMap0->cameraPos = cameraPos;
 	constBuffB0->Unmap(0, nullptr);
 
 	//当たり判定更新
-	if (collider)
+	if (collider_)
 	{
-		collider->Update();
+		collider_->Update();
 	}
 }
 
@@ -301,33 +301,33 @@ void Object3d::UpdateWorldMatrix()
 	XMMATRIX matScale, matRot, matTrans;
 
 	// スケール、回転、平行移動行列の計算
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+	matScale = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation_.z));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation_.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation_.y));
+	matTrans = XMMatrixTranslation(position_.x, position_.y, position_.z);
 
 	// ワールド行列の合成
-	matWorld = XMMatrixIdentity(); // 変形をリセット
-	matWorld *= matScale; // ワールド行列にスケーリングを反映
-	matWorld *= matRot; // ワールド行列に回転を反映
-	matWorld *= matTrans; // ワールド行列に平行移動を反映
+	matWorld_ = XMMatrixIdentity(); // 変形をリセット
+	matWorld_ *= matScale; // ワールド行列にスケーリングを反映
+	matWorld_ *= matRot; // ワールド行列に回転を反映
+	matWorld_ *= matTrans; // ワールド行列に平行移動を反映
 
 	if (isBillboard_)
 	{
 		const XMMATRIX& matBillboard = camera_->GetMatBillboard();
 		// ワールド行列の合成
-		matWorld = XMMatrixIdentity(); // 変形をリセット
-		matWorld *= matScale; // ワールド行列にスケーリングを反映
-		matWorld *= matRot; // ワールド行列に回転を反映
-		matWorld *= matBillboard;
-		matWorld *= matTrans; // ワールド行列に平行移動を反映
+		matWorld_ = XMMatrixIdentity(); // 変形をリセット
+		matWorld_ *= matScale; // ワールド行列にスケーリングを反映
+		matWorld_ *= matRot; // ワールド行列に回転を反映
+		matWorld_ *= matBillboard;
+		matWorld_ *= matTrans; // ワールド行列に平行移動を反映
 	}
 	// 親オブジェクトがあれば
-	if (parent != nullptr) {
+	if (parent_ != nullptr) {
 		// 親オブジェクトのワールド行列を掛ける
-		matWorld *= parent->matWorld;
+		matWorld_ *= parent_->matWorld_;
 	}
 }
 
@@ -335,25 +335,25 @@ void Object3d::Draw()
 {
 	// nullptrチェック
 	assert(device_);
-	assert(Object3d::cmdList);
+	assert(Object3d::cmdList_);
 
 	//モデルがセットされていなければ描画をスキップ
 	if (model_ == nullptr) return;
 
 	// 定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 
 	//cmdList->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	//ライト描画
-	lightGroup_->Draw(cmdList, 3);
+	lightGroup_->Draw(cmdList_, 3);
 	//モデルを描画
-	model_->Draw(cmdList);
+	model_->Draw(cmdList_);
 }
 
 void Object3d::SetCollider(BaseCollider* collider)
 {
 	collider->SetObject(this);
-	this->collider = collider;
+	this->collider_ = collider;
 	//コリジョンマネージャーに登録
 	CollisionManager::GetInstance()->AddCollider(collider);
 	//コライダー更新

@@ -76,16 +76,16 @@ private: // 静的メンバ変数
 	static ID3D12Device* device_;
 	
 	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList;
+	static ID3D12GraphicsCommandList* cmdList_;
 	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
+	static ComPtr<ID3D12RootSignature> rootsignature_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate;
+	static ComPtr<ID3D12PipelineState> pipelinestate_;
 	
-	static ComPtr<ID3DBlob> rootSigBlob;
-	static ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
-	static ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
-	static ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
+	static ComPtr<ID3DBlob> rootSigBlob_;
+	static ComPtr<ID3DBlob> vsBlob_; // 頂点シェーダオブジェクト
+	static ComPtr<ID3DBlob> psBlob_;	// ピクセルシェーダオブジェクト
+	static ComPtr<ID3DBlob> errorBlob_; // エラーオブジェクト
 	//ライト
 	static LightGroup* lightGroup_;
 
@@ -128,45 +128,45 @@ protected: // メンバ変数
 	// 色
 	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 	// ローカルスケール
-	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 scale_ = { 1.0f,1.0f,1.0f };
 	// X,Y,Z軸回りのローカル回転角
-	XMFLOAT3 rotation = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 rotation_ = { 0.0f,0.0f,0.0f };
 	// ローカル座標
-	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 position_ = { 0.0f,0.0f,0.0f };
 	// ローカルワールド変換行列
-	XMMATRIX matWorld;
+	XMMATRIX matWorld_;
 	// 親オブジェクト
-	Object3d* parent = nullptr;
+	Object3d* parent_ = nullptr;
 	
 	//クラス名
-	const char* name = nullptr;
+	const char* name_ = nullptr;
 	//コライダー
-	BaseCollider* collider = nullptr;
+	BaseCollider* collider_ = nullptr;
 	
 public: //アクセッサ置き場
 	//モデル
 	void SetModel(Model* model) { this->model_ = model; }
 	//スケール
-	const XMFLOAT3& GetScale() const { return scale; }
-	void SetScale(const XMFLOAT3& scale) { this->scale = scale; }
+	const XMFLOAT3& GetScale() const { return scale_; }
+	void SetScale(const XMFLOAT3& scale) { this->scale_ = scale; }
 	//回転
-	const XMFLOAT3& GetRotation() const { return rotation; }
-	void SetRotation(const XMFLOAT3& rotation) { this->rotation = rotation; }
+	const XMFLOAT3& GetRotation() const { return rotation_; }
+	void SetRotation(const XMFLOAT3& rotation) { this->rotation_ = rotation; }
 	//ワールド座標
-	const XMMATRIX& GetWorld() const { return matWorld; }
-	void SetWorld(const XMMATRIX& matWorld) { this->matWorld = matWorld; }
+	const XMMATRIX& GetWorld() const { return matWorld_; }
+	void SetWorld(const XMMATRIX& matWorld) { this->matWorld_ = matWorld; }
 
 	/// <summary>
 	/// 座標の取得
 	/// </summary>
 	/// <returns>座標</returns>
-	const XMFLOAT3& GetPosition() const { return position; }
+	const XMFLOAT3& GetPosition() const { return position_; }
 
 	/// <summary>
 	/// 座標の設定
 	/// </summary>
 	/// <param name="position">座標</param>
-	void SetPosition(const XMFLOAT3& position) { this->position = position; }
+	void SetPosition(const XMFLOAT3& position) { this->position_ = position; }
 	
 	//カメラ
 	void SetCamera( Camera* camera) { this->camera_ = camera; }
