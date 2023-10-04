@@ -9,7 +9,7 @@
 #include <list>
 #include <memory>
 
-//“G
+//¶‰E‚É“®‚­ƒ{ƒX“G
 class EnemyBoss :public BaseEnemy {
 private:
 	// DirectX::‚ğÈ—ª

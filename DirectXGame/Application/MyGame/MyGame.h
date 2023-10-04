@@ -4,6 +4,7 @@
 #include <list>
 #include <memory>
 
+//ƒQ[ƒ€‘S‘Ì
 class MyGame :public Framework
 {
 public:

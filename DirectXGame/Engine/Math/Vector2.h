@@ -1,5 +1,6 @@
 #pragma once
 
+//Vector2
 class Vector2
 {
 public:

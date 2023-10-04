@@ -4,7 +4,7 @@
 #include <DirectXMath.h>
 
 class CollisionManager;
-//Ž©ƒLƒƒƒ‰‚Ì’e
+//Ž©‹@‚Ì’e
 class PlayerBullet:public Object3d
 {
 private:

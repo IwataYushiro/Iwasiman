@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 
+//Windowsアプリケーション
 class WinApp final
 {
 public://定数

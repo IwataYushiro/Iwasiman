@@ -6,7 +6,7 @@
 #include <forward_list>
 #include <d3d12.h>
 class BaseCollider;
-
+//当たり判定マネージャー
 class CollisionManager
 {
 public://静的メンバ関数

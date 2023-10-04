@@ -8,6 +8,7 @@
 
 class CollisionManager;
 
+//ƒS[ƒ‹
 class Goal :public Object3d
 {
 private:

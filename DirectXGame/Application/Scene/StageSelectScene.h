@@ -18,7 +18,7 @@
 //jsonレベルデータ
 struct LevelData;
 
-//タイトルシーン
+//ステージセレクトシーン
 class StageSelectScene :public BaseScene
 {
 public://メンバ関数

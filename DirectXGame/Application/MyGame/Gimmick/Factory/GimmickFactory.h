@@ -1,11 +1,11 @@
 #pragma once
 #include "AbstractGimmickFactory.h"
 
-//具体的(このゲーム用)な敵ファクトリー
+//具体的(このゲーム用)なギミックファクトリー
 class GimmickFactory :public AbstractGimmickFactory
 {
 public:
-	//敵生成
+	//ギミック生成
 	std::unique_ptr<BaseGimmick> CreateGimmick(const std::string& gimmickName
 		, Model* model, Player* player) override;
 

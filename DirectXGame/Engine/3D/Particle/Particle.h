@@ -5,6 +5,7 @@
 #include <wrl.h>
 #include <forward_list>
 
+//一粒のパーティクル
 class Particle
 {
 private://エイリアス

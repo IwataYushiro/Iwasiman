@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 
+//ライト
 class DirectionalLight
 {
 private: // エイリアス

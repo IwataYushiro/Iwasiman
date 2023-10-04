@@ -10,7 +10,7 @@
 #include <list>
 #include <memory>
 
-//敵
+//ボス敵のコア
 class EnemyCore :public BaseEnemy {
 private:
 	// DirectX::を省略
@@ -54,7 +54,7 @@ public:
 
 	//離脱
 	void UpdateLeave();
-
+	//ベジェ曲線
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数

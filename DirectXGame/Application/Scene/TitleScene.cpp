@@ -20,13 +20,6 @@ void TitleScene::Initialize()
 	//オーディオ
 	audio_->Initialize();
 
-	//カメラ
-	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
-	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
-
-	//camera_->SetTarget({ 90.0f,0.0f,0.0f });
-	//camera_->SetEye({ -10.0f,2.0f,0.0f });
-
 	// 視点座標
 	camera_->SetEye({ easeEye[0].start, easeEye[1].start, easeEye[2].start });
 	// 注視点座標
@@ -236,7 +229,7 @@ void TitleScene::Update()
 
 		move.x += speed.x;
 		ground->SetPosition(move);
-		if (ground->GetPosition().x <= returnPos)ground->SetPosition(startGroundPos);
+		if (ground->GetPosition().x <= returnPos)ground->SetPosition(startPos);
 
 		ground->Update();
 	}
@@ -394,7 +387,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newObject->SetPosition(pos);
-			startGroundPos = newObject->GetPosition();
+			startPos = newObject->GetPosition();
 
 			// 回転角
 			DirectX::XMFLOAT3 rot;

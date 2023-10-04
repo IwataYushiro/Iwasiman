@@ -11,6 +11,7 @@
 class Player;
 class CollisionManager;
 
+//—‚¿‚é‹…‚Æ¸‚é‹…
 class FallSphere :public BaseGimmick
 {
 private:

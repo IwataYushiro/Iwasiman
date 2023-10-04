@@ -18,7 +18,6 @@
 struct LevelData;
 
 //タイトルシーン
-
 class TitleScene :public BaseScene
 {
 public://メンバ関数
@@ -141,7 +140,7 @@ private://メンバ変数
 	ParticleManager* pm1_ = nullptr;
 
 	//開始時のポジション
-	DirectX::XMFLOAT3 startGroundPos;
+	DirectX::XMFLOAT3 startPos;
 	//X値がここまで来たらループ
 	const float returnPos = -120.0f;
 
