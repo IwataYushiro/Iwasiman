@@ -15,7 +15,7 @@ ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* TitleScene::camera_ = Camera::GetInstance();
 
 
-TitleScene::TitleScene(int stagenum) : stageNum_(stagenum){}
+TitleScene::TitleScene(int stagenum) : stageNum_(stagenum) {}
 
 void TitleScene::Initialize()
 {
@@ -91,13 +91,13 @@ void TitleScene::Update()
 	if (menuCount_ <= TSMI_Tutorial)menuCount_ = TSMI_Tutorial;
 	else if (menuCount_ >= TSMI_StageSelect)menuCount_ = TSMI_StageSelect;
 
-	
+
 	DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
 	DirectX::XMFLOAT4 TitleDoneColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
 	//SetColorより前に呼び出す
 	UpdateChangeColor();
 
-	
+
 	if (isMenu_)
 	{
 		//イージング
@@ -107,7 +107,7 @@ void TitleScene::Update()
 		for (int i = 0; i < 3; i++)easeTarget_[i].ease_out_expo();
 
 		//座標セット
-		spriteTitle_->SetPosition({ easeTitlePosX_[0].num_X,0.0f});
+		spriteTitle_->SetPosition({ easeTitlePosX_[0].num_X,0.0f });
 		spriteTitleDone_->SetPosition({ easeTitlePosX_[1].num_X,550.0f });
 		spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
 		spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
@@ -116,8 +116,8 @@ void TitleScene::Update()
 		spriteBack_->SetPosition({ easeMenuPosX_[4].num_X,50.0f });
 
 		//カメラもセット
-		camera_->SetEye({easeEye_[0].num_X, easeEye_[1].num_X, easeEye_[2].num_X});
-		camera_->SetTarget({easeTarget_[0].num_X, easeTarget_[1].num_X, easeTarget_[2].num_X});
+		camera_->SetEye({ easeEye_[0].num_X, easeEye_[1].num_X, easeEye_[2].num_X });
+		camera_->SetTarget({ easeTarget_[0].num_X, easeTarget_[1].num_X, easeTarget_[2].num_X });
 
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
@@ -143,7 +143,7 @@ void TitleScene::Update()
 			else if (menuCount_ == TSMI_StageSelect)
 			{
 				//ステージ選択
-				if(stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT",SSSMI_Stage1_SkyStage );
+				if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
 				else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
 				else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
 			}
@@ -253,15 +253,18 @@ void TitleScene::Update()
 
 		skydome->Update();
 	}
-		
+
 
 	camera_->Update();
 	lightGroup_->Update();
 	pm1_->Update();
 
 	//objF->Update();
+
 	imguiManager_->Begin();
+#ifdef DEBUG
 	camera_->DebugCamera(false);
+#endif // DEBUG
 	imguiManager_->End();
 }
 

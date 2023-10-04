@@ -40,7 +40,7 @@ bool Enemy2::Initialize(int level) {
 	if (!Object3d::Initialize()) return false;
 	
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR(), radius_));
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 
 	InitSubATTR(level);
