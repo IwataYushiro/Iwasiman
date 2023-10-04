@@ -5,7 +5,7 @@
 #include <list>
 #include <memory>
 
-//抽象シーンファクトリー
+//抽象エネミファクトリー
 
 class AbstractEnemyFactory
 {

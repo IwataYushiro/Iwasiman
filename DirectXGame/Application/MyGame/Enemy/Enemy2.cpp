@@ -40,8 +40,8 @@ bool Enemy2::Initialize(int level) {
 	if (!Object3d::Initialize()) return false;
 	
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR(), radius_));
-	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
+	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 
 	InitSubATTR(level);
 
@@ -52,40 +52,40 @@ bool Enemy2::Initialize(int level) {
 
 void Enemy2::InitSubATTR(int level)
 {
-	if (level == 1)collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
-	else if (level == 2)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
-	else if (level == 3)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
-	else if (level == 4)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
-	else if (level == 5)collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
+	if (level == 1)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	else if (level == 2)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
+	else if (level == 3)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
+	else if (level == 4)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
+	else if (level == 5)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
 }
 
 void Enemy2::InitSpeed()
 {
 	//移動
-	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_NONE)
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE)
 	{
-		speed = { 0.0f, -1.0f, 0.0f };
-		backSpeed = { 0.0f,0.5f,0.0f };
+		speed_ = { 0.0f, -1.0f, 0.0f };
+		backSpeed_ = { 0.0f,0.5f,0.0f };
 	}
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER)
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER)
 	{
-		speed = { 0.0f, -0.5f, 0.0f };
-		backSpeed = { 0.0f,0.25f,0.0f };
+		speed_ = { 0.0f, -0.5f, 0.0f };
+		backSpeed_ = { 0.0f,0.25f,0.0f };
 	}
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD)
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD)
 	{
-		speed = { 0.0f, -1.0f, 0.0f };
-		backSpeed = { 0.0f,0.5f,0.0f };
+		speed_ = { 0.0f, -1.0f, 0.0f };
+		backSpeed_ = { 0.0f,0.5f,0.0f };
 	}
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED)
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED)
 	{
-		speed = { 0.0f, -2.0f, 0.0f };
-		backSpeed = { 0.0f,1.0f,0.0f };
+		speed_ = { 0.0f, -2.0f, 0.0f };
+		backSpeed_ = { 0.0f,1.0f,0.0f };
 	}
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH)
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH)
 	{
-		speed = { 0.0f, -0.5f, 0.0f };
-		backSpeed = { 0.0f,0.25f,0.0f };
+		speed_ = { 0.0f, -0.5f, 0.0f };
+		backSpeed_ = { 0.0f,0.25f,0.0f };
 	}
 
 }
@@ -93,11 +93,11 @@ void Enemy2::InitSpeed()
 void Enemy2::InitLIfe()
 {
 	//ライフ
-	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = 3;
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) life_ = 3;
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) life_ = 5;
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) life_ = 2;
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) life_ = 2;
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = 3;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) life_ = 3;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) life_ = 5;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) life_ = 2;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) life_ = 2;
 }
 
 //パラメータ
@@ -105,12 +105,12 @@ void Enemy2::Parameter(int level) {
 
 	isReverse_ = false;
 	//ジャンプしたか
-	onGround = false;
+	onGround_ = false;
 	//初期フェーズ
 	phase_ = Phase::Approach;
 
 	//発射タイマー初期化
-	fireTimer = kFireInterval;
+	fireTimer_ = kFireInterval;
 
 	//移動
 	InitSpeed();
@@ -142,13 +142,13 @@ void Enemy2::Update() {
 
 
 	//発射タイマーカウントダウン
-	fireTimer--;
+	fireTimer_--;
 	//指定時間に達した
-	if (fireTimer <= 0) {
+	if (fireTimer_ <= 0) {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval / 2, kFireInterval);
+		fireTimer_ = MyMath::RandomMTInt(kFireInterval / 2, kFireInterval);
 	}
 
 	//死んだら
@@ -161,7 +161,7 @@ void Enemy2::Update() {
 	Trans();
 	camera_->Update();
 	Object3d::Update();
-	collider->Update();
+	collider_->Update();
 
 	Landing();
 }
@@ -220,11 +220,11 @@ void Enemy2::Fire() {
 	velocity.z -= kBulletSpeed;
 
 	//座標をコピー
-	XMFLOAT3 position = GetPosition();
+	XMFLOAT3 pos = GetPosition();
 
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet;
-	newBullet = EnemyBullet::Create(position, velocity, modelBullet_);
+	newBullet = EnemyBullet::Create(pos, velocity, modelBullet_);
 	newBullet->SetCamera(camera_);
 	newBullet->Update();
 
@@ -236,7 +236,7 @@ void Enemy2::Fire() {
 void Enemy2::Landing()
 {
 	//球コライダーの取得
-	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
 	assert(sphereCollider);
 
 	//専用クエリーコールバッククラス定義
@@ -282,9 +282,9 @@ void Enemy2::Landing()
 	//球と地形の交差を全検索
 	colManager_->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
 	//交差による排斥分動かす
-	position.x += callback.move.m128_f32[0];
-	position.y += callback.move.m128_f32[1];
-	//position.z += callback.move.m128_f32[2];
+	position_.x += callback.move.m128_f32[0];
+	position_.y += callback.move.m128_f32[1];
+	//position_.z += callback.move.m128_f32[2];
 
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
@@ -297,7 +297,7 @@ void Enemy2::Landing()
 	UpdateWorldMatrix();
 	camera_->SetEye(eyepos);
 	camera_->SetTarget(tarpos);
-	collider->Update();
+	collider_->Update();
 
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
@@ -306,18 +306,18 @@ void Enemy2::Landing()
 	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
 	RaycastHit raycastHit;
 	//接地状態
-	if (onGround)
+	if (onGround_)
 	{
 		//接地を維持
-		if (count == MAX_GROUND)
+		if (count_ == MAX_GROUND)
 		{
-			onGround = false;
-			count = 0;
-			upPos = Object3d::GetPosition();
+			onGround_ = false;
+			count_ = 0;
+			upPos_ = Object3d::GetPosition();
 			phase_ = Phase::Leave;
 		}
 		
-		count++;
+		count_++;
 	}
 	//落下状態
 	else
@@ -325,10 +325,10 @@ void Enemy2::Landing()
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f))
 		{
-			onGround = true;	
+			onGround_ = true;	
 		}
 		
-		if (position.y >= 20.0f)
+		if (position_.y >= 20.0f)
 		{
 			phase_ = Phase::Approach;
 		}
@@ -352,14 +352,14 @@ void Enemy2::Draw() {
 void Enemy2::UpdateApproach() {
 
 	//移動
-	if (!onGround)
+	if (!onGround_)
 	{
-		position.x += speed.x;
-		position.y += speed.y;
-		position.z += speed.z;
+		position_.x += speed_.x;
+		position_.y += speed_.y;
+		position_.z += speed_.z;
 	}
 
-	if (position.y <= -20.0f)
+	if (position_.y <= -20.0f)
 	{
 		
 		phase_ = Phase::Leave;
@@ -368,11 +368,11 @@ void Enemy2::UpdateApproach() {
 
 //離脱
 void Enemy2::UpdateLeave() {
-	position.x += backSpeed.x;
-	position.y += backSpeed.y;
-	position.z += backSpeed.z;
+	position_.x += backSpeed_.x;
+	position_.y += backSpeed_.y;
+	position_.z += backSpeed_.z;
 
-	if (position.y >=  20.0f) phase_ = Phase::Approach;
+	if (position_.y >=  20.0f) phase_ = Phase::Approach;
 }
 
 //ワールド座標を取得

@@ -11,6 +11,7 @@
 class Player;
 class CollisionManager;
 
+//当たると痛いトゲ
 class Spike :public BaseGimmick
 {
 private:
@@ -42,8 +43,8 @@ public:
 private:
 	static CollisionManager* colManager_;
 	//ポジション
-	XMFLOAT3 pos;
-	XMFLOAT3 scale;
+	XMFLOAT3 pos_;
+	XMFLOAT3 scale_;
 
 	bool isSpike_ = false;
 

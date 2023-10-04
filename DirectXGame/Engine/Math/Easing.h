@@ -1,6 +1,7 @@
 #pragma once
 #include <chrono>
 
+//イージング関係
 class Easing
 {
 public:

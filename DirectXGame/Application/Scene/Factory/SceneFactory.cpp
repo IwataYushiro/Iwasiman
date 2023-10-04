@@ -12,7 +12,7 @@ BaseScene* SceneFactory::CreateScene(const std::string& sceneName, int stagenum)
 
 	if (sceneName == "TITLE")
 	{
-		newScene = new TitleScene();
+		newScene = new TitleScene(stagenum);
 	}
 	else if (sceneName == "GAMEPLAY")
 	{

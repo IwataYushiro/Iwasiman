@@ -24,7 +24,7 @@ std::unique_ptr<FallSphere> FallSphere::Create(Model* model, Player* player, uns
 	//モデルのセット
 	if (model) ins->SetModel(model);
 	if (player)ins->SetPlayer(player);
-	if (subAttribute)ins->collider->SetSubAttribute(subAttribute);
+	if (subAttribute)ins->collider_->SetSubAttribute(subAttribute);
 	
 
 	return ins;
@@ -36,7 +36,7 @@ bool FallSphere::Initialize()
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_LANDSHAPE);
+	collider_->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
 	
 	return true;
@@ -46,9 +46,9 @@ bool FallSphere::Initialize()
 void FallSphere::Update()
 {
 	
-	if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphereReturn();
-	else if (collider->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE)UpdateRiseSphere();
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphereReturn();
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE)UpdateRiseSphere();
 
 	Trans();
 	camera_->Update();
@@ -57,15 +57,15 @@ void FallSphere::Update()
 
 void FallSphere::UpdateFallSphere()
 {
-	if (isRide)
+	if (isRide_)
 	{
 		const float downSpeed = 0.1f;
-		position.y -= downSpeed;
+		position_.y -= downSpeed;
 
-		if (position.y <= startPos.y - 50.0f)
+		if (position_.y <= startPos_.y - 50.0f)
 		{
-			position = startPos;
-			isRide = false;
+			position_ = startPos_;
+			isRide_ = false;
 		}
 	}
 }
@@ -74,22 +74,22 @@ void FallSphere::UpdateFallSphereReturn()
 {
 	const float speed = 0.1f;
 	
-	if (isRide)
+	if (isRide_)
 	{
-		if (player_->OnGround())position.y -= speed;
+		if (player_->OnGround())position_.y -= speed;
 		else
 		{
-			isRide = false;
-			isReturn = true;
+			isRide_ = false;
+			isReturn_ = true;
 		}
 	}
-	else if (isReturn)
+	else if (isReturn_)
 	{
-		position.y += speed;
-		if (position.y >= startPos.y)
+		position_.y += speed;
+		if (position_.y >= startPos_.y)
 		{
-			position = startPos;
-			isReturn = false;
+			position_ = startPos_;
+			isReturn_ = false;
 		}
 	}
 	
@@ -97,15 +97,15 @@ void FallSphere::UpdateFallSphereReturn()
 
 void FallSphere::UpdateRiseSphere()
 {
-	if (isRide)
+	if (isRide_)
 	{
 		const float Speed = 0.1f;
-		position.y += Speed;
+		position_.y += Speed;
 
-		if (position.y >= startPos.y + 50.0f)
+		if (position_.y >= startPos_.y + 50.0f)
 		{
-			position = startPos;
-			isRide = false;
+			position_ = startPos_;
+			isRide_ = false;
 		}
 	}
 }
@@ -114,22 +114,22 @@ void FallSphere::UpdateRiseSphereReturn()
 {
 	const float speed = 0.1f;
 
-	if (isRide)
+	if (isRide_)
 	{
-		if (player_->OnGround())position.y += speed;
+		if (player_->OnGround())position_.y += speed;
 		else
 		{
-			isRide = false;
-			isReturn = true;
+			isRide_ = false;
+			isReturn_ = true;
 		}
 	}
-	else if (isReturn)
+	else if (isReturn_)
 	{
-		position.y -= speed;
-		if (position.y <= startPos.y)
+		position_.y -= speed;
+		if (position_.y <= startPos_.y)
 		{
-			position = startPos;
-			isReturn = false;
+			position_ = startPos_;
+			isReturn_ = false;
 		}
 	}
 }
@@ -176,14 +176,14 @@ void FallSphere::Draw()
 
 void FallSphere::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
-	if (isRide)return;
+	if (isRide_)return;
 
 	if (attribute == COLLISION_ATTR_PLAYERS)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			if (!isReturn)startPos = position;
-			isRide = true;
+			if (!isReturn_)startPos_ = position_;
+			isRide_ = true;
 			
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;

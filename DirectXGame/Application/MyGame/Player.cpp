@@ -40,17 +40,17 @@ bool Player::Initialize() {
 
 	life_ = 10;
 	isDead_ = false;
-	ishit = false;
-	mutekiCount = 0;
+	isHit_ = false;
+	mutekiCount_ = 0;
 
 	isRight_ = true;
 	//ジャンプしたか
-	onGround = true;
+	onGround_ = true;
 
 	//奥側にいるか
-	isJumpBack = false;
+	isJumpBack_ = false;
 	//奧にいるか
-	isBack = false;
+	isBack_ = false;
 
 	//奥側ジャンプに使うベジェ曲線用の時間
 	startCount = std::chrono::steady_clock::now();	//開始時間
@@ -66,8 +66,8 @@ bool Player::Initialize() {
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
-	collider->SetAttribute(COLLISION_ATTR_PLAYERS);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 
 	return true;
 }
@@ -79,12 +79,12 @@ void Player::Reset() {
 
 	isRight_ = true;
 	//ジャンプしたか
-	onGround = true;
+	onGround_ = true;
 
 	//奥側にいるか
-	isJumpBack = false;
+	isJumpBack_ = false;
 	//奧にいるか
-	isBack = false;
+	isBack_ = false;
 
 	//奥側ジャンプに使うベジェ曲線用の時間
 	startCount = std::chrono::steady_clock::now();	//開始時間
@@ -93,7 +93,7 @@ void Player::Reset() {
 	maxTime = 1.0f;					//全体時間
 
 }
-void Player::Update(bool isBack, bool isAttack) {
+void Player::Update(bool isBack_, bool isAttack) {
 
 	pmDash_->SetCamera(camera_);
 
@@ -101,46 +101,46 @@ void Player::Update(bool isBack, bool isAttack) {
 	{
 
 		//移動処理
-		if (!isJumpBack)Move();
+		if (!isJumpBack_)Move();
 		//攻撃処理
 		FallAndJump();
-		if (isBack)JumpBack();
+		if (isBack_)JumpBack();
 		if (isAttack)Attack();
 
 		if (life_ <= 0)
 		{
 			isDead_ = true;
 		}
-		if (position.y <= -60.0f)isDead_ = true;
+		if (position_.y <= -60.0f)isDead_ = true;
 
-		if (ishit)
+		if (isHit_)
 		{
-			nowEye = camera_->GetEye();
-			nowTarget = camera_->GetTarget();
+			nowEye_ = camera_->GetEye();
+			nowTarget_ = camera_->GetTarget();
 
-			isShake = true;
-			ishit = false;
+			isShake_ = true;
+			isHit_ = false;
 		}
-		if (isShake)
+		if (isShake_)
 		{
-			XMFLOAT3 Eye = nowEye + hitMove;
-			XMFLOAT3 Target = nowTarget + hitMove;
+			XMFLOAT3 Eye = nowEye_ + hitMove_;
+			XMFLOAT3 Target = nowTarget_ + hitMove_;
 			camera_->ShakeEye(Eye, 10, { Eye.x - 2.0f,Eye.y - 2.0f,Eye.z - 2.0f },
 				{ Eye.x + 2.0f,Eye.y + 2.0f,Eye.z + 2.0f });
 
 			camera_->ShakeTarget(Target, 10, { Target.x - 2.0f,Target.y - 2.0f,Target.z - 2.0f },
 				{ Target.x + 2.0f,Target.y + 2.0f,Target.z + 2.0f });
 			camera_->Update();
-			mutekiCount++;
+			mutekiCount_++;
 		}
 
-		if (mutekiCount == MUTEKI_COUNT)
+		if (mutekiCount_ == MUTEKI_COUNT)
 		{
-			camera_->SetEye(nowEye + hitMove);
-			camera_->SetTarget(nowTarget + hitMove);
-			isShake = false;
-			mutekiCount = 0;
-			hitMove = { 0.0f,0.0f,0.0f };
+			camera_->SetEye(nowEye_ + hitMove_);
+			camera_->SetTarget(nowTarget_ + hitMove_);
+			isShake_ = false;
+			mutekiCount_ = 0;
+			hitMove_ = { 0.0f,0.0f,0.0f };
 		}
 		//移動制限
 		Trans();
@@ -150,7 +150,7 @@ void Player::Update(bool isBack, bool isAttack) {
 
 	camera_->Update();
 	UpdateWorldMatrix();
-	collider->Update();
+	collider_->Update();
 
 	//着地処理
 	Landing(COLLISION_ATTR_LANDSHAPE);
@@ -178,21 +178,21 @@ void Player::Move() {
 	{
 		if (input_->PushKey(DIK_A)) {
 			isRight_ = false;
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,3.0f,0.0f }, { 3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { 3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
 			rot = { 0.0f,-90.0f,0.0f };
 			move.x -= moveSpeed * 1.5f;
 			cmove.x -= moveSpeed * 1.5f;
 			tmove.x -= moveSpeed * 1.5f;
-			if (isShake)hitMove.x -= moveSpeed * 1.5f;
+			if (isShake_)hitMove_.x -= moveSpeed * 1.5f;
 		}
 		if (input_->PushKey(DIK_D)) {
 			isRight_ = true;
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 20.0f ,3.0f,0.0f }, { -3.0f,0.1f,0.0f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
+			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
 			rot = { 0.0f,90.0f,0.0f };
 			move.x += moveSpeed * 1.5f;
 			cmove.x += moveSpeed * 1.5f;
 			tmove.x += moveSpeed * 1.5f;
-			if (isShake)hitMove.x += moveSpeed * 1.5f;
+			if (isShake_)hitMove_.x += moveSpeed * 1.5f;
 		}
 	}
 	else
@@ -203,7 +203,7 @@ void Player::Move() {
 			move.x -= moveSpeed;
 			cmove.x -= moveSpeed;
 			tmove.x -= moveSpeed;
-			if (isShake)hitMove.x -= moveSpeed;
+			if (isShake_)hitMove_.x -= moveSpeed;
 		}
 		if (input_->PushKey(DIK_D)) {
 			isRight_ = true;
@@ -211,7 +211,7 @@ void Player::Move() {
 			move.x += moveSpeed;
 			cmove.x += moveSpeed;
 			tmove.x += moveSpeed;
-			if (isShake)hitMove.x += moveSpeed;
+			if (isShake_)hitMove_.x += moveSpeed;
 		}
 
 
@@ -279,24 +279,24 @@ void Player::FallAndJump()
 	//}
 	//Object3d::SetPosition(move);
 
-	if (!onGround)
+	if (!onGround_)
 	{
 		//下向き加速度
 		const float fallAcc = -0.1f;
 		const float fallVYMin = -2.0f;
 		//加速
-		fallVec.y = max(fallVec.y + fallAcc, fallVYMin);
+		fallVec_.y = max(fallVec_.y + fallAcc, fallVYMin);
 		//移動
-		position.x += fallVec.x;
-		position.y += fallVec.y;
-		position.z += fallVec.z;
+		position_.x += fallVec_.x;
+		position_.y += fallVec_.y;
+		position_.z += fallVec_.z;
 	}
 	//ジャンプ操作
 	else if (input_->TriggerKey(DIK_SPACE))
 	{
-		onGround = false;
+		onGround_ = false;
 
-		fallVec = { 0.0f,jumpVYFist,0.0f };
+		fallVec_ = { 0.0f,jumpVYFist_,0.0f };
 	}
 
 }
@@ -313,20 +313,20 @@ void Player::JumpBack()
 
 	//時間
 
-	if (onGround)
+	if (onGround_)
 	{
-		if (!isJumpBack)
+		if (!isJumpBack_)
 		{
 			if (input_->TriggerKey(DIK_Z))
 			{
 
-				if (isBack)isBack = false;
-				else isBack = true;
-				isJumpBack = true;
+				if (isBack_)isBack_ = false;
+				else isBack_ = true;
+				isJumpBack_ = true;
 			}
 		}
 	}
-	if (isJumpBack)
+	if (isJumpBack_)
 	{
 		//現在時間を取得する
 		nowCount = std::chrono::steady_clock::now();
@@ -337,19 +337,19 @@ void Player::JumpBack()
 
 		timeRate = min(elapsed / maxTime, 1.0f);
 
-		if (isBack)move = Bezier3(end, p2, p1, start, timeRate);
+		if (isBack_)move = Bezier3(end, p2, p1, start, timeRate);
 
 		else move = Bezier3(start, p1, p2, end, timeRate);
 
 		if (move.z >= end.z)
 		{
 			startCount = std::chrono::steady_clock::now();
-			isJumpBack = false;
+			isJumpBack_ = false;
 		}
 		else if (move.z <= start.z)
 		{
 			startCount = std::chrono::steady_clock::now();
-			isJumpBack = false;
+			isJumpBack_ = false;
 		}
 	}
 
@@ -359,7 +359,7 @@ void Player::JumpBack()
 void Player::Landing(unsigned short attribute)
 {
 	//球コライダーの取得
-	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
 	assert(sphereCollider);
 
 	//専用クエリーコールバッククラス定義
@@ -405,9 +405,9 @@ void Player::Landing(unsigned short attribute)
 	//球と地形の交差を全検索
 	colManager_->QuerySphere(*sphereCollider, &callback, attribute);
 	//交差による排斥分動かす
-	position.x += callback.move.m128_f32[0];
-	position.y += callback.move.m128_f32[1];
-	//position.z += callback.move.m128_f32[2];
+	position_.x += callback.move.m128_f32[0];
+	position_.y += callback.move.m128_f32[1];
+	//position_.z += callback.move.m128_f32[2];
 
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
@@ -420,7 +420,7 @@ void Player::Landing(unsigned short attribute)
 	UpdateWorldMatrix();
 	camera_->SetEye(eyepos);
 	camera_->SetTarget(tarpos);
-	collider->Update();
+	collider_->Update();
 
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
@@ -429,7 +429,7 @@ void Player::Landing(unsigned short attribute)
 	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
 	RaycastHit raycastHit;
 	//接地状態
-	if (onGround)
+	if (onGround_)
 	{
 		//スムーズに坂を下るための吸着処理
 		const float adsDistance = 0.2f;
@@ -437,27 +437,27 @@ void Player::Landing(unsigned short attribute)
 		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f + adsDistance))
 		{
-			onGround = true;
-			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			onGround_ = true;
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 			//行列更新
 			Object3d::Update();
 		}
 		//地面が無いので落下
 		else
 		{
-			onGround = false;
-			fallVec = {};
+			onGround_ = false;
+			fallVec_ = {};
 		}
 	}
 	//落下状態
-	else if (fallVec.y <= 0.0f)
+	else if (fallVec_.y <= 0.0f)
 	{
 		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f))
 		{
 			//着地
-			onGround = true;
-			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			onGround_ = true;
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 			//行列更新
 			Object3d::Update();
 		}
@@ -484,11 +484,11 @@ void Player::Attack() {
 		matVec.r[0].m128_f32[3] = 0.0f;
 		matVec *= Object3d::GetWorld();
 		//自キャラの座標をコピー
-		XMFLOAT3 position = Object3d::GetPosition();
+		XMFLOAT3 position_ = Object3d::GetPosition();
 
 		//弾を生成し初期化
 		std::unique_ptr<PlayerBullet> newBullet;
-		newBullet = PlayerBullet::Create(position, velocity, modelBullet_);
+		newBullet = PlayerBullet::Create(position_, velocity, modelBullet_);
 		newBullet->SetCamera(camera_);
 		newBullet->Update();
 
@@ -540,7 +540,7 @@ XMFLOAT3 Player::GetWorldPosition() {
 void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
-		if (isShake)return;
+		if (isShake_)return;
 
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ -= 2;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)life_ -= 4;
@@ -553,20 +553,20 @@ void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, un
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
 		pmDash_->Update();
-		ishit = true;
+		isHit_ = true;
 	}
 
 	else if (attribute == COLLISION_ATTR_GIMMICK)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
 		{
-			if (isShake)return;
+			if (isShake_)return;
 			life_ -= 3;
 			pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
 			pmDash_->Update();
-			ishit = true;
+			isHit_ = true;
 		}
 
 	}

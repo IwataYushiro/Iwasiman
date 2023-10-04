@@ -63,7 +63,7 @@
                     7.0
                 ]
             },
-            "file_name": "skydomet",
+            "file_name": "skydome",
             "objecttype": "SKYDOME"
         },
         {
@@ -72,7 +72,7 @@
             "transform": {
                 "translation": [
                     60.0,
-                    -30.0,
+                    0.0,
                     -10.0
                 ],
                 "rotation": [
@@ -82,11 +82,12 @@
                 ],
                 "scaling": [
                     0.4000000059604645,
-                    0.30000001192092896,
+                    4.0,
                     1.0
                 ]
             },
             "file_name": "ground",
+            "objecttype": "PLANE",
             "collider": {
                 "type": "BOX",
                 "center": [
@@ -103,34 +104,11 @@
         },
         {
             "type": "MESH",
-            "name": "Goal",
-            "transform": {
-                "translation": [
-                    60.0,
-                    40.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "file_name": "sphere",
-            "objecttype": "GOAL"
-        },
-        {
-            "type": "MESH",
             "name": "Player",
             "transform": {
                 "translation": [
                     60.0,
-                    -30.0,
+                    0.0,
                     -8.0
                 ],
                 "rotation": [
@@ -146,41 +124,6 @@
             },
             "file_name": "player",
             "objecttype": "PLAYER"
-        },
-        {
-            "type": "MESH",
-            "name": "Plane.002",
-            "transform": {
-                "translation": [
-                    60.0,
-                    35.0,
-                    -10.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    0.4000000059604645,
-                    0.30000001192092896,
-                    1.0
-                ]
-            },
-            "file_name": "ground",
-            "collider": {
-                "type": "BOX",
-                "center": [
-                    10.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    200.0,
-                    200.0,
-                    2.0
-                ]
-            }
         }
     ]
 }

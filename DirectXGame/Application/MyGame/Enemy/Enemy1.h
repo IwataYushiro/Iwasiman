@@ -8,7 +8,7 @@
 #include <list>
 #include <memory>
 
-//敵
+//そのまま歩き続ける敵
 class Enemy1 :public BaseEnemy {
 private:
 	// DirectX::を省略
@@ -75,19 +75,19 @@ private:
 	//フェーズ
 	Phase phase_;
 	//弾発射タイマー
-	int32_t fireTimer = 0;
+	int32_t fireTimer_ = 0;
 	//スケール
-	XMFLOAT3 scale;
+	XMFLOAT3 scale_;
 	//ポジション
-	XMFLOAT3 pos;
+	XMFLOAT3 pos_;
 	//アングル
-	XMFLOAT3 angle;
+	XMFLOAT3 angle_;
 	//半径
 	float radius_ = 1.0f;
 	
 	
-	bool onGround = true;
-	XMFLOAT3 fallVec;
+	bool onGround_ = true;
+	XMFLOAT3 fallVec_;
 
 	//反転フラグ
 	bool isReverse_ = false;

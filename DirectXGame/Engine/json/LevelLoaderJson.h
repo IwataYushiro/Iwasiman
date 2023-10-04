@@ -31,7 +31,7 @@ struct LevelData
 	std::vector<ObjectData> objects;
 };
 
-//レベルローダー
+//Jsonレベルローダー
 class LevelLoader
 {
 public:

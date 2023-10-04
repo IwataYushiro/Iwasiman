@@ -33,8 +33,8 @@ bool Spike::Initialize()
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_GIMMICK);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_GIMMICK_SPIKE);
+	collider_->SetAttribute(COLLISION_ATTR_GIMMICK);
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_GIMMICK_SPIKE);
 
 
 	return true;

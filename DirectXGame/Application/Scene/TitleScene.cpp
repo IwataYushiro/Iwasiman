@@ -1,10 +1,11 @@
 #include "TitleScene.h"
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
+#include "StageList.h"
+
 #include <cassert>
 #include <sstream>
 #include <iomanip>
-
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* TitleScene::input_ = Input::GetInstance();
@@ -14,173 +15,183 @@ ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* TitleScene::camera_ = Camera::GetInstance();
 
 
+TitleScene::TitleScene(int stagenum) : stageNum_(stagenum) {}
+
 void TitleScene::Initialize()
 {
 	spCommon_ = SpriteCommon::GetInstance();
 	//オーディオ
 	audio_->Initialize();
 
-	//カメラ
-	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
-	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
-
-	//camera_->SetTarget({ 90.0f,0.0f,0.0f });
-	//camera_->SetEye({ -10.0f,2.0f,0.0f });
-
 	// 視点座標
-	camera_->SetEye({ 0.0f, 5.0f, -100.0f });
+	camera_->SetEye({ easeEye_[0].start, easeEye_[1].start, easeEye_[2].start });
 	// 注視点座標
-	camera_->SetTarget({ 0.0f,0.0f,0.0f });
+	camera_->SetTarget({ easeTarget_[0].start, easeTarget_[1].start, easeTarget_[2].start });
 
 	//レベルデータ読み込み
-	//LoadLVData();
+	if (stageNum_ == SL_Default)LoadLVData("scene/titlet");
+	else if (stageNum_ <= SL_Stage1_StageID)LoadLVData("scene/title1");
+	else if (stageNum_ <= SL_Stage2_StageID)LoadLVData("scene/title2");
+	else LoadLVData("scene/titlet");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	UINT titleTex = 00;
-	spCommon_->LoadTexture(titleTex, "texture/title2.png");
-	spriteTitle_->Initialize(spCommon_, titleTex);
+	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title2.png");
+	spriteTitle_->Initialize(spCommon_, TSTI_TitleTex);
+	spriteTitle_->SetColor(backTitleColor_);
 
-	UINT titleMenuTex = 01;
-	spCommon_->LoadTexture(titleMenuTex, "texture/titlemenu.png");
-	spriteMenu_->Initialize(spCommon_, titleMenuTex);
-	spriteMenu_->SetPosition({ easeMenuPosX[0].start,0.0f });
-	spriteMenu_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space.png");
+	spriteTitleDone_->Initialize(spCommon_, TSTI_TitleDoneTex);
+	spriteTitleDone_->SetPosition({ 0.0f,550.0f });
 
-	UINT titleMenuTutorialTex = 02;
-	spCommon_->LoadTexture(titleMenuTutorialTex, "texture/titlemenut.png");
-	spriteMenuTutorial_->Initialize(spCommon_, titleMenuTutorialTex);
-	spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].start,150.0f });
+	spCommon_->LoadTexture(TSTI_MenuTex, "texture/titlemenu.png");
+	spriteMenu_->Initialize(spCommon_, TSTI_MenuTex);
+	spriteMenu_->SetPosition({ easeMenuPosX_[0].start,0.0f });
+	spriteMenu_->SetColor(otherMenuColor_);
 
-	UINT titleMenuStageSerectTex = 03;
-	spCommon_->LoadTexture(titleMenuStageSerectTex, "texture/titlemenus.png");
-	spriteMenuStageSelect_->Initialize(spCommon_, titleMenuStageSerectTex);
-	spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].start,300.0f });
+	spCommon_->LoadTexture(TSTI_MenuTutorialTex, "texture/titlemenut.png");
+	spriteMenuTutorial_->Initialize(spCommon_, TSTI_MenuTutorialTex);
+	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].start,150.0f });
 
-	UINT titleMenuDoneTex = 04;
-	spCommon_->LoadTexture(titleMenuDoneTex, "texture/titlemenud.png");
-	spriteMenuDone_->Initialize(spCommon_, titleMenuDoneTex);
-	spriteMenuDone_->SetPosition({ easeMenuPosX[3].start,550.0f });
-	spriteMenuDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+	spCommon_->LoadTexture(TSTI_MenuStageSerectTex, "texture/titlemenus.png");
+	spriteMenuStageSelect_->Initialize(spCommon_, TSTI_MenuStageSerectTex);
+	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[2].start,300.0f });
 
-	UINT BackTex = 05;
-	spCommon_->LoadTexture(BackTex, "texture/back.png");
-	spriteBack_->Initialize(spCommon_, BackTex);
-	spriteBack_->SetPosition({ easeMenuPosX[4].start,50.0f });
-	spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+	spCommon_->LoadTexture(TSTI_MenuDoneTex, "texture/titlemenud.png");
+	spriteMenuDone_->Initialize(spCommon_, TSTI_MenuDoneTex);
+	spriteMenuDone_->SetPosition({ easeMenuPosX_[3].start,550.0f });
+	spriteMenuDone_->SetColor(otherMenuColor_);
+
+	spCommon_->LoadTexture(TSTI_BackTitleTex, "texture/back.png");
+	spriteBack_->Initialize(spCommon_, TSTI_BackTitleTex);
+	spriteBack_->SetPosition({ easeMenuPosX_[4].start,50.0f });
+	spriteBack_->SetColor(backTitleColor_);
 
 
 	//FBX
-	objF = ObjectFbx::Create();
-	modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-	objF->SetModelFBX(modelF);
-	objF->SetCamera(camera_);
-	objF->PlayAnimation();//更新で呼ぶと止まるから注意
+	//objF = ObjectFbx::Create();
+	//modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+	//objF->SetModelFBX(modelF);
+	//objF->SetCamera(camera_);
+	//objF->PlayAnimation();//更新で呼ぶと止まるから注意
 
 	//パーティクル
-	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);*/
+	pm1_->SetCamera(camera_);
 
 }
 
 void TitleScene::Update()
 {
-	if (MenuCount <= 0)MenuCount = 0;
-	else if (MenuCount >= 1)MenuCount = 1;
-	if (isMenu)
+	//メニュー上下限
+	if (menuCount_ <= TSMI_Tutorial)menuCount_ = TSMI_Tutorial;
+	else if (menuCount_ >= TSMI_StageSelect)menuCount_ = TSMI_StageSelect;
+
+
+	DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
+	DirectX::XMFLOAT4 TitleDoneColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
+	//SetColorより前に呼び出す
+	UpdateChangeColor();
+
+
+	if (isMenu_)
 	{
 		//イージング
-		easeTitlePosX.ease_out_expo();
-		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
+		for (int i = 0; i < 2; i++)easeTitlePosX_[i].ease_out_expo();
+		for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeEye_[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeTarget_[i].ease_out_expo();
 
 		//座標セット
-		spriteTitle_->SetPosition({ easeTitlePosX.num_X,0.0f });
-		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
-		spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
-		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
-		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
-		spriteBack_->SetPosition({ easeMenuPosX[4].num_X,50.0f });
+		spriteTitle_->SetPosition({ easeTitlePosX_[0].num_X,0.0f });
+		spriteTitleDone_->SetPosition({ easeTitlePosX_[1].num_X,550.0f });
+		spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
+		spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+		spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
+		spriteMenuDone_->SetPosition({ easeMenuPosX_[3].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX_[4].num_X,50.0f });
 
-		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
-		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
+		//カメラもセット
+		camera_->SetEye({ easeEye_[0].num_X, easeEye_[1].num_X, easeEye_[2].num_X });
+		camera_->SetTarget({ easeTarget_[0].num_X, easeTarget_[1].num_X, easeTarget_[2].num_X });
 
-		if (isColorReverse_)speedColor -= 0.02f;
-		else speedColor += 0.02f;
+		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
+		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
 
-		if (speedColor >= 0.9f)
+		if (menuCount_ == TSMI_Tutorial)
 		{
-			isColorReverse_ = true;
+			spriteMenuTutorial_->SetColor(selectMenuColor);
+			spriteMenuStageSelect_->SetColor(otherMenuColor_);
 		}
-		if (speedColor <= 0.0f)
+		else if (menuCount_ == TSMI_StageSelect)
 		{
-			isColorReverse_ = false;
-		}
-
-		if (MenuCount == 0)
-		{
-			spriteMenuTutorial_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
-			spriteMenuStageSelect_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		}
-		else if (MenuCount == 1)
-		{
-			spriteMenuTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-			spriteMenuStageSelect_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
+			spriteMenuTutorial_->SetColor(otherMenuColor_);
+			spriteMenuStageSelect_->SetColor(selectMenuColor);
 		}
 
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			if (MenuCount == 0)
+			if (menuCount_ == TSMI_Tutorial)
 			{
 				//チュートリアルステージ
-				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 100);
+				sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
 			}
-			else if (MenuCount == 1)
+			else if (menuCount_ == TSMI_StageSelect)
 			{
 				//ステージ選択
-				camera_->Reset();
-				sceneManager_->ChangeScene("STAGESELECT", 0);
-
+				if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+				else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+				else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
 			}
 		}
-		if (easeMenuPosX[4].num_X == easeMenuPosX[4].end)
+		if (easeMenuPosX_[4].num_X == easeMenuPosX_[4].end)
 		{
 			if (input_->TriggerKey(DIK_Q))
 			{
-				easeTitlePosX.Standby(true);
-				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(true);
-				isBack = true;
-				isMenu = false;
+				for (int i = 0; i < 2; i++)easeTitlePosX_[i].Standby(true);
+				for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
+				for (int i = 0; i < 3; i++)easeEye_[i].Standby(true);
+				for (int i = 0; i < 3; i++)easeTarget_[i].Standby(true);
+				isBack_ = true;
+				isMenu_ = false;
 			}
 		}
 
 	}
-	else if (isBack)
+	else if (isBack_)
 	{
 		//イージング
-		easeTitlePosX.ease_out_expo();
-		for (int i = 0; i < 5; i++)easeMenuPosX[i].ease_out_expo();
-
+		for (int i = 0; i < 2; i++)easeTitlePosX_[i].ease_out_expo();
+		for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeEye_[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeTarget_[i].ease_out_expo();
 		//座標セット
-		spriteTitle_->SetPosition({ easeTitlePosX.num_X,0.0f });
-		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
-		spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
-		spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
-		spriteMenuDone_->SetPosition({ easeMenuPosX[3].num_X,550.0f });
-		spriteBack_->SetPosition({ easeMenuPosX[4].num_X,50.0f });
+		spriteTitle_->SetPosition({ easeTitlePosX_[0].num_X,0.0f });
+		spriteTitleDone_->SetPosition({ easeTitlePosX_[1].num_X,550.0f });
+		spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
+		spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+		spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
+		spriteMenuDone_->SetPosition({ easeMenuPosX_[3].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX_[4].num_X,50.0f });
 
-		if (easeMenuPosX[4].num_X == easeMenuPosX[4].start)
+		//カメラもセット
+		camera_->SetEye({ easeEye_[0].num_X, easeEye_[1].num_X, easeEye_[2].num_X });
+		camera_->SetTarget({ easeTarget_[0].num_X, easeTarget_[1].num_X, easeTarget_[2].num_X });
+
+		if (easeMenuPosX_[4].num_X == easeMenuPosX_[4].start)
 		{
 			if (input_->TriggerKey(DIK_SPACE))
 			{
-				easeTitlePosX.Standby(false);
-				for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
-				isMenu = true;
-				isBack = false;
+				for (int i = 0; i < 2; i++)easeTitlePosX_[i].Standby(false);
+				for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeEye_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeTarget_[i].Standby(false);
+				isMenu_ = true;
+				isBack_ = false;
 			}
 		}
 	}
@@ -188,31 +199,72 @@ void TitleScene::Update()
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			easeTitlePosX.Standby(false);
-			for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
-			isMenu = true;
+			for (int i = 0; i < 2; i++)easeTitlePosX_[i].Standby(false);
+			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
+			for (int i = 0; i < 3; i++)easeEye_[i].Standby(false);
+			for (int i = 0; i < 3; i++)easeTarget_[i].Standby(false);
+			isMenu_ = true;
 
 		}
 
 	}
+	spriteTitleDone_->SetColor(TitleDoneColor);
+	spriteMenu_->SetColor(TitleDoneColor);
+	spriteMenuDone_->SetColor(TitleDoneColor);
+
+
 
 	spriteTitle_->Update();
+	spriteTitleDone_->Update();
 	spriteMenu_->Update();
 	spriteMenuTutorial_->Update();
 	spriteMenuStageSelect_->Update();
 	spriteMenuDone_->Update();
 	spriteBack_->Update();
 
-	/*for (auto& object : objects) {
-		object->Update();
-	}*/
+	for (Object3d*& player : objPlayers_)
+	{
+		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
+			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
+
+		player->Update();
+	}
+
+	for (Object3d*& ground : objGrounds_)
+	{
+		DirectX::XMFLOAT3 move = ground->GetPosition();
+		DirectX::XMFLOAT3 speed = { -1.0f,0.0f,0.0f };
+
+		move.x += speed.x;
+		ground->SetPosition(move);
+		if (ground->GetPosition().x <= returnPos_)ground->SetPosition(startPos_);
+
+		ground->Update();
+	}
+
+	for (Object3d*& skydome : objSkydomes_)
+	{
+		//天球回転用
+		DirectX::XMFLOAT3 rotSkydome = skydome->GetRotation();
+
+		const float rotSpeed = -0.2f;
+		rotSkydome.y += rotSpeed;
+		skydome->SetRotation(rotSkydome);
+
+		skydome->Update();
+	}
+
+
 	camera_->Update();
 	lightGroup_->Update();
-	//pm1_->Update();
+	pm1_->Update();
 
-	objF->Update();
+	//objF->Update();
+
 	imguiManager_->Begin();
-
+#ifdef DEBUG
+	camera_->DebugCamera(false);
+#endif // DEBUG
 	imguiManager_->End();
 }
 
@@ -220,34 +272,34 @@ void TitleScene::Draw()
 {
 	//背景スプライト描画前処理
 
-	//エフェクト描画前処理
-	ParticleManager::PreDraw(dxCommon_->GetCommandList());
-
-	//pm1_->Draw();
-	//エフェクト描画後処理
-	ParticleManager::PostDraw();
-
 
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
-	/*for (auto& object : objects) {
-		object->Draw();
-	}*/
+	for (Object3d*& player : objPlayers_)player->Draw();
+	for (Object3d*& ground : objGrounds_)ground->Draw();
+	for (Object3d*& skydome : objSkydomes_)skydome->Draw();
 	//モデル描画後処理
 	Object3d::PostDraw();
 
 	//Fbxモデル描画前処理
 	ObjectFbx::PreDraw(dxCommon_->GetCommandList());
 
-	objF->Draw();
+	//objF->Draw();
 	//Fbxモデル描画後処理
 	ObjectFbx::PostDraw();
 
+	//エフェクト描画前処理
+	ParticleManager::PreDraw(dxCommon_->GetCommandList());
+
+	pm1_->Draw();
+	//エフェクト描画後処理
+	ParticleManager::PostDraw();
 
 	spCommon_->PreDraw();
 	//前景スプライト
 	//スプライト描画
 	spriteTitle_->Draw();
+	spriteTitleDone_->Draw();
 	spriteMenu_->Draw();
 	spriteMenuTutorial_->Draw();
 	spriteMenuStageSelect_->Draw();
@@ -262,86 +314,175 @@ void TitleScene::Finalize()
 	audio_->Finalize();
 	//スプライト
 	delete spriteTitle_;
+	delete spriteTitleDone_;
 	delete spriteMenu_;
 	delete spriteMenuTutorial_;
 	delete spriteMenuStageSelect_;
 	delete spriteMenuDone_;
 	delete spriteBack_;
 
-	//プレイヤー
-	delete object3DPlayer_;
-	delete modelPlayer_;
+
 	//レベルデータ用オブジェクト
-	/*for (Object3d*& object : objects)
-	{
-		delete object;
-	}
-	delete modelSkydome;
-	delete modelGround;
-	delete modelFighter;
-	delete modelSphere;*/
+	for (Object3d*& player : objPlayers_)delete player;
+	for (Object3d*& ground : objGrounds_)delete ground;
+	for (Object3d*& skydome : objSkydomes_)delete skydome;
+
+	delete modelPlayer_;
+	delete modelSkydome_;
+	delete modelSkydomeStage1_;
+	delete modelSkydomeStage2_;
+	delete modelGround_;
 
 	//ライト
 	delete lightGroup_;
 	//パーティクル
-	//delete particle1_;
-	//delete pm1_;
+	delete particle1_;
+	delete pm1_;
 	//FBX
-	delete objF;
-	delete modelF;
+	//delete objF;
+	//delete modelF;
 }
 
-void TitleScene::LoadLVData()
+void TitleScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
-	levelData = LevelLoader::LoadFile("test");
+	levelData = LevelLoader::LoadFile(stagePath);
 
 	// モデル読み込み
 	modelPlayer_ = Model::LoadFromOBJ("player", true);
-	modelSkydome = Model::LoadFromOBJ("skydome");
-	modelGround = Model::LoadFromOBJ("ground");
-	modelFighter = Model::LoadFromOBJ("chr_sword", true);
-	modelSphere = Model::LoadFromOBJ("sphere", true);
+	modelSkydome_ = Model::LoadFromOBJ("skydomet");
+	modelSkydomeStage1_ = Model::LoadFromOBJ("skydome");
+	modelSkydomeStage2_ = Model::LoadFromOBJ("skydome2");
+	modelGround_ = Model::LoadFromOBJ("ground");
 
-	models.insert(std::make_pair("player", modelPlayer_));
-	models.insert(std::make_pair("skydome", modelSkydome));
-	models.insert(std::make_pair("ground", modelGround));
-	models.insert(std::make_pair("chr_sword", modelFighter));
-	models.insert(std::make_pair("sphere", modelSphere));
+	models_.insert(std::make_pair("player", modelPlayer_));
+	models_.insert(std::make_pair("skydomet", modelSkydome_));
+	models_.insert(std::make_pair("skydome", modelSkydomeStage1_));
+	models_.insert(std::make_pair("skydome2", modelSkydomeStage2_));
+	models_.insert(std::make_pair("ground", modelGround_));
 
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
-		decltype(models)::iterator it = models.find(objectData.fileName);
-		if (it != models.end()) {
+		decltype(models_)::iterator it = models_.find(objectData.fileName);
+		if (it != models_.end()) {
 			model = it->second;
 		}
 
-		// モデルを指定して3Dオブジェクトを生成
-		Object3d* newObject = Object3d::Create();
-		//オブジェクトにモデル紐付ける
-		newObject->SetModel(model);
+		if (objectData.objectType.find("PLAYER") == 0)
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			//オブジェクトにモデル紐付ける
+			newObject->SetModel(model);
 
-		// 座標
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMStoreFloat3(&pos, objectData.trans);
-		newObject->SetPosition(pos);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
 
-		// 回転角
-		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, objectData.rot);
-		newObject->SetRotation(rot);
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
 
-		// 座標
-		DirectX::XMFLOAT3 scale;
-		DirectX::XMStoreFloat3(&scale, objectData.scale);
-		newObject->SetScale(scale);
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
 
-		newObject->SetCamera(camera_);
-		// 配列に登録
-		objects.push_back(newObject);
+			newObject->SetCamera(camera_);
+			// 配列に登録
+			objPlayers_.push_back(newObject);
+		}
+		else if (objectData.objectType.find("PLANE") == 0)
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			//オブジェクトにモデル紐付ける
+			newObject->SetModel(model);
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+			startPos_ = newObject->GetPosition();
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+			// 配列に登録
+			objGrounds_.push_back(newObject);
+		}
+		else if (objectData.objectType.find("SKYDOME") == 0)
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			//オブジェクトにモデル紐付ける
+			newObject->SetModel(model);
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+			// 配列に登録
+			objSkydomes_.push_back(newObject);
+		}
+
 	}
 
 }
 
+void TitleScene::UpdateChangeColor()
+{
+	//色を変えるスピード
+	float speedColor = 0.02f;
+
+	if (isColorReverse_)
+	{
+		selectColor_.x -= speedColor;
+		selectColor_.y -= speedColor;
+		selectColor_.z -= speedColor;
+	}
+
+	else
+	{
+		selectColor_.x += speedColor;
+		selectColor_.y += speedColor;
+		selectColor_.z += speedColor;
+
+	}
+
+	const DirectX::XMFLOAT2 maxAndMinSpeedColor = { 0.9f,0.0f };//{max,min}
+
+	if (selectColor_.x >= maxAndMinSpeedColor.x)
+	{
+		isColorReverse_ = true;
+	}
+	if (selectColor_.x <= maxAndMinSpeedColor.y)
+	{
+		isColorReverse_ = false;
+	}
+
+}

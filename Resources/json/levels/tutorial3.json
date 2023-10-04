@@ -64,7 +64,7 @@
                 ]
             },
             "file_name": "skydomet",
-            "objecttype": "NONE"
+            "objecttype": "SKYDOME"
         },
         {
             "type": "MESH",

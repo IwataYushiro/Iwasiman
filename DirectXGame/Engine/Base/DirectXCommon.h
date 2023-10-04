@@ -8,6 +8,7 @@
 
 #include "WinApp.h"
 
+//DirectXŠî”ÕƒNƒ‰ƒX
 class DirectXCommon final
 {
 public: // È—ª

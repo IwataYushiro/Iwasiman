@@ -45,9 +45,9 @@ bool EnemyCore::Initialize() {
 	timeRate;
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_ENEMYS);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
+	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
+	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
 
 	Parameter();
 
@@ -63,7 +63,7 @@ void EnemyCore::Parameter() {
 
 	isReverse_ = false;
 	//発射タイマー初期化
-	fireTimer = kFireInterval;
+	fireTimer_ = kFireInterval;
 
 	isDead_ = false;
 
@@ -152,11 +152,11 @@ void EnemyCore::Fire() {
 	velocity.z -= kBulletSpeed;
 
 	//座標をコピー
-	XMFLOAT3 position = GetPosition();
+	XMFLOAT3 position_ = GetPosition();
 
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet;
-	newBullet = EnemyBullet::Create(position, velocity, modelBullet_);
+	newBullet = EnemyBullet::Create(position_, velocity, modelBullet_);
 	newBullet->SetCamera(camera_);
 	newBullet->Update();
 
@@ -181,7 +181,7 @@ void EnemyCore::UpdateCore()
 	float cameraMove = camera_->GetEye().x;
 
 	//制御点
-	start = nowPos;
+	start = nowPos_;
 	p1 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
 	p2 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
 	end = { MyMath::RandomMTFloat(-20.0f,20.0f) + cameraMove,10.0f,100.0f };
@@ -192,34 +192,34 @@ void EnemyCore::UpdateCore()
 	if (!isReverse_)velocity = { 0.3f, 0.0f, 0.0f };
 	else velocity = { -0.3f, 0.0f, 0.0f };
 
-	position.x += velocity.x;
-	position.y += velocity.y;
-	position.z += velocity.z;
+	position_.x += velocity.x;
+	position_.y += velocity.y;
+	position_.z += velocity.z;
 
 	//指定の位置に到達したら反転
-	if (position.x >= 65.0f) {
+	if (position_.x >= 65.0f) {
 		//→から←
 		isReverse_ = true;
 	}
-	if (position.x <= -65.0f) {
+	if (position_.x <= -65.0f) {
 		isReverse_ = false;
 	}
 
 	//発射タイマーカウントダウン
-	fireTimer--;
+	fireTimer_--;
 	//指定時間に達した
-	if (fireTimer <= 0) {
+	if (fireTimer_ <= 0) {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
+		fireTimer_ = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
 	}
 	//死んだら自機の弾みたいに
 	if (life_ == 0) {
-		nowPos = Object3d::GetPosition();
+		nowPos_ = Object3d::GetPosition();
 
-		collider->SetAttribute(COLLISION_ATTR_PLAYERS);
-		collider->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
+		collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
+		collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
 
 		life_ = 0;
 		startCount = std::chrono::steady_clock::now();	//開始時間
@@ -243,7 +243,7 @@ void EnemyCore::UpdateBreakCore()
 
 	timeRate = min(elapsed / maxTime, 1.0f);
 
-	position = Bezier3(start, p1, p2, end, timeRate);
+	position_ = Bezier3(start, p1, p2, end, timeRate);
 
 }
 
@@ -251,7 +251,7 @@ void EnemyCore::UpdateBreakCore()
 void EnemyCore::UpdateLeave() {
 
 	isDead_ = true;
-	bossDead = true;
+	bossDead_ = true;
 }
 
 const XMFLOAT3 EnemyCore::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)

@@ -16,7 +16,7 @@
 //jsonレベルデータ
 struct LevelData;
 
-//タイトルシーン
+//ステージクリアシーン
 class StageClearScene :public BaseScene
 {
 public://メンバ関数
@@ -48,7 +48,7 @@ private://静的メンバ変数
 	static Camera* camera_;
 
 private://メンバ変数
-	int stageNum;
+	int stageNum_;
 	//Sprite
 	Sprite* spriteStageClear_ = new Sprite();
 	

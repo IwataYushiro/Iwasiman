@@ -59,11 +59,6 @@ void Framework::Update()
 
 	//“ü—Í‚ÌXV
 	input_->Update();
-#ifdef _DEBUG
-	//camera_->DebugCamera();
-
-#endif // DEBUG
-	
 
 	sceneManager_->Update();
 

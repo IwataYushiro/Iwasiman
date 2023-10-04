@@ -5,10 +5,13 @@
 #include "MeshCollider.h"
 #include "TouchableObject.h"
 #include "CollisionAttribute.h"
+#include "StageList.h"
 
 #include <cassert>
 #include <sstream>
 #include <iomanip>
+
+#include "StageList.h"
 
 using namespace DirectX;
 
@@ -20,7 +23,7 @@ SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
 
-GamePlayScene::GamePlayScene(int stagenum) :stageNum(stagenum) {}
+GamePlayScene::GamePlayScene(int stagenum) :stageNum_(stagenum) {}
 
 void GamePlayScene::Initialize()
 {
@@ -28,17 +31,18 @@ void GamePlayScene::Initialize()
 	spCommon_ = SpriteCommon::GetInstance();
 	colManager_ = CollisionManager::GetInstance();
 	//工業地帯
-	enemyFactory = std::make_unique<EnemyFactory>();
-	gimmickFactory = std::make_unique<GimmickFactory>();
+	enemyFactory_ = std::make_unique<EnemyFactory>();
+	gimmickFactory_ = std::make_unique<GimmickFactory>();
 
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
 	//音声データ
-	sound = audio_->SoundLoadWave("Resources/TestMusic.wav");
+	sound_ = audio_->SoundLoadWave("Resources/TestMusic.wav");
 
 	//音声再生呼び出し例
 	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
+	camera_->Reset();
 	//弾リセット
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Reset();
 	for (std::unique_ptr<EnemyBullet>& ebullet : enemyBullets_)ebullet->Reset();
@@ -47,15 +51,15 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("test");
-	else if (stageNum == 2)LoadLVData("stage2");
-	else if (stageNum == 3)LoadLVData("stage3_2");
-	else if (stageNum == 4)LoadLVData("stageboss1");
+	if (stageNum_ == SL_Stage1_Area1)LoadLVData("test");
+	else if (stageNum_ == SL_Stage1_Area2)LoadLVData("stage2");
+	else if (stageNum_ == SL_Stage1_Area3)LoadLVData("stage3_2");
+	else if (stageNum_ == SL_Stage1_AreaBoss)LoadLVData("stageboss1");
 
-	else if (stageNum == 100)LoadLVData("tutorial");
-	else if (stageNum == 101)LoadLVData("tutorial2");
-	else if (stageNum == 102)LoadLVData("tutorial3");
-	else if (stageNum == 103)LoadLVData("tutorialf");
+	else if (stageNum_ == SL_StageTutorial_Area1)LoadLVData("tutorial");
+	else if (stageNum_ == SL_StageTutorial_Area2)LoadLVData("tutorial2");
+	else if (stageNum_ == SL_StageTutorial_Area3)LoadLVData("tutorial3");
+	else if (stageNum_ == SL_StageTutorial_Final)LoadLVData("tutorialf");
 
 	//スプライト
 	LoadSprite();
@@ -72,7 +76,7 @@ void GamePlayScene::Initialize()
 	pm_->SetCamera(camera_);
 
 	isPause_ = false;
-	if (stageNum >= 100)for (int i = 0; i < 6; i++)easeInfo[i].Standby(false);
+	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < 6; i++)easeInfo_[i].Standby(false);
 }
 
 void GamePlayScene::Update()
@@ -88,28 +92,37 @@ void GamePlayScene::Update()
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
 
-	//弾更新
-	for (std::unique_ptr<EnemyBullet>& bullet : enemyBullets_) bullet->Update();
+	//天球ぐるぐる
+	for (Object3d*& skydome : skydomes_)
+	{
+		//天球回転用
+		XMFLOAT3 rotSkydome = skydome->GetRotation();
+		const float rotSpeed = -0.2f;
+		rotSkydome.y += rotSpeed;
 
+		skydome->SetRotation(rotSkydome);
+
+		skydome->Update();
+	}
 
 	if (!isPause_)
 	{
 		//モデル呼び出し例
 		for (std::unique_ptr<Player>& player : players_)
 		{
-			if (!isclear || !isGameover)
+			if (!isclear_ || !isGameover_)
 			{
 				//チュートリアル基本操作
-				if (stageNum == 100)player->Update(false, false);
+				if (stageNum_ == SL_StageTutorial_Area1)player->Update(false, false);
 				//チュートリアル奥側移動→攻撃→応用ステージ
-				else if (stageNum == 101)player->Update(true, false);
+				else if (stageNum_ == SL_StageTutorial_Area2)player->Update(true, false);
 				//基本状態
 				else player->Update();
 			}
 
 			lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 			//かめおべら
-			if (player->IsDead())isGameover = true;
+			if (player->IsDead())isGameover_ = true;
 
 			//ImGui	
 			imguiManager_->Begin();
@@ -122,14 +135,16 @@ void GamePlayScene::Update()
 			imguiManager_->End();
 		}
 		//弾更新
-		for (std::unique_ptr<PlayerBullet>& bullet : playerBullets_) bullet->Update();
-
+		for (std::unique_ptr<PlayerBullet>& playerBullet : playerBullets_) playerBullet->Update();
+		
 		for (std::unique_ptr<BaseEnemy>& enemy : enemys_)
 		{
 			enemy->Update();
 			//ボス撃破
-			if (enemy->BossDead())isclear = true;
+			if (enemy->BossDead())isclear_ = true;
 		}
+		//弾更新
+		for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
 
 		for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
 
@@ -137,7 +152,7 @@ void GamePlayScene::Update()
 		{
 			goal->Update();
 			//クリア
-			if (goal->IsGoal()) isclear = true;
+			if (goal->IsGoal()) isclear_ = true;
 		}
 		for (std::unique_ptr<Item>& item : items_)
 		{
@@ -145,31 +160,31 @@ void GamePlayScene::Update()
 		}
 
 
-		for (Object3d*& object : objects) object->Update();
+		for (Object3d*& object : objects_) object->Update();
 
 		//カメラ
 		camera_->Update();
 		lightGroup_->Update();
 		pm_->Update();
 
-		if (isGameover)
+		if (isGameover_)
 		{
-			sceneManager_->ChangeScene("GAMEOVER", stageNum);
-			isGameover = false;
+			sceneManager_->ChangeScene("GAMEOVER", stageNum_);
+			isGameover_ = false;
 		}
-		if (isclear)
+		if (isclear_)
 		{
-			sceneManager_->ChangeScene("STAGECLEAR", stageNum);
-			isclear = false;
+			sceneManager_->ChangeScene("STAGECLEAR", stageNum_);
+			isclear_ = false;
 		}
 		colManager_->CheckAllCollisions();
 		//Pause機能
-		if (input_->TriggerKey(DIK_Q) && !isclear && !isGameover)
+		if (input_->TriggerKey(DIK_Q) && !isclear_ && !isGameover_)
 		{
 			//ここでイージングの準備
-			es.Standby(false);
-			isBack = false;
-			spritePause_->SetPosition({ es.start,0.0f });
+			easePause_.Standby(false);
+			isBack_ = false;
+			spritePause_->SetPosition({ easePause_.start,0.0f });
 
 			isPause_ = true;
 		}
@@ -177,8 +192,8 @@ void GamePlayScene::Update()
 	else if (isPause_)
 	{
 		//イージングサンプル(ポーズ中に準備してもここがやってくれる)
-		es.ease_in_out_elastic();
-		spritePause_->SetPosition({ es.num_X,0.0f });
+		easePause_.ease_in_out_elastic();
+		spritePause_->SetPosition({ easePause_.num_X,0.0f });
 
 		if (input_->TriggerKey(DIK_W))
 		{
@@ -189,40 +204,40 @@ void GamePlayScene::Update()
 		if (input_->TriggerKey(DIK_Q))
 		{
 			//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
-			if (spritePause_->GetPosition().x == es.end) es.Standby(true);
-			isBack = true;
+			if (spritePause_->GetPosition().x == easePause_.end) easePause_.Standby(true);
+			isBack_ = true;
 		}
 		//到達したらPause解除
-		if (spritePause_->GetPosition().x == es.start)
+		if (spritePause_->GetPosition().x == easePause_.start)
 		{
-			if (isBack)isPause_ = false;
+			if (isBack_)isPause_ = false;
 		}
 	}
 	spritePause_->Update();
 
-	if (stageNum == 100)
+	if (stageNum_ == SL_StageTutorial_Area1)
 	{
-		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-			nullptr, nullptr, spriteTutorialInfo1);
+		SettingTutorialEase(1, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+			nullptr, nullptr, spriteTutorialInfo1_);
 	}
-
-	else if (stageNum == 101)
+	else if (stageNum_ == SL_StageTutorial_Area2)
 	{
-		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-			spriteTutorialHTPMoveBack, nullptr, spriteTutorialInfo2);
+		SettingTutorialEase(1, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+			spriteTutorialHTPMoveBack_, nullptr, spriteTutorialInfo2_);
 	}
-	else if (stageNum == 102)
+	else if (stageNum_ == SL_StageTutorial_Area3)
 	{
-		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-			spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo3);
+		SettingTutorialEase(1, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+			spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo3_);
 	}
-	else if (stageNum == 103)
+	else if (stageNum_ == SL_StageTutorial_Final)
 	{
-		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-			spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo4);
+		SettingTutorialEase(1, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+			spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
 	}
 	UpdateTutorialSprite();
-
+	
+	
 }
 
 void GamePlayScene::Draw()
@@ -238,8 +253,9 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_) gimmick->Draw();
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Draw();
 	for (std::unique_ptr<Item>& item : items_)item->Draw();
-	for (auto& object : objects)object->Draw();
-
+	for (auto& skydome : skydomes_)skydome->Draw();
+	for (auto& object : objects_)object->Draw();
+	
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -265,26 +281,26 @@ void GamePlayScene::Draw()
 			item->DrawSprite();
 		}
 
-		if (stageNum == 100)
+		if (stageNum_ == SL_StageTutorial_Area1)
 		{
-			DrawTutorialSprite(spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-				nullptr, nullptr, spriteTutorialInfo1);
+			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+				nullptr, nullptr, spriteTutorialInfo1_);
 		}
 
-		else if (stageNum == 101)
+		else if (stageNum_ == SL_StageTutorial_Area2)
 		{
-			DrawTutorialSprite(spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-				spriteTutorialHTPMoveBack, nullptr, spriteTutorialInfo2);
+			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+				spriteTutorialHTPMoveBack_, nullptr, spriteTutorialInfo2_);
 		}
-		else if (stageNum == 102)
+		else if (stageNum_ == SL_StageTutorial_Area3)
 		{
-			DrawTutorialSprite(spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-				spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo3);
+			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+				spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo3_);
 		}
-		else if (stageNum == 103)
+		else if (stageNum_ == SL_StageTutorial_Final)
 		{
-			DrawTutorialSprite(spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-				spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo4);
+			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+				spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
 		}
 	}
 }
@@ -295,7 +311,7 @@ void GamePlayScene::Finalize()
 	audio_->Finalize();
 	//解放
 	//各種音声
-	audio_->SoundUnLoad(&sound);
+	audio_->SoundUnLoad(&sound_);
 
 	//パーティクル
 	delete particle1_;
@@ -305,8 +321,10 @@ void GamePlayScene::Finalize()
 	delete lightGroup_;
 	//モデル
 
-	for (Object3d*& object : objects)delete object;
-	objects.clear();
+	for (Object3d*& object : objects_)delete object;
+	for (Object3d*& skydome : skydomes_)delete skydome;
+	objects_.clear();
+	skydomes_.clear();
 
 	//3Dモデル
 	delete modelPlayer_;
@@ -315,45 +333,45 @@ void GamePlayScene::Finalize()
 	delete modelEnemyBullet_;
 	delete modelBoss1_;
 	delete modelBossCore1_;
-	delete modelStageT;
-	delete modelStage1;
-	delete modelStage2;
+	delete modelStageT_;
+	delete modelStage1_;
+	delete modelStage2_;
 	delete modelItemJump_;
 	delete modelItemHeal_;
 	delete modelSpike_;
-	delete modelGround;
-	delete modelBox;
+	delete modelGround_;
+	delete modelBox_;
 	delete modelGoal_;
 
-	models.clear();
+	models_.clear();
 
 	//スプライト
 	delete spritePause_;
 	delete spritePauseInfo_;
 
-	delete spriteTutorialInfo1;
-	delete spriteTutorialInfo2;
-	delete spriteTutorialInfo3;
-	delete spriteTutorialInfo4;
+	delete spriteTutorialInfo1_;
+	delete spriteTutorialInfo2_;
+	delete spriteTutorialInfo3_;
+	delete spriteTutorialInfo4_;
 
-	delete spriteTutorialHTPDash;
-	delete spriteTutorialHTPMove;
-	delete spriteTutorialHTPJump;
-	delete spriteTutorialHTPMoveBack;
-	delete spriteTutorialHTPAttack;
+	delete spriteTutorialHTPDash_;
+	delete spriteTutorialHTPMove_;
+	delete spriteTutorialHTPJump_;
+	delete spriteTutorialHTPMoveBack_;
+	delete spriteTutorialHTPAttack_;
 }
 
 void GamePlayScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
-	levelData = LevelLoader::LoadFile(stagePath);
+	levelData_ = LevelLoader::LoadFile(stagePath);
 	// レベルデータからオブジェクトを生成、配置
-	for (LevelData::ObjectData& objectData : levelData->objects) {
+	for (LevelData::ObjectData& objectData : levelData_->objects) {
 
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
-		decltype(models)::iterator it = models.find(objectData.fileName);
-		if (it != models.end()) {
+		decltype(models_)::iterator it = models_.find(objectData.fileName);
+		if (it != models_.end()) {
 			model = it->second;
 		}
 		//プレイヤー
@@ -390,7 +408,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			std::unique_ptr<BaseEnemy> newenemy;
 			std::unique_ptr<Player>& player = players_.front();
 
-			newenemy = enemyFactory->CreateEnemy(objectData.objectPattern,
+			newenemy = enemyFactory_->CreateEnemy(objectData.objectPattern,
 				model, modelEnemyBullet_, player.get(), this);
 
 			// 座標
@@ -420,7 +438,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			std::unique_ptr<BaseGimmick> newGimmick;
 			std::unique_ptr<Player>& player = players_.front();
 
-			newGimmick = gimmickFactory->CreateGimmick(objectData.objectPattern, model, player.get());
+			newGimmick = gimmickFactory_->CreateGimmick(objectData.objectPattern, model, player.get());
 
 			// 座標
 			DirectX::XMFLOAT3 pos;
@@ -500,10 +518,11 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//リストに登録
 			items_.push_back(std::move(newitem));
 		}
+		//当たり判定がないオブジェクト
 		else if (objectData.objectType.find("NONE") == 0)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			TouchableObject* newObject = TouchableObject::Create(model, false);
+			Object3d* newObject = Object3d::Create();
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -523,7 +542,34 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 
 
 			// 配列に登録
-			objects.push_back(newObject);
+			objects_.push_back(newObject);
+		}
+		//天球
+		else if (objectData.objectType.find("SKYDOME") == 0)
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			//オブジェクトにモデル紐付ける
+			newObject->SetModel(model);
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+			// 配列に登録
+			skydomes_.push_back(newObject);
 		}
 		//地形
 		else
@@ -549,7 +595,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 
 
 			// 配列に登録
-			objects.push_back(newObject);
+			objects_.push_back(newObject);
 		}
 
 	}
@@ -581,27 +627,27 @@ void GamePlayScene::LoadModel()
 	modelItemJump_ = Model::LoadFromOBJ("itemjump");
 	modelItemHeal_ = Model::LoadFromOBJ("itemheal");
 	modelSpike_ = Model::LoadFromOBJ("spikeball");
-	modelStageT = Model::LoadFromOBJ("skydomet");
-	modelStage1 = Model::LoadFromOBJ("skydome");
-	modelStage2 = Model::LoadFromOBJ("skydome2");
-	modelGround = Model::LoadFromOBJ("ground");
-	modelBox = Model::LoadFromOBJ("sphere2", true);
+	modelStageT_ = Model::LoadFromOBJ("skydomet");
+	modelStage1_ = Model::LoadFromOBJ("skydome");
+	modelStage2_ = Model::LoadFromOBJ("skydome2");
+	modelGround_ = Model::LoadFromOBJ("ground");
+	modelBox_ = Model::LoadFromOBJ("sphere2", true);
 
-	models.insert(std::make_pair("player", modelPlayer_));
-	models.insert(std::make_pair("playerbullet", modelPlayerBullet_));
-	models.insert(std::make_pair("enemy1", modelEnemy1_));
-	models.insert(std::make_pair("enemybullet", modelEnemyBullet_));
-	models.insert(std::make_pair("boss1", modelBoss1_));
-	models.insert(std::make_pair("core1", modelBossCore1_));
-	models.insert(std::make_pair("sphere", modelGoal_));
-	models.insert(std::make_pair("Itemjump", modelItemJump_));
-	models.insert(std::make_pair("itemheal", modelItemHeal_));
-	models.insert(std::make_pair("spikeball", modelSpike_));
-	models.insert(std::make_pair("skydomet", modelStageT));
-	models.insert(std::make_pair("skydome", modelStage1));
-	models.insert(std::make_pair("skydome2", modelStage2));
-	models.insert(std::make_pair("ground", modelGround));
-	models.insert(std::make_pair("sphere2", modelBox));
+	models_.insert(std::make_pair("player", modelPlayer_));
+	models_.insert(std::make_pair("playerbullet", modelPlayerBullet_));
+	models_.insert(std::make_pair("enemy1", modelEnemy1_));
+	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_));
+	models_.insert(std::make_pair("boss1", modelBoss1_));
+	models_.insert(std::make_pair("core1", modelBossCore1_));
+	models_.insert(std::make_pair("sphere", modelGoal_));
+	models_.insert(std::make_pair("Itemjump", modelItemJump_));
+	models_.insert(std::make_pair("itemheal", modelItemHeal_));
+	models_.insert(std::make_pair("spikeball", modelSpike_));
+	models_.insert(std::make_pair("skydomet", modelStageT_));
+	models_.insert(std::make_pair("skydome", modelStage1_));
+	models_.insert(std::make_pair("skydome2", modelStage2_));
+	models_.insert(std::make_pair("ground", modelGround_));
+	models_.insert(std::make_pair("sphere2", modelBox_));
 
 }
 
@@ -611,21 +657,21 @@ void GamePlayScene::SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
 	switch (num)
 	{
 	case 0:
-		if (s1 != nullptr)s1->SetPosition({ easeInfo[0].start,50.0f });
-		if (s2 != nullptr)s2->SetPosition({ easeInfo[1].start,50.0f });
-		if (s3 != nullptr)s3->SetPosition({ easeInfo[2].start,110.0f });
-		if (s4 != nullptr)s4->SetPosition({ easeInfo[3].start,110.0f });
-		if (s5 != nullptr)s5->SetPosition({ easeInfo[4].start,170.0f });
-		if (s6 != nullptr)s6->SetPosition({ easeInfo[5].start,250.0f });
+		if (s1 != nullptr)s1->SetPosition({ easeInfo_[0].start,50.0f });
+		if (s2 != nullptr)s2->SetPosition({ easeInfo_[1].start,50.0f });
+		if (s3 != nullptr)s3->SetPosition({ easeInfo_[2].start,110.0f });
+		if (s4 != nullptr)s4->SetPosition({ easeInfo_[3].start,110.0f });
+		if (s5 != nullptr)s5->SetPosition({ easeInfo_[4].start,170.0f });
+		if (s6 != nullptr)s6->SetPosition({ easeInfo_[5].start,250.0f });
 		break;
 	case 1:
-		for (int i = 0; i < 6; i++)easeInfo[i].ease_out_expo();
-		if (s1 != nullptr)s1->SetPosition({ easeInfo[0].num_X,50.0f  });
-		if (s2 != nullptr)s2->SetPosition({ easeInfo[1].num_X,50.0f });
-		if (s3 != nullptr)s3->SetPosition({ easeInfo[2].num_X,110.0f });
-		if (s4 != nullptr)s4->SetPosition({ easeInfo[3].num_X,110.0f });
-		if (s5 != nullptr)s5->SetPosition({ easeInfo[4].num_X,110.0f });
-		if (s6 != nullptr)s6->SetPosition({ easeInfo[5].num_X,200.0f });
+		for (int i = 0; i < 6; i++)easeInfo_[i].ease_out_expo();
+		if (s1 != nullptr)s1->SetPosition({ easeInfo_[0].num_X,50.0f  });
+		if (s2 != nullptr)s2->SetPosition({ easeInfo_[1].num_X,50.0f });
+		if (s3 != nullptr)s3->SetPosition({ easeInfo_[2].num_X,110.0f });
+		if (s4 != nullptr)s4->SetPosition({ easeInfo_[3].num_X,110.0f });
+		if (s5 != nullptr)s5->SetPosition({ easeInfo_[4].num_X,110.0f });
+		if (s6 != nullptr)s6->SetPosition({ easeInfo_[5].num_X,200.0f });
 		break;
 	}
 
@@ -633,57 +679,57 @@ void GamePlayScene::SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
 
 void GamePlayScene::UpdateTutorialSprite()
 {
-	if (isColorReverse_)speedColor -= 0.02f;
-	else speedColor += 0.02f;
+	if (isColorReverse_)speedColor_ -= 0.02f;
+	else speedColor_ += 0.02f;
 
-	if (speedColor >= 0.9f)
+	if (speedColor_ >= 0.9f)
 	{
 		isColorReverse_ = true;
 	}
-	if (speedColor <= 0.0f)
+	if (speedColor_ <= 0.0f)
 	{
 		isColorReverse_ = false;
 	}
 
-	spriteTutorialHTPDash->SetColor({ 0.1f,0.1f,0.1f,1.0f });
-	spriteTutorialHTPMove->SetColor({ 0.1f,0.1f,0.1f,1.0f });
-	spriteTutorialHTPJump->SetColor({ 0.1f,0.1f,0.1f,1.0f });
-	spriteTutorialHTPMoveBack->SetColor({ 0.1f,0.1f,0.1f,1.0f });
-	spriteTutorialHTPAttack->SetColor({ 0.1f,0.1f,0.1f,1.0f });
+	spriteTutorialHTPDash_->SetColor({ 0.1f,0.1f,0.1f,1.0f });
+	spriteTutorialHTPMove_->SetColor({ 0.1f,0.1f,0.1f,1.0f });
+	spriteTutorialHTPJump_->SetColor({ 0.1f,0.1f,0.1f,1.0f });
+	spriteTutorialHTPMoveBack_->SetColor({ 0.1f,0.1f,0.1f,1.0f });
+	spriteTutorialHTPAttack_->SetColor({ 0.1f,0.1f,0.1f,1.0f });
 
 	//ダッシュ
 	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
 	{
-		if (input_->PushKey(DIK_A))spriteTutorialHTPDash->SetColor({ 0.1f,0.1f,1.0f,1.0f });
-		if (input_->PushKey(DIK_D))spriteTutorialHTPDash->SetColor({ 1.0f,0.1f,0.1f,1.0f });
+		if (input_->PushKey(DIK_A))spriteTutorialHTPDash_->SetColor({ 0.1f,0.1f,1.0f,1.0f });
+		if (input_->PushKey(DIK_D))spriteTutorialHTPDash_->SetColor({ 1.0f,0.1f,0.1f,1.0f });
 	}
 	else
 	{
-		if (input_->PushKey(DIK_A))spriteTutorialHTPMove->SetColor({ 0.1f,0.1f,1.0f,1.0f });
-		if (input_->PushKey(DIK_D))spriteTutorialHTPMove->SetColor({ 1.0f,0.1f,0.1f,1.0f });
+		if (input_->PushKey(DIK_A))spriteTutorialHTPMove_->SetColor({ 0.1f,0.1f,1.0f,1.0f });
+		if (input_->PushKey(DIK_D))spriteTutorialHTPMove_->SetColor({ 1.0f,0.1f,0.1f,1.0f });
 	}
 	//ジャンプ
-	if (input_->PushKey(DIK_SPACE))spriteTutorialHTPJump->SetColor({ 1.0f,0.1f,0.1f,1.0f });
+	if (input_->PushKey(DIK_SPACE))spriteTutorialHTPJump_->SetColor({ 1.0f,0.1f,0.1f,1.0f });
 	//奥側ジャンプ
-	if (input_->PushKey(DIK_Z))spriteTutorialHTPMoveBack->SetColor({ 1.0f,0.1f,0.1f,1.0f });
+	if (input_->PushKey(DIK_Z))spriteTutorialHTPMoveBack_->SetColor({ 1.0f,0.1f,0.1f,1.0f });
 	//攻撃
-	if (input_->PushKey(DIK_X))spriteTutorialHTPAttack->SetColor({ 1.0f,0.1f,0.1f,1.0f });
+	if (input_->PushKey(DIK_X))spriteTutorialHTPAttack_->SetColor({ 1.0f,0.1f,0.1f,1.0f });
 
-	spriteTutorialInfo1->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
-	spriteTutorialInfo2->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
-	spriteTutorialInfo3->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
-	spriteTutorialInfo4->SetColor({ 0.1f,0.1f,0.1f + speedColor,1.0f });
+	spriteTutorialInfo1_->SetColor({ 0.1f + speedColor_,0.1f,0.1f,1.0f });
+	spriteTutorialInfo2_->SetColor({ 0.1f + speedColor_,0.1f,0.1f,1.0f });
+	spriteTutorialInfo3_->SetColor({ 0.1f + speedColor_,0.1f,0.1f,1.0f });
+	spriteTutorialInfo4_->SetColor({ 0.1f,0.1f,0.1f + speedColor_,1.0f });
 
-	spriteTutorialInfo1->Update();
-	spriteTutorialInfo2->Update();
-	spriteTutorialInfo3->Update();
-	spriteTutorialInfo4->Update();
+	spriteTutorialInfo1_->Update();
+	spriteTutorialInfo2_->Update();
+	spriteTutorialInfo3_->Update();
+	spriteTutorialInfo4_->Update();
 
-	spriteTutorialHTPMove->Update();
-	spriteTutorialHTPDash->Update();
-	spriteTutorialHTPJump->Update();
-	spriteTutorialHTPMoveBack->Update();
-	spriteTutorialHTPAttack->Update();
+	spriteTutorialHTPMove_->Update();
+	spriteTutorialHTPDash_->Update();
+	spriteTutorialHTPJump_->Update();
+	spriteTutorialHTPMoveBack_->Update();
+	spriteTutorialHTPAttack_->Update();
 }
 
 void GamePlayScene::DrawTutorialSprite(Sprite* s1, Sprite* s2, Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6)
@@ -707,62 +753,62 @@ void GamePlayScene::LoadSprite()
 	spritePauseInfo_->Initialize(spCommon_, 12);
 
 	spCommon_->LoadTexture(1000, "texture/info/tinfo1.png");//1
-	spriteTutorialInfo1->Initialize(spCommon_, 1000);
+	spriteTutorialInfo1_->Initialize(spCommon_, 1000);
 
 	spCommon_->LoadTexture(1001, "texture/info/tinfo2.png");//2
-	spriteTutorialInfo2->Initialize(spCommon_, 1001);
+	spriteTutorialInfo2_->Initialize(spCommon_, 1001);
 
 	spCommon_->LoadTexture(1002, "texture/info/tinfo3.png");//3
-	spriteTutorialInfo3->Initialize(spCommon_, 1002);
+	spriteTutorialInfo3_->Initialize(spCommon_, 1002);
 
 	spCommon_->LoadTexture(1003, "texture/info/tinfo4.png");//4
-	spriteTutorialInfo4->Initialize(spCommon_, 1003);
+	spriteTutorialInfo4_->Initialize(spCommon_, 1003);
 
 	spCommon_->LoadTexture(1004, "texture/info/moveinfo.png");//1~
-	spriteTutorialHTPMove->Initialize(spCommon_, 1004);
+	spriteTutorialHTPMove_->Initialize(spCommon_, 1004);
 	spCommon_->LoadTexture(1005, "texture/info/dashinfo.png");//1~
-	spriteTutorialHTPDash->Initialize(spCommon_, 1005);
+	spriteTutorialHTPDash_->Initialize(spCommon_, 1005);
 	spCommon_->LoadTexture(1006, "texture/info/jumpinfo.png");//1~
-	spriteTutorialHTPJump->Initialize(spCommon_, 1006);
+	spriteTutorialHTPJump_->Initialize(spCommon_, 1006);
 	spCommon_->LoadTexture(1007, "texture/info/backmoveinfo1.png");//2~
-	spriteTutorialHTPMoveBack->Initialize(spCommon_, 1007);
+	spriteTutorialHTPMoveBack_->Initialize(spCommon_, 1007);
 	spCommon_->LoadTexture(1008, "texture/info/attackinfo.png");//3~
-	spriteTutorialHTPAttack->Initialize(spCommon_, 1008);
+	spriteTutorialHTPAttack_->Initialize(spCommon_, 1008);
 
-	if (stageNum == 100)
+	if (stageNum_ == SL_StageTutorial_Area1)
 	{
-		SettingTutorialEase(0, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-			nullptr, nullptr, spriteTutorialInfo1);
+		SettingTutorialEase(0, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+			nullptr, nullptr, spriteTutorialInfo1_);
 	}
 
-	else if (stageNum == 101)
+	else if (stageNum_ == SL_StageTutorial_Area2)
 	{
-		SettingTutorialEase(0, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-			spriteTutorialHTPMoveBack, nullptr, spriteTutorialInfo2);
+		SettingTutorialEase(0, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+			spriteTutorialHTPMoveBack_, nullptr, spriteTutorialInfo2_);
 	}
-	else if (stageNum == 102)
+	else if (stageNum_ == SL_StageTutorial_Area3)
 	{
-		SettingTutorialEase(0, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-			spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo3);
+		SettingTutorialEase(0, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+			spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo3_);
 	}
-	else if (stageNum == 103)
+	else if (stageNum_ == SL_StageTutorial_Final)
 	{
-		SettingTutorialEase(0, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
-			spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo4);
+		SettingTutorialEase(0, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+			spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
 	}
 
 	spritePause_->Update();
 	spritePauseInfo_->Update();
 
-	spriteTutorialInfo1->Update();
-	spriteTutorialInfo2->Update();
-	spriteTutorialInfo3->Update();
-	spriteTutorialInfo4->Update();
+	spriteTutorialInfo1_->Update();
+	spriteTutorialInfo2_->Update();
+	spriteTutorialInfo3_->Update();
+	spriteTutorialInfo4_->Update();
 
-	spriteTutorialHTPMove->Update();
-	spriteTutorialHTPDash->Update();
-	spriteTutorialHTPJump->Update();
-	spriteTutorialHTPMoveBack->Update();
-	spriteTutorialHTPAttack->Update();
+	spriteTutorialHTPMove_->Update();
+	spriteTutorialHTPDash_->Update();
+	spriteTutorialHTPJump_->Update();
+	spriteTutorialHTPMoveBack_->Update();
+	spriteTutorialHTPAttack_->Update();
 
 }

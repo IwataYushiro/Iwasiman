@@ -45,8 +45,8 @@ public:
 private:
 	static CollisionManager* colManager_;
 	//ƒ|ƒWƒVƒ‡ƒ“
-	XMFLOAT3 pos;
-	XMFLOAT3 scale;
+	XMFLOAT3 pos_;
+	XMFLOAT3 scale_;
 
 	bool isGet_ = false;
 

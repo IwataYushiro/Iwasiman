@@ -617,6 +617,9 @@
     <ClInclude Include="DirectXGame\Application\Scene\GameOverScene.h">
       <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\StageList.h">
+      <Filter>Header File\Application\MyGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\FBX\FBX.hlsli">

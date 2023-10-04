@@ -19,7 +19,7 @@ Camera::Camera()
 
 Camera::~Camera()
 {
-	
+
 }
 
 void Camera::Reset()
@@ -114,8 +114,8 @@ void Camera::Update()
 void Camera::UpdateViewMatrix()
 {
 	// ビュー行列の更新
-		matView_ = XMMatrixLookAtLH(XMLoadFloat3(&eye_), XMLoadFloat3(&target_), XMLoadFloat3(&up_));
-		//視点座標
+	matView_ = XMMatrixLookAtLH(XMLoadFloat3(&eye_), XMLoadFloat3(&target_), XMLoadFloat3(&up_));
+	//視点座標
 	XMVECTOR eyePosition = XMLoadFloat3(&eye_);
 	//注視点座標
 	XMVECTOR targetPosition = XMLoadFloat3(&target_);
@@ -243,7 +243,7 @@ void Camera::CameraMoveVectorTarget(const XMFLOAT3& move)
 	SetTarget(target_moved);
 }
 
-void Camera::DebugCamera()
+void Camera::DebugCamera(bool eyeTargetMix)
 {
 	Input* input_ = Input::GetInstance();
 	ImGuiManager* imguiManager_ = ImGuiManager::GetInstance();
@@ -252,33 +252,80 @@ void Camera::DebugCamera()
 	//ImGuiに渡す用の変数
 	float ieye[VECTOR3COUNT] = { eye_.x,eye_.y,eye_.z };
 	float itarget[VECTOR3COUNT] = { target_.x,target_.y,target_.z };
+	if (!eyeTargetMix)
+	{
+		//視点
+		if (input_->PushKey(DIK_W))CameraMoveVectorEye({ 0.0f,1.0f,0.0f });
+		else if (input_->PushKey(DIK_S))CameraMoveVectorEye({ 0.0f,-1.0f,0.0f });
+		else if (input_->PushKey(DIK_A))CameraMoveVectorEye({ -1.0f,0.0f,0.0f });
+		else if (input_->PushKey(DIK_D))CameraMoveVectorEye({ 1.0f,0.0f,0.0f });
+		else if (input_->PushKey(DIK_Z))CameraMoveVectorEye({ 0.0f,0.0f,1.0f });
+		else if (input_->PushKey(DIK_X))CameraMoveVectorEye({ 0.0f,0.0f,-1.0f });
 
-	//視点
-	if (input_->PushKey(DIK_W))CameraMoveVectorEye({ 0.0f,1.0f,0.0f });
-	else if (input_->PushKey(DIK_S))CameraMoveVectorEye({ 0.0f,-1.0f,0.0f });
-	else if (input_->PushKey(DIK_A))CameraMoveVectorEye({ -1.0f,0.0f,0.0f });
-	else if (input_->PushKey(DIK_D))CameraMoveVectorEye({ 1.0f,0.0f,0.0f });
-	else if (input_->PushKey(DIK_Z))CameraMoveVectorEye({ 0.0f,0.0f,1.0f });
-	else if (input_->PushKey(DIK_X))CameraMoveVectorEye({ 0.0f,0.0f,-1.0f });
+		//注視点
+		if (input_->PushKey(DIK_UP))CameraMoveVectorTarget({ 0.0f,1.0f,0.00001f });
+		else if (input_->PushKey(DIK_DOWN))CameraMoveVectorTarget({ 0.0f,-1.0f,0.00001f });
+		else if (input_->PushKey(DIK_LEFT))CameraMoveVectorTarget({ -1.0f,0.0f,0.00001f });
+		else if (input_->PushKey(DIK_RIGHT))CameraMoveVectorTarget({ 1.0f,0.0f,0.00001f });
+		else if (input_->PushKey(DIK_Q))CameraMoveVectorTarget({ 0.0f,0.0f,1.0f });
+		else if (input_->PushKey(DIK_E))CameraMoveVectorTarget({ 0.0f,0.0f,-1.0f });
 
-	//注視点
-	if (input_->PushKey(DIK_UP))CameraMoveVectorTarget({ 0.0f,1.0f,0.00001f });
-	else if (input_->PushKey(DIK_DOWN))CameraMoveVectorTarget({ 0.0f,-1.0f,0.00001f });
-	else if (input_->PushKey(DIK_LEFT))CameraMoveVectorTarget({ -1.0f,0.0f,0.00001f });
-	else if (input_->PushKey(DIK_RIGHT))CameraMoveVectorTarget({ 1.0f,0.0f,0.00001f });
-	else if (input_->PushKey(DIK_Q))CameraMoveVectorTarget({ 0.0f,0.0f,1.0f });
-	else if (input_->PushKey(DIK_E))CameraMoveVectorTarget({ 0.0f,0.0f,-1.0f });
+		//imguiManager_->Begin();
+		ImGui::Begin("Camera");
+		ImGui::SetWindowPos(ImVec2(700, 0));
+		ImGui::SetWindowSize(ImVec2(560, 150));
+		ImGui::InputFloat3("Eye", ieye);
+		ImGui::Text("eye W += x S -= x  D += y A -= y Z += z X -= z");
+		ImGui::InputFloat3("Target", itarget);
+		ImGui::Text("target RIGHT += x LEFT -= x  UP += y DOWN -= y Q += z E -= z");
+		ImGui::Text("WARNING eye.x = target.x & eye.y = target.y & eye.z = target.z -> SYSTEM DOWN");
+		ImGui::End();
+		//imguiManager_->End();
+	}
+	else
+	{
+		//視点
+		if (input_->PushKey(DIK_W))
+		{
+			CameraMoveVectorEye({ 0.0f,1.0f,0.0f });
+			CameraMoveVectorTarget({ 0.0f,1.0f,0.00001f });
+		}
+		else if (input_->PushKey(DIK_S))
+		{
+			CameraMoveVectorEye({ 0.0f,-1.0f,0.0f });
+			CameraMoveVectorTarget({ 0.0f,-1.0f,0.00001f });
+		}
+		else if (input_->PushKey(DIK_A))
+		{
+			CameraMoveVectorEye({ -1.0f,0.0f,0.0f });
+			CameraMoveVectorTarget({ -1.0f,0.0f,0.00001f });
+		}
+		else if (input_->PushKey(DIK_D))
+		{
+			CameraMoveVectorEye({ 1.0f,0.0f,0.0f });
+			CameraMoveVectorTarget({ 1.0f,0.0f,0.00001f });
+		}
+		else if (input_->PushKey(DIK_Z))
+		{
+			CameraMoveVectorEye({ 0.0f,0.0f,1.0f });
+			CameraMoveVectorTarget({ 0.0f,0.0f,1.00001f });
+		}
+		else if (input_->PushKey(DIK_X))
+		{
+			CameraMoveVectorEye({ 0.0f,0.0f,-1.0f });
+			CameraMoveVectorTarget({ 0.0f,0.0f,-1.00001f });
+		}
 
-	ImGui::Begin("Camera");
-	ImGui::SetWindowPos(ImVec2(700, 0));
-	ImGui::SetWindowSize(ImVec2(560, 150));
-	ImGui::InputFloat3("Eye", ieye);
-	ImGui::Text("eye W += x S -= x  D += y A -= y Z += z X -= z");
-	ImGui::InputFloat3("Target", itarget);
-	ImGui::Text("target RIGHT += x LEFT -= x  UP += y DOWN -= y Q += z E -= z");
-	ImGui::Text("WARNING eye.x = target.x & eye.y = target.y & eye.z = target.z -> SYSTEM DOWN");
-	ImGui::End();
-
+		//imguiManager_->Begin();
+		ImGui::Begin("Camera Mix Mode");
+		ImGui::SetWindowPos(ImVec2(700, 0));
+		ImGui::SetWindowSize(ImVec2(560, 150));
+		ImGui::InputFloat3("Eye", ieye);
+		ImGui::InputFloat3("Target", itarget);
+		ImGui::Text("W += x S -= x  D += y A -= y Z += z X -= z");
+		ImGui::End();
+		//imguiManager_->End();
+	}
 }
 
 
@@ -294,7 +341,7 @@ void Camera::SetTarget(const XMFLOAT3& target) {
 
 void Camera::SetUp(const XMFLOAT3& up)
 {
-	this->up_ = up; 
+	this->up_ = up;
 }
 
 Camera* Camera::GetInstance()

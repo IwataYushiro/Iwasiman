@@ -2,6 +2,8 @@
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
 #include "TouchableObject.h"
+#include "StageList.h"
+
 #include <cassert>
 #include <sstream>
 #include <iomanip>
@@ -15,7 +17,7 @@ SceneManager* StageSelectScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* StageSelectScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* StageSelectScene::camera_ = Camera::GetInstance();
 
-StageSelectScene::StageSelectScene(int count) :MenuCount(count)
+StageSelectScene::StageSelectScene(int count) :menuCount_(count)
 {
 }
 
@@ -44,45 +46,39 @@ void StageSelectScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	UINT MenuTex = 00;
-	spCommon_->LoadTexture(MenuTex, "texture/stageselect.png");
-	spriteMenu_->Initialize(spCommon_, MenuTex);
-	spriteMenu_->SetPosition({ easeMenuPosX[0].start,0.0f });
+	spCommon_->LoadTexture(SSSTI_MenuTex, "texture/stageselect.png");
+	spriteMenu_->Initialize(spCommon_, SSSTI_MenuTex);
+	spriteMenu_->SetPosition({ easeMenuPosX_[0].start,0.0f });
 
-	UINT MenuTutorialTex = 01;
-	spCommon_->LoadTexture(MenuTutorialTex, "texture/titlemenut.png");
-	spriteTutorial_->Initialize(spCommon_, MenuTutorialTex);
-	spriteTutorial_->SetPosition({ easeMenuPosX[1].start,150.0f });
+	spCommon_->LoadTexture(SSSTI_MenuTutorialTex, "texture/titlemenut.png");
+	spriteTutorial_->Initialize(spCommon_, SSSTI_MenuTutorialTex);
+	spriteTutorial_->SetPosition({ easeMenuPosX_[1].start,150.0f });
 
-	UINT Menustage1Tex = 02;
-	spCommon_->LoadTexture(Menustage1Tex, "texture/stagesky.png");
-	spriteStage1_->Initialize(spCommon_, Menustage1Tex);
-	spriteStage1_->SetPosition({ easeMenuPosX[2].start,300.0f });
+	spCommon_->LoadTexture(SSSTI_Menustage1Tex, "texture/stagesky.png");
+	spriteStage1_->Initialize(spCommon_, SSSTI_Menustage1Tex);
+	spriteStage1_->SetPosition({ easeMenuPosX_[2].start,300.0f });
 
-	UINT Menustage2Tex = 03;
-	spCommon_->LoadTexture(Menustage2Tex, "texture/stagetower.png");
-	spriteStage2_->Initialize(spCommon_, Menustage2Tex);
-	spriteStage2_->SetPosition({ easeMenuPosX[3].start,450.0f });
+	spCommon_->LoadTexture(SSSTI_Menustage2Tex, "texture/stagetower.png");
+	spriteStage2_->Initialize(spCommon_, SSSTI_Menustage2Tex);
+	spriteStage2_->SetPosition({ easeMenuPosX_[3].start,450.0f });
 
-	UINT MenuDoneTex = 04;
-	spCommon_->LoadTexture(MenuDoneTex, "texture/titlemenud.png");
-	spriteDone_->Initialize(spCommon_, MenuDoneTex);
-	spriteDone_->SetPosition({ easeMenuPosX[4].start,580.0f });
+	spCommon_->LoadTexture(SSSTI_MenuDoneTex, "texture/titlemenud.png");
+	spriteDone_->Initialize(spCommon_, SSSTI_MenuDoneTex);
+	spriteDone_->SetPosition({ easeMenuPosX_[4].start,580.0f });
 
-	UINT BackTex = 05;
-	spCommon_->LoadTexture(BackTex, "texture/back.png");
-	spriteBack_->Initialize(spCommon_, BackTex);
-	spriteBack_->SetPosition({ easeMenuPosX[5].start,50.0f });
+	spCommon_->LoadTexture(SSSTI_BackTitleTex, "texture/back.png");
+	spriteBack_->Initialize(spCommon_, SSSTI_BackTitleTex);
+	spriteBack_->SetPosition({ easeMenuPosX_[5].start,50.0f });
 	spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 
-	modelStageTutorial = Model::LoadFromOBJ("skydomet");
-	modelStage1 = Model::LoadFromOBJ("skydome");
-	modelStage2 = Model::LoadFromOBJ("skydome2");
+	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
+	modelStage1_ = Model::LoadFromOBJ("skydome");
+	modelStage2_ = Model::LoadFromOBJ("skydome2");
 	
-	objStage = Object3d::Create();
-	objStage->SetModel(modelStageTutorial);
-	objStage->SetCamera(camera_);
-	objStage->SetScale({ 7.0f,7.0f,7.0f });
+	objStage_ = Object3d::Create();
+	objStage_->SetModel(modelStageTutorial_);
+	objStage_->SetCamera(camera_);
+	objStage_->SetScale({ 7.0f,7.0f,7.0f });
 
 	//FBX
 	//objF = ObjectFbx::Create();
@@ -97,130 +93,130 @@ void StageSelectScene::Initialize()
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);*/
 
-	easeTitlePosX.Standby(false);
-	for (int i = 0; i < 6; i++)easeMenuPosX[i].Standby(false);
+	easeTitlePosX_.Standby(false);
+	for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(false);
 
 }
 
 void StageSelectScene::Update()
 {
-	if (MenuCount <= 0)MenuCount = 0;
-	else if (MenuCount >= 2)MenuCount = 2;
-	if (!outStageSerect)
+	if (menuCount_ <= SSSMI_StageTutorial_Tutorial)menuCount_ = SSSMI_StageTutorial_Tutorial;
+	else if (menuCount_ >= SSSMI_Stage2_TowerStage)menuCount_ = SSSMI_Stage2_TowerStage;
+	if (!outStageSerect_)
 	{
 		//イージング
-		easeTitlePosX.ease_out_expo();
-		for (int i = 0; i < 6; i++)easeMenuPosX[i].ease_out_expo();
+		easeTitlePosX_.ease_out_expo();
+		for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
 
 		//座標セット
-		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
-		spriteTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
-		spriteStage1_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
-		spriteStage2_->SetPosition({ easeMenuPosX[3].num_X,450.0f });
-		spriteDone_->SetPosition({ easeMenuPosX[4].num_X,550.0f });
-		spriteBack_->SetPosition({ easeMenuPosX[5].num_X,50.0f });
+		spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
+		spriteTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+		spriteStage1_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
+		spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
+		spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
 
-		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
-		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
+		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
+		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
 
-		if (isColorReverse_)speedColor -= 0.02f;
-		else speedColor += 0.02f;
+		if (isColorReverse_)speedColor_ -= 0.02f;
+		else speedColor_ += 0.02f;
 
-		if (speedColor >= 0.9f)
+		if (speedColor_ >= 0.9f)
 		{
 			isColorReverse_ = true;
 		}
-		if (speedColor <= 0.0f)
+		if (speedColor_ <= 0.0f)
 		{
 			isColorReverse_ = false;
 		}
 
-		if (MenuCount == 0)
+		if (menuCount_ == SSSMI_StageTutorial_Tutorial)
 		{
-			objStage->SetModel(modelStageTutorial);
+			objStage_->SetModel(modelStageTutorial_);
 			spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-			spriteTutorial_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
+			spriteTutorial_->SetColor({ 0.1f + speedColor_,0.1f,0.1f,1.0f });
 			spriteStage1_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 			spriteStage2_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 			spriteDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 			spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 		}
-		else if (MenuCount == 1)
+		else if (menuCount_ == SSSMI_Stage1_SkyStage)
 		{
-			objStage->SetModel(modelStage1);
+			objStage_->SetModel(modelStage1_);
 			spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 			spriteTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-			spriteStage1_->SetColor({ 0.1f + speedColor,0.1f,0.1f,1.0f });
+			spriteStage1_->SetColor({ 0.1f + speedColor_,0.1f,0.1f,1.0f });
 			spriteStage2_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 			spriteDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 			spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 		}
-		else if (MenuCount == 2)
+		else if (menuCount_ == SSSMI_Stage2_TowerStage)
 		{
-			objStage->SetModel(modelStage2);
+			objStage_->SetModel(modelStage2_);
 			spriteMenu_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 			spriteTutorial_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 			spriteStage1_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-			spriteStage2_->SetColor({ 1.0f,speedColor + 0.1f,speedColor + 0.1f,1.0f });
+			spriteStage2_->SetColor({ 1.0f,speedColor_ + 0.1f,speedColor_ + 0.1f,1.0f });
 			spriteDone_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 			spriteBack_->SetColor({ 0.5f,0.5f,1.0f,1.0f });
 		}
 
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			if (MenuCount == 0)
+			if (menuCount_ == SSSMI_StageTutorial_Tutorial)
 			{
 				//チュートリアルステージ
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 100);
+				sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
 			}
-			else if (MenuCount == 1)
+			else if (menuCount_ == SSSMI_Stage1_SkyStage)
 			{
 				//ステージ1
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 1);
+				sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);
 
 			}
-			else if (MenuCount == 2)
+			else if (menuCount_ == SSSMI_Stage2_TowerStage)
 			{
 				//ステージ2
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 4);
+				sceneManager_->ChangeScene("GAMEPLAY", SL_Stage2_Area1);
 
 			}
 		}
-		if (easeMenuPosX[5].num_X == easeMenuPosX[5].end)
+		if (easeMenuPosX_[5].num_X == easeMenuPosX_[5].end)
 		{
 			if (input_->TriggerKey(DIK_Q))
 			{
-				easeTitlePosX.Standby(true);
-				for (int i = 0; i < 6; i++)easeMenuPosX[i].Standby(true);
-				outStageSerect = true;
+				easeTitlePosX_.Standby(true);
+				for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(true);
+				outStageSerect_ = true;
 			}
 		}
 	}
 	else
 	{
 		//イージング
-		easeTitlePosX.ease_out_expo();
-		for (int i = 0; i < 6; i++)easeMenuPosX[i].ease_out_expo();
+		easeTitlePosX_.ease_out_expo();
+		for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
 
 		//座標セット
-		spriteMenu_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
-		spriteTutorial_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
-		spriteStage1_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
-		spriteStage2_->SetPosition({ easeMenuPosX[3].num_X,450.0f });
-		spriteDone_->SetPosition({ easeMenuPosX[4].num_X,550.0f });
-		spriteBack_->SetPosition({ easeMenuPosX[5].num_X,50.0f });
+		spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
+		spriteTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+		spriteStage1_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
+		spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
+		spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
 
-		if (easeMenuPosX[5].num_X == easeMenuPosX[5].start)
+		if (easeMenuPosX_[5].num_X == easeMenuPosX_[5].start)
 		{
 			sceneManager_->ChangeScene("TITLE");
 		}
 	}
-	rot.y += 0.5f;
+	rot_.y += 0.5f;
 
-	objStage->SetRotation(rot);
+	objStage_->SetRotation(rot_);
 
 	imguiManager_->Begin();
 	imguiManager_->End();
@@ -234,7 +230,7 @@ void StageSelectScene::Update()
 
 	camera_->Update();
 	lightGroup_->Update();
-	objStage->Update();
+	objStage_->Update();
 }
 
 void StageSelectScene::Draw()
@@ -243,7 +239,7 @@ void StageSelectScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	
-	objStage->Draw();
+	objStage_->Draw();
 
 	//モデル描画後処理
 	Object3d::PostDraw();
@@ -277,11 +273,11 @@ void StageSelectScene::Finalize()
 	delete spriteDone_;
 	delete spriteBack_;
 	//ステージ
-	delete objStage;
+	delete objStage_;
 
-	delete modelStageTutorial;
-	delete modelStage1;
-	delete modelStage2;
+	delete modelStageTutorial_;
+	delete modelStage1_;
+	delete modelStage2_;
 	
 	//ライト
 	delete lightGroup_;
@@ -290,14 +286,14 @@ void StageSelectScene::Finalize()
 void StageSelectScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
-	levelData = LevelLoader::LoadFile(stagePath);
+	levelData_ = LevelLoader::LoadFile(stagePath);
 	// レベルデータからオブジェクトを生成、配置
-	for (LevelData::ObjectData& objectData : levelData->objects) {
+	for (LevelData::ObjectData& objectData : levelData_->objects) {
 
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
-		decltype(models)::iterator it = models.find(objectData.fileName);
-		if (it != models.end()) {
+		decltype(models_)::iterator it = models_.find(objectData.fileName);
+		if (it != models_.end()) {
 			model = it->second;
 		}
 		
@@ -323,7 +319,7 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 
 
 		// 配列に登録
-		objects.push_back(newObject);
+		objects_.push_back(newObject);
 		
 
 	}

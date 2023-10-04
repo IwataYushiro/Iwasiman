@@ -28,6 +28,7 @@ struct Node
 	Node* parent = nullptr;
 };
 
+//FBXモデル
 class ModelFbx
 {
 private://エイリアス

@@ -9,7 +9,7 @@
 #include <list>
 #include <memory>
 
-//敵
+//左右に動くボス敵
 class EnemyBoss :public BaseEnemy {
 private:
 	// DirectX::を省略
@@ -77,12 +77,12 @@ private:
 	//フェーズ
 	Phase phase_;
 	//弾発射タイマー
-	int32_t fireTimer = 0;
+	int32_t fireTimer_ = 0;
 	
 	//半径
 	float radius_ = 5.0f;
 	//ボス死亡
-	bool bossDead = false;
+	bool bossDead_ = false;
 
 //時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
@@ -107,5 +107,5 @@ public:
 	bool IsDead() const override { return isDead_; }
 	void SetPlayer(Player* player) { player_ = player; }
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
-	bool BossDead()const override{ return bossDead; }
+	bool BossDead()const override{ return bossDead_; }
 };

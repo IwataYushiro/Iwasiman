@@ -30,8 +30,8 @@ bool Goal::Initialize()
 	isGoal_ = false;
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_GOAL);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	collider_->SetAttribute(COLLISION_ATTR_GOAL);
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	return true;
 	
 }

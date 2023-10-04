@@ -18,7 +18,7 @@
 //jsonレベルデータ
 struct LevelData;
 
-//タイトルシーン
+//ゲームオーバーシーン
 class GameOverScene :public BaseScene
 {
 public://メンバ関数
@@ -60,32 +60,32 @@ private://メンバ変数
 	Sprite* spriteDone_ = new Sprite();
 
 	//FBX
-	ModelFbx* modelF = nullptr;
-	ObjectFbx* objF = nullptr;
+	//ModelFbx* modelF_ = nullptr;
+	//ObjectFbx* objF_ = nullptr;
 
 	//モデル
 	//Model* modelPlayer_ = nullptr;
 	//Object3d* object3DPlayer_ = nullptr;
 
-	LevelData* levelData = nullptr;
+	LevelData* levelData_ = nullptr;
 
-	Object3d* objStage = nullptr;
+	Object3d* objStage_ = nullptr;
 
-	Model* modelStageTutorial = nullptr;
-	Model* modelStage1 = nullptr;
-	Model* modelStage2 = nullptr;
+	Model* modelStageTutorial_ = nullptr;
+	Model* modelStage1_ = nullptr;
+	Model* modelStage2_ = nullptr;
 
 	//オブジェクト回転用
-	DirectX::XMFLOAT3 rot = { 0.0f,0.0f,0.0f };
+	DirectX::XMFLOAT3 rot_ = { 0.0f,0.0f,0.0f };
 
-	std::map<std::string, Model*> models;
-	std::vector<Object3d*> objects;
+	std::map<std::string, Model*> models_;
+	std::vector<Object3d*> objects_;
 
-	bool isStart = false;
-	bool isMenu = false;
-	Easing easeTitlePosX = Easing(0.0f, -1300.0f, 1.0f);
+	bool isStart_ = false;
+	bool isMenu_ = false;
+	Easing easeTitlePosX_ = Easing(0.0f, -1300.0f, 1.0f);
 
-	Easing easeMenuPosX[5] =
+	Easing easeMenuPosX_[5] =
 	{
 		Easing(1300.0f, 0.0f, 1.0f),//メニュー
 		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
@@ -93,9 +93,9 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.6f),//スペースで選択
 		Easing(1300.0f, 0.0f, 1.8f),//スペースで選択
 	};
-	int MenuCount = 0;
+	int menuCount_ = 0;
 	//色を変えるスピード
-	float speedColor = 0.0f;
+	float speedColor_ = 0.0f;
 	//色反転フラグ
 	bool isColorReverse_ = false;
 

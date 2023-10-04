@@ -2,6 +2,7 @@
 #include "Vector3.h"
 #include "Matrix4.h"
 
+//クオータニオン
 class Quaternion
 {
 public:

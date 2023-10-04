@@ -33,8 +33,8 @@ bool ItemAttack::Initialize()
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
-	collider->SetAttribute(COLLISION_ATTR_ITEM);
-	collider->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	collider_->SetAttribute(COLLISION_ATTR_ITEM);
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 
 	return true;
 
@@ -42,7 +42,7 @@ bool ItemAttack::Initialize()
 
 void ItemAttack::Update()
 {
-	rotation.y += 2.0f;
+	rotation_.y += 2.0f;
 
 	Trans();
 	camera_->Update();

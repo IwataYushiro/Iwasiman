@@ -29,7 +29,8 @@ struct LevelData;
 class CollisionManager;
 class TouchableObject;
 
-//ゲームプレイ
+//ゲームプレイシーン
+
 class GamePlayScene :public BaseScene
 {
 public://構造体類
@@ -79,27 +80,27 @@ private://静的メンバ変数
 private:
 
 	//サウンド読み込み
-	Audio::SoundData sound;
+	Audio::SoundData sound_;
 
 	//スプライト
 	Sprite* spritePause_ = new Sprite();
 	Sprite* spritePauseInfo_ = new Sprite();
 
-	Sprite* spriteTutorialHTPMove = new Sprite();
-	Sprite* spriteTutorialHTPDash = new Sprite();
-	Sprite* spriteTutorialHTPJump = new Sprite();
+	Sprite* spriteTutorialHTPMove_ = new Sprite();
+	Sprite* spriteTutorialHTPDash_ = new Sprite();
+	Sprite* spriteTutorialHTPJump_ = new Sprite();
 
-	Sprite* spriteTutorialHTPMoveBack = new Sprite();
+	Sprite* spriteTutorialHTPMoveBack_ = new Sprite();
 
-	Sprite* spriteTutorialHTPAttack = new Sprite();
+	Sprite* spriteTutorialHTPAttack_ = new Sprite();
 
 
-	Sprite* spriteTutorialInfo1 = new Sprite();
-	Sprite* spriteTutorialInfo2 = new Sprite();
-	Sprite* spriteTutorialInfo3 = new Sprite();
-	Sprite* spriteTutorialInfo4 = new Sprite();
+	Sprite* spriteTutorialInfo1_ = new Sprite();
+	Sprite* spriteTutorialInfo2_ = new Sprite();
+	Sprite* spriteTutorialInfo3_ = new Sprite();
+	Sprite* spriteTutorialInfo4_ = new Sprite();
 
-	Easing easeInfo[6] =
+	Easing easeInfo_[6] =
 	{
 		Easing(1300.0f, 0.0f, 1.0f),//メニュー
 		Easing(1300.0f, 500.0f, 1.2f),//チュートリアルへ
@@ -111,15 +112,15 @@ private:
 
 	//ポーズしたか
 	bool isPause_ = false;
-	bool isclear = false;
-	bool isGameover = false;
+	bool isclear_ = false;
+	bool isGameover_ = false;
 
 	//モデル
 	std::list<std::unique_ptr<Player>> players_;
 	Model* modelPlayer_ = nullptr;
 	Model* modelPlayerBullet_ = nullptr;
 
-	std::unique_ptr<AbstractEnemyFactory> enemyFactory;
+	std::unique_ptr<AbstractEnemyFactory> enemyFactory_;
 
 	std::list<std::unique_ptr<BaseEnemy>> enemys_;
 	Model* modelEnemy1_ = nullptr;
@@ -128,7 +129,7 @@ private:
 	Model* modelBoss1_ = nullptr;
 	Model* modelBossCore1_ = nullptr;
 
-	std::unique_ptr<AbstractGimmickFactory> gimmickFactory;
+	std::unique_ptr<AbstractGimmickFactory> gimmickFactory_;
 
 	std::list<std::unique_ptr<BaseGimmick>> gimmicks_;
 	Model* modelSpike_ = nullptr;
@@ -140,17 +141,18 @@ private:
 	Model* modelItemJump_ = nullptr;
 	Model* modelItemHeal_ = nullptr;
 
-	LevelData* levelData = nullptr;
+	LevelData* levelData_ = nullptr;
 
-	Model* modelStageT = nullptr;
-	Model* modelStage1 = nullptr;
-	Model* modelStage2 = nullptr;
+	Model* modelStageT_ = nullptr;
+	Model* modelStage1_ = nullptr;
+	Model* modelStage2_ = nullptr;
 
-	Model* modelGround = nullptr;
-	Model* modelBox = nullptr;
+	Model* modelGround_ = nullptr;
+	Model* modelBox_ = nullptr;
 
-	std::map<std::string, Model*> models;
-	std::vector<Object3d*> objects;
+	std::map<std::string, Model*> models_;
+	std::vector<Object3d*> objects_;
+	std::vector<Object3d*> skydomes_;
 
 	//パーティクル
 	Particle* particle1_ = nullptr;
@@ -167,21 +169,22 @@ private:
 private:
 	/*
 	stagenumの値
-	1~9		ステージ1
-	10~19	ステージ2
-	100~109	チュートリアル
+	0~10		ステージ1
+	11~20		ステージ2
+	101~110		チュートリアル
 	*/
-	int stageNum;
+
+	int stageNum_;
 	//自機弾
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
 	//敵弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
-	//イージングマネージャー(左から右へ)
-	Easing es = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
+	//ポーズのイージング(左から右へ)
+	Easing easePause_ = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
 	//○○した瞬間に○○解除を防ぐ用のフラグ
-	bool isBack = false;
+	bool isBack_ = false;
 	//色を変えるスピード
-	float speedColor = 0.0f;
+	float speedColor_ = 0.0f;
 	//色反転フラグ
 	bool isColorReverse_ = false;
 private:

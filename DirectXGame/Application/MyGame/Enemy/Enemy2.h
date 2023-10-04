@@ -7,7 +7,7 @@
 #include <list>
 #include <memory>
 
-//敵
+//ドッスン風雑魚敵
 class Enemy2 :public BaseEnemy {
 private:
 	// DirectX::を省略
@@ -77,27 +77,27 @@ private:
 	//フェーズ
 	Phase phase_;
 	//弾発射タイマー
-	int32_t fireTimer = 0;
+	int32_t fireTimer_ = 0;
 	//スケール
-	XMFLOAT3 scale;
+	XMFLOAT3 scale_;
 	//ポジション
-	XMFLOAT3 pos;
+	XMFLOAT3 pos_;
 	//地面に当たった時
-	XMFLOAT3 upPos;
+	XMFLOAT3 upPos_;
 	//アングル
-	XMFLOAT3 angle;
+	XMFLOAT3 angle_;
 	//半径
 	float radius_ = 3.0f;
 	//撤退スピード
-	XMFLOAT3 backSpeed;
+	XMFLOAT3 backSpeed_;
 
-	bool onGround = true;
-	XMFLOAT3 fallVec;
+	bool onGround_ = true;
+	XMFLOAT3 fallVec_;
 
 	//反転フラグ
 	bool isReverse_ = false;
 
-	int count = 0;
+	int count_ = 0;
 
 public:
 

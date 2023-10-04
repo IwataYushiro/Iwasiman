@@ -5,6 +5,7 @@
 #include <cassert>
 #include <sstream>
 #include <iomanip>
+#include "StageList.h"
 
 using namespace DirectX;
 
@@ -42,125 +43,120 @@ void GameOverScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	UINT MenuTex = 00;
-	spCommon_->LoadTexture(MenuTex, "texture/gameover2.png");
-	spriteGameOver_->Initialize(spCommon_, MenuTex);
-	spriteGameOver_->SetPosition({ easeMenuPosX[0].start,0.0f });
+	spCommon_->LoadTexture(GOSTI_MenuTex, "texture/gameover2.png");
+	spriteGameOver_->Initialize(spCommon_, GOSTI_MenuTex);
+	spriteGameOver_->SetPosition({ easeMenuPosX_[0].start,0.0f });
 
-	UINT MenuTutorialTex = 01;
-	spCommon_->LoadTexture(MenuTutorialTex, "texture/continue.png");
-	spriteContinue_->Initialize(spCommon_, MenuTutorialTex);
-	spriteContinue_->SetPosition({ easeMenuPosX[1].start,150.0f });
+	spCommon_->LoadTexture(GOSTI_ContinueTex, "texture/continue.png");
+	spriteContinue_->Initialize(spCommon_, GOSTI_ContinueTex);
+	spriteContinue_->SetPosition({ easeMenuPosX_[1].start,150.0f });
 
-	UINT Menustage1Tex = 02;
-	spCommon_->LoadTexture(Menustage1Tex, "texture/backstageselect.png");
-	spriteStageSelect_->Initialize(spCommon_, Menustage1Tex);
-	spriteStageSelect_->SetPosition({ easeMenuPosX[2].start,300.0f });
+	spCommon_->LoadTexture(GOSTI_StageSelectTex, "texture/backstageselect.png");
+	spriteStageSelect_->Initialize(spCommon_, GOSTI_StageSelectTex);
+	spriteStageSelect_->SetPosition({ easeMenuPosX_[2].start,300.0f });
 
-	UINT Menustage2Tex = 03;
-	spCommon_->LoadTexture(Menustage2Tex, "texture/backtitle.png");
-	spriteTitle_->Initialize(spCommon_, Menustage2Tex);
-	spriteTitle_->SetPosition({ easeMenuPosX[3].start,450.0f });
+	spCommon_->LoadTexture(GOSTI_TitleTex, "texture/backtitle.png");
+	spriteTitle_->Initialize(spCommon_, GOSTI_TitleTex);
+	spriteTitle_->SetPosition({ easeMenuPosX_[3].start,450.0f });
 
-	UINT MenuDoneTex = 04;
-	spCommon_->LoadTexture(MenuDoneTex, "texture/titlemenud.png");
-	spriteDone_->Initialize(spCommon_, MenuDoneTex);
-	spriteDone_->SetPosition({ easeMenuPosX[4].start,580.0f });
+	spCommon_->LoadTexture(GOSTI_MenuDoneTex, "texture/titlemenud.png");
+	spriteDone_->Initialize(spCommon_, GOSTI_MenuDoneTex);
+	spriteDone_->SetPosition({ easeMenuPosX_[4].start,580.0f });
 
-	modelStageTutorial = Model::LoadFromOBJ("skydomet");
-	modelStage1 = Model::LoadFromOBJ("skydome");
-	modelStage2 = Model::LoadFromOBJ("skydome2");
+	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
+	modelStage1_ = Model::LoadFromOBJ("skydome");
+	modelStage2_ = Model::LoadFromOBJ("skydome2");
 
-	objStage = Object3d::Create();
-	objStage->SetModel(modelStage2);
-	objStage->SetCamera(camera_);
-	objStage->SetScale({ 7.0f,7.0f,7.0f });
+	objStage_ = Object3d::Create();
+	objStage_->SetModel(modelStage2_);
+	objStage_->SetCamera(camera_);
+	objStage_->SetScale({ 7.0f,7.0f,7.0f });
 
 
-	easeTitlePosX.Standby(false);
-	for (int i = 0; i < 5; i++)easeMenuPosX[i].Standby(false);
+	easeTitlePosX_.Standby(false);
+	for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
 }
 
 void GameOverScene::Update()
 {
-	if (MenuCount <= 0)MenuCount = 0;
-	else if (MenuCount >= 2)MenuCount = 2;
+	if (menuCount_ <= GOSMI_Continue)menuCount_ = GOSMI_Continue;
+	else if (menuCount_ >= GOSMI_Title)menuCount_ = GOSMI_Title;
 
 	//イージング
-	easeTitlePosX.ease_out_expo();
-	for (int i = 0; i < 4; i++)easeMenuPosX[i].ease_out_expo();
+	easeTitlePosX_.ease_out_expo();
+	for (int i = 0; i < 4; i++)easeMenuPosX_[i].ease_out_expo();
 
 	//座標セット
-	spriteGameOver_->SetPosition({ easeMenuPosX[0].num_X,0.0f });
-	spriteContinue_->SetPosition({ easeMenuPosX[1].num_X,150.0f });
-	spriteStageSelect_->SetPosition({ easeMenuPosX[2].num_X,300.0f });
-	spriteTitle_->SetPosition({ easeMenuPosX[3].num_X,450.0f });
-	spriteDone_->SetPosition({ easeMenuPosX[4].num_X,550.0f });
+	spriteGameOver_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
+	spriteContinue_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+	spriteStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
+	spriteTitle_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
+	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
 
-	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
-	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
+	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
+	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
 
-	if (isColorReverse_)speedColor -= 0.02f;
-	else speedColor += 0.02f;
+	if (isColorReverse_)speedColor_ -= 0.02f;
+	else speedColor_ += 0.02f;
 
-	if (speedColor >= 0.9f)
+	if (speedColor_ >= 0.9f)
 	{
 		isColorReverse_ = true;
 	}
-	if (speedColor <= 0.0f)
+	if (speedColor_ <= 0.0f)
 	{
 		isColorReverse_ = false;
 	}
 
-	if (MenuCount == 0)
+	if (menuCount_ == GOSMI_Continue)
 	{
-		spriteGameOver_->SetColor({ speedColor + 0.1f,speedColor + 0.1f,1.0f,1.0f });
-		spriteContinue_->SetColor({ 1.0f,speedColor + 0.1f,speedColor + 0.1f,1.0f });
+		spriteGameOver_->SetColor({ speedColor_ + 0.1f,speedColor_ + 0.1f,1.0f,1.0f });
+		spriteContinue_->SetColor({ 1.0f,speedColor_ + 0.1f,speedColor_ + 0.1f,1.0f });
 		spriteStageSelect_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		spriteTitle_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	}
-	else if (MenuCount == 1)
+	else if (menuCount_ == GOSMI_StageSelect)
 	{
-		spriteGameOver_->SetColor({ speedColor + 0.1f,speedColor + 0.1f,1.0f,1.0f });
+		spriteGameOver_->SetColor({ speedColor_ + 0.1f,speedColor_ + 0.1f,1.0f,1.0f });
 		spriteContinue_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		spriteStageSelect_->SetColor({ 1.0f,speedColor + 0.1f,speedColor + 0.1f,1.0f });
+		spriteStageSelect_->SetColor({ 1.0f,speedColor_ + 0.1f,speedColor_ + 0.1f,1.0f });
 		spriteTitle_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	}
-	else if (MenuCount == 2)
+	else if (menuCount_ == GOSMI_Title)
 	{
-		spriteGameOver_->SetColor({ speedColor + 0.1f,speedColor + 0.1f,1.0f,1.0f });
+		spriteGameOver_->SetColor({ speedColor_ + 0.1f,speedColor_ + 0.1f,1.0f,1.0f });
 		spriteContinue_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		spriteStageSelect_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		spriteTitle_->SetColor({ 1.0f,speedColor + 0.1f,speedColor + 0.1f,1.0f });
+		spriteTitle_->SetColor({ 1.0f,speedColor_ + 0.1f,speedColor_ + 0.1f,1.0f });
 	}
 
 	if (input_->TriggerKey(DIK_SPACE))
 	{
-		if (MenuCount == 0)
+		if (menuCount_ == GOSMI_Continue)
 		{
 			//コンティニュー
 			camera_->Reset();
 			sceneManager_->ChangeScene("GAMEPLAY", stageNum);
 		}
-		else if (MenuCount == 1)
+		else if (menuCount_ == GOSMI_StageSelect)
 		{
 			//ステージセレクトへ
-			camera_->Reset();
-			sceneManager_->ChangeScene("STAGESELECT");
-
+			if (stageNum <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+			else if (stageNum <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+			else if (stageNum <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 		}
-		else if (MenuCount == 2)
+		else if (menuCount_ == GOSMI_Title)
 		{
 			//タイトルへ
 			camera_->Reset();
-			sceneManager_->ChangeScene("TITLE");
+			sceneManager_->ChangeScene("TITLE", stageNum);
 
 		}
 	}
 
-	rot.y += 0.1f;
+	rot_.y += 0.1f;
 
-	objStage->SetRotation(rot);
+	objStage_->SetRotation(rot_);
 
 	imguiManager_->Begin();
 	imguiManager_->End();
@@ -173,7 +169,7 @@ void GameOverScene::Update()
 
 	camera_->Update();
 	lightGroup_->Update();
-	objStage->Update();
+	objStage_->Update();
 }
 
 void GameOverScene::Draw()
@@ -181,7 +177,7 @@ void GameOverScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
-	objStage->Draw();
+	objStage_->Draw();
 
 	//モデル描画後処理
 	Object3d::PostDraw();
@@ -213,11 +209,11 @@ void GameOverScene::Finalize()
 	delete spriteTitle_;
 	delete spriteDone_;
 	//ステージ
-	delete objStage;
+	delete objStage_;
 
-	delete modelStageTutorial;
-	delete modelStage1;
-	delete modelStage2;
+	delete modelStageTutorial_;
+	delete modelStage1_;
+	delete modelStage2_;
 
 	//ライト
 	delete lightGroup_;
