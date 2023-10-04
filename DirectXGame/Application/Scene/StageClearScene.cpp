@@ -1,6 +1,8 @@
 #include "StageClearScene.h"
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
+#include "StageList.h"
+
 #include <cassert>
 #include <sstream>
 #include <iomanip>
@@ -35,8 +37,9 @@ void StageClearScene::Initialize()
 	Object3d::SetLightGroup(lightGroup_);
 
 	UINT StageTex = 00;
-	if (stageNum == 4)spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
-	else if (stageNum == 103)spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
+	if (stageNum == SL_Stage1_AreaBoss)spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
+	else if (stageNum == SL_Stage2_AreaBoss)spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
+	else if (stageNum == SL_StageTutorial_Final)spCommon_->LoadTexture(StageTex, "texture/gameclear.png");
 	else spCommon_->LoadTexture(StageTex, "texture/stageclear.png");
 	spriteStageClear_->Initialize(spCommon_, StageTex);
 
@@ -49,8 +52,8 @@ void StageClearScene::Update()
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		camera_->Reset();
-		if (stageNum == 4) sceneManager_->ChangeScene("STAGESELECT", 2);
-		else if (stageNum == 103) sceneManager_->ChangeScene("STAGESELECT", 1);
+		if (stageNum == SL_Stage1_AreaBoss) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+		else if (stageNum == SL_StageTutorial_Final) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
 		else sceneManager_->ChangeScene("GAMEPLAY", ++stageNum);
 	}
 	imguiManager_->Begin();

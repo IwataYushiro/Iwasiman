@@ -1,10 +1,11 @@
 #include "TitleScene.h"
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
+#include "StageList.h"
+
 #include <cassert>
 #include <sstream>
 #include <iomanip>
-#include <StageList.h>
 
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* TitleScene::input_ = Input::GetInstance();
@@ -28,40 +29,43 @@ void TitleScene::Initialize()
 	camera_->SetTarget({ easeTarget[0].start, easeTarget[1].start, easeTarget[2].start });
 
 	//レベルデータ読み込み
-	LoadLVData("scene/title");
+	if (stageNum == SL_Default)LoadLVData("scene/titlet");
+	else if (stageNum <= SL_Stage1_StageID)LoadLVData("scene/title1");
+	else if (stageNum <= SL_Stage2_StageID)LoadLVData("scene/title2");
+	else LoadLVData("scene/titlet");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	spCommon_->LoadTexture(TITitle, "texture/title2.png");
-	spriteTitle_->Initialize(spCommon_, TITitle);
+	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title2.png");
+	spriteTitle_->Initialize(spCommon_, TSTI_TitleTex);
 	spriteTitle_->SetColor(backTitleColor);
 
-	spCommon_->LoadTexture(TITitleDone, "texture/space.png");
-	spriteTitleDone_->Initialize(spCommon_, TITitleDone);
+	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space.png");
+	spriteTitleDone_->Initialize(spCommon_, TSTI_TitleDoneTex);
 	spriteTitleDone_->SetPosition({ 0.0f,550.0f });
 
-	spCommon_->LoadTexture(TIMenu, "texture/titlemenu.png");
-	spriteMenu_->Initialize(spCommon_, TIMenu);
+	spCommon_->LoadTexture(TSTI_MenuTex, "texture/titlemenu.png");
+	spriteMenu_->Initialize(spCommon_, TSTI_MenuTex);
 	spriteMenu_->SetPosition({ easeMenuPosX[0].start,0.0f });
 	spriteMenu_->SetColor(otherMenuColor);
 
-	spCommon_->LoadTexture(TIMenuTutorial, "texture/titlemenut.png");
-	spriteMenuTutorial_->Initialize(spCommon_, TIMenuTutorial);
+	spCommon_->LoadTexture(TSTI_MenuTutorialTex, "texture/titlemenut.png");
+	spriteMenuTutorial_->Initialize(spCommon_, TSTI_MenuTutorialTex);
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX[1].start,150.0f });
 
-	spCommon_->LoadTexture(TIMenuStageSerect, "texture/titlemenus.png");
-	spriteMenuStageSelect_->Initialize(spCommon_, TIMenuStageSerect);
+	spCommon_->LoadTexture(TSTI_MenuStageSerectTex, "texture/titlemenus.png");
+	spriteMenuStageSelect_->Initialize(spCommon_, TSTI_MenuStageSerectTex);
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX[2].start,300.0f });
 
-	spCommon_->LoadTexture(TIMenuDone, "texture/titlemenud.png");
-	spriteMenuDone_->Initialize(spCommon_, TIMenuDone);
+	spCommon_->LoadTexture(TSTI_MenuDoneTex, "texture/titlemenud.png");
+	spriteMenuDone_->Initialize(spCommon_, TSTI_MenuDoneTex);
 	spriteMenuDone_->SetPosition({ easeMenuPosX[3].start,550.0f });
 	spriteMenuDone_->SetColor(otherMenuColor);
 
-	spCommon_->LoadTexture(TIBackTitle, "texture/back.png");
-	spriteBack_->Initialize(spCommon_, TIBackTitle);
+	spCommon_->LoadTexture(TSTI_BackTitleTex, "texture/back.png");
+	spriteBack_->Initialize(spCommon_, TSTI_BackTitleTex);
 	spriteBack_->SetPosition({ easeMenuPosX[4].start,50.0f });
 	spriteBack_->SetColor(backTitleColor);
 
@@ -83,8 +87,9 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	if (MenuCount <= Tutorial)MenuCount = Tutorial;
-	else if (MenuCount >= StageSelect)MenuCount = StageSelect;
+	//メニュー上下限
+	if (MenuCount <= TSMI_Tutorial)MenuCount = TSMI_Tutorial;
+	else if (MenuCount >= TSMI_StageSelect)MenuCount = TSMI_StageSelect;
 
 	
 	DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor.x,0.1f,0.1f,1.0f };
@@ -117,12 +122,12 @@ void TitleScene::Update()
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))MenuCount--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))MenuCount++;
 
-		if (MenuCount == Tutorial)
+		if (MenuCount == TSMI_Tutorial)
 		{
 			spriteMenuTutorial_->SetColor(selectMenuColor);
 			spriteMenuStageSelect_->SetColor(otherMenuColor);
 		}
-		else if (MenuCount == StageSelect)
+		else if (MenuCount == TSMI_StageSelect)
 		{
 			spriteMenuTutorial_->SetColor(otherMenuColor);
 			spriteMenuStageSelect_->SetColor(selectMenuColor);
@@ -130,17 +135,17 @@ void TitleScene::Update()
 
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			if (MenuCount == Tutorial)
+			if (MenuCount == TSMI_Tutorial)
 			{
 				//チュートリアルステージ
-				sceneManager_->ChangeScene("GAMEPLAY", StageTutorial_Area1);
+				sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
 			}
-			else if (MenuCount == StageSelect)
+			else if (MenuCount == TSMI_StageSelect)
 			{
 				//ステージ選択
-				if(stageNum <=Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT",RSSAT_Stage1_SkyStage );
-				else if (stageNum <= Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", RSSAT_Stage2_TowerStage);
-				else if (stageNum <= StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", RSSAT_StageTutorial_Tutorial);
+				if(stageNum <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT",SSSMI_Stage1_SkyStage );
+				else if (stageNum <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+				else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
 			}
 		}
 		if (easeMenuPosX[4].num_X == easeMenuPosX[4].end)
@@ -239,6 +244,9 @@ void TitleScene::Update()
 
 	for (Object3d*& skydome : objSkydomes_)
 	{
+		//天球回転用
+		DirectX::XMFLOAT3 rotSkydome = skydome->GetRotation();
+
 		const float rotSpeed = -0.2f;
 		rotSkydome.y += rotSpeed;
 		skydome->SetRotation(rotSkydome);
@@ -318,6 +326,8 @@ void TitleScene::Finalize()
 
 	delete modelPlayer_;
 	delete modelSkydome;
+	delete modelSkydomeStage1;
+	delete modelSkydomeStage2;
 	delete modelGround;
 
 	//ライト
@@ -338,10 +348,14 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 	// モデル読み込み
 	modelPlayer_ = Model::LoadFromOBJ("player", true);
 	modelSkydome = Model::LoadFromOBJ("skydomet");
+	modelSkydomeStage1 = Model::LoadFromOBJ("skydome");
+	modelSkydomeStage2 = Model::LoadFromOBJ("skydome2");
 	modelGround = Model::LoadFromOBJ("ground");
 
 	models.insert(std::make_pair("player", modelPlayer_));
 	models.insert(std::make_pair("skydomet", modelSkydome));
+	models.insert(std::make_pair("skydome", modelSkydomeStage1));
+	models.insert(std::make_pair("skydome2", modelSkydomeStage2));
 	models.insert(std::make_pair("ground", modelGround));
 
 	// レベルデータからオブジェクトを生成、配置

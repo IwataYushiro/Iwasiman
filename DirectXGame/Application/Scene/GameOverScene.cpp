@@ -5,6 +5,7 @@
 #include <cassert>
 #include <sstream>
 #include <iomanip>
+#include "StageList.h"
 
 using namespace DirectX;
 
@@ -42,29 +43,24 @@ void GameOverScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	UINT MenuTex = 00;
-	spCommon_->LoadTexture(MenuTex, "texture/gameover2.png");
-	spriteGameOver_->Initialize(spCommon_, MenuTex);
+	spCommon_->LoadTexture(GOSTI_MenuTex, "texture/gameover2.png");
+	spriteGameOver_->Initialize(spCommon_, GOSTI_MenuTex);
 	spriteGameOver_->SetPosition({ easeMenuPosX[0].start,0.0f });
 
-	UINT MenuTutorialTex = 01;
-	spCommon_->LoadTexture(MenuTutorialTex, "texture/continue.png");
-	spriteContinue_->Initialize(spCommon_, MenuTutorialTex);
+	spCommon_->LoadTexture(GOSTI_ContinueTex, "texture/continue.png");
+	spriteContinue_->Initialize(spCommon_, GOSTI_ContinueTex);
 	spriteContinue_->SetPosition({ easeMenuPosX[1].start,150.0f });
 
-	UINT Menustage1Tex = 02;
-	spCommon_->LoadTexture(Menustage1Tex, "texture/backstageselect.png");
-	spriteStageSelect_->Initialize(spCommon_, Menustage1Tex);
+	spCommon_->LoadTexture(GOSTI_StageSelectTex, "texture/backstageselect.png");
+	spriteStageSelect_->Initialize(spCommon_, GOSTI_StageSelectTex);
 	spriteStageSelect_->SetPosition({ easeMenuPosX[2].start,300.0f });
 
-	UINT Menustage2Tex = 03;
-	spCommon_->LoadTexture(Menustage2Tex, "texture/backtitle.png");
-	spriteTitle_->Initialize(spCommon_, Menustage2Tex);
+	spCommon_->LoadTexture(GOSTI_TitleTex, "texture/backtitle.png");
+	spriteTitle_->Initialize(spCommon_, GOSTI_TitleTex);
 	spriteTitle_->SetPosition({ easeMenuPosX[3].start,450.0f });
 
-	UINT MenuDoneTex = 04;
-	spCommon_->LoadTexture(MenuDoneTex, "texture/titlemenud.png");
-	spriteDone_->Initialize(spCommon_, MenuDoneTex);
+	spCommon_->LoadTexture(GOSTI_MenuDoneTex, "texture/titlemenud.png");
+	spriteDone_->Initialize(spCommon_, GOSTI_MenuDoneTex);
 	spriteDone_->SetPosition({ easeMenuPosX[4].start,580.0f });
 
 	modelStageTutorial = Model::LoadFromOBJ("skydomet");
@@ -83,8 +79,8 @@ void GameOverScene::Initialize()
 
 void GameOverScene::Update()
 {
-	if (MenuCount <= 0)MenuCount = 0;
-	else if (MenuCount >= 2)MenuCount = 2;
+	if (MenuCount <= GOSMI_Continue)MenuCount = GOSMI_Continue;
+	else if (MenuCount >= GOSMI_Title)MenuCount = GOSMI_Title;
 
 	//イージング
 	easeTitlePosX.ease_out_expo();
@@ -112,21 +108,21 @@ void GameOverScene::Update()
 		isColorReverse_ = false;
 	}
 
-	if (MenuCount == 0)
+	if (MenuCount == GOSMI_Continue)
 	{
 		spriteGameOver_->SetColor({ speedColor + 0.1f,speedColor + 0.1f,1.0f,1.0f });
 		spriteContinue_->SetColor({ 1.0f,speedColor + 0.1f,speedColor + 0.1f,1.0f });
 		spriteStageSelect_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		spriteTitle_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	}
-	else if (MenuCount == 1)
+	else if (MenuCount == GOSMI_StageSelect)
 	{
 		spriteGameOver_->SetColor({ speedColor + 0.1f,speedColor + 0.1f,1.0f,1.0f });
 		spriteContinue_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 		spriteStageSelect_->SetColor({ 1.0f,speedColor + 0.1f,speedColor + 0.1f,1.0f });
 		spriteTitle_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
 	}
-	else if (MenuCount == 2)
+	else if (MenuCount == GOSMI_Title)
 	{
 		spriteGameOver_->SetColor({ speedColor + 0.1f,speedColor + 0.1f,1.0f,1.0f });
 		spriteContinue_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
@@ -136,24 +132,24 @@ void GameOverScene::Update()
 
 	if (input_->TriggerKey(DIK_SPACE))
 	{
-		if (MenuCount == 0)
+		if (MenuCount == GOSMI_Continue)
 		{
 			//コンティニュー
 			camera_->Reset();
 			sceneManager_->ChangeScene("GAMEPLAY", stageNum);
 		}
-		else if (MenuCount == 1)
+		else if (MenuCount == GOSMI_StageSelect)
 		{
 			//ステージセレクトへ
-			camera_->Reset();
-			sceneManager_->ChangeScene("STAGESELECT");
-
+			if (stageNum <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+			else if (stageNum <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+			else if (stageNum <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 		}
-		else if (MenuCount == 2)
+		else if (MenuCount == GOSMI_Title)
 		{
 			//タイトルへ
 			camera_->Reset();
-			sceneManager_->ChangeScene("TITLE");
+			sceneManager_->ChangeScene("TITLE", stageNum);
 
 		}
 	}

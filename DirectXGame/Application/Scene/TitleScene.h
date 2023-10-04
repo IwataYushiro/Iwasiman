@@ -10,6 +10,7 @@
 #include "ParticleManager.h"
 #include "Sprite.h"
 
+
 #include <map>
 
 #include "SceneManager.h"
@@ -51,23 +52,8 @@ private://静的メンバ変数
 	static Camera* camera_;
 
 private://メンバ変数
-	enum TextureIndex
-	{
-		TITitle = 0,
-		TITitleDone = 1,
-		TIMenu = 2,
-		TIMenuTutorial = 3,
-		TIMenuStageSerect = 4,
-		TIMenuDone = 5,
-		TIBackTitle = 6,
-	};
-
-	enum MenuIndex
-	{
-		Tutorial = 0,
-		StageSelect = 1,
-	};
-	int MenuCount = Tutorial;
+	
+	int MenuCount;
 
 	//Sprite
 	Sprite* spriteTitle_ = new Sprite();
@@ -87,6 +73,8 @@ private://メンバ変数
 	//モデル
 	Model* modelPlayer_ = nullptr;
 	Model* modelSkydome = nullptr;
+	Model* modelSkydomeStage1 = nullptr;
+	Model* modelSkydomeStage2 = nullptr;
 	Model* modelGround = nullptr;
 
 	std::vector<Object3d*> objPlayers_;
@@ -144,12 +132,9 @@ private://メンバ変数
 	DirectX::XMFLOAT3 startPos;
 	//X値がここまで来たらループ
 	const float returnPos = -120.0f;
-
-	//天球回転用
-	DirectX::XMFLOAT3 rotSkydome{ 0.0f,0.0f,0.0f };
-
+	
 	//どのステージにいるのかを受け取るための変数
-	int stageNum = 0;
+	int stageNum;
 
 public:
 	//色が変わる処理

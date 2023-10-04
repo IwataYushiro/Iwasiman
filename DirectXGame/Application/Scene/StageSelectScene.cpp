@@ -2,6 +2,8 @@
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
 #include "TouchableObject.h"
+#include "StageList.h"
+
 #include <cassert>
 #include <sstream>
 #include <iomanip>
@@ -44,34 +46,28 @@ void StageSelectScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	UINT MenuTex = 00;
-	spCommon_->LoadTexture(MenuTex, "texture/stageselect.png");
-	spriteMenu_->Initialize(spCommon_, MenuTex);
+	spCommon_->LoadTexture(SSSTI_MenuTex, "texture/stageselect.png");
+	spriteMenu_->Initialize(spCommon_, SSSTI_MenuTex);
 	spriteMenu_->SetPosition({ easeMenuPosX[0].start,0.0f });
 
-	UINT MenuTutorialTex = 01;
-	spCommon_->LoadTexture(MenuTutorialTex, "texture/titlemenut.png");
-	spriteTutorial_->Initialize(spCommon_, MenuTutorialTex);
+	spCommon_->LoadTexture(SSSTI_MenuTutorialTex, "texture/titlemenut.png");
+	spriteTutorial_->Initialize(spCommon_, SSSTI_MenuTutorialTex);
 	spriteTutorial_->SetPosition({ easeMenuPosX[1].start,150.0f });
 
-	UINT Menustage1Tex = 02;
-	spCommon_->LoadTexture(Menustage1Tex, "texture/stagesky.png");
-	spriteStage1_->Initialize(spCommon_, Menustage1Tex);
+	spCommon_->LoadTexture(SSSTI_Menustage1Tex, "texture/stagesky.png");
+	spriteStage1_->Initialize(spCommon_, SSSTI_Menustage1Tex);
 	spriteStage1_->SetPosition({ easeMenuPosX[2].start,300.0f });
 
-	UINT Menustage2Tex = 03;
-	spCommon_->LoadTexture(Menustage2Tex, "texture/stagetower.png");
-	spriteStage2_->Initialize(spCommon_, Menustage2Tex);
+	spCommon_->LoadTexture(SSSTI_Menustage2Tex, "texture/stagetower.png");
+	spriteStage2_->Initialize(spCommon_, SSSTI_Menustage2Tex);
 	spriteStage2_->SetPosition({ easeMenuPosX[3].start,450.0f });
 
-	UINT MenuDoneTex = 04;
-	spCommon_->LoadTexture(MenuDoneTex, "texture/titlemenud.png");
-	spriteDone_->Initialize(spCommon_, MenuDoneTex);
+	spCommon_->LoadTexture(SSSTI_MenuDoneTex, "texture/titlemenud.png");
+	spriteDone_->Initialize(spCommon_, SSSTI_MenuDoneTex);
 	spriteDone_->SetPosition({ easeMenuPosX[4].start,580.0f });
 
-	UINT BackTex = 05;
-	spCommon_->LoadTexture(BackTex, "texture/back.png");
-	spriteBack_->Initialize(spCommon_, BackTex);
+	spCommon_->LoadTexture(SSSTI_BackTitleTex, "texture/back.png");
+	spriteBack_->Initialize(spCommon_, SSSTI_BackTitleTex);
 	spriteBack_->SetPosition({ easeMenuPosX[5].start,50.0f });
 	spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 
@@ -104,8 +100,8 @@ void StageSelectScene::Initialize()
 
 void StageSelectScene::Update()
 {
-	if (MenuCount <= 0)MenuCount = 0;
-	else if (MenuCount >= 2)MenuCount = 2;
+	if (MenuCount <= SSSMI_StageTutorial_Tutorial)MenuCount = SSSMI_StageTutorial_Tutorial;
+	else if (MenuCount >= SSSMI_Stage2_TowerStage)MenuCount = SSSMI_Stage2_TowerStage;
 	if (!outStageSerect)
 	{
 		//イージング
@@ -135,7 +131,7 @@ void StageSelectScene::Update()
 			isColorReverse_ = false;
 		}
 
-		if (MenuCount == 0)
+		if (MenuCount == SSSMI_StageTutorial_Tutorial)
 		{
 			objStage->SetModel(modelStageTutorial);
 			spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
@@ -145,7 +141,7 @@ void StageSelectScene::Update()
 			spriteDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 			spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 		}
-		else if (MenuCount == 1)
+		else if (MenuCount == SSSMI_Stage1_SkyStage)
 		{
 			objStage->SetModel(modelStage1);
 			spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
@@ -155,7 +151,7 @@ void StageSelectScene::Update()
 			spriteDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 			spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 		}
-		else if (MenuCount == 2)
+		else if (MenuCount == SSSMI_Stage2_TowerStage)
 		{
 			objStage->SetModel(modelStage2);
 			spriteMenu_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
@@ -168,24 +164,24 @@ void StageSelectScene::Update()
 
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			if (MenuCount == 0)
+			if (MenuCount == SSSMI_StageTutorial_Tutorial)
 			{
 				//チュートリアルステージ
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 100);
+				sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
 			}
-			else if (MenuCount == 1)
+			else if (MenuCount == SSSMI_Stage1_SkyStage)
 			{
 				//ステージ1
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 1);
+				sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);
 
 			}
-			else if (MenuCount == 2)
+			else if (MenuCount == SSSMI_Stage2_TowerStage)
 			{
 				//ステージ2
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", 4);
+				sceneManager_->ChangeScene("GAMEPLAY", SL_Stage2_Area1);
 
 			}
 		}

@@ -45,29 +45,6 @@
         },
         {
             "type": "MESH",
-            "name": "Skydome",
-            "transform": {
-                "translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    3.184230089187622,
-                    8.763559341430664,
-                    3.6212449073791504
-                ]
-            },
-            "file_name": "skydomet",
-            "objecttype": "NONE"
-        },
-        {
-            "type": "MESH",
             "name": "Plane.001",
             "transform": {
                 "translation": [
@@ -384,6 +361,29 @@
             "file_name": "spikeball",
             "objecttype": "GIMMICK",
             "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "skydome",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    7.0,
+                    7.0,
+                    7.0
+                ]
+            },
+            "file_name": "skydomet",
+            "objecttype": "SKYDOME"
         }
     ]
 }

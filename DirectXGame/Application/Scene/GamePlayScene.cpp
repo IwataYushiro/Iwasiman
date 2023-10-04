@@ -5,10 +5,13 @@
 #include "MeshCollider.h"
 #include "TouchableObject.h"
 #include "CollisionAttribute.h"
+#include "StageList.h"
 
 #include <cassert>
 #include <sstream>
 #include <iomanip>
+
+#include "StageList.h"
 
 using namespace DirectX;
 
@@ -48,15 +51,15 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum == 1)LoadLVData("test");
-	else if (stageNum == 2)LoadLVData("stage2");
-	else if (stageNum == 3)LoadLVData("stage3_2");
-	else if (stageNum == 4)LoadLVData("stageboss1");
+	if (stageNum == SL_Stage1_Area1)LoadLVData("test");
+	else if (stageNum == SL_Stage1_Area2)LoadLVData("stage2");
+	else if (stageNum == SL_Stage1_Area3)LoadLVData("stage3_2");
+	else if (stageNum == SL_Stage1_AreaBoss)LoadLVData("stageboss1");
 
-	else if (stageNum == 100)LoadLVData("tutorial");
-	else if (stageNum == 101)LoadLVData("tutorial2");
-	else if (stageNum == 102)LoadLVData("tutorial3");
-	else if (stageNum == 103)LoadLVData("tutorialf");
+	else if (stageNum == SL_StageTutorial_Area1)LoadLVData("tutorial");
+	else if (stageNum == SL_StageTutorial_Area2)LoadLVData("tutorial2");
+	else if (stageNum == SL_StageTutorial_Area3)LoadLVData("tutorial3");
+	else if (stageNum == SL_StageTutorial_Final)LoadLVData("tutorialf");
 
 	//スプライト
 	LoadSprite();
@@ -73,7 +76,7 @@ void GamePlayScene::Initialize()
 	pm_->SetCamera(camera_);
 
 	isPause_ = false;
-	if (stageNum >= 100)for (int i = 0; i < 6; i++)easeInfo[i].Standby(false);
+	if (stageNum >= SL_StageTutorial_Area1)for (int i = 0; i < 6; i++)easeInfo[i].Standby(false);
 }
 
 void GamePlayScene::Update()
@@ -89,9 +92,18 @@ void GamePlayScene::Update()
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
 
-	//弾更新
-	
+	//天球ぐるぐる
+	for (Object3d*& skydome : skydomes)
+	{
+		//天球回転用
+		XMFLOAT3 rotSkydome = skydome->GetRotation();
+		const float rotSpeed = -0.2f;
+		rotSkydome.y += rotSpeed;
 
+		skydome->SetRotation(rotSkydome);
+
+		skydome->Update();
+	}
 
 	if (!isPause_)
 	{
@@ -101,9 +113,9 @@ void GamePlayScene::Update()
 			if (!isclear || !isGameover)
 			{
 				//チュートリアル基本操作
-				if (stageNum == 100)player->Update(false, false);
+				if (stageNum == SL_StageTutorial_Area1)player->Update(false, false);
 				//チュートリアル奥側移動→攻撃→応用ステージ
-				else if (stageNum == 101)player->Update(true, false);
+				else if (stageNum == SL_StageTutorial_Area2)player->Update(true, false);
 				//基本状態
 				else player->Update();
 			}
@@ -203,39 +215,28 @@ void GamePlayScene::Update()
 	}
 	spritePause_->Update();
 
-	if (stageNum == 100)
+	if (stageNum == SL_StageTutorial_Area1)
 	{
 		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 			nullptr, nullptr, spriteTutorialInfo1);
 	}
-	else if (stageNum == 101)
+	else if (stageNum == SL_StageTutorial_Area2)
 	{
 		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 			spriteTutorialHTPMoveBack, nullptr, spriteTutorialInfo2);
 	}
-	else if (stageNum == 102)
+	else if (stageNum == SL_StageTutorial_Area3)
 	{
 		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 			spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo3);
 	}
-	else if (stageNum == 103)
+	else if (stageNum == SL_StageTutorial_Final)
 	{
 		SettingTutorialEase(1, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 			spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo4);
 	}
 	UpdateTutorialSprite();
-	//天球ぐるぐる
-	for (Object3d*& skydome : skydomes)
-	{
-		//天球回転用
-		XMFLOAT3 rotSkydome = skydome->GetPosition();
-		const float rotSpeed = -0.2f;
-		rotSkydome.y += rotSpeed;
-
-		skydome->SetRotation(rotSkydome);
-
-		skydome->Update();
-	}
+	
 	
 }
 
@@ -254,7 +255,7 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<Item>& item : items_)item->Draw();
 	for (auto& skydome : skydomes)skydome->Draw();
 	for (auto& object : objects)object->Draw();
-
+	
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -280,23 +281,23 @@ void GamePlayScene::Draw()
 			item->DrawSprite();
 		}
 
-		if (stageNum == 100)
+		if (stageNum == SL_StageTutorial_Area1)
 		{
 			DrawTutorialSprite(spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 				nullptr, nullptr, spriteTutorialInfo1);
 		}
 
-		else if (stageNum == 101)
+		else if (stageNum == SL_StageTutorial_Area2)
 		{
 			DrawTutorialSprite(spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 				spriteTutorialHTPMoveBack, nullptr, spriteTutorialInfo2);
 		}
-		else if (stageNum == 102)
+		else if (stageNum == SL_StageTutorial_Area3)
 		{
 			DrawTutorialSprite(spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 				spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo3);
 		}
-		else if (stageNum == 103)
+		else if (stageNum == SL_StageTutorial_Final)
 		{
 			DrawTutorialSprite(spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 				spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo4);
@@ -774,23 +775,23 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(1008, "texture/info/attackinfo.png");//3~
 	spriteTutorialHTPAttack->Initialize(spCommon_, 1008);
 
-	if (stageNum == 100)
+	if (stageNum == SL_StageTutorial_Area1)
 	{
 		SettingTutorialEase(0, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 			nullptr, nullptr, spriteTutorialInfo1);
 	}
 
-	else if (stageNum == 101)
+	else if (stageNum == SL_StageTutorial_Area2)
 	{
 		SettingTutorialEase(0, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 			spriteTutorialHTPMoveBack, nullptr, spriteTutorialInfo2);
 	}
-	else if (stageNum == 102)
+	else if (stageNum == SL_StageTutorial_Area3)
 	{
 		SettingTutorialEase(0, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 			spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo3);
 	}
-	else if (stageNum == 103)
+	else if (stageNum == SL_StageTutorial_Final)
 	{
 		SettingTutorialEase(0, spriteTutorialHTPMove, spriteTutorialHTPDash, spriteTutorialHTPJump,
 			spriteTutorialHTPMoveBack, spriteTutorialHTPAttack, spriteTutorialInfo4);
