@@ -93,7 +93,7 @@ void Player::Reset() {
 	maxTime = 1.0f;					//全体時間
 
 }
-void Player::Update(bool isBack_, bool isAttack) {
+void Player::Update(bool isBack, bool isAttack) {
 
 	pmDash_->SetCamera(camera_);
 
@@ -104,7 +104,7 @@ void Player::Update(bool isBack_, bool isAttack) {
 		if (!isJumpBack_)Move();
 		//攻撃処理
 		FallAndJump();
-		if (isBack_)JumpBack();
+		if (isBack)JumpBack();
 		if (isAttack)Attack();
 
 		if (life_ <= 0)
@@ -484,7 +484,7 @@ void Player::Attack() {
 		matVec.r[0].m128_f32[3] = 0.0f;
 		matVec *= Object3d::GetWorld();
 		//自キャラの座標をコピー
-		XMFLOAT3 position_ = Object3d::GetPosition();
+		XMFLOAT3 pos = Object3d::GetPosition();
 
 		//弾を生成し初期化
 		std::unique_ptr<PlayerBullet> newBullet;

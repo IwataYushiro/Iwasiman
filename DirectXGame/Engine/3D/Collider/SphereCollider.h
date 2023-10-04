@@ -27,7 +27,7 @@ public://メンバ関数
 
 	inline float GetRadius(){return radius_;}
 
-	inline void SetRadius(float radius) { this->radius_ = radius; }
+	inline void SetRadius(float rad) { this->radius_ = rad; }
 
 private://メンバ変数
 	//オブジェクト中心からのオフセット
