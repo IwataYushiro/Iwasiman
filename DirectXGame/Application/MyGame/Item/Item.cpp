@@ -32,18 +32,17 @@ std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short 
 	//モデルのセット
 	if (model) ins->SetModel(model);
 	if (player)ins->SetPlayer(player);
-	if (subAttribute)ins->collider_->SetSubAttribute(subAttribute);
 	return ins;
 }
 
-bool Item::Initialize(unsigned short subAttribute)
+bool Item::Initialize([[maybe_unused]] unsigned short subAttribute)
 {
 	if (!Object3d::Initialize()) return false;
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ITEM);
-	
+	if (subAttribute)collider_->SetAttribute(subAttribute);
 
 	isGet_ = false;
 	isGetJump_ = false;
@@ -156,7 +155,7 @@ void Item::DrawSprite()
 	if (isGetJump_)spriteItemJumpBar_->Draw();
 }
 
-void Item::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (isGet_)return;//多重ヒットを防止
 

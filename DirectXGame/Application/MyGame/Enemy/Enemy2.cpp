@@ -45,7 +45,7 @@ bool Enemy2::Initialize(int level) {
 
 	InitSubATTR(level);
 
-	Parameter(level);
+	Parameter();
 
 	return true;
 }
@@ -101,7 +101,7 @@ void Enemy2::InitLIfe()
 }
 
 //パラメータ
-void Enemy2::Parameter(int level) {
+void Enemy2::Parameter() {
 
 	isReverse_ = false;
 	//ジャンプしたか
@@ -123,7 +123,7 @@ void Enemy2::Parameter(int level) {
 }
 
 //リセット
-void Enemy2::Reset(int level) { Parameter(level); }
+void Enemy2::Reset() { Parameter(); }
 
 //更新
 void Enemy2::Update() {
@@ -388,7 +388,7 @@ XMFLOAT3 Enemy2::GetWorldPosition() {
 
 	return worldPos;
 }
-void Enemy2::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)

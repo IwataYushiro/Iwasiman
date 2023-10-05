@@ -85,7 +85,7 @@ void Goal::Draw()
 	Object3d::Draw();
 }
 
-void Goal::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Goal::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_PLAYERS)
 	{

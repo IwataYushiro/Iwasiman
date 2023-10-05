@@ -31,10 +31,10 @@ public:
 	void InitLIfe();
 
 	//リセット処理
-	void Reset(int level);
+	void Reset();
 
 	//パラメータ
-	void Parameter(int level);
+	void Parameter();
 	//更新
 	void Update()override;
 	//転送　

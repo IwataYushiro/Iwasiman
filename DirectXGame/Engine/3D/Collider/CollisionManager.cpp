@@ -85,7 +85,7 @@ bool CollisionManager::RayCast(const Ray& ray, unsigned short attribute, Raycast
 	//今までで最も近いコライダーの距離を記録する変数
 	float distance = maxDistance;
 	//今までで最も近いコライダーとの交点を記録する変数
-	XMVECTOR inter;
+	XMVECTOR inter = {};
 	//全コライダーと総当たりチェック
 	it = colliders.begin();
 	for (; it != colliders.end(); ++it)

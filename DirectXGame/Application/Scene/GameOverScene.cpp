@@ -219,6 +219,6 @@ void GameOverScene::Finalize()
 	delete lightGroup_;
 }
 
-void GameOverScene::LoadLVData(const std::string& stagePath)
+void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 {
 }

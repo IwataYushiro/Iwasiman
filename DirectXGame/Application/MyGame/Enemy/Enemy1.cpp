@@ -44,7 +44,7 @@ bool Enemy1::Initialize(int level) {
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 	InitSubATTR(level);
-	Parameter(level);
+	Parameter();
 
 	return true;
 }
@@ -78,7 +78,7 @@ void Enemy1::InitLIfe()
 }
 
 //パラメータ
-void Enemy1::Parameter(int level) {
+void Enemy1::Parameter() {
 
 	isReverse_ = false;
 	//ジャンプしたか
@@ -100,7 +100,7 @@ void Enemy1::Parameter(int level) {
 }
 
 //リセット
-void Enemy1::Reset(int level) { Parameter(level); }
+void Enemy1::Reset() { Parameter(); }
 
 //更新
 void Enemy1::Update() {
@@ -376,7 +376,7 @@ XMFLOAT3 Enemy1::GetWorldPosition() {
 
 	return worldPos;
 }
-void Enemy1::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Enemy1::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)

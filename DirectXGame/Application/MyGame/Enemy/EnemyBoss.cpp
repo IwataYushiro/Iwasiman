@@ -297,7 +297,7 @@ XMFLOAT3 EnemyBoss::GetWorldPosition() {
 
 	return worldPos;
 }
-void EnemyBoss::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)

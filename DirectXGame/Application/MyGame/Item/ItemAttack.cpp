@@ -89,7 +89,7 @@ void ItemAttack::Draw()
 	if (!isGet_)Object3d::Draw();
 }
 
-void ItemAttack::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void ItemAttack::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (isGet_)return;//‘½dƒqƒbƒg‚ğ–h~
 	if (attribute == COLLISION_ATTR_PLAYERS)

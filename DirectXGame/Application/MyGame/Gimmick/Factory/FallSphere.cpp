@@ -174,7 +174,7 @@ void FallSphere::Draw()
 	Object3d::Draw();
 }
 
-void FallSphere::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void FallSphere::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (isRide_)return;
 

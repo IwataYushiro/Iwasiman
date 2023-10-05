@@ -85,7 +85,7 @@ void PlayerBullet::Draw() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void PlayerBullet::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
+void PlayerBullet::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 
 	if (attribute == COLLISION_ATTR_LANDSHAPE)isDead_ = true;
 	else if (attribute == COLLISION_ATTR_ENEMYS) 

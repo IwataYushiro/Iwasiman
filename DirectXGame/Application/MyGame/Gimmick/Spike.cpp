@@ -88,7 +88,7 @@ void Spike::Draw()
 	Object3d::Draw();
 }
 
-void Spike::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Spike::OnCollision([[maybe_unused]] const CollisionInfo& info, [[maybe_unused]] unsigned short attribute, [[maybe_unused]] unsigned short subAttribute)
 {
 	
 }

@@ -103,7 +103,7 @@ void ItemHeal::DrawParticle()
 	pm_->Draw();
 }
 
-void ItemHeal::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void ItemHeal::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (isGet_)return;//‘½dƒqƒbƒg‚ğ–h~
 	if (attribute == COLLISION_ATTR_PLAYERS)

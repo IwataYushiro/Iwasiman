@@ -87,7 +87,7 @@ void EnemyBullet::Draw() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void EnemyBullet::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
+void EnemyBullet::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	
 	if (attribute == COLLISION_ATTR_PLAYERS)
 	{

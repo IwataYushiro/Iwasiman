@@ -113,8 +113,8 @@ public: // メンバ関数
 	virtual void Draw();
 
 	//衝突時のコールバック
-	virtual void OnCollision(const CollisionInfo& info,
-		unsigned short attribute, unsigned short subAttribute) {}
+	virtual void OnCollision([[maybe_unused]] const CollisionInfo& info,
+		[[maybe_unused]] unsigned short attribute, [[maybe_unused]] unsigned short subAttribute) {}
 protected: // メンバ変数
 	//モデル
 	Model* model_ = nullptr;

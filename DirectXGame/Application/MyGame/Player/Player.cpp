@@ -537,7 +537,7 @@ XMFLOAT3 Player::GetWorldPosition() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void Player::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
+void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
 		if (isShake_)return;

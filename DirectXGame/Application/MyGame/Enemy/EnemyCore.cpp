@@ -13,7 +13,7 @@ CollisionManager* EnemyCore::colManager_ = CollisionManager::GetInstance();
 EnemyCore::~EnemyCore() {
 }
 
-std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene, unsigned short stage)
+std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene, [[maybe_unused]] unsigned short stage)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyCore> ins = std::make_unique<EnemyCore>();
@@ -281,7 +281,7 @@ XMFLOAT3 EnemyCore::GetWorldPosition() {
 
 	return worldPos;
 }
-void EnemyCore::OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
