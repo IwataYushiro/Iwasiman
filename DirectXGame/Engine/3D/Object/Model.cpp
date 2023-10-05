@@ -232,7 +232,7 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 	//メッシュ生成
 	Mesh* mesh = new Mesh();
 	int indexCountTex = 0;
-	int indexCountNoTex = 0;
+	//int indexCountNoTex = 0;
 
 	vector<XMFLOAT3> positions;					//頂点座標
 	vector<XMFLOAT3> normals;					//法線ベクトル
@@ -251,10 +251,10 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 		if (key == "mtllib")
 		{
 			//マテリアルのファイル名読み込み
-			string filename;
-			line_stream >> filename;
+			string fileNameMat;
+			line_stream >> fileNameMat;
 			//マテリアル読み込み
-			LoadMaterial(directoryPath, filename);
+			LoadMaterial(directoryPath, fileNameMat);
 		}
 		//先頭文字列がgならグループの開始
 		if (key == "g")
@@ -414,13 +414,13 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 				{
 					// 四角形ポリゴンの4点目なので、
 					// 四角形の0,1,2,3の内 2,3,0で三角形を構築する
-					mesh->AddIndex(indexCountTex - 1);
-					mesh->AddIndex(indexCountTex);
-					mesh->AddIndex(indexCountTex - 3);
+					mesh->AddIndex(static_cast<unsigned short>(indexCountTex - 1));
+					mesh->AddIndex(static_cast<unsigned short>(indexCountTex));
+					mesh->AddIndex(static_cast<unsigned short>(indexCountTex - 3));
 				}
 				else
 				{
-					mesh->AddIndex(indexCountTex);
+					mesh->AddIndex(static_cast<unsigned short>(indexCountTex));
 				}
 				indexCountTex++;
 				faceIndexCount++;

@@ -68,7 +68,7 @@ float Quaternion::norm(const Quaternion& q)
 	return sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
 }
 
-Vector3 Quaternion::Normalize(const Vector3& v)
+Vector3 Quaternion::Normalize([[maybe_unused]] const Vector3& v)
 {
 	return Vector3();
 }

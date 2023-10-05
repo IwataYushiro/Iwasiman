@@ -152,11 +152,11 @@ void EnemyCore::Fire() {
 	velocity.z -= kBulletSpeed;
 
 	//座標をコピー
-	XMFLOAT3 position_ = GetPosition();
+	XMFLOAT3 pos = GetPosition();
 
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet;
-	newBullet = EnemyBullet::Create(position_, velocity, modelBullet_);
+	newBullet = EnemyBullet::Create(pos, velocity, modelBullet_);
 	newBullet->SetCamera(camera_);
 	newBullet->Update();
 
@@ -182,8 +182,8 @@ void EnemyCore::UpdateCore()
 
 	//制御点
 	start = nowPos_;
-	p1 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
-	p2 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
+	point1 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
+	point2 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
 	end = { MyMath::RandomMTFloat(-20.0f,20.0f) + cameraMove,10.0f,100.0f };
 
 	//速度
@@ -243,7 +243,7 @@ void EnemyCore::UpdateBreakCore()
 
 	timeRate = min(elapsed / maxTime, 1.0f);
 
-	position_ = Bezier3(start, p1, p2, end, timeRate);
+	position_ = Bezier3(start, point1, point2, end, timeRate);
 
 }
 

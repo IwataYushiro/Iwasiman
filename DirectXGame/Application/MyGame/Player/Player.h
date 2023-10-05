@@ -101,8 +101,8 @@ private:
 	float	timeRate;
 	//êßå‰ì_
 	XMFLOAT3 start;
-	XMFLOAT3 p1;
-	XMFLOAT3 p2;
+	XMFLOAT3 point1;
+	XMFLOAT3 point2;
 	XMFLOAT3 end;
 
 	//îºåa

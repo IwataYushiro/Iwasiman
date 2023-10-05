@@ -223,15 +223,21 @@
     <Filter Include="Shader File\Toon">
       <UniqueIdentifier>{72240c68-f0d5-4fe8-8d4d-adfd97fa77cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header File\Application\MyGame\Player">
+      <UniqueIdentifier>{54f779d3-ae29-4d9f-a94c-993b1f5f8730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Application\MyGame\Goal">
+      <UniqueIdentifier>{1994a427-ba47-48d4-af59-3632e1f30b59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Application\MyGame\Player">
+      <UniqueIdentifier>{912a7f2b-6bb1-4eb0-b563-a359e85abcf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Application\MyGame\Goal">
+      <UniqueIdentifier>{f2d6c081-925c-4006-bbf0-4356b46fb50d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp">
-      <Filter>Source File\Application\MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Player\Player.cpp">
-      <Filter>Source File\Application\MyGame</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Player\PlayerBullet.cpp">
       <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\2D\Sprite\SpriteCommon.cpp">
@@ -330,9 +336,6 @@
     <ClCompile Include="DirectXGame\Engine\json\LevelLoaderJson.cpp">
       <Filter>Source File\Engine\json</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Goal\Goal.cpp">
-      <Filter>Source File\Application\MyGame</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Light\LightGroup.cpp">
       <Filter>Source File\Engine\3D\Light</Filter>
     </ClCompile>
@@ -405,14 +408,17 @@
     <ClCompile Include="DirectXGame\Application\Scene\GameOverScene.cpp">
       <Filter>Source File\Application\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Goal\Goal.cpp">
+      <Filter>Source File\Application\MyGame\Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Player\Player.cpp">
+      <Filter>Source File\Application\MyGame\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Player\PlayerBullet.cpp">
+      <Filter>Source File\Application\MyGame\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectXGame\Application\MyGame\Player\Player.h">
-      <Filter>Header File\Application\MyGame</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\Player\PlayerBullet.h">
-      <Filter>Header File\Application\MyGame</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h">
       <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
@@ -511,9 +517,6 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\json\LevelLoaderJson.h">
       <Filter>Header File\Engine\json</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\Goal\Goal.h">
-      <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Light\LightGroup.h">
       <Filter>Header File\Engine\3D\Light</Filter>
@@ -619,6 +622,15 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\StageList.h">
       <Filter>Header File\Application\MyGame</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Goal\Goal.h">
+      <Filter>Header File\Application\MyGame\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Player\Player.h">
+      <Filter>Header File\Application\MyGame\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Player\PlayerBullet.h">
+      <Filter>Header File\Application\MyGame\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

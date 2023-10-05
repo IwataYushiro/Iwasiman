@@ -109,8 +109,7 @@ public:
 	
 private://メンバ変数
 	//コントローラーデバイス生成
-	static BOOL CALLBACK EnumJoyStickProc
-	(const DIDEVICEINSTANCE* lpddi, VOID* pvRef)noexcept;
+	//static BOOL CALLBACK EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef)noexcept;
 	
 	//DirectInputの初期化
 	ComPtr<IDirectInput8> directInput = nullptr;

@@ -12,8 +12,7 @@
 //ノード構造体
 struct Node
 {
-	//名前
-	std::string name;
+	
 	//ローカルスケール
 	DirectX::XMVECTOR scaling = { 1.0f,1.0f,1.0f,0.0f };
 	//ローカル回転角
@@ -24,6 +23,9 @@ struct Node
 	DirectX::XMMATRIX transform;
 	//グローバル変形行列
 	DirectX::XMMATRIX globalTransform;
+	
+	//名前
+	std::string name;
 	//親ノード
 	Node* parent = nullptr;
 };

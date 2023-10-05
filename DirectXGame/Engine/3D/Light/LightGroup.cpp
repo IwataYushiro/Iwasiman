@@ -4,16 +4,16 @@
 using namespace DirectX;
 
 //静的メンバ変数の実体
-ID3D12Device* LightGroup::device = nullptr;
+ID3D12Device* LightGroup::device_ = nullptr;
 
 void LightGroup::StaticInitialize(ID3D12Device* device)
 {
 	//再初期化チェック
-	assert(!LightGroup::device);
+	assert(!LightGroup::device_);
 	//nullptrチェック
 	assert(device);
 
-	LightGroup::device = device;
+	LightGroup::device_ = device;
 }
 
 LightGroup* LightGroup::Create()
@@ -46,13 +46,13 @@ void LightGroup::Initialize()
 	cbResourseDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//定数バッファの生成
-	result = device->CreateCommittedResource(
+	result = device_->CreateCommittedResource(
 		&cbHeapProp,//ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
 		&cbResourseDesc, //リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
 
 	//定数バッファへデータ転送
@@ -62,17 +62,17 @@ void LightGroup::Initialize()
 void LightGroup::Update()
 {
 	//値の更新があった時だけ定数バッファに転送
-	if (dirty)
+	if (dirty_)
 	{
 		TransferConstBuffer();
-		dirty = false;
+		dirty_ = false;
 	}
 }
 
 void LightGroup::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex)
 {
 	//定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(rootParameterIndex, constBuff->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(rootParameterIndex, constBuff_->GetGPUVirtualAddress());
 }
 
 void LightGroup::TransferConstBuffer()
@@ -80,20 +80,20 @@ void LightGroup::TransferConstBuffer()
 	HRESULT result;
 	//定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	result = constBuff_->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
 		//環境光
-		constMap->ambientColor = ambientColor;
+		constMap->ambientColor = ambientColor_;
 		//平行光源
 		for (int i = 0; i < DirLightNum; i++)
 		{
 			//lightが有効なら設定を転送
-			if (dirLights[i].IsActive())
+			if (dirLights_[i].IsActive())
 			{
 				constMap->dirLights[i].active = 1;
-				constMap->dirLights[i].lightV = -dirLights[i].GetLightDir();
-				constMap->dirLights[i].lightColor = dirLights[i].GetLightColor();
+				constMap->dirLights[i].lightV = -dirLights_[i].GetLightDir();
+				constMap->dirLights[i].lightColor = dirLights_[i].GetLightColor();
 			}
 			//無効なら転送しない
 			else
@@ -105,12 +105,12 @@ void LightGroup::TransferConstBuffer()
 		for (int i = 0; i < PointLightNum; i++)
 		{
 			//lightが有効なら設定を転送
-			if (pointLights[i].IsActive())
+			if (pointLights_[i].IsActive())
 			{
 				constMap->pointLights[i].active = 1;
-				constMap->pointLights[i].lightPos = pointLights[i].GetLightPos();
-				constMap->pointLights[i].lightColor = pointLights[i].GetLightColor();
-				constMap->pointLights[i].lightatten = pointLights[i].GetLightAtten();
+				constMap->pointLights[i].lightPos = pointLights_[i].GetLightPos();
+				constMap->pointLights[i].lightColor = pointLights_[i].GetLightColor();
+				constMap->pointLights[i].lightatten = pointLights_[i].GetLightAtten();
 			}
 			//無効なら転送しない
 			else
@@ -118,80 +118,80 @@ void LightGroup::TransferConstBuffer()
 				constMap->pointLights[i].active = 0;
 			}
 		}
-		constBuff->Unmap(0, nullptr);
+		constBuff_->Unmap(0, nullptr);
 	}
 }
 
 void LightGroup::DefaultLightSetting()
 {
-	dirLights[0].SetActive(true);
-	dirLights[0].SetLightColor({ 1.0f,1.0f,1.0f });
-	dirLights[0].SetLightDir({ 0.0f,-1.0f,0.0f,0.0f });
+	dirLights_[0].SetActive(true);
+	dirLights_[0].SetLightColor({ 1.0f,1.0f,1.0f });
+	dirLights_[0].SetLightDir({ 0.0f,-1.0f,0.0f,0.0f });
 
-	dirLights[1].SetActive(true);
-	dirLights[1].SetLightColor({ 1.0f,1.0f,1.0f });
-	dirLights[1].SetLightDir({ 0.5f,0.1f,0.2f,0.0f });
+	dirLights_[1].SetActive(true);
+	dirLights_[1].SetLightColor({ 1.0f,1.0f,1.0f });
+	dirLights_[1].SetLightDir({ 0.5f,0.1f,0.2f,0.0f });
 
-	dirLights[2].SetActive(true);
-	dirLights[2].SetLightColor({ 1.0f,1.0f,1.0f });
-	dirLights[2].SetLightDir({ -0.5f,0.1f,-0.2f,0.0f });
+	dirLights_[2].SetActive(true);
+	dirLights_[2].SetLightColor({ 1.0f,1.0f,1.0f });
+	dirLights_[2].SetLightDir({ -0.5f,0.1f,-0.2f,0.0f });
 
-	pointLights[0].SetActive(false);
-	pointLights[0].SetLightColor({ 1.0f,1.0f,1.0f });
-	pointLights[0].SetLightPos({ 0.0f,0.0f,0.0f });
-	pointLights[0].SetLightAtten({ 1.0f,1.0f,1.0f });
+	pointLights_[0].SetActive(false);
+	pointLights_[0].SetLightColor({ 1.0f,1.0f,1.0f });
+	pointLights_[0].SetLightPos({ 0.0f,0.0f,0.0f });
+	pointLights_[0].SetLightAtten({ 1.0f,1.0f,1.0f });
 }
 
 void LightGroup::SetAmbientColor(const XMFLOAT3& color)
 {
-	ambientColor = color;
-	dirty = true;
+	ambientColor_ = color;
+	dirty_ = true;
 }
 
 void LightGroup::SetDirLightActive(int index, bool active)
 {
 	assert(0 <= index && index < DirLightNum);
-	dirLights[index].SetActive(active);
+	dirLights_[index].SetActive(active);
 }
 
 void LightGroup::SetDirLightDir(int index, const XMVECTOR& lightdir)
 {
 	assert(0 <= index && index < DirLightNum);
-	dirLights[index].SetLightDir(lightdir);
-	dirty = true;
+	dirLights_[index].SetLightDir(lightdir);
+	dirty_ = true;
 }
 
 void LightGroup::SetDirLightColor(int index, const XMFLOAT3& lightcolor)
 {
 	assert(0 <= index && index < DirLightNum);
-	dirLights[index].SetLightColor(lightcolor);
-	dirty = true;
+	dirLights_[index].SetLightColor(lightcolor);
+	dirty_ = true;
 }
 
 void LightGroup::SetPointLightPos(int index, const XMFLOAT3& lightPos)
 {
 	assert(0 <= index && index < PointLightNum);
-	pointLights[index].SetLightPos(lightPos);
-	dirty = true;
+	pointLights_[index].SetLightPos(lightPos);
+	dirty_ = true;
 }
 
 void LightGroup::SetPointLightColor(int index, const XMFLOAT3& lightColor)
 {
 	assert(0 <= index && index < PointLightNum);
-	pointLights[index].SetLightColor(lightColor);
-	dirty = true;
+	pointLights_[index].SetLightColor(lightColor);
+	dirty_ = true;
 
 }
 
 void LightGroup::SetPointLightAtten(int index, const XMFLOAT3& lightAtten)
 {
 	assert(0 <= index && index < PointLightNum);
-	pointLights[index].SetLightAtten(lightAtten);
-	dirty = true;
+	pointLights_[index].SetLightAtten(lightAtten);
+	dirty_ = true;
 }
 
 void LightGroup::SetPointLightActive(int index, bool active)
 {
 	assert(0 <= index && index < PointLightNum);
-	pointLights[index].SetActive(active);
+	pointLights_[index].SetActive(active);
 }

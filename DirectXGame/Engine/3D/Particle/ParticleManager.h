@@ -73,11 +73,11 @@ private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device_;
 	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList;
+	static ID3D12GraphicsCommandList* cmdList_;
 	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
+	static ComPtr<ID3D12RootSignature> rootsignature_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate;
+	static ComPtr<ID3D12PipelineState> pipelinestate_;
 
 private:// 静的メンバ関数
 
@@ -145,9 +145,9 @@ public: // メンバ関数
 
 
 private: // メンバ変数
-	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
+	ComPtr<ID3D12Resource> constBuff_; // 定数バッファ
 	// ローカルスケール
-	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 scale_ = { 1.0f,1.0f,1.0f };
 	
 	Particle* particle_ = nullptr;
 

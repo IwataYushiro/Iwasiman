@@ -13,9 +13,9 @@ using namespace Microsoft::WRL;
 const float ParticleManager::radius = 5.0f;				// 底面の半径
 const float ParticleManager::prizmHeight = 8.0f;			// 柱の高さ
 ID3D12Device* ParticleManager::device_ = nullptr;
-ID3D12GraphicsCommandList* ParticleManager::cmdList = nullptr;
-ComPtr<ID3D12RootSignature> ParticleManager::rootsignature;
-ComPtr<ID3D12PipelineState> ParticleManager::pipelinestate;
+ID3D12GraphicsCommandList* ParticleManager::cmdList_ = nullptr;
+ComPtr<ID3D12RootSignature> ParticleManager::rootsignature_;
+ComPtr<ID3D12PipelineState> ParticleManager::pipelinestate_;
 
 void ParticleManager::StaticInitialize(ID3D12Device* device)
 {
@@ -35,15 +35,15 @@ void ParticleManager::StaticInitialize(ID3D12Device* device)
 void ParticleManager::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(ParticleManager::cmdList == nullptr);
+	assert(ParticleManager::cmdList_ == nullptr);
 
 	// コマンドリストをセット
-	ParticleManager::cmdList = cmdList;
+	ParticleManager::cmdList_ = cmdList;
 
 	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipelinestate.Get());
+	cmdList->SetPipelineState(pipelinestate_.Get());
 	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(rootsignature.Get());
+	cmdList->SetGraphicsRootSignature(rootsignature_.Get());
 	// プリミティブ形状を設定
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 }
@@ -51,7 +51,7 @@ void ParticleManager::PreDraw(ID3D12GraphicsCommandList* cmdList)
 void ParticleManager::PostDraw()
 {
 	// コマンドリストを解除
-	ParticleManager::cmdList = nullptr;
+	ParticleManager::cmdList_ = nullptr;
 }
 
 ParticleManager* ParticleManager::Create()
@@ -238,13 +238,13 @@ void ParticleManager::InitializeGraphicsPipeline()
 	// バージョン自動判定のシリアライズ
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 	// ルートシグネチャの生成
-	result = device_->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature));
+	result = device_->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature_));
 	assert(SUCCEEDED(result));
 
-	gpipeline.pRootSignature = rootsignature.Get();
+	gpipeline.pRootSignature = rootsignature_.Get();
 
 	// グラフィックスパイプラインの生成
-	result = device_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestate));
+	result = device_->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestate_));
 	assert(SUCCEEDED(result));
 
 }
@@ -267,7 +267,7 @@ bool ParticleManager::Initialize()
 	result = device_->CreateCommittedResource(
 		&heapProps, // アップロード可能
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
 
 	return true;
@@ -284,22 +284,22 @@ void ParticleManager::Update()
 
 	// 定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	result = constBuff_->Map(0, nullptr, (void**)&constMap);
 	constMap->mat = matView;	// 行列の合成
 	constMap->matBillboard = matBillboard;
-	constBuff->Unmap(0, nullptr);
+	constBuff_->Unmap(0, nullptr);
 }
 
 void ParticleManager::Draw()
 {
 	// nullptrチェック
 	assert(device_);
-	assert(ParticleManager::cmdList);
+	assert(ParticleManager::cmdList_);
 
 	// 定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 
-	particle_->Draw(cmdList);
+	particle_->Draw(cmdList_);
 }
 
 void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale)

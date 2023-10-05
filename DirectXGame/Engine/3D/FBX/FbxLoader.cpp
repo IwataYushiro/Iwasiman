@@ -221,9 +221,9 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 			FbxVector4 normal;
 			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
 			{
-				vertex.normal.x = (float)normal[0];
-				vertex.normal.y = (float)normal[1];
-				vertex.normal.z = (float)normal[2];
+				vertex.normal.x = static_cast<float>(normal[0]);
+				vertex.normal.y = static_cast<float>(normal[1]);
+				vertex.normal.z = static_cast<float>(normal[2]);
 			}
 			//テクスチャUV読み込み
 			if (textureCount > 0)
@@ -234,8 +234,8 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 				if (fbxMesh->GetPolygonVertexUV(i, j,
 					uvNames[0], uvs, lUnmappedUV))
 				{
-					vertex.uv.x = (float)uvs[0];
-					vertex.uv.y = (float)uvs[1];
+					vertex.uv.x = static_cast<float>(uvs[0]);
+					vertex.uv.y = static_cast<float>(uvs[1]);
 				}
 			}
 			//インデックス配列に頂点インデックスを追加
@@ -243,7 +243,7 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 			if (j < 3)
 			{
 				//1点追加し、他の2点と三角形を構築
-				indices.push_back(index);
+				indices.push_back(static_cast<unsigned short>(index));
 			}
 			//4頂点目
 			else
@@ -251,11 +251,11 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 				//3点追加
 				//四角形の0,1,2,3の内 2,3,0で三角形を構築する
 				int index2 = indices[indices.size() - 1];
-				int index3 = index;
+				int index3 = static_cast<unsigned short>(index);
 				int index0 = indices[indices.size() - 3];
-				indices.push_back(index2);
-				indices.push_back(index3);
-				indices.push_back(index0);
+				indices.push_back(static_cast<unsigned short>(index2));
+				indices.push_back(static_cast<unsigned short>(index3));
+				indices.push_back(static_cast<unsigned short>(index0));
 			}
 		}
 	}

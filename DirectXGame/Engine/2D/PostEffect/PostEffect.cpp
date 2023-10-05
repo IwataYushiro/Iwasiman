@@ -52,17 +52,19 @@ void PostEffect::CreateVertexBuffer()
 	HRESULT result;
 	
 	//サイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(verticesPost[0]) * _countof(verticesPost));
+	//UINT sizeVB = static_cast<UINT>(sizeof(verticesPost[0]) * _countof(verticesPost));
 
 	//頂点バッファ
 	D3D12_HEAP_PROPERTIES heapProp{};	//ヒープ設定
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	//GPU転送用
+
+	CD3DX12_RESOURCE_DESC buffer = CD3DX12_RESOURCE_DESC::Buffer(sizeof(Vertex) * verticesCount);
 	//リソース設定
 	//頂点バッファ生成
 	result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(Vertex)*verticesCount),
+		&buffer,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&vertBuff));
@@ -115,11 +117,12 @@ void PostEffect::CreateConstBufferMaterialPost()
 	D3D12_HEAP_PROPERTIES cbHeapProp{};		//ヒープ設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUへの転送用
 	
+	CD3DX12_RESOURCE_DESC buffer = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataMaterial) + 0xff) & ~0xff);
 	//定数バッファの生成
 	result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
 		&cbHeapProp,//ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataMaterial) + 0xff) & ~0xff),//リソース設定
+		&buffer,//リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuffMaterialPost));
@@ -136,12 +139,14 @@ void PostEffect::CreateConstBufferTransformPost()
 
 	D3D12_HEAP_PROPERTIES cbHeapProp{};		//ヒープ設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUへの転送用
+
+	CD3DX12_RESOURCE_DESC buffer = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
 	//リソース設定
 	//定数バッファの生成
 	result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
 		&cbHeapProp,//ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff), //リソース設定
+		&buffer, //リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuffTransformPost));
@@ -162,15 +167,18 @@ void PostEffect::CreateTexture()
 		(UINT)WinApp::window_height,
 		1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 
+	CD3DX12_HEAP_PROPERTIES CHP = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
+	CD3DX12_CLEAR_VALUE CCV = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, clearcolor);
+
 	//テクスチャバッファ生成
 	for (int i = 0; i < 2; i++)
 	{
 		result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
-			&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
+			&CHP,
 			D3D12_HEAP_FLAG_NONE,
 			&texresDesc,
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-			&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, clearcolor),
+			&CCV,
 			IID_PPV_ARGS(&texBuff[i]));
 		assert(SUCCEEDED(result));
 		{
@@ -263,12 +271,16 @@ void PostEffect::CreateDepthBuffer()
 		1, 0, 1, 0,
 		D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
+	CD3DX12_HEAP_PROPERTIES CHP = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_CLEAR_VALUE CCV = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D32_FLOAT, 1.0f, 0);
+
+
 	//深度バッファ生成
 	result = spCommon_->GetDxCommon()->GetDevice()->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+		&CHP,
 		D3D12_HEAP_FLAG_NONE, &depthResDesc,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
-		&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D32_FLOAT, 1.0f, 0),
+		&CCV,
 		IID_PPV_ARGS(&depthBuff));
 	assert(SUCCEEDED(result));
 }
@@ -516,7 +528,7 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 
 }
 
-void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
+void PostEffect::Draw([[maybe_unused]] ID3D12GraphicsCommandList* cmdList)
 {
 	//パイプラインステートとルートシグネチャの設定
 	spCommon_->GetDxCommon()->GetCommandList()->SetPipelineState(pipelineState.Get());
@@ -552,13 +564,14 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void PostEffect::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
+	
 	for (int i = 0; i < 2; i++)
 	{
+		CD3DX12_RESOURCE_BARRIER CRB = CD3DX12_RESOURCE_BARRIER::Transition(texBuff[i].Get(),
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_RENDER_TARGET);
 		//リソースバリア変更(シェーダーリソース→描画可能)
-		cmdList->ResourceBarrier(1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(texBuff[i].Get(),
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_RENDER_TARGET));
+		cmdList->ResourceBarrier(1,&CRB);
 	}
 	//RTV用デスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHs[2];
@@ -598,10 +611,9 @@ void PostEffect::PostDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	for (int i = 0; i < 2; i++)
 	{
+		CD3DX12_RESOURCE_BARRIER CRB = CD3DX12_RESOURCE_BARRIER::Transition(texBuff[i].Get(),
+			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 		//リソースバリア変更(描画可能→シェーダーリソース)
-		cmdList->ResourceBarrier(1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(texBuff[i].Get(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		cmdList->ResourceBarrier(1, &CRB);
 	}
 }

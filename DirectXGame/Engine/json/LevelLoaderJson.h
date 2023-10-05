@@ -8,12 +8,7 @@ struct LevelData
 {
 	struct ObjectData
 	{
-		//ファイル名
-		std::string fileName;
-		//オブジェクトタイプ
-		std::string objectType;
-		//オブジェクトパターン
-		std::string objectPattern;
+		
 		//平行移動
 		DirectX::XMVECTOR trans;
 		//回転角
@@ -26,6 +21,13 @@ struct LevelData
 		DirectX::XMVECTOR centerCollider;
 		//サイズ
 		DirectX::XMVECTOR sizeCollider;
+		
+		//ファイル名
+		std::string fileName;
+		//オブジェクトタイプ
+		std::string objectType;
+		//オブジェクトパターン
+		std::string objectPattern;
 	};
 	//オブジェクト配列
 	std::vector<ObjectData> objects;

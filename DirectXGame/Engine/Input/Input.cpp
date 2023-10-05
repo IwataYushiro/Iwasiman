@@ -15,10 +15,10 @@ Input::~Input()
 	//入力情報の取得を終了
 	if (keyboard)keyboard->Unacquire();
 	if (mouse)mouse->Unacquire();
-	if (isJoyStick)
+	/*if (isJoyStick)
 	{
 		if (joyStick)joyStick->Unacquire();
-	}
+	}*/
 }
 
 //初期化
@@ -39,7 +39,7 @@ void Input::Initialize()
 	//マウスデバイス
 	GenerateMouse();
 	//コントローラーデバイス
-	GenerateJoyStick();
+	//GenerateJoyStick();
 }
 
 //更新
@@ -71,17 +71,17 @@ void Input::Update()
 	mousePos.x = static_cast<float>(mouseScreenPos.x);
 	mousePos.y = static_cast<float>(mouseScreenPos.y);
 
-	if (isJoyStick)
-	{
-		joyStick->Acquire();
-		joyStick->Poll();
-		//全コントローラーの入力状態を取得する
-		joyStick->GetDeviceState(sizeof(joyState), &joyState);
-		if (joyState.rgdwPOV[0] != 0xFFFFFFFF)
-		{
-			OutputDebugStringA("ok");
-		}
-	}
+	//if (isJoyStick)
+	//{
+	//	joyStick->Acquire();
+	//	joyStick->Poll();
+	//	//全コントローラーの入力状態を取得する
+	//	joyStick->GetDeviceState(sizeof(joyState), &joyState);
+	//	if (joyState.rgdwPOV[0] != 0xFFFFFFFF)
+	//	{
+	//		OutputDebugStringA("ok");
+	//	}
+	//}
 }
 
 void Input::GenerateKeyBoard()
@@ -119,17 +119,18 @@ void Input::GenerateMouse()
 }
 
 
-
-void Input::GenerateJoyStick()
-{
-	HRESULT result;
-	
-	//ジョイスティック列挙
-	result = directInput->EnumDevices(DI8DEVTYPE_GAMEPAD,
-		EnumJoyStickProc,this, DIEDFL_ATTACHEDONLY);
-	if (joyStick) isJoyStick = true;
-
-}
+//
+//void Input::GenerateJoyStick()
+//{
+//	HRESULT result;
+//	
+//	//ジョイスティック列挙
+//	result = directInput->EnumDevices(DI8DEVTYPE_GAMEPAD,
+//		EnumJoyStickProc,this, DIEDFL_ATTACHEDONLY);
+//	if (joyStick) isJoyStick = true;
+//
+//}
+//
 
 //キーが押されているか
 bool Input::PushKey(BYTE keyNumber) {
@@ -202,6 +203,7 @@ bool Input::ReleaseMouse(int32_t mouseNumber)
 	return false;
 }
 
+/*
 BOOL Input::EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef) noexcept
 {
 	HRESULT result;
@@ -263,3 +265,4 @@ BOOL Input::EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef) noexcep
 
 	return DIENUM_STOP;
 }
+*/

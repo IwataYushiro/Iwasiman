@@ -120,12 +120,12 @@ void Sprite::Update()
 	if (texBuff)
 	{
 		//テクスチャ情報取得
-		D3D12_RESOURCE_DESC resDesc = texBuff->GetDesc();
+		D3D12_RESOURCE_DESC texResDesc = texBuff->GetDesc();
 
-		float tex_left = textureLeftTop_.x / resDesc.Width;
-		float tex_right = (textureLeftTop_.x + textureSize_.x) / resDesc.Width;
-		float tex_top = textureLeftTop_.y / resDesc.Height;
-		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / resDesc.Height;
+		float tex_left = textureLeftTop_.x / texResDesc.Width;
+		float tex_right = (textureLeftTop_.x + textureSize_.x) / texResDesc.Width;
+		float tex_top = textureLeftTop_.y / texResDesc.Height;
+		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / texResDesc.Height;
 		//頂点のUVに反映する
 		vertices[LB].uv = { tex_left,tex_bottom, };		//左下
 		vertices[LT].uv = { tex_left,tex_top, };		//左上
@@ -239,9 +239,9 @@ void Sprite::AdjustTextureSize() {
 	assert(texBuff);
 
 	//テクスチャ情報取得
-	D3D12_RESOURCE_DESC resDesc = texBuff->GetDesc();
+	D3D12_RESOURCE_DESC texResDesc = texBuff->GetDesc();
 
 	//テクスチャサイズ取得
-	textureSize_.x = static_cast<float>(resDesc.Width);
-	textureSize_.y = static_cast<float>(resDesc.Height);
+	textureSize_.x = static_cast<float>(texResDesc.Width);
+	textureSize_.y = static_cast<float>(texResDesc.Height);
 }

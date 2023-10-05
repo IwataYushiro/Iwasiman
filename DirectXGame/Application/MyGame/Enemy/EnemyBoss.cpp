@@ -215,8 +215,8 @@ void EnemyBoss::UpdateAttack() {
 	float cameraMove = camera_->GetEye().x;
 	//制御点
 	start = { -30.0f + cameraMove,10.0f,100.0f };
-	p1 = { -10.0f + cameraMove,-20.0f,100.0f };
-	p2 = { 10.0f + cameraMove,40.0f,100.0f };
+	point1 = { -10.0f + cameraMove,-20.0f,100.0f };
+	point2 = { 10.0f + cameraMove,40.0f,100.0f };
 	end = { 30.0f + cameraMove,10.0f,100.0f };
 	//時間
 
@@ -230,10 +230,10 @@ void EnemyBoss::UpdateAttack() {
 	timeRate = min(elapsed / maxTime, 1.0f);
 
 	if (isReverse_) {
-		position_ = Bezier3(end, p2, p1, start, timeRate);
+		position_ = Bezier3(end, point2, point1, start, timeRate);
 	}
 	else {
-		position_ = Bezier3(start, p1, p2, end, timeRate);
+		position_ = Bezier3(start, point1, point2, end, timeRate);
 	}
 	//指定の位置に到達したら反転
 	if (position_.x >= 30.0f + cameraMove) {

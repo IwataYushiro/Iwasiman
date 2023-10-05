@@ -37,8 +37,6 @@ private://静的メンバ変数
 	static ID3D12Device* device_;
 
 private://メンバ変数
-	//定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
 	//ライト光線方向(単位ベクトル)
 	XMVECTOR lightDir = { 1.0f,0.0f,0.0f,0.0f };
 	//ライト色
@@ -47,6 +45,9 @@ private://メンバ変数
 	bool dirty = false;
 	//有効フラグ
 	bool active_ = false;
+	//定数バッファ
+	ComPtr<ID3D12Resource> constBuff;
+	
 
 public://メンバ関数
 	//初期化

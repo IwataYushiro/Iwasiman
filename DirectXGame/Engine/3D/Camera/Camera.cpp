@@ -246,7 +246,6 @@ void Camera::CameraMoveVectorTarget(const XMFLOAT3& move)
 void Camera::DebugCamera(bool eyeTargetMix)
 {
 	Input* input_ = Input::GetInstance();
-	ImGuiManager* imguiManager_ = ImGuiManager::GetInstance();
 	const int VECTOR3COUNT = 3;
 
 	//ImGui‚É“n‚·—p‚Ì•Ï”

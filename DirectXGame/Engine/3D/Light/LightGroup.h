@@ -37,7 +37,7 @@ public://サブクラス
 
 private://静的メンバ変数
 	//デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 
 public://静的メンバ関数
 	//静的初期化
@@ -46,17 +46,18 @@ public://静的メンバ関数
 	static LightGroup* Create();
 
 private://メンバ変数
-	//定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	
 	//環境光の色
-	XMFLOAT3 ambientColor = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 ambientColor_ = { 1.0f,1.0f,1.0f };
 	//平行光源の配列
-	DirectionalLight dirLights[DirLightNum];
+	DirectionalLight dirLights_[DirLightNum];
+	//定数バッファ
+	ComPtr<ID3D12Resource> constBuff_;
 	//ダーティフラグ
-	bool dirty = false;
+	bool dirty_ = false;
 
 	//点光源の配列
-	PointLight pointLights[PointLightNum];
+	PointLight pointLights_[PointLightNum];
 
 public://メンバ関数
 	//初期化

@@ -307,8 +307,8 @@ void Player::JumpBack()
 
 	//§Œä“_
 	start = { move.x,-10.0f,-60.0f };
-	p1 = { move.x,10.0f,-40.0f };
-	p2 = { move.x,10.0f,-20.0f };
+	point1 = { move.x,10.0f,-40.0f };
+	point2 = { move.x,10.0f,-20.0f };
 	end = { move.x,-10.0f,0.0f };
 
 	//ŠÔ
@@ -337,9 +337,9 @@ void Player::JumpBack()
 
 		timeRate = min(elapsed / maxTime, 1.0f);
 
-		if (isBack_)move = Bezier3(end, p2, p1, start, timeRate);
+		if (isBack_)move = Bezier3(end, point2, point1, start, timeRate);
 
-		else move = Bezier3(start, p1, p2, end, timeRate);
+		else move = Bezier3(start, point1, point2, end, timeRate);
 
 		if (move.z >= end.z)
 		{

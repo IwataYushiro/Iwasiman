@@ -17,7 +17,8 @@ public:
 	virtual ~BaseEnemy() = default;
 
 	virtual bool Initialize() { return Object3d::Initialize(); }
-	virtual bool Initialize(unsigned short subAttribute) { return Object3d::Initialize(); }
+	
+	virtual bool Initialize([[maybe_unused]] unsigned short subAttribute ) { return Object3d::Initialize(); }
 
 	//çXêV
 	virtual void Update() { Object3d::Update(); }
