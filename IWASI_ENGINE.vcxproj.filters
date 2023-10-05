@@ -228,10 +228,10 @@
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp">
       <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Player.cpp">
+    <ClCompile Include="DirectXGame\Application\MyGame\Player\Player.cpp">
       <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\PlayerBullet.cpp">
+    <ClCompile Include="DirectXGame\Application\MyGame\Player\PlayerBullet.cpp">
       <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\2D\Sprite\SpriteCommon.cpp">
@@ -330,7 +330,7 @@
     <ClCompile Include="DirectXGame\Engine\json\LevelLoaderJson.cpp">
       <Filter>Source File\Engine\json</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Goal.cpp">
+    <ClCompile Include="DirectXGame\Application\MyGame\Goal\Goal.cpp">
       <Filter>Source File\Application\MyGame</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Light\LightGroup.cpp">
@@ -407,10 +407,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectXGame\Application\MyGame\Player.h">
+    <ClInclude Include="DirectXGame\Application\MyGame\Player\Player.h">
       <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\PlayerBullet.h">
+    <ClInclude Include="DirectXGame\Application\MyGame\Player\PlayerBullet.h">
       <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h">
@@ -512,7 +512,7 @@
     <ClInclude Include="DirectXGame\Engine\json\LevelLoaderJson.h">
       <Filter>Header File\Engine\json</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\Goal.h">
+    <ClInclude Include="DirectXGame\Application\MyGame\Goal\Goal.h">
       <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Light\LightGroup.h">
