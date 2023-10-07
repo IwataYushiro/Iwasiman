@@ -1,5 +1,10 @@
 #include "WinApp.h"
+
+#pragma warning(push)
+#pragma warning(disable:4514)
+#pragma warning(disable:4820)
 #include <imgui_impl_win32.h>
+#pragma warning(pop)
 
 #pragma comment(lib,"winmm.lib")
 

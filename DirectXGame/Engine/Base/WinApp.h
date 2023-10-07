@@ -1,5 +1,10 @@
 #pragma once
+
+#pragma warning(push)
+#pragma warning(disable:4668)
+#pragma warning(disable:5039)
 #include <Windows.h>
+#pragma warning(pop)
 
 //Windowsアプリケーション
 class WinApp final
@@ -39,7 +44,7 @@ public://アクセッサ置き場
 	static WinApp* GetInstance();
 
 private:
-	WinApp()=default;
+	WinApp() {};
 	~WinApp() = default;
 public:
 	WinApp(const WinApp& obj) = delete;

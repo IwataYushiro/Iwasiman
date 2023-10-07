@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseEnemy.h"
+
 #include <string>
 #include <list>
 #include <memory>

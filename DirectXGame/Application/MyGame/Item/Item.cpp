@@ -24,7 +24,7 @@ std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short 
 	if (ins == nullptr) return nullptr;
 
 	//初期化
-	if (!ins->Initialize(subAttribute))
+	if (!ins->Initialize())
 	{
 		ins.release();
 		assert(0);
@@ -32,18 +32,19 @@ std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short 
 	//モデルのセット
 	if (model) ins->SetModel(model);
 	if (player)ins->SetPlayer(player);
+	if (subAttribute)ins->collider_->SetSubAttribute(subAttribute);
+
 	return ins;
 }
 
-bool Item::Initialize([[maybe_unused]] unsigned short subAttribute)
+bool Item::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ITEM);
-	if (subAttribute)collider_->SetAttribute(subAttribute);
-
+	
 	isGet_ = false;
 	isGetJump_ = false;
 

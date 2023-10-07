@@ -99,7 +99,6 @@ void Player::Update(bool isBack, bool isAttack) {
 
 	if (!isDead_)
 	{
-
 		//移動処理
 		if (!isJumpBack_)Move();
 		//攻撃処理
@@ -305,21 +304,13 @@ void Player::JumpBack()
 {
 	XMFLOAT3 move = Object3d::GetPosition();
 
-	//制御点
-	start = { move.x,-10.0f,-60.0f };
-	point1 = { move.x,10.0f,-40.0f };
-	point2 = { move.x,10.0f,-20.0f };
-	end = { move.x,-10.0f,0.0f };
-
-	//時間
-
 	if (onGround_)
 	{
 		if (!isJumpBack_)
 		{
 			if (input_->TriggerKey(DIK_Z))
 			{
-
+				jumpBackPos_ = position_;
 				if (isBack_)isBack_ = false;
 				else isBack_ = true;
 				isJumpBack_ = true;
@@ -328,6 +319,14 @@ void Player::JumpBack()
 	}
 	if (isJumpBack_)
 	{
+		const float offsetPosY = 1.0f;
+		const float JumpBackPosY = 20.0f;
+		//制御点
+		start = { move.x,jumpBackPos_.y-offsetPosY,-60.0f };
+		point1 = { move.x,jumpBackPos_.y + JumpBackPosY,-40.0f };
+		point2 = { move.x,jumpBackPos_.y + JumpBackPosY,-20.0f };
+		end = { move.x,jumpBackPos_.y-offsetPosY,0.0f };
+
 		//現在時間を取得する
 		nowCount = std::chrono::steady_clock::now();
 		//前回記録からの経過時間を取得する

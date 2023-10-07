@@ -92,6 +92,7 @@ private:
 	//‰œ‘¤‚ÉˆÚ“®
 	bool isJumpBack_;
 	bool isBack_;
+	XMFLOAT3 jumpBackPos_;
 
 	//ŽžŠÔŒv‘ª
 	std::chrono::steady_clock::time_point startCount;	//ŠJŽnŽžŠÔ
