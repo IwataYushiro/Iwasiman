@@ -181,7 +181,7 @@ void StageSelectScene::Update()
 			{
 				//ステージ2
 				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", SL_Stage2_Area1);
+				sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//まだ未完成
 
 			}
 		}
@@ -211,7 +211,9 @@ void StageSelectScene::Update()
 
 		if (easeMenuPosX_[5].num_X == easeMenuPosX_[5].start)
 		{
-			sceneManager_->ChangeScene("TITLE");
+			if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("TITLE",SL_StageTutorial_StageID);
+			else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("TITLE", SL_Stage1_StageID);
+			else if (menuCount_ == SSSMI_Stage2_TowerStage)sceneManager_->ChangeScene("TITLE", SL_Stage2_StageID);
 		}
 	}
 	rot_.y += 0.5f;

@@ -6,6 +6,7 @@
 #include "EnemyBoss.h"
 #include "EnemyCore.h"
 
+//“G‚ÌHê
 std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyName,
 	Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
 {

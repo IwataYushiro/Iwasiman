@@ -29,6 +29,8 @@ public://メンバ関数
 	void Update() override;
 	//状態更新(ゲーム開始するとき)
 	void UpdateIsStartGame();
+	//状態更新(ステージセレクトへ遷移するとき)
+	void UpdateIsStageSelect();
 	//状態更新(スタートに戻ったとき)
 	void UpdateIsBack();
 	//状態更新(メニューのとき) 
@@ -95,6 +97,7 @@ private://メンバ変数
 	bool isMenu_ = false;
 	bool isBack_ = false;
 	bool isStartGame_ = false;
+	bool isStageSelect_ = false;
 
 	Easing easeTitlePosX_[2] =
 	{
@@ -126,15 +129,22 @@ private://メンバ変数
 
 	Easing easeEyeGameStart_[3]
 	{
-		Easing(21.0f, -22.0f, 1.8f),//X
-		Easing(-4.0f, -1.0f, 1.8f),//Y
-		Easing(-60.0f, -60.0f, 1.8f),//Z
+		Easing(21.0f, -22.0f, 1.0f),//X
+		Easing(-4.0f, -1.0f, 1.0f),//Y
+		Easing(-60.0f, -60.0f, 1.0f),//Z
 	};
 	Easing easeTargetGameStart_[3]
 	{
-		Easing(-100.0f, 50.0f, 1.8f),//X
-		Easing(-10.0f, -8.0f, 1.8f),//Y
-		Easing(-62.0f, -57.0f, 1.8f),//Z
+		Easing(-100.0f, 50.0f, 1.0f),//X
+		Easing(-10.0f, -8.0f, 1.0f),//Y
+		Easing(-62.0f, -57.0f, 1.0f),//Z
+	};
+
+	Easing easePlayerMove_[3]
+	{
+		Easing(0.0f, 150.0f, 3.0f),//X
+		Easing(-8.0f, 40.0f, 3.0f),//Y
+		Easing(-60.0f, -60.0f, 3.0f),//Z
 	};
 
 	//選択中の色

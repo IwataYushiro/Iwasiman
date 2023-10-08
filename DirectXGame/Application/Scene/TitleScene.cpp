@@ -96,6 +96,7 @@ void TitleScene::Update()
 	UpdateChangeColor();
 
 	if (isStartGame_)UpdateIsStartGame();
+	else if (isStageSelect_)UpdateIsStageSelect();
 	else if (isMenu_)UpdateIsMenu();
 	else if (isBack_)UpdateIsBack();
 	else
@@ -166,9 +167,13 @@ void TitleScene::Update()
 
 	//objF->Update();
 
+#ifdef DEBUG
+	camera_->DebugCamera(false);
+#endif // DEBUG
+
 	imguiManager_->Begin();
 
-	camera_->DebugCamera(false);
+	
 
 	imguiManager_->End();
 }
@@ -201,13 +206,44 @@ void TitleScene::UpdateIsStartGame()
 		goal->SetPosition(move);
 		if (goal->GetPosition().x <= gameStartPos_)
 		{
-
 			//チュートリアルステージへ
 			sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
 
 		};
 
 
+	}
+
+}
+
+void TitleScene::UpdateIsStageSelect()
+{
+	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_out_expo();
+	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_out_expo();
+	for (int i = 0; i < 3; i++)easePlayerMove_[i].ease_in_expo();
+
+	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
+	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
+	spriteMenuDone_->SetPosition({ easeMenuPosX_[3].num_X,550.0f });
+	spriteBack_->SetPosition({ easeMenuPosX_[4].num_X,50.0f });
+
+	//カメラもセット
+	camera_->SetEye({ easeEyeGameStart_[0].num_X, easeEyeGameStart_[1].num_X, easeEyeGameStart_[2].num_X });
+	camera_->SetTarget({ easeTargetGameStart_[0].num_X, easeTargetGameStart_[1].num_X, easeTargetGameStart_[2].num_X });
+
+	for (Object3d*& player : objPlayers_)
+	{
+		player->SetPosition({ easePlayerMove_[0].num_X,easePlayerMove_[1].num_X,easePlayerMove_[2].num_X });
+
+		if (player->GetPosition().x == easePlayerMove_[0].end)
+		{
+			//ステージ選択
+			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+			else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
+		}
 	}
 
 }
@@ -294,10 +330,12 @@ void TitleScene::UpdateIsMenu()
 		}
 		else if (menuCount_ == TSMI_StageSelect)
 		{
-			//ステージ選択
-			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
-			else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
+			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
+			for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
+			for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
+			for (int i = 0; i < 3; i++)easePlayerMove_[i].Standby(false);
+			isStageSelect_ = true;
+		
 		}
 	}
 	if (easeMenuPosX_[4].num_X == easeMenuPosX_[4].end)

@@ -197,7 +197,7 @@ void GamePlayScene::Update()
 
 		if (input_->TriggerKey(DIK_W))
 		{
-			sceneManager_->ChangeScene("TITLE");
+			sceneManager_->ChangeScene("TITLE", stageNum_);
 			isPause_ = false;
 		}
 
