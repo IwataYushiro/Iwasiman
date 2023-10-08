@@ -124,6 +124,29 @@
             },
             "file_name": "player",
             "objecttype": "PLAYER"
+        },
+        {
+            "type": "MESH",
+            "name": "球",
+            "transform": {
+                "translation": [
+                    60.0,
+                    200.0,
+                    -2.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "sphere",
+            "objecttype": "GOAL"
         }
     ]
 }

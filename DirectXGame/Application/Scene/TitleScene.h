@@ -27,6 +27,12 @@ public://メンバ関数
 	void Initialize() override;
 	//更新
 	void Update() override;
+	//状態更新(ゲーム開始するとき)
+	void UpdateIsStartGame();
+	//状態更新(スタートに戻ったとき)
+	void UpdateIsBack();
+	//状態更新(メニューのとき) 
+	void UpdateIsMenu();
 	//描画
 	void Draw() override;
 	//終了
@@ -76,22 +82,25 @@ private://メンバ変数
 	Model* modelSkydomeStage1_ = nullptr;
 	Model* modelSkydomeStage2_ = nullptr;
 	Model* modelGround_ = nullptr;
+	Model* modelGoal_ = nullptr;
 
 	std::vector<Object3d*> objPlayers_;
 	std::vector<Object3d*> objSkydomes_;
 	std::vector<Object3d*> objGrounds_;
+	std::vector<Object3d*> objGoals_;
 
 	std::map<std::string, Model*> models_;
 
-	bool isStart_ = false;
+	//フラグ類
 	bool isMenu_ = false;
 	bool isBack_ = false;
+	bool isStartGame_ = false;
+
 	Easing easeTitlePosX_[2] =
 	{
 		Easing(0.0f, -1300.0f, 1.0f),
 		Easing(0.0f, -1300.0f, 1.0f)
 	};
-		
 
 	Easing easeMenuPosX_[5] =
 	{
@@ -102,18 +111,32 @@ private://メンバ変数
 		Easing(1300.0f, 900.0f, 1.8f),//戻る
 	};
 
-	Easing easeEye_[3]
+	Easing easeEyeMenu_[3]
 	{
 		Easing(0.0f, 21.0f, 1.8f),//X
 		Easing(1.0f, -4.0f, 1.8f),//Y
 		Easing(-110.0f, -60.0f, 1.8f),//Z
 	};
-	Easing easeTarget_[3]
+	Easing easeTargetMenu_[3]
 	{
 		Easing(0.0f, -100.0f, 1.8f),//X
 		Easing(0.0f, -10.0f, 1.8f),//Y
 		Easing(-10.0f, -62.0f, 1.8f),//Z
 	};
+
+	Easing easeEyeGameStart_[3]
+	{
+		Easing(21.0f, -22.0f, 1.8f),//X
+		Easing(-4.0f, -1.0f, 1.8f),//Y
+		Easing(-60.0f, -60.0f, 1.8f),//Z
+	};
+	Easing easeTargetGameStart_[3]
+	{
+		Easing(-100.0f, 50.0f, 1.8f),//X
+		Easing(-10.0f, -8.0f, 1.8f),//Y
+		Easing(-62.0f, -57.0f, 1.8f),//Z
+	};
+
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
 
@@ -130,8 +153,6 @@ private://メンバ変数
 
 	//開始時のポジション
 	DirectX::XMFLOAT3 startPos_;
-	//X値がここまで来たらループ
-	const float returnPos_ = -120.0f;
 	
 	//どのステージにいるのかを受け取るための変数
 	int stageNum_;
