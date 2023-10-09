@@ -168,7 +168,7 @@ void TitleScene::Update()
 	//objF->Update();
 
 #ifdef DEBUG
-	camera_->DebugCamera(false);
+camera_->DebugCamera(false);
 #endif // DEBUG
 
 	imguiManager_->Begin();
