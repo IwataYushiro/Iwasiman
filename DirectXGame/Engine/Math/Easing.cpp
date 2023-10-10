@@ -753,3 +753,10 @@ float Easing::bounceCalculation(float x)
 
 	return v;
 }
+
+void Easing::SetEasing(float s, float e, float t)
+{
+	this->start = s;
+	this->end = e;
+	this->maxtime = t;
+}

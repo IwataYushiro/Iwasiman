@@ -35,12 +35,12 @@ void StageSelectScene::Initialize()
 	//camera_->SetEye({ -10.0f,2.0f,0.0f });
 
 	// 視点座標
-	camera_->SetEye({ 0.0f, 5.0f, -100.0f });
+	camera_->SetEye({ easeEyeStageSelect_[0].start, easeEyeStageSelect_[1].start, easeEyeStageSelect_[2].start });
 	// 注視点座標
-	camera_->SetTarget({ 0.0f,0.0f,0.0f });
+	camera_->SetTarget({ easeTargetStageSelect_[0].start, easeTargetStageSelect_[1].start, easeTargetStageSelect_[2].start});
 
 	//レベルデータ読み込み
-	//LoadLVData("enemytest");
+	LoadLVData("scene/stageselect");
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
@@ -74,27 +74,21 @@ void StageSelectScene::Initialize()
 	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
 	modelStage1_ = Model::LoadFromOBJ("skydome");
 	modelStage2_ = Model::LoadFromOBJ("skydome2");
-	
+
 	objStage_ = Object3d::Create();
 	objStage_->SetModel(modelStageTutorial_);
 	objStage_->SetCamera(camera_);
 	objStage_->SetScale({ 7.0f,7.0f,7.0f });
 
-	//FBX
-	//objF = ObjectFbx::Create();
-	//modelF = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-	//objF->SetModelFBX(modelF);
-	//objF->SetCamera(camera_);
-	//objF->PlayAnimation();//更新で呼ぶと止まるから注意
-
-	//パーティクル
-	/*particle1_ = Particle::LoadFromParticleTexture("particle2.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);*/
+	pm1_->SetCamera(camera_);
 
 	easeTitlePosX_.Standby(false);
 	for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(false);
+	for (int i = 0; i < 3; i++)easeEyeStageSelect_[i].Standby(false);
+	for (int i = 0; i < 3; i++)easeTargetStageSelect_[i].Standby(false);
 
 }
 
@@ -102,11 +96,14 @@ void StageSelectScene::Update()
 {
 	if (menuCount_ <= SSSMI_StageTutorial_Tutorial)menuCount_ = SSSMI_StageTutorial_Tutorial;
 	else if (menuCount_ >= SSSMI_Stage2_TowerStage)menuCount_ = SSSMI_Stage2_TowerStage;
-	if (!outStageSerect_)
+	
+	if (isStageSelect_)
 	{
 		//イージング
 		easeTitlePosX_.ease_out_expo();
 		for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeEyeStageSelect_[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeTargetStageSelect_[i].ease_out_expo();
 
 		//座標セット
 		spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
@@ -115,6 +112,10 @@ void StageSelectScene::Update()
 		spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
 		spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
 		spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
+
+		//カメラもセット
+		camera_->SetEye({ easeEyeStageSelect_[0].num_X, easeEyeStageSelect_[1].num_X, easeEyeStageSelect_[2].num_X });
+		camera_->SetTarget({ easeTargetStageSelect_[0].num_X, easeTargetStageSelect_[1].num_X, easeTargetStageSelect_[2].num_X });
 
 		if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
 		if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
@@ -191,7 +192,8 @@ void StageSelectScene::Update()
 			{
 				easeTitlePosX_.Standby(true);
 				for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(true);
-				outStageSerect_ = true;
+				outStageSelect_ = true;
+				isStageSelect_ = false;
 			}
 		}
 	}
@@ -211,17 +213,26 @@ void StageSelectScene::Update()
 
 		if (easeMenuPosX_[5].num_X == easeMenuPosX_[5].start)
 		{
-			if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("TITLE",SL_StageTutorial_StageID);
+			if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("TITLE", SL_StageTutorial_StageID);
 			else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("TITLE", SL_Stage1_StageID);
 			else if (menuCount_ == SSSMI_Stage2_TowerStage)sceneManager_->ChangeScene("TITLE", SL_Stage2_StageID);
 		}
 	}
+
+	for (Object3d*& player : objPlayers_)
+	{
+		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
+			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
+
+		player->Update();
+	}
+	for (Object3d*& ground : objGrounds_)ground->Update();
+	for (Object3d*& goal : objGoals_)goal->Update();
+
+
 	rot_.y += 0.5f;
 
 	objStage_->SetRotation(rot_);
-
-	imguiManager_->Begin();
-	imguiManager_->End();
 
 	spriteMenu_->Update();
 	spriteTutorial_->Update();
@@ -229,10 +240,18 @@ void StageSelectScene::Update()
 	spriteStage2_->Update();
 	spriteDone_->Update();
 	spriteBack_->Update();
+	pm1_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
 	objStage_->Update();
+	
+	imguiManager_->Begin();
+#ifdef _DEBUG
+	//camera_->DebugCamera(false);
+#endif // DEBUG
+
+	imguiManager_->End();
 }
 
 void StageSelectScene::Draw()
@@ -240,7 +259,10 @@ void StageSelectScene::Draw()
 
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
-	
+
+	for (Object3d*& player : objPlayers_)player->Draw();
+	for (Object3d*& ground : objGrounds_)ground->Draw();
+	for (Object3d*& goal : objGoals_)goal->Draw();
 	objStage_->Draw();
 
 	//モデル描画後処理
@@ -251,6 +273,14 @@ void StageSelectScene::Draw()
 
 	//Fbxモデル描画後処理
 	ObjectFbx::PostDraw();
+
+//エフェクト描画前処理
+	ParticleManager::PreDraw(dxCommon_->GetCommandList());
+
+	pm1_->Draw();
+	//エフェクト描画後処理
+	ParticleManager::PostDraw();
+
 
 	spCommon_->PreDraw();
 	//前景スプライト
@@ -274,13 +304,24 @@ void StageSelectScene::Finalize()
 	delete spriteStage2_;
 	delete spriteDone_;
 	delete spriteBack_;
+
 	//ステージ
 	delete objStage_;
+	//レベルデータ用オブジェクト
+	for (Object3d*& player : objPlayers_)delete player;
+	for (Object3d*& ground : objGrounds_)delete ground;
+	for (Object3d*& goal : objGoals_)delete goal;
 
 	delete modelStageTutorial_;
 	delete modelStage1_;
 	delete modelStage2_;
-	
+	delete modelPlayer_;
+	delete modelGround_;
+	delete modelGoal_;
+	//パーティクル
+	delete particle1_;
+	delete pm1_;
+
 	//ライト
 	delete lightGroup_;
 }
@@ -289,40 +330,103 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
 	levelData_ = LevelLoader::LoadFile(stagePath);
-	// レベルデータからオブジェクトを生成、配置
-	for (LevelData::ObjectData& objectData : levelData_->objects) {
 
+	// モデル読み込み
+	modelPlayer_ = Model::LoadFromOBJ("player", true);
+	modelGoal_ = Model::LoadFromOBJ("sphere");
+	modelGround_ = Model::LoadFromOBJ("ground");
+
+	models_.insert(std::make_pair("player", modelPlayer_));
+	models_.insert(std::make_pair("sphere", modelGoal_));
+	models_.insert(std::make_pair("ground", modelGround_));
+
+	// レベルデータからオブジェクトを生成、配置
+	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
 		decltype(models_)::iterator it = models_.find(objectData.fileName);
 		if (it != models_.end()) {
 			model = it->second;
 		}
-		
-		//地形
-		// モデルを指定して3Dオブジェクトを生成
-		TouchableObject* newObject = TouchableObject::Create(model, false);
-		// 座標
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMStoreFloat3(&pos, objectData.trans);
-		newObject->SetPosition(pos);
 
-		// 回転角
-		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, objectData.rot);
-		newObject->SetRotation(rot);
+		if (objectData.objectType.find("PLAYER") == 0)
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			//オブジェクトにモデル紐付ける
+			newObject->SetModel(model);
 
-		// 座標
-		DirectX::XMFLOAT3 scale;
-		DirectX::XMStoreFloat3(&scale, objectData.scale);
-		newObject->SetScale(scale);
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
 
-		newObject->SetCamera(camera_);
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
 
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
 
-		// 配列に登録
-		objects_.push_back(newObject);
-		
+			newObject->SetCamera(camera_);
+			// 配列に登録
+			objPlayers_.push_back(newObject);
+		}
+		else if (objectData.objectType.find("PLANE") == 0)
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			//オブジェクトにモデル紐付ける
+			newObject->SetModel(model);
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+			
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+			// 配列に登録
+			objGrounds_.push_back(newObject);
+		}
+		else if (objectData.objectType.find("GOAL") == 0)
+		{
+			// モデルを指定して3Dオブジェクトを生成
+			Object3d* newObject = Object3d::Create();
+			//オブジェクトにモデル紐付ける
+			newObject->SetModel(model);
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newObject->SetRotation(rot);
+
+			// 座標
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newObject->SetScale(scale);
+
+			newObject->SetCamera(camera_);
+			// 配列に登録
+			objGoals_.push_back(newObject);
+		}
 
 	}
 

@@ -76,7 +76,7 @@ private://ƒƒ“ƒo•Ï”
 	//ModelFbx* modelF = nullptr;
 	//ObjectFbx* objF = nullptr;
 
-	LevelData* levelData = nullptr;
+	LevelData* levelData_ = nullptr;
 
 	//ƒ‚ƒfƒ‹
 	Model* modelPlayer_ = nullptr;

@@ -167,13 +167,10 @@ void TitleScene::Update()
 
 	//objF->Update();
 
-#ifdef DEBUG
-camera_->DebugCamera(false);
-#endif // DEBUG
-
 	imguiManager_->Begin();
-
-	
+#ifdef _DEBUG
+	camera_->DebugCamera();
+#endif // _DEBUG
 
 	imguiManager_->End();
 }
@@ -272,6 +269,7 @@ void TitleScene::UpdateIsBack()
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{
+			
 			for (int i = 0; i < 2; i++)easeTitlePosX_[i].Standby(false);
 			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
 			for (int i = 0; i < 3; i++)easeEyeMenu_[i].Standby(false);
@@ -363,7 +361,7 @@ void TitleScene::Draw()
 	for (Object3d*& player : objPlayers_)player->Draw();
 	for (Object3d*& ground : objGrounds_)ground->Draw();
 	for (Object3d*& skydome : objSkydomes_)skydome->Draw();
-	for (Object3d*& goal : objGoals_)goal->Draw();
+	if(!isStageSelect_)for (Object3d*& goal : objGoals_)goal->Draw();
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -434,7 +432,7 @@ void TitleScene::Finalize()
 void TitleScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
-	levelData = LevelLoader::LoadFile(stagePath);
+	levelData_ = LevelLoader::LoadFile(stagePath);
 
 	// モデル読み込み
 	modelPlayer_ = Model::LoadFromOBJ("player", true);
@@ -452,7 +450,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 	models_.insert(std::make_pair("sphere", modelGoal_));
 
 	// レベルデータからオブジェクトを生成、配置
-	for (auto& objectData : levelData->objects) {
+	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
 		decltype(models_)::iterator it = models_.find(objectData.fileName);

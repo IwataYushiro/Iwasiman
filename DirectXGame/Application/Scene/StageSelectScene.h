@@ -69,16 +69,25 @@ private://メンバ変数
 
 	LevelData* levelData_ = nullptr;
 
+	//オブジェクト
 	Object3d* objStage_ = nullptr;
-	
+	std::vector<Object3d*> objPlayers_;
+	std::vector<Object3d*> objGoals_;
+	std::vector<Object3d*> objGrounds_;
+
+	//モデル
+	Model* modelPlayer_ = nullptr;
+	Model* modelGoal_ = nullptr;
+	Model* modelGround_ = nullptr;
 	Model* modelStageTutorial_ = nullptr;
 	Model* modelStage1_ = nullptr;
 	Model* modelStage2_ = nullptr;
+	std::map<std::string, Model*> models_;
 
 	//オブジェクト回転用
 	DirectX::XMFLOAT3 rot_ = { 0.0f,0.0f,0.0f };
 
-	std::map<std::string, Model*> models_;
+	
 	std::vector<Object3d*> objects_;
 
 	bool isStart_ = false;
@@ -94,13 +103,44 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.8f),//スペースで選択
 		Easing(1300.0f, 900.0f, 2.0f),//戻る
 	};
+
+
+	Easing easeEyeStageSelect_[3]
+	{
+		Easing(-22.0f, 144.0f, 1.0f),//X
+		Easing(-1.0f, 45.0f, 1.0f),//Y
+		Easing(-60.0f, -98.0f, 1.0f),//Z
+	};
+	Easing easeTargetStageSelect_[3]
+	{
+		Easing(50.0f, 132.0f, 1.0f),//X
+		Easing(-8.0f, 39.0f, 1.0f),//Y
+		Easing(-57.0f, -52.0f, 1.0f),//Z
+	};
+
+	Easing easePlayerStartMove_[3] =
+	{
+		Easing(150.0f, 250.0f, 2.0f),//X
+		Easing(40.0f, 40.0f, 2.0f),//Y
+		Easing(-60.0f, -60.0f, 2.0f),//Z
+	};
+
+	Easing easePlayerQuitMove_[3] =
+	{
+		Easing(150.0f, 0.0f, 2.0f),//X
+		Easing(40.0f, -8.0f, 2.0f),//Y
+		Easing(-60.0f, -60.0f, 2.0f),//Z
+	};
+
 	int menuCount_ = 0;
 	//色を変えるスピード
 	float speedColor_ = 0.0f;
 	//色反転フラグ
 	bool isColorReverse_ = false;
+	//ステージセレクト時
+	bool isStageSelect_ = true;
 	//ステージセレクトから抜ける
-	bool outStageSerect_ = false;
+	bool outStageSelect_ = false;
 
 	//ライト
 	LightGroup* lightGroup_ = nullptr;

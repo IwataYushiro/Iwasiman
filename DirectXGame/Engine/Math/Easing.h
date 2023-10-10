@@ -78,5 +78,7 @@ private:
 	//bounce_easingåvéZóp
 	float bounceCalculation(float x);
 
+public:
+	void SetEasing(float s, float e, float t);
 };
 
