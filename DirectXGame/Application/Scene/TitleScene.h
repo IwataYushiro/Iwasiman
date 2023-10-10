@@ -35,6 +35,8 @@ public://メンバ関数
 	void UpdateIsBack();
 	//状態更新(メニューのとき) 
 	void UpdateIsMenu();
+	//フェードアウト
+	void FadeOut(DirectX::XMFLOAT3 rgb);
 	//描画
 	void Draw() override;
 	//終了
@@ -71,6 +73,7 @@ private://メンバ変数
 	Sprite* spriteMenuStageSelect_ = new Sprite();
 	Sprite* spriteMenuDone_ = new Sprite();
 	Sprite* spriteBack_ = new Sprite();
+	Sprite* spriteFadeInOut_ = new Sprite();
 
 	//FBX
 	//ModelFbx* modelF = nullptr;
@@ -98,6 +101,7 @@ private://メンバ変数
 	bool isBack_ = false;
 	bool isStartGame_ = false;
 	bool isStageSelect_ = false;
+	bool isFadeOut_ = false;
 
 	Easing easeTitlePosX_[2] =
 	{
@@ -146,6 +150,9 @@ private://メンバ変数
 		Easing(-8.0f, 40.0f, 3.0f),//Y
 		Easing(-60.0f, -60.0f, 3.0f),//Z
 	};
+
+	//フェードインアウト(false フェードイン、true フェードアウト)
+	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
 
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb

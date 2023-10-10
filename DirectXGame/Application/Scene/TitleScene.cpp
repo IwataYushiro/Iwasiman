@@ -69,6 +69,9 @@ void TitleScene::Initialize()
 	spriteBack_->SetPosition({ easeMenuPosX_[4].start,50.0f });
 	spriteBack_->SetColor(backTitleColor_);
 
+	spCommon_->LoadTexture(TSTI_FadeInOutTex, "texture/fade.png");
+	spriteFadeInOut_->Initialize(spCommon_, TSTI_FadeInOutTex);
+	spriteFadeInOut_->SetColor({ 0.0f,0.0f, 0.0f, easeFadeInOut_.start });
 
 	//FBX
 	//objF = ObjectFbx::Create();
@@ -83,10 +86,12 @@ void TitleScene::Initialize()
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
 
+	easeFadeInOut_.Standby(false);
 }
 
 void TitleScene::Update()
 {
+
 	//メニュー上下限
 	if (menuCount_ <= TSMI_Tutorial)menuCount_ = TSMI_Tutorial;
 	else if (menuCount_ >= TSMI_StageSelect)menuCount_ = TSMI_StageSelect;
@@ -101,16 +106,21 @@ void TitleScene::Update()
 	else if (isBack_)UpdateIsBack();
 	else
 	{
-		if (input_->TriggerKey(DIK_SPACE))
+		easeFadeInOut_.ease_in_out_quint();
+		spriteFadeInOut_->SetColor({ 0.0f,0.0f, 0.0f, easeFadeInOut_.num_X });//透明度だけ変える
+
+		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.end)
 		{
-			for (int i = 0; i < 2; i++)easeTitlePosX_[i].Standby(false);
-			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easeEyeMenu_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easeTargetMenu_[i].Standby(false);
-			isMenu_ = true;
+			if (input_->TriggerKey(DIK_SPACE))
+			{
+				for (int i = 0; i < 2; i++)easeTitlePosX_[i].Standby(false);
+				for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeEyeMenu_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeTargetMenu_[i].Standby(false);
+				isMenu_ = true;
 
+			}
 		}
-
 	}
 	spriteTitleDone_->SetColor(TitleDoneColor);
 	spriteMenu_->SetColor(TitleDoneColor);
@@ -125,6 +135,7 @@ void TitleScene::Update()
 	spriteMenuStageSelect_->Update();
 	spriteMenuDone_->Update();
 	spriteBack_->Update();
+	spriteFadeInOut_->Update();
 
 	for (Object3d*& player : objPlayers_)
 	{
@@ -196,16 +207,19 @@ void TitleScene::UpdateIsStartGame()
 
 		DirectX::XMFLOAT3 move = goal->GetPosition();
 		DirectX::XMFLOAT3 speed = { -1.0f,0.0f,0.0f };
-		//X値がここまで来たらゲームスタート
-		const float gameStartPos_ = 8.0f;
+		//X値がここまで来たらイージング
+		const float gameStartPos_ = 50.0f;
 
 		move.x += speed.x;
 		goal->SetPosition(move);
 		if (goal->GetPosition().x <= gameStartPos_)
 		{
-			//チュートリアルステージへ
-			sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
-
+			FadeOut({ 1.0f,1.0f,1.0f });//ゲームプレイ遷移時は白くする
+			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+			{
+				//チュートリアルステージへ
+				sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
+			}
 		};
 
 
@@ -236,10 +250,14 @@ void TitleScene::UpdateIsStageSelect()
 
 		if (player->GetPosition().x == easePlayerMove_[0].end)
 		{
-			//ステージ選択
-			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
-			else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
+			FadeOut({ 0.0f,0.0f,0.0f });//黒くする
+			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+			{
+				//ステージ選択
+				if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+				else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+				else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
+			}
 		}
 	}
 
@@ -269,7 +287,7 @@ void TitleScene::UpdateIsBack()
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			
+
 			for (int i = 0; i < 2; i++)easeTitlePosX_[i].Standby(false);
 			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
 			for (int i = 0; i < 3; i++)easeEyeMenu_[i].Standby(false);
@@ -333,7 +351,7 @@ void TitleScene::UpdateIsMenu()
 			for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
 			for (int i = 0; i < 3; i++)easePlayerMove_[i].Standby(false);
 			isStageSelect_ = true;
-		
+
 		}
 	}
 	if (easeMenuPosX_[4].num_X == easeMenuPosX_[4].end)
@@ -351,6 +369,21 @@ void TitleScene::UpdateIsMenu()
 
 }
 
+void TitleScene::FadeOut(DirectX::XMFLOAT3 rgb)
+{
+	if (!isFadeOut_)
+	{
+		easeFadeInOut_.Standby(true);
+		isFadeOut_ = true;
+	}
+	else
+	{
+		easeFadeInOut_.ease_in_out_quint();
+		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
+
+	}
+}
+
 void TitleScene::Draw()
 {
 	//背景スプライト描画前処理
@@ -361,7 +394,7 @@ void TitleScene::Draw()
 	for (Object3d*& player : objPlayers_)player->Draw();
 	for (Object3d*& ground : objGrounds_)ground->Draw();
 	for (Object3d*& skydome : objSkydomes_)skydome->Draw();
-	if(!isStageSelect_)for (Object3d*& goal : objGoals_)goal->Draw();
+	if (!isStageSelect_)for (Object3d*& goal : objGoals_)goal->Draw();
 	//モデル描画後処理
 	Object3d::PostDraw();
 
@@ -389,6 +422,7 @@ void TitleScene::Draw()
 	spriteMenuStageSelect_->Draw();
 	spriteMenuDone_->Draw();
 	spriteBack_->Draw();
+	spriteFadeInOut_->Draw();
 
 }
 
@@ -404,7 +438,7 @@ void TitleScene::Finalize()
 	delete spriteMenuStageSelect_;
 	delete spriteMenuDone_;
 	delete spriteBack_;
-
+	delete spriteFadeInOut_;
 
 	//レベルデータ用オブジェクト
 	for (Object3d*& player : objPlayers_)delete player;

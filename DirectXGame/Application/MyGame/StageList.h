@@ -64,6 +64,7 @@ enum TitleSceneTextureIndex
 	TSTI_MenuStageSerectTex = 4,
 	TSTI_MenuDoneTex = 5,
 	TSTI_BackTitleTex = 6,
+	TSTI_FadeInOutTex = 7,
 };
 
 //タイトル用メニュー番号
@@ -84,6 +85,7 @@ enum StageSelectSceneTextureIndex
 	SSSTI_Menustage2Tex = 3,
 	SSSTI_MenuDoneTex = 4,
 	SSSTI_BackTitleTex  = 5,
+	SSSTI_FadeInOutTex = 6,
 };
 
 //ステージセレクト用メニューインデックス
@@ -96,12 +98,13 @@ enum StageSelectSceneMenuIndex
 
 //ステージクリアシーン
 
-//
+//ステージクリア用テクスチャインデックス
 enum StageClearSceneTextureIndex
 {
 	SCSTI_StageTutorial_Tutorial = 0,
 	SCSTI_Stage1_SkyStage = 1,
 	SCSTI_Stage2_TowerStage = 2,
+	SCSTI_FadeInOut = 20,
 };
 
 //ゲームオーバーシーン
@@ -114,6 +117,7 @@ enum GameOverSceneTextureIndex
 	GOSTI_StageSelectTex = 2,
 	GOSTI_TitleTex = 3,
 	GOSTI_MenuDoneTex = 4,
+	GOSTI_FadeInOut = 5,
 };
 
 //ゲームオーバー用メニューインデックス

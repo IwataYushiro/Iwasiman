@@ -31,6 +31,8 @@ public://メンバ関数
 	void Draw() override;
 	//終了
 	void Finalize() override;
+	//フェードアウト
+	void FadeOut(DirectX::XMFLOAT3 rgb);
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
 
@@ -59,13 +61,11 @@ private://メンバ変数
 	Sprite* spriteDone_ = new Sprite();
 	Sprite* spriteBack_ = new Sprite();
 
-	//FBX
-	//ModelFbx* modelF = nullptr;
-	//ObjectFbx* objF = nullptr;
-
-	//モデル
-	//Model* modelPlayer_ = nullptr;
-	//Object3d* object3DPlayer_ = nullptr;
+	//フェードインアウトセット
+	Sprite* spriteFadeInOut_ = new Sprite();
+	bool isFadeOut_ = false;
+	//フェードインアウト(false フェードイン、true フェードアウト)
+	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
 
 	LevelData* levelData_ = nullptr;
 

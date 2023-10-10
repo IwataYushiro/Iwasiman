@@ -37,7 +37,7 @@ void StageSelectScene::Initialize()
 	// 視点座標
 	camera_->SetEye({ easeEyeStageSelect_[0].start, easeEyeStageSelect_[1].start, easeEyeStageSelect_[2].start });
 	// 注視点座標
-	camera_->SetTarget({ easeTargetStageSelect_[0].start, easeTargetStageSelect_[1].start, easeTargetStageSelect_[2].start});
+	camera_->SetTarget({ easeTargetStageSelect_[0].start, easeTargetStageSelect_[1].start, easeTargetStageSelect_[2].start });
 
 	//レベルデータ読み込み
 	LoadLVData("scene/stageselect");
@@ -71,6 +71,10 @@ void StageSelectScene::Initialize()
 	spriteBack_->SetPosition({ easeMenuPosX_[5].start,50.0f });
 	spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
 
+	spCommon_->LoadTexture(SSSTI_FadeInOutTex, "texture/fade.png");
+	spriteFadeInOut_->Initialize(spCommon_, SSSTI_FadeInOutTex);
+	spriteFadeInOut_->SetColor({ 0.0f,0.0f, 0.0f, easeFadeInOut_.start });
+
 	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
 	modelStage1_ = Model::LoadFromOBJ("skydome");
 	modelStage2_ = Model::LoadFromOBJ("skydome2");
@@ -85,10 +89,12 @@ void StageSelectScene::Initialize()
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
 
+	//イージングStandby
 	easeTitlePosX_.Standby(false);
 	for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(false);
 	for (int i = 0; i < 3; i++)easeEyeStageSelect_[i].Standby(false);
 	for (int i = 0; i < 3; i++)easeTargetStageSelect_[i].Standby(false);
+	easeFadeInOut_.Standby(false);
 
 }
 
@@ -96,7 +102,7 @@ void StageSelectScene::Update()
 {
 	if (menuCount_ <= SSSMI_StageTutorial_Tutorial)menuCount_ = SSSMI_StageTutorial_Tutorial;
 	else if (menuCount_ >= SSSMI_Stage2_TowerStage)menuCount_ = SSSMI_Stage2_TowerStage;
-	
+
 	if (isStageSelect_)
 	{
 		//イージング
@@ -104,6 +110,7 @@ void StageSelectScene::Update()
 		for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
 		for (int i = 0; i < 3; i++)easeEyeStageSelect_[i].ease_out_expo();
 		for (int i = 0; i < 3; i++)easeTargetStageSelect_[i].ease_out_expo();
+		easeFadeInOut_.ease_in_out_quint();
 
 		//座標セット
 		spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
@@ -112,6 +119,9 @@ void StageSelectScene::Update()
 		spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
 		spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
 		spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
+
+		//カラーセット
+		spriteFadeInOut_->SetColor({ 0.0f,0.0f, 0.0f, easeFadeInOut_.num_X });//透明度だけ変える
 
 		//カメラもセット
 		camera_->SetEye({ easeEyeStageSelect_[0].num_X, easeEyeStageSelect_[1].num_X, easeEyeStageSelect_[2].num_X });
@@ -240,12 +250,14 @@ void StageSelectScene::Update()
 	spriteStage2_->Update();
 	spriteDone_->Update();
 	spriteBack_->Update();
+	spriteFadeInOut_->Update();
+
 	pm1_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
 	objStage_->Update();
-	
+
 	imguiManager_->Begin();
 #ifdef _DEBUG
 	//camera_->DebugCamera(false);
@@ -274,7 +286,7 @@ void StageSelectScene::Draw()
 	//Fbxモデル描画後処理
 	ObjectFbx::PostDraw();
 
-//エフェクト描画前処理
+	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
 	pm1_->Draw();
@@ -291,6 +303,7 @@ void StageSelectScene::Draw()
 	spriteStage2_->Draw();
 	spriteDone_->Draw();
 	spriteBack_->Draw();
+	spriteFadeInOut_->Draw();
 }
 
 void StageSelectScene::Finalize()
@@ -304,6 +317,7 @@ void StageSelectScene::Finalize()
 	delete spriteStage2_;
 	delete spriteDone_;
 	delete spriteBack_;
+	delete spriteFadeInOut_;
 
 	//ステージ
 	delete objStage_;
@@ -324,6 +338,21 @@ void StageSelectScene::Finalize()
 
 	//ライト
 	delete lightGroup_;
+}
+
+void StageSelectScene::FadeOut(DirectX::XMFLOAT3 rgb)
+{
+	if (!isFadeOut_)
+	{
+		easeFadeInOut_.Standby(true);
+		isFadeOut_ = true;
+	}
+	else
+	{
+		easeFadeInOut_.ease_in_out_quint();
+		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
+
+	}
 }
 
 void StageSelectScene::LoadLVData(const std::string& stagePath)
@@ -386,7 +415,7 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newObject->SetPosition(pos);
-			
+
 			// 回転角
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
