@@ -180,7 +180,7 @@ void TitleScene::Update()
 
 	imguiManager_->Begin();
 #ifdef _DEBUG
-	camera_->DebugCamera();
+	//camera_->DebugCamera();
 #endif // _DEBUG
 
 	imguiManager_->End();
@@ -189,8 +189,8 @@ void TitleScene::Update()
 void TitleScene::UpdateIsStartGame()
 {
 	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_out_expo();
+	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_in_out_expo();
+	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_in_out_expo();
 
 	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
@@ -230,9 +230,9 @@ void TitleScene::UpdateIsStartGame()
 void TitleScene::UpdateIsStageSelect()
 {
 	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easePlayerMove_[i].ease_in_expo();
+	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_in_out_expo();
+	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_in_out_expo();
+	for (int i = 0; i < 3; i++)easePlayerMove_[i].ease_in_out_expo();
 
 	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
@@ -248,7 +248,7 @@ void TitleScene::UpdateIsStageSelect()
 	{
 		player->SetPosition({ easePlayerMove_[0].num_X,easePlayerMove_[1].num_X,easePlayerMove_[2].num_X });
 
-		if (player->GetPosition().x == easePlayerMove_[0].end)
+		if (spriteMenu_->GetPosition().x == easeMenuPosX_[0].start)
 		{
 			FadeOut({ 0.0f,0.0f,0.0f });//•‚­‚·‚é
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)

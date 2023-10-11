@@ -90,10 +90,6 @@ private://メンバ変数
 	
 	std::vector<Object3d*> objects_;
 
-	bool isStart_ = false;
-	bool isMenu_ = false;
-	Easing easeTitlePosX_ = Easing(0.0f, -1300.0f, 1.0f);
-
 	Easing easeMenuPosX_[6] =
 	{
 		Easing(1300.0f, 0.0f, 1.0f),//メニュー
@@ -118,6 +114,32 @@ private://メンバ変数
 		Easing(-57.0f, -52.0f, 1.0f),//Z
 	};
 
+	Easing easeEyeDoneMenu_[3]
+	{
+		Easing(144.0f, 127.0f, 1.0f),//X
+		Easing(45.0f, 52.0f, 1.0f),//Y
+		Easing(-98.0f, -60.0f, 1.0f),//Z
+	};
+	Easing easeTargetDoneMenu_[3]
+	{
+		Easing(132.0f, 192.0f, 1.0f),//X
+		Easing(39.0f, 33.0f, 1.0f),//Y
+		Easing(-52.0f, -60.0f, 1.0f),//Z
+	};
+
+	Easing easeEyeGameStart_[3]
+	{
+		Easing(127.0f, 227.0f, 2.0f),//X
+		Easing(52.0f, 55.0f, 2.0f),//Y
+		Easing(-60.0f, -60.0f, 2.0f),//Z
+	};
+	Easing easeTargetGameStart_[3]
+	{
+		Easing(192.0f, 292.0f, 2.0f),//X
+		Easing(33.0f, 33.0f, 2.0f),//Y
+		Easing(-60.0f, -60.0f, 2.0f),//Z
+	};
+
 	Easing easePlayerStartMove_[3] =
 	{
 		Easing(150.0f, 250.0f, 2.0f),//X
@@ -137,8 +159,14 @@ private://メンバ変数
 	float speedColor_ = 0.0f;
 	//色反転フラグ
 	bool isColorReverse_ = false;
+
+	//遷移フラグ類
 	//ステージセレクト時
 	bool isStageSelect_ = true;
+	//ゲームスタート時
+	bool isStart_ = false;
+	//ステージ決定時
+	bool isDone_ = false;
 	//ステージセレクトから抜ける
 	bool outStageSelect_ = false;
 

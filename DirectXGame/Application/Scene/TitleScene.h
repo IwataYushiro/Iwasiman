@@ -146,9 +146,9 @@ private://メンバ変数
 
 	Easing easePlayerMove_[3]
 	{
-		Easing(0.0f, 150.0f, 3.0f),//X
-		Easing(-8.0f, 40.0f, 3.0f),//Y
-		Easing(-60.0f, -60.0f, 3.0f),//Z
+		Easing(0.0f, 150.0f, 2.0f),//X
+		Easing(-8.0f, 40.0f, 2.0f),//Y
+		Easing(-60.0f, -60.0f, 2.0f),//Z
 	};
 
 	//フェードインアウト(false フェードイン、true フェードアウト)

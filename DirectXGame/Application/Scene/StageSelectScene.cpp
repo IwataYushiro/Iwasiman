@@ -90,7 +90,6 @@ void StageSelectScene::Initialize()
 	pm1_->SetCamera(camera_);
 
 	//イージングStandby
-	easeTitlePosX_.Standby(false);
 	for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(false);
 	for (int i = 0; i < 3; i++)easeEyeStageSelect_[i].Standby(false);
 	for (int i = 0; i < 3; i++)easeTargetStageSelect_[i].Standby(false);
@@ -106,7 +105,6 @@ void StageSelectScene::Update()
 	if (isStageSelect_)
 	{
 		//イージング
-		easeTitlePosX_.ease_out_expo();
 		for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
 		for (int i = 0; i < 3; i++)easeEyeStageSelect_[i].ease_out_expo();
 		for (int i = 0; i < 3; i++)easeTargetStageSelect_[i].ease_out_expo();
@@ -175,43 +173,29 @@ void StageSelectScene::Update()
 
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			if (menuCount_ == SSSMI_StageTutorial_Tutorial)
-			{
-				//チュートリアルステージ
-				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
-			}
-			else if (menuCount_ == SSSMI_Stage1_SkyStage)
-			{
-				//ステージ1
-				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);
-
-			}
-			else if (menuCount_ == SSSMI_Stage2_TowerStage)
-			{
-				//ステージ2
-				camera_->Reset();
-				sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//まだ未完成
-
-			}
+			for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(true);
+			for (int i = 0; i < 3; i++)easeEyeDoneMenu_[i].Standby(false);
+			for (int i = 0; i < 3; i++)easeTargetDoneMenu_[i].Standby(false);
+			isDone_ = true;
+			isStageSelect_ = false;
 		}
 		if (easeMenuPosX_[5].num_X == easeMenuPosX_[5].end)
 		{
 			if (input_->TriggerKey(DIK_Q))
 			{
-				easeTitlePosX_.Standby(true);
+				for (int i = 0; i < 3; i++)easePlayerQuitMove_[i].Standby(false);
 				for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(true);
 				outStageSelect_ = true;
 				isStageSelect_ = false;
 			}
 		}
 	}
-	else
+	else if (isDone_)
 	{
 		//イージング
-		easeTitlePosX_.ease_out_expo();
 		for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeEyeDoneMenu_[i].ease_out_expo();
+		for (int i = 0; i < 3; i++)easeTargetDoneMenu_[i].ease_out_expo();
 
 		//座標セット
 		spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
@@ -221,7 +205,69 @@ void StageSelectScene::Update()
 		spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
 		spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
 
-		if (easeMenuPosX_[5].num_X == easeMenuPosX_[5].start)
+		//カメラもセット
+		camera_->SetEye({ easeEyeDoneMenu_[0].num_X, easeEyeDoneMenu_[1].num_X, easeEyeDoneMenu_[2].num_X });
+		camera_->SetTarget({ easeTargetDoneMenu_[0].num_X, easeTargetDoneMenu_[1].num_X, easeTargetDoneMenu_[2].num_X });
+
+		//イージングが終わったら
+		if (camera_->GetEye().x == easeEyeDoneMenu_[0].end)
+		{
+			for (int i = 0; i < 3; i++)easePlayerStartMove_[i].Standby(false);
+			for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
+			for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
+			isStart_ = true;
+			isDone_ = false;
+		}
+	}
+	else if (isStart_)
+	{
+		//プレイヤーのX値がここまで来たらフェードアウト
+		const float gameStartPosX_ = 200.0f;
+		//イージング
+		for (int i = 0; i < 3; i++)easePlayerStartMove_[i].ease_in_out_expo();
+		for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_in_quint();
+		for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_in_quint();
+
+		//カメラセット
+		camera_->SetEye({ easeEyeGameStart_[0].num_X, easeEyeGameStart_[1].num_X, easeEyeGameStart_[2].num_X });
+		camera_->SetTarget({ easeTargetGameStart_[0].num_X, easeTargetGameStart_[1].num_X, easeTargetGameStart_[2].num_X });
+
+		//プレイヤー座標もセット
+		for (Object3d*& player : objPlayers_)
+		{
+			player->SetPosition({ easePlayerStartMove_[0].num_X,easePlayerStartMove_[1].num_X ,easePlayerStartMove_[2].num_X });;
+			if (player->GetPosition().x >= gameStartPosX_)FadeOut({ 1.0f,1.0f,1.0f });//ゲームプレイ遷移時は白くする
+		}
+		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+		{
+			if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);//チュートリアルステージ
+			else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);//ステージ1
+			else if (menuCount_ == SSSMI_Stage2_TowerStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//ステージ2はまだ未完成
+
+		}
+	}
+	else
+	{
+		//イージング
+		for (int i = 0; i < 3; i++)easePlayerQuitMove_[i].ease_in_expo();
+		for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
+
+		//座標セット
+		spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
+		spriteTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+		spriteStage1_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
+		spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
+		spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
+		spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
+		//メニュー標記のイージングが終わったらフェードアウト
+		if (spriteMenu_->GetPosition().x == easeMenuPosX_[0].start) FadeOut({ 0.0f,0.0f,0.0f });//黒くする
+
+		//プレイヤー座標もセット
+		for (Object3d*& player : objPlayers_)
+		{
+			player->SetPosition({ easePlayerQuitMove_[0].num_X,easePlayerQuitMove_[1].num_X ,easePlayerQuitMove_[2].num_X });
+		}
+		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 		{
 			if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("TITLE", SL_StageTutorial_StageID);
 			else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("TITLE", SL_Stage1_StageID);
