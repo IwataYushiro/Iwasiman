@@ -27,6 +27,15 @@ public://メンバ関数
 	void Initialize() override;
 	//更新
 	void Update() override;
+	//ステージセレクト中
+	void UpdateIsStageSelect();
+	//決定時
+	void UpdateIsDone();
+	//決定からのゲームスタート
+	void UpdateIsGameStart();
+	//タイトルへ戻るとき 
+	void UpdateIsQuitTitle();
+
 	//描画
 	void Draw() override;
 	//終了
