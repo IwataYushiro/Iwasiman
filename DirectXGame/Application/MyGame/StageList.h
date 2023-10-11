@@ -101,12 +101,20 @@ enum StageSelectSceneMenuIndex
 //ステージクリア用テクスチャインデックス
 enum StageClearSceneTextureIndex
 {
-	SCSTI_StageTutorial_Tutorial = 0,
-	SCSTI_Stage1_SkyStage = 1,
-	SCSTI_Stage2_TowerStage = 2,
-	SCSTI_FadeInOut = 20,
+	SCSTI_MenuTex = 0,
+	SCSTI_ContinueTex = 1,
+	SCSTI_StageSelectTex = 2,
+	SCSTI_TitleTex = 3,
+	SCSTI_MenuDoneTex = 4,
+	SCSTI_FadeInOutTex = 5,
 };
-
+//ステージクリア用メニューインデックス
+enum StageClearSceneMenuIndex
+{
+	SCSMI_Continue = 0,
+	SCSMI_StageSelect = 1,
+	SCSMI_Title = 2,
+};
 //ゲームオーバーシーン
 
 //ゲームオーバー用テクスチャインデックス
