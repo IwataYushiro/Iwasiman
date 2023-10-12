@@ -6,7 +6,13 @@
 
 using namespace DirectX;
 
-//ゴール
+/*
+
+*	Goal.cpp
+
+*	ゴール
+
+*/
 
 //静的メンバ変数の実体
 CollisionManager* Goal::colManager_ = CollisionManager::GetInstance();

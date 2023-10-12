@@ -2,7 +2,14 @@
 
 using namespace DirectX;
 
-//1枚1枚のスプライト
+/*
+
+*	Sprite.cpp
+
+*	1枚のスプライト
+
+*/
+
 void Sprite::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 {
 	HRESULT result;

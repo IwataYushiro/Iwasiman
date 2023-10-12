@@ -6,7 +6,13 @@
 
 using namespace DirectX;
 
-//自機の弾
+/*
+
+*	PlayerBullet.cpp
+
+*	自機の弾
+
+*/
 
 //静的メンバ変数の実体
 CollisionManager* PlayerBullet::colManager_ = CollisionManager::GetInstance();

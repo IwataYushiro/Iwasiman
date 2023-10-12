@@ -15,7 +15,13 @@
 
 using namespace DirectX;
 
-//ゲームプレイシーン
+/*
+
+*	GamyPlayScene.cpp
+
+*	ゲームプレイシーン
+
+*/
 
 //静的メンバ変数の実体
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();

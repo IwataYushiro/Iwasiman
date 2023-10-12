@@ -7,7 +7,13 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-//パーティクルマネージャー
+/*
+
+*	ParticleManager.cpp
+
+*	パーティクルマネージャー
+
+*/
 
 /// <summary>
 /// 静的メンバ変数の実体

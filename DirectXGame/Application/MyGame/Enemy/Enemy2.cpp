@@ -10,7 +10,13 @@
 
 using namespace DirectX;
 
-//¸‚Á‚Ä‚Í—‚¿‚éG‹›“G
+/*
+
+*	Enemy2.cpp
+
+*	¸‚Á‚Ä‚Í—‚¿‚éG‹›“G
+
+*/
 
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
 CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();

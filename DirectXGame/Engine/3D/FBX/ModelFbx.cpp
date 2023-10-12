@@ -1,6 +1,12 @@
 #include "ModelFbx.h"
 
-//FBXモデル
+/*
+
+*	ModelFbx.cpp
+
+*	FBXモデル
+
+*/
 
 //静的メンバ変数の実体
 ID3D12Device* ModelFbx::device_ = nullptr;

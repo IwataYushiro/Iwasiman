@@ -7,7 +7,13 @@
 #include <sstream>
 #include <iomanip>
 
-//ステージクリアシーン
+/*
+
+*	StageClearScene.cpp
+
+*	ステージクリアシーン
+
+*/
 
 //静的メンバ変数の実体
 DirectXCommon* StageClearScene::dxCommon_ = DirectXCommon::GetInstance();

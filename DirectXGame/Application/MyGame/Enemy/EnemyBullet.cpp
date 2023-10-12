@@ -6,8 +6,13 @@
 
 using namespace DirectX;
 
-//“G‚Ì’e
+/*
 
+*	EnemyBullet.cpp
+
+*	“G‚Ì’e
+
+*/
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
 CollisionManager* EnemyBullet::colManager_ = CollisionManager::GetInstance();
 

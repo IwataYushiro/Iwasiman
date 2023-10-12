@@ -3,7 +3,13 @@
 
 using namespace DirectX;
 
-//ライトグループ
+/*
+
+*	LightGroup.cpp
+
+*	ライトグループ
+
+*/
 
 //静的メンバ変数の実体
 ID3D12Device* LightGroup::device_ = nullptr;

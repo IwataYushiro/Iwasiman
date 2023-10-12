@@ -6,7 +6,7 @@
 
 *	Matrix4.h
 
-*	Matrix4\‘¢‘Ì
+*	Matrix4(4x4s—ñ)\‘¢‘Ì
 
 */
 struct Matrix4

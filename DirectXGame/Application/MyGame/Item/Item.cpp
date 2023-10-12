@@ -7,7 +7,13 @@
 
 using namespace DirectX;
 
-//アイテム管理
+/*
+
+*	Item.cpp
+
+*	アイテム管理
+
+*/
 
 //静的メンバ変数の実体
 CollisionManager* Item::colManager_ = CollisionManager::GetInstance();

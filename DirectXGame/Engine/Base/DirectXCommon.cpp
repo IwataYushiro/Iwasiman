@@ -7,7 +7,13 @@
 
 using namespace Microsoft::WRL;
 
-//DirectX基盤クラス
+/*
+
+*	DirectXCommon.cpp
+
+*	DirectX基盤クラス
+
+*/
 
 DirectXCommon* DirectXCommon::GetInstance()
 {

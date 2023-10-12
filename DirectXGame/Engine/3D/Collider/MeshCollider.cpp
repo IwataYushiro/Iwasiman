@@ -3,7 +3,13 @@
 
 using namespace DirectX;
 
-//メッシュ衝突判定オブジェクト
+/*
+
+*	MeshCollider.cpp
+
+*	メッシュ衝突判定オブジェクト
+
+*/
 
 void MeshCollider::ConstructTriangles(Model* model)
 {

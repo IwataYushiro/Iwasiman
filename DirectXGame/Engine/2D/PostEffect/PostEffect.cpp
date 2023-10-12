@@ -8,7 +8,13 @@
 
 using namespace DirectX;
 
-//ポストエフェクト
+/*
+
+*	PostEffect.cpp
+
+*	ポストエフェクト
+
+*/
 
 //静的メンバ変数の実体
 const float PostEffect::clearcolor[4] = { 0.25f,0.5f,0.1f,0.0f };

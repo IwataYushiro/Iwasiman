@@ -14,7 +14,13 @@ using namespace std;
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-//3Dオブジェクト(.obj)
+/*
+
+*	Object3d.cpp
+
+*	3Dオブジェクト(.obj)
+
+*/
 
 /// <summary>
 /// 静的メンバ変数の実体

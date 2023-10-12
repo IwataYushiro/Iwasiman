@@ -3,7 +3,13 @@
 
 using namespace DirectX;
 
-//FBXローダー
+/*
+
+*	FbxLoader.cpp
+
+*	FBXローダー
+
+*/
 
 //静的メンバ変数の実体
 const std::string FbxLoader::baseDirectory = "Resources/";

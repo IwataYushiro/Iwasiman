@@ -7,7 +7,13 @@
 #include <sstream>
 #include <iomanip>
 
-//タイトルシーン
+/*
+
+*	TitleScene.cpp
+
+*	タイトルシーン
+
+*/
 
 //静的メンバ変数の実体
 DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();

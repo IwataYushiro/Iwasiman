@@ -7,7 +7,13 @@
 
 using namespace DirectX;
 
-//自機ライフ回復アイテム
+/*
+
+*	ItemHeal.cpp
+
+*	自機ライフ回復アイテム
+
+*/
 
 //静的メンバ変数の実体
 CollisionManager* ItemHeal::colManager_ = CollisionManager::GetInstance();

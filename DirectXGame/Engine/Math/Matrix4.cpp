@@ -2,7 +2,13 @@
 #include "Vector3.h"
 #include <cmath>
 
-//Matrix4(行列)
+/*
+
+*	Matrix4.cpp
+
+*	Matrix4(4x4行列)構造体
+
+*/
 
 //単位行列を求める
 Matrix4 identity()

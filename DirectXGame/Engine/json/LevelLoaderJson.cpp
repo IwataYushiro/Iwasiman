@@ -4,7 +4,13 @@
 #include <fstream>
 #include <cassert>
 
-//jsonファイルによるレベルデータ
+/*
+
+*	LevelLoaderJson.cpp
+
+*	jsonファイルによるレベルデータ構造体
+
+*/
 
 //静的メンバ変数の実体
 const std::string LevelLoader::defaultBaseDirectory = "Resources/json/levels/";

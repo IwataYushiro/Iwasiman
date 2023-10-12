@@ -10,7 +10,13 @@
 
 using namespace DirectX;
 
-//ステージセレクトシーン
+/*
+
+*	StageSelectScene.cpp
+
+*	ステージセレクトシーン
+
+*/
 
 //静的メンバ変数の実体
 DirectXCommon* StageSelectScene::dxCommon_ = DirectXCommon::GetInstance();

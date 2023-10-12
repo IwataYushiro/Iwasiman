@@ -5,7 +5,13 @@
 
 using namespace DirectX;
 
-//当たり判定マネージャー
+/*
+
+*	CollisionManager.cpp
+
+*	当たり判定マネージャー
+
+*/
 
 CollisionManager* CollisionManager::GetInstance()
 {

@@ -1,7 +1,13 @@
 #include "Vector2.h"
 #include <cmath>		//sqat
 
-//Vector2
+/*
+
+*	Vector2.cpp
+
+*	x,y‚ÌƒxƒNƒgƒ‹2‚Â
+
+*/
 
 Vector2::Vector2()
 {

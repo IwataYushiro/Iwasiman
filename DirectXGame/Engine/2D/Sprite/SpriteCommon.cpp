@@ -10,7 +10,13 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-//スプライト基盤
+/*
+
+*	SpriteCommon.cpp
+
+*	スプライト基盤
+
+*/
 
 //デフォルトテクスチャ格納ディレクトリ
 std::string SpriteCommon::kDefaultTextureDirectoryPath = "Resources/";

@@ -5,7 +5,15 @@
 
 #include "CollisionAttribute.h"
 
-//具体的(このゲーム用)なギミックファクトリー
+
+/*
+
+*	GimmickFactory.cpp
+
+*	具体的(このゲーム用)なギミックファクトリー
+
+*/
+
 std::unique_ptr<BaseGimmick> GimmickFactory::CreateGimmick(const std::string& gimmickName, Model* model, Player* player)
 {
 	//トゲ

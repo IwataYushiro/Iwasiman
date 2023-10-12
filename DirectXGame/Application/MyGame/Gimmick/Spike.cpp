@@ -7,7 +7,13 @@
 
 using namespace DirectX;
 
-//当たると痛いトゲ
+/*
+
+*	Spike.cpp
+
+*	当たると痛いトゲ
+
+*/
 
 //静的メンバ変数の実体
 CollisionManager* Spike::colManager_ = CollisionManager::GetInstance();

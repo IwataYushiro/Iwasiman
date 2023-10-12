@@ -4,7 +4,13 @@
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 
-//入力
+/*
+
+*	Input.cpp
+
+*	キーボード、マウス入力
+
+*/
 
 Input* Input::GetInstance()
 {

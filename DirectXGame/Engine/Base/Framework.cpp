@@ -4,7 +4,13 @@
 #include "ObjectFbx.h"
 #include "ParticleManager.h"
 
-//ゲーム全体フレームワーク
+/*
+
+*	Framework.cpp
+
+*	ゲーム全体フレームワーク
+
+*/
 
 void Framework::Initialize()
 {

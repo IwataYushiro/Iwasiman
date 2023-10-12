@@ -10,7 +10,13 @@
 using namespace DirectX;
 using namespace std;
 
-//一粒のパーティクル
+/*
+
+*	Particle.cpp
+
+*	一粒のパーティクル
+
+*/
 
 //静的メンバ変数の実体
 ID3D12Device* Particle::device_ = nullptr;

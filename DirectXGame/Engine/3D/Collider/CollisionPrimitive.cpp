@@ -2,7 +2,13 @@
 
 using namespace DirectX;
 
-//当たり判定プリミティブ形状
+/*
+
+*	CollisionPrimitive.cpp
+
+*	当たり判定プリミティブ形状
+
+*/
 
 void Triangle::ComputeNormal()
 {

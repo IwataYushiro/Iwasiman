@@ -3,7 +3,13 @@
 
 using namespace DirectX;
 
-//便利数学
+/*
+
+*	MyMath.cpp
+
+*	便利数学
+
+*/
 
 ////零ベクトルを返す
 //const XMFLOAT3 MyMathUtility::MySetVector3Zero() {

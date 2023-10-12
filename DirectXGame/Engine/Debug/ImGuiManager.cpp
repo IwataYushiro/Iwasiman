@@ -1,7 +1,13 @@
 #include "ImGuiManager.h"
 #include <cassert>
 
-//ImGuiŠÇ—
+/*
+
+*	ImGuiManager.cpp
+
+*	ImGuiŠÇ—
+
+*/
 
 ImGuiManager* ImGuiManager::GetInstance()
 {

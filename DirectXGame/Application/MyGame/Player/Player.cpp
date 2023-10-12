@@ -7,7 +7,13 @@
 
 using namespace DirectX;
 
-//自機
+/*
+
+*	Player.cpp
+
+*	自機
+
+*/
 
 //静的メンバ変数の実体
 CollisionManager* Player::colManager_ = CollisionManager::GetInstance();

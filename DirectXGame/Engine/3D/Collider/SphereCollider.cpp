@@ -2,7 +2,13 @@
 
 using namespace DirectX;
 
-//球衝突判定オブジェクト
+/*
+
+*	SphereCollider.cpp
+
+*	球衝突判定オブジェクト
+
+*/
 
 void SphereCollider::Update()
 {

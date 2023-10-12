@@ -2,7 +2,13 @@
 
 using namespace DirectX;
 
-//当たり判定ヘルパー
+/*
+
+*	Collision.cpp
+
+*	当たり判定ヘルパー
+
+*/
 
 bool Collision::ChackSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2,
 	DirectX::XMVECTOR* inter, DirectX::XMVECTOR* reject)

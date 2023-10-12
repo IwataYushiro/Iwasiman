@@ -19,7 +19,6 @@ class BaseCollider;
 
 *	3Dオブジェクト(.obj)
 
-
 */
 class Object3d
 {

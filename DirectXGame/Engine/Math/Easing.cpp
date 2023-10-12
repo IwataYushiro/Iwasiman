@@ -3,7 +3,13 @@
 
 using namespace std;
 
-//イージング関係
+/*
+
+*	Easing.cpp
+
+*	イージング関係 Easing(float start, float end, float time);
+
+*/
 
 Easing::Easing()
 {

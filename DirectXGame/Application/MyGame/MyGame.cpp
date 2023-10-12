@@ -3,7 +3,13 @@
 
 using namespace DirectX;
 
-//ゲーム全体
+/*
+
+*	MyGame.cpp
+
+*	ゲーム全体
+
+*/
 
 void MyGame::Initialize()
 {

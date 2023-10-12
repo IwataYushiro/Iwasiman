@@ -1,7 +1,13 @@
 #include "Vector3.h"
 #include <cmath>		//sqat
 
-//Vector3
+/*
+
+*	Vector3.cpp
+
+*	x,y,z‚ÌƒxƒNƒgƒ‹3‚Â
+
+*/
 
 Vector3::Vector3() :x(0.0f), y(0.0f), z(0.0f)
 {

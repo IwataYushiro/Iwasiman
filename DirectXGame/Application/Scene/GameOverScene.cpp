@@ -9,7 +9,13 @@
 
 using namespace DirectX;
 
-//ゲームオーバーシーン
+/*
+
+*	GameOverScene.cpp
+
+*	ゲームオーバーシーン
+
+*/
 
 //静的メンバ変数の実体
 DirectXCommon* GameOverScene::dxCommon_ = DirectXCommon::GetInstance();

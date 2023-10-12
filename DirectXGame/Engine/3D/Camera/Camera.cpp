@@ -6,7 +6,13 @@
 
 using namespace DirectX;
 
-//ƒJƒƒ‰
+/*
+
+*	Camera.cpp
+
+*	ƒJƒƒ‰
+
+*/
 
 Camera::Camera()
 {

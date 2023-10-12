@@ -7,7 +7,13 @@
 
 using namespace DirectX;
 
-//—‚¿‚é‹…‚Æ¸‚é‹…
+/*
+
+*	FallSphere.cpp
+
+*	—‚¿‚é‹…‚Æ¸‚é‹…
+
+*/
 
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
 CollisionManager* FallSphere::colManager_ = CollisionManager::GetInstance();

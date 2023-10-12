@@ -1,7 +1,13 @@
 #include "SceneManager.h"
 #include <cassert>
 
-//シーンマネージャー
+/*
+
+*	SceneManager.cpp
+
+*	シーンマネージャー
+
+*/
 
 SceneManager* SceneManager::GetInstance()
 {
