@@ -9,6 +9,9 @@
 
 using namespace DirectX;
 
+//ゲームオーバーシーン
+
+//静的メンバ変数の実体
 DirectXCommon* GameOverScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* GameOverScene::input_ = Input::GetInstance();
 Audio* GameOverScene::audio_ = Audio::GetInstance();

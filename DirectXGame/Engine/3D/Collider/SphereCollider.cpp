@@ -2,6 +2,8 @@
 
 using namespace DirectX;
 
+//球衝突判定オブジェクト
+
 void SphereCollider::Update()
 {
 	//ワールド行列から座標を抽出

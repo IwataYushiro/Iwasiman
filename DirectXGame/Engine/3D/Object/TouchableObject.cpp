@@ -2,6 +2,8 @@
 #include "MeshCollider.h"
 #include "CollisionAttribute.h"
 
+//接触可能オブジェクト
+
 TouchableObject* TouchableObject::Create(Model* model, bool Touth)
 {
 	TouchableObject* ins = new TouchableObject();

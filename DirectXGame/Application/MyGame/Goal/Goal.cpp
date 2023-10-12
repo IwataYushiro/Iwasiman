@@ -5,6 +5,10 @@
 #include "CollisionManager.h"
 
 using namespace DirectX;
+
+//ƒS[ƒ‹
+
+//Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
 CollisionManager* Goal::colManager_ = CollisionManager::GetInstance();
 
 std::unique_ptr<Goal> Goal::Create(Model* model)

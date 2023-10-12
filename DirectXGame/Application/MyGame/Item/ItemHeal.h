@@ -11,6 +11,7 @@
 class Player;
 class CollisionManager;
 
+//自機ライフ回復アイテム
 class ItemHeal :public Object3d
 {
 private:

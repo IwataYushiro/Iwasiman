@@ -3,6 +3,8 @@
 
 using namespace DirectX;
 
+//ƒQ[ƒ€‘S‘Ì
+
 void MyGame::Initialize()
 {
 	Framework::Initialize();

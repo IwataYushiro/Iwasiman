@@ -6,6 +6,8 @@
 using namespace DirectX;
 using namespace std;
 
+//3Dモデル(.obj)
+
 //静的メンバ変数の実体
 ID3D12Device* Model::device_ = nullptr;
 // デスクリプタサイズ

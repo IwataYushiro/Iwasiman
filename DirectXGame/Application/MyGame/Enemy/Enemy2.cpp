@@ -7,8 +7,12 @@
 #include "GamePlayScene.h"
 
 #include "MyMath.h"
+
 using namespace DirectX;
 
+//¸‚Á‚Ä‚Í—‚¿‚éG‹›“G
+
+//Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
 CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
 
 Enemy2::~Enemy2() {

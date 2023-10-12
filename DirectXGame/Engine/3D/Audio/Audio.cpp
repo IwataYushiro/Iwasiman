@@ -4,6 +4,8 @@
 
 #pragma comment(lib,"xaudio2.lib")
 
+//音声(オーディオ)
+
 Audio* Audio::GetInstance()
 {
 	static Audio instance;

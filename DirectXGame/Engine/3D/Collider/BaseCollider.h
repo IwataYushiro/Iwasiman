@@ -3,7 +3,7 @@
 #include "CollisionTypes.h"
 #include "Object3d.h"
 
-//コライダー基盤クラス
+//コライダー基盤
 class BaseCollider
 {
 public://フレンドクラス

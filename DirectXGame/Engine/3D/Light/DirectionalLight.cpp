@@ -3,6 +3,8 @@
 
 using namespace DirectX;
 
+//ライト
+
 //静的メンバ変数の実態
 ID3D12Device* DirectionalLight::device_ = nullptr;
 

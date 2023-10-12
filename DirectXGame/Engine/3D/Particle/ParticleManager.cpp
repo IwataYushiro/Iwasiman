@@ -7,6 +7,8 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
+//パーティクルマネージャー
+
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>

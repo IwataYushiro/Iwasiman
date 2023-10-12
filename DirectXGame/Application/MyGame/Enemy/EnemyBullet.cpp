@@ -5,8 +5,11 @@
 #include "CollisionManager.h"
 
 using namespace DirectX;
-CollisionManager* EnemyBullet::colManager_ = CollisionManager::GetInstance();
 
+//“G‚Ì’e
+
+//Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
+CollisionManager* EnemyBullet::colManager_ = CollisionManager::GetInstance();
 
 std::unique_ptr<EnemyBullet> EnemyBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model)
 {

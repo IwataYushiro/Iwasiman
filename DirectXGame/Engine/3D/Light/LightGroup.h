@@ -4,7 +4,6 @@
 #include "PointLight.h"
 
 //ライトグループ
-
 class LightGroup
 {
 private: // エイリアス

@@ -6,6 +6,10 @@
 #include "CollisionManager.h"
 
 using namespace DirectX;
+
+//—‚¿‚é‹…‚Æ¸‚é‹…
+
+//Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
 CollisionManager* FallSphere::colManager_ = CollisionManager::GetInstance();
 
 std::unique_ptr<FallSphere> FallSphere::Create(Model* model, Player* player, unsigned short subAttribute)

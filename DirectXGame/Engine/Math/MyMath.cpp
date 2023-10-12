@@ -2,7 +2,9 @@
 #include <random>
 
 using namespace DirectX;
-//
+
+//便利数学
+
 ////零ベクトルを返す
 //const XMFLOAT3 MyMathUtility::MySetVector3Zero() {
 //	XMFLOAT3 v = { 0.0f, 0.0f, 0.0f };

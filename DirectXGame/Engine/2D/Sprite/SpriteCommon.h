@@ -6,8 +6,7 @@
 #include <string>
 #include <wrl.h>
 
-//スプライト基盤クラス
-
+//スプライト基盤
 class SpriteCommon final
 {
 public:

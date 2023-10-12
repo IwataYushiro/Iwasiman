@@ -5,6 +5,8 @@
 
 using namespace DirectX;
 
+//当たり判定マネージャー
+
 CollisionManager* CollisionManager::GetInstance()
 {
 	static CollisionManager instance;

@@ -6,6 +6,8 @@
 
 using namespace DirectX;
 
+//形状(メッシュ)
+
 //静的メンバ変数の実体
 ID3D12Device* Mesh::device_ = nullptr;
 

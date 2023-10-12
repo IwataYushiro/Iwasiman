@@ -1,5 +1,7 @@
 #include "ModelFbx.h"
 
+//FBXƒ‚ƒfƒ‹
+
 //Ã“Iƒƒ“ƒo•Ï”‚ÌŽÀ‘Ì
 ID3D12Device* ModelFbx::device_ = nullptr;
 

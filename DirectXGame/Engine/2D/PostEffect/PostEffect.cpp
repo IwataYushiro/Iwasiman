@@ -4,11 +4,12 @@
 #include <d3dcompiler.h>
 #include "Input.h"
 
-
 #pragma comment(lib,"d3dcompiler.lib")
 
-
 using namespace DirectX;
+
+//ポストエフェクト
+
 //静的メンバ変数の実体
 const float PostEffect::clearcolor[4] = { 0.25f,0.5f,0.1f,0.0f };
 

@@ -1,6 +1,8 @@
 #include "ImGuiManager.h"
 #include <cassert>
 
+//ImGuiŠÇ—
+
 ImGuiManager* ImGuiManager::GetInstance()
 {
 	static ImGuiManager instance;

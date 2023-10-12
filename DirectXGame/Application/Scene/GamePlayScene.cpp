@@ -15,13 +15,15 @@
 
 using namespace DirectX;
 
+//ゲームプレイシーン
+
+//静的メンバ変数の実体
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
 Audio* GamePlayScene::audio_ = Audio::GetInstance();
 Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
-
 
 GamePlayScene::GamePlayScene(int stagenum) :stageNum_(stagenum) {}
 

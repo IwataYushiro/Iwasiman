@@ -2,6 +2,8 @@
 
 using namespace DirectX;
 
+//当たり判定プリミティブ形状
+
 void Triangle::ComputeNormal()
 {
 	XMVECTOR p0_p1 = p1 - p0;

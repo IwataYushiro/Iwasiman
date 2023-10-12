@@ -3,6 +3,8 @@
 
 using namespace DirectX;
 
+//メッシュ衝突判定オブジェクト
+
 void MeshCollider::ConstructTriangles(Model* model)
 {
 	//三角形リストをクリア

@@ -11,6 +11,7 @@
 class Player;
 class CollisionManager;
 
+//UŒ‚—Í‹­‰»ƒAƒCƒeƒ€
 class ItemAttack :public Object3d
 {
 private:

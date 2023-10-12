@@ -5,6 +5,9 @@
 #include "ImGuiManager.h"
 
 using namespace DirectX;
+
+//カメラ
+
 Camera::Camera()
 {
 	// ビュー行列の生成

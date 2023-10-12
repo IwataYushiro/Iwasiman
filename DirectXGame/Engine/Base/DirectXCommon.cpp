@@ -7,6 +7,8 @@
 
 using namespace Microsoft::WRL;
 
+//DirectXŠî”ÕƒNƒ‰ƒX
+
 DirectXCommon* DirectXCommon::GetInstance()
 {
 	static DirectXCommon instance;

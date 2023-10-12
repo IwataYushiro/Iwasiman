@@ -1,5 +1,6 @@
 #pragma once
 #include "Object3d.h"
+
 //接触可能オブジェクト
 class TouchableObject:public Object3d
 {

@@ -7,7 +7,7 @@
 #include <list>
 #include <memory>
 
-//ƒhƒbƒXƒ“•—G‹›“G
+//¸‚Á‚Ä‚Í—‚¿‚éG‹›“G
 class Enemy2 :public BaseEnemy {
 private:
 	// DirectX::‚ğÈ—ª

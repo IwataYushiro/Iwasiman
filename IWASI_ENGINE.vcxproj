@@ -192,7 +192,6 @@
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Player\Player.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Player\PlayerBullet.cpp" />
-    <ClCompile Include="DirectXGame\Application\Scene\BaseScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\Factory\SceneFactory.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\GameOverScene.cpp" />
     <ClCompile Include="DirectXGame\Application\Scene\GamePlayScene.cpp" />
@@ -209,7 +208,6 @@
     <ClCompile Include="DirectXGame\Engine\3D\Collider\CollisionManager.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Collider\CollisionPrimitive.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Collider\MeshCollider.cpp" />
-    <ClCompile Include="DirectXGame\Engine\3D\Collider\QueryCallback.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Collider\SphereCollider.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxLoader.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ModelFbx.cpp" />

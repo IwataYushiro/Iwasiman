@@ -7,14 +7,15 @@
 #include <sstream>
 #include <iomanip>
 
+//ステージクリアシーン
 
+//静的メンバ変数の実体
 DirectXCommon* StageClearScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* StageClearScene::input_ = Input::GetInstance();
 Audio* StageClearScene::audio_ = Audio::GetInstance();
 SceneManager* StageClearScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* StageClearScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* StageClearScene::camera_ = Camera::GetInstance();
-
 
 StageClearScene::StageClearScene(int stagenum) :stageNum_(stagenum) {}
 

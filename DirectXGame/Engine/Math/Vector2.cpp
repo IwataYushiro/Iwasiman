@@ -1,6 +1,7 @@
 #include "Vector2.h"
 #include <cmath>		//sqat
 
+//Vector2
 
 Vector2::Vector2()
 {

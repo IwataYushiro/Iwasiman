@@ -10,6 +10,9 @@
 
 using namespace DirectX;
 
+//ステージセレクトシーン
+
+//静的メンバ変数の実体
 DirectXCommon* StageSelectScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* StageSelectScene::input_ = Input::GetInstance();
 Audio* StageSelectScene::audio_ = Audio::GetInstance();

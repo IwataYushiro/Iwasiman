@@ -7,6 +7,8 @@
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
+//FBXオブジェクト
+
 //静的メンバ変数の実体
 ID3D12Device* ObjectFbx::device_ = nullptr;
 ID3D12GraphicsCommandList* ObjectFbx::cmdList_ = nullptr;

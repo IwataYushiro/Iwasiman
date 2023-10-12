@@ -13,8 +13,7 @@
 
 class BaseCollider;
 
-
-// 3Dオブジェクト
+//3Dオブジェクト(.obj)
 class Object3d
 {
 private: // エイリアス

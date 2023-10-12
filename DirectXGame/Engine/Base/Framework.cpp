@@ -4,6 +4,8 @@
 #include "ObjectFbx.h"
 #include "ParticleManager.h"
 
+//ゲーム全体フレームワーク
+
 void Framework::Initialize()
 {
 	//WinApp

@@ -2,6 +2,8 @@
 
 using namespace DirectX;
 
+//“–‚½‚è”»’èƒwƒ‹ƒp[
+
 bool Collision::ChackSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2,
 	DirectX::XMVECTOR* inter, DirectX::XMVECTOR* reject)
 {

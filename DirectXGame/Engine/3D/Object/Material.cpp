@@ -5,6 +5,8 @@
 using namespace DirectX;
 using namespace std;
 
+//マテリアル管理
+
 // 静的メンバ変数の実体
 ID3D12Device* Material::device_ = nullptr;
 

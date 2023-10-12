@@ -5,6 +5,8 @@
 #include "StageSelectScene.h"
 #include "GameOverScene.h"
 
+//具体的(このゲーム用)なシーンファクトリー
+
 BaseScene* SceneFactory::CreateScene(const std::string& sceneName, int stagenum)
 {
 	//次のシーンを生成

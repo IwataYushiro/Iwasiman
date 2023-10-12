@@ -300,9 +300,6 @@
     <ClCompile Include="DirectXGame\Application\Scene\TitleScene.cpp">
       <Filter>Source File\Application\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Application\Scene\BaseScene.cpp">
-      <Filter>Source File\Application\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXGame\Application\Scene\SceneManager.cpp">
       <Filter>Source File\Application\Scene</Filter>
     </ClCompile>
@@ -356,9 +353,6 @@
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\3D\Object\TouchableObject.cpp">
       <Filter>Source File\Engine\3D\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\Engine\3D\Collider\QueryCallback.cpp">
-      <Filter>Source File\Engine\3D\Collider</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Engine\Math\Easing.cpp">
       <Filter>Source File\Engine\Math</Filter>

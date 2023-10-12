@@ -8,6 +8,10 @@
 
 #include "MyMath.h"
 using namespace DirectX;
+
+//ボス敵のコア
+
+//静的メンバ変数の実体
 CollisionManager* EnemyCore::colManager_ = CollisionManager::GetInstance();
 
 EnemyCore::~EnemyCore() {

@@ -1,6 +1,8 @@
 #include "Quaternion.h"
 #include <cmath>
 
+//クオータニオン
+
 Quaternion::Quaternion()
 {
 }

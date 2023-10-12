@@ -6,6 +6,10 @@
 #include "CollisionManager.h"
 
 using namespace DirectX;
+
+//攻撃力強化アイテム
+
+//静的メンバ変数の実体
 CollisionManager* ItemAttack::colManager_ = CollisionManager::GetInstance();
 
 std::unique_ptr<ItemAttack> ItemAttack::Create(Model* model, Player* player)

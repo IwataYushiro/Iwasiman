@@ -6,7 +6,8 @@
 #include "EnemyBoss.h"
 #include "EnemyCore.h"
 
-//敵の工場
+//具体的(このゲーム用)な敵ファクトリー
+
 std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyName,
 	Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
 {

@@ -3,6 +3,8 @@
 
 using namespace std;
 
+//イージング関係
+
 Easing::Easing()
 {
 	startCount = chrono::steady_clock::now();	//開始時間

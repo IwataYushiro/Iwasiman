@@ -9,6 +9,7 @@
 #include <memory>
 
 //‚»‚Ì‚Ü‚Ü•à‚«‘±‚¯‚é“G
+
 class Enemy1 :public BaseEnemy {
 private:
 	// DirectX::‚ğÈ—ª
