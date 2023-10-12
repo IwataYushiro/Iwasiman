@@ -3,6 +3,8 @@
 #include "Model.h"
 #include <DirectXMath.h>
 
+//前方宣言
+//コリジョンマネージャー
 class CollisionManager;
 
 /*
@@ -22,9 +24,10 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	//生成(初期座標、速度、使用モデル)
 	static std::unique_ptr<PlayerBullet> Create
 	(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model = nullptr);
-	//初期化
+	//初期化(初期座標、速度)
 	bool Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity);
 	//リセット処理
 	void Reset();
@@ -42,6 +45,7 @@ public:
 	XMFLOAT3 GetWorldPosition();
 
 private:
+	//コリジョンマネージャー
 	static CollisionManager* colManager_;
 
 	//速度

@@ -78,13 +78,12 @@ void GamePlayScene::Initialize()
 
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
-	particle2_ = Particle::LoadFromParticleTexture("particle5.png");
 	pm_ = ParticleManager::Create();
 	pm_->SetParticleModel(particle1_);
 	pm_->SetCamera(camera_);
 
 	isPause_ = false;
-	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < 6; i++)easeInfo_[i].Standby(false);
+	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < 6; i++)easeInfoTutorial_[i].Standby(false);
 }
 
 void GamePlayScene::Update()
@@ -323,7 +322,6 @@ void GamePlayScene::Finalize()
 
 	//パーティクル
 	delete particle1_;
-	delete particle2_;
 	delete pm_;
 	//ライト
 	delete lightGroup_;
@@ -665,21 +663,21 @@ void GamePlayScene::SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
 	switch (num)
 	{
 	case 0:
-		if (s1 != nullptr)s1->SetPosition({ easeInfo_[0].start,50.0f });
-		if (s2 != nullptr)s2->SetPosition({ easeInfo_[1].start,50.0f });
-		if (s3 != nullptr)s3->SetPosition({ easeInfo_[2].start,110.0f });
-		if (s4 != nullptr)s4->SetPosition({ easeInfo_[3].start,110.0f });
-		if (s5 != nullptr)s5->SetPosition({ easeInfo_[4].start,170.0f });
-		if (s6 != nullptr)s6->SetPosition({ easeInfo_[5].start,250.0f });
+		if (s1 != nullptr)s1->SetPosition({ easeInfoTutorial_[0].start,50.0f });
+		if (s2 != nullptr)s2->SetPosition({ easeInfoTutorial_[1].start,50.0f });
+		if (s3 != nullptr)s3->SetPosition({ easeInfoTutorial_[2].start,110.0f });
+		if (s4 != nullptr)s4->SetPosition({ easeInfoTutorial_[3].start,110.0f });
+		if (s5 != nullptr)s5->SetPosition({ easeInfoTutorial_[4].start,170.0f });
+		if (s6 != nullptr)s6->SetPosition({ easeInfoTutorial_[5].start,250.0f });
 		break;
 	case 1:
-		for (int i = 0; i < 6; i++)easeInfo_[i].ease_out_expo();
-		if (s1 != nullptr)s1->SetPosition({ easeInfo_[0].num_X,50.0f  });
-		if (s2 != nullptr)s2->SetPosition({ easeInfo_[1].num_X,50.0f });
-		if (s3 != nullptr)s3->SetPosition({ easeInfo_[2].num_X,110.0f });
-		if (s4 != nullptr)s4->SetPosition({ easeInfo_[3].num_X,110.0f });
-		if (s5 != nullptr)s5->SetPosition({ easeInfo_[4].num_X,110.0f });
-		if (s6 != nullptr)s6->SetPosition({ easeInfo_[5].num_X,200.0f });
+		for (int i = 0; i < 6; i++)easeInfoTutorial_[i].ease_out_expo();
+		if (s1 != nullptr)s1->SetPosition({ easeInfoTutorial_[0].num_X,50.0f  });
+		if (s2 != nullptr)s2->SetPosition({ easeInfoTutorial_[1].num_X,50.0f });
+		if (s3 != nullptr)s3->SetPosition({ easeInfoTutorial_[2].num_X,110.0f });
+		if (s4 != nullptr)s4->SetPosition({ easeInfoTutorial_[3].num_X,110.0f });
+		if (s5 != nullptr)s5->SetPosition({ easeInfoTutorial_[4].num_X,110.0f });
+		if (s6 != nullptr)s6->SetPosition({ easeInfoTutorial_[5].num_X,200.0f });
 		break;
 	}
 

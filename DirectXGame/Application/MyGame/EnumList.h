@@ -1,10 +1,9 @@
 #pragma once
-//enum倉庫?　命名規則は　コード(大文字繋げ)_Stage1_Area1みたいな感じ
-
+//enum倉庫　命名規則は　コード(大文字繋げ)_Stage1_Area1みたいな感じ
+//stageNum=SL_Stahe_Area1 (cpp X)
 //ゲームプレイシーン
-
 //ステージリスト
-enum StageList//stageNum=SL_Stahe_Area1
+enum StageList
 {
 	//デフォルト
 	SL_Default = 0,

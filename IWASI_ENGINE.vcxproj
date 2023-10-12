@@ -178,8 +178,6 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Spike.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Goal\Goal.cpp" />
-    <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemAttack.cpp" />
-    <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemHeal.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Item\Item.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Player\Player.cpp" />
@@ -242,8 +240,6 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Spike.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Goal\Goal.h" />
-    <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemAttack.h" />
-    <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemHeal.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Item\Item.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Player\Player.h" />

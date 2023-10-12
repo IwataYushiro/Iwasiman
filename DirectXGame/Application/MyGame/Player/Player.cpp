@@ -232,31 +232,6 @@ void Player::Move() {
 	camera_->SetTarget(tmove);
 }
 
-void Player::CameraMove()
-{
-	XMFLOAT3 move = Object3d::GetPosition();
-	XMFLOAT3 cmove = camera_->GetEye();
-	XMFLOAT3 tmove = camera_->GetTarget();
-	float moveSpeed = 1.0f;
-
-	//キーボード入力による移動処理
-	XMMATRIX matTrans = XMMatrixIdentity();
-	if (input_->PushKey(DIK_LEFT)) {
-		move.x -= moveSpeed;
-		cmove.x -= moveSpeed;
-		tmove.x -= moveSpeed;
-	}
-	if (input_->PushKey(DIK_RIGHT)) {
-		move.x += moveSpeed;
-		cmove.x += moveSpeed;
-		tmove.x += moveSpeed;
-	}
-
-	Object3d::SetPosition(move);
-	camera_->SetEye(cmove);
-	camera_->SetTarget(tmove);
-}
-
 void Player::FallAndJump()
 {
 	//旧

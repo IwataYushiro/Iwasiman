@@ -8,9 +8,6 @@
 #include <list>
 #include <memory>
 
-class Player;
-class CollisionManager;
-
 /*
 
 *	FallSphere.h
@@ -29,6 +26,7 @@ private:
 
 public:
 
+	//生成(使用モデル、プレイヤー、サブ属性)
 	static std::unique_ptr<FallSphere> Create(Model* model = nullptr, Player* player = nullptr, unsigned short subAttribute = 0b1000000000000001);
 	//初期化
 	bool Initialize()override;
@@ -52,19 +50,20 @@ public:
 	//描画
 	void Draw()override;
 
-	//衝突を検出したら呼び出されるコールバック関数
+	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
 	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
 
 private:
 	static CollisionManager* colManager_;
 	//ポジション
 	XMFLOAT3 pos_;
+	//スケール
 	XMFLOAT3 scale_;
 
-	bool isFallSphere_ = false;
-
+	//半径
 	float radius_ = 9.0f;
 
+	//プレイヤー
 	Player* player_ = nullptr;
 
 	//乗るとtrue
@@ -72,10 +71,11 @@ private:
 	//乗って離れるとtrue
 	bool isReturn_ = false;
 
+	//開始地点
 	XMFLOAT3 startPos_ = {};
 
 public: //アクセッサ、インライン関数
-	bool IsFallSphere() const { return isFallSphere_; }
+	
+	//プレイヤーセット
 	void SetPlayer(Player* player) { player_ = player; }
 };
-#pragma once

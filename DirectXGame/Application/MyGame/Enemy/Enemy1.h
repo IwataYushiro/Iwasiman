@@ -24,7 +24,10 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	//デストラクタ
 	~Enemy1();
+
+	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、パラメータレベル)
 	static std::unique_ptr<Enemy1> Create(Model* model = nullptr, Model* bullet = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr, int level = 1);
 
@@ -32,9 +35,12 @@ public:
 	int kFireInterval;
 	//初期化
 	bool Initialize(int level);
+	//サブ属性初期化
 	void InitSubATTR(int level);
+	//サブ属性別速度初期化
 	void InitSpeed();
-	void InitLIfe();
+	//サブ属性別ライフ初期化
+	void InitLife();
 
 	//リセット処理
 	void Reset();
@@ -60,11 +66,12 @@ public:
 	//離脱
 	void UpdateLeave();
 
-	//衝突を検出したら呼び出されるコールバック関数
+	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
 	void OnCollision(const CollisionInfo& info, unsigned short attribute,
 		unsigned short subAttribute)override;
 
 private:
+	//コリジョンマネージャー
 	static CollisionManager* colManager_;
 
 	//モデル	
@@ -73,7 +80,7 @@ private:
 	//行動フェーズ
 	enum class Phase {
 		//ここからステージ1
-		Approach,
+		Approach,//登場
 		Leave, //離脱
 
 	};
@@ -91,8 +98,9 @@ private:
 	//半径
 	float radius_ = 1.0f;
 	
-	
+	//地面に乗ってるか
 	bool onGround_ = true;
+	//落下時ベクトル
 	XMFLOAT3 fallVec_;
 
 	//反転フラグ
@@ -100,6 +108,8 @@ private:
 
 public:
 	
+	//プレイヤーセット
 	void SetPlayer(Player* player) { player_ = player; }
+	//ゲームプレイシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

@@ -360,12 +360,6 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Item\Item.cpp">
       <Filter>Source File\Application\MyGame\Item</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemHeal.cpp">
-      <Filter>Source File\Application\MyGame\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Item\ItemAttack.cpp">
-      <Filter>Source File\Application\MyGame\Item</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyBoss.cpp">
       <Filter>Source File\Application\MyGame\Enemy</Filter>
     </ClCompile>
@@ -558,12 +552,6 @@
       <Filter>Header File\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Item\Item.h">
-      <Filter>Header File\Application\MyGame\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemHeal.h">
-      <Filter>Header File\Application\MyGame\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\Item\ItemAttack.h">
       <Filter>Header File\Application\MyGame\Item</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyBoss.h">

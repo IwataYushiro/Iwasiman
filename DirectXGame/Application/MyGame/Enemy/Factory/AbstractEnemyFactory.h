@@ -19,7 +19,7 @@ public:
 	//仮想デストラクタ
 	virtual ~AbstractEnemyFactory() = default;
 
-	//敵生成
+	//敵生成(敵の名前、使用モデル、使用モデル(弾)、プレイヤー、ゲームプレイシーン)
 	virtual std::unique_ptr<BaseEnemy> CreateEnemy(const std::string& enemyName,
 		Model* model, Model* bullet, Player* player, GamePlayScene* gamescene) = 0;
 private:

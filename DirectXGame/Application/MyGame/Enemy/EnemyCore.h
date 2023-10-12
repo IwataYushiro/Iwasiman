@@ -26,10 +26,11 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	//デストラクタ
 	~EnemyCore();
+	////生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、パラメータレベル)
 	static std::unique_ptr<EnemyCore> Create(Model* model = nullptr, Model* bullet = nullptr,
-		Player* player = nullptr, GamePlayScene* gamescene = nullptr
-		, unsigned short stage = 1);
+		Player* player = nullptr, GamePlayScene* gamescene = nullptr, unsigned short stage = 1);
 
 	//弾発射間隔
 	static const int kFireInterval = 40;
@@ -60,7 +61,8 @@ public:
 
 	//離脱
 	void UpdateLeave();
-	//ベジェ曲線
+
+	//ベジェ曲線(最初点、中間点1、中間点2、最終点、時間の進み具合)
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数
@@ -96,17 +98,18 @@ private:
 	//時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
 	std::chrono::steady_clock::time_point nowCount;		//現在時間
-	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	float	maxTime = 2.0f;					//全体時間
-	float	timeRate;
+	std::chrono::microseconds elapsedCount;				//経過時間 経過時間=現在時間-開始時間
+	float	maxTime = 2.0f;								//全体時間
+	float	timeRate;									//どれくらい時間が進んだか
 	//制御点
-	XMFLOAT3 start;
-	XMFLOAT3 point1;
-	XMFLOAT3 point2;
-	XMFLOAT3 end;
+	XMFLOAT3 start;		//最初点
+	XMFLOAT3 point1;	//中間点1
+	XMFLOAT3 point2;	//中間点2
+	XMFLOAT3 end;		//最終点
 
-	//死亡フラグとライフ
+	//死亡フラグ
 	bool isDead_;
+	//ライフ
 	int life_;
 
 	//反転フラグ
@@ -115,7 +118,10 @@ private:
 	XMFLOAT3 nowPos_ = {};
 
 public:
+	//死んだかどうか
 	bool IsDead() const override{ return isDead_; }
+	//プレイヤーセット
 	void SetPlayer(Player* player) { player_ = player; }
+	//ゲームシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

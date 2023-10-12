@@ -1,5 +1,6 @@
 #pragma once
 //前方宣言
+//シーンマネージャー
 class SceneManager;
 
 /*

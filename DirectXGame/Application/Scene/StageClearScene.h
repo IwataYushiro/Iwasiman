@@ -27,6 +27,7 @@ struct LevelData;
 class StageClearScene :public BaseScene
 {
 public://メンバ関数
+	//コンストラクタ(ステージ番号)
 	StageClearScene(int stagenum);
 	//初期化
 	void Initialize() override;
@@ -72,63 +73,69 @@ private://メンバ変数
 	//メニュー番号
 	int menuCount_ = 0;
 	//Sprite
-	Sprite* spriteStageClear_ = new Sprite();
-	Sprite* spriteNextStage_ = new Sprite();
-	Sprite* spriteStageSelect_ = new Sprite();
-	Sprite* spriteTitle_ = new Sprite();
-	Sprite* spriteDone_ = new Sprite();
-	Sprite* spriteFadeInOut_ = new Sprite();
-
-	LevelData* levelData_ = nullptr;
+	Sprite* spriteStageClear_ = new Sprite();	//ステージクリア時のスプライト
+	Sprite* spriteNextStage_ = new Sprite();	//次のステージ表示のスプライト
+	Sprite* spriteStageSelect_ = new Sprite();	//ステージセレクト表示のスプライト
+	Sprite* spriteTitle_ = new Sprite();		//タイトル表示のスプライト
+	Sprite* spriteDone_ = new Sprite();			//決定表示のスプライト
+	Sprite* spriteFadeInOut_ = new Sprite();	//フェードインアウトのスプライト
+	
+	//jsonレベルデータ
+	LevelData* levelData_ = nullptr;			
 
 	//モデル
-	Model* modelPlayer_ = nullptr;
-	Model* modelSkydome_ = nullptr;
-	Model* modelSkydomeStage1_ = nullptr;
-	Model* modelSkydomeStage2_ = nullptr;
-	Model* modelGround_ = nullptr;
-	Model* modelGoal_ = nullptr;
+	Model* modelPlayer_ = nullptr;				//自機モデル
+	Model* modelSkydome_ = nullptr;				//チュートリアルステージモデル(天球)
+	Model* modelSkydomeStage1_ = nullptr;		//ステージ1モデル(天球)
+	Model* modelSkydomeStage2_ = nullptr;		//ステージ2モデル(天球)
+	Model* modelGround_ = nullptr;				//床のモデル
+	Model* modelGoal_ = nullptr;				//ゴールモデル
 
-	std::vector<Object3d*> objPlayers_;
-	std::vector<Object3d*> objSkydomes_;
-	std::vector<Object3d*> objGrounds_;
-	std::vector<Object3d*> objGoals_;
+	std::vector<Object3d*> objPlayers_;			//自機配列
+	std::vector<Object3d*> objSkydomes_;		//天球配列
+	std::vector<Object3d*> objGrounds_;			//床配列
+	std::vector<Object3d*> objGoals_;			//ゴール配列
 
+	//マッピングモデル
 	std::map<std::string, Model*> models_;
+
 	//フラグ類
-	bool isFinalStage_ = false;//最終面の場合
-	bool isNextStage_ = false;
-	bool isStageSelect_ = false;
-	bool isQuitTitle_ = false;
-	bool isFadeOut_ = false;
+	bool isFinalStage_ = false;					//最終面の場合
+	bool isNextStage_ = false;					//次のステージへ行く場合
+	bool isStageSelect_ = false;				//ステージセレクトへ行く場合
+	bool isQuitTitle_ = false;					//タイトルに戻る場合
+	bool isFadeOut_ = false;					//フェードインアウト
 
 	//イージング類
+	//メニュー画面出現イージング
 	Easing easeMenuPosX_[5] =
 	{
-		Easing(1300.0f, 0.0f, 1.0f),//メニュー
-		Easing(1300.0f, 0.0f, 1.2f),//チュートリアルへ
-		Easing(1300.0f, 0.0f, 1.4f),//ステージセレクトへ
-		Easing(1300.0f, 0.0f, 1.6f),//タイトルへ
-		Easing(1300.0f, 0.0f, 1.8f),//スペースで選択
+		Easing(1300.0f, 0.0f, 1.0f),			//メニュー
+		Easing(1300.0f, 0.0f, 1.2f),			//チュートリアルへ
+		Easing(1300.0f, 0.0f, 1.4f),			//ステージセレクトへ
+		Easing(1300.0f, 0.0f, 1.6f),			//タイトルへ
+		Easing(1300.0f, 0.0f, 1.8f),			//スペースで選択
 	};
+	//次のステージへ行くときの視点イージング
 	Easing easeEyeGameStart_[3]
 	{
-		Easing(0.0f, -22.0f, 1.8f),//X
-		Easing(1.0f, -1.0f, 1.8f),//Y
-		Easing(-110.0f, -60.0f, 1.8f),//Z
+		Easing(0.0f, -22.0f, 1.8f),				//X
+		Easing(1.0f, -1.0f, 1.8f),				//Y
+		Easing(-110.0f, -60.0f, 1.8f),			//Z
 	};
+	//次のステージへ行くときの注視点イージング
 	Easing easeTargetGameStart_[3]
 	{
-		Easing(0.0f, 50.0f, 1.8f),//X
-		Easing(0.0f, -8.0f, 1.8f),//Y
-		Easing(-10.0f, -57.0f, 1.8f),//Z
+		Easing(0.0f, 50.0f, 1.8f),				//X
+		Easing(0.0f, -8.0f, 1.8f),				//Y
+		Easing(-10.0f, -57.0f, 1.8f),			//Z
 	};
-
+	//ステージセレクトへ行くときの自機移動イージング
 	Easing easePlayerMoveStageSelect_[3]
 	{
-		Easing(0.0f, 150.0f, 2.0f),//X
-		Easing(-8.0f, 40.0f, 2.0f),//Y
-		Easing(-60.0f, -60.0f, 2.0f),//Z
+		Easing(0.0f, 150.0f, 2.0f),				//X
+		Easing(-8.0f, 40.0f, 2.0f),				//Y
+		Easing(-60.0f, -60.0f, 2.0f),			//Z
 	};
 	//フェードインアウト(false フェードイン、true フェードアウト)
 	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
@@ -142,6 +149,7 @@ private://メンバ変数
 	LightGroup* lightGroup_ = nullptr;
 	//パーティクル
 	Particle* particle1_ = nullptr;
+	//パーティクルマネージャー
 	ParticleManager* pm1_ = nullptr;
 
 	//開始時のポジション

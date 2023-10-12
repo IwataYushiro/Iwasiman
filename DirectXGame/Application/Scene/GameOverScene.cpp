@@ -25,7 +25,7 @@ SceneManager* GameOverScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GameOverScene::imguiManager_ = ImGuiManager::GetInstance();
 Camera* GameOverScene::camera_ = Camera::GetInstance();
 
-GameOverScene::GameOverScene(int stagenum) :stageNum(stagenum) {}
+GameOverScene::GameOverScene(int stagenum) :stageNum_(stagenum) {}
 
 void GameOverScene::Initialize()
 {
@@ -82,7 +82,6 @@ void GameOverScene::Initialize()
 	objStage_->SetScale({ 7.0f,7.0f,7.0f });
 
 
-	easeTitlePosX_.Standby(false);
 	for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
 }
 
@@ -92,7 +91,6 @@ void GameOverScene::Update()
 	else if (menuCount_ >= GOSMI_Title)menuCount_ = GOSMI_Title;
 
 	//イージング
-	easeTitlePosX_.ease_out_expo();
 	for (int i = 0; i < 4; i++)easeMenuPosX_[i].ease_out_expo();
 
 	//座標セット
@@ -145,20 +143,20 @@ void GameOverScene::Update()
 		{
 			//コンティニュー
 			camera_->Reset();
-			sceneManager_->ChangeScene("GAMEPLAY", stageNum);
+			sceneManager_->ChangeScene("GAMEPLAY", stageNum_);
 		}
 		else if (menuCount_ == GOSMI_StageSelect)
 		{
 			//ステージセレクトへ
-			if (stageNum <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-			else if (stageNum <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
-			else if (stageNum <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
+			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+			else if (stageNum_ <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 		}
 		else if (menuCount_ == GOSMI_Title)
 		{
 			//タイトルへ
 			camera_->Reset();
-			sceneManager_->ChangeScene("TITLE", stageNum);
+			sceneManager_->ChangeScene("TITLE", stageNum_);
 
 		}
 	}

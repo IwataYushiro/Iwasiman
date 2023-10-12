@@ -10,6 +10,7 @@
 #include <memory>
 #include <chrono>
 
+//前方宣言
 class CollisionManager;
 class GamePlayScene;
 
@@ -30,8 +31,10 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	//最大無敵時間
 	const int MUTEKI_COUNT = 60;
 public:
+	//デストラクタ
 	~Player();
 
 	static std::unique_ptr<Player> Create(Model* model = nullptr, Model* bullet = nullptr,

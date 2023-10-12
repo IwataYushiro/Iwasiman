@@ -17,8 +17,7 @@ public:
 	//仮想デストラクタ
 	virtual ~AbstractSceneFactory() = default;
 
-	//シーン生成
+	//シーン生成(シーン名、ステージ情報)
 	virtual BaseScene* CreateScene(const std::string& sceneName, int stagenum = 0) = 0;
-private:
 
 };

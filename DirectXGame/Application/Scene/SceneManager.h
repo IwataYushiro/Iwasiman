@@ -15,7 +15,7 @@ public://シングルトンインスタンス
 	static SceneManager* GetInstance();
 
 public://メンバ関数
-	//次のシーンを予約
+	//次のシーンを予約(シーン名、ステージ番号)
 	void ChangeScene(const std::string& sceneName, int stagenum = 0);
 	//更新
 	void Update();
@@ -39,9 +39,12 @@ public://アクセッサ置き場
 	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { this->sceneFactory_ = sceneFactory; }
 
 private:
+	//コンストラクタ
 	SceneManager() = default;
+	//デストラクタ
 	~SceneManager() = default;
 public:
+	//コピーコンストラクタの防止
 	SceneManager(const SceneManager& obj) = delete;
 	SceneManager& operator=(const SceneManager& obj) = delete;
 };

@@ -100,7 +100,7 @@ void Enemy2::InitSpeed()
 
 }
 
-void Enemy2::InitLIfe()
+void Enemy2::InitLife()
 {
 	//ライフ
 	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = 3;
@@ -125,7 +125,7 @@ void Enemy2::Parameter() {
 	//移動
 	InitSpeed();
 	//ライフ
-	InitLIfe();
+	InitLife();
 
 	isDead_ = false;
 

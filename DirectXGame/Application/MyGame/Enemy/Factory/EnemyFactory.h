@@ -11,7 +11,7 @@
 class EnemyFactory :public AbstractEnemyFactory
 {
 public:
-	//敵生成
+	//敵生成(敵の名前、使用モデル、使用モデル(弾)、プレイヤー、ゲームプレイシーン)
 	std::unique_ptr<BaseEnemy> CreateEnemy(const std::string& enemyName
 		,Model* model, Model* bullet, Player* player, GamePlayScene* gamescene) override;
 

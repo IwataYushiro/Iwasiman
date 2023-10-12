@@ -21,8 +21,9 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	//生成(初期座標、速度、使用モデル)
 	static std::unique_ptr<EnemyBullet> Create(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model = nullptr);
-	//初期化
+	//初期化(初期座標、速度)
 	bool Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity);
 	//リセット処理
 	void Reset();
@@ -32,13 +33,14 @@ public:
 	//描画
 	void Draw();
 
-	//衝突を検出したら呼び出されるコールバック関数
+	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
 	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
 
 	//ワールド座標を取得
 	XMFLOAT3 GetWorldPosition();
 
 private:
+	//コリジョンマネージャー
 	static CollisionManager* colManager_;
 
 	//速度
@@ -54,5 +56,6 @@ private:
 	float radius_ = 4.0f;
 
 public: //アクセッサ、インライン関数
+	//死んだかどうか
 	bool IsDead() const { return isDead_; }
 };

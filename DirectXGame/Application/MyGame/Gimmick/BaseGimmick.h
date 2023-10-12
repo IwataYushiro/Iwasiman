@@ -1,8 +1,10 @@
 #pragma once
 #include "Object3d.h"
 
-//自機クラスの前方宣言
+//前方宣言
+//自機クラス
 class Player;
+//コリジョンマネージャー
 class CollisionManager;
 
 /*
@@ -15,8 +17,10 @@ class CollisionManager;
 class BaseGimmick :public Object3d
 {
 public:
+	//デストラクタ
 	virtual ~BaseGimmick() = default;
 
+	//初期化
 	virtual bool Initialize() = 0; //{ return Object3d::Initialize(); }
 
 	//更新
