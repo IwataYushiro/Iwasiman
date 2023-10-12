@@ -25,7 +25,7 @@ public://シングルトンインスタンス
 	static DirectXCommon* GetInstance();
 public:
 	
-	//初期化
+	//初期化(Windowsアプリケーション)
 	void Initialize(WinApp* winApp);
 	//デバイスの初期化
 	void InitializeDevice();
@@ -59,13 +59,16 @@ private:
 	ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
 	//スワップチェーン
 	ComPtr<IDXGISwapChain4> swapChain = nullptr;
+	//スワップチェーンデスク
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	
-	//レンダーターゲットビュー
+	//レンダーターゲットビューデスク
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+	//レンダーターゲットビューヒープ
 	ComPtr<ID3D12DescriptorHeap> rtvHeap = nullptr;
-	//深度ビュー用
+	//深度ビューヒープ
 	ComPtr<ID3D12DescriptorHeap> dsvHeap = nullptr;
+	//深度バッファ
 	ComPtr<ID3D12Resource> depthBuff = nullptr;
 	// バックバッファ
 	std::vector<ComPtr<ID3D12Resource>> backBuffers;
@@ -74,7 +77,7 @@ private:
 	//フェンス値
 	UINT64 fenceVal = 0;
 
-	//WindowsAPI
+	//Windowsアプリケーション
 	WinApp* winApp_ = nullptr;
 
 	//リソースバリア
@@ -95,9 +98,13 @@ private://メンバ関数
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point referense_;
 private:
+	//コンストラクタ（シングルトンパターン）
 	DirectXCommon() = default;
+	//デストラクタ（シングルトンパターン）
 	~DirectXCommon() = default;
 public:
+	//コピーコンストラクタの防止（シングルトンパターン）
 	DirectXCommon(const DirectXCommon& obj) = delete;
+	// コピー代入演算子を禁止（シングルトンパターン）
 	DirectXCommon& operator=(const DirectXCommon& obj) = delete;
 };

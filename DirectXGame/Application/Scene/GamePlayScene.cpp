@@ -27,7 +27,6 @@ using namespace DirectX;
 DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
 Input* GamePlayScene::input_ = Input::GetInstance();
 Audio* GamePlayScene::audio_ = Audio::GetInstance();
-Camera* GamePlayScene::camera_ = Camera::GetInstance();
 SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
 
@@ -42,8 +41,13 @@ void GamePlayScene::Initialize()
 	enemyFactory_ = std::make_unique<EnemyFactory>();
 	gimmickFactory_ = std::make_unique<GimmickFactory>();
 
+	
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
+	
+	//カメラ生成
+	camera_ = new Camera();
+
 	//音声データ
 	sound_ = audio_->SoundLoadWave("Resources/TestMusic.wav");
 
@@ -323,6 +327,9 @@ void GamePlayScene::Finalize()
 	//パーティクル
 	delete particle1_;
 	delete pm_;
+
+	//カメラ
+	delete camera_;
 	//ライト
 	delete lightGroup_;
 	//モデル

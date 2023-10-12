@@ -10,7 +10,9 @@
 #include <memory>
 
 //前方宣言
+//自機クラス
 class Player;
+//コリジョンマネージャー
 class CollisionManager;
 
 /*

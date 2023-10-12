@@ -56,13 +56,13 @@ public://メンバ関数
 	//初期化
 	void Initialize();
 
-	//サウンド読み込み
+	//サウンド読み込み(使用音声.wav)
 	SoundData SoundLoadWave(const char* filename);
 	
-	//音声再生(true＝ループ再生)
+	//音声再生(Xaudio2、サウンドデータ、true＝ループ再生)
 	void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, bool loop);
 	
-	//各種音声データの開放
+	//各種音声データの開放(サウンドデータ)
 	void SoundUnLoad(SoundData* soundData);
 	
 	//終了処理(xAudio2の開放->各種音声データを開放するように！)
@@ -70,15 +70,18 @@ public://メンバ関数
 
 private://メンバ変数
 
-	ComPtr<IXAudio2> xaudio2;
+	ComPtr<IXAudio2> xaudio2;//Xaudio2
 
 public://アクセッサ置き場
-	//xAudio2
+	//xAudio2ゲット
 	IXAudio2* GetXAudio2() { return xaudio2.Get(); }
 private:
+	//コンストラクタ
 	Audio() = default;
+	//デストラクタ
 	~Audio() = default;
 public:
+	//コピーコンストラクタの防止
 	Audio(const Audio& obj) = delete;
 	Audio& operator=(const Audio& obj) = delete;
 };

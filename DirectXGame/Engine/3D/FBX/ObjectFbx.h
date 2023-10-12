@@ -48,9 +48,9 @@ public://サブクラス
 
 
 public://静的メンバ関数
-	//静的初期化
+	//静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
-	// 描画前処理
+	// 描画前処理(コマンドリスト)
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 	// 描画後処理
 	static void PostDraw();
@@ -116,7 +116,9 @@ protected://メンバ変数
 	//カメラ
 	Camera* camera_ = nullptr;
 public://アクセッサ置き場
+	//FBXモデルセット
 	void SetModelFBX(ModelFbx* modelF) { this->modelF_ = modelF; }
+	//カメラセット
 	void SetCamera(Camera* camera) { this->camera_ = camera; }
 
 };

@@ -28,7 +28,9 @@ struct QueryHit
 class QueryCallback
 {
 public:
+	//コンストラクタ
 	QueryCallback() = default;
+	//デストラクタ
 	virtual ~QueryCallback() = default;
 
 	//交差時のコールバック関数

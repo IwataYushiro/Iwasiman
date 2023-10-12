@@ -61,21 +61,21 @@ private://定数
 
 public://メンバ関数
 
-	//OBJファイルからパーティクルモデルを読み込む
+	//OBJファイルからパーティクルモデルを読み込む(使用パーティクルモデル)
 	static Particle* LoadFromParticleTexture(const std::string& fileName);
 	// デスクリプタヒープの初期化
 	void InitializeDescriptorHeap();
-	// テクスチャ読み込み
+	// テクスチャ読み込み(テクスチャファイルネーム)
 	void LoadTexture(const std::string& fileName);
 
 	//各種バッファ生成
 	void CreateBuffers();
 	//更新
 	void Update();
-	// 描画
+	// 描画(コマンドリスト)
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	//パーティクルの追加
+	//パーティクルの追加(寿命、初期座標、速度、重力加速度、開始時スケール、終了時スケール)
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
 		float start_scale, float end_scale);
 
@@ -105,9 +105,9 @@ private://メンバ変数
 	std::forward_list<OneParticle> particles_;
 
 public://アクセッサ置き場
-	//デバイス
+	//デバイスセット
 	static void SetDevice(ID3D12Device* device) { Particle::device_ = device; }
 
 };
-
+//オペレーター
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);

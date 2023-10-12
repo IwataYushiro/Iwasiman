@@ -85,7 +85,7 @@ public://フレンド、サブクラス
 		DirectX::XMMATRIX invInitialPose;
 		//クラスター
 		FbxCluster* fbxCluster;
-		//コンストラクタ
+		//コンストラクタ(名前)
 		Bone(const std::string& name) {
 			this->name = name;
 		}
@@ -94,9 +94,9 @@ public://フレンド、サブクラス
 public://メンバ関数
 	//デストラクタ
 	~ModelFbx();
-	//描画
+	//描画(コマンドリスト)
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	//バッファ生成
+	//バッファ生成(デバイス)
 	void CreateBuffers(ID3D12Device* device);
 	//デバイス
 	static void SetDevice(ID3D12Device* device) { ModelFbx::device_ = device; }

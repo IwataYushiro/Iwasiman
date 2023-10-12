@@ -32,7 +32,7 @@ public://サブクラス
 	};
 
 public://静的メンバ関数
-	//静的初期化
+	//静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
 
 	//インスタンス生成
@@ -45,7 +45,7 @@ private://静的メンバ変数
 private://メンバ変数
 	//ライト光線方向(単位ベクトル)
 	XMVECTOR lightDir = { 1.0f,0.0f,0.0f,0.0f };
-	//ライト色
+	//ライトカラー
 	XMFLOAT3 lightColor = { 1.0f,1.0f,1.0f };
 	//ダーティフラグ
 	bool dirty = false;
@@ -62,18 +62,20 @@ public://メンバ関数
 	//更新
 	void Update();
 
-	//描画
+	//描画(コマンドリスト、ルートパラメータインデックス)
 	void Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex);
 
 	//定数バッファ転送
 	void TransferConstBuffer();
 
-	//ライト方向のセット
+	//ライト方向セット
 	void SetLightDir(const XMVECTOR& lightdir);
+	//ライト方向ゲット
 	const XMVECTOR& GetLightDir() { return lightDir; }
 
-	//ライト色のセット
+	//ライトカラーのセット
 	void SetLightColor(const XMFLOAT3& lightcolor);
+	//ライトカラーのゲット
 	const XMFLOAT3& GetLightColor() { return lightColor; }
 
 	//有効フラグのセット

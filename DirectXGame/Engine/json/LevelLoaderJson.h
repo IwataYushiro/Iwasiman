@@ -12,9 +12,9 @@
 */
 struct LevelData
 {
+	//オブジェクト情報
 	struct ObjectData
 	{
-		
 		//平行移動
 		DirectX::XMVECTOR trans;
 		//回転角

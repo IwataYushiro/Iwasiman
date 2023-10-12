@@ -16,16 +16,17 @@ class MeshCollider:public BaseCollider
 public:
 	//コンストラクタにメッシュ形状をセット
 	MeshCollider() { shapeType = COLLISIONSHAPE_MESH; }
+	//デストラクタ
 	~MeshCollider()=default;
 
-	//三角形の配列を構築
+	//三角形の配列を構築(モデル)
 	void ConstructTriangles(Model* model);
 	//更新
 	void Update()override;
-	//球との当たり判定
+	//球との当たり判定(球、衝突点、排斥ベクトル)
 	bool CheckCollisionSphere(const Sphere& sphere,
 		DirectX::XMVECTOR* inter = nullptr, DirectX::XMVECTOR* reject = nullptr);
-	//レイとの当たり判定
+	//レイとの当たり判定(レイ、距離、衝突点)
 	bool CheckCollisionRay(const Ray& ray, float* distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
 
 private:

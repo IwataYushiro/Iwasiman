@@ -24,7 +24,6 @@ Input* StageSelectScene::input_ = Input::GetInstance();
 Audio* StageSelectScene::audio_ = Audio::GetInstance();
 SceneManager* StageSelectScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* StageSelectScene::imguiManager_ = ImGuiManager::GetInstance();
-Camera* StageSelectScene::camera_ = Camera::GetInstance();
 
 StageSelectScene::StageSelectScene(int count) :menuCount_(count)
 {
@@ -33,6 +32,9 @@ StageSelectScene::StageSelectScene(int count) :menuCount_(count)
 void StageSelectScene::Initialize()
 {
 	spCommon_ = SpriteCommon::GetInstance();
+
+	//カメラ初期化
+	camera_ = new Camera();
 	//オーディオ
 	audio_->Initialize();
 
@@ -399,6 +401,8 @@ void StageSelectScene::Finalize()
 	delete particle1_;
 	delete pm1_;
 
+	//カメラ
+	delete camera_;
 	//ライト
 	delete lightGroup_;
 }

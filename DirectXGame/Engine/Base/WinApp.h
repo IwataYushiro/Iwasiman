@@ -22,7 +22,7 @@ public://定数
 
 public://メンバ関数
 	
-	//ウィンドゥプロシージャ
+	//ウィンドゥプロシージャ(ウィンドゥハンドル、メッセージ、Windowsパラメータ、Longパラメータ)
 	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 	//初期化
@@ -43,16 +43,21 @@ private://メンバ変数
 
 
 public://アクセッサ置き場
+	//ウィンドゥハンドルゲット
 	HWND GetHwnd() const { return hwnd; }
-
+	//ウィンドゥハンドルインスタンスゲット
 	HINSTANCE GetHinstance() const { return wndClassEx.hInstance; }
-
+	//インスタンス取得（シングルトンパターン）
 	static WinApp* GetInstance();
 
 private:
+	//コンストラクタ（シングルトンパターン）
 	WinApp() {};
+	//デストラクタ（シングルトンパターン）
 	~WinApp() = default;
 public:
+	//コピーコンストラクタの防止（シングルトンパターン）
 	WinApp(const WinApp& obj) = delete;
+	// コピー代入演算子を禁止（シングルトンパターン）
 	WinApp& operator=(const WinApp& obj) = delete;
 };

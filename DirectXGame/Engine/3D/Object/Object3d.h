@@ -31,11 +31,13 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public://コンストラクタ等
+	//コンストラクタ
 	Object3d() = default;
+	//デストラクタ
 	virtual ~Object3d();
 
 public: // サブクラス
-	
+
 
 	// 定数バッファ用データ構造体
 	struct ConstBufferDataB0
@@ -44,80 +46,66 @@ public: // サブクラス
 		XMMATRIX world;			//ワールド行列
 		XMFLOAT3 cameraPos;		//カメラ座標(ワールド座標)
 	};
-	
+
 private: // 定数
-	static const int division = 50;					// 分割数
-	static const float radius;				// 底面の半径
-	static const float prizmHeight;			// 柱の高さ
+	static const int division = 50;									// 分割数
+	static const float radius;										// 底面の半径
+	static const float prizmHeight;									// 柱の高さ
 	static const int planeCount = division * 2 + division * 2;		// 面の数
-	static const int vertexCount = planeCount * 3;		// 頂点数
+	static const int vertexCount = planeCount * 3;					// 頂点数
 
 public: // 静的メンバ関数
-	/// <summary>
-	/// 静的初期化
-	/// </summary>
-	/// <param name="device">デバイス</param>
+
+	// 静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
 
-	/// <summary>
-	/// 描画前処理
-	/// </summary>
-	/// <param name="cmdList">描画コマンドリスト</param>
+
+	// 描画前処理(コマンドリスト)
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
+	//描画後処理
 	static void PostDraw();
 
-	/// <summary>
-	/// 3Dオブジェクト生成
-	/// </summary>
-	/// <returns></returns>
+
+	// 生成
 	static Object3d* Create();
 
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device_;
-	
+
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList_;
 	// ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootsignature_;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate_;
-	
-	static ComPtr<ID3DBlob> rootSigBlob_;
-	static ComPtr<ID3DBlob> vsBlob_; // 頂点シェーダオブジェクト
-	static ComPtr<ID3DBlob> psBlob_;	// ピクセルシェーダオブジェクト
-	static ComPtr<ID3DBlob> errorBlob_; // エラーオブジェクト
-	//ライト
+
+	static ComPtr<ID3DBlob> rootSigBlob_;	//ルートシグネチャオブジェクト
+	static ComPtr<ID3DBlob> vsBlob_;		// 頂点シェーダオブジェクト
+	static ComPtr<ID3DBlob> psBlob_;		// ピクセルシェーダオブジェクト
+	static ComPtr<ID3DBlob> errorBlob_;		// エラーオブジェクト
+	//ライトグループ
 	static LightGroup* lightGroup_;
 
-	
+
 
 private:// 静的メンバ関数
-	/// <summary>
-	/// グラフィックパイプライン生成
-	/// </summary>
-	/// <returns>成否</returns>
+	// グラフィックパイプライン生成
 	static void InitializeGraphicsPipeline();
 
 public: // メンバ関数
+	//初期化
 	virtual bool Initialize();
-	/// <summary>
-	/// 毎フレーム処理
-	/// </summary>
+	//更新
 	virtual void Update();
 
 	//行列更新
 	void UpdateWorldMatrix();
-	/// <summary>
-	/// 描画
-	/// </summary>
+	//描画
 	virtual void Draw();
 
-	//衝突時のコールバック
+	//衝突時のコールバック(コリジョン情報、メイン属性、サブ属性)
 	virtual void OnCollision([[maybe_unused]] const CollisionInfo& info,
 		[[maybe_unused]] unsigned short attribute, [[maybe_unused]] unsigned short subAttribute) {}
 protected: // メンバ変数
@@ -128,7 +116,8 @@ protected: // メンバ変数
 	//ビルボード
 	bool isBillboard_ = false;
 	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuffB0; 
+	ComPtr<ID3D12Resource> constBuffB0;
+	//定数バッファのマッピング
 	ConstBufferDataB0* constMap0 = nullptr;
 	// 色
 	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
@@ -142,48 +131,46 @@ protected: // メンバ変数
 	XMMATRIX matWorld_;
 	// 親オブジェクト
 	Object3d* parent_ = nullptr;
-	
+
 	//クラス名
 	const char* name_ = nullptr;
 	//コライダー
 	BaseCollider* collider_ = nullptr;
-	
+
 public: //アクセッサ置き場
-	//モデル
+	//モデルセット
 	void SetModel(Model* model) { this->model_ = model; }
-	//スケール
+	//スケーリングゲット
 	const XMFLOAT3& GetScale() const { return scale_; }
+	//スケーリングセット
 	void SetScale(const XMFLOAT3& scale) { this->scale_ = scale; }
-	//回転
+	//ローテーションゲット
 	const XMFLOAT3& GetRotation() const { return rotation_; }
+	//ローテーションセット
 	void SetRotation(const XMFLOAT3& rotation) { this->rotation_ = rotation; }
-	//ワールド座標
+	
+	//ワールド行列ゲット
 	const XMMATRIX& GetWorld() const { return matWorld_; }
+	//ワールド行列セット
 	void SetWorld(const XMMATRIX& matWorld) { this->matWorld_ = matWorld; }
 
-	/// <summary>
-	/// 座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
+	// ポジションゲット
 	const XMFLOAT3& GetPosition() const { return position_; }
 
-	/// <summary>
-	/// 座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
+	//ポジションセット
 	void SetPosition(const XMFLOAT3& position) { this->position_ = position; }
-	
-	//カメラ
-	void SetCamera( Camera* camera) { this->camera_ = camera; }
-	//ライト
+
+	//カメラセット
+	void SetCamera(Camera* camera) { this->camera_ = camera; }
+	//ライトグループセット
 	static void SetLightGroup(LightGroup* lightGroup) { Object3d::lightGroup_ = lightGroup; }
-	//ビルボード
+	//ビルボードセット
 	void SetBillboard(bool isBillboard) { this->isBillboard_ = isBillboard; }
 
-	//コライダーのセット
+	//コライダーセット
 	void SetCollider(BaseCollider* collider);
-	//モデルの取得
+	//モデルゲット
 	inline Model* GetModel() { return model_; }
-	
+
 };
 

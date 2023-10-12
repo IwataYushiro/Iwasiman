@@ -15,11 +15,12 @@ namespace MyMath {
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+	//円周率
 	const float PI = 3.141592654f;
 
 	//ランダム生成
-	int RandomMTInt(int min, int max);
-	float RandomMTFloat(float min, float max);
+	int RandomMTInt(int min, int max);			//int版
+	float RandomMTFloat(float min, float max);	//float版
 	//// 零ベクトルを返す
 	//const XMFLOAT3 MySetVector3Zero();
 	//// 2ベクトルが一致しているか調べる

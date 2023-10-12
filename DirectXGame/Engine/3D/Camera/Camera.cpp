@@ -351,9 +351,3 @@ void Camera::SetUp(const XMFLOAT3& up)
 {
 	this->up_ = up;
 }
-
-Camera* Camera::GetInstance()
-{
-	static Camera instance;
-	return &instance;
-}

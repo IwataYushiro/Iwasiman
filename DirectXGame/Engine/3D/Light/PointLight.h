@@ -46,16 +46,20 @@ private://メンバ変数
 
 public://アクセッサ置き場
 	
-	//ライト座標
+	//ライト座標セット
 	inline void SetLightPos(const XMFLOAT3& lightPos) { this->lightPos_ = lightPos; }
+	//ライト座標ゲット
 	inline const XMFLOAT3& GetLightPos() { return lightPos_; }
-	//ライトの色
+	//ライトカラーセット
 	inline void SetLightColor(const XMFLOAT3& lightColor) { this->lightColor_ = lightColor; }
+	//ライトカラーゲット
 	inline const XMFLOAT3& GetLightColor() { return lightColor_; }
-	//ライト距離の減衰係数
+	//ライト距離の減衰係数セット
 	inline void SetLightAtten(const XMFLOAT3& lightAtten) { this->lightAtten_ = lightAtten; }
+	//ライト距離の減衰係数ゲット
 	inline const XMFLOAT3& GetLightAtten() { return lightAtten_; }
-	//平行光源のライト色のセット
+	//点光源のライトセット
 	inline void SetActive(bool active) { this->active_ = active; }
+	//点光源のライトゲット
 	inline bool IsActive() { return active_; }
 };

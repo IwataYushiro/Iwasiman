@@ -51,27 +51,17 @@ private: // 定数
 	static const int vertexCount = 1024;		// 頂点数
 	//static const int indexCount = 3 * 2;	//インデックス数
 public: // 静的メンバ関数
-	/// <summary>
-	/// 静的初期化
-	/// </summary>
-	/// <param name="device">デバイス</param>
+	
+	// 静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
 
-	/// <summary>
-	/// 描画前処理
-	/// </summary>
-	/// <param name="cmdList">描画コマンドリスト</param>
+	// 描画前処理(コマンドリスト)
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
+	//描画後処理
 	static void PostDraw();
 
-	/// <summary>
-	/// 3Dオブジェクト生成
-	/// </summary>
-	/// <returns></returns>
+	//生成
 	static ParticleManager* Create();
 
 private: // 静的メンバ変数
@@ -86,82 +76,40 @@ private: // 静的メンバ変数
 
 private:// 静的メンバ関数
 
-	/// グラフィックパイプライン生成
-	/// </summary>
-	/// <returns>成否</returns>
+	// グラフィックパイプライン生成
 	static void InitializeGraphicsPipeline();
 
 public: // メンバ関数
+	//初期化
 	bool Initialize();
-	/// <summary>
-	/// 毎フレーム処理
-	/// </summary>
+	//更新
 	void Update();
 
-	/// <summary>
-	/// 描画
-	/// </summary>
+	//描画
 	void Draw();
 
-	/// <summary>
-	/// パーティクル発射
-	/// </summary>
-	/// <param name="p">パーティクル</param>
-	/// <param name="setmove">初期位置</param>
-	/// <param name="setpos">位置</param>
-	/// <param name="setvel">移動量</param>
-	/// <param name="setacc">重力分布</param>
-	/// <param name="setnum">一気に何個か</param>
-	///  <param name="setscale">x = 開始スケール , y = 終了スケール</param>
+	// パーティクル発射(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール})
 	void Active(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
-	/// <summary>
-	/// パーティクル発射X軸
-	/// </summary>
-	/// <param name="p">パーティクル</param>
-	/// <param name="setmove">初期位置</param>
-	/// <param name="setpos">位置</param>
-	/// <param name="setvel">移動量</param>
-	/// <param name="setacc">重力分布</param>
-	/// <param name="setnum">一気に何個か</param>
-	///  <param name="setscale">x = 開始スケール , y = 終了スケール</param>
+	// パーティクル発射X軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール})
 	void ActiveX(Particle* p,const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
-	/// <summary>
-	/// パーティクル発射Y軸
-	/// </summary>
-	/// <param name="p">パーティクル</param>
-	/// <param name="setmove">初期位置</param>
-	/// <param name="setpos">位置</param>
-	/// <param name="setvel">移動量</param>
-	/// <param name="setacc">重力分布</param>
-	/// <param name="setnum">一気に何個か</param>
-	///  <param name="setscale">x = 開始スケール , y = 終了スケール</param>
+	// パーティクル発射Y軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール})
 	void ActiveY(Particle* p,const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
-	/// <summary>
-	/// パーティクル発射Z軸
-	/// </summary>
-	/// <param name="p">パーティクル</param>
-	/// <param name="setmove">初期位置</param>
-	/// <param name="setpos">位置</param>
-	/// <param name="setvel">移動量</param>
-	/// <param name="setacc">重力分布</param>
-	/// <param name="setnum">一気に何個か</param>
-	///  <param name="setscale">x = 開始スケール , y = 終了スケール</param>
+	// パーティクル発射Z軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール})
 	void ActiveZ(Particle* p,const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale);
-
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff_; // 定数バッファ
 	// ローカルスケール
 	XMFLOAT3 scale_ = { 1.0f,1.0f,1.0f };
-	
+	//一粒のパーティクル
 	Particle* particle_ = nullptr;
-
+	//カメラ
 	Camera* camera_ = nullptr;
 
 public://アクセッサ置き場
-	//パーティクルモデル
+	//パーティクルモデルセット
 	void SetParticleModel(Particle* pmodel) { this->particle_ = pmodel; }
-	//カメラ
+	//カメラセット
 	void SetCamera(Camera* camera) { this->camera_ = camera; }
 };
 

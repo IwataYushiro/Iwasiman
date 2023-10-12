@@ -38,7 +38,7 @@ public://サブクラス
 public://静的メンバ関数
 	//生成
 	static Material* Create();
-	//静的初期化
+	//静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
 
 private://静的メンバ変数
@@ -54,7 +54,7 @@ public://共有メンバ変数
 
 public://メンバ関数	
 	
-	// テクスチャ読み込み
+	// テクスチャ読み込み(ディレクトリパス、CPUハンドル、GPUハンドル)
 	void LoadTexture(
 		const std::string& directoryPath, D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle,
 		D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
@@ -89,10 +89,12 @@ private://カプセル化メンバ関数
 	void CreateConstBuffer();
 
 public://アクセッサ置き場
-	// 定数バッファの取得
+	// 定数バッファゲット
 	ID3D12Resource* GetConstantBuffer() { return constBuff.Get(); }
 	//ハンドル関係
+	//CPUハンドルゲット
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return cpuDescHandleSRV; }
+	//GPUハンドルゲット
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return gpuDescHandleSRV; }
 
 

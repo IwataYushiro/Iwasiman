@@ -98,7 +98,7 @@ protected://構造体類に関係あるメンバ変数
 
 public://メンバ関数
 
-	//初期化
+	//初期化(スプライト基盤、テクスチャインデックス)
 	void Initialize(SpriteCommon* spCommon, uint32_t textureIndex = UINT32_MAX);
 	//更新
 	void Update();
@@ -140,59 +140,59 @@ protected:
 	uint32_t textureIndex_ = 0;
 
 public://アクセッサ置き場
-	//アンカーポイント
+	//アンカーポイントセット
 	void SetAnchorPoint(const XMFLOAT2& anchorPoint) { anchorPoint_ = anchorPoint; }
-
+	//アンカーポイントゲット
 	const XMFLOAT2& GetAnchorPoint()const { return anchorPoint_; }
 
-	//スケーリング
+	//スケーリングセット
 	void SetSize(const XMFLOAT2& size) { size_ = size; }
-
+	//スケーリングゲット
 	const XMFLOAT2& GetSize()const { return size_; }
 
-	//座標
+	//ポジションセット
 	void SetPosition(const XMFLOAT2& position) { position_ = position; }
-
+	//ポジションゲット
 	const XMFLOAT2& GetPosition()const { return position_; }
 
-	//回転
+	//ローテーションセット(Z軸)
 	void SetRotationZ(const float& rotationZ) { rotationZ_ = rotationZ; }
-
+	//ローテーションゲット(Z軸)
 	const float& GetRotationZ()const { return rotationZ_; }
 
-	//色
+	//カラーセット
 	void SetColor(const XMFLOAT4& color) { color_ = color; }
-
+	//カラーゲット
 	const XMFLOAT4& GetColor()const { return color_; }
 
-	//左右フリップ
+	//左右フリップセット
 	void SetFlipX(const bool& isFlipX) { isFlipX_ = isFlipX; }
-
+	//左右フリップゲット
 	const bool& GetFlipX()const { return isFlipX_; }
 	
-	//上下フリップ
+	//上下フリップセット
 	void SetFlipY(const bool& isFlipY) { isFlipY_ = isFlipY; }
-
+	//上下フリップゲット
 	const bool& GetFlipY()const { return isFlipY_; }
 
-	//視覚化
+	//視覚化セット
 	void SetInvisible(const bool& isInvisible) { isInvisible_ = isInvisible; }
-
+	//視覚化ゲット
 	const bool& GetInvisible()const { return isInvisible_; }
 
-	//テクスチャ番号取得
+	//テクスチャ番号セット
 	void SetTextureIndex(const uint32_t& textureIndex) { textureIndex_ = textureIndex; }
-
+	//テクスチャ番号ゲット
 	const uint32_t& GetTextureIndex()const { return textureIndex_; }
 
-	//テクスチャ左上座標
+	//テクスチャ左上座標セット
 	void SetTextureLeftTop(const XMFLOAT2& textureLeftTop) { textureLeftTop_ = textureLeftTop; }
-
+	//テクスチャ左上座標ゲット
 	const XMFLOAT2& GetTextureLeftTop()const { return textureLeftTop_; }
 
-	//テクスチャ切り出しサイズ
+	//テクスチャ切り出しサイズセット
 	void SetTextureSize(const XMFLOAT2& textureSize) { textureSize_ = textureSize; }
-
+	//テクスチャ切り出しサイズゲット
 	const XMFLOAT2& GetTextureSize()const { return textureSize_; }
 
 protected:

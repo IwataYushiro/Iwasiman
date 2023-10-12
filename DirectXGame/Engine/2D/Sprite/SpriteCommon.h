@@ -28,20 +28,21 @@ public://シングルトンインスタンス
 
 public://メンバ関数
 
-	//初期化
+	//初期化(DirectX基盤)
 	void Initialize(DirectXCommon* dxCommon);
 
-	//テクスチャ読み込み
+	//テクスチャ読み込み(テクスチャインデックス、使用スプライト)
 	void LoadTexture(uint32_t index, const std::string& fileName);
 
 	//描画前処理
 	void PreDraw();
 
-	//描画用テクスチャコマンドの発行
+	//描画用テクスチャコマンドの発行(テクスチャインデックス)
 	void SetTextureCommands(uint32_t index);
 
 private://メンバ変数
 
+	//DirectX基盤
 	DirectXCommon* dxCommon_ = nullptr;
 
 	//デフォルトテクスチャ格納ディレクトリ
@@ -60,6 +61,7 @@ private://メンバ変数
 	ComPtr<ID3D12DescriptorHeap> srvHeap;
 	//SRVヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle;
+	//SRVGPUヒープのハンドルを取得
 	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle;
 
 
@@ -77,23 +79,26 @@ private://メンバ変数
 
 public://アクセッサ
 
+	//DirectX基盤ゲット
 	DirectXCommon* GetDxCommon() { return dxCommon_; }
 	
+	//SRVヒープゲット
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVHandle() { return srvHandle; }
+	//SRVGPUヒープゲット
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandle() { return srvGpuHandle; }
-
-	ID3D12Resource* GetTextureBuffer(uint32_t index)const
-	{
-		return texBuffs[index].Get();
-	}
-	//パイプラインステート
+	//テクスチャバッファゲット
+	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return texBuffs[index].Get(); }
+	//パイプラインステートゲット
 	ID3D12PipelineState* GetPipelineState() { return pipelineState.Get(); }
-	//ルートシグネチャ
+	//ルートシグネチャゲット
 	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
 private:
+	//コンストラクタ
 	SpriteCommon() = default;
+	//デストラクタ
 	~SpriteCommon() = default;
 public:
+	//コピーコンストラクタの防止
 	SpriteCommon(const SpriteCommon& obj) = delete;
 	SpriteCommon& operator=(const SpriteCommon& obj) = delete;
 };

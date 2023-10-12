@@ -45,7 +45,7 @@ private://静的メンバ変数
 	static ID3D12Device* device_;
 
 public://静的メンバ関数
-	//静的初期化
+	//静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
 	//インスタンス生成
 	static LightGroup* Create();
@@ -69,7 +69,7 @@ public://メンバ関数
 	void Initialize();
 	//更新
 	void Update();
-	//描画
+	//描画(コマンドリスト、ルートパラメータインデックス)
 	void Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex);
 
 	//定数バッファ転送
@@ -77,23 +77,23 @@ public://メンバ関数
 	//標準のライト設定
 	void DefaultLightSetting();
 
-	//環境光のライト色をセット
+	//環境光のライト色をセット(カラー)
 	void SetAmbientColor(const XMFLOAT3& color);
-	//平行光源の有効フラグのセット
+	//平行光源の有効フラグのセット(何番ライト、起動フラグ)
 	void SetDirLightActive(int index, bool active);
-	//平行光源のライト方向のセット
+	//平行光源のライト方向のセット(何番ライト、方向)
 	void SetDirLightDir(int index, const XMVECTOR& lightdir);
-	//平行光源のライト色のセット
+	//平行光源のライト色のセット(何番ライト、カラー)
 	void SetDirLightColor(int index, const XMFLOAT3& lightcolor);
 
 	//点光源
-	//ライト座標
+	//ライト座標セット(何番ライト、座標)
 	void SetPointLightPos(int index,const XMFLOAT3& lightPos);
-	//ライトの色
+	//ライトの色セット(何番ライト、カラー)
 	void SetPointLightColor(int index, const XMFLOAT3& lightColor);
-	//ライト距離の減衰係数
+	//ライト距離の減衰係数セット(何番ライト、減衰係数)
 	void SetPointLightAtten(int index, const XMFLOAT3& lightAtten);
-	//平行光源のライト色のセット
+	//点光源のライトセット(何番ライト、起動フラグ)
 	void SetPointLightActive(int index, bool active);
 };
 

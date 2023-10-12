@@ -21,13 +21,15 @@ Input* StageClearScene::input_ = Input::GetInstance();
 Audio* StageClearScene::audio_ = Audio::GetInstance();
 SceneManager* StageClearScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* StageClearScene::imguiManager_ = ImGuiManager::GetInstance();
-Camera* StageClearScene::camera_ = Camera::GetInstance();
 
 StageClearScene::StageClearScene(int stagenum) :stageNum_(stagenum) {}
 
 void StageClearScene::Initialize()
 {
 	spCommon_ = SpriteCommon::GetInstance();
+
+	//カメラ
+	camera_ = new Camera();
 	//オーディオ
 	audio_->Initialize();
 
@@ -433,6 +435,8 @@ void StageClearScene::Finalize()
 	delete modelGround_;
 	delete modelGoal_;
 
+	//カメラ
+	delete camera_;
 	//ライト
 	delete lightGroup_;
 	//パーティクル

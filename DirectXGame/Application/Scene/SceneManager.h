@@ -39,12 +39,13 @@ public://アクセッサ置き場
 	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { this->sceneFactory_ = sceneFactory; }
 
 private:
-	//コンストラクタ
+	//コンストラクタ（シングルトンパターン）
 	SceneManager() = default;
-	//デストラクタ
+	//デストラクタ（シングルトンパターン）
 	~SceneManager() = default;
 public:
-	//コピーコンストラクタの防止
+	//コピーコンストラクタの防止（シングルトンパターン）
 	SceneManager(const SceneManager& obj) = delete;
+	// コピー代入演算子を禁止（シングルトンパターン）
 	SceneManager& operator=(const SceneManager& obj) = delete;
 };

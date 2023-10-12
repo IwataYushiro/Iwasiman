@@ -21,14 +21,15 @@ Input* TitleScene::input_ = Input::GetInstance();
 Audio* TitleScene::audio_ = Audio::GetInstance();
 SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
-Camera* TitleScene::camera_ = Camera::GetInstance();
-
 
 TitleScene::TitleScene(int stagenum) : stageNum_(stagenum) {}
 
 void TitleScene::Initialize()
 {
 	spCommon_ = SpriteCommon::GetInstance();
+
+	//カメラ初期化
+	camera_ = new Camera();
 	//オーディオ
 	audio_->Initialize();
 
@@ -462,6 +463,8 @@ void TitleScene::Finalize()
 	delete modelGround_;
 	delete modelGoal_;
 
+	//カメラ
+	delete camera_;
 	//ライト
 	delete lightGroup_;
 	//パーティクル

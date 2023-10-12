@@ -54,8 +54,7 @@ public://メンバ関数(ステージ番号)
 private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
-	//スプライト基盤
-	SpriteCommon* spCommon_ = nullptr;
+	
 	//インプット
 	static Input* input_;
 	//オーディオ
@@ -64,11 +63,15 @@ private://静的メンバ変数
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
-	//カメラ
-	static Camera* camera_;
+	
 
 private://メンバ変数
-	
+
+	//スプライト基盤
+	SpriteCommon* spCommon_ = nullptr;
+	//カメラ
+	Camera* camera_ = nullptr;
+
 	//選択しているメニュー表示
 	int menuCount_;
 

@@ -26,9 +26,9 @@ public://コンストラクタ等
 	~Model();
 
 public://静的メンバ関数
-	//静的初期化
+	//静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
-	//OBJファイルから3Dモデルを読み込む
+	//OBJファイルから3Dモデルを読み込む(モデル名、スムージングするか)
 	static Model* LoadFromOBJ(const std::string& modelName, bool smoothing = false);
 	
 public://メンバ関数
@@ -36,14 +36,14 @@ public://メンバ関数
 	// デスクリプタヒープの初期化
 	void InitializeDescriptorHeap();
 
-	// マテリアル読み込み
+	// マテリアル読み込み(ディレクトリパス、モデル名)
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
-	//マテリアル登録
+	//マテリアル登録(マテリアル)
 	void AddMaterial(Material* material) { materials.emplace(material->name, material); }
 	// テクスチャ読み込み
 	void LoadTextures();	
 
-	// 描画
+	// 描画(コマンドリスト)
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 private://静的メンバ変数
@@ -68,13 +68,13 @@ private:
 	
 	
 public://アクセッサ置き場
-	//デバイス
+	//デバイスセット
 	static void SetDevice(ID3D12Device* device) { Model::device_ = device; }
-	//メッシュコンテナ取得
+	//メッシュコンテナゲット
 	inline const std::vector<Mesh*>& GetMeshes() { return meshes; }
 
 private://メンバ関数(カプセル化)
-	//OBJファイルから3Dモデルを読み込む(非公開)
+	//OBJファイルから3Dモデルを読み込む(非公開)(モデル名、スムージングするか)
 	void LoadFromOBJInternal(const std::string& modelName, bool smoothing = false);
 	
 };

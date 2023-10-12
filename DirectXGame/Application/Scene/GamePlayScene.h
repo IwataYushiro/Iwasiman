@@ -75,8 +75,7 @@ private://静的メンバ変数
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
-	//カメラ
-	static Camera* camera_;
+	
 private:
 
 	//サウンド読み込み
@@ -146,7 +145,7 @@ private:
 	Model* modelStage1_ = nullptr;				//ステージ1モデル(天球)
 	Model* modelStage2_ = nullptr;				//ステージ2モデル(天球)
 
-	
+	//床
 	Model* modelGround_ = nullptr;				//床のモデル
 	Model* modelBox_ = nullptr;					//AABB床モデル
 
@@ -166,7 +165,8 @@ private:
 	//パーティクルマネージャー
 	ParticleManager* pm_ = nullptr;
 
-	
+	//カメラ
+	Camera* camera_ = nullptr;
 
 	//ライト
 	LightGroup* lightGroup_ = nullptr;

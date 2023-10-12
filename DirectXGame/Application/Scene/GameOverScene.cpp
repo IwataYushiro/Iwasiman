@@ -23,13 +23,15 @@ Input* GameOverScene::input_ = Input::GetInstance();
 Audio* GameOverScene::audio_ = Audio::GetInstance();
 SceneManager* GameOverScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GameOverScene::imguiManager_ = ImGuiManager::GetInstance();
-Camera* GameOverScene::camera_ = Camera::GetInstance();
 
 GameOverScene::GameOverScene(int stagenum) :stageNum_(stagenum) {}
 
 void GameOverScene::Initialize()
 {
 	spCommon_ = SpriteCommon::GetInstance();
+
+	//カメラ初期化
+	camera_ = new Camera();
 	//オーディオ
 	audio_->Initialize();
 
@@ -222,6 +224,8 @@ void GameOverScene::Finalize()
 	delete modelStage1_;
 	delete modelStage2_;
 
+	//カメラ
+	delete camera_;
 	//ライト
 	delete lightGroup_;
 }

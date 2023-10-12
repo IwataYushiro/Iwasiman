@@ -23,33 +23,36 @@ public:
 
 
 private://構造体類
+	//マウスのボタン
 	typedef enum MouseButtonNum
 	{
-		Left,
-		Right,
-		CenterWheel,
+		Left,			//左クリック
+		Right,			//右クリック
+		CenterWheel,	//ホイール
 	}MouseButton;
 
+	//ジョイスティックのボタン（コントローラー、ゲームパッド）
 	typedef enum JSButtonNum
 	{
-		jsLeft,
-		jsRight,
-		jsUP,
-		jsDOWN,
-		jsA,
-		jsB,
-		jsX,
-		jsY,
-		jsLB,
-		jsLT,
-		jsRB,
-		jsRT,
+		jsLeft,			//左
+		jsRight,		//右
+		jsUP,			//上
+		jsDOWN,			//下
+		jsA,			//A
+		jsB,			//B
+		jsX,			//X
+		jsY,			//Y
+		jsLB,			//Lボタン
+		jsLT,			//Lトリガー
+		jsRB,			//Rボタン
+		jsRT,			//Rトリガー
 	}JSButton;
 
+	//ジョイスティックパラメータ
 	struct PadParam
 	{
-		ComPtr<IDirectInputDevice8> joyStick;
-		int find;
+		ComPtr<IDirectInputDevice8> joyStick;//ジョイスティック
+		int find;//見つかったか
 	};
 
 public://シングルトンインスタンス
@@ -66,50 +69,24 @@ public:
 	//マウスデバイス生成
 	void GenerateMouse();
 	
-	void GenerateJoyStick();
+	//ジョイスティック生成
+	//void GenerateJoyStick();
 
-
-	///<summary>
-	///キーが押されているか(プレス)
-	///<summary>
-	/// <param name="keyNumber">キー番号(DIK_0等)</param>
-	/// <returns>押されているか</returns>
+	//キーが押されているか(プレス)(キー(DIK_SPACEとか))
 	bool PushKey(BYTE keyNumber);
-	///<summary>
-	///キーが今押されているか(トリガー)
-	///<summary>
-	/// <param name="keyNumber">キー番号(DIK_0等)</param>
-	/// <returns>今押されているか</returns>
+	//キーが押されているか(トリガー)(キー(DIK_SPACEとか))
 	bool TriggerKey(BYTE keyNumber);
-	///<summary>
-	///キーを離した瞬間か(リリース)
-	///<summary>
-	/// <param name="keyNumber">キー番号(DIK_0等)</param>
-	/// <returns>離したか</returns>
+	//キーが押されているか(リリース)(キー(DIK_SPACEとか))
 	bool ReleaseKey(BYTE keyNumber);
 	
-
-	///<summary>
-	///キーが押されているか(プレス)
-	///<summary>
-	/// <param name="mouseNumber">マウス番号(0 = 左　1 = 右　2 = 中央)</param>
-	/// <returns>押されているか</returns>
+	
+	//マウスが押されているか(プレス)(マウス番号(0 = 左　1 = 右　2 = 中央))
 	bool PressMouse(int32_t mouseNumber);
-
-	///<summary>
-	///キーが今押されているか(トリガー)
-	///<summary>
-	/// <param name="mouseNumber">マウス番号(0 = 左　1 = 右　2 = 中央)</param>
-	/// <returns>今押されているか</returns>
+	//マウスが押されているか(トリガー)(マウス番号(0 = 左　1 = 右　2 = 中央))
 	bool TriggerMouse(int32_t mouseNumber);
-
-	///<summary>
-	///キーを離した瞬間か(リリース)
-	///<summary>
-	/// <param name="mouseNumber">マウス番号(0 = 左　1 = 右　2 = 中央)</param>
-	/// <returns>離したか</returns>
+	//マウスが押されているか(リリース)(マウス番号(0 = 左　1 = 右　2 = 中央))
 	bool ReleaseMouse(int32_t mouseNumber);
-
+	//マウス座標ゲット
 	const DirectX::XMFLOAT2& GetMousePosition()const { return mousePos; }
 
 	
@@ -124,6 +101,7 @@ private://メンバ変数
 	
 	//全キーの状態
 	BYTE keys[256] = {};
+	//1フレーム前の全キーの状態
 	BYTE preKeys[256] = {};
 
 	//マウス
@@ -139,16 +117,22 @@ private://メンバ変数
 	ComPtr<IDirectInputDevice8> joyStick = nullptr;
 	//ジョイスティックステート
 	DIJOYSTATE2 joyState;
+	//1フレーム前のジョイスティックステート
 	DIJOYSTATE2 joyStatePre;
+	//ジョイスティックかどうか
 	bool isJoyStick = false;
 private:
+	//コンストラクタ（シングルトンパターン）
 	Input() = default;
+	//デストラクタ（シングルトンパターン）
 	~Input();
 public:
+	//コピーコンストラクタの防止（シングルトンパターン）
 	Input(const Input& obj) = delete;
+	// コピー代入演算子を禁止（シングルトンパターン）
 	Input& operator=(const Input& obj) = delete;
 
 public://アクセッサ
-
+	//DirectInputゲット
 	IDirectInput8* GetDirectInput()const { return directInput.Get(); }
 };

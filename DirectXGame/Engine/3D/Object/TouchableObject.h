@@ -11,12 +11,14 @@
 class TouchableObject:public Object3d
 {
 public:
+	//コンストラクタ
 	TouchableObject() = default;
+	//デストラクタ
 	~TouchableObject() = default;
 
-	//オブジェクトの生成
+	//オブジェクトの生成(使用モデル、接触可能か)
 	static TouchableObject* Create(Model* model = nullptr, bool Touth = true);
-	//初期化
+	//初期化(使用モデル、接触可能か)
 	bool Initialize(Model* model, bool Touth);
 
 };

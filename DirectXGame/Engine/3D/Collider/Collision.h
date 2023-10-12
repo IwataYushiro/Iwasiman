@@ -86,6 +86,4 @@ public:
 	static bool ChackRay2Sphere(const Ray& ray, const Sphere& sphere,
 		float* distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
 
-private:
-
 };

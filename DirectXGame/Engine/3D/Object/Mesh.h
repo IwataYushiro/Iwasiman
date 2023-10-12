@@ -42,17 +42,17 @@ private://静的メンバ変数
 	static ID3D12Device* device_;
 
 public://メンバ関数
-	//頂点データ追加
+	//頂点データ追加(頂点データ)
 	void AddVertex(const VertexPosNormalUv& vertex) { vertices_.emplace_back(vertex); }
-	//頂点インデックス追加
+	//頂点インデックス追加(頂点インデックス)
 	void AddIndex(unsigned short index) { indices_.emplace_back(index); }
-	//エッジ平滑化データ追加
+	//エッジ平滑化データ追加(インデックス座標、頂点インデックス)
 	void AddSmoothData(unsigned short indexPosition, unsigned short indexVertex);
 	//平滑化された頂点法線の追加
 	void CalculateSmoothedVertexNormals();
 	//バッファ生成
 	void CreateBuffers();
-	//描画
+	//描画(コマンドリスト)
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 public://アクセッサ置き場
@@ -92,8 +92,9 @@ private://メンバ変数
 	D3D12_INDEX_BUFFER_VIEW ibView_;
 	//マテリアル
 	Material* material_ = nullptr;
-	//頂点、インデックスバッファのマッピング
+	//頂点バッファのマッピング
 	VertexPosNormalUv* vertMap_ = nullptr;
+	//インデックスバッファのマッピング
 	unsigned short* indexmap_ = nullptr;
 	//頂点スムージングデータ
 	std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData_;

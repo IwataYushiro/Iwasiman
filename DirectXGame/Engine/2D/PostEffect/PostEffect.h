@@ -50,13 +50,15 @@ public://構造体類
 private://静的メンバ変数
     //ベースディレクトリ
     static const std::string baseDirectory;
+    //頂点シェーダー
     static const std::string DirectoryVS;
+    //ピクセルシェーダー
     static const std::string DirectoryPS;
 
 public:
     //コンストラクタ
     PostEffect();
-    //初期化
+    //初期化(スプライト基盤、使用ポストエフェクトパス)
     void Initialize(SpriteCommon* spCommon, const std::string& fileName="None");
     //更新
     void Update();
@@ -78,15 +80,15 @@ public:
     void CreateDepthBuffer();
     // DSV生成
     void CreateDSV();
-    //パイプライン生成
+    //パイプライン生成(ポストエフェクトファイルパス)
     void CreateGraphicsPipelineState(const std::string& fileName);
 
-    //描画
+    //描画(コマンドリスト)
     void Draw(ID3D12GraphicsCommandList* cmdList);
-    //描画前処理
+    //描画前処理(コマンドリスト)
     void PreDraw(ID3D12GraphicsCommandList* cmdList);
 
-    //描画後処理
+    //描画後処理(コマンドリスト)
     void PostDraw(ID3D12GraphicsCommandList* cmdList);
 
 private:
@@ -133,8 +135,8 @@ private:
     //色(RGBA)
     XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 public:
-    //色
+    //カラーセット
     void SetColor(const XMFLOAT4& color) { color_ = color; }
-
+    //カラーゲット
     const XMFLOAT4& GetColor()const { return color_; }
 };

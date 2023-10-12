@@ -18,7 +18,9 @@ private:
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMMATRIX = DirectX::XMMATRIX;
 public:
+	//コンストラクタ
 	Camera();
+	//デストラクタ
 	virtual ~Camera();
 	//初期値にリセット
 	void Reset();
@@ -85,5 +87,4 @@ public://アクセッサ
 	const XMFLOAT3& GetUp() { return up_; }
 	void SetUp(const XMFLOAT3& up);
 
-	static Camera* GetInstance();
 };

@@ -23,7 +23,7 @@ public://シングルトンインスタンス
 
 public://メンバ関数
 	
-	//初期化
+	//初期化(Windowsアプリケーション、DirectX基盤)
 	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
 	
 	//更新
@@ -33,8 +33,10 @@ public://メンバ関数
 	//受付終了
 	void End();
 	
+	//ImGuiのサンプル関数（スタイルチェンジ）
 	void ImGuiStyleShowSample();
 
+	//ImGuiのサンプル関数（MyFirstTool）
 	void ImGuiMyFirstToolColor();
 	
 	//描画
@@ -51,9 +53,13 @@ private:
 	//SRV用のデスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> srvHeap_;
 private:
+	//コンストラクタ（シングルトンパターン）
 	ImGuiManager() = default;
+	//デストラクタ（シングルトンパターン）
 	~ImGuiManager() = default;
 public:
+	//コピーコンストラクタの防止（シングルトンパターン）
 	ImGuiManager(const ImGuiManager& obj) = delete;
+	// コピー代入演算子を禁止（シングルトンパターン）
 	ImGuiManager& operator=(const ImGuiManager& obj) = delete;
 };

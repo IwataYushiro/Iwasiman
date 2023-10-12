@@ -11,7 +11,9 @@
 #include <chrono>
 
 //前方宣言
+//コリジョンマネージャー
 class CollisionManager;
+//ゲームプレイシーン
 class GamePlayScene;
 
 /*
@@ -36,7 +38,7 @@ public:
 public:
 	//デストラクタ
 	~Player();
-
+	//生成(使用モデル、使用弾モデル、ゲームプレイシーン)
 	static std::unique_ptr<Player> Create(Model* model = nullptr, Model* bullet = nullptr,
 		GamePlayScene* gamescene = nullptr);
 	//初期化
@@ -44,16 +46,16 @@ public:
 	//リセット処理
 	void Reset();
 	
-	//更新
+	//更新(手前と背面ジャンプの有効化、攻撃処理の有効化)
 	void Update(bool isBack = true, bool isAttack = true);
 	//プレイヤーの移動処理
 	void Move();
-	void CameraMove();
-	//落ちる＆ジャンプ
+	
+	//落ちる処理とジャンプ処理
 	void FallAndJump();
 	//奥へ移動
 	void JumpBack();
-	//着地
+	//着地(属性指定)
 	void Landing(unsigned short attribute);
 	//プレイヤーの攻撃処理
 	void Attack();
@@ -66,21 +68,24 @@ public:
 
 	//描画
 	void Draw();
+	//パーティクル描画
 	void DrawParticle();
 
-	//衝突を検出したら呼び出されるコールバック関数
+	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
 	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
 
-	//ベジェ曲線
+	//ベジェ曲線(最初点、中間点1、中間点2、最終点、時間の進み具合)
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//弾リストを取得
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
 private:
+	//コリジョンマネージャー
 	static CollisionManager* colManager_;
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
+	//右を向いてるか
 	bool isRight_ = true;
 	//モデル
 	Model* modelBullet_ = nullptr;
@@ -95,57 +100,72 @@ private:
 
 	//ジャンプしてるか
 	bool onGround_ = true;
+	//ジャンプ力
 	float jumpVYFist_ = 2.0f;
+	//落下時ベクトル
 	XMFLOAT3 fallVec_;
 
-	//奥側に移動
+	//手前、奥側に移動
 	bool isJumpBack_;
+	//奥側にいる場合
 	bool isBack_;
+	//手前、奥側ジャンプ時のポジション
 	XMFLOAT3 jumpBackPos_;
 
 	//時間計測
 	std::chrono::steady_clock::time_point startCount;	//開始時間
 	std::chrono::steady_clock::time_point nowCount;		//現在時間
-	std::chrono::microseconds elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	float	maxTime = 1.0f;					//全体時間
-	float	timeRate;
+	std::chrono::microseconds elapsedCount;				//経過時間 経過時間=現在時間-開始時間
+	float	maxTime = 1.0f;								//全体時間
+	float	timeRate;									//どれくらい時間が進んだか
 	//制御点
-	XMFLOAT3 start;
-	XMFLOAT3 point1;
-	XMFLOAT3 point2;
-	XMFLOAT3 end;
+	XMFLOAT3 start;										//最初点
+	XMFLOAT3 point1;									//中間点1
+	XMFLOAT3 point2;									//中間点2
+	XMFLOAT3 end;										//最終点
 
 	//半径
 	float radius_ = 1.0f;
 	
-	//死亡フラグとライフ
+	//死亡フラグ
 	bool isDead_ = false;
+	//無敵時間
 	int mutekiCount_ = 0;
+	//ライフ
 	int life_ = 5;
+	//敵の攻撃やトゲ等に当たったか
 	bool isHit_ = false;
+	//シェイク時用のカメラムーブ
 	bool cameramove_ = true;
 	//パーティクル
 	Particle* particleDash_ = nullptr;
+	//パーティクルマネージャー
 	ParticleManager* pmDash_ = nullptr;
 
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;
 	//シェイク機能
 	bool isShake_ = false;
-	//スタート時
+	//現在視点
 	XMFLOAT3 nowEye_;
+	//現在注視点
 	XMFLOAT3 nowTarget_;
+	//シェイク時にスクロールしても元のカメラ視点、注視点に戻るための座標
 	XMFLOAT3 hitMove_;
 
 public: //アクセッサ、インライン関数
+	//死んだかどうか
 	bool IsDead() const { return isDead_; }
+	//立ってるかどうか
 	bool OnGround()const { return onGround_; }
+	//立ち判定のセット
 	void SetOnGround(bool og) { this->onGround_ = og; }
 
-	//ジャンプ力
+	//ジャンプ力セット
 	void SetJumpVYFist(float jumpFist) { this->jumpVYFist_ = jumpFist; }
-	//ライフ
+	//ライフセット
 	void SetLife(int life) { this->life_ = life; }
+	//ライフゲット
 	const int& GetLife()const { return life_; }
 	//ゲームシーン
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }

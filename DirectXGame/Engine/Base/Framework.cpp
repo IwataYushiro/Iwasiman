@@ -28,8 +28,6 @@ void Framework::Initialize()
 	sceneManager_ = SceneManager::GetInstance();
 	//imgui
 	imguiManager_ = ImGuiManager::GetInstance();
-	//ƒJƒƒ‰
-	camera_ = Camera::GetInstance();
 
 	//WinApp‰Šú‰»
 	winApp_->Initialize();
@@ -49,8 +47,6 @@ void Framework::Initialize()
 	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 	//ƒ‰ƒCƒg
 	LightGroup::StaticInitialize(dxCommon_->GetDevice());
-
-
 
 }
 
