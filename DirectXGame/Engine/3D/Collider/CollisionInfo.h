@@ -4,7 +4,13 @@
 class Object3d;
 class BaseCollider;
 
-//Õ“Ëî•ñ
+/*
+
+*	CollisionInfo.h (cpp X)
+
+*	Õ“Ëî•ñ
+
+*/
 struct CollisionInfo
 {
 	CollisionInfo(Object3d* object, BaseCollider* collider,

@@ -5,7 +5,13 @@
 #include <d3dx12.h>
 #include <string>
 
-//マテリアル管理
+/*
+
+*	Material.h
+
+*	マテリアル管理
+
+*/
 class Material
 {
 private: // エイリアス

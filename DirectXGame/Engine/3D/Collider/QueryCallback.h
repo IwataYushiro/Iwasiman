@@ -4,7 +4,13 @@
 class Object3d;
 class BaseCollider;
 
-//クエリーによる情報を得るための構造体
+/*
+
+*	QueryCallBack.h (cpp X)
+
+*	クエリーによる情報を得るための構造体
+
+*/
 struct QueryHit
 {
 	//衝突相手のオブジェクト

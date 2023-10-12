@@ -3,7 +3,13 @@
 #include "CollisionTypes.h"
 #include "Object3d.h"
 
-//コライダー基盤
+/*
+
+*	BaseCollider.h (cpp X)
+
+*	コライダー基盤
+
+*/
 class BaseCollider
 {
 public://フレンドクラス

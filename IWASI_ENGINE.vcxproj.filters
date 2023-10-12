@@ -614,7 +614,7 @@
     <ClInclude Include="DirectXGame\Application\Scene\GameOverScene.h">
       <Filter>Header File\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\StageList.h">
+    <ClInclude Include="DirectXGame\Application\MyGame\EnumList.h">
       <Filter>Header File\Application\MyGame</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\MyGame\Goal\Goal.h">

@@ -8,7 +8,13 @@ class Player;
 class CollisionManager;
 class GamePlayScene;
 
-//敵基盤クラス
+/*
+
+*	BaseEnemy.h (cpp X)
+
+*	敵基盤クラス
+
+*/
 class BaseEnemy :public Object3d
 {
 private:

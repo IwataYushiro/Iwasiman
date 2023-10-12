@@ -8,7 +8,13 @@
 
 #include "WinApp.h"
 
-//DirectX基盤クラス
+/*
+
+*	DirectXCommon.h
+
+*	DirectX基盤クラス
+
+*/
 class DirectXCommon final
 {
 public: // 省略

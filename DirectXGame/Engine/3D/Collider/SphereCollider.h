@@ -4,7 +4,13 @@
 
 #include <DirectXMath.h>
 
-//球衝突判定オブジェクト
+/*
+
+*	SphereCollider.h
+
+*	球衝突判定オブジェクト
+
+*/
 class SphereCollider :public BaseCollider, public Sphere
 {
 private://エイリアス

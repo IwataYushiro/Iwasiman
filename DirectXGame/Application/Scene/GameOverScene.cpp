@@ -5,7 +5,7 @@
 #include <cassert>
 #include <sstream>
 #include <iomanip>
-#include "StageList.h"
+#include "EnumList.h"
 
 using namespace DirectX;
 

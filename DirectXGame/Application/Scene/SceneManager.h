@@ -2,7 +2,13 @@
 #include "BaseScene.h"
 #include "AbstractSceneFactory.h"
 
-//シーンマネージャー
+/*
+
+*	SceneManager.h
+
+*	シーンマネージャー
+
+*/
 class SceneManager final
 {
 public://シングルトンインスタンス

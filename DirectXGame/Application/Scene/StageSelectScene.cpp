@@ -2,7 +2,7 @@
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
 #include "TouchableObject.h"
-#include "StageList.h"
+#include "EnumList.h"
 
 #include <cassert>
 #include <sstream>

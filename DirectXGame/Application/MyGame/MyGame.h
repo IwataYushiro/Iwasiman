@@ -4,7 +4,13 @@
 #include <list>
 #include <memory>
 
-//ゲーム全体
+/*
+
+*	MyGame.h
+
+*	ゲーム全体
+
+*/
 class MyGame :public Framework
 {
 public:

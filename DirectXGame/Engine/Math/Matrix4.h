@@ -2,7 +2,13 @@
 
 #include "Vector3.h"
 
-//Matrix4 \‘¢‘Ì
+/*
+
+*	Matrix4.h
+
+*	Matrix4\‘¢‘Ì
+
+*/
 struct Matrix4
 {
 	float m[4][4];

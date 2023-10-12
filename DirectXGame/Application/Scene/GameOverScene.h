@@ -18,7 +18,13 @@
 //jsonレベルデータ
 struct LevelData;
 
-//ゲームオーバーシーン
+/*
+
+*	GameOverScene.h
+
+*	ゲームオーバーシーン
+
+*/
 class GameOverScene :public BaseScene
 {
 public://メンバ関数

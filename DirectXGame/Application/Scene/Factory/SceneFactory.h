@@ -2,7 +2,13 @@
 
 #include "AbstractSceneFactory.h"
 
-//具体的(このゲーム用)なシーンファクトリー
+/*
+
+*	SceneFactory.h
+
+*	具体的(このゲーム用)なシーンファクトリー
+
+*/
 class SceneFactory :public AbstractSceneFactory
 {
 public:

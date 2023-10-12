@@ -12,7 +12,13 @@
 class Player;
 class CollisionManager;
 
-//アイテム管理
+/*
+
+*	Item.h
+
+*	アイテム管理
+
+*/
 class Item :public Object3d
 {
 private:

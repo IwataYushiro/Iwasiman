@@ -3,7 +3,13 @@
 #include <fstream>
 #include <wrl.h>
 
-//音声(オーディオ)
+/*
+
+*	Audio.h
+
+*	音声(オーディオ)
+
+*/
 class Audio final
 {
 private://エイリアス

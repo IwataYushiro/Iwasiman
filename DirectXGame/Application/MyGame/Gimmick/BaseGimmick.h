@@ -5,7 +5,13 @@
 class Player;
 class CollisionManager;
 
-//ギミック基盤クラス
+/*
+
+*	BaseGimmick.h (cpp X)
+
+*	ギミック基盤クラス
+
+*/
 class BaseGimmick :public Object3d
 {
 public:

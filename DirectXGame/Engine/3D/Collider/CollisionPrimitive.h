@@ -1,8 +1,14 @@
 #pragma once
 #include <DirectXMath.h>
 
-//当たり判定プリミティブ形状
+/*
 
+*	CollisionPrimitive.h
+
+*	当たり判定プリミティブ形状
+
+
+*/
 //AABB(箱)
 struct AABB
 {

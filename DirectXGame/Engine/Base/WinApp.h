@@ -6,7 +6,13 @@
 #include <Windows.h>
 #pragma warning(pop)
 
-//Windowsアプリケーション
+/*
+
+*	WinApp.h
+
+*	Windowsアプリケーション
+
+*/
 class WinApp final
 {
 public://定数

@@ -1,7 +1,13 @@
 #pragma once
 #include <chrono>
 
-//イージング関係
+/*
+
+*	Easing.h
+
+*	イージング関係 Easing(float start, float end, float time);
+
+*/
 class Easing
 {
 public:

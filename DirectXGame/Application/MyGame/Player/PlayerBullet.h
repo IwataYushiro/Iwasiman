@@ -5,7 +5,13 @@
 
 class CollisionManager;
 
-//Ž©‹@‚Ì’e
+/*
+
+*	PlayerBullet.h
+
+*	Ž©‹@‚Ì’e
+
+*/
 class PlayerBullet:public Object3d
 {
 private:

@@ -9,7 +9,13 @@
 #include <list>
 #include <memory>
 
-//左右に動くボス敵
+/*
+
+*	EnemyBoss.h
+
+*	左右に動くボス敵
+
+*/
 class EnemyBoss :public BaseEnemy {
 private:
 	// DirectX::を省略

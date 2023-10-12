@@ -7,7 +7,13 @@
 #include "Camera.h"
 #include "Particle.h"
 
-//パーティクルマネージャー
+/*
+
+*	ParticleManager.h
+
+*	パーティクルマネージャー
+
+*/
 class ParticleManager
 {
 private: // エイリアス

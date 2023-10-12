@@ -17,7 +17,13 @@
 //jsonレベルデータ
 struct LevelData;
 
-//ステージクリアシーン
+/*
+
+*	StageClearScene.h
+
+*	ステージクリアシーン
+
+*/
 class StageClearScene :public BaseScene
 {
 public://メンバ関数

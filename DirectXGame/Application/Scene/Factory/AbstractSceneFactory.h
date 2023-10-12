@@ -3,8 +3,14 @@
 #include "BaseScene.h"
 #include <string>
 
-//抽象シーンファクトリー
 
+/*
+
+*	AbstractSceneFactory.h (cpp X)
+
+*	抽象シーンファクトリー
+
+*/
 class AbstractSceneFactory
 {
 public:

@@ -9,7 +9,14 @@
 #include <Windows.h>
 #include <wrl.h>
 
-//ノード構造体
+
+/*
+
+*	ModelFbx.h
+
+*	ノード構造体
+
+*/
 struct Node
 {
 	
@@ -30,7 +37,13 @@ struct Node
 	Node* parent = nullptr;
 };
 
-//FBXモデル
+/*
+
+*	ModelFbx.h
+
+*	FBXモデル
+
+*/
 class ModelFbx
 {
 private://エイリアス

@@ -5,13 +5,13 @@
 #include "MeshCollider.h"
 #include "TouchableObject.h"
 #include "CollisionAttribute.h"
-#include "StageList.h"
+#include "EnumList.h"
 
 #include <cassert>
 #include <sstream>
 #include <iomanip>
 
-#include "StageList.h"
+#include "EnumList.h"
 
 using namespace DirectX;
 

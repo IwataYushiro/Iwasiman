@@ -11,7 +11,13 @@
 class Player;
 class CollisionManager;
 
-//“–‚½‚é‚Æ’É‚¢ƒgƒQ
+/*
+
+*	Spike.h
+
+*	“–‚½‚é‚Æ’É‚¢ƒgƒQ
+
+*/
 class Spike :public BaseGimmick
 {
 private:

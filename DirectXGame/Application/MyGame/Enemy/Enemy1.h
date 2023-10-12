@@ -8,8 +8,13 @@
 #include <list>
 #include <memory>
 
-//‚»‚Ì‚Ü‚Ü•à‚«‘±‚¯‚é“G
+/*
 
+*	Enemy1.h
+
+*	‚»‚Ì‚Ü‚Ü•à‚«‘±‚¯‚é“G
+
+*/
 class Enemy1 :public BaseEnemy {
 private:
 	// DirectX::‚ğÈ—ª

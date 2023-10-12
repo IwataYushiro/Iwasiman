@@ -8,7 +8,13 @@
 #include <Windows.h>
 #include <wrl.h>
 
-//入力
+/*
+
+*	Input.h
+
+*	キーボード、マウス入力
+
+*/
 class Input final
 {
 public:

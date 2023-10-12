@@ -8,7 +8,13 @@
 #include <vector>
 #include <wrl.h>
 
-//形状(メッシュ)
+/*
+
+*	Mesh.h
+
+*	形状(メッシュ)
+
+*/
 class Mesh
 {
 private: // エイリアス

@@ -30,7 +30,13 @@ struct LevelData;
 class CollisionManager;
 class TouchableObject;
 
-//ゲームプレイシーン
+/*
+
+*	GamyPlayScene.h
+
+*	ゲームプレイシーン
+
+*/
 class GamePlayScene :public BaseScene
 {
 public://構造体類

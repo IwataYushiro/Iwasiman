@@ -6,7 +6,13 @@
 #include <string>
 #include <wrl.h>
 
-//スプライト基盤
+/*
+
+*	SpriteCommon.h
+
+*	スプライト基盤
+
+*/
 class SpriteCommon final
 {
 public:

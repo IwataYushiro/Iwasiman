@@ -1,7 +1,13 @@
 #pragma once
 #include <vector>
 
-//Vector3
+/*
+
+*	Vector3.h
+
+*	x,y,z‚ÌƒxƒNƒgƒ‹3‚Â
+
+*/
 class Vector3
 {
 public:

@@ -2,7 +2,13 @@
 #include <DirectXMath.h>
 #include <wrl.h>
 
-//ƒJƒƒ‰
+/*
+
+*	Camera.h
+
+*	ƒJƒƒ‰
+
+*/
 class Camera
 {
 private:

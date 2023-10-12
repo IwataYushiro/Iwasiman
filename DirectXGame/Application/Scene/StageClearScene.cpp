@@ -1,7 +1,7 @@
 #include "StageClearScene.h"
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
-#include "StageList.h"
+#include "EnumList.h"
 
 #include <cassert>
 #include <sstream>

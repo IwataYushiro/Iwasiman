@@ -13,7 +13,14 @@
 
 class BaseCollider;
 
-//3Dオブジェクト(.obj)
+/*
+
+*	Object3d.h
+
+*	3Dオブジェクト(.obj)
+
+
+*/
 class Object3d
 {
 private: // エイリアス

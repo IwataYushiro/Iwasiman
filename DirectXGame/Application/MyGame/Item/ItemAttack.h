@@ -11,7 +11,13 @@
 class Player;
 class CollisionManager;
 
-//攻撃力強化アイテム
+/*
+
+*	ItemAttack.h
+
+*	攻撃力強化アイテム
+
+*/
 class ItemAttack :public Object3d
 {
 private:

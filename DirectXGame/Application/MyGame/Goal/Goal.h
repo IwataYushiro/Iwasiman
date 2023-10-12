@@ -8,7 +8,13 @@
 
 class CollisionManager;
 
-//ƒS[ƒ‹
+/*
+
+*	Goal.h
+
+*	ƒS[ƒ‹
+
+*/
 class Goal :public Object3d
 {
 private:

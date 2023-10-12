@@ -1,7 +1,13 @@
 #pragma once
 #include "CollisionPrimitive.h"
 
-//当たり判定ヘルパー
+/*
+
+*	Collision.h
+
+*	当たり判定ヘルパー
+
+*/
 class Collision
 {
 public:

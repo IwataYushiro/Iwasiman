@@ -4,7 +4,13 @@
 
 class Object3d;
 
-//レイキャストによる情報を得るための構造体
+/*
+
+*	RayCastHit.h (cpp X)
+
+*	レイキャストによる情報を得るための構造体
+
+*/
 struct RaycastHit
 {
 	//衝突相手のオブジェクト

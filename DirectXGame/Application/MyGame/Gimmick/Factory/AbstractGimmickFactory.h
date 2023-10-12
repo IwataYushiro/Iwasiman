@@ -5,8 +5,13 @@
 #include <list>
 #include <memory>
 
-//抽象ギミックファクトリー
+/*
 
+*	AbstractGimmickFactory.h (cpp X)
+
+*	抽象ギミックファクトリー
+
+*/
 class AbstractGimmickFactory
 {
 public:

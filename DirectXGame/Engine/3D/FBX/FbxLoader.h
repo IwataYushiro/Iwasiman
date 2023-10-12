@@ -7,7 +7,13 @@
 #include <d3dx12.h>
 #include <string>
 
-//FBXローダー
+/*
+
+*	FbxLoader.h
+
+*	FBXローダー
+
+*/
 class FbxLoader
 {
 private://エイリアス

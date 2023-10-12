@@ -9,7 +9,13 @@
 #include <Windows.h>
 #include <wrl.h>
 
-//FBXオブジェクト
+/*
+
+*	ObgextFbx.h
+
+*	FBXオブジェクト
+
+*/
 class ObjectFbx
 {
 protected://エイリアス

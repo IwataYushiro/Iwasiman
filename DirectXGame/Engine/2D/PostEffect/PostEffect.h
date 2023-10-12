@@ -1,7 +1,13 @@
 #pragma once
 #include "Sprite.h"
 
-//ポストエフェクト
+/*
+
+*	PostEffect.h
+
+*	ポストエフェクト
+
+*/
 class PostEffect
 {
 public: // メンバ関数

@@ -1,6 +1,12 @@
 #pragma once
 
-//Vector2
+/*
+
+*	Vector2.h
+
+*	x,y‚ÌƒxƒNƒgƒ‹2‚Â
+
+*/
 class Vector2
 {
 public:

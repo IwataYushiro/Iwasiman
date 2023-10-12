@@ -1,7 +1,13 @@
 #pragma once
 #include "AbstractGimmickFactory.h"
 
-//具体的(このゲーム用)なギミックファクトリー
+/*
+
+*	GimmickFactory.h
+
+*	具体的(このゲーム用)なギミックファクトリー
+
+*/
 class GimmickFactory :public AbstractGimmickFactory
 {
 public:

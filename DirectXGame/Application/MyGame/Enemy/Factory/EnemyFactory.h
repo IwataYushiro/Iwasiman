@@ -1,7 +1,13 @@
 #pragma once
 #include "AbstractEnemyFactory.h"
 
-//具体的(このゲーム用)な敵ファクトリー
+/*
+
+*	EnemyFactory.h
+
+*	具体的(このゲーム用)な敵ファクトリー
+
+*/
 class EnemyFactory :public AbstractEnemyFactory
 {
 public:

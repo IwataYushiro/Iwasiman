@@ -13,7 +13,13 @@
 class CollisionManager;
 class GamePlayScene;
 
-//Ž©‹@
+/*
+
+*	Player.h
+
+*	Ž©‹@
+
+*/
 class Player:public Object3d
 {
 private:

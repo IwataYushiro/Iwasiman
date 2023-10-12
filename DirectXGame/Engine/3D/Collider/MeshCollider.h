@@ -4,7 +4,13 @@
 
 #include <DirectXMath.h>
 
-//メッシュ衝突判定オブジェクト
+/*
+
+*	MeshCollider.h
+
+*	メッシュ衝突判定オブジェクト
+
+*/
 class MeshCollider:public BaseCollider
 {
 public:

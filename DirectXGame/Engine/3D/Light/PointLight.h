@@ -1,7 +1,13 @@
 #pragma once
 #include <DirectXMath.h>
 
-//ポイントライト
+/*
+
+*	PointLight.h (cpp X)
+
+*	ポイントライト
+
+*/
 class PointLight
 {
 private: // エイリアス

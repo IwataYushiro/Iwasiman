@@ -18,7 +18,13 @@
 //jsonレベルデータ
 struct LevelData;
 
-//タイトルシーン
+/*
+
+*	TitleScene.h
+
+*	タイトルシーン
+
+*/
 class TitleScene :public BaseScene
 {
 public://メンバ関数

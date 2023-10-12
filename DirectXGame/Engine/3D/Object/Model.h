@@ -3,7 +3,13 @@
 #include <DirectXMath.h>
 #include <unordered_map>
 
-//3Dモデル(.obj)
+/*
+
+*	Model.h
+
+*	3Dモデル(.obj)
+
+*/
 class Model
 {
 private://エイリアス

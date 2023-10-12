@@ -2,7 +2,13 @@
 #include "Input.h"
 #include <DirectXMath.h>
 
-//•Ö—˜”Šw
+/*
+
+*	MyMath.h
+
+*	•Ö—˜”Šw
+
+*/
 namespace MyMath {
 	// DirectX::‚ğÈ—ª
 	using XMFLOAT2 = DirectX::XMFLOAT2;

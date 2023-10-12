@@ -6,8 +6,13 @@
 #include <list>
 #include <memory>
 
-//抽象エネミファクトリー
+/*
 
+*	AbstractEnemyFactory.h (cpp X)
+
+*	抽象エネミファクトリー
+
+*/
 class AbstractEnemyFactory
 {
 public:

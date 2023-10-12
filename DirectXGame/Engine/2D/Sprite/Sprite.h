@@ -3,7 +3,13 @@
 #include "Input.h"
 #include <DirectXMath.h>
 
-//1枚1枚のスプライト
+/*
+
+*	Sprite.h
+
+*	1枚のスプライト
+
+*/
 class Sprite
 {
 public: // メンバ関数

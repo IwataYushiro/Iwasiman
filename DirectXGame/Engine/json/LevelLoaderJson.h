@@ -3,7 +3,13 @@
 #include <vector>
 #include <DirectXMath.h>
 
-//jsonファイルによるレベルデータ
+/*
+
+*	LevelLoaderJson.h
+
+*	jsonファイルによるレベルデータ構造体
+
+*/
 struct LevelData
 {
 	struct ObjectData

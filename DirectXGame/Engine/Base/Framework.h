@@ -10,7 +10,13 @@
 #include "SceneManager.h"
 #include "SpriteCommon.h"
 
-//ゲーム全体フレームワーク
+/*
+
+*	Framework.h
+
+*	ゲーム全体フレームワーク
+
+*/
 class Framework
 {
 public://メンバ関数

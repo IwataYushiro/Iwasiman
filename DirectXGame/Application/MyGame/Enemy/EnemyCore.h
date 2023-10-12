@@ -10,7 +10,13 @@
 #include <list>
 #include <memory>
 
-//ボス敵のコア
+/*
+
+*	EnemyCore.h
+
+*	ボス敵のコア
+
+*/
 class EnemyCore :public BaseEnemy {
 private:
 	// DirectX::を省略

@@ -2,7 +2,13 @@
 //前方宣言
 class SceneManager;
 
-//シーン基盤
+/*
+
+*	BaseScene.h (cpp X)
+
+*	シーン基盤
+
+*/
 class BaseScene
 {
 public://メンバ関数

@@ -18,7 +18,13 @@
 //jsonレベルデータ
 struct LevelData;
 
-//ステージセレクトシーン
+/*
+
+*	StageSelectScene.h
+
+*	ステージセレクトシーン
+
+*/
 class StageSelectScene :public BaseScene
 {
 public://メンバ関数

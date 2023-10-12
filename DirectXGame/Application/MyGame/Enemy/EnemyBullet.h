@@ -5,7 +5,13 @@
 
 class CollisionManager;
 
-//“G‚Ì’e
+/*
+
+*	EnemyBullet.h
+
+*	“G‚Ì’e
+
+*/
 class EnemyBullet: public Object3d {
 private:
 	// DirectX::‚ğÈ—ª
