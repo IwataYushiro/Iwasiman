@@ -617,7 +617,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 void TitleScene::UpdateChangeColor()
 {
 	//色を変えるスピード
-	float speedColor = 0.02f;
+	const float speedColor = 0.02f;
 
 	if (isColorReverse_)
 	{

@@ -47,6 +47,13 @@ public://メンバ関数
 	void Initialize()override;
 	//更新
 	void Update() override;
+	//状態更新(ゲームプレイ時)
+	void UpdateIsPlayGame();
+	//状態更新(ポーズ画面時)
+	void UpdateIsPause();
+	//チュートリアル更新
+	void UpdateTutorial();
+	
 	//描画
 	void Draw() override;
 	//終了
@@ -54,6 +61,9 @@ public://メンバ関数
 
 	//レベルデータ読み込み(ステージファイルパス)
 	void LoadLVData(const std::string& stagePath);
+
+	//色が変わる処理
+	void UpdateChangeColor();
 
 public:
 	//自機弾追加(自機の弾)
@@ -173,6 +183,9 @@ private:
 
 	//コリジョンマネージャー
 	CollisionManager* colManager_ = nullptr;
+
+	//チュートリアル表示の色
+	DirectX::XMFLOAT3 infoColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
 
 private:
 	/*

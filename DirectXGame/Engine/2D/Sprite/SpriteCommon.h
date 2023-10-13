@@ -93,12 +93,13 @@ public://アクセッサ
 	//ルートシグネチャゲット
 	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
 private:
-	//コンストラクタ
+	//コンストラクタ（シングルトンパターン）
 	SpriteCommon() = default;
-	//デストラクタ
+	//デストラクタ（シングルトンパターン）
 	~SpriteCommon() = default;
 public:
-	//コピーコンストラクタの防止
+	//コピーコンストラクタの防止（シングルトンパターン）
 	SpriteCommon(const SpriteCommon& obj) = delete;
+	// コピー代入演算子を禁止（シングルトンパターン）
 	SpriteCommon& operator=(const SpriteCommon& obj) = delete;
 };

@@ -76,12 +76,13 @@ public://アクセッサ置き場
 	//xAudio2ゲット
 	IXAudio2* GetXAudio2() { return xaudio2.Get(); }
 private:
-	//コンストラクタ
+	//コンストラクタ（シングルトンパターン）
 	Audio() = default;
-	//デストラクタ
+	//デストラクタ（シングルトンパターン）
 	~Audio() = default;
 public:
-	//コピーコンストラクタの防止
+	//コピーコンストラクタの防止（シングルトンパターン）
 	Audio(const Audio& obj) = delete;
+	// コピー代入演算子を禁止（シングルトンパターン）
 	Audio& operator=(const Audio& obj) = delete;
 };
