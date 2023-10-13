@@ -53,6 +53,8 @@ public://メンバ関数
 	void UpdateIsPause();
 	//状態更新(ステージクリア時)
 	void UpdateIsStageClear();
+	//状態更新(ステージクリア時)
+	void UpdateIsGameOver();
 	//状態更新(ゲーム終了時)
 	void UpdateIsQuitGame();
 	//チュートリアル更新
@@ -170,7 +172,7 @@ private:
 	//クリアしたか
 	bool isClear_ = false;
 	//ゲームオーバーになったか
-	bool isGameover_ = false;
+	bool isGameOver_ = false;
 	//フェードアウト(遷移時)
 	bool isFadeOutScene_ = false;
 	//フェードアウト(ポーズ時)

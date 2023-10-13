@@ -117,10 +117,11 @@ void GamePlayScene::Update()
 		skydome->Update();
 	}
 
-	if (isGamePlay_)	UpdateIsPlayGame();				//ゲームプレイ時
-	else if (isPause_)	UpdateIsPause();				//ポーズ時
-	else if (isClear_)	UpdateIsStageClear();			//ステージクリア時
-	else				UpdateIsQuitGame();				//終了時
+	if (isGamePlay_)	 UpdateIsPlayGame();				//ゲームプレイ時
+	else if (isPause_)	 UpdateIsPause();					//ポーズ時
+	else if (isClear_)	 UpdateIsStageClear();				//ステージクリア時
+	else if (isGameOver_)UpdateIsGameOver();				//ゲームオーバー時
+	else				 UpdateIsQuitGame();				//終了時
 	spritePause_->Update();
 	spritePauseInfo_->Update();
 	spritePauseResume_->Update();
@@ -146,20 +147,22 @@ void GamePlayScene::UpdateIsPlayGame()
 	//モデル呼び出し例
 	for (std::unique_ptr<Player>& player : players_)
 	{
-		if (!isClear_ || !isGameover_)
-		{
-			//チュートリアル基本操作
-			if (stageNum_ == SL_StageTutorial_Area1)player->Update(false, false);
-			//チュートリアル奥側移動→攻撃→応用ステージ
-			else if (stageNum_ == SL_StageTutorial_Area2)player->Update(true, false);
-			//基本状態
-			else player->Update();
-		}
+		
+		//チュートリアル基本操作
+		if (stageNum_ == SL_StageTutorial_Area1)player->Update(false, false);
+		//チュートリアル奥側移動→攻撃→応用ステージ
+		else if (stageNum_ == SL_StageTutorial_Area2)player->Update(true, false);
+		//基本状態
+		else player->Update();
+		
 
 		lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 		//かめおべら
-		if (player->IsDead())isGameover_ = true;
-
+		if (player->IsDead())
+		{
+			isGameOver_ = true;
+			isGamePlay_ = false;
+		}
 		//ImGui	
 		imguiManager_->Begin();
 		int plife[1] = { player->GetLife() };
@@ -211,16 +214,9 @@ void GamePlayScene::UpdateIsPlayGame()
 	camera_->Update();
 	lightGroup_->Update();
 	pm_->Update();
-
-	if (isGameover_)
-	{
-		sceneManager_->ChangeScene("GAMEOVER", stageNum_);
-		isGameover_ = false;
-	}
-
 	colManager_->CheckAllCollisions();
 	//Pause機能
-	if (input_->TriggerKey(DIK_Q) && !isGameover_)
+	if (input_->TriggerKey(DIK_Q))
 	{
 		//ここでイージングの準備
 		for (int i = 0; i < 6; i++)easePauseMenuPosX_[i].Standby(false);
@@ -408,6 +404,16 @@ void GamePlayScene::UpdateIsStageClear()
 	{
 		sceneManager_->ChangeScene("STAGECLEAR", stageNum_);
 		isClear_ = false;
+	}
+}
+
+void GamePlayScene::UpdateIsGameOver()
+{
+	FadeOut({ 0.2f,0.0f,0.0f });
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+	{
+		sceneManager_->ChangeScene("GAMEOVER", stageNum_);
+		isGameOver_ = false;
 	}
 }
 
