@@ -119,8 +119,8 @@ void GamePlayScene::Update()
 
 	if (isGamePlay_)UpdateIsPlayGame();				//ゲームプレイ時
 	else if (isPause_) UpdateIsPause();				//ポーズ時
-
-	spritePause_->Update();
+	else if (isClear_) UpdateIsStageClear();
+		spritePause_->Update();
 	spritePauseInfo_->Update();
 	spritePauseResume_->Update();
 	spritePauseHowToPlay_->Update();
@@ -145,7 +145,7 @@ void GamePlayScene::UpdateIsPlayGame()
 	//モデル呼び出し例
 	for (std::unique_ptr<Player>& player : players_)
 	{
-		if (!isclear_ || !isGameover_)
+		if (!isClear_ || !isGameover_)
 		{
 			//チュートリアル基本操作
 			if (stageNum_ == SL_StageTutorial_Area1)player->Update(false, false);
@@ -176,7 +176,11 @@ void GamePlayScene::UpdateIsPlayGame()
 	{
 		enemy->Update();
 		//ボス撃破
-		if (enemy->BossDead())isclear_ = true;
+		if (enemy->BossDead())
+		{
+			isClear_ = true;
+			isGamePlay_ = false;
+		}
 	}
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
@@ -187,7 +191,12 @@ void GamePlayScene::UpdateIsPlayGame()
 	{
 		goal->Update();
 		//クリア
-		if (goal->IsGoal()) isclear_ = true;
+		if (goal->IsGoal())
+		{
+			isClear_ = true;
+			isGamePlay_ = false;
+		}
+
 	}
 	for (std::unique_ptr<Item>& item : items_)
 	{
@@ -207,14 +216,10 @@ void GamePlayScene::UpdateIsPlayGame()
 		sceneManager_->ChangeScene("GAMEOVER", stageNum_);
 		isGameover_ = false;
 	}
-	if (isclear_)
-	{
-		sceneManager_->ChangeScene("STAGECLEAR", stageNum_);
-		isclear_ = false;
-	}
+
 	colManager_->CheckAllCollisions();
 	//Pause機能
-	if (input_->TriggerKey(DIK_Q) && !isclear_ && !isGameover_)
+	if (input_->TriggerKey(DIK_Q) && !isGameover_)
 	{
 		//ここでイージングの準備
 		for (int i = 0; i < 6; i++)easePauseMenuPosX_[i].Standby(false);
@@ -345,9 +350,9 @@ void GamePlayScene::UpdateIsPause()
 
 		//else if (menuCount_ == GPSPMI_StageSelect)
 		//else if (menuCount_ == GPSPMI_Title)
-		
 
-		
+
+
 	}
 	//到達したらPause解除
 	if (spriteDone_->GetPosition().x == easePauseMenuPosX_[5].start)
@@ -395,6 +400,16 @@ void GamePlayScene::UpdateIsPause()
 	//デフォルトカラー
 	spritePause_->SetColor(doneColor);
 	spriteDone_->SetColor(doneColor);
+}
+
+void GamePlayScene::UpdateIsStageClear()
+{
+	FadeOut({ 1.0f,1.0f,1.0f });
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+	{
+		sceneManager_->ChangeScene("STAGECLEAR", stageNum_);
+		isClear_ = false;
+	}
 }
 
 void GamePlayScene::UpdateTutorial()
@@ -509,7 +524,7 @@ void GamePlayScene::Draw()
 	{
 		//フェードインアウト
 		spriteFadeInOut_->Draw();
-		
+
 		spritePause_->Draw();
 		spritePauseResume_->Draw();
 		spritePauseHowToPlay_->Draw();
@@ -517,11 +532,11 @@ void GamePlayScene::Draw()
 		spritePauseTitle_->Draw();
 		spriteDone_->Draw();
 
-		
+
 	}
 	else
 	{
-		
+
 		spritePauseInfo_->Draw();
 		for (std::unique_ptr<Item>& item : items_)
 		{
@@ -549,7 +564,7 @@ void GamePlayScene::Draw()
 			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
 				spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
 		}
-		
+
 		//フェードインアウト
 		spriteFadeInOut_->Draw();
 

@@ -51,6 +51,8 @@ public://メンバ関数
 	void UpdateIsPlayGame();
 	//状態更新(ポーズ画面時)
 	void UpdateIsPause();
+	//状態更新(ステージクリア時)
+	void UpdateIsStageClear();
 	//チュートリアル更新
 	void UpdateTutorial();
 	
@@ -164,7 +166,7 @@ private:
 	//ポーズしたか
 	bool isPause_ = false;
 	//クリアしたか
-	bool isclear_ = false;
+	bool isClear_ = false;
 	//ゲームオーバーになったか
 	bool isGameover_ = false;
 	//フェードアウト(遷移時)
