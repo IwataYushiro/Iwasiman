@@ -54,6 +54,10 @@ public://メンバ関数
 	//チュートリアル更新
 	void UpdateTutorial();
 	
+	//フェードアウト(色)
+	void FadeOut(DirectX::XMFLOAT3 rgb);
+	//フェードイン(色)
+	void FadeIn(DirectX::XMFLOAT3 rgb);
 	//描画
 	void Draw() override;
 	//終了
@@ -62,7 +66,7 @@ public://メンバ関数
 	//レベルデータ読み込み(ステージファイルパス)
 	void LoadLVData(const std::string& stagePath);
 
-	//色が変わる処理
+	//色が変わる処理(色)
 	void UpdateChangeColor();
 
 public:
@@ -85,7 +89,7 @@ private://静的メンバ変数
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
-	
+
 private:
 
 	//サウンド読み込み
@@ -94,7 +98,14 @@ private:
 	//スプライト	
 	Sprite* spritePause_ = new Sprite();				//ポーズ時のスプライト
 	Sprite* spritePauseInfo_ = new Sprite();			//どのキーでポーズするのかを書いたスプライト
-	
+	Sprite* spritePauseResume_ = new Sprite();			//ポーズ時にゲーム再開するかを書いたスプライト
+	Sprite* spritePauseHowToPlay_ = new Sprite();		//ポーズ時に遊び方を確認するかを書いたスプライト
+	Sprite* spritePauseStageSelect_ = new Sprite();		//ポーズ時にステージセレクトへ戻るかを書いたスプライト
+	Sprite* spritePauseTitle_ = new Sprite();			//ポーズ時にタイトルへ戻るかを書いたスプライト
+	Sprite* spriteDone_ = new Sprite();					//決定表示のスプライト
+	Sprite* spriteFadeInOut_ = new Sprite();			//フェードインアウトのスプライト
+
+
 	Sprite* spriteTutorialHTPMove_ = new Sprite();		//チュートリアルの移動方法スプライト
 	Sprite* spriteTutorialHTPDash_ = new Sprite();		//チュートリアルのダッシュ方法スプライト
 	Sprite* spriteTutorialHTPJump_ = new Sprite();		//チュートリアルのジャンプ方法スプライト
@@ -117,13 +128,51 @@ private:
 		Easing(1300.0f, 0.0f, 2.0f),	//ゲーム説明文字
 	};
 
+	//ポーズメニュー画面出現イージング
+	Easing easePauseMenuPosX_[6] =
+	{
+		Easing(1300.0f, 100.0f, 0.5f),			//メニュー
+		Easing(1300.0f, 50.0f, 0.6f),			//再開
+		Easing(1300.0f, 50.0f, 0.7f),			//遊び方確認
+		Easing(1300.0f, 50.0f, 0.8f),			//ステージセレクトへ
+		Easing(1300.0f, 50.0f, 0.9f),			//タイトルへ
+		Easing(1300.0f, 0.0f, 1.0f),			//スペースで選択
+	};
+
+	//遊び方説明画面出現イージング
+	Easing easeHowToPlayPosX_[6] =
+	{
+		Easing(1300.0f, 0.0f, 0.5f),			//メニュー
+		Easing(1300.0f, 0.0f, 0.6f),			//再開
+		Easing(1300.0f, 0.0f, 0.7f),			//遊び方確認
+		Easing(1300.0f, 0.0f, 0.8f),			//ステージセレクトへ
+		Easing(1300.0f, 0.0f, 0.9f),			//タイトルへ
+		Easing(1300.0f, 0.0f, 1.0f),			//スペースで選択
+	};
+
+	//フェードインアウト(false フェードイン、true フェードアウト)
+	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 0.5f);
+	//ポーズ用のフェードインアウトイージング
+	Easing easeFadeInOutPause_ = Easing(0.8f, 0.0f, 0.5f);
+
+	//プレイ中か
+	bool isGamePlay_ = true;
+	//遊び方説明画面時か
+	bool isHowToPlay_ = false;
+	//ゲームプレイシーンから離れるか
+	bool isQuit_ = false;
 	//ポーズしたか
 	bool isPause_ = false;
 	//クリアしたか
 	bool isclear_ = false;
 	//ゲームオーバーになったか
 	bool isGameover_ = false;
-
+	//フェードアウト(遷移時)
+	bool isFadeOutScene_ = false;
+	//フェードアウト(ポーズ時)
+	bool isFadeOutPause_ = false;
+	//フェードイン(ポーズ時)
+	bool isFadeInPause_ = false;
 	//モデル
 	//自機
 	std::list<std::unique_ptr<Player>> players_;		//自機リスト
@@ -171,7 +220,7 @@ private:
 
 	//パーティクル
 	Particle* particle1_ = nullptr;
-	
+
 	//パーティクルマネージャー
 	ParticleManager* pm_ = nullptr;
 
@@ -200,14 +249,17 @@ private:
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
 	//敵弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
-	//ポーズのイージング(左から右へ)
-	Easing easePause_ = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
+
+	//メニュー関係
+	//メニュー番号
+	int menuCount_ = 0;
 	//○○した瞬間に○○解除を防ぐ用のフラグ
 	bool isBack_ = false;
 	//色を変えるスピード
 	float speedColor_ = 0.0f;
 	//色反転フラグ
 	bool isColorReverse_ = false;
+
 private:
 	//スプライト読み込み
 	void LoadSprite();
@@ -220,10 +272,10 @@ private:
 	*/
 	void SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
 		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);
-	
+
 	//チュートリアルスプライトの更新
 	void UpdateTutorialSprite();
-	
+
 	//チュートリアル用のスプライト描画(スプライト1～6枚)
 	void DrawTutorialSprite(Sprite* s1, Sprite* s2,
 		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);
