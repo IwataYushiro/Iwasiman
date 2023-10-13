@@ -53,6 +53,8 @@ public://メンバ関数
 	void UpdateIsPause();
 	//状態更新(ステージクリア時)
 	void UpdateIsStageClear();
+	//状態更新(ゲーム終了時)
+	void UpdateIsQuitGame();
 	//チュートリアル更新
 	void UpdateTutorial();
 	

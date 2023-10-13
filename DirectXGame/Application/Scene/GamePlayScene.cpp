@@ -117,10 +117,11 @@ void GamePlayScene::Update()
 		skydome->Update();
 	}
 
-	if (isGamePlay_)UpdateIsPlayGame();				//ゲームプレイ時
-	else if (isPause_) UpdateIsPause();				//ポーズ時
-	else if (isClear_) UpdateIsStageClear();
-		spritePause_->Update();
+	if (isGamePlay_)	UpdateIsPlayGame();				//ゲームプレイ時
+	else if (isPause_)	UpdateIsPause();				//ポーズ時
+	else if (isClear_)	UpdateIsStageClear();			//ステージクリア時
+	else				UpdateIsQuitGame();				//終了時
+	spritePause_->Update();
 	spritePauseInfo_->Update();
 	spritePauseResume_->Update();
 	spritePauseHowToPlay_->Update();
@@ -348,10 +349,8 @@ void GamePlayScene::UpdateIsPause()
 			isBack_ = false;
 		}
 
-		//else if (menuCount_ == GPSPMI_StageSelect)
-		//else if (menuCount_ == GPSPMI_Title)
-
-
+		else if (menuCount_ == GPSPMI_StageSelect) FadeIn({ 0.0f,0.0f,0.0f });
+		else if (menuCount_ == GPSPMI_Title) FadeIn({ 0.0f,0.0f,0.0f });
 
 	}
 	//到達したらPause解除
@@ -378,18 +377,18 @@ void GamePlayScene::UpdateIsPause()
 			}
 			else if (menuCount_ == GPSPMI_StageSelect)
 			{
+				isQuit_ = true;
 				isBack_ = false;
 				isFadeInPause_ = false;
 				isFadeOutPause_ = false;
-				sceneManager_->ChangeScene("STAGESELECT", stageNum_);
 				isPause_ = false;
 			}
 			else if (menuCount_ == GPSPMI_Title)
 			{
+				isQuit_ = true;
 				isBack_ = false;
 				isFadeInPause_ = false;
 				isFadeOutPause_ = false;
-				sceneManager_->ChangeScene("TITLE", stageNum_);
 				isPause_ = false;
 			}
 
@@ -410,6 +409,26 @@ void GamePlayScene::UpdateIsStageClear()
 		sceneManager_->ChangeScene("STAGECLEAR", stageNum_);
 		isClear_ = false;
 	}
+}
+
+void GamePlayScene::UpdateIsQuitGame()
+{
+	FadeOut({ 0.0f,0.0f,0.0f });
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+	{
+		//ポーズからステージセレクト、タイトルを選んだとき
+		if (menuCount_ == GPSPMI_StageSelect)
+		{
+			//ステージ選択
+			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+			else sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
+		}
+		else if (menuCount_ == GPSPMI_Title) sceneManager_->ChangeScene("TITLE", stageNum_);
+		isQuit_ = false;
+	}
+
+
 }
 
 void GamePlayScene::UpdateTutorial()
