@@ -125,6 +125,7 @@ private:
 	Sprite* spriteTutorialInfo2_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル2面)
 	Sprite* spriteTutorialInfo3_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル3面)
 	Sprite* spriteTutorialInfo4_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル4面)
+	Sprite* spriteTutorialInfoHowToPlay_ = new Sprite();//チュートリアル説明文字スプライト(チュートリアル中の遊び方説明について)
 
 	//チュートリアル表示のイージング
 	Easing easeInfoTutorial_[6] =
@@ -138,24 +139,25 @@ private:
 	};
 
 	//ポーズメニュー画面出現イージング
-	Easing easePauseMenuPosX_[6] =
+	Easing easePauseMenuPosX_[7] =
 	{
 		Easing(1300.0f, 100.0f, 0.5f),			//メニュー
 		Easing(1300.0f, 50.0f, 0.6f),			//再開
-		Easing(1300.0f, 50.0f, 0.7f),			//遊び方確認
-		Easing(1300.0f, 50.0f, 0.8f),			//ステージセレクトへ
-		Easing(1300.0f, 50.0f, 0.9f),			//タイトルへ
+		Easing(1300.0f, 100.0f, 0.7f),			//遊び方確認
+		Easing(1300.0f, 150.0f, 0.8f),			//ステージセレクトへ
+		Easing(1300.0f, 200.0f, 0.9f),			//タイトルへ
 		Easing(1300.0f, 0.0f, 1.0f),			//スペースで選択
+		Easing(1300.0f, 800.0f, 0.75f)			//チュートリアル時の遊び方説明について
 	};
 
 	//遊び方説明画面出現イージング
 	Easing easeHowToPlayPosX_[7] =
 	{
-		Easing(1300.0f, 300.0f, 0.5f),			//移動
-		Easing(1300.0f, 300.0f, 0.6f),			//ダッシュ
+		Easing(1300.0f, 100.0f, 0.5f),			//移動
+		Easing(1300.0f, 200.0f, 0.6f),			//ダッシュ
 		Easing(1300.0f, 300.0f, 0.7f),			//ジャンプ
-		Easing(1300.0f, 300.0f, 0.8f),			//手前、奥側移動
-		Easing(1300.0f, 300.0f, 0.9f),			//攻撃
+		Easing(1300.0f, 400.0f, 0.8f),			//手前、奥側移動
+		Easing(1300.0f, 500.0f, 0.9f),			//攻撃
 		Easing(1300.0f, 0.0f, 1.0f),			//遊び方
 	};
 

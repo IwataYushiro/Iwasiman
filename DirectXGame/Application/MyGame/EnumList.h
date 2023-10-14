@@ -64,6 +64,7 @@ enum GamePlaySceneTutorialTextureIndex
 	GPSTTI_HowToPlayJumpTex = 1006,
 	GPSTTI_HowToPlayBackMoveTex = 1007,
 	GPSTTI_HowToPlayAttackTex = 1008,
+	GPSTTI_TutorialInfoHowToPlayTex = 1009,
 };
 
 //アイテムテクスチャインデックス
