@@ -35,6 +35,14 @@ public://メンバ関数
 	void Initialize() override;
 	//更新
 	void Update() override;
+	//ゲームオーバー中
+	void UpdateIsGameOver();
+	//コンティニュー時
+	void UpdateIsContinue();
+	//ステージセレクト遷移時
+	void UpdateIsQuitStageSelect();
+	//タイトル遷移時
+	void UpdateIsQuitTitle();
 	//描画
 	void Draw() override;
 	//終了
@@ -98,10 +106,11 @@ private://メンバ変数
 	//オブジェクト配列
 	std::vector<Object3d*> objects_;
 
-	//スタート時フラグ
-	bool isMenu_ = false;						//メニュー時フラグ
+	//フラグ類
+	bool isGameover_ = true;					//メニュー時フラグ
 	bool isContinue_ = false;					//コンティニューする場合
-	bool isStageSelect_ = false;				//ステージセレクトへ行く場合
+	bool isQuitStageSelect_ = false;			//ステージセレクトに戻る場合
+	bool completeRotate_ = false;				//回り終わった時 
 	bool isQuitTitle_ = false;					//タイトルに戻る場合
 	bool isFadeOut_ = false;					//フェードインアウト
 	
@@ -117,17 +126,61 @@ private://メンバ変数
 	//コンティニューするときの視点イージング
 	Easing easeEyeContinue_[3]
 	{
-		Easing(-6.0f, -22.0f, 1.8f),				//X
-		Easing(-8.0f, -1.0f, 1.8f),				//Y
-		Easing(-110.0f, -60.0f, 1.8f),			//Z
+		Easing(-6.0f, -21.0f, 1.0f),				//X
+		Easing(-8.0f, -5.0f, 1.0f),					//Y
+		Easing(-110.0f, -60.0f, 1.0f),				//Z
 	};
 	//コンティニューするときの注視点イージング
 	Easing easeTargetContinue_[3]
 	{
-		Easing(-32.0f, 50.0f, 1.8f),				//X
-		Easing(-24.0f, -8.0f, 1.8f),				//Y
-		Easing(-10.0f, -57.0f, 1.8f),			//Z
+		Easing(-32.0f, 90.0f, 1.0f),				//X
+		Easing(-24.0f, -22.0f, 1.0f),				//Y
+		Easing(-10.0f, -61.0f, 1.0f),				//Z
 	};
+	//コンティニューするときの自機回転イージング
+	Easing easePlayerRotateContinue_[3]
+	{
+		Easing(90.0f, 0.0f, 1.0f),					//X
+		Easing(-90.0f, 90.0f, 1.0f),				//Y
+		Easing(0.0f, 0.0f, 1.0f),					//Z
+	};
+	//コンティニューするときの自機移動イージング
+	Easing easePlayerMoveContinue_[3]
+	{
+		Easing(0.0f, 90.0f, 1.0f),					//X
+		Easing(-8.0f, -8.0f, 1.0f),					//Y
+		Easing(-60.0f, -60.0f, 1.0f),				//Z
+	};
+
+	//ステージセレクトへ遷移するときの視点イージング
+	Easing easeEyeQuitStageSelect_[3]
+	{
+		Easing(-6.0f, -21.0f, 1.0f),				//X
+		Easing(-8.0f, -5.0f, 1.0f),					//Y
+		Easing(-110.0f, -60.0f, 1.0f),				//Z
+	};
+	//ステージセレクトへ遷移するときの注視点イージング
+	Easing easeTargetQuitStageSelect_[3]
+	{
+		Easing(-32.0f, 90.0f, 1.0f),				//X
+		Easing(-24.0f, -22.0f, 1.0f),				//Y
+		Easing(-10.0f, -61.0f, 1.0f),				//Z
+	};
+	//ステージセレクトへ遷移するときの自機回転イージング
+	Easing easePlayerRotateQuitStageSelect_[3]
+	{
+		Easing(90.0f, 0.0f, 1.0f),					//X
+		Easing(-90.0f, 90.0f, 1.0f),				//Y
+		Easing(0.0f, 0.0f, 1.0f),					//Z
+	};
+	//ステージセレクトへ遷移するときの自機移動イージング
+	Easing easePlayerMoveQuitStageSelect_[3]
+	{
+		Easing(0.0f, 150.0f, 1.0f),					//X
+		Easing(-8.0f, 20.0f, 1.0f),					//Y
+		Easing(-60.0f, -60.0f, 1.0f),				//Z
+	};
+
 	//フェードインアウト(false フェードイン、true フェードアウト)
 	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
 

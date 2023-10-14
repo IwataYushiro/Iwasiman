@@ -95,8 +95,8 @@
             "transform": {
                 "translation": [
                     60.0,
-                    0.0,
-                    -100.0
+                    100.0,
+                    -8.0
                 ],
                 "rotation": [
                     0.0,
