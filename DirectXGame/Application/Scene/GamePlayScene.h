@@ -51,9 +51,11 @@ public://メンバ関数
 	void UpdateIsPlayGame();
 	//状態更新(ポーズ画面時)
 	void UpdateIsPause();
+	//状態更新(遊び方説明時)
+	void UpdateHowToPlay();
 	//状態更新(ステージクリア時)
 	void UpdateIsStageClear();
-	//状態更新(ステージクリア時)
+	//状態更新(ゲームオーバー時)
 	void UpdateIsGameOver();
 	//状態更新(ゲーム終了時)
 	void UpdateIsQuitGame();
@@ -109,6 +111,7 @@ private:
 	Sprite* spritePauseStageSelect_ = new Sprite();		//ポーズ時にステージセレクトへ戻るかを書いたスプライト
 	Sprite* spritePauseTitle_ = new Sprite();			//ポーズ時にタイトルへ戻るかを書いたスプライト
 	Sprite* spriteDone_ = new Sprite();					//決定表示のスプライト
+	Sprite* spriteQuitHowtoPlay_ = new Sprite();		//遊び方説明時ポーズに戻る案内用のスプライト
 	Sprite* spriteFadeInOut_ = new Sprite();			//フェードインアウトのスプライト
 
 
@@ -146,14 +149,14 @@ private:
 	};
 
 	//遊び方説明画面出現イージング
-	Easing easeHowToPlayPosX_[6] =
+	Easing easeHowToPlayPosX_[7] =
 	{
-		Easing(1300.0f, 0.0f, 0.5f),			//メニュー
-		Easing(1300.0f, 0.0f, 0.6f),			//再開
-		Easing(1300.0f, 0.0f, 0.7f),			//遊び方確認
-		Easing(1300.0f, 0.0f, 0.8f),			//ステージセレクトへ
-		Easing(1300.0f, 0.0f, 0.9f),			//タイトルへ
-		Easing(1300.0f, 0.0f, 1.0f),			//スペースで選択
+		Easing(1300.0f, 300.0f, 0.5f),			//移動
+		Easing(1300.0f, 300.0f, 0.6f),			//ダッシュ
+		Easing(1300.0f, 300.0f, 0.7f),			//ジャンプ
+		Easing(1300.0f, 300.0f, 0.8f),			//手前、奥側移動
+		Easing(1300.0f, 300.0f, 0.9f),			//攻撃
+		Easing(1300.0f, 0.0f, 1.0f),			//遊び方
 	};
 
 	//フェードインアウト(false フェードイン、true フェードアウト)
@@ -165,6 +168,8 @@ private:
 	bool isGamePlay_ = true;
 	//遊び方説明画面時か
 	bool isHowToPlay_ = false;
+	//遊び方説明からポーズへ戻る時か
+	bool isBackPause_ = false;
 	//ゲームプレイシーンから離れるか
 	bool isQuit_ = false;
 	//ポーズしたか

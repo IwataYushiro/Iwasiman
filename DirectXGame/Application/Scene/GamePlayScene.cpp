@@ -117,11 +117,12 @@ void GamePlayScene::Update()
 		skydome->Update();
 	}
 
-	if (isGamePlay_)	 UpdateIsPlayGame();				//ゲームプレイ時
-	else if (isPause_)	 UpdateIsPause();					//ポーズ時
-	else if (isClear_)	 UpdateIsStageClear();				//ステージクリア時
-	else if (isGameOver_)UpdateIsGameOver();				//ゲームオーバー時
-	else				 UpdateIsQuitGame();				//終了時
+	if (isGamePlay_)		UpdateIsPlayGame();				//ゲームプレイ時
+	else if (isPause_)		UpdateIsPause();				//ポーズ時
+	else if (isHowToPlay_)	UpdateHowToPlay();				//遊び方説明時
+	else if (isClear_)		UpdateIsStageClear();			//ステージクリア時
+	else if (isGameOver_)	UpdateIsGameOver();				//ゲームオーバー時
+	else					UpdateIsQuitGame();				//終了時
 	spritePause_->Update();
 	spritePauseInfo_->Update();
 	spritePauseResume_->Update();
@@ -129,6 +130,7 @@ void GamePlayScene::Update()
 	spritePauseStageSelect_->Update();
 	spritePauseTitle_->Update();
 	spriteDone_->Update();
+	spriteQuitHowtoPlay_->Update();
 	spriteFadeInOut_->Update();
 
 	//チュートリアル関係
@@ -147,14 +149,14 @@ void GamePlayScene::UpdateIsPlayGame()
 	//モデル呼び出し例
 	for (std::unique_ptr<Player>& player : players_)
 	{
-		
+
 		//チュートリアル基本操作
 		if (stageNum_ == SL_StageTutorial_Area1)player->Update(false, false);
 		//チュートリアル奥側移動→攻撃→応用ステージ
 		else if (stageNum_ == SL_StageTutorial_Area2)player->Update(true, false);
 		//基本状態
 		else player->Update();
-		
+
 
 		lightGroup_->SetPointLightPos(0, player->GetWorldPosition());
 		//かめおべら
@@ -242,9 +244,6 @@ void GamePlayScene::UpdateIsPause()
 	//イージング(ポーズ中に準備してもここがやってくれる)
 	FadeOut({ 0.0f,0.0f,0.0f });
 	for (int i = 0; i < 6; i++)easePauseMenuPosX_[i].ease_in_out_quint();
-	SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-		spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteDone_);
-
 
 	//ポジションセット
 	spritePause_->SetPosition({ easePauseMenuPosX_[0].num_X,0.0f });
@@ -253,6 +252,13 @@ void GamePlayScene::UpdateIsPause()
 	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[3].num_X,360.0f });
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[4].num_X,480.0f });
 	spriteDone_->SetPosition({ easePauseMenuPosX_[5].num_X,600.0f });
+
+	spriteTutorialHTPMove_->SetPosition({ easeHowToPlayPosX_[0].num_X,0.0f });
+	spriteTutorialHTPDash_->SetPosition({ easeHowToPlayPosX_[1].num_X,120.0f });
+	spriteTutorialHTPJump_->SetPosition({ easeHowToPlayPosX_[2].num_X,240.0f });
+	spriteTutorialHTPMoveBack_->SetPosition({ easeHowToPlayPosX_[3].num_X,360.0f });
+	spriteTutorialHTPAttack_->SetPosition({ easeHowToPlayPosX_[4].num_X,480.0f });
+	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[5].num_X,600.0f });
 
 	//メニュー操作
 	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
@@ -303,13 +309,27 @@ void GamePlayScene::UpdateIsPause()
 			}
 			else if (menuCount_ == GPSPMI_HowToPlay)
 			{
-				//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
-				if (spriteDone_->GetPosition().x == easePauseMenuPosX_[5].end)
+				if (stageNum_ < SL_StageTutorial_Area1)//チュートリアルステージだと何も起こらない
 				{
-					for (int i = 0; i < 6; i++)easePauseMenuPosX_[i].Standby(true);
+					//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
+					if (spriteDone_->GetPosition().x == easePauseMenuPosX_[5].end)
+					{
+						for (int i = 0; i < 6; i++)easePauseMenuPosX_[i].Standby(true);
+						for (int i = 0; i < 6; i++)easeHowToPlayPosX_[i].Standby(false);
 
+					}
+					//カラーセット
+					DirectX::XMFLOAT4 howToPlayColor = { 1.0f,0.15f,0.15f,1.0f };
+
+					spriteTutorialHTPDash_->SetColor(howToPlayColor);
+					spriteTutorialHTPMove_->SetColor(howToPlayColor);
+					spriteTutorialHTPJump_->SetColor(howToPlayColor);
+					spriteTutorialHTPMoveBack_->SetColor(howToPlayColor);
+					spriteTutorialHTPAttack_->SetColor(howToPlayColor);
+
+					isHowToPlay_ = true;
+					isPause_ = false;
 				}
-				isBack_ = true;
 			}
 			else if (menuCount_ == GPSPMI_StageSelect)
 			{
@@ -333,18 +353,10 @@ void GamePlayScene::UpdateIsPause()
 
 		}
 	}
+
 	if (isBack_)
 	{
 		if (menuCount_ == GPSPMI_Resume) FadeIn({ 0.0f,0.0f,0.0f });
-		else if (menuCount_ == GPSPMI_HowToPlay)
-		{
-			if (spriteDone_->GetPosition().x == easePauseMenuPosX_[5].start)
-			{
-				if (input_->TriggerKey(DIK_SPACE)) for (int i = 0; i < 6; i++)easePauseMenuPosX_[i].Standby(true);
-			}
-			isBack_ = false;
-		}
-
 		else if (menuCount_ == GPSPMI_StageSelect) FadeIn({ 0.0f,0.0f,0.0f });
 		else if (menuCount_ == GPSPMI_Title) FadeIn({ 0.0f,0.0f,0.0f });
 
@@ -356,15 +368,6 @@ void GamePlayScene::UpdateIsPause()
 		{
 			if (menuCount_ == GPSPMI_Resume)
 			{
-				isGamePlay_ = true;
-				isFadeInPause_ = false;
-				isFadeOutPause_ = false;
-				isBack_ = false;
-				isPause_ = false;
-			}
-			else if (menuCount_ == GPSPMI_HowToPlay)
-			{
-
 				isGamePlay_ = true;
 				isFadeInPause_ = false;
 				isFadeOutPause_ = false;
@@ -395,6 +398,55 @@ void GamePlayScene::UpdateIsPause()
 	//デフォルトカラー
 	spritePause_->SetColor(doneColor);
 	spriteDone_->SetColor(doneColor);
+}
+
+void GamePlayScene::UpdateHowToPlay()
+{
+	//イージング
+	for (int i = 0; i < 6; i++)easePauseMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < 6; i++)easeHowToPlayPosX_[i].ease_out_expo();
+
+	//ポジションセット
+	spritePause_->SetPosition({ easePauseMenuPosX_[0].num_X,0.0f });
+	spritePauseResume_->SetPosition({ easePauseMenuPosX_[1].num_X,120.0f });
+	spritePauseHowToPlay_->SetPosition({ easePauseMenuPosX_[2].num_X,240.0f });
+	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[3].num_X,360.0f });
+	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[4].num_X,480.0f });
+	spriteDone_->SetPosition({ easePauseMenuPosX_[5].num_X,600.0f });
+
+	spriteTutorialHTPMove_->SetPosition({ easeHowToPlayPosX_[0].num_X,0.0f });
+	spriteTutorialHTPDash_->SetPosition({ easeHowToPlayPosX_[1].num_X,120.0f });
+	spriteTutorialHTPJump_->SetPosition({ easeHowToPlayPosX_[2].num_X,240.0f });
+	spriteTutorialHTPMoveBack_->SetPosition({ easeHowToPlayPosX_[3].num_X,360.0f });
+	spriteTutorialHTPAttack_->SetPosition({ easeHowToPlayPosX_[4].num_X,480.0f });
+	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[5].num_X,600.0f });
+
+
+	//操作説明文字カラー
+	
+	//到達するまで遊び方説明画面解除不可
+	if (spriteDone_->GetPosition().x == easePauseMenuPosX_[5].start)
+	{
+		//到達した後スペースで戻る
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			for (int i = 0; i < 6; i++)easePauseMenuPosX_[i].Standby(false);
+			for (int i = 0; i < 6; i++)easeHowToPlayPosX_[i].Standby(true);
+			isBackPause_ = true;
+		}
+
+	}
+	if (isBackPause_)
+	{
+		for (int i = 0; i < 6; i++)easePauseMenuPosX_[i].ease_in_out_quint();
+		for (int i = 0; i < 6; i++)easeHowToPlayPosX_[i].ease_in_out_quint();
+		if (spriteDone_->GetPosition().x == easePauseMenuPosX_[5].end)
+		{
+			isPause_ = true;
+			isBackPause_ = false;
+			isHowToPlay_ = false;
+		}
+	}
 }
 
 void GamePlayScene::UpdateIsStageClear()
@@ -545,7 +597,7 @@ void GamePlayScene::Draw()
 	//スプライト描画前処理
 	spCommon_->PreDraw();
 	//前景スプライト
-	if (isPause_)
+	if (isPause_)//ポーズ時
 	{
 		//フェードインアウト
 		spriteFadeInOut_->Draw();
@@ -558,6 +610,25 @@ void GamePlayScene::Draw()
 		spriteDone_->Draw();
 
 
+	}
+	else if (isHowToPlay_)//遊び方説明時
+	{
+		//フェードインアウト
+		spriteFadeInOut_->Draw();
+
+		spritePause_->Draw();
+		spritePauseResume_->Draw();
+		spritePauseHowToPlay_->Draw();
+		spritePauseStageSelect_->Draw();
+		spritePauseTitle_->Draw();
+		spriteDone_->Draw();
+
+		spriteTutorialHTPMove_->Draw();
+		spriteTutorialHTPDash_->Draw();
+		spriteTutorialHTPJump_->Draw();
+		spriteTutorialHTPMoveBack_->Draw();
+		spriteTutorialHTPAttack_->Draw();
+		spriteQuitHowtoPlay_->Draw();
 	}
 	else
 	{
@@ -648,6 +719,7 @@ void GamePlayScene::Finalize()
 	delete spritePauseStageSelect_;
 	delete spritePauseTitle_;
 	delete spriteDone_;
+	delete spriteQuitHowtoPlay_;
 	delete spriteFadeInOut_;
 
 	delete spriteTutorialInfo1_;
@@ -1012,46 +1084,48 @@ void GamePlayScene::SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
 
 void GamePlayScene::UpdateTutorialSprite()
 {
-	//チュートリアル説明カラー
-	DirectX::XMFLOAT4 infoColorRed = { 0.1f + infoColor_.x,0.0f,0.0f,1.0f };
-	DirectX::XMFLOAT4 infoColorBlue = { 0.0f,0.0f,0.1f + infoColor_.z,1.0f };
-
-	//操作説明文字カラー
-	DirectX::XMFLOAT4 howToPlayColorActiveRed = { 1.0f,0.1f,0.1f,1.0f };
-	DirectX::XMFLOAT4 howToPlayColorActiveBlue = { 0.1f,0.1f,1.0f,1.0f };
-	DirectX::XMFLOAT4 howToPlayColorDefault = { 0.1f,0.1f,0.1f,1.0f };
-
-	UpdateChangeColor();
-
-	spriteTutorialHTPDash_->SetColor(howToPlayColorDefault);
-	spriteTutorialHTPMove_->SetColor(howToPlayColorDefault);
-	spriteTutorialHTPJump_->SetColor(howToPlayColorDefault);
-	spriteTutorialHTPMoveBack_->SetColor(howToPlayColorDefault);
-	spriteTutorialHTPAttack_->SetColor(howToPlayColorDefault);
-
-	//ダッシュ
-	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
+	if (stageNum_ >= SL_StageTutorial_Area1)//チュートリアルステージだと何も起こらない
 	{
-		if (input_->PushKey(DIK_A))spriteTutorialHTPDash_->SetColor(howToPlayColorActiveBlue);
-		if (input_->PushKey(DIK_D))spriteTutorialHTPDash_->SetColor(howToPlayColorActiveRed);
-	}
-	else
-	{
-		if (input_->PushKey(DIK_A))spriteTutorialHTPMove_->SetColor(howToPlayColorActiveBlue);
-		if (input_->PushKey(DIK_D))spriteTutorialHTPMove_->SetColor(howToPlayColorActiveRed);
-	}
-	//ジャンプ
-	if (input_->PushKey(DIK_SPACE))spriteTutorialHTPJump_->SetColor(howToPlayColorActiveRed);
-	//奥側ジャンプ
-	if (input_->PushKey(DIK_Z))spriteTutorialHTPMoveBack_->SetColor(howToPlayColorActiveRed);
-	//攻撃
-	if (input_->PushKey(DIK_X))spriteTutorialHTPAttack_->SetColor(howToPlayColorActiveRed);
+		//チュートリアル説明カラー
+		DirectX::XMFLOAT4 infoColorRed = { 0.1f + infoColor_.x,0.0f,0.0f,1.0f };
+		DirectX::XMFLOAT4 infoColorBlue = { 0.0f,0.0f,0.1f + infoColor_.z,1.0f };
 
-	spriteTutorialInfo1_->SetColor(infoColorRed);
-	spriteTutorialInfo2_->SetColor(infoColorRed);
-	spriteTutorialInfo3_->SetColor(infoColorRed);
-	spriteTutorialInfo4_->SetColor(infoColorBlue);
+		//操作説明文字カラー
+		DirectX::XMFLOAT4 howToPlayColorActiveRed = { 1.0f,0.1f,0.1f,1.0f };
+		DirectX::XMFLOAT4 howToPlayColorActiveBlue = { 0.1f,0.1f,1.0f,1.0f };
+		DirectX::XMFLOAT4 howToPlayColorDefault = { 0.1f,0.1f,0.1f,1.0f };
 
+		UpdateChangeColor();
+
+		spriteTutorialHTPDash_->SetColor(howToPlayColorDefault);
+		spriteTutorialHTPMove_->SetColor(howToPlayColorDefault);
+		spriteTutorialHTPJump_->SetColor(howToPlayColorDefault);
+		spriteTutorialHTPMoveBack_->SetColor(howToPlayColorDefault);
+		spriteTutorialHTPAttack_->SetColor(howToPlayColorDefault);
+
+		//ダッシュ
+		if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
+		{
+			if (input_->PushKey(DIK_A))spriteTutorialHTPDash_->SetColor(howToPlayColorActiveBlue);
+			if (input_->PushKey(DIK_D))spriteTutorialHTPDash_->SetColor(howToPlayColorActiveRed);
+		}
+		else
+		{
+			if (input_->PushKey(DIK_A))spriteTutorialHTPMove_->SetColor(howToPlayColorActiveBlue);
+			if (input_->PushKey(DIK_D))spriteTutorialHTPMove_->SetColor(howToPlayColorActiveRed);
+		}
+		//ジャンプ
+		if (input_->PushKey(DIK_SPACE))spriteTutorialHTPJump_->SetColor(howToPlayColorActiveRed);
+		//奥側ジャンプ
+		if (input_->PushKey(DIK_Z))spriteTutorialHTPMoveBack_->SetColor(howToPlayColorActiveRed);
+		//攻撃
+		if (input_->PushKey(DIK_X))spriteTutorialHTPAttack_->SetColor(howToPlayColorActiveRed);
+
+		spriteTutorialInfo1_->SetColor(infoColorRed);
+		spriteTutorialInfo2_->SetColor(infoColorRed);
+		spriteTutorialInfo3_->SetColor(infoColorRed);
+		spriteTutorialInfo4_->SetColor(infoColorBlue);
+	}
 	spriteTutorialInfo1_->Update();
 	spriteTutorialInfo2_->Update();
 	spriteTutorialInfo3_->Update();
@@ -1104,6 +1178,10 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(GPSPTI_PauseDoneTex, "texture/done.png");
 	spriteDone_->Initialize(spCommon_, GPSPTI_PauseDoneTex);
 	spriteDone_->SetPosition({ easePauseMenuPosX_[5].start,600.0f });
+
+	spCommon_->LoadTexture(GPSPTI_QuitHowToPlayTex, "texture/howtoplayquit.png");
+	spriteQuitHowtoPlay_->Initialize(spCommon_, GPSPTI_QuitHowToPlayTex);
+	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[5].start,600.0f });
 
 	spCommon_->LoadTexture(GPSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, GPSTI_FadeInOutTex);
@@ -1159,6 +1237,7 @@ void GamePlayScene::LoadSprite()
 	spritePauseStageSelect_->Update();
 	spritePauseTitle_->Update();
 	spriteDone_->Update();
+	spriteQuitHowtoPlay_->Update();
 	spriteFadeInOut_->Update();
 
 	spriteTutorialInfo1_->Update();

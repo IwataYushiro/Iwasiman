@@ -37,7 +37,8 @@ enum GamePlayScenePauseTextureIndex
 	GPSPTI_PauseStageSelectTex = 4,
 	GPSPTI_PauseTitleTex = 5,
 	GPSPTI_PauseDoneTex = 6,
-	GPSTI_FadeInOutTex = 7,
+	GPSPTI_QuitHowToPlayTex=7,
+	GPSTI_FadeInOutTex = 8,
 
 };
 
