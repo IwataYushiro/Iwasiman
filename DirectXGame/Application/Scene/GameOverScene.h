@@ -41,7 +41,10 @@ public://メンバ関数
 	void Finalize() override;
 	//レベルデータ読み込み(ステージファイルパス)
 	void LoadLVData(const std::string& stagePath);
-
+	//フェードアウト
+	void FadeOut(DirectX::XMFLOAT3 rgb);
+	//色が変わる処理
+	void UpdateChangeColor();
 private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
@@ -71,23 +74,21 @@ private://メンバ変数
 	Sprite* spriteStageSelect_ = new Sprite();		//ステージセレクト表示スプライト
 	Sprite* spriteTitle_ = new Sprite();			//タイトル表示スプライト
 	Sprite* spriteDone_ = new Sprite();				//決定スプライト
-
-	//FBX
-	//ModelFbx* modelF_ = nullptr;
-	//ObjectFbx* objF_ = nullptr;
-
-	//モデル
-	//Model* modelPlayer_ = nullptr;
-	//Object3d* object3DPlayer_ = nullptr;
+	Sprite* spriteFadeInOut_ = new Sprite();		//フェードインアウトスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
-	//ステージオブジェクト
-	Object3d* objStage_ = nullptr;
-
-	Model* modelStageTutorial_ = nullptr;	//チュートリアルステージモデル(天球)
-	Model* modelStage1_ = nullptr;			//ステージ1モデル(天球)
-	Model* modelStage2_ = nullptr;			//ステージ2モデル(天球)
+	
+	//モデル
+	Model* modelPlayer_ = nullptr;				//自機モデル
+	Model* modelGoal_ = nullptr;				//ゴールモデル
+	Model* modelStageTutorial_ = nullptr;		//チュートリアルステージモデル(天球)
+	Model* modelStage1_ = nullptr;				//ステージ1モデル(天球)
+	Model* modelStage2_ = nullptr;				//ステージ2モデル(天球)
+	
+	std::vector<Object3d*> objPlayers_;			//自機オブジェクト配列
+	std::vector<Object3d*> objGoals_;			//ゴールオブジェクト配列
+	std::vector<Object3d*> objStages_;			//ステージオブジェクト配列
 
 	//オブジェクト回転用
 	DirectX::XMFLOAT3 rot_ = { 0.0f,0.0f,0.0f };
@@ -98,9 +99,11 @@ private://メンバ変数
 	std::vector<Object3d*> objects_;
 
 	//スタート時フラグ
-	bool isStart_ = false;
-	//メニュー時フラグ
-	bool isMenu_ = false;
+	bool isMenu_ = false;						//メニュー時フラグ
+	bool isContinue_ = false;					//コンティニューする場合
+	bool isStageSelect_ = false;				//ステージセレクトへ行く場合
+	bool isQuitTitle_ = false;					//タイトルに戻る場合
+	bool isFadeOut_ = false;					//フェードインアウト
 	
 	//メニュー表示用のイージング
 	Easing easeMenuPosX_[5] =
@@ -111,10 +114,27 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.6f),			//タイトルへ
 		Easing(1300.0f, 0.0f, 1.8f),			//スペースで選択
 	};
+	//コンティニューするときの視点イージング
+	Easing easeEyeContinue_[3]
+	{
+		Easing(-6.0f, -22.0f, 1.8f),				//X
+		Easing(-8.0f, -1.0f, 1.8f),				//Y
+		Easing(-110.0f, -60.0f, 1.8f),			//Z
+	};
+	//コンティニューするときの注視点イージング
+	Easing easeTargetContinue_[3]
+	{
+		Easing(-32.0f, 50.0f, 1.8f),				//X
+		Easing(-24.0f, -8.0f, 1.8f),				//Y
+		Easing(-10.0f, -57.0f, 1.8f),			//Z
+	};
+	//フェードインアウト(false フェードイン、true フェードアウト)
+	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
+
+	//選択中の色
+	DirectX::XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
 	//選択しているメニュー表示
 	int menuCount_ = 0;
-	//色を変えるスピード
-	float speedColor_ = 0.0f;
 	//色反転フラグ
 	bool isColorReverse_ = false;
 

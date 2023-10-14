@@ -152,7 +152,7 @@ enum GameOverSceneTextureIndex
 	GOSTI_StageSelectTex = 2,
 	GOSTI_TitleTex = 3,
 	GOSTI_MenuDoneTex = 4,
-	GOSTI_FadeInOut = 5,
+	GOSTI_FadeInOutTex = 5,
 };
 
 //ゲームオーバー用メニューインデックス
