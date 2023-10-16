@@ -47,7 +47,7 @@ void WinApp::Initialize() {
 	wndClassEx.lpszClassName = L"DX12Sample";           //ウィンドゥクラス名
 	wndClassEx.hInstance = GetModuleHandle(nullptr);   //ウィンドゥハンドル
 	wndClassEx.hCursor = LoadCursor(NULL, IDC_ARROW);  //カーソル指定
-
+	
 	//ウィンドゥクラスをOSに登録
 	RegisterClassEx(&wndClassEx);
 	//ウィンドウサイズ {X座標,Y座標,横幅,縦幅}
@@ -57,7 +57,7 @@ void WinApp::Initialize() {
 
 	//ウィンドゥ作成
 	hwnd = CreateWindow(wndClassEx.lpszClassName,   //クラス名
-		L"DirectXGame IWASI Engine",				//タイトルバーの文字
+		L"Iwasiman",				//タイトルバーの文字
 		//WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE,	//最大化だけ封印
 		WS_OVERLAPPEDWINDOW,					//標準的なウィンドウスタイル WS_OVERLAPPED | WS_SYSMENU=閉じるだけ
 		CW_USEDEFAULT,							//表示X座標(OSに任せる)
