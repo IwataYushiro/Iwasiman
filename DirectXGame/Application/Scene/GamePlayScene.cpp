@@ -162,6 +162,7 @@ void GamePlayScene::UpdateIsPlayGame()
 		//‚©‚ß‚¨‚×‚ç
 		if (player->IsDead())
 		{
+			easeFadeInOut_.SetEasing(1.0f, 0.1f, 5.0f);
 			isGameOver_ = true;
 			isGamePlay_ = false;
 		}

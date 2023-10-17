@@ -764,7 +764,19 @@ float Easing::bounceCalculation(float x)
 
 void Easing::SetEasing(float s, float e, float t)
 {
+
 	this->start = s;
 	this->end = e;
 	this->maxtime = t;
+
+	startCount = chrono::steady_clock::now();	//開始時間
+	nowCount = chrono::steady_clock::now();		//現在時間
+	//イージングプロパティ
+	num_X = 0.0f;
+	timeNow = 0.0f;					//時間
+	totaltime = t;					//合計時間
+	startpos = start;				//開始位置
+	differencepos = end - start;	//開始位置-終了位置の差
+	isReverse = false;
+
 }

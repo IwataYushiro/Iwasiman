@@ -180,6 +180,8 @@ private:
 	bool isClear_ = false;
 	//ゲームオーバーになったか
 	bool isGameOver_ = false;
+	//スタート時
+	bool isStart_ = false;
 	//フェードアウト(遷移時)
 	bool isFadeOutScene_ = false;
 	//フェードアウト(ポーズ時)
