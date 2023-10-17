@@ -47,6 +47,8 @@ public://メンバ関数
 	void Initialize()override;
 	//更新
 	void Update() override;
+	//状態更新(ゲーム開始時)
+	void UpdateIsStartGame();
 	//状態更新(ゲームプレイ時)
 	void UpdateIsPlayGame();
 	//状態更新(ポーズ画面時)
@@ -160,14 +162,36 @@ private:
 		Easing(1300.0f, 500.0f, 0.9f),			//攻撃
 		Easing(1300.0f, 0.0f, 1.0f),			//遊び方
 	};
+	//入場用の視点カメラワークイージング
+	Easing easeEyeGameStart_[3]
+	{
+		Easing(-110.0f, -10.0f, 3.0f),				//X
+		Easing(101.0f, 1.0f, 3.0f),					//Y
+		Easing(-210.0f, -100.0f, 2.5f),				//Z
+	};
+	//入場用の注視点カメラワークイージング
+	Easing easeTargetGameStart_[3]
+	{
+		Easing(-110.0f, -10.0f, 3.0f),				//X
+		Easing(100.0f, 0.0f, 3.0f),					//Y
+		Easing(-110.0f, 0.0f, 2.5f),				//Z
+	};
+	//入場用のプレイヤーポジションイージング
+	Easing easePlayerPositionGameStart_[3];
+
+	//入場時のイージングスタート地点を決める変数
+	//DirectX::XMFLOAT3 startEaseCameraWorkEye_;			//視点
+	//DirectX::XMFLOAT3 startEaseCameraWorkTarget_;		//注視点
+	DirectX::XMFLOAT3 startEasePlayerPosition_;			//プレイヤーポジション
 
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 0.5f);
+	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
 	//ポーズ用のフェードインアウトイージング
-	Easing easeFadeInOutPause_ = Easing(0.8f, 0.0f, 0.5f);
+	Easing easeFadeInOutPause_ = Easing(0.8f, 0.0f, 1.0f);
+	
 
 	//プレイ中か
-	bool isGamePlay_ = true;
+	bool isGamePlay_ = false;
 	//遊び方説明画面時か
 	bool isHowToPlay_ = false;
 	//遊び方説明からポーズへ戻る時か
@@ -181,7 +205,7 @@ private:
 	//ゲームオーバーになったか
 	bool isGameOver_ = false;
 	//スタート時
-	bool isStart_ = false;
+	bool isStart_ = true;
 	//フェードアウト(遷移時)
 	bool isFadeOutScene_ = false;
 	//フェードアウト(ポーズ時)

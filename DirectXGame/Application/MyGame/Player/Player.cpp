@@ -103,67 +103,68 @@ void Player::Reset() {
 	maxTime = 1.0f;					//‘S‘ÌŠÔ
 
 }
-void Player::Update(bool isBack, bool isAttack) {
+void Player::Update(bool isBack, bool isAttack, bool isStart) {
 
 	pmDash_->SetCamera(camera_);
-
-	if (!isDead_)
+	if (!isStart)
 	{
-		//ˆÚ“®ˆ—
-		if (!isJumpBack_)Move();
-		//UŒ‚ˆ—
-		FallAndJump();
-		if (isBack)JumpBack();
-		if (isAttack)Attack();
-
-		if (life_ <= 0)
+		if (!isDead_)
 		{
-			isDead_ = true;
+			//ˆÚ“®ˆ—
+			if (!isJumpBack_)Move();
+			//UŒ‚ˆ—
+			FallAndJump();
+			if (isBack)JumpBack();
+			if (isAttack)Attack();
+
+			if (life_ <= 0)
+			{
+				isDead_ = true;
+			}
+			if (position_.y <= -60.0f)isDead_ = true;
+
+			if (isHit_)
+			{
+				nowEye_ = camera_->GetEye();
+				nowTarget_ = camera_->GetTarget();
+
+				isShake_ = true;
+				isHit_ = false;
+			}
+			if (isShake_)
+			{
+				XMFLOAT3 Eye = nowEye_ + hitMove_;
+				XMFLOAT3 Target = nowTarget_ + hitMove_;
+				camera_->ShakeEye(Eye, 10, { Eye.x - 2.0f,Eye.y - 2.0f,Eye.z - 2.0f },
+					{ Eye.x + 2.0f,Eye.y + 2.0f,Eye.z + 2.0f });
+
+				camera_->ShakeTarget(Target, 10, { Target.x - 2.0f,Target.y - 2.0f,Target.z - 2.0f },
+					{ Target.x + 2.0f,Target.y + 2.0f,Target.z + 2.0f });
+				camera_->Update();
+				mutekiCount_++;
+			}
+
+			if (mutekiCount_ == MUTEKI_COUNT)
+			{
+				camera_->SetEye(nowEye_ + hitMove_);
+				camera_->SetTarget(nowTarget_ + hitMove_);
+				isShake_ = false;
+				mutekiCount_ = 0;
+				hitMove_ = { 0.0f,0.0f,0.0f };
+			}
+			//ˆÚ“®§ŒÀ
+			Trans();
+
 		}
-		if (position_.y <= -60.0f)isDead_ = true;
-
-		if (isHit_)
-		{
-			nowEye_ = camera_->GetEye();
-			nowTarget_ = camera_->GetTarget();
-
-			isShake_ = true;
-			isHit_ = false;
-		}
-		if (isShake_)
-		{
-			XMFLOAT3 Eye = nowEye_ + hitMove_;
-			XMFLOAT3 Target = nowTarget_ + hitMove_;
-			camera_->ShakeEye(Eye, 10, { Eye.x - 2.0f,Eye.y - 2.0f,Eye.z - 2.0f },
-				{ Eye.x + 2.0f,Eye.y + 2.0f,Eye.z + 2.0f });
-
-			camera_->ShakeTarget(Target, 10, { Target.x - 2.0f,Target.y - 2.0f,Target.z - 2.0f },
-				{ Target.x + 2.0f,Target.y + 2.0f,Target.z + 2.0f });
-			camera_->Update();
-			mutekiCount_++;
-		}
-
-		if (mutekiCount_ == MUTEKI_COUNT)
-		{
-			camera_->SetEye(nowEye_ + hitMove_);
-			camera_->SetTarget(nowTarget_ + hitMove_);
-			isShake_ = false;
-			mutekiCount_ = 0;
-			hitMove_ = { 0.0f,0.0f,0.0f };
-		}
-		//ˆÚ“®§ŒÀ
-		Trans();
-
+		
 	}
-	pmDash_->Update();
-
 	camera_->Update();
 	UpdateWorldMatrix();
-	collider_->Update();
+	pmDash_->Update();
 
+	collider_->Update();
 	//’…’nˆ—
 	Landing(COLLISION_ATTR_LANDSHAPE);
-
 }
 
 void Player::Draw() { Object3d::Draw(); }
@@ -307,10 +308,10 @@ void Player::JumpBack()
 		const float offsetPosY = 1.0f;
 		const float JumpBackPosY = 20.0f;
 		//§Œä“_
-		start = { move.x,jumpBackPos_.y-offsetPosY,-60.0f };
+		start = { move.x,jumpBackPos_.y - offsetPosY,-60.0f };
 		point1 = { move.x,jumpBackPos_.y + JumpBackPosY,-40.0f };
 		point2 = { move.x,jumpBackPos_.y + JumpBackPosY,-20.0f };
-		end = { move.x,jumpBackPos_.y-offsetPosY,0.0f };
+		end = { move.x,jumpBackPos_.y - offsetPosY,0.0f };
 
 		//Œ»İŠÔ‚ğæ“¾‚·‚é
 		nowCount = std::chrono::steady_clock::now();

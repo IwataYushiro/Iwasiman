@@ -46,8 +46,8 @@ public:
 	//リセット処理
 	void Reset();
 	
-	//更新(手前と背面ジャンプの有効化、攻撃処理の有効化)
-	void Update(bool isBack = true, bool isAttack = true);
+	//更新(手前と背面ジャンプの有効化、攻撃処理の有効化、開始時演出だと全操作無効)
+	void Update(bool isBack = true, bool isAttack = true, bool isStart = false);
 	//プレイヤーの移動処理
 	void Move();
 	

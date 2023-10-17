@@ -81,14 +81,16 @@ void GamePlayScene::Initialize()
 	Object3d::SetLightGroup(lightGroup_);
 
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle6.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm_ = ParticleManager::Create();
 	pm_->SetParticleModel(particle1_);
 	pm_->SetCamera(camera_);
 
-	isPause_ = false;
 	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < 6; i++)easeInfoTutorial_[i].Standby(false);
 	easeFadeInOut_.Standby(false);
+	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
+	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
+	for (int i = 0; i < 3; i++)easePlayerPositionGameStart_[i].Standby(false);
 }
 
 void GamePlayScene::Update()
@@ -116,13 +118,14 @@ void GamePlayScene::Update()
 
 		skydome->Update();
 	}
-
-	if (isGamePlay_)		UpdateIsPlayGame();				//ゲームプレイ時
+	if (isStart_)			UpdateIsStartGame();			//ゲーム開始時
+	else if (isGamePlay_)	UpdateIsPlayGame();				//ゲームプレイ時
 	else if (isPause_)		UpdateIsPause();				//ポーズ時
 	else if (isHowToPlay_)	UpdateHowToPlay();				//遊び方説明時
 	else if (isClear_)		UpdateIsStageClear();			//ステージクリア時
 	else if (isGameOver_)	UpdateIsGameOver();				//ゲームオーバー時
 	else					UpdateIsQuitGame();				//終了時
+
 	spritePause_->Update();
 	spritePauseInfo_->Update();
 	spritePauseResume_->Update();
@@ -139,21 +142,74 @@ void GamePlayScene::Update()
 
 }
 
-void GamePlayScene::UpdateIsPlayGame()
+void GamePlayScene::UpdateIsStartGame()
 {
 	//イージング
 	easeFadeInOut_.ease_in_out_quint();
+	easeEyeGameStart_[0].ease_in_out_quint();
+	easeEyeGameStart_[1].ease_in_out_quint();
+	easeEyeGameStart_[2].ease_in_sine();
+	easeTargetGameStart_[0].ease_in_out_quint();
+	easeTargetGameStart_[1].ease_in_out_quint();
+	easeTargetGameStart_[2].ease_in_sine();
+
+	for (int i = 0; i < 3; i++)easePlayerPositionGameStart_[i].ease_in_out_quint();
 	//フェードインアウト
 	spriteFadeInOut_->SetColor({ 1.0f, 1.0f, 1.0f, easeFadeInOut_.num_X });
+
+	//カメラもセット
+	camera_->SetEye({ easeEyeGameStart_[0].num_X, easeEyeGameStart_[1].num_X, easeEyeGameStart_[2].num_X });
+	camera_->SetTarget({ easeTargetGameStart_[0].num_X, easeTargetGameStart_[1].num_X, easeTargetGameStart_[2].num_X });
+
+	for (std::unique_ptr<Player>& player : players_)
+	{
+		pm_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
+			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
+
+		player->SetPosition
+		({
+			easePlayerPositionGameStart_[0].num_X,
+			easePlayerPositionGameStart_[1].num_X,
+			easePlayerPositionGameStart_[2].num_X
+		});
+
+		player->Update(false, false, true);
+
+		if (player->GetPosition().x == easePlayerPositionGameStart_[0].end)
+		{
+			isStart_ = false;
+			isGamePlay_ = true;
+		}
+	}
+
+	//for (std::unique_ptr<BaseEnemy>& enemy : enemys_)enemy->Update();
+	//弾更新
+	//for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
+
+	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
+
+	for (std::unique_ptr<Goal>& goal : goals_)goal->Update();
+	
+	for (std::unique_ptr<Item>& item : items_)item->Update();
+
+	for (Object3d*& object : objects_) object->Update();
+	//カメラ
+	camera_->Update();
+	lightGroup_->Update();
+	pm_->Update();
+}
+
+void GamePlayScene::UpdateIsPlayGame()
+{
 
 	//モデル呼び出し例
 	for (std::unique_ptr<Player>& player : players_)
 	{
 
 		//チュートリアル基本操作
-		if (stageNum_ == SL_StageTutorial_Area1)player->Update(false, false);
+		if (stageNum_ == SL_StageTutorial_Area1)player->Update(false, false, false);
 		//チュートリアル奥側移動→攻撃→応用ステージ
-		else if (stageNum_ == SL_StageTutorial_Area2)player->Update(true, false);
+		else if (stageNum_ == SL_StageTutorial_Area2)player->Update(true, false, false);
 		//基本状態
 		else player->Update();
 
@@ -162,7 +218,7 @@ void GamePlayScene::UpdateIsPlayGame()
 		//かめおべら
 		if (player->IsDead())
 		{
-			easeFadeInOut_.SetEasing(1.0f, 0.1f, 5.0f);
+
 			isGameOver_ = true;
 			isGamePlay_ = false;
 		}
@@ -627,7 +683,8 @@ void GamePlayScene::Draw()
 	else
 	{
 
-		spritePauseInfo_->Draw();
+		if (isGamePlay_)spritePauseInfo_->Draw();
+
 		for (std::unique_ptr<Item>& item : items_)
 		{
 			item->DrawSprite();
@@ -747,13 +804,19 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		{
 			//プレイヤー初期化
 			std::unique_ptr<Player> newplayer;
+			//イージング用のポジション
+			DirectX::XMFLOAT3 endEasePlayerPosition;
+			//開始時ポジションを決めるオフセット
+			DirectX::XMFLOAT3 offsetPlayerPosition = { -100.0f,100.0f,60.0f };
 
+			//生成
 			newplayer = Player::Create(model, modelPlayerBullet_, this);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newplayer->SetPosition(pos);
-
+			endEasePlayerPosition = newplayer->GetPosition();//最終イージングポジションセット
+			startEasePlayerPosition_ = endEasePlayerPosition + offsetPlayerPosition;
 			// 回転角
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
@@ -763,6 +826,10 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newplayer->SetScale(scale);
+			//ここで開始時プレイヤー演出セット
+			easePlayerPositionGameStart_[0].SetEasing(startEasePlayerPosition_.x, endEasePlayerPosition.x, 3.0f);
+			easePlayerPositionGameStart_[1].SetEasing(startEasePlayerPosition_.y, endEasePlayerPosition.y, 3.0f);
+			easePlayerPositionGameStart_[2].SetEasing(startEasePlayerPosition_.z, endEasePlayerPosition.z, 2.5f);
 
 			newplayer->SetCamera(camera_);
 			newplayer->Update();
@@ -798,6 +865,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			newenemy->Update();
 			//リストに登録
 			enemys_.push_back(std::move(newenemy));
+			
 		}
 		//仕掛け
 		else if (objectData.objectType.find("GIMMICK") == 0)
