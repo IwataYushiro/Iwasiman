@@ -24,7 +24,7 @@ CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
 Enemy2::~Enemy2() {
 }
 
-std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene,int level)
+std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene, int level)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy2> ins = std::make_unique<Enemy2>();
@@ -48,7 +48,7 @@ std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Model* bullet, Player* play
 bool Enemy2::Initialize(int level) {
 
 	if (!Object3d::Initialize()) return false;
-	
+
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
@@ -136,35 +136,38 @@ void Enemy2::Parameter() {
 void Enemy2::Reset() { Parameter(); }
 
 //更新
-void Enemy2::Update() {
+void Enemy2::Update(bool isStart) {
+
+	if (!isStart)
+	{
 
 
-	//座標を移動させる
-	switch (phase_) {
-	case Enemy2::Phase::Approach:
+		//座標を移動させる
+		switch (phase_) {
+		case Enemy2::Phase::Approach:
 
-		UpdateApproach();
-		break;
-	case Enemy2::Phase::Leave:
-		UpdateLeave();
-		break;
-	}
+			UpdateApproach();
+			break;
+		case Enemy2::Phase::Leave:
+			UpdateLeave();
+			break;
+		}
 
+		//発射タイマーカウントダウン
+		fireTimer_--;
+		//指定時間に達した
+		if (fireTimer_ <= 0) {
+			//弾発射
+			Fire();
+			//発射タイマー初期化
+			fireTimer_ = MyMath::RandomMTInt(kFireInterval / 2, kFireInterval);
+		}
 
-	//発射タイマーカウントダウン
-	fireTimer_--;
-	//指定時間に達した
-	if (fireTimer_ <= 0) {
-		//弾発射
-		Fire();
-		//発射タイマー初期化
-		fireTimer_ = MyMath::RandomMTInt(kFireInterval / 2, kFireInterval);
-	}
-
-	//死んだら
-	if (life_ <= 0) {
-		isDead_ = true;
-		life_ = 0;
+		//死んだら
+		if (life_ <= 0) {
+			isDead_ = true;
+			life_ = 0;
+		}
 	}
 
 	//行列更新
@@ -326,7 +329,7 @@ void Enemy2::Landing()
 			upPos_ = Object3d::GetPosition();
 			phase_ = Phase::Leave;
 		}
-		
+
 		count_++;
 	}
 	//落下状態
@@ -335,9 +338,9 @@ void Enemy2::Landing()
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
 			sphereCollider->GetRadius() * 2.0f))
 		{
-			onGround_ = true;	
+			onGround_ = true;
 		}
-		
+
 		if (position_.y >= 20.0f)
 		{
 			phase_ = Phase::Approach;
@@ -349,10 +352,10 @@ void Enemy2::Landing()
 
 //描画
 void Enemy2::Draw() {
-	
-		//モデルの描画
-		Object3d::Draw();
-	
+
+	//モデルの描画
+	Object3d::Draw();
+
 
 }
 
@@ -371,7 +374,7 @@ void Enemy2::UpdateApproach() {
 
 	if (position_.y <= -20.0f)
 	{
-		
+
 		phase_ = Phase::Leave;
 	}
 }
@@ -382,7 +385,7 @@ void Enemy2::UpdateLeave() {
 	position_.y += backSpeed_.y;
 	position_.z += backSpeed_.z;
 
-	if (position_.y >=  20.0f) phase_ = Phase::Approach;
+	if (position_.y >= 20.0f) phase_ = Phase::Approach;
 }
 
 //ワールド座標を取得

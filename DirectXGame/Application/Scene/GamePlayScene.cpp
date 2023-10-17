@@ -182,9 +182,9 @@ void GamePlayScene::UpdateIsStartGame()
 		}
 	}
 
-	for (std::unique_ptr<BaseEnemy>& enemy : enemys_)enemy->Update();
+	for (std::unique_ptr<BaseEnemy>& enemy : enemys_)enemy->Update(true);
 	//íeçXêV
-	//for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
+	for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
 
 	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
 

@@ -50,7 +50,7 @@ public:
 	//パラメータ
 	void Parameter();
 	//更新
-	void Update()override;
+	void Update(bool isStart = false)override;
 	//転送　
 	void Trans();
 	//弾発射

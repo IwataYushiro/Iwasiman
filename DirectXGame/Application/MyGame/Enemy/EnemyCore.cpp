@@ -84,24 +84,25 @@ void EnemyCore::Parameter() {
 void EnemyCore::Reset() { Parameter(); }
 
 //更新
-void EnemyCore::Update() {
+void EnemyCore::Update(bool isStart) {
 
+	if (!isStart)
+	{
+		//座標を移動させる
+		switch (phase_) {
+		case EnemyCore::Phase::CoreStage1:
+			UpdateCore();
+			break;
 
-	//座標を移動させる
-	switch (phase_) {
-	case EnemyCore::Phase::CoreStage1:
-		UpdateCore();
-		break;
+		case EnemyCore::Phase::CoreBreak:
+			UpdateBreakCore();
 
-	case EnemyCore::Phase::CoreBreak:
-		UpdateBreakCore();
-
-		break;
-	case EnemyCore::Phase::Leave:
-		UpdateLeave();
-		break;
+			break;
+		case EnemyCore::Phase::Leave:
+			UpdateLeave();
+			break;
+		}
 	}
-
 	//行列更新
 	Trans();
 	camera_->Update();

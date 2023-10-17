@@ -90,27 +90,28 @@ void EnemyBoss::Parameter() {
 void EnemyBoss::Reset() { }
 
 //更新
-void EnemyBoss::Update() {
+void EnemyBoss::Update(bool isStart) {
 
+	if (!isStart)
+	{
+		//座標を移動させる
+		switch (phase_) {
+		case EnemyBoss::Phase::ApproachStage1:
 
-	//座標を移動させる
-	switch (phase_) {
-	case EnemyBoss::Phase::ApproachStage1:
+			UpdateApproach();
+			break;
 
-		UpdateApproach();
-		break;
+		case EnemyBoss::Phase::AttackStage1:
 
-	case EnemyBoss::Phase::AttackStage1:
+			UpdateAttack();
 
-		UpdateAttack();
+			break;
 
-		break;
-
-	case EnemyBoss::Phase::Leave:
-		UpdateLeave();
-		break;
+		case EnemyBoss::Phase::Leave:
+			UpdateLeave();
+			break;
+		}
 	}
-
 	//行列更新
 	Trans();
 	camera_->Update();
