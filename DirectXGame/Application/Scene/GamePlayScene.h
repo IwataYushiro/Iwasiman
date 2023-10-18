@@ -115,6 +115,7 @@ private:
 	Sprite* spriteDone_ = new Sprite();					//決定表示のスプライト
 	Sprite* spriteQuitHowtoPlay_ = new Sprite();		//遊び方説明時ポーズに戻る案内用のスプライト
 	Sprite* spriteReady_ = new Sprite();				//Ready表記文字用のスプライト
+	Sprite* spriteGo_ = new Sprite();					//Go表記文字用のスプライト
 	Sprite* spriteFadeInOut_ = new Sprite();			//フェードインアウトのスプライト
 
 
@@ -138,7 +139,7 @@ private:
 		Easing(1300.0f, 0.0f, 1.4f),	//ジャンプ方法
 		Easing(1300.0f, 500.0f, 1.6f),	//手前、奥側移動方法
 		Easing(1300.0f, 800.0f, 1.8f),	//攻撃方法
-		Easing(1300.0f, 0.0f, 2.0f),	//ゲーム説明文字
+		Easing(1300.0f, 0.0f, 2.0f)		//ゲーム説明文字
 	};
 
 	//ポーズメニュー画面出現イージング
@@ -161,31 +162,40 @@ private:
 		Easing(1300.0f, 300.0f, 0.7f),			//ジャンプ
 		Easing(1300.0f, 400.0f, 0.8f),			//手前、奥側移動
 		Easing(1300.0f, 500.0f, 0.9f),			//攻撃
-		Easing(1300.0f, 0.0f, 1.0f),			//遊び方
+		Easing(1300.0f, 0.0f, 1.0f)				//遊び方
 	};
 	//入場用の視点カメラワークイージング
 	Easing easeEyeGameStart_[3]
 	{
-		Easing(-110.0f, -10.0f, 3.0f),				//X
-		Easing(101.0f, 1.0f, 3.0f),					//Y
-		Easing(-210.0f, -100.0f, 2.5f),				//Z
+		Easing(-110.0f, -10.0f, 4.0f),				//X
+		Easing(101.0f, 1.0f, 4.0f),					//Y
+		Easing(-210.0f, -100.0f, 3.5f)				//Z
 	};
 	//入場用の注視点カメラワークイージング
 	Easing easeTargetGameStart_[3]
 	{
-		Easing(-110.0f, -10.0f, 3.0f),				//X
-		Easing(100.0f, 0.0f, 3.0f),					//Y
-		Easing(-110.0f, 0.0f, 2.5f),				//Z
+		Easing(-110.0f, -10.0f, 4.0f),				//X
+		Easing(100.0f, 0.0f, 4.0f),					//Y
+		Easing(-110.0f, 0.0f, 3.5f)					//Z
 	};
 	//入場用のプレイヤーポジションイージング
 	Easing easePlayerPositionGameStart_[3];
 	//入場用のレディー表記のイージング
 	Easing easeReadyPosition_[2]
 	{
-		Easing(1300.0f, -1000.0f, 2.5f),				//X
-		Easing(300.0f, 300.0f, 2.5f),				//Y
+		Easing(1300.0f, -1000.0f, 3.0f),				//X
+		Easing(300.0f, 300.0f, 3.0f)					//Y
 	};
+	//レディーイージングが終わったかのフラグ
+	bool isEndReady_ = false;
 
+	//入場用のゴー表記のイージング
+	Easing easeGoSizeAndAlpha_[3]
+	{
+		Easing(0.0f, 2000.0f, 1.0f),					//Xサイズ
+		Easing(0.0f, 1000.0f, 1.0f),					//Yサイズ
+		Easing(1.0f,0.0f,0.8f)							//アルファ値
+	};
 
 	//入場時のイージングスタート地点を決める変数
 	//DirectX::XMFLOAT3 startEaseCameraWorkEye_;			//視点
@@ -286,6 +296,8 @@ private:
 private:
 	//ポーズメニューのY値
 	std::array<float, 6> pausePosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f };
+	//ゴー表記の座標値
+	std::array<float, 2> goPosition_ = { 640.0f,360.0f };
 	/*
 	stagenumの値
 	0~10		ステージ1

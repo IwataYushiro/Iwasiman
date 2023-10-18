@@ -93,6 +93,7 @@ void GamePlayScene::Initialize()
 	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
 	for (int i = 0; i < 3; i++)easePlayerPositionGameStart_[i].Standby(false);
 	easeReadyPosition_[0].Standby(false);
+
 }
 
 void GamePlayScene::Update()
@@ -137,6 +138,7 @@ void GamePlayScene::Update()
 	spriteDone_->Update();
 	spriteQuitHowtoPlay_->Update();
 	spriteReady_->Update();
+	spriteGo_->Update();
 	spriteFadeInOut_->Update();
 
 	//チュートリアル関係
@@ -149,7 +151,7 @@ void GamePlayScene::UpdateIsStartGame()
 {
 	//イージング
 	easeFadeInOut_.ease_in_out_quint();
-	easeReadyPosition_[0].ease_in_circ();
+
 	easeEyeGameStart_[0].ease_in_out_quint();
 	easeEyeGameStart_[1].ease_in_out_quint();
 	easeEyeGameStart_[2].ease_in_sine();
@@ -157,9 +159,30 @@ void GamePlayScene::UpdateIsStartGame()
 	easeTargetGameStart_[1].ease_in_out_quint();
 	easeTargetGameStart_[2].ease_in_sine();
 
+
+	if (!isEndReady_)
+	{
+		easeReadyPosition_[0].ease_in_circ();
+		//座標セット
+		spriteReady_->SetPosition({ easeReadyPosition_[0].num_X,easeReadyPosition_[1].start });
+		//移動が終わったら
+		if (spriteReady_->GetPosition().x == easeReadyPosition_[0].end)
+		{
+			for (int i = 0; i < 3; i++)easeGoSizeAndAlpha_[i].Standby(false);
+			isEndReady_ = true;
+		}
+
+	}
+	else
+	{
+		for (int i = 0; i < 3; i++)easeGoSizeAndAlpha_[i].ease_out_cubic();
+		//サイズ、カラーセット
+		spriteGo_->SetSize({ easeGoSizeAndAlpha_[0].num_X,easeGoSizeAndAlpha_[1].num_X });
+		spriteGo_->SetColor({ 0.0f,0.0f, 0.0f,easeGoSizeAndAlpha_[2].num_X });
+	}
+
 	for (int i = 0; i < 3; i++)easePlayerPositionGameStart_[i].ease_in_out_quint();
-	//座標セット
-	spriteReady_->SetPosition({ easeReadyPosition_[0].num_X,easeReadyPosition_[1].start });
+
 	//フェードインアウト
 	spriteFadeInOut_->SetColor({ 1.0f, 1.0f, 1.0f, easeFadeInOut_.num_X });
 
@@ -177,7 +200,7 @@ void GamePlayScene::UpdateIsStartGame()
 			easePlayerPositionGameStart_[0].num_X,
 			easePlayerPositionGameStart_[1].num_X,
 			easePlayerPositionGameStart_[2].num_X
-		});
+			});
 
 		player->Update(false, false, true);
 
@@ -195,7 +218,7 @@ void GamePlayScene::UpdateIsStartGame()
 	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
 
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Update();
-	
+
 	for (std::unique_ptr<Item>& item : items_)item->Update();
 
 	for (Object3d*& object : objects_) object->Update();
@@ -717,13 +740,14 @@ void GamePlayScene::Draw()
 			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
 				spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
 		}
-		
+
 
 		//フェードインアウト
 		spriteFadeInOut_->Draw();
-		
+
 		//レディーゴー
 		spriteReady_->Draw();
+		spriteGo_->Draw();
 	}
 
 
@@ -781,6 +805,7 @@ void GamePlayScene::Finalize()
 	delete spriteDone_;
 	delete spriteQuitHowtoPlay_;
 	delete spriteReady_;
+	delete spriteGo_;
 	delete spriteFadeInOut_;
 
 	delete spriteTutorialInfo1_;
@@ -818,6 +843,8 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMFLOAT3 endEasePlayerPosition;
 			//開始時ポジションを決めるオフセット
 			DirectX::XMFLOAT3 offsetPlayerPosition = { -100.0f,100.0f,60.0f };
+			//イージングの時間
+			const float maxTime = 4.0f;
 
 			//生成
 			newplayer = Player::Create(model, modelPlayerBullet_, this);
@@ -837,9 +864,9 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newplayer->SetScale(scale);
 			//ここで開始時プレイヤー演出セット
-			easePlayerPositionGameStart_[0].SetEasing(startEasePlayerPosition_.x, endEasePlayerPosition.x, 3.0f);
-			easePlayerPositionGameStart_[1].SetEasing(startEasePlayerPosition_.y, endEasePlayerPosition.y, 3.0f);
-			easePlayerPositionGameStart_[2].SetEasing(startEasePlayerPosition_.z, endEasePlayerPosition.z, 2.5f);
+			easePlayerPositionGameStart_[0].SetEasing(startEasePlayerPosition_.x, endEasePlayerPosition.x, maxTime);
+			easePlayerPositionGameStart_[1].SetEasing(startEasePlayerPosition_.y, endEasePlayerPosition.y, maxTime);
+			easePlayerPositionGameStart_[2].SetEasing(startEasePlayerPosition_.z, endEasePlayerPosition.z, maxTime);
 
 			newplayer->SetCamera(camera_);
 			newplayer->Update();
@@ -1231,7 +1258,7 @@ void GamePlayScene::LoadSprite()
 	//ポーズ時
 	spCommon_->LoadTexture(GPSTI_PauseTex, "texture/pause.png");
 	spritePause_->Initialize(spCommon_, GPSTI_PauseTex);
-	spritePause_->SetPosition({ easePauseMenuPosX_[0].start,pausePosY_[0]});
+	spritePause_->SetPosition({ easePauseMenuPosX_[0].start,pausePosY_[0] });
 
 	spCommon_->LoadTexture(GPSTI_PauseResumeTex, "texture/resume.png");
 	spritePauseResume_->Initialize(spCommon_, GPSTI_PauseResumeTex);
@@ -1261,6 +1288,13 @@ void GamePlayScene::LoadSprite()
 	spriteReady_->Initialize(spCommon_, GPSTI_ReadyTex);
 	spriteReady_->SetPosition({ easeReadyPosition_[0].start,easeReadyPosition_[1].start });
 	spriteReady_->SetColor({ 0.0f,0.0f, 0.0f,1.0f });
+
+	spCommon_->LoadTexture(GPSTI_GoTex, "texture/go.png");
+	spriteGo_->Initialize(spCommon_, GPSTI_GoTex);
+	spriteGo_->SetSize({ easeGoSizeAndAlpha_[0].start,easeGoSizeAndAlpha_[1].start });
+	spriteGo_->SetPosition({ goPosition_[0],goPosition_[1] });
+	spriteGo_->SetAnchorPoint({ 0.5f,0.5f });
+	spriteGo_->SetColor({ 0.0f,0.0f, 0.0f,easeGoSizeAndAlpha_[2].start });
 
 	spCommon_->LoadTexture(GPSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, GPSTI_FadeInOutTex);
@@ -1332,6 +1366,7 @@ void GamePlayScene::LoadSprite()
 	spriteDone_->Update();
 	spriteQuitHowtoPlay_->Update();
 	spriteReady_->Update();
+	spriteGo_->Update();
 	spriteFadeInOut_->Update();
 
 	spriteTutorialInfo1_->Update();

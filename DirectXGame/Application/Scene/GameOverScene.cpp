@@ -204,6 +204,12 @@ void GameOverScene::UpdateIsGameOver()
 	{
 		if (menuCount_ == GOSMI_Continue)
 		{
+			for (Object3d*& player : objPlayers_)
+			{
+				easePlayerRotateContinue_[1].SetEasing(player->GetRotation().y,
+					easePlayerRotateContinue_[1].end,
+					easePlayerRotateContinue_[1].maxtime);
+			}
 			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
 			for (int i = 0; i < 3; i++)easeEyeContinue_[i].Standby(false);
 			for (int i = 0; i < 3; i++)easeTargetContinue_[i].Standby(false);
@@ -215,6 +221,12 @@ void GameOverScene::UpdateIsGameOver()
 		}
 		else if (menuCount_ == GOSMI_StageSelect)
 		{
+			for (Object3d*& player : objPlayers_)
+			{
+				easePlayerRotateQuitStageSelect_[1].SetEasing(player->GetRotation().y,
+					easePlayerRotateQuitStageSelect_[1].end,
+					easePlayerRotateQuitStageSelect_[1].maxtime);
+			}
 			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
 			for (int i = 0; i < 3; i++)easeEyeQuitStageSelect_[i].Standby(false);
 			for (int i = 0; i < 3; i++)easeTargetQuitStageSelect_[i].Standby(false);
