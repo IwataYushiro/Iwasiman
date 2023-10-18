@@ -114,6 +114,7 @@ private:
 	Sprite* spritePauseTitle_ = new Sprite();			//ポーズ時にタイトルへ戻るかを書いたスプライト
 	Sprite* spriteDone_ = new Sprite();					//決定表示のスプライト
 	Sprite* spriteQuitHowtoPlay_ = new Sprite();		//遊び方説明時ポーズに戻る案内用のスプライト
+	Sprite* spriteReady_ = new Sprite();				//Ready表記文字用のスプライト
 	Sprite* spriteFadeInOut_ = new Sprite();			//フェードインアウトのスプライト
 
 
@@ -178,6 +179,13 @@ private:
 	};
 	//入場用のプレイヤーポジションイージング
 	Easing easePlayerPositionGameStart_[3];
+	//入場用のレディー表記のイージング
+	Easing easeReadyPosition_[2]
+	{
+		Easing(1300.0f, -1000.0f, 2.5f),				//X
+		Easing(300.0f, 300.0f, 2.5f),				//Y
+	};
+
 
 	//入場時のイージングスタート地点を決める変数
 	//DirectX::XMFLOAT3 startEaseCameraWorkEye_;			//視点
@@ -276,6 +284,8 @@ private:
 	DirectX::XMFLOAT3 infoColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
 
 private:
+	//ポーズメニューのY値
+	std::array<float, 6> pausePosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f };
 	/*
 	stagenumの値
 	0~10		ステージ1

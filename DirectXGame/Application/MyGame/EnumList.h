@@ -27,18 +27,20 @@ enum StageList
 	SL_StageTutorial_StageID = 110,
 };
 
-//ポーズ用テクスチャインデックスとフェードインアウトテクスチャインデックス
-enum GamePlayScenePauseTextureIndex
+//ゲームシーンのテクスチャインデックスとフェードインアウトテクスチャインデックス
+enum GamePlaySceneTextureIndex
 {
-	GPSPTI_PauseTex = 0,
-	GPSPTI_PauseInfoTex = 1,
-	GPSPTI_PauseResumeTex = 2,
-	GPSPTI_PauseHowToPlayTex = 3,
-	GPSPTI_PauseStageSelectTex = 4,
-	GPSPTI_PauseTitleTex = 5,
-	GPSPTI_PauseDoneTex = 6,
-	GPSPTI_QuitHowToPlayTex=7,
-	GPSTI_FadeInOutTex = 8,
+	GPSTI_PauseTex = 0,
+	GPSTI_PauseInfoTex = 1,
+	GPSTI_PauseResumeTex = 2,
+	GPSTI_PauseHowToPlayTex = 3,
+	GPSTI_PauseStageSelectTex = 4,
+	GPSTI_PauseTitleTex = 5,
+	GPSTI_PauseDoneTex = 6,
+	GPSTI_QuitHowToPlayTex = 7,
+	GPSTI_ReadyTex = 8,
+	GPSTI_GoTex = 9,
+	GPSTI_FadeInOutTex,
 
 };
 
@@ -165,3 +167,6 @@ enum GameOverSceneMenuIndex
 	GOSMI_Title = 2,
 };
 
+//その他便利な
+//レベルデータ読み込むのに使う0ナンバーの代わり
+enum LevelDataTrueOrFalse { LDTOF_TRUE = 0 };

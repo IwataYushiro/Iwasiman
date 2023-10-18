@@ -86,11 +86,13 @@ void GamePlayScene::Initialize()
 	pm_->SetParticleModel(particle1_);
 	pm_->SetCamera(camera_);
 
+	//イージングスタンバイ
 	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < 6; i++)easeInfoTutorial_[i].Standby(false);
 	easeFadeInOut_.Standby(false);
 	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
 	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
 	for (int i = 0; i < 3; i++)easePlayerPositionGameStart_[i].Standby(false);
+	easeReadyPosition_[0].Standby(false);
 }
 
 void GamePlayScene::Update()
@@ -134,6 +136,7 @@ void GamePlayScene::Update()
 	spritePauseTitle_->Update();
 	spriteDone_->Update();
 	spriteQuitHowtoPlay_->Update();
+	spriteReady_->Update();
 	spriteFadeInOut_->Update();
 
 	//チュートリアル関係
@@ -146,6 +149,7 @@ void GamePlayScene::UpdateIsStartGame()
 {
 	//イージング
 	easeFadeInOut_.ease_in_out_quint();
+	easeReadyPosition_[0].ease_in_circ();
 	easeEyeGameStart_[0].ease_in_out_quint();
 	easeEyeGameStart_[1].ease_in_out_quint();
 	easeEyeGameStart_[2].ease_in_sine();
@@ -154,6 +158,8 @@ void GamePlayScene::UpdateIsStartGame()
 	easeTargetGameStart_[2].ease_in_sine();
 
 	for (int i = 0; i < 3; i++)easePlayerPositionGameStart_[i].ease_in_out_quint();
+	//座標セット
+	spriteReady_->SetPosition({ easeReadyPosition_[0].num_X,easeReadyPosition_[1].start });
 	//フェードインアウト
 	spriteFadeInOut_->SetColor({ 1.0f, 1.0f, 1.0f, easeFadeInOut_.num_X });
 
@@ -711,10 +717,13 @@ void GamePlayScene::Draw()
 			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
 				spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
 		}
+		
 
 		//フェードインアウト
 		spriteFadeInOut_->Draw();
-
+		
+		//レディーゴー
+		spriteReady_->Draw();
 	}
 
 
@@ -771,6 +780,7 @@ void GamePlayScene::Finalize()
 	delete spritePauseTitle_;
 	delete spriteDone_;
 	delete spriteQuitHowtoPlay_;
+	delete spriteReady_;
 	delete spriteFadeInOut_;
 
 	delete spriteTutorialInfo1_;
@@ -800,7 +810,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			model = it->second;
 		}
 		//プレイヤー
-		if (objectData.objectType.find("PLAYER") == 0)
+		if (objectData.objectType.find("PLAYER") == LDTOF_TRUE)
 		{
 			//プレイヤー初期化
 			std::unique_ptr<Player> newplayer;
@@ -837,7 +847,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			players_.push_back(std::move(newplayer));
 		}
 		//敵
-		else if (objectData.objectType.find("ENEMY") == 0)
+		else if (objectData.objectType.find("ENEMY") == LDTOF_TRUE)
 		{
 			//敵初期化
 			std::unique_ptr<BaseEnemy> newenemy;
@@ -865,10 +875,10 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			newenemy->Update();
 			//リストに登録
 			enemys_.push_back(std::move(newenemy));
-			
+
 		}
 		//仕掛け
-		else if (objectData.objectType.find("GIMMICK") == 0)
+		else if (objectData.objectType.find("GIMMICK") == LDTOF_TRUE)
 		{
 			//敵初期化
 			std::unique_ptr<BaseGimmick> newGimmick;
@@ -897,7 +907,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			gimmicks_.push_back(std::move(newGimmick));
 		}
 		//ゴール
-		else if (objectData.objectType.find("GOAL") == 0)
+		else if (objectData.objectType.find("GOAL") == LDTOF_TRUE)
 		{
 			//ゴール初期化
 			std::unique_ptr<Goal> newgoal;
@@ -923,7 +933,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			goals_.push_back(std::move(newgoal));
 		}
 		//アイテム
-		else if (objectData.objectType.find("ITEM") == 0)
+		else if (objectData.objectType.find("ITEM") == LDTOF_TRUE)
 		{
 			//アイテム初期化
 			std::unique_ptr<Item> newitem;
@@ -955,7 +965,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			items_.push_back(std::move(newitem));
 		}
 		//当たり判定がないオブジェクト
-		else if (objectData.objectType.find("NONE") == 0)
+		else if (objectData.objectType.find("NONE") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			Object3d* newObject = Object3d::Create();
@@ -981,7 +991,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			objects_.push_back(newObject);
 		}
 		//天球
-		else if (objectData.objectType.find("SKYDOME") == 0)
+		else if (objectData.objectType.find("SKYDOME") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			Object3d* newObject = Object3d::Create();
@@ -1215,37 +1225,42 @@ void GamePlayScene::DrawTutorialSprite(Sprite* s1, Sprite* s2, Sprite* s3, Sprit
 void GamePlayScene::LoadSprite()
 {
 	//スプライト
-	spCommon_->LoadTexture(GPSPTI_PauseInfoTex, "texture/pauseinfo.png");
-	spritePauseInfo_->Initialize(spCommon_, GPSPTI_PauseInfoTex);
+	spCommon_->LoadTexture(GPSTI_PauseInfoTex, "texture/pauseinfo.png");
+	spritePauseInfo_->Initialize(spCommon_, GPSTI_PauseInfoTex);
 
 	//ポーズ時
-	spCommon_->LoadTexture(GPSPTI_PauseTex, "texture/pause.png");
-	spritePause_->Initialize(spCommon_, GPSPTI_PauseTex);
-	spritePause_->SetPosition({ easePauseMenuPosX_[0].start,0.0f });
+	spCommon_->LoadTexture(GPSTI_PauseTex, "texture/pause.png");
+	spritePause_->Initialize(spCommon_, GPSTI_PauseTex);
+	spritePause_->SetPosition({ easePauseMenuPosX_[0].start,pausePosY_[0]});
 
-	spCommon_->LoadTexture(GPSPTI_PauseResumeTex, "texture/resume.png");
-	spritePauseResume_->Initialize(spCommon_, GPSPTI_PauseResumeTex);
-	spritePauseResume_->SetPosition({ easePauseMenuPosX_[1].start,120.0f });
+	spCommon_->LoadTexture(GPSTI_PauseResumeTex, "texture/resume.png");
+	spritePauseResume_->Initialize(spCommon_, GPSTI_PauseResumeTex);
+	spritePauseResume_->SetPosition({ easePauseMenuPosX_[1].start,pausePosY_[1] });
 
-	spCommon_->LoadTexture(GPSPTI_PauseHowToPlayTex, "texture/howtoplay2.png");
-	spritePauseHowToPlay_->Initialize(spCommon_, GPSPTI_PauseHowToPlayTex);
-	spritePauseHowToPlay_->SetPosition({ easePauseMenuPosX_[2].start,240.0f });
+	spCommon_->LoadTexture(GPSTI_PauseHowToPlayTex, "texture/howtoplay2.png");
+	spritePauseHowToPlay_->Initialize(spCommon_, GPSTI_PauseHowToPlayTex);
+	spritePauseHowToPlay_->SetPosition({ easePauseMenuPosX_[2].start,pausePosY_[2] });
 
-	spCommon_->LoadTexture(GPSPTI_PauseStageSelectTex, "texture/backstageselect.png");
-	spritePauseStageSelect_->Initialize(spCommon_, GPSPTI_PauseStageSelectTex);
-	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[3].start,360.0f });
+	spCommon_->LoadTexture(GPSTI_PauseStageSelectTex, "texture/backstageselect.png");
+	spritePauseStageSelect_->Initialize(spCommon_, GPSTI_PauseStageSelectTex);
+	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[3].start,pausePosY_[3] });
 
-	spCommon_->LoadTexture(GPSPTI_PauseTitleTex, "texture/backtitle.png");
-	spritePauseTitle_->Initialize(spCommon_, GPSPTI_PauseTitleTex);
-	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[4].start,480.0f });
+	spCommon_->LoadTexture(GPSTI_PauseTitleTex, "texture/backtitle.png");
+	spritePauseTitle_->Initialize(spCommon_, GPSTI_PauseTitleTex);
+	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[4].start,pausePosY_[4] });
 
-	spCommon_->LoadTexture(GPSPTI_PauseDoneTex, "texture/done.png");
-	spriteDone_->Initialize(spCommon_, GPSPTI_PauseDoneTex);
-	spriteDone_->SetPosition({ easePauseMenuPosX_[5].start,600.0f });
+	spCommon_->LoadTexture(GPSTI_PauseDoneTex, "texture/done.png");
+	spriteDone_->Initialize(spCommon_, GPSTI_PauseDoneTex);
+	spriteDone_->SetPosition({ easePauseMenuPosX_[5].start,pausePosY_[5] });
 
-	spCommon_->LoadTexture(GPSPTI_QuitHowToPlayTex, "texture/howtoplayquit.png");
-	spriteQuitHowtoPlay_->Initialize(spCommon_, GPSPTI_QuitHowToPlayTex);
-	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[5].start,600.0f });
+	spCommon_->LoadTexture(GPSTI_QuitHowToPlayTex, "texture/howtoplayquit.png");
+	spriteQuitHowtoPlay_->Initialize(spCommon_, GPSTI_QuitHowToPlayTex);
+	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[5].start,pausePosY_[5] });
+
+	spCommon_->LoadTexture(GPSTI_ReadyTex, "texture/ready2.png");
+	spriteReady_->Initialize(spCommon_, GPSTI_ReadyTex);
+	spriteReady_->SetPosition({ easeReadyPosition_[0].start,easeReadyPosition_[1].start });
+	spriteReady_->SetColor({ 0.0f,0.0f, 0.0f,1.0f });
 
 	spCommon_->LoadTexture(GPSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, GPSTI_FadeInOutTex);
@@ -1316,6 +1331,7 @@ void GamePlayScene::LoadSprite()
 	spritePauseTitle_->Update();
 	spriteDone_->Update();
 	spriteQuitHowtoPlay_->Update();
+	spriteReady_->Update();
 	spriteFadeInOut_->Update();
 
 	spriteTutorialInfo1_->Update();
