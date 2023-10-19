@@ -21,7 +21,7 @@ private://エイリアス
 	using string = std::string;
 
 public://定数
-	static const string baseDirectory;
+	static const string BASE_DIRECTORY;
 
 public://静的メンバ関数
 	/// <summary>
@@ -69,7 +69,7 @@ private:
 	// コピー代入演算子を禁止（シングルトンパターン）
 	void operator=(const FbxLoader& obj) = delete;
 	//デフォルトテクスチャ名
-	static const string defaultTextureFileName;
+	static const string defaultTextureFileName_;
 private:
 	//デバイス
 	ID3D12Device* device_ = nullptr;

@@ -44,15 +44,15 @@ private://静的メンバ変数
 
 private://メンバ変数
 	//ライト光線方向(単位ベクトル)
-	XMVECTOR lightDir = { 1.0f,0.0f,0.0f,0.0f };
+	XMVECTOR lightDir_ = { 1.0f,0.0f,0.0f,0.0f };
 	//ライトカラー
-	XMFLOAT3 lightColor = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 lightColor_ = { 1.0f,1.0f,1.0f };
 	//ダーティフラグ
-	bool dirty = false;
+	bool dirty_ = false;
 	//有効フラグ
 	bool active_ = false;
 	//定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 	
 
 public://メンバ関数
@@ -71,12 +71,12 @@ public://メンバ関数
 	//ライト方向セット
 	void SetLightDir(const XMVECTOR& lightdir);
 	//ライト方向ゲット
-	const XMVECTOR& GetLightDir() { return lightDir; }
+	const XMVECTOR& GetLightDir() { return lightDir_; }
 
 	//ライトカラーのセット
 	void SetLightColor(const XMFLOAT3& lightcolor);
 	//ライトカラーのゲット
-	const XMFLOAT3& GetLightColor() { return lightColor; }
+	const XMFLOAT3& GetLightColor() { return lightColor_; }
 
 	//有効フラグのセット
 	inline void SetActive(bool active) { this->active_ = active; }

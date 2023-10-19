@@ -70,11 +70,11 @@ public://メンバ関数
 
 private://メンバ変数
 
-	ComPtr<IXAudio2> xaudio2;//Xaudio2
+	ComPtr<IXAudio2> xaudio2_;//Xaudio2
 
 public://アクセッサ置き場
 	//xAudio2ゲット
-	IXAudio2* GetXAudio2() { return xaudio2.Get(); }
+	IXAudio2* GetXAudio2() { return xaudio2_.Get(); }
 private:
 	//コンストラクタ（シングルトンパターン）
 	Audio() = default;

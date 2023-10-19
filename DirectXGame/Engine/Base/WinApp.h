@@ -17,8 +17,8 @@ class WinApp final
 {
 public://定数
 	//ウィンドゥサイズ
-	static const int window_width = 1280; //横幅
-	static const int window_height = 720; //縦幅
+	static const int WINDOW_WIDTH = 1280; //横幅
+	static const int WINDOW_HEIGHT = 720; //縦幅
 
 public://メンバ関数
 	
@@ -36,17 +36,17 @@ public://メンバ関数
 
 private://メンバ変数
 	//ウィンドゥハンドル
-	HWND hwnd = nullptr;
+	HWND hwnd_ = nullptr;
 
 	//ウィンドゥクラスの設定
-	WNDCLASSEX wndClassEx{};
+	WNDCLASSEX wndClassEx_{};
 
 
 public://アクセッサ置き場
 	//ウィンドゥハンドルゲット
-	HWND GetHwnd() const { return hwnd; }
+	HWND GetHwnd() const { return hwnd_; }
 	//ウィンドゥハンドルインスタンスゲット
-	HINSTANCE GetHinstance() const { return wndClassEx.hInstance; }
+	HINSTANCE GetHinstance() const { return wndClassEx_.hInstance; }
 	//インスタンス取得（シングルトンパターン）
 	static WinApp* GetInstance();
 

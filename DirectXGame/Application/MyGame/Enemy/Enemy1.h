@@ -89,10 +89,6 @@ private:
 	Phase phase_;
 	//弾発射タイマー
 	int32_t fireTimer_ = 0;
-	//スケール
-	XMFLOAT3 scale_;
-	//ポジション
-	XMFLOAT3 pos_;
 	//アングル
 	XMFLOAT3 angle_;
 	//半径

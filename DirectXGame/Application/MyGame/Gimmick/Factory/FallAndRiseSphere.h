@@ -10,12 +10,12 @@
 
 /*
 
-*	FallSphere.h
+*	FallAndRiseSphere.h
 
 *	落ちる球と昇る球
 
 */
-class FallSphere :public BaseGimmick
+class FallAndRiseSphere :public BaseGimmick
 {
 private:
 	// DirectX::を省略
@@ -27,7 +27,7 @@ private:
 public:
 
 	//生成(使用モデル、プレイヤー、サブ属性)
-	static std::unique_ptr<FallSphere> Create(Model* model = nullptr, Player* player = nullptr, unsigned short subAttribute = 0b1000000000000001);
+	static std::unique_ptr<FallAndRiseSphere> Create(Model* model = nullptr, Player* player = nullptr, unsigned short subAttribute = 0b1000000000000001);
 	//初期化
 	bool Initialize()override;
 	//更新

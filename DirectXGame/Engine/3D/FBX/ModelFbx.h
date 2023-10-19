@@ -105,46 +105,46 @@ private://メンバ変数
 	// デバイス
 	static ID3D12Device* device_;
 	//モデル名
-	string name;
+	string name_;
 	//ノード配列
-	vector<Node> nodes;
+	vector<Node> nodes_;
 	//メッシュを持つノード
-	Node* meshNode = nullptr;
+	Node* meshNode_ = nullptr;
 	//ボーン配列
-	std::vector<Bone> bones;
+	std::vector<Bone> bones_;
 	 //FBXシーン
-	FbxScene* fbxScene = nullptr;
+	FbxScene* fbxScene_ = nullptr;
 	//頂点データ配列
-	vector<VertexPosNormalUvSkin> vertices;
+	vector<VertexPosNormalUvSkin> vertices_;
 	//頂点インデックス配列
-	vector<unsigned short> indices;
+	vector<unsigned short> indices_;
 	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	// インデックスバッファ
-	ComPtr<ID3D12Resource> indexBuff;
+	ComPtr<ID3D12Resource> indexBuff_;
 	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texbuff;
+	ComPtr<ID3D12Resource> texbuff_;
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
+	D3D12_VERTEX_BUFFER_VIEW vbView_;
 	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView;
+	D3D12_INDEX_BUFFER_VIEW ibView_;
 	// SRV用のデスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+	ComPtr<ID3D12DescriptorHeap> descHeapSRV_;
 	
 	//アンビエント係数
-	XMFLOAT3 ambient = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 ambient_ = { 1.0f,1.0f,1.0f };
 	//ディフューズ係数
-	XMFLOAT3 diffuse = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 diffuse_ = { 1.0f,1.0f,1.0f };
 	//テクスチャメタデータ
-	TexMetadata metadata = {};
+	TexMetadata metadata_ = {};
 	//スクラッチイメージ
-	ScratchImage scratchImg = {};
+	ScratchImage scratchImg_ = {};
 
 public://アクセッサ置き場
 	//モデル変形行列
-	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	const XMMATRIX& GetModelTransform() { return meshNode_->globalTransform; }
 	//全ボーン
-	std::vector<Bone>& GetBones() { return bones; }
+	std::vector<Bone>& GetBones() { return bones_; }
 	//FBXシーン
-	FbxScene* GetFbxScene() { return fbxScene; }
+	FbxScene* GetFbxScene() { return fbxScene_; }
 };

@@ -51,9 +51,9 @@ public://構造体類
 	};
 protected://構造体類に関係あるメンバ変数
 	//定数バッファのGPUリソースのポインタ
-	ComPtr<ID3D12Resource> constBuffMaterial = nullptr;
+	ComPtr<ID3D12Resource> constBuffMaterial_ = nullptr;
 	//マッピング用のポインタ
-	ConstBufferDataMaterial* constMapMaterial = nullptr;
+	ConstBufferDataMaterial* constMapMaterial_ = nullptr;
 
 	//アンカーポイント
 	XMFLOAT2 anchorPoint_ = { 0.0f,0.0f };
@@ -83,18 +83,18 @@ protected://構造体類に関係あるメンバ変数
 	XMFLOAT2 textureSize_ = { 100.0f,100.0f };
 
 	//射影行列
-	XMMATRIX matProjection;
+	XMMATRIX matProjection_;
 
 	//ワールド変換行列
-	XMMATRIX matRot;
-	XMMATRIX matTrans;
-	XMMATRIX matWorld = DirectX::XMMatrixIdentity();
+	XMMATRIX matRot_;
+	XMMATRIX matTrans_;
+	XMMATRIX matWorld_ = DirectX::XMMatrixIdentity();
 
 
 	//定数バッファのGPUリソースのポインタ
-	ComPtr<ID3D12Resource> constBuffTransform = nullptr;
+	ComPtr<ID3D12Resource> constBuffTransform_ = nullptr;
 	//マッピング用のポインタ
-	ConstBufferDataTransform* constMapTransform = nullptr;
+	ConstBufferDataTransform* constMapTransform_ = nullptr;
 
 public://メンバ関数
 
@@ -114,7 +114,7 @@ public://メンバ関数
 //private://メンバ変数
 protected:
 	//頂点データ
-	Vertex vertices[verticesCount] = {
+	Vertex vertices_[verticesCount] = {
 		{{  0.0f,size_.y,0.0f},{0.0f,1.0f}},	//左下
 		{{  0.0f,  0.0f,0.0f},{0.0f,0.0f}},		//左上
 		{{size_.x,size_.y,0.0f},{1.0f,1.0f}},	//右下
@@ -122,19 +122,19 @@ protected:
 	};
 
 	//GPU上のバッファに対応した仮想メモリを取得
-	Vertex* vertMap = nullptr;
+	Vertex* vertMap_ = nullptr;
 	//インプット
 	Input* input_ = nullptr;
 	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
 
 	//頂点バッファのリソース設定
-	D3D12_RESOURCE_DESC resDesc{};
+	D3D12_RESOURCE_DESC resDesc_{};
 
 	//頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	//頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
+	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 
 	//テクスチャ番号
 	uint32_t textureIndex_ = 0;

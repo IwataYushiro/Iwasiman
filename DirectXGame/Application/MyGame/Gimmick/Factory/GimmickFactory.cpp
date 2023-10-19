@@ -1,7 +1,7 @@
 #include "GimmickFactory.h"
 
 #include "Spike.h"
-#include "FallSphere.h"
+#include "FallAndRiseSphere.h"
 
 #include "CollisionAttribute.h"
 
@@ -24,17 +24,17 @@ std::unique_ptr<BaseGimmick> GimmickFactory::CreateGimmick(const std::string& gi
 	//óéÇøÇÈãÖ
 	else if(gimmickName.find("FALLSPHERE") == 0)
 	{
-		return FallSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE);
+		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE);
 	}
 	//óéÇøÇƒñﬂÇ¡ÇƒÇ≠ÇÈãÖ
 	else if (gimmickName.find("FALLSPHERERETURN") == 0)
 	{
-		return FallSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN);
+		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN);
 	}
 	//è∏ÇÈãÖ
 	else if (gimmickName.find("RISESPHERE") == 0)
 	{
-		return FallSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_UPSPHERE);
+		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_UPSPHERE);
 	}
 
 	return nullptr;

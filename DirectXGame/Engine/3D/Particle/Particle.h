@@ -57,7 +57,7 @@ public://サブクラス
 	};
 
 private://定数
-	static const int vertexCount = 1024;		// 頂点数
+	static const int VERTEX_COUNT = 1024;		// 頂点数
 
 public://メンバ関数
 
@@ -100,7 +100,7 @@ private://メンバ変数
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbView_;
 	//頂点データ配列
-	VertexPosScale vertices_[vertexCount];
+	VertexPosScale vertices_[VERTEX_COUNT];
 
 	std::forward_list<OneParticle> particles_;
 

@@ -13,13 +13,13 @@
 */
 
 //静的メンバ変数の実体
-const std::string LevelLoader::defaultBaseDirectory = "Resources/json/levels/";
-const std::string LevelLoader::extension = ".json";
+const std::string LevelLoader::DEFAULT_BASE_DIRECTORY = "Resources/json/levels/";
+const std::string LevelLoader::EXTENSION = ".json";
 
 LevelData* LevelLoader::LoadFile(const std::string& fileName)
 {
 	//連結してフルパスを得る
-	const std::string fullpath = defaultBaseDirectory + fileName + extension;
+	const std::string fullpath = DEFAULT_BASE_DIRECTORY + fileName + EXTENSION;
 
 	// ファイルストリーム
 	std::ifstream file;

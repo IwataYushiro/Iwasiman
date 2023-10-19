@@ -19,7 +19,7 @@ using namespace Microsoft::WRL;
 */
 
 //デフォルトテクスチャ格納ディレクトリ
-std::string SpriteCommon::kDefaultTextureDirectoryPath = "Resources/";
+std::string SpriteCommon::kDefaultTextureDirectoryPath_ = "Resources/";
 
 SpriteCommon* SpriteCommon::GetInstance()
 {
@@ -41,14 +41,14 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 		"main", "vs_5_0",									//エントリーポイント名、シェーダモデル
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	//デバック用設定
 		0,
-		&vsBlob, &errorBlob);
+		&vsBlob_, &errorBlob_);
 	//エラーだと
 	if (FAILED(result))
 	{
 		//errorBlobからエラー内容をstring型にコピー
 		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-		std::copy_n((char*)errorBlob->GetBufferPointer(), errorBlob->GetBufferSize(), error.begin());
+		error.resize(errorBlob_->GetBufferSize());
+		std::copy_n((char*)errorBlob_->GetBufferPointer(), errorBlob_->GetBufferSize(), error.begin());
 		error += "\n";
 		//エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(error.c_str());
@@ -63,15 +63,15 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 		"main", "ps_5_0",									//エントリーポイント名、シェーダモデル
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,	//デバック用設定
 		0,
-		&psBlob, &errorBlob);
+		&psBlob_, &errorBlob_);
 
 	//エラーだと
 	if (FAILED(result))
 	{
 		//errorBlobからエラー内容をstring型にコピー
 		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-		std::copy_n((char*)errorBlob->GetBufferPointer(), errorBlob->GetBufferSize(), error.begin());
+		error.resize(errorBlob_->GetBufferSize());
+		std::copy_n((char*)errorBlob_->GetBufferPointer(), errorBlob_->GetBufferSize(), error.begin());
 		error += "\n";
 		//エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(error.c_str());
@@ -97,10 +97,10 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 
 	//シェーダ設定
-	pipelineDesc.VS.pShaderBytecode = vsBlob->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = vsBlob->GetBufferSize();
-	pipelineDesc.PS.pShaderBytecode = psBlob->GetBufferPointer();
-	pipelineDesc.PS.BytecodeLength = psBlob->GetBufferSize();
+	pipelineDesc.VS.pShaderBytecode = vsBlob_->GetBufferPointer();
+	pipelineDesc.VS.BytecodeLength = vsBlob_->GetBufferSize();
+	pipelineDesc.PS.pShaderBytecode = psBlob_->GetBufferPointer();
+	pipelineDesc.PS.BytecodeLength = psBlob_->GetBufferSize();
 
 	//サンプルマスク
 	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;	//標準設定
@@ -199,27 +199,27 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	rootSignatureDesc.NumStaticSamplers = 1;
 
 	// ルートシグネチャのシリアライズ
-	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob_, &errorBlob_);
 	assert(SUCCEEDED(result));
 	result = dxCommon_->GetDevice()->CreateRootSignature(
-		0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+		0, rootSigBlob_->GetBufferPointer(), rootSigBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
 	assert(SUCCEEDED(result));
 
 	//パイプラインにルートシグネチャをセット
-	pipelineDesc.pRootSignature = rootSignature.Get();
+	pipelineDesc.pRootSignature = rootSignature_.Get();
 
 	//パイプラインステート生成
-	result = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
+	result = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState_));
 	assert(SUCCEEDED(result));
 
 	//デスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	descHeapDesc.NumDescriptors = kMaxSRVCount;
+	descHeapDesc.NumDescriptors = kMaxSRVCount_;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダーから見えるように
 
 	//設定をもとにSRV用デスクリプタヒープを生成
-	result = dxCommon_->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&srvHeap));
+	result = dxCommon_->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&srvHeap_));
 	assert(SUCCEEDED(result));
 
 }
@@ -230,7 +230,7 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 	HRESULT result;
 
 	//ディレクトリパスとファイル名を連結してフルパスを得る
-	std::string fullPath = kDefaultTextureDirectoryPath + fileName;
+	std::string fullPath = kDefaultTextureDirectoryPath_ + fileName;
 
 	//ワイド文字列に変換した際の文字列バッファサイズを計算
 	int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
@@ -286,14 +286,14 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 		&textureResourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&texBuffs[index]));
+		IID_PPV_ARGS(&texBuffs_[index]));
 	assert(SUCCEEDED(result));
 	for (size_t i = 0; i < metadata.mipLevels; i++)
 	{
 		//ミップマップレベルを指定してイメージを取得
 		const Image* img = scratchImg.GetImage(i, 0, 0);
 		//テクスチャバッファにデータ転送
-		result = texBuffs[index]->WriteToSubresource(
+		result = texBuffs_[index]->WriteToSubresource(
 			(UINT)i,
 			nullptr,							//全領域へコピー
 			img->pixels,						//元データアドレス
@@ -305,10 +305,10 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 
 	
 	//SRVヒープのハンドルを取得
-	incrementSize = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart();
+	incrementSize_ = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	srvHandle_ = srvHeap_->GetCPUDescriptorHandleForHeapStart();
 
-	srvHandle.ptr += index * incrementSize;
+	srvHandle_.ptr += index * incrementSize_;
 	
 	//シェーダーリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};				//設定構造体
@@ -320,19 +320,19 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 
 	//ハンドルの指す位置にシェーダーリソースビュー作成
 	 dxCommon_->GetDevice()->
-		CreateShaderResourceView(texBuffs[index].Get(), &srvDesc, srvHandle);
+		CreateShaderResourceView(texBuffs_[index].Get(), &srvDesc, srvHandle_);
 
 }
 
 void SpriteCommon::PreDraw()
 {
 //パイプラインステートとルートシグネチャの設定
-	dxCommon_->GetCommandList()->SetPipelineState(pipelineState.Get());
-	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+	dxCommon_->GetCommandList()->SetPipelineState(pipelineState_.Get());
+	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
 	//プリミティブ形状の設定コマンド
 	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	//デスクリプタヒープの配列をセットするコマンド
-	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap.Get()};
+	ID3D12DescriptorHeap* ppHeaps[] = { srvHeap_.Get()};
 	dxCommon_->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 }
@@ -340,10 +340,10 @@ void SpriteCommon::PreDraw()
 void SpriteCommon::SetTextureCommands(uint32_t index)
 {
 	//SRVヒープの先頭ハンドルを取得
-	srvGpuHandle = srvHeap->GetGPUDescriptorHandleForHeapStart();
+	srvGpuHandle_ = srvHeap_->GetGPUDescriptorHandleForHeapStart();
 	
-	srvGpuHandle.ptr += index * incrementSize;
+	srvGpuHandle_.ptr += index * incrementSize_;
 
 	// SRVヒープの先頭にあるSRVルートパラメータ1番に設定5
-	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle);
+	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle_);
 }

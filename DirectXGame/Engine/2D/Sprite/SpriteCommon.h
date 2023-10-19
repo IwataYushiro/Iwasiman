@@ -46,36 +46,36 @@ private://メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 
 	//デフォルトテクスチャ格納ディレクトリ
-	static std::string kDefaultTextureDirectoryPath;
+	static std::string kDefaultTextureDirectoryPath_;
 
 	//SRVの最大個数
-	static const size_t kMaxSRVCount = 2056;
+	static const size_t kMaxSRVCount_ = 2056;
 
 	//テクスチャバッファの生成
-	std::array<ComPtr<ID3D12Resource>,kMaxSRVCount> texBuffs;
+	std::array<ComPtr<ID3D12Resource>,kMaxSRVCount_> texBuffs_;
 
 	//サイズの問い合わせ
-	UINT incrementSize;
+	UINT incrementSize_;
 	
 	//設定をもとにSRV用デスクリプタヒープを生成
-	ComPtr<ID3D12DescriptorHeap> srvHeap;
+	ComPtr<ID3D12DescriptorHeap> srvHeap_;
 	//SRVヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle_;
 	//SRVGPUヒープのハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle;
+	D3D12_GPU_DESCRIPTOR_HANDLE srvGpuHandle_;
 
 
 	//シェーダオブジェクト
-	ComPtr<ID3DBlob> vsBlob = nullptr;		//頂点シェーダーオブジェクト
-	ComPtr<ID3DBlob> psBlob = nullptr;		//ピクセルシェーダーオブジェクト
-	ComPtr<ID3DBlob> errorBlob = nullptr;	//エラーオブジェクト
+	ComPtr<ID3DBlob> vsBlob_ = nullptr;		//頂点シェーダーオブジェクト
+	ComPtr<ID3DBlob> psBlob_ = nullptr;		//ピクセルシェーダーオブジェクト
+	ComPtr<ID3DBlob> errorBlob_ = nullptr;	//エラーオブジェクト
 
 	//パイプラインステートの生成
-	ComPtr<ID3D12PipelineState> pipelineState;
+	ComPtr<ID3D12PipelineState> pipelineState_;
 	//ルートシグネチャ
-	ComPtr<ID3D12RootSignature> rootSignature;
+	ComPtr<ID3D12RootSignature> rootSignature_;
 	// ルートシグネチャのシリアライズ
-	ComPtr<ID3DBlob> rootSigBlob = nullptr;
+	ComPtr<ID3DBlob> rootSigBlob_ = nullptr;
 
 public://アクセッサ
 
@@ -83,15 +83,15 @@ public://アクセッサ
 	DirectXCommon* GetDxCommon() { return dxCommon_; }
 	
 	//SRVヒープゲット
-	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVHandle() { return srvHandle; }
+	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVHandle() { return srvHandle_; }
 	//SRVGPUヒープゲット
-	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandle() { return srvGpuHandle; }
+	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandle() { return srvGpuHandle_; }
 	//テクスチャバッファゲット
-	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return texBuffs[index].Get(); }
+	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return texBuffs_[index].Get(); }
 	//パイプラインステートゲット
-	ID3D12PipelineState* GetPipelineState() { return pipelineState.Get(); }
+	ID3D12PipelineState* GetPipelineState() { return pipelineState_.Get(); }
 	//ルートシグネチャゲット
-	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }
+	ID3D12RootSignature* GetRootSignature() { return rootSignature_.Get(); }
 private:
 	//コンストラクタ（シングルトンパターン）
 	SpriteCommon() = default;

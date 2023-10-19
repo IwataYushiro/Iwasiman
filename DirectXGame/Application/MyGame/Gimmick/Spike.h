@@ -46,11 +46,6 @@ public:
 private:
 	//コリジョンマネージャー
 	static CollisionManager* colManager_;
-	//ポジション
-	XMFLOAT3 pos_;
-	//スケール
-	XMFLOAT3 scale_;
-
 	//半径
 	float radius_ = 5.0f;
 

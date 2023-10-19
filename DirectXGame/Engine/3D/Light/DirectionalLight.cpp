@@ -58,7 +58,7 @@ void DirectionalLight::Initialize()
 		&cbResourseDesc, //リソース設定
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
 
 	//定数バッファへデータ転送
@@ -68,17 +68,17 @@ void DirectionalLight::Initialize()
 void DirectionalLight::Update()
 {
 	//値の更新があった時だけ定数バッファに転送する
-	if (dirty)
+	if (dirty_)
 	{
 		TransferConstBuffer();
-		dirty = false;
+		dirty_ = false;
 	}
 }
 
 void DirectionalLight::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex)
 {
 	//定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(rootParameterIndex, constBuff->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(rootParameterIndex, constBuff_->GetGPUVirtualAddress());
 }
 
 void DirectionalLight::TransferConstBuffer()
@@ -86,12 +86,12 @@ void DirectionalLight::TransferConstBuffer()
 	HRESULT result;
 	//定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	result = constBuff_->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
-		constMap->lightV = -lightDir;
-		constMap->lightColor = lightColor;
-		constBuff->Unmap(0, nullptr);
+		constMap->lightV = -lightDir_;
+		constMap->lightColor = lightColor_;
+		constBuff_->Unmap(0, nullptr);
 	}
 
 }
@@ -99,13 +99,13 @@ void DirectionalLight::TransferConstBuffer()
 void DirectionalLight::SetLightDir(const XMVECTOR& lightdir)
 {
 	//正規化してセット
-	this->lightDir = XMVector3Normalize(lightdir);
-	dirty = true;
+	this->lightDir_ = XMVector3Normalize(lightdir);
+	dirty_ = true;
 }
 
 void DirectionalLight::SetLightColor(const XMFLOAT3& lightcolor)
 {
 	//正規化してセット
-	this->lightColor = lightcolor;
-	dirty = true;
+	this->lightColor_ = lightcolor;
+	dirty_ = true;
 }

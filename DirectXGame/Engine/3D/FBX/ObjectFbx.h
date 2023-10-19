@@ -98,20 +98,20 @@ protected://メンバ変数
 	// モデル
 	ModelFbx* modelF_ = nullptr;
 	//定数バッファ
-	ComPtr<ID3D12Resource> constBufferTransform;
+	ComPtr<ID3D12Resource> constBufferTransform_;
 	//スキン
-	ComPtr<ID3D12Resource> constBufferSkin;
+	ComPtr<ID3D12Resource> constBufferSkin_;
 
 	//1フレームの時間
-	FbxTime frameTime;
+	FbxTime frameTime_;
 	// アニメーション開始時間
-	FbxTime startTime;
+	FbxTime startTime_;
 	// アニメーション終了時間
-	FbxTime endTime;
+	FbxTime endTime_;
 	//アニメーション現在時間
-	FbxTime currentTime;
+	FbxTime currentTime_;
 	//アニメーション再生中フラグ
-	bool isPlayAnimation = false;
+	bool isPlayAnimation_ = false;
 
 	//カメラ
 	Camera* camera_ = nullptr;

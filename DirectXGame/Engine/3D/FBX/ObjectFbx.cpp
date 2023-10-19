@@ -256,7 +256,7 @@ bool ObjectFbx::Initialize()
 		&bufferTransform,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBufferTransform));
+		IID_PPV_ARGS(&constBufferTransform_));
 
 	CD3DX12_RESOURCE_DESC bufferDataSkin = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
 	//スキニング
@@ -266,17 +266,17 @@ bool ObjectFbx::Initialize()
 		&bufferDataSkin,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBufferSkin));
+		IID_PPV_ARGS(&constBufferSkin_));
 
-	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
+	frameTime_.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 	//定数バッファへデータを転送
 	ConstBufferDataSkin* constMapSkin = nullptr;
-	result = constBufferSkin->Map(0, nullptr, (void**)&constMapSkin);
+	result = constBufferSkin_->Map(0, nullptr, (void**)&constMapSkin);
 	for (int i = 0; i < MAX_BONES; i++)
 	{
 		constMapSkin->bones[i] = XMMatrixIdentity();
 	}
-	constBufferSkin->Unmap(0, nullptr);
+	constBufferSkin_->Unmap(0, nullptr);
 
 	return true;
 }
@@ -309,31 +309,31 @@ void ObjectFbx::Update()
 
 	//定数バッファへのデータ転送
 	ConstBufferDataTransform* constMapTransform = nullptr;
-	result = constBufferTransform->Map(0, nullptr, (void**)&constMapTransform);
+	result = constBufferTransform_->Map(0, nullptr, (void**)&constMapTransform);
 	if (SUCCEEDED(result))
 	{
 		constMapTransform->viewProj = matViewProjection;
 		constMapTransform->world = modelTransform * matWorld_;
 		constMapTransform->cameraPos = cameraPos;
-		constBufferTransform->Unmap(0, nullptr);
+		constBufferTransform_->Unmap(0, nullptr);
 	}
 
 	//ボーン配列
 	std::vector<ModelFbx::Bone>& bones = modelF_->GetBones();
 	//アニメーション
-	if (isPlayAnimation)
+	if (isPlayAnimation_)
 	{
 		//1フレーム進める
-		currentTime += frameTime;
+		currentTime_ += frameTime_;
 		//最後まで再生したら先頭に戻す
-		if (currentTime > endTime)
+		if (currentTime_ > endTime_)
 		{
-			currentTime = startTime;
+			currentTime_ = startTime_;
 		}
 	}
 	//定数バッファへのデータ転送
 	ConstBufferDataSkin* constMapSkin = nullptr;
-	result = constBufferSkin->Map(0, nullptr, (void**)&constMapSkin);
+	result = constBufferSkin_->Map(0, nullptr, (void**)&constMapSkin);
 	for (int i = 0; i < bones.size(); i++)
 	{
 	
@@ -341,14 +341,14 @@ void ObjectFbx::Update()
 		XMMATRIX matCurrentPose;
 		//現姿勢行列の取得
 		FbxAMatrix fbxCurrentPose 
-			= bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
+			= bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime_);
 		//XMMATRIXに変換
 		FbxLoader::ConvertMatrixFromFBX(&matCurrentPose, fbxCurrentPose);
 		//合成してスキニング行列に
 		constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPose;
 	
 	}
-	constBufferSkin->Unmap(0, nullptr);
+	constBufferSkin_->Unmap(0, nullptr);
 }
 
 void ObjectFbx::Draw()
@@ -361,8 +361,8 @@ void ObjectFbx::Draw()
 		return;
 	}
 	//定数バッファビューセット
-	cmdList_->SetGraphicsRootConstantBufferView(0, constBufferTransform->GetGPUVirtualAddress());
-	cmdList_->SetGraphicsRootConstantBufferView(2, constBufferSkin->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(0, constBufferTransform_->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(2, constBufferSkin_->GetGPUVirtualAddress());
 
 	//モデル描画
 	modelF_->Draw(cmdList_);
@@ -384,11 +384,11 @@ void ObjectFbx::PlayAnimation()
 	FbxTakeInfo* takeinfo = fbxScene->GetTakeInfo(animstackname);
 
 	//開始時間取得
-	startTime = takeinfo->mLocalTimeSpan.GetStart();
+	startTime_ = takeinfo->mLocalTimeSpan.GetStart();
 	//終了時間取得
-	endTime = takeinfo->mLocalTimeSpan.GetStop();
+	endTime_ = takeinfo->mLocalTimeSpan.GetStop();
 	//開始時間に合わせる
-	currentTime = startTime;
+	currentTime_ = startTime_;
 	//アニメーション再生中状態にする
-	isPlayAnimation = true;
+	isPlayAnimation_ = true;
 }

@@ -44,9 +44,9 @@ class LevelLoader
 {
 public:
 	//デフォルトの読み込みディレクトリ
-	static const std::string defaultBaseDirectory;
+	static const std::string DEFAULT_BASE_DIRECTORY;
 	//ファイル拡張子(json)
-	static const std::string extension;
+	static const std::string EXTENSION;
 
 public:
 	// レベルデータファイルの読み込み
