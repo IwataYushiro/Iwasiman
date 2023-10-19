@@ -49,12 +49,11 @@ bool EnemyBoss::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
 
-	startCount = std::chrono::steady_clock::now();	//開始時間
-	nowCount = std::chrono::steady_clock::now();		//現在時間
-	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	maxTime = 5.0f;					//全体時間
-	timeRate;
-
+	startCount_ = std::chrono::steady_clock::now();	//開始時間
+	nowCount_ = std::chrono::steady_clock::now();		//現在時間
+	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
+	maxTime_ = 5.0f;					//全体時間
+	
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
@@ -73,7 +72,7 @@ void EnemyBoss::Parameter() {
 	//初期フェーズ
 
 	phase_ = Phase::ApproachStage1;
-	maxTime = 5.0f;
+	maxTime_ = 5.0f;
 	life_ = 2;
 
 
@@ -90,27 +89,28 @@ void EnemyBoss::Parameter() {
 void EnemyBoss::Reset() { }
 
 //更新
-void EnemyBoss::Update() {
+void EnemyBoss::Update(bool isStart) {
 
+	if (!isStart)
+	{
+		//座標を移動させる
+		switch (phase_) {
+		case EnemyBoss::Phase::ApproachStage1:
 
-	//座標を移動させる
-	switch (phase_) {
-	case EnemyBoss::Phase::ApproachStage1:
+			UpdateApproach();
+			break;
 
-		UpdateApproach();
-		break;
+		case EnemyBoss::Phase::AttackStage1:
 
-	case EnemyBoss::Phase::AttackStage1:
+			UpdateAttack();
 
-		UpdateAttack();
+			break;
 
-		break;
-
-	case EnemyBoss::Phase::Leave:
-		UpdateLeave();
-		break;
+		case EnemyBoss::Phase::Leave:
+			UpdateLeave();
+			break;
+		}
 	}
-
 	//行列更新
 	Trans();
 	camera_->Update();
@@ -225,35 +225,35 @@ void EnemyBoss::UpdateAttack() {
 	//速度
 	float cameraMove = camera_->GetEye().x;
 	//制御点
-	start = { -30.0f + cameraMove,10.0f,100.0f };
-	point1 = { -10.0f + cameraMove,-20.0f,100.0f };
-	point2 = { 10.0f + cameraMove,40.0f,100.0f };
-	end = { 30.0f + cameraMove,10.0f,100.0f };
+	start_ = { -30.0f + cameraMove,10.0f,100.0f };
+	point1_ = { -10.0f + cameraMove,-20.0f,100.0f };
+	point2_ = { 10.0f + cameraMove,40.0f,100.0f };
+	end_ = { 30.0f + cameraMove,10.0f,100.0f };
 	//時間
 
 	//現在時間を取得する
-	nowCount = std::chrono::steady_clock::now();
+	nowCount_ = std::chrono::steady_clock::now();
 	//前回記録からの経過時間を取得する
-	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
+	elapsedCount_ = std::chrono::duration_cast<std::chrono::microseconds>(nowCount_ - startCount_);
 
-	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	timeRate = min(elapsed / maxTime, 1.0f);
+	timeRate_ = min(elapsed / maxTime_, 1.0f);
 
 	if (isReverse_) {
-		position_ = Bezier3(end, point2, point1, start, timeRate);
+		position_ = Bezier3(end_, point2_, point1_, start_, timeRate_);
 	}
 	else {
-		position_ = Bezier3(start, point1, point2, end, timeRate);
+		position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 	}
 	//指定の位置に到達したら反転
 	if (position_.x >= 30.0f + cameraMove) {
 		isReverse_ = true;
-		startCount = std::chrono::steady_clock::now();
+		startCount_ = std::chrono::steady_clock::now();
 	}
 	if (position_.x <= -30.0f + cameraMove) {
 		isReverse_ = false;
-		startCount = std::chrono::steady_clock::now();
+		startCount_ = std::chrono::steady_clock::now();
 	}
 
 	//発射タイマーカウントダウン

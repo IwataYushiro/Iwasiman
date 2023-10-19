@@ -42,22 +42,22 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 void WinApp::Initialize() {
 
 	
-	wndClassEx.cbSize = sizeof(WNDCLASSEX);
-	wndClassEx.lpfnWndProc = (WNDPROC)WindowProc;      //ウィンドゥプロシージャを設定 
-	wndClassEx.lpszClassName = L"DX12Sample";           //ウィンドゥクラス名
-	wndClassEx.hInstance = GetModuleHandle(nullptr);   //ウィンドゥハンドル
-	wndClassEx.hCursor = LoadCursor(NULL, IDC_ARROW);  //カーソル指定
-
+	wndClassEx_.cbSize = sizeof(WNDCLASSEX);
+	wndClassEx_.lpfnWndProc = (WNDPROC)WindowProc;      //ウィンドゥプロシージャを設定 
+	wndClassEx_.lpszClassName = L"DX12Sample";           //ウィンドゥクラス名
+	wndClassEx_.hInstance = GetModuleHandle(nullptr);   //ウィンドゥハンドル
+	wndClassEx_.hCursor = LoadCursor(NULL, IDC_ARROW);  //カーソル指定
+	
 	//ウィンドゥクラスをOSに登録
-	RegisterClassEx(&wndClassEx);
+	RegisterClassEx(&wndClassEx_);
 	//ウィンドウサイズ {X座標,Y座標,横幅,縦幅}
-	RECT wrc = { 0,0,window_width,window_height };
+	RECT wrc = { 0,0,WINDOW_WIDTH,WINDOW_HEIGHT };
 	//自動でサイズを補正
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
 	//ウィンドゥ作成
-	hwnd = CreateWindow(wndClassEx.lpszClassName,   //クラス名
-		L"DirectXGame IWASI Engine",				//タイトルバーの文字
+	hwnd_ = CreateWindow(wndClassEx_.lpszClassName,   //クラス名
+		L"Iwasiman",				//タイトルバーの文字
 		//WS_OVERLAPPEDWINDOW ^ WS_MAXIMIZEBOX ^ WS_THICKFRAME | WS_VISIBLE,	//最大化だけ封印
 		WS_OVERLAPPEDWINDOW,					//標準的なウィンドウスタイル WS_OVERLAPPED | WS_SYSMENU=閉じるだけ
 		CW_USEDEFAULT,							//表示X座標(OSに任せる)
@@ -66,11 +66,11 @@ void WinApp::Initialize() {
 		wrc.bottom - wrc.top,					//ウィンドウ縦幅
 		nullptr,								//親ウィンドウハンドル
 		nullptr,								//メニューハンドル
-		wndClassEx.hInstance,							//呼び出しアプリケーションハンドル
+		wndClassEx_.hInstance,							//呼び出しアプリケーションハンドル
 		nullptr);								//オプション
 
 	//ウィンドゥを表示状態にする
-	ShowWindow(hwnd, SW_SHOW);
+	ShowWindow(hwnd_, SW_SHOW);
 
 	//システムタイマーの分解能を上げる
 	timeBeginPeriod(1);
@@ -99,7 +99,7 @@ bool WinApp::ProcessMessage() {
 void WinApp::Finalize()
 {
 	//ウィンドゥクラスを登録解除
-	UnregisterClass(wndClassEx.lpszClassName, wndClassEx.hInstance);
+	UnregisterClass(wndClassEx_.lpszClassName, wndClassEx_.hInstance);
 }
 
 WinApp* WinApp::GetInstance()

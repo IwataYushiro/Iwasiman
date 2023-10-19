@@ -63,12 +63,11 @@ bool Player::Initialize() {
 	isBack_ = false;
 
 	//奥側ジャンプに使うベジェ曲線用の時間
-	startCount = std::chrono::steady_clock::now();	//開始時間
-	nowCount = std::chrono::steady_clock::now();		//現在時間
-	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	maxTime = 1.0f;					//全体時間
-	timeRate;
-
+	startCount_ = std::chrono::steady_clock::now();	//開始時間
+	nowCount_ = std::chrono::steady_clock::now();		//現在時間
+	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
+	maxTime_ = 1.0f;					//全体時間
+	
 	//パーティクル
 	particleDash_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmDash_ = ParticleManager::Create();
@@ -97,73 +96,74 @@ void Player::Reset() {
 	isBack_ = false;
 
 	//奥側ジャンプに使うベジェ曲線用の時間
-	startCount = std::chrono::steady_clock::now();	//開始時間
-	nowCount = std::chrono::steady_clock::now();		//現在時間
-	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	maxTime = 1.0f;					//全体時間
+	startCount_ = std::chrono::steady_clock::now();	//開始時間
+	nowCount_ = std::chrono::steady_clock::now();		//現在時間
+	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
+	maxTime_ = 1.0f;					//全体時間
 
 }
-void Player::Update(bool isBack, bool isAttack) {
+void Player::Update(bool isBack, bool isAttack, bool isStart) {
 
 	pmDash_->SetCamera(camera_);
-
-	if (!isDead_)
+	if (!isStart)
 	{
-		//移動処理
-		if (!isJumpBack_)Move();
-		//攻撃処理
-		FallAndJump();
-		if (isBack)JumpBack();
-		if (isAttack)Attack();
-
-		if (life_ <= 0)
+		if (!isDead_)
 		{
-			isDead_ = true;
+			//移動処理
+			if (!isJumpBack_)Move();
+			//攻撃処理
+			FallAndJump();
+			if (isBack)JumpBack();
+			if (isAttack)Attack();
+
+			if (life_ <= 0)
+			{
+				isDead_ = true;
+			}
+			if (position_.y <= -60.0f)isDead_ = true;
+
+			if (isHit_)
+			{
+				nowEye_ = camera_->GetEye();
+				nowTarget_ = camera_->GetTarget();
+
+				isShake_ = true;
+				isHit_ = false;
+			}
+			if (isShake_)
+			{
+				XMFLOAT3 Eye = nowEye_ + hitMove_;
+				XMFLOAT3 Target = nowTarget_ + hitMove_;
+				camera_->ShakeEye(Eye, 10, { Eye.x - 2.0f,Eye.y - 2.0f,Eye.z - 2.0f },
+					{ Eye.x + 2.0f,Eye.y + 2.0f,Eye.z + 2.0f });
+
+				camera_->ShakeTarget(Target, 10, { Target.x - 2.0f,Target.y - 2.0f,Target.z - 2.0f },
+					{ Target.x + 2.0f,Target.y + 2.0f,Target.z + 2.0f });
+				camera_->Update();
+				mutekiCount_++;
+			}
+
+			if (mutekiCount_ == MUTEKI_COUNT)
+			{
+				camera_->SetEye(nowEye_ + hitMove_);
+				camera_->SetTarget(nowTarget_ + hitMove_);
+				isShake_ = false;
+				mutekiCount_ = 0;
+				hitMove_ = { 0.0f,0.0f,0.0f };
+			}
+			//移動制限
+			Trans();
+
 		}
-		if (position_.y <= -60.0f)isDead_ = true;
-
-		if (isHit_)
-		{
-			nowEye_ = camera_->GetEye();
-			nowTarget_ = camera_->GetTarget();
-
-			isShake_ = true;
-			isHit_ = false;
-		}
-		if (isShake_)
-		{
-			XMFLOAT3 Eye = nowEye_ + hitMove_;
-			XMFLOAT3 Target = nowTarget_ + hitMove_;
-			camera_->ShakeEye(Eye, 10, { Eye.x - 2.0f,Eye.y - 2.0f,Eye.z - 2.0f },
-				{ Eye.x + 2.0f,Eye.y + 2.0f,Eye.z + 2.0f });
-
-			camera_->ShakeTarget(Target, 10, { Target.x - 2.0f,Target.y - 2.0f,Target.z - 2.0f },
-				{ Target.x + 2.0f,Target.y + 2.0f,Target.z + 2.0f });
-			camera_->Update();
-			mutekiCount_++;
-		}
-
-		if (mutekiCount_ == MUTEKI_COUNT)
-		{
-			camera_->SetEye(nowEye_ + hitMove_);
-			camera_->SetTarget(nowTarget_ + hitMove_);
-			isShake_ = false;
-			mutekiCount_ = 0;
-			hitMove_ = { 0.0f,0.0f,0.0f };
-		}
-		//移動制限
-		Trans();
-
+		
 	}
-	pmDash_->Update();
-
 	camera_->Update();
 	UpdateWorldMatrix();
-	collider_->Update();
+	pmDash_->Update();
 
+	collider_->Update();
 	//着地処理
 	Landing(COLLISION_ATTR_LANDSHAPE);
-
 }
 
 void Player::Draw() { Object3d::Draw(); }
@@ -307,32 +307,32 @@ void Player::JumpBack()
 		const float offsetPosY = 1.0f;
 		const float JumpBackPosY = 20.0f;
 		//制御点
-		start = { move.x,jumpBackPos_.y-offsetPosY,-60.0f };
-		point1 = { move.x,jumpBackPos_.y + JumpBackPosY,-40.0f };
-		point2 = { move.x,jumpBackPos_.y + JumpBackPosY,-20.0f };
-		end = { move.x,jumpBackPos_.y-offsetPosY,0.0f };
+		start_ = { move.x,jumpBackPos_.y - offsetPosY,-60.0f };
+		point1_ = { move.x,jumpBackPos_.y + JumpBackPosY,-40.0f };
+		point2_ = { move.x,jumpBackPos_.y + JumpBackPosY,-20.0f };
+		end_ = { move.x,jumpBackPos_.y - offsetPosY,0.0f };
 
 		//現在時間を取得する
-		nowCount = std::chrono::steady_clock::now();
+		nowCount_ = std::chrono::steady_clock::now();
 		//前回記録からの経過時間を取得する
-		elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
+		elapsedCount_ = std::chrono::duration_cast<std::chrono::microseconds>(nowCount_ - startCount_);
 
-		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-		timeRate = min(elapsed / maxTime, 1.0f);
+		timeRate_ = min(elapsed / maxTime_, 1.0f);
 
-		if (isBack_)move = Bezier3(end, point2, point1, start, timeRate);
+		if (isBack_)move = Bezier3(end_, point2_, point1_, start_, timeRate_);
 
-		else move = Bezier3(start, point1, point2, end, timeRate);
+		else move = Bezier3(start_, point1_, point2_, end_, timeRate_);
 
-		if (move.z >= end.z)
+		if (move.z >= end_.z)
 		{
-			startCount = std::chrono::steady_clock::now();
+			startCount_ = std::chrono::steady_clock::now();
 			isJumpBack_ = false;
 		}
-		else if (move.z <= start.z)
+		else if (move.z <= start_.z)
 		{
-			startCount = std::chrono::steady_clock::now();
+			startCount_ = std::chrono::steady_clock::now();
 			isJumpBack_ = false;
 		}
 	}

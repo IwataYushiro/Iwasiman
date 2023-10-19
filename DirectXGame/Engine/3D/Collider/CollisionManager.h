@@ -22,9 +22,9 @@ public://静的メンバ関数
 
 public://メンバ関数
 	//コライダーの追加
-	inline void AddCollider(BaseCollider* collider) { colliders.push_front(collider); }
+	inline void AddCollider(BaseCollider* collider) { colliders_.push_front(collider); }
 	//コライダーの削除
-	inline void RemoveCollider(BaseCollider* collider) { colliders.remove(collider); }
+	inline void RemoveCollider(BaseCollider* collider) { colliders_.remove(collider); }
 	//全ての衝突チェック
 	void CheckAllCollisions();
 	/// <summary>
@@ -58,7 +58,7 @@ public://メンバ関数
 
 private:
 	//コライダーのリスト
-	std::forward_list<BaseCollider*>colliders;
+	std::forward_list<BaseCollider*>colliders_;
 
 private:
 	//コンストラクタ（シングルトンパターン）

@@ -113,21 +113,21 @@ void Enemy1::Parameter() {
 void Enemy1::Reset() { Parameter(); }
 
 //更新
-void Enemy1::Update() {
+void Enemy1::Update(bool isStart) {
 
+	if (!isStart)
+	{
+		//座標を移動させる
+		switch (phase_) {
+		case Enemy1::Phase::Approach:
 
-	//座標を移動させる
-	switch (phase_) {
-	case Enemy1::Phase::Approach:
-
-		UpdateApproach();
-		break;
-	case Enemy1::Phase::Leave:
-		UpdateLeave();
-		break;
+			UpdateApproach();
+			break;
+		case Enemy1::Phase::Leave:
+			UpdateLeave();
+			break;
+		}
 	}
-
-
 	//行列更新
 	Trans();
 	camera_->Update();

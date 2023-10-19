@@ -48,11 +48,10 @@ bool EnemyCore::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
 
-	startCount = std::chrono::steady_clock::now();	//開始時間
-	nowCount = std::chrono::steady_clock::now();		//現在時間
-	elapsedCount;	//経過時間 経過時間=現在時間-開始時間
-	maxTime = 5.0f;					//全体時間
-	timeRate;
+	startCount_ = std::chrono::steady_clock::now();	//開始時間
+	nowCount_ = std::chrono::steady_clock::now();		//現在時間
+	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
+	maxTime_ = 5.0f;					//全体時間
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
@@ -67,7 +66,7 @@ bool EnemyCore::Initialize() {
 //パラメータ
 void EnemyCore::Parameter() {
 	phase_ = Phase::CoreStage1;
-	maxTime = 2.0f;
+	maxTime_ = 2.0f;
 	life_ = 5;
 
 
@@ -84,24 +83,25 @@ void EnemyCore::Parameter() {
 void EnemyCore::Reset() { Parameter(); }
 
 //更新
-void EnemyCore::Update() {
+void EnemyCore::Update(bool isStart) {
 
+	if (!isStart)
+	{
+		//座標を移動させる
+		switch (phase_) {
+		case EnemyCore::Phase::CoreStage1:
+			UpdateCore();
+			break;
 
-	//座標を移動させる
-	switch (phase_) {
-	case EnemyCore::Phase::CoreStage1:
-		UpdateCore();
-		break;
+		case EnemyCore::Phase::CoreBreak:
+			UpdateBreakCore();
 
-	case EnemyCore::Phase::CoreBreak:
-		UpdateBreakCore();
-
-		break;
-	case EnemyCore::Phase::Leave:
-		UpdateLeave();
-		break;
+			break;
+		case EnemyCore::Phase::Leave:
+			UpdateLeave();
+			break;
+		}
 	}
-
 	//行列更新
 	Trans();
 	camera_->Update();
@@ -191,10 +191,10 @@ void EnemyCore::UpdateCore()
 	float cameraMove = camera_->GetEye().x;
 
 	//制御点
-	start = nowPos_;
-	point1 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
-	point2 = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
-	end = { MyMath::RandomMTFloat(-20.0f,20.0f) + cameraMove,10.0f,100.0f };
+	start_ = nowPos_;
+	point1_ = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
+	point2_ = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
+	end_ = { MyMath::RandomMTFloat(-20.0f,20.0f) + cameraMove,10.0f,100.0f };
 
 	//速度
 	XMFLOAT3 velocity;
@@ -232,7 +232,7 @@ void EnemyCore::UpdateCore()
 		collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
 
 		life_ = 0;
-		startCount = std::chrono::steady_clock::now();	//開始時間
+		startCount_ = std::chrono::steady_clock::now();	//開始時間
 		//敵にぶつける
 
 		phase_ = Phase::CoreBreak;
@@ -245,15 +245,15 @@ void EnemyCore::UpdateBreakCore()
 	//時間
 
 	//現在時間を取得する
-	nowCount = std::chrono::steady_clock::now();
+	nowCount_ = std::chrono::steady_clock::now();
 	//前回記録からの経過時間を取得する
-	elapsedCount = std::chrono::duration_cast<std::chrono::microseconds>(nowCount - startCount);
+	elapsedCount_ = std::chrono::duration_cast<std::chrono::microseconds>(nowCount_ - startCount_);
 
-	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	timeRate = min(elapsed / maxTime, 1.0f);
+	timeRate_ = min(elapsed / maxTime_, 1.0f);
 
-	position_ = Bezier3(start, point1, point2, end, timeRate);
+	position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 
 }
 

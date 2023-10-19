@@ -49,11 +49,13 @@ public://構造体類
     };
 private://静的メンバ変数
     //ベースディレクトリ
-    static const std::string baseDirectory;
+    static const std::string baseDirectory_;
     //頂点シェーダー
-    static const std::string DirectoryVS;
+    static const std::string directoryVS_;
     //ピクセルシェーダー
-    static const std::string DirectoryPS;
+    static const std::string directoryPS_;
+    //画面クリアカラー
+    static const float clearcolor_[4];
 
 public:
     //コンストラクタ
@@ -93,7 +95,7 @@ public:
 
 private:
     //頂点データ
-    Vertex verticesPost[verticesCount] = {
+    Vertex verticesPost_[verticesCount] = {
         {{-1.0f,-1.0f,0.0f},{0.0f,1.0f}},	//左下
         {{-1.0f,+1.0f,0.0f},{0.0f,0.0f}},		//左上
         {{+1.0f,-1.0f,0.0f},{1.0f,1.0f}},	//右下
@@ -101,37 +103,35 @@ private:
     };
 
     //定数バッファのGPUリソースのポインタ
-    ComPtr<ID3D12Resource> constBuffMaterialPost = nullptr;
+    ComPtr<ID3D12Resource> constBuffMaterialPost_ = nullptr;
     //マッピング用のポインタ
-    ConstBufferDataMaterial* constMapMaterialPost = nullptr;
+    ConstBufferDataMaterial* constMapMaterialPost_ = nullptr;
     //定数バッファのGPUリソースのポインタ
-    ComPtr<ID3D12Resource> constBuffTransformPost = nullptr;
+    ComPtr<ID3D12Resource> constBuffTransformPost_ = nullptr;
     //マッピング用のポインタ
-    ConstBufferDataTransform* constMapTransformPost = nullptr;
+    ConstBufferDataTransform* constMapTransformPost_ = nullptr;
 
     //スプライト基盤
     SpriteCommon* spCommon_ = nullptr;
     //頂点バッファ
-    ComPtr<ID3D12Resource> vertBuff;
+    ComPtr<ID3D12Resource> vertBuff_;
     //頂点バッファビュー
-    D3D12_VERTEX_BUFFER_VIEW vbView{};
+    D3D12_VERTEX_BUFFER_VIEW vbView_{};
     //テクスチャバッファ
-    ComPtr<ID3D12Resource> texBuff[2];
+    ComPtr<ID3D12Resource> texBuff_[2];
     //SRV用デスクリプタヒープ
-    ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+    ComPtr<ID3D12DescriptorHeap> descHeapSRV_;
     //深度バッファ
-    ComPtr<ID3D12Resource> depthBuff;
+    ComPtr<ID3D12Resource> depthBuff_;
     //RTV用デスクリプタヒープ
-    ComPtr<ID3D12DescriptorHeap> descHeapRTV;
+    ComPtr<ID3D12DescriptorHeap> descHeapRTV_;
     //DSV用デスクリプタヒープ
-    ComPtr<ID3D12DescriptorHeap> descHeapDSV;
+    ComPtr<ID3D12DescriptorHeap> descHeapDSV_;
     //グラフィックスパイプライン
-    ComPtr<ID3D12PipelineState> pipelineState;
+    ComPtr<ID3D12PipelineState> pipelineState_;
     //ルートシグネチャ
-    ComPtr<ID3D12RootSignature> rootSignature;
-    //画面クリアカラー
-    static const float clearcolor[4];
-
+    ComPtr<ID3D12RootSignature> rootSignature_;
+  
     //色(RGBA)
     XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 public:

@@ -27,29 +27,61 @@ enum StageList
 	SL_StageTutorial_StageID = 110,
 };
 
-//ポーズ用テクスチャインデックス
+//ゲームシーンのテクスチャインデックスとフェードインアウトテクスチャインデックス
+enum GamePlaySceneTextureIndex
+{
+	GPSTI_PauseTex = 0,
+	GPSTI_PauseInfoTex = 1,
+	GPSTI_PauseResumeTex = 2,
+	GPSTI_PauseHowToPlayTex = 3,
+	GPSTI_PauseStageSelectTex = 4,
+	GPSTI_PauseTitleTex = 5,
+	GPSTI_PauseDoneTex = 6,
+	GPSTI_QuitHowToPlayTex = 7,
+	GPSTI_ReadyTex = 8,
+	GPSTI_GoTex = 9,
+	GPSTI_FadeInOutTex,
 
+};
 
 //ポーズ用メニューインデックス
-enum PauseMenuIndex
+enum GamePlayScenePauseMenuIndex
 {
-	PMI_Continue = 0,
-	PMI_StageSelect = 1,
-	PMI_Title = 2,
+	GPSPMI_Resume = 0,
+	GPSPMI_HowToPlay = 1,
+	GPSPMI_StageSelect = 2,
+	GPSPMI_Title = 3,
 };
 
 
 //チュートリアルテクスチャインデックス
-enum TutorialTextureIndex
+enum GamePlaySceneTutorialTextureIndex
 {
-
+	GPSTTI_TutorialInfo1Tex = 1000,
+	GPSTTI_TutorialInfo2Tex = 1001,
+	GPSTTI_TutorialInfo3Tex = 1002,
+	GPSTTI_TutorialInfo4Tex = 1003,
+	GPSTTI_HowToPlayMoveTex = 1004,
+	GPSTTI_HowToPlayDashTex = 1005,
+	GPSTTI_HowToPlayJumpTex = 1006,
+	GPSTTI_HowToPlayBackMoveTex = 1007,
+	GPSTTI_HowToPlayAttackTex = 1008,
+	GPSTTI_TutorialInfoHowToPlayTex = 1009,
 };
 
 //アイテムテクスチャインデックス
-enum ItemTextureIndex
+enum GamePlaySceneItemTextureIndex
 {
-
+	GPSITI_ItemJumpBar = 2000,
 };
+
+//チュートリアル用のイージング状態
+enum GamePlaySceneSettingTutorialEasingNum
+{
+	GPSSTEN_Stundby = 0,
+	GPSSTEN_Active = 1,
+};
+
 
 //タイトルシーン
 
@@ -83,7 +115,7 @@ enum StageSelectSceneTextureIndex
 	SSSTI_Menustage1Tex = 2,
 	SSSTI_Menustage2Tex = 3,
 	SSSTI_MenuDoneTex = 4,
-	SSSTI_BackTitleTex  = 5,
+	SSSTI_BackTitleTex = 5,
 	SSSTI_FadeInOutTex = 6,
 };
 
@@ -124,7 +156,7 @@ enum GameOverSceneTextureIndex
 	GOSTI_StageSelectTex = 2,
 	GOSTI_TitleTex = 3,
 	GOSTI_MenuDoneTex = 4,
-	GOSTI_FadeInOut = 5,
+	GOSTI_FadeInOutTex = 5,
 };
 
 //ゲームオーバー用メニューインデックス
@@ -135,3 +167,6 @@ enum GameOverSceneMenuIndex
 	GOSMI_Title = 2,
 };
 
+//その他便利な
+//レベルデータ読み込むのに使う0ナンバーの代わり
+enum LevelDataTrueOrFalse { LDTOF_TRUE = 0 };

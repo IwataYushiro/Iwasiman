@@ -4,6 +4,7 @@
 #include <cassert>
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
+#include "EnumList.h"
 
 using namespace DirectX;
 
@@ -196,8 +197,8 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned shor
 void Item::LoadSprite()
 {
 	//ƒAƒCƒeƒ€ŠÖŒW
-	spCommon_->LoadTexture(2000, "itemtex/itemjumpbar.png");
-	spriteItemJumpBar_->Initialize(spCommon_, 2000);
+	spCommon_->LoadTexture(GPSITI_ItemJumpBar, "itemtex/itemjumpbar.png");
+	spriteItemJumpBar_->Initialize(spCommon_, GPSITI_ItemJumpBar);
 	spriteItemJumpBar_->SetPosition({ 0.0f,100.0f });
 
 	spriteItemJumpBar_->Update();

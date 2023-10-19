@@ -21,11 +21,11 @@ Input* Input::GetInstance()
 Input::~Input()
 {
 	//入力情報の取得を終了
-	if (keyboard)keyboard->Unacquire();
-	if (mouse)mouse->Unacquire();
-	/*if (isJoyStick)
+	if (keyboard_)keyboard_->Unacquire();
+	if (mouse_)mouse_->Unacquire();
+	/*if (isJoyStick_)
 	{
-		if (joyStick)joyStick->Unacquire();
+		if (joyStick_)joyStick->Unacquire();
 	}*/
 }
 
@@ -38,7 +38,7 @@ void Input::Initialize()
 
 	result = DirectInput8Create(
 		WinApp::GetInstance()->GetHinstance(), DIRECTINPUT_VERSION, IID_IDirectInput8,
-		(void**)&directInput, nullptr);
+		(void**)&directInput_, nullptr);
 	assert(SUCCEEDED(result));
 #pragma endregion
 
@@ -54,21 +54,21 @@ void Input::Initialize()
 void Input::Update()
 {
 	//前回のキー入力を保存
-	memcpy(preKeys, keys, sizeof(keys));
+	memcpy(preKeys_, keys_, sizeof(keys_));
 	//マウス
-	mouseStatePre = mouseState;
+	mouseStatePre_ = mouseState_;
 	//ジョイスティック
-	joyStatePre = joyState;
+	joyStatePre_ = joyState_;
 
 	//キーボード情報の取得開始
-	keyboard->Acquire();
+	keyboard_->Acquire();
 	//全キーの入力状態を取得する
-	keyboard->GetDeviceState(sizeof(keys), keys);
+	keyboard_->GetDeviceState(sizeof(keys_), keys_);
 
 	//マウス情報の取得開始
-	mouse->Acquire();
+	mouse_->Acquire();
 	//全マウスの入力状態を取得する
-	mouse->GetDeviceState(sizeof(mouseState),&mouseState);
+	mouse_->GetDeviceState(sizeof(mouseState_),&mouseState_);
 
 	//マウスのスクリーン座標を取得
 	POINT mouseScreenPos;
@@ -76,8 +76,8 @@ void Input::Update()
 
 	//クライアントエリア座標に変換
 	ScreenToClient(WinApp::GetInstance()->GetHwnd(), &mouseScreenPos);
-	mousePos.x = static_cast<float>(mouseScreenPos.x);
-	mousePos.y = static_cast<float>(mouseScreenPos.y);
+	mousePos_.x = static_cast<float>(mouseScreenPos.x);
+	mousePos_.y = static_cast<float>(mouseScreenPos.y);
 
 	//if (isJoyStick)
 	//{
@@ -96,15 +96,15 @@ void Input::GenerateKeyBoard()
 {
 	HRESULT result;
 	//キーボードデバイスの生成
-	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
+	result = directInput_->CreateDevice(GUID_SysKeyboard, &keyboard_, NULL);
 	assert(SUCCEEDED(result));
 
 	//入力データ形式のセット
-	result = keyboard->SetDataFormat(&c_dfDIKeyboard); //標準形式
+	result = keyboard_->SetDataFormat(&c_dfDIKeyboard); //標準形式
 	assert(SUCCEEDED(result));
 
 	//排他制御レベルのセット
-	result = keyboard->SetCooperativeLevel(
+	result = keyboard_->SetCooperativeLevel(
 		WinApp::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 }
@@ -113,15 +113,15 @@ void Input::GenerateMouse()
 {
 	HRESULT result;
 	//マウスデバイスの生成
-	result = directInput->CreateDevice(GUID_SysMouse, &mouse, NULL);
+	result = directInput_->CreateDevice(GUID_SysMouse, &mouse_, NULL);
 	assert(SUCCEEDED(result));
 
 	//入力データ形式のセット
-	result = mouse->SetDataFormat(&c_dfDIMouse2); //標準形式(拡張8ボタン)
+	result = mouse_->SetDataFormat(&c_dfDIMouse2); //標準形式(拡張8ボタン)
 	assert(SUCCEEDED(result));
 
 	//排他制御レベルのセット
-	result = mouse->SetCooperativeLevel(
+	result = mouse_->SetCooperativeLevel(
 		WinApp::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	assert(SUCCEEDED(result));
 }
@@ -144,7 +144,7 @@ void Input::GenerateMouse()
 bool Input::PushKey(BYTE keyNumber) {
 
 	//指定キーを押していればtrue
-	if (keys[keyNumber])
+	if (keys_[keyNumber])
 	{
 		return true;
 	}
@@ -156,7 +156,7 @@ bool Input::PushKey(BYTE keyNumber) {
 bool Input::TriggerKey(BYTE keyNumber) {
 
 	//指定キーを押していればtrue
-	if (keys[keyNumber] && !preKeys[keyNumber])
+	if (keys_[keyNumber] && !preKeys_[keyNumber])
 	{
 		return true;
 	}
@@ -167,7 +167,7 @@ bool Input::TriggerKey(BYTE keyNumber) {
 bool Input::ReleaseKey(BYTE keyNumber)
 {
 	//1フレーム前の地点で指定キーを押していればtrue
-	if (!keys[keyNumber] && preKeys[keyNumber])
+	if (!keys_[keyNumber] && preKeys_[keyNumber])
 	{
 		return true;
 	}
@@ -178,8 +178,8 @@ bool Input::ReleaseKey(BYTE keyNumber)
 bool Input::PressMouse(int32_t mouseNumber)
 {
 	//指定番号(0～2)が無いときはエラー
-	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState.rgbButtons));
-	if ((mouseState.rgbButtons[mouseNumber]& 0x80))
+	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState_.rgbButtons));
+	if ((mouseState_.rgbButtons[mouseNumber]& 0x80))
 	{
 		return true;
 	}
@@ -189,10 +189,10 @@ bool Input::PressMouse(int32_t mouseNumber)
 bool Input::TriggerMouse(int32_t mouseNumber)
 {
 	//指定番号(0～2)が無いときはエラー
-	assert(0 <= mouseNumber && mouseNumber < _countof(mouseStatePre.rgbButtons));
-	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState.rgbButtons));
-	if (!(mouseStatePre.rgbButtons[mouseNumber] & 0x80)
-		&& (mouseState.rgbButtons[mouseNumber] & 0x80))
+	assert(0 <= mouseNumber && mouseNumber < _countof(mouseStatePre_.rgbButtons));
+	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState_.rgbButtons));
+	if (!(mouseStatePre_.rgbButtons[mouseNumber] & 0x80)
+		&& (mouseState_.rgbButtons[mouseNumber] & 0x80))
 	{
 		return true;
 	}
@@ -201,10 +201,10 @@ bool Input::TriggerMouse(int32_t mouseNumber)
 
 bool Input::ReleaseMouse(int32_t mouseNumber)
 {//指定番号(0～2)が無いときはエラー
-	assert(0 <= mouseNumber && mouseNumber < _countof(mouseStatePre.rgbButtons));
-	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState.rgbButtons));
-	if ((mouseStatePre.rgbButtons[mouseNumber] & 0x80)
-		&& !(mouseState.rgbButtons[mouseNumber] & 0x80))
+	assert(0 <= mouseNumber && mouseNumber < _countof(mouseStatePre_.rgbButtons));
+	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState_.rgbButtons));
+	if ((mouseStatePre_.rgbButtons[mouseNumber] & 0x80)
+		&& !(mouseState_.rgbButtons[mouseNumber] & 0x80))
 	{
 		return true;
 	}

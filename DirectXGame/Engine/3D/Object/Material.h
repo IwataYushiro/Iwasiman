@@ -62,15 +62,15 @@ public://メンバ関数
 	void Update();
 
 private://メンバ変数
-	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
+	ComPtr<ID3D12Resource> constBuff_; // 定数バッファ
 	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texBuff;
+	ComPtr<ID3D12Resource> texBuff_;
 	// シェーダリソースビューのハンドル(CPU)
-	D3D12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	D3D12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV_;
 	// シェーダリソースビューのハンドル(CPU)
-	D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV_;
 	//マッピング
-	ConstBufferDataB1* constMap = nullptr;
+	ConstBufferDataB1* constMap_ = nullptr;
 
 private://カプセル化メンバ関数
 	//コンストラクタ
@@ -79,8 +79,8 @@ private://カプセル化メンバ関数
 		diffuse = { 0.0f,0.0f,0.0f };
 		specular = { 0.0f,0.0f,0.0f };
 		alpha = 1.0f;
-		cpuDescHandleSRV = {};
-		gpuDescHandleSRV = {};
+		cpuDescHandleSRV_ = {};
+		gpuDescHandleSRV_ = {};
 	}
 
 	//初期化
@@ -90,12 +90,12 @@ private://カプセル化メンバ関数
 
 public://アクセッサ置き場
 	// 定数バッファゲット
-	ID3D12Resource* GetConstantBuffer() { return constBuff.Get(); }
+	ID3D12Resource* GetConstantBuffer() { return constBuff_.Get(); }
 	//ハンドル関係
 	//CPUハンドルゲット
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return cpuDescHandleSRV; }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return cpuDescHandleSRV_; }
 	//GPUハンドルゲット
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return gpuDescHandleSRV; }
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return gpuDescHandleSRV_; }
 
 
 };

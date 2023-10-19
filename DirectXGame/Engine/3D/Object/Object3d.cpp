@@ -268,11 +268,11 @@ bool Object3d::Initialize()
 	result = device_->CreateCommittedResource(
 		&heapProps, // アップロード可能
 		D3D12_HEAP_FLAG_NONE, &resourceDescB0, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&constBuffB0));
+		IID_PPV_ARGS(&constBuffB0_));
 	assert(SUCCEEDED(result));
 	
 	// 定数バッファのマッピング
-	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
+	result = constBuffB0_->Map(0, nullptr, (void**)&constMap0_);
 	assert(SUCCEEDED(result));
 
 	//クラス名の文字列を取得
@@ -290,12 +290,12 @@ void Object3d::Update()
 
 	// 定数バッファへデータ転送
 	
-	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
+	result = constBuffB0_->Map(0, nullptr, (void**)&constMap0_);
 	//constMap0->color = color;
-	constMap0->viewproj = matViewProjection;	// 行列の合成
-	constMap0->world = matWorld_;
-	constMap0->cameraPos = cameraPos;
-	constBuffB0->Unmap(0, nullptr);
+	constMap0_->viewproj = matViewProjection;	// 行列の合成
+	constMap0_->world = matWorld_;
+	constMap0_->cameraPos = cameraPos;
+	constBuffB0_->Unmap(0, nullptr);
 
 	//当たり判定更新
 	if (collider_)
@@ -349,7 +349,7 @@ void Object3d::Draw()
 	if (model_ == nullptr) return;
 
 	// 定数バッファビューをセット
-	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffB0_->GetGPUVirtualAddress());
 
 	//cmdList->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	//ライト描画

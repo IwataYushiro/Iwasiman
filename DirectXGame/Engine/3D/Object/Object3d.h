@@ -116,11 +116,11 @@ protected: // メンバ変数
 	//ビルボード
 	bool isBillboard_ = false;
 	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuffB0;
+	ComPtr<ID3D12Resource> constBuffB0_;
 	//定数バッファのマッピング
-	ConstBufferDataB0* constMap0 = nullptr;
+	ConstBufferDataB0* constMap0_ = nullptr;
 	// 色
-	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
+	XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 	// ローカルスケール
 	XMFLOAT3 scale_ = { 1.0f,1.0f,1.0f };
 	// X,Y,Z軸回りのローカル回転角

@@ -47,6 +47,27 @@ public://メンバ関数
 	void Initialize()override;
 	//更新
 	void Update() override;
+	//状態更新(ゲーム開始時)
+	void UpdateIsStartGame();
+	//状態更新(ゲームプレイ時)
+	void UpdateIsPlayGame();
+	//状態更新(ポーズ画面時)
+	void UpdateIsPause();
+	//状態更新(遊び方説明時)
+	void UpdateHowToPlay();
+	//状態更新(ステージクリア時)
+	void UpdateIsStageClear();
+	//状態更新(ゲームオーバー時)
+	void UpdateIsGameOver();
+	//状態更新(ゲーム終了時)
+	void UpdateIsQuitGame();
+	//チュートリアル更新
+	void UpdateTutorial();
+	
+	//フェードアウト(色)
+	void FadeOut(DirectX::XMFLOAT3 rgb);
+	//フェードイン(色)
+	void FadeIn(DirectX::XMFLOAT3 rgb);
 	//描画
 	void Draw() override;
 	//終了
@@ -54,6 +75,9 @@ public://メンバ関数
 
 	//レベルデータ読み込み(ステージファイルパス)
 	void LoadLVData(const std::string& stagePath);
+
+	//色が変わる処理(色)
+	void UpdateChangeColor();
 
 public:
 	//自機弾追加(自機の弾)
@@ -75,7 +99,7 @@ private://静的メンバ変数
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
-	
+
 private:
 
 	//サウンド読み込み
@@ -84,7 +108,17 @@ private:
 	//スプライト	
 	Sprite* spritePause_ = new Sprite();				//ポーズ時のスプライト
 	Sprite* spritePauseInfo_ = new Sprite();			//どのキーでポーズするのかを書いたスプライト
-	
+	Sprite* spritePauseResume_ = new Sprite();			//ポーズ時にゲーム再開するかを書いたスプライト
+	Sprite* spritePauseHowToPlay_ = new Sprite();		//ポーズ時に遊び方を確認するかを書いたスプライト
+	Sprite* spritePauseStageSelect_ = new Sprite();		//ポーズ時にステージセレクトへ戻るかを書いたスプライト
+	Sprite* spritePauseTitle_ = new Sprite();			//ポーズ時にタイトルへ戻るかを書いたスプライト
+	Sprite* spriteDone_ = new Sprite();					//決定表示のスプライト
+	Sprite* spriteQuitHowtoPlay_ = new Sprite();		//遊び方説明時ポーズに戻る案内用のスプライト
+	Sprite* spriteReady_ = new Sprite();				//Ready表記文字用のスプライト
+	Sprite* spriteGo_ = new Sprite();					//Go表記文字用のスプライト
+	Sprite* spriteFadeInOut_ = new Sprite();			//フェードインアウトのスプライト
+
+
 	Sprite* spriteTutorialHTPMove_ = new Sprite();		//チュートリアルの移動方法スプライト
 	Sprite* spriteTutorialHTPDash_ = new Sprite();		//チュートリアルのダッシュ方法スプライト
 	Sprite* spriteTutorialHTPJump_ = new Sprite();		//チュートリアルのジャンプ方法スプライト
@@ -95,6 +129,7 @@ private:
 	Sprite* spriteTutorialInfo2_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル2面)
 	Sprite* spriteTutorialInfo3_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル3面)
 	Sprite* spriteTutorialInfo4_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル4面)
+	Sprite* spriteTutorialInfoHowToPlay_ = new Sprite();//チュートリアル説明文字スプライト(チュートリアル中の遊び方説明について)
 
 	//チュートリアル表示のイージング
 	Easing easeInfoTutorial_[6] =
@@ -104,16 +139,97 @@ private:
 		Easing(1300.0f, 0.0f, 1.4f),	//ジャンプ方法
 		Easing(1300.0f, 500.0f, 1.6f),	//手前、奥側移動方法
 		Easing(1300.0f, 800.0f, 1.8f),	//攻撃方法
-		Easing(1300.0f, 0.0f, 2.0f),	//ゲーム説明文字
+		Easing(1300.0f, 0.0f, 2.0f)		//ゲーム説明文字
 	};
 
+	//ポーズメニュー画面出現イージング
+	Easing easePauseMenuPosX_[7] =
+	{
+		Easing(1300.0f, 100.0f, 0.5f),			//メニュー
+		Easing(1300.0f, 50.0f, 0.6f),			//再開
+		Easing(1300.0f, 100.0f, 0.7f),			//遊び方確認
+		Easing(1300.0f, 150.0f, 0.8f),			//ステージセレクトへ
+		Easing(1300.0f, 200.0f, 0.9f),			//タイトルへ
+		Easing(1300.0f, 0.0f, 1.0f),			//スペースで選択
+		Easing(1300.0f, 800.0f, 0.75f)			//チュートリアル時の遊び方説明について
+	};
+
+	//遊び方説明画面出現イージング
+	Easing easeHowToPlayPosX_[7] =
+	{
+		Easing(1300.0f, 100.0f, 0.5f),			//移動
+		Easing(1300.0f, 200.0f, 0.6f),			//ダッシュ
+		Easing(1300.0f, 300.0f, 0.7f),			//ジャンプ
+		Easing(1300.0f, 400.0f, 0.8f),			//手前、奥側移動
+		Easing(1300.0f, 500.0f, 0.9f),			//攻撃
+		Easing(1300.0f, 0.0f, 1.0f)				//遊び方
+	};
+	//入場用の視点カメラワークイージング
+	Easing easeEyeGameStart_[3]
+	{
+		Easing(-110.0f, -10.0f, 4.0f),				//X
+		Easing(101.0f, 1.0f, 4.0f),					//Y
+		Easing(-210.0f, -100.0f, 3.5f)				//Z
+	};
+	//入場用の注視点カメラワークイージング
+	Easing easeTargetGameStart_[3]
+	{
+		Easing(-110.0f, -10.0f, 4.0f),				//X
+		Easing(100.0f, 0.0f, 4.0f),					//Y
+		Easing(-110.0f, 0.0f, 3.5f)					//Z
+	};
+	//入場用のプレイヤーポジションイージング
+	Easing easePlayerPositionGameStart_[3];
+	//入場用のレディー表記のイージング
+	Easing easeReadyPosition_[2]
+	{
+		Easing(1300.0f, -1000.0f, 3.0f),				//X
+		Easing(300.0f, 300.0f, 3.0f)					//Y
+	};
+	//レディーイージングが終わったかのフラグ
+	bool isEndReady_ = false;
+
+	//入場用のゴー表記のイージング
+	Easing easeGoSizeAndAlpha_[3]
+	{
+		Easing(0.0f, 2000.0f, 1.0f),					//Xサイズ
+		Easing(0.0f, 1000.0f, 1.0f),					//Yサイズ
+		Easing(1.0f,0.0f,0.8f)							//アルファ値
+	};
+
+	//入場時のイージングスタート地点を決める変数
+	//DirectX::XMFLOAT3 startEaseCameraWorkEye_;			//視点
+	//DirectX::XMFLOAT3 startEaseCameraWorkTarget_;		//注視点
+	DirectX::XMFLOAT3 startEasePlayerPosition_;			//プレイヤーポジション
+
+	//フェードインアウト(false フェードイン、true フェードアウト)
+	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
+	//ポーズ用のフェードインアウトイージング
+	Easing easeFadeInOutPause_ = Easing(0.8f, 0.0f, 1.0f);
+	
+
+	//プレイ中か
+	bool isGamePlay_ = false;
+	//遊び方説明画面時か
+	bool isHowToPlay_ = false;
+	//遊び方説明からポーズへ戻る時か
+	bool isBackPause_ = false;
+	//ゲームプレイシーンから離れるか
+	bool isQuit_ = false;
 	//ポーズしたか
 	bool isPause_ = false;
 	//クリアしたか
-	bool isclear_ = false;
+	bool isClear_ = false;
 	//ゲームオーバーになったか
-	bool isGameover_ = false;
-
+	bool isGameOver_ = false;
+	//スタート時
+	bool isStart_ = true;
+	//フェードアウト(遷移時)
+	bool isFadeOutScene_ = false;
+	//フェードアウト(ポーズ時)
+	bool isFadeOutPause_ = false;
+	//フェードイン(ポーズ時)
+	bool isFadeInPause_ = false;
 	//モデル
 	//自機
 	std::list<std::unique_ptr<Player>> players_;		//自機リスト
@@ -161,7 +277,7 @@ private:
 
 	//パーティクル
 	Particle* particle1_ = nullptr;
-	
+
 	//パーティクルマネージャー
 	ParticleManager* pm_ = nullptr;
 
@@ -174,7 +290,14 @@ private:
 	//コリジョンマネージャー
 	CollisionManager* colManager_ = nullptr;
 
+	//チュートリアル表示の色
+	DirectX::XMFLOAT3 infoColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
+
 private:
+	//ポーズメニューのY値
+	std::array<float, 6> pausePosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f };
+	//ゴー表記の座標値
+	std::array<float, 2> goPosition_ = { 640.0f,360.0f };
 	/*
 	stagenumの値
 	0~10		ステージ1
@@ -187,14 +310,17 @@ private:
 	std::list<std::unique_ptr<PlayerBullet>> playerBullets_;
 	//敵弾
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullets_;
-	//ポーズのイージング(左から右へ)
-	Easing easePause_ = Easing(-(float)WinApp::GetInstance()->window_width, 0.0f, 1.0f);
+
+	//メニュー関係
+	//メニュー番号
+	int menuCount_ = 0;
 	//○○した瞬間に○○解除を防ぐ用のフラグ
 	bool isBack_ = false;
 	//色を変えるスピード
 	float speedColor_ = 0.0f;
 	//色反転フラグ
 	bool isColorReverse_ = false;
+
 private:
 	//スプライト読み込み
 	void LoadSprite();
@@ -207,10 +333,10 @@ private:
 	*/
 	void SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
 		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);
-	
+
 	//チュートリアルスプライトの更新
 	void UpdateTutorialSprite();
-	
+
 	//チュートリアル用のスプライト描画(スプライト1～6枚)
 	void DrawTutorialSprite(Sprite* s1, Sprite* s2,
 		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);

@@ -68,11 +68,6 @@ public:
 private:
 	//コリジョンマネージャー
 	static CollisionManager* colManager_;
-	//ポジション
-	XMFLOAT3 pos_;
-	//スケール
-	XMFLOAT3 scale_;
-
 	//取得時
 	bool isGet_ = false;
 	//ジャンプアイテムを取得したか

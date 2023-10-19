@@ -24,13 +24,13 @@ void Audio::Initialize()
 	HRESULT result;
 
 	//XAudioのインスタンスを生成
-	result = XAudio2Create(&xaudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
+	result = XAudio2Create(&xaudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
 
 	//マスターボイスを生成
 
 	IXAudio2MasteringVoice* masterVoice;     
 
-	result = xaudio2->CreateMasteringVoice(&masterVoice);
+	result = xaudio2_->CreateMasteringVoice(&masterVoice);
 
 }
 
@@ -144,5 +144,5 @@ void Audio::SoundUnLoad(SoundData* soundData)
 //終了処理(xAudio2の開放→各種音声データを開放するように！)
 void Audio::Finalize()
 {
-	xaudio2.Reset();
+	xaudio2_.Reset();
 }

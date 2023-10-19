@@ -34,9 +34,9 @@ void StageClearScene::Initialize()
 	audio_->Initialize();
 
 	// 視点座標
-	camera_->SetEye({ easeEyeGameStart_[0].start, easeEyeGameStart_[1].start, easeEyeGameStart_[2].start });
+	camera_->SetEye({ easeEyeStageClear_[0].start, easeEyeStageClear_[1].start, easeEyeStageClear_[2].start });
 	// 注視点座標
-	camera_->SetTarget({ easeTargetGameStart_[0].start, easeTargetGameStart_[1].start, easeTargetGameStart_[2].start });
+	camera_->SetTarget({ easeTargetStageClear_[0].start, easeTargetStageClear_[1].start, easeTargetStageClear_[2].start });
 
 	//レベルデータ読み込み
 	if (stageNum_ == SL_Default)LoadLVData("scene/stagecleart");
@@ -74,7 +74,7 @@ void StageClearScene::Initialize()
 	spriteDone_->SetPosition({ easeMenuPosX_[4].start,580.0f });
 
 	spCommon_->LoadTexture(SCSTI_FadeInOutTex, "texture/fade.png");
-	spriteFadeInOut_->Initialize(spCommon_, TSTI_FadeInOutTex);
+	spriteFadeInOut_->Initialize(spCommon_, SCSTI_FadeInOutTex);
 	spriteFadeInOut_->SetColor({ 1.0f,1.0f, 1.0f, easeFadeInOut_.start });
 
 	//パーティクル
@@ -168,8 +168,8 @@ void StageClearScene::UpdateIsNextStage()
 {
 	//イージング
 	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_out_expo();
+	for (int i = 0; i < 3; i++)easeEyeStageClear_[i].ease_out_expo();
+	for (int i = 0; i < 3; i++)easeTargetStageClear_[i].ease_out_expo();
 
 	//座標セット
 	spriteStageClear_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
@@ -179,8 +179,8 @@ void StageClearScene::UpdateIsNextStage()
 	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
 
 	//カメラもセット
-	camera_->SetEye({ easeEyeGameStart_[0].num_X, easeEyeGameStart_[1].num_X, easeEyeGameStart_[2].num_X });
-	camera_->SetTarget({ easeTargetGameStart_[0].num_X, easeTargetGameStart_[1].num_X, easeTargetGameStart_[2].num_X });
+	camera_->SetEye({ easeEyeStageClear_[0].num_X, easeEyeStageClear_[1].num_X, easeEyeStageClear_[2].num_X });
+	camera_->SetTarget({ easeTargetStageClear_[0].num_X, easeTargetStageClear_[1].num_X, easeTargetStageClear_[2].num_X });
 
 	for (Object3d*& goal : objGoals_)
 	{
@@ -211,8 +211,8 @@ void StageClearScene::UpdateIsStageSelect()
 {
 	//イージング
 	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_out_expo();
+	for (int i = 0; i < 3; i++)easeEyeStageClear_[i].ease_out_expo();
+	for (int i = 0; i < 3; i++)easeTargetStageClear_[i].ease_out_expo();
 	for (int i = 0; i < 3; i++)easePlayerMoveStageSelect_[i].ease_in_out_expo();
 	//座標セット
 	spriteStageClear_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
@@ -222,8 +222,8 @@ void StageClearScene::UpdateIsStageSelect()
 	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
 
 	//カメラもセット
-	camera_->SetEye({ easeEyeGameStart_[0].num_X, easeEyeGameStart_[1].num_X, easeEyeGameStart_[2].num_X });
-	camera_->SetTarget({ easeTargetGameStart_[0].num_X, easeTargetGameStart_[1].num_X, easeTargetGameStart_[2].num_X });
+	camera_->SetEye({ easeEyeStageClear_[0].num_X, easeEyeStageClear_[1].num_X, easeEyeStageClear_[2].num_X });
+	camera_->SetTarget({ easeTargetStageClear_[0].num_X, easeTargetStageClear_[1].num_X, easeTargetStageClear_[2].num_X });
 
 	for (Object3d*& player : objPlayers_)
 	{
@@ -327,15 +327,15 @@ void StageClearScene::UpdateIsMenu()
 			if (menuCount_ == SCSMI_Continue)
 			{
 				for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
-				for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
-				for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeEyeStageClear_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeTargetStageClear_[i].Standby(false);
 				isNextStage_ = true;
 			}
 			else if (menuCount_ == SCSMI_StageSelect)
 			{
 				for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
-				for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
-				for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeEyeStageClear_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeTargetStageClear_[i].Standby(false);
 				for (int i = 0; i < 3; i++)easePlayerMoveStageSelect_[i].Standby(false);
 				isStageSelect_ = true;
 			}

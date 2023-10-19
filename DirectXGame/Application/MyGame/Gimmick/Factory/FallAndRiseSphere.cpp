@@ -1,4 +1,4 @@
-#include "FallSphere.h"
+#include "FallAndRiseSphere.h"
 #include "Player.h"
 #include "SphereCollider.h"
 #include <cassert>
@@ -9,19 +9,19 @@ using namespace DirectX;
 
 /*
 
-*	FallSphere.cpp
+*	FallAndRiseSphere.cpp
 
 *	落ちる球と昇る球
 
 */
 
 //静的メンバ変数の実体
-CollisionManager* FallSphere::colManager_ = CollisionManager::GetInstance();
+CollisionManager* FallAndRiseSphere::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<FallSphere> FallSphere::Create(Model* model, Player* player, unsigned short subAttribute)
+std::unique_ptr<FallAndRiseSphere> FallAndRiseSphere::Create(Model* model, Player* player, unsigned short subAttribute)
 {
 	//インスタンス生成
-	std::unique_ptr<FallSphere> ins = std::make_unique<FallSphere>();
+	std::unique_ptr<FallAndRiseSphere> ins = std::make_unique<FallAndRiseSphere>();
 
 	if (ins == nullptr) return nullptr;
 
@@ -40,7 +40,7 @@ std::unique_ptr<FallSphere> FallSphere::Create(Model* model, Player* player, uns
 	return ins;
 }
 
-bool FallSphere::Initialize()
+bool FallAndRiseSphere::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
 
@@ -53,7 +53,7 @@ bool FallSphere::Initialize()
 
 }
 
-void FallSphere::Update()
+void FallAndRiseSphere::Update()
 {
 	
 	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();
@@ -65,7 +65,7 @@ void FallSphere::Update()
 	Object3d::Update();
 }
 
-void FallSphere::UpdateFallSphere()
+void FallAndRiseSphere::UpdateFallSphere()
 {
 	if (isRide_)
 	{
@@ -80,7 +80,7 @@ void FallSphere::UpdateFallSphere()
 	}
 }
 
-void FallSphere::UpdateFallSphereReturn()
+void FallAndRiseSphere::UpdateFallSphereReturn()
 {
 	const float speed = 0.1f;
 	
@@ -105,7 +105,7 @@ void FallSphere::UpdateFallSphereReturn()
 	
 }
 
-void FallSphere::UpdateRiseSphere()
+void FallAndRiseSphere::UpdateRiseSphere()
 {
 	if (isRide_)
 	{
@@ -120,7 +120,7 @@ void FallSphere::UpdateRiseSphere()
 	}
 }
 
-void FallSphere::UpdateRiseSphereReturn()
+void FallAndRiseSphere::UpdateRiseSphereReturn()
 {
 	const float speed = 0.1f;
 
@@ -144,7 +144,7 @@ void FallSphere::UpdateRiseSphereReturn()
 	}
 }
 
-void FallSphere::Trans()
+void FallAndRiseSphere::Trans()
 {
 	XMMATRIX world;
 	//行列更新
@@ -166,7 +166,7 @@ void FallSphere::Trans()
 	Object3d::SetWorld(world);
 }
 
-XMFLOAT3 FallSphere::GetWorldPosition()
+XMFLOAT3 FallAndRiseSphere::GetWorldPosition()
 {
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -179,12 +179,12 @@ XMFLOAT3 FallSphere::GetWorldPosition()
 	return worldPos;
 }
 
-void FallSphere::Draw()
+void FallAndRiseSphere::Draw()
 {
 	Object3d::Draw();
 }
 
-void FallSphere::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void FallAndRiseSphere::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (isRide_)return;
 

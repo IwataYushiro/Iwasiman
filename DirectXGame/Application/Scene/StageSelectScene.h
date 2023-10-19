@@ -85,7 +85,7 @@ private://メンバ変数
 	LevelData* levelData_ = nullptr;
 
 	//オブジェクト
-	Object3d* objStage_ = nullptr;				//ステージオブジェクト配列
+	Object3d* objStage_ = nullptr;				//ステージオブジェクト
 	std::vector<Object3d*> objPlayers_;			//自機オブジェクト配列
 	std::vector<Object3d*> objGoals_;			//ゴールオブジェクト配列
 	std::vector<Object3d*> objGrounds_;			//床オブジェクト配列

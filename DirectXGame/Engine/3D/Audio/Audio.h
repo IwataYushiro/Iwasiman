@@ -70,18 +70,19 @@ public://メンバ関数
 
 private://メンバ変数
 
-	ComPtr<IXAudio2> xaudio2;//Xaudio2
+	ComPtr<IXAudio2> xaudio2_;//Xaudio2
 
 public://アクセッサ置き場
 	//xAudio2ゲット
-	IXAudio2* GetXAudio2() { return xaudio2.Get(); }
+	IXAudio2* GetXAudio2() { return xaudio2_.Get(); }
 private:
-	//コンストラクタ
+	//コンストラクタ（シングルトンパターン）
 	Audio() = default;
-	//デストラクタ
+	//デストラクタ（シングルトンパターン）
 	~Audio() = default;
 public:
-	//コピーコンストラクタの防止
+	//コピーコンストラクタの防止（シングルトンパターン）
 	Audio(const Audio& obj) = delete;
+	// コピー代入演算子を禁止（シングルトンパターン）
 	Audio& operator=(const Audio& obj) = delete;
 };

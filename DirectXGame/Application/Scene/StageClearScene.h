@@ -121,14 +121,14 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.8f),			//スペースで選択
 	};
 	//次のステージへ行くときの視点イージング
-	Easing easeEyeGameStart_[3]
+	Easing easeEyeStageClear_[3]
 	{
 		Easing(0.0f, -22.0f, 1.8f),				//X
 		Easing(1.0f, -1.0f, 1.8f),				//Y
 		Easing(-110.0f, -60.0f, 1.8f),			//Z
 	};
 	//次のステージへ行くときの注視点イージング
-	Easing easeTargetGameStart_[3]
+	Easing easeTargetStageClear_[3]
 	{
 		Easing(0.0f, 50.0f, 1.8f),				//X
 		Easing(0.0f, -8.0f, 1.8f),				//Y

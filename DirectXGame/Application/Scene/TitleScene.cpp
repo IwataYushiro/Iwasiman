@@ -48,13 +48,14 @@ void TitleScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_);
 
-	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title2.png");
+	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title3.png");
 	spriteTitle_->Initialize(spCommon_, TSTI_TitleTex);
 	spriteTitle_->SetColor(backTitleColor_);
+	spriteTitle_->SetPosition({ easeTitlePosX_[0].start,50.0f });
 
-	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space.png");
+	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space2.png");
 	spriteTitleDone_->Initialize(spCommon_, TSTI_TitleDoneTex);
-	spriteTitleDone_->SetPosition({ 0.0f,550.0f });
+	spriteTitleDone_->SetPosition({ easeTitlePosX_[1].start,600.0f});
 
 	spCommon_->LoadTexture(TSTI_MenuTex, "texture/titlemenu.png");
 	spriteMenu_->Initialize(spCommon_, TSTI_MenuTex);
@@ -190,7 +191,7 @@ void TitleScene::Update()
 
 	imguiManager_->Begin();
 #ifdef _DEBUG
-	//camera_->DebugCamera();
+	//camera_->DebugCamera(true);
 #endif // _DEBUG
 
 	imguiManager_->End();
@@ -281,8 +282,8 @@ void TitleScene::UpdateIsBack()
 	for (int i = 0; i < 3; i++)easeEyeMenu_[i].ease_out_expo();
 	for (int i = 0; i < 3; i++)easeTargetMenu_[i].ease_out_expo();
 	//座標セット
-	spriteTitle_->SetPosition({ easeTitlePosX_[0].num_X,0.0f });
-	spriteTitleDone_->SetPosition({ easeTitlePosX_[1].num_X,550.0f });
+	spriteTitle_->SetPosition({ easeTitlePosX_[0].num_X,50.0f });
+	spriteTitleDone_->SetPosition({ easeTitlePosX_[1].num_X,600.0f });
 	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
@@ -319,8 +320,8 @@ void TitleScene::UpdateIsMenu()
 	for (int i = 0; i < 3; i++)easeTargetMenu_[i].ease_out_expo();
 
 	//座標セット
-	spriteTitle_->SetPosition({ easeTitlePosX_[0].num_X,0.0f });
-	spriteTitleDone_->SetPosition({ easeTitlePosX_[1].num_X,550.0f });
+	spriteTitle_->SetPosition({ easeTitlePosX_[0].num_X,50.0f });
+	spriteTitleDone_->SetPosition({ easeTitlePosX_[1].num_X,600.0f });
 	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
@@ -617,7 +618,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 void TitleScene::UpdateChangeColor()
 {
 	//色を変えるスピード
-	float speedColor = 0.02f;
+	const float speedColor = 0.02f;
 
 	if (isColorReverse_)
 	{

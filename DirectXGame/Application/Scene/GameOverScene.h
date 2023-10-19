@@ -35,13 +35,24 @@ public://メンバ関数
 	void Initialize() override;
 	//更新
 	void Update() override;
+	//ゲームオーバー中
+	void UpdateIsGameOver();
+	//コンティニュー時
+	void UpdateIsContinue();
+	//ステージセレクト遷移時
+	void UpdateIsQuitStageSelect();
+	//タイトル遷移時
+	void UpdateIsQuitTitle();
 	//描画
 	void Draw() override;
 	//終了
 	void Finalize() override;
 	//レベルデータ読み込み(ステージファイルパス)
 	void LoadLVData(const std::string& stagePath);
-
+	//フェードアウト
+	void FadeOut(DirectX::XMFLOAT3 rgb);
+	//色が変わる処理
+	void UpdateChangeColor();
 private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
@@ -71,23 +82,21 @@ private://メンバ変数
 	Sprite* spriteStageSelect_ = new Sprite();		//ステージセレクト表示スプライト
 	Sprite* spriteTitle_ = new Sprite();			//タイトル表示スプライト
 	Sprite* spriteDone_ = new Sprite();				//決定スプライト
-
-	//FBX
-	//ModelFbx* modelF_ = nullptr;
-	//ObjectFbx* objF_ = nullptr;
-
-	//モデル
-	//Model* modelPlayer_ = nullptr;
-	//Object3d* object3DPlayer_ = nullptr;
+	Sprite* spriteFadeInOut_ = new Sprite();		//フェードインアウトスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
-	//ステージオブジェクト
-	Object3d* objStage_ = nullptr;
-
-	Model* modelStageTutorial_ = nullptr;	//チュートリアルステージモデル(天球)
-	Model* modelStage1_ = nullptr;			//ステージ1モデル(天球)
-	Model* modelStage2_ = nullptr;			//ステージ2モデル(天球)
+	
+	//モデル
+	Model* modelPlayer_ = nullptr;				//自機モデル
+	Model* modelGoal_ = nullptr;				//ゴールモデル
+	Model* modelStageTutorial_ = nullptr;		//チュートリアルステージモデル(天球)
+	Model* modelStage1_ = nullptr;				//ステージ1モデル(天球)
+	Model* modelStage2_ = nullptr;				//ステージ2モデル(天球)
+	
+	std::vector<Object3d*> objPlayers_;			//自機オブジェクト配列
+	std::vector<Object3d*> objGoals_;			//ゴールオブジェクト配列
+	std::vector<Object3d*> objStages_;			//ステージオブジェクト配列
 
 	//オブジェクト回転用
 	DirectX::XMFLOAT3 rot_ = { 0.0f,0.0f,0.0f };
@@ -97,10 +106,13 @@ private://メンバ変数
 	//オブジェクト配列
 	std::vector<Object3d*> objects_;
 
-	//スタート時フラグ
-	bool isStart_ = false;
-	//メニュー時フラグ
-	bool isMenu_ = false;
+	//フラグ類
+	bool isGameover_ = true;					//メニュー時フラグ
+	bool isContinue_ = false;					//コンティニューする場合
+	bool isQuitStageSelect_ = false;			//ステージセレクトに戻る場合
+	bool completeRotate_ = false;				//回り終わった時 
+	bool isQuitTitle_ = false;					//タイトルに戻る場合
+	bool isFadeOut_ = false;					//フェードインアウト
 	
 	//メニュー表示用のイージング
 	Easing easeMenuPosX_[5] =
@@ -111,10 +123,71 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.6f),			//タイトルへ
 		Easing(1300.0f, 0.0f, 1.8f),			//スペースで選択
 	};
+	//コンティニューするときの視点イージング
+	Easing easeEyeContinue_[3]
+	{
+		Easing(-6.0f, -21.0f, 1.0f),				//X
+		Easing(-8.0f, -5.0f, 1.0f),					//Y
+		Easing(-110.0f, -60.0f, 1.0f),				//Z
+	};
+	//コンティニューするときの注視点イージング
+	Easing easeTargetContinue_[3]
+	{
+		Easing(-32.0f, 90.0f, 1.0f),				//X
+		Easing(-24.0f, -22.0f, 1.0f),				//Y
+		Easing(-10.0f, -61.0f, 1.0f),				//Z
+	};
+	//コンティニューするときの自機回転イージング
+	Easing easePlayerRotateContinue_[3]
+	{
+		Easing(90.0f, 0.0f, 1.0f),					//X
+		Easing(-90.0f, 90.0f, 1.0f),				//Y
+		Easing(0.0f, 0.0f, 1.0f),					//Z
+	};
+	//コンティニューするときの自機移動イージング
+	Easing easePlayerMoveContinue_[3]
+	{
+		Easing(0.0f, 90.0f, 1.0f),					//X
+		Easing(-8.0f, -8.0f, 1.0f),					//Y
+		Easing(-60.0f, -60.0f, 1.0f),				//Z
+	};
+
+	//ステージセレクトへ遷移するときの視点イージング
+	Easing easeEyeQuitStageSelect_[3]
+	{
+		Easing(-6.0f, -21.0f, 1.0f),				//X
+		Easing(-8.0f, -5.0f, 1.0f),					//Y
+		Easing(-110.0f, -60.0f, 1.0f),				//Z
+	};
+	//ステージセレクトへ遷移するときの注視点イージング
+	Easing easeTargetQuitStageSelect_[3]
+	{
+		Easing(-32.0f, 90.0f, 1.0f),				//X
+		Easing(-24.0f, -22.0f, 1.0f),				//Y
+		Easing(-10.0f, -61.0f, 1.0f),				//Z
+	};
+	//ステージセレクトへ遷移するときの自機回転イージング
+	Easing easePlayerRotateQuitStageSelect_[3]
+	{
+		Easing(90.0f, 0.0f, 1.0f),					//X
+		Easing(-90.0f, 90.0f, 1.0f),				//Y
+		Easing(0.0f, 0.0f, 1.0f),					//Z
+	};
+	//ステージセレクトへ遷移するときの自機移動イージング
+	Easing easePlayerMoveQuitStageSelect_[3]
+	{
+		Easing(0.0f, 150.0f, 1.0f),					//X
+		Easing(-8.0f, 20.0f, 1.0f),					//Y
+		Easing(-60.0f, -60.0f, 1.0f),				//Z
+	};
+
+	//フェードインアウト(false フェードイン、true フェードアウト)
+	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
+
+	//選択中の色
+	DirectX::XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
 	//選択しているメニュー表示
 	int menuCount_ = 0;
-	//色を変えるスピード
-	float speedColor_ = 0.0f;
 	//色反転フラグ
 	bool isColorReverse_ = false;
 

@@ -52,14 +52,11 @@ public:
 private:
 	//コリジョンマネージャー
 	static CollisionManager* colManager_;
-	//ポジション
-	XMFLOAT3 pos_;
-	//スケール
-	XMFLOAT3 scale_;
 	//ゴールしたか
 	bool isGoal_ = false;
 	//半径
 	float radius_ = 10.0f;
+
 public: //アクセッサ、インライン関数
 	//ゴールしたか
 	bool IsGoal() const { return isGoal_; }

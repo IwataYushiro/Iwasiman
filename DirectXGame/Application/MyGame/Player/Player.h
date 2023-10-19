@@ -46,8 +46,8 @@ public:
 	//リセット処理
 	void Reset();
 	
-	//更新(手前と背面ジャンプの有効化、攻撃処理の有効化)
-	void Update(bool isBack = true, bool isAttack = true);
+	//更新(手前と背面ジャンプの有効化、攻撃処理の有効化、開始時演出だと全操作無効)
+	void Update(bool isBack = true, bool isAttack = true, bool isStart = false);
 	//プレイヤーの移動処理
 	void Move();
 	
@@ -93,8 +93,6 @@ private:
 	//インプット
 	Input* input_ = nullptr;
 	
-	//ポジション
-	XMFLOAT3 pos_;
 	//アングル
 	XMFLOAT3 angle_;
 
@@ -113,16 +111,16 @@ private:
 	XMFLOAT3 jumpBackPos_;
 
 	//時間計測
-	std::chrono::steady_clock::time_point startCount;	//開始時間
-	std::chrono::steady_clock::time_point nowCount;		//現在時間
-	std::chrono::microseconds elapsedCount;				//経過時間 経過時間=現在時間-開始時間
-	float	maxTime = 1.0f;								//全体時間
-	float	timeRate;									//どれくらい時間が進んだか
+	std::chrono::steady_clock::time_point startCount_;	//開始時間
+	std::chrono::steady_clock::time_point nowCount_;		//現在時間
+	std::chrono::microseconds elapsedCount_;				//経過時間 経過時間=現在時間-開始時間
+	float	maxTime_ = 1.0f;								//全体時間
+	float	timeRate_;									//どれくらい時間が進んだか
 	//制御点
-	XMFLOAT3 start;										//最初点
-	XMFLOAT3 point1;									//中間点1
-	XMFLOAT3 point2;									//中間点2
-	XMFLOAT3 end;										//最終点
+	XMFLOAT3 start_;										//最初点
+	XMFLOAT3 point1_;									//中間点1
+	XMFLOAT3 point2_;									//中間点2
+	XMFLOAT3 end_;										//最終点
 
 	//半径
 	float radius_ = 1.0f;

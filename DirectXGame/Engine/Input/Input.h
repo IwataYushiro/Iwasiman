@@ -86,41 +86,39 @@ public:
 	bool TriggerMouse(int32_t mouseNumber);
 	//マウスが押されているか(リリース)(マウス番号(0 = 左　1 = 右　2 = 中央))
 	bool ReleaseMouse(int32_t mouseNumber);
-	//マウス座標ゲット
-	const DirectX::XMFLOAT2& GetMousePosition()const { return mousePos; }
-
+	
 	
 private://メンバ変数
 	//コントローラーデバイス生成
 	//static BOOL CALLBACK EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef)noexcept;
 	
 	//DirectInputの初期化
-	ComPtr<IDirectInput8> directInput = nullptr;
+	ComPtr<IDirectInput8> directInput_ = nullptr;
 	//キーボード
-	ComPtr <IDirectInputDevice8> keyboard = nullptr;
+	ComPtr <IDirectInputDevice8> keyboard_ = nullptr;
 	
 	//全キーの状態
-	BYTE keys[256] = {};
+	BYTE keys_[256] = {};
 	//1フレーム前の全キーの状態
-	BYTE preKeys[256] = {};
+	BYTE preKeys_[256] = {};
 
 	//マウス
-	ComPtr <IDirectInputDevice8> mouse = nullptr;
+	ComPtr <IDirectInputDevice8> mouse_ = nullptr;
 	//マウスステート
-	DIMOUSESTATE2 mouseState;
+	DIMOUSESTATE2 mouseState_;
 	//1フレーム前のマウスステート
-	DIMOUSESTATE2 mouseStatePre;
+	DIMOUSESTATE2 mouseStatePre_;
 	//マウス座標
-	DirectX::XMFLOAT2 mousePos;
+	DirectX::XMFLOAT2 mousePos_;
 
 	//ジョイスティック(コントローラー)
-	ComPtr<IDirectInputDevice8> joyStick = nullptr;
+	ComPtr<IDirectInputDevice8> joyStick_ = nullptr;
 	//ジョイスティックステート
-	DIJOYSTATE2 joyState;
+	DIJOYSTATE2 joyState_;
 	//1フレーム前のジョイスティックステート
-	DIJOYSTATE2 joyStatePre;
+	DIJOYSTATE2 joyStatePre_;
 	//ジョイスティックかどうか
-	bool isJoyStick = false;
+	bool isJoyStick_ = false;
 private:
 	//コンストラクタ（シングルトンパターン）
 	Input() = default;
@@ -134,5 +132,8 @@ public:
 
 public://アクセッサ
 	//DirectInputゲット
-	IDirectInput8* GetDirectInput()const { return directInput.Get(); }
+	IDirectInput8* GetDirectInput()const { return directInput_.Get(); }
+	//マウス座標ゲット
+	const DirectX::XMFLOAT2& GetMousePosition()const { return mousePos_; }
+
 };

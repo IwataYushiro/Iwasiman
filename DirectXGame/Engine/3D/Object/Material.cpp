@@ -41,8 +41,8 @@ void Material::LoadTexture(const std::string& directoryPath, D3D12_CPU_DESCRIPTO
 		textureFilename = "white1x1.png";
 	}
 	// シェーダリソースビュー作成
-	cpuDescHandleSRV = cpuHandle;
-	gpuDescHandleSRV = gpuHandle;
+	cpuDescHandleSRV_ = cpuHandle;
+	gpuDescHandleSRV_ = gpuHandle;
 
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
@@ -91,13 +91,13 @@ void Material::LoadTexture(const std::string& directoryPath, D3D12_CPU_DESCRIPTO
 	result = device_->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &texresDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ, // テクスチャ用指定
-		nullptr, IID_PPV_ARGS(&texBuff));
+		nullptr, IID_PPV_ARGS(&texBuff_));
 	assert(SUCCEEDED(result));
 
 	// テクスチャバッファにデータ転送
 	for (size_t i = 0; i < metadata.mipLevels; i++) {
 		const Image* img = scratchImg.GetImage(i, 0, 0); // 生データ抽出
-		result = texBuff->WriteToSubresource(
+		result = texBuff_->WriteToSubresource(
 			(UINT)i,
 			nullptr,              // 全領域へコピー
 			img->pixels,          // 元データアドレス
@@ -108,26 +108,26 @@ void Material::LoadTexture(const std::string& directoryPath, D3D12_CPU_DESCRIPTO
 	}
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
-	D3D12_RESOURCE_DESC resDesc = texBuff->GetDesc();
+	D3D12_RESOURCE_DESC resDesc = texBuff_->GetDesc();
 
 	srvDesc.Format = resDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;
 
-	device_->CreateShaderResourceView(texBuff.Get(), //ビューと関連付けるバッファ
+	device_->CreateShaderResourceView(texBuff_.Get(), //ビューと関連付けるバッファ
 		&srvDesc, //テクスチャ設定情報
-		cpuDescHandleSRV
+		cpuDescHandleSRV_
 	);
 }
 
 void Material::Update()
 {
 	//定数バッファへ転送
-	constMap->ambient = ambient;
-	constMap->diffuse = diffuse;
-	constMap->specular = specular;
-	constMap->alpha = alpha;
+	constMap_->ambient = ambient;
+	constMap_->diffuse = diffuse;
+	constMap_->specular = specular;
+	constMap_->alpha = alpha;
 }
 
 void Material::Initialize()
@@ -158,10 +158,10 @@ void Material::CreateConstBuffer()
 	result = device_->CreateCommittedResource(
 		&heapProps, // アップロード可能
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&constBuff));
+		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
 
 	// 定数バッファへデータ転送
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	result = constBuff_->Map(0, nullptr, (void**)&constMap_);
 	assert(SUCCEEDED(result));
 }

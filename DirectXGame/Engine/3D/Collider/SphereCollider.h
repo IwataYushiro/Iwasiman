@@ -22,7 +22,7 @@ public://メンバ関数(オフセット、半径)
 		offset_(offset), radius_(radius)
 	{
 		//球形状をセット
-		shapeType = COLLISIONSHAPE_SPHERE;
+		shapeType_ = COLLISIONSHAPE_SPHERE;
 	}
 	//更新
 	void Update() override;

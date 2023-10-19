@@ -69,18 +69,18 @@ public://関数
 
 private:
 	//時間計測
-	std::chrono::steady_clock::time_point startCount;	//開始時間
-	std::chrono::steady_clock::time_point nowCount;		//現在時間
-	std::chrono::microseconds elapsedCount;				//経過時間 経過時間=現在時間-開始時間
+	std::chrono::steady_clock::time_point startCount_;	//開始時間
+	std::chrono::steady_clock::time_point nowCount_;		//現在時間
+	std::chrono::microseconds elapsedCount_;				//経過時間 経過時間=現在時間-開始時間
 
 	//イージングプロパティ
-	float timeNow;					//時間
-	float startpos;					//開始位置
-	float differencepos;			//開始位置-終了位置の差
-	float totaltime;				//合計時間
+	float timeNow_;					//時間
+	float startPos_;				//開始位置
+	float differencePos_;			//開始位置-終了位置の差
+	float totalTime_;				//合計時間
 
 	//反転
-	bool isReverse = false;
+	bool isReverse_ = false;
 private://定数
 	//円周率
 	const float PI = 3.141592f;

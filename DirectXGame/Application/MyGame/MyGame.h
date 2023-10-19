@@ -28,20 +28,13 @@ public:
 	void Finalize() override;
 	
 private:
-	//合計
-	const int POST_NUM = 12;
 	//ポストエフェクト
-	PostEffect* pe;
-	
-	//切り替え用カウント
-	int postCount = 0;
-	//ポストエフェクトのバリエーション
-	int Variation = 0;
+	PostEffect* pe_;
 
 private:
-	void PostInitialize();
-	void PostDraw();
-	void PostDelete();
+	void PostInitialize();	//ポストエフェクト初期化
+	void PostDraw();		//ポストエフェクト描画
+	void PostDelete();		//ポストエフェクト解放
 		
 };
 

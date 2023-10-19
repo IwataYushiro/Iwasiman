@@ -48,48 +48,48 @@ public:
 	void PostDraw();
 private:
 	//DirectX12デバイス
-	ComPtr<ID3D12Device> device = nullptr;
+	ComPtr<ID3D12Device> device_ = nullptr;
 	//DXGIファクトリー
-	ComPtr<IDXGIFactory7> dxgiFactory = nullptr;
+	ComPtr<IDXGIFactory7> dxgiFactory_ = nullptr;
 	//コマンドアロケータ
-	ComPtr<ID3D12CommandAllocator> cmdAllocator = nullptr;
+	ComPtr<ID3D12CommandAllocator> cmdAllocator_ = nullptr;
 	//コマンドリスト
-	ComPtr<ID3D12GraphicsCommandList> commandList = nullptr;
+	ComPtr<ID3D12GraphicsCommandList> commandList_ = nullptr;
 	//コマンドキュー
-	ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
+	ComPtr<ID3D12CommandQueue> commandQueue_ = nullptr;
 	//スワップチェーン
-	ComPtr<IDXGISwapChain4> swapChain = nullptr;
+	ComPtr<IDXGISwapChain4> swapChain_ = nullptr;
 	//スワップチェーンデスク
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc_{};
 	
 	//レンダーターゲットビューデスク
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc_{};
 	//レンダーターゲットビューヒープ
-	ComPtr<ID3D12DescriptorHeap> rtvHeap = nullptr;
+	ComPtr<ID3D12DescriptorHeap> rtvHeap_ = nullptr;
 	//深度ビューヒープ
-	ComPtr<ID3D12DescriptorHeap> dsvHeap = nullptr;
+	ComPtr<ID3D12DescriptorHeap> dsvHeap_ = nullptr;
 	//深度バッファ
-	ComPtr<ID3D12Resource> depthBuff = nullptr;
+	ComPtr<ID3D12Resource> depthBuff_ = nullptr;
 	// バックバッファ
-	std::vector<ComPtr<ID3D12Resource>> backBuffers;
+	std::vector<ComPtr<ID3D12Resource>> backBuffers_;
 	// フェンス
-	ComPtr<ID3D12Fence> fence = nullptr;
+	ComPtr<ID3D12Fence> fence_ = nullptr;
 	//フェンス値
-	UINT64 fenceVal = 0;
+	UINT64 fenceVal_ = 0;
 
 	//Windowsアプリケーション
 	WinApp* winApp_ = nullptr;
 
 	//リソースバリア
-	D3D12_RESOURCE_BARRIER barrierDesc{};
+	D3D12_RESOURCE_BARRIER barrierDesc_{};
 
 public://アクセッサ置き場
 	//デバイス取得
-	ID3D12Device* GetDevice() const { return device.Get(); }
+	ID3D12Device* GetDevice() const { return device_.Get(); }
 	//コマンドリスト取得
-	ID3D12GraphicsCommandList* GetCommandList() const { return commandList.Get(); }
+	ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
 	//バックバッファ数を取得
-	size_t GetBuckBufferCount()const { return backBuffers.size(); }
+	size_t GetBuckBufferCount()const { return backBuffers_.size(); }
 private://メンバ関数
 	//FPS固定初期化
 	void InitializeFixFPS();

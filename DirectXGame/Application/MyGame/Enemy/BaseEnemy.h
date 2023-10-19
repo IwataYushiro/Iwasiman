@@ -32,7 +32,7 @@ public:
 	virtual bool Initialize([[maybe_unused]] unsigned short subAttribute ) { return Object3d::Initialize(); }
 
 	//XV
-	virtual void Update() { Object3d::Update(); }
+	virtual void Update(bool isStart = false) = 0;
 	//•`‰æ
 	virtual void Draw() { Object3d::Draw(); }
 

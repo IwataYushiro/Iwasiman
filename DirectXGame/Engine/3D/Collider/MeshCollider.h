@@ -15,7 +15,7 @@ class MeshCollider:public BaseCollider
 {
 public:
 	//コンストラクタにメッシュ形状をセット
-	MeshCollider() { shapeType = COLLISIONSHAPE_MESH; }
+	MeshCollider() { shapeType_ = COLLISIONSHAPE_MESH; }
 	//デストラクタ
 	~MeshCollider()=default;
 
@@ -30,8 +30,8 @@ public:
 	bool CheckCollisionRay(const Ray& ray, float* distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
 
 private:
-	std::vector<Triangle> triangles;
+	std::vector<Triangle> triangles_;
 	//ワールド行列の逆行列
-	DirectX::XMMATRIX invMatWorld;
+	DirectX::XMMATRIX invMatWorld_;
 
 };
