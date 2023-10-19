@@ -17,23 +17,23 @@ using namespace std;
 //静的メンバ変数の実体
 ID3D12Device* Model::device_ = nullptr;
 // デスクリプタサイズ
-UINT Model::descriptorHandleIncrementSize;
+UINT Model::descriptorHandleIncrementSize_;
 
-const std::string Model::baseDirectory = "Resources/";
+const std::string Model::BASE_DIRECTORY = "Resources/";
 
 Model::~Model()
 {
-	for (auto m : meshes)
+	for (auto m : meshes_)
 	{
 		delete m;
 	}
-	meshes.clear();
+	meshes_.clear();
 
-	for (auto m: materials)
+	for (auto m: materials_)
 	{
 		delete m.second;
 	}
-	materials.clear();
+	materials_.clear();
 }
 
 void Model::StaticInitialize(ID3D12Device* device)
@@ -65,19 +65,19 @@ void Model::InitializeDescriptorHeap() {
 	HRESULT result = S_FALSE;
 
 	//マテリアル数
-	size_t materialCount = materials.size();
+	size_t materialCount = materials_.size();
 	// デスクリプタヒープを生成	
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダから見えるように
 	descHeapDesc.NumDescriptors = (UINT)materialCount; // シェーダーリソースビュー=マテリアル数
-	result = device_->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));//生成
+	result = device_->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap_));//生成
 	if (FAILED(result)) {
 		assert(0);
 	}
 
 	// デスクリプタサイズを取得
-	descriptorHandleIncrementSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorHandleIncrementSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 }
 
@@ -182,19 +182,19 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 void Model::LoadTextures()
 {
 	int texIndex = 0;
-	string directoryPath = baseDirectory + name + "/";
-	for (auto& m : materials)
+	string directoryPath = BASE_DIRECTORY + name_ + "/";
+	for (auto& m : materials_)
 	{
 		Material* material = m.second;
-		D3D12_CPU_DESCRIPTOR_HANDLE CDHSRV = descHeap->GetCPUDescriptorHandleForHeapStart();
-		CDHSRV.ptr += (descriptorHandleIncrementSize * texIndex);
+		D3D12_CPU_DESCRIPTOR_HANDLE CDHSRV = descHeap_->GetCPUDescriptorHandleForHeapStart();
+		CDHSRV.ptr += (descriptorHandleIncrementSize_ * texIndex);
 		
-		D3D12_GPU_DESCRIPTOR_HANDLE GDHSRV = descHeap->GetGPUDescriptorHandleForHeapStart();
-		GDHSRV.ptr += (descriptorHandleIncrementSize * texIndex);
+		D3D12_GPU_DESCRIPTOR_HANDLE GDHSRV = descHeap_->GetGPUDescriptorHandleForHeapStart();
+		GDHSRV.ptr += (descriptorHandleIncrementSize_ * texIndex);
 		//テクスチャ無しの場合
 		if (material->textureFilename.size() <= 0)
 		{
-			directoryPath = baseDirectory;
+			directoryPath = BASE_DIRECTORY;
 		}
 
 		//テクスチャ読み込み
@@ -209,13 +209,13 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList) {
 	assert(device_);
 	assert(cmdList);
 
-	if (descHeap)
+	if (descHeap_)
 	{
 		// デスクリプタヒープの配列
-		ID3D12DescriptorHeap* ppHeaps[] = { descHeap.Get() };
+		ID3D12DescriptorHeap* ppHeaps[] = { descHeap_.Get() };
 		cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	}
-	for (auto& mesh : meshes)
+	for (auto& mesh : meshes_)
 	{
 		mesh->Draw(cmdList);
 	}
@@ -228,7 +228,7 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 	std::ifstream file;
 	//objファイルを開く
 	const string filename = modelName + ".obj";					
-	const string directoryPath = baseDirectory + modelName + "/";
+	const string directoryPath = BASE_DIRECTORY + modelName + "/";
 
 	file.open(directoryPath + filename);//"Resources/triangle_mat/triangle_mat.obj"
 	//ファイルオープン失敗をチェック
@@ -236,7 +236,7 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 	{
 		assert(0);
 	}
-	name = modelName;
+	name_ = modelName;
 	//メッシュ生成
 	Mesh* mesh = new Mesh();
 	int indexCountTex = 0;
@@ -275,7 +275,7 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 					mesh->CalculateSmoothedVertexNormals();
 				}
 				//コンテナに登録
-				meshes.emplace_back(mesh);
+				meshes_.emplace_back(mesh);
 				//次のメッシュ生成
 				mesh = new Mesh();
 				indexCountTex = 0;
@@ -335,8 +335,8 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 				line_stream >> materialName;
 
 				//マテリアル名で検索し割り当てる
-				auto itr = materials.find(materialName);
-				if (itr!=materials.end())
+				auto itr = materials_.find(materialName);
+				if (itr!=materials_.end())
 				{
 					mesh->SetMaterial(itr->second);
 				}
@@ -444,33 +444,33 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 		mesh->CalculateSmoothedVertexNormals();
 	}
 	//メッシュコンテナに登録
-	meshes.emplace_back(mesh);
+	meshes_.emplace_back(mesh);
 
 	//メッシュのマテリアルチェック
-	for (auto& m : meshes)
+	for (auto& m : meshes_)
 	{
 		//ない場合
 		if (m->GetMaterial() == nullptr)
 		{
-			if (defaultMaterial == nullptr)
+			if (defaultMaterial_ == nullptr)
 			{
 				//デフォルトのマテリアルを生成
-				defaultMaterial = Material::Create();
-				defaultMaterial->name = "no material";
-				materials.emplace(defaultMaterial->name, defaultMaterial);
+				defaultMaterial_= Material::Create();
+				defaultMaterial_->name = "no material";
+				materials_.emplace(defaultMaterial_->name, defaultMaterial_);
 			}
 			//それをセット
-			m->SetMaterial(defaultMaterial);
+			m->SetMaterial(defaultMaterial_);
 		}
 	}
 
 	//メッシュのバッファ生成
-	for (auto& m : meshes)
+	for (auto& m : meshes_)
 	{
 		m->CreateBuffers();
 	}
 	//マテリアル数値を定数バッファに反映
-	for (auto& m : materials)
+	for (auto& m : materials_)
 	{
 		m.second->Update();
 	}

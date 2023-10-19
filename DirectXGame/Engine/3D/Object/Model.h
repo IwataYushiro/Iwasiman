@@ -39,7 +39,7 @@ public://メンバ関数
 	// マテリアル読み込み(ディレクトリパス、モデル名)
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 	//マテリアル登録(マテリアル)
-	void AddMaterial(Material* material) { materials.emplace(material->name, material); }
+	void AddMaterial(Material* material) { materials_.emplace(material->name, material); }
 	// テクスチャ読み込み
 	void LoadTextures();	
 
@@ -50,28 +50,28 @@ private://静的メンバ変数
 	// デバイス
 	static ID3D12Device* device_;
 	// デスクリプタサイズ
-	static UINT descriptorHandleIncrementSize;
+	static UINT descriptorHandleIncrementSize_;
 	//ベースディレクトリ
-	static const std::string baseDirectory;
+	static const std::string BASE_DIRECTORY;
 	
 private:
 	//名前
-	std::string name;
+	std::string name_;
 	//メッシュコンテナ
-	std::vector<Mesh*> meshes;
+	std::vector<Mesh*> meshes_;
 	//マテリアルコンテナ
-	std::unordered_map<std::string, Material*> materials;
+	std::unordered_map<std::string, Material*> materials_;
 	//デフォルトマテリアル
-	Material* defaultMaterial = nullptr;
+	Material* defaultMaterial_ = nullptr;
 	// デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeap;
+	ComPtr<ID3D12DescriptorHeap> descHeap_;
 	
 	
 public://アクセッサ置き場
 	//デバイスセット
 	static void SetDevice(ID3D12Device* device) { Model::device_ = device; }
 	//メッシュコンテナゲット
-	inline const std::vector<Mesh*>& GetMeshes() { return meshes; }
+	inline const std::vector<Mesh*>& GetMeshes() { return meshes_; }
 
 private://メンバ関数(カプセル化)
 	//OBJファイルから3Dモデルを読み込む(非公開)(モデル名、スムージングするか)
