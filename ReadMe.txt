@@ -1,0 +1,3 @@
+命名規則
+・public変数は　life、private変数はlife_って感じで表す
+・publicの定数はMAX_LIFEって感じで表す

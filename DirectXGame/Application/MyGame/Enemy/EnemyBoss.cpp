@@ -77,8 +77,9 @@ void EnemyBoss::Parameter() {
 
 
 	isReverse_ = false;
+	fireInterval_ = MyMath::RandomMTInt(100, 150);
 	//発射タイマー初期化
-	fireTimer_ = kFireInterval;
+	fireTimer_ = fireInterval_;
 
 	isDead_ = false;
 	bossDead_ = false;
@@ -211,7 +212,7 @@ void EnemyBoss::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer_ = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
+		fireTimer_ = MyMath::RandomMTInt(fireInterval_, fireInterval_ * 2);
 	}
 
 	//指定の位置に到達したら攻撃
@@ -263,7 +264,7 @@ void EnemyBoss::UpdateAttack() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer_ = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
+		fireTimer_ = MyMath::RandomMTInt(fireInterval_, fireInterval_ * 2);
 	}
 	//死んだら
 	if (life_ <= 0) {

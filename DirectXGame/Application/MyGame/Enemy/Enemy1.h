@@ -31,8 +31,6 @@ public:
 	static std::unique_ptr<Enemy1> Create(Model* model = nullptr, Model* bullet = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr, int level = 1);
 
-	//弾発射間隔
-	int kFireInterval;
 	//初期化
 	bool Initialize(int level);
 	//サブ属性初期化
@@ -87,6 +85,9 @@ private:
 
 	//フェーズ
 	Phase phase_;
+
+	//弾発射間隔
+	int fireInterval_;
 	//弾発射タイマー
 	int32_t fireTimer_ = 0;
 	//アングル

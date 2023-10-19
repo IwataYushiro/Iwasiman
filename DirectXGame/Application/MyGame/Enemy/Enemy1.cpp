@@ -96,8 +96,9 @@ void Enemy1::Parameter() {
 	//初期フェーズ
 	phase_ = Phase::Approach;
 
+fireInterval_ = MyMath::RandomMTInt(100, 150);
 	//発射タイマー初期化
-	fireTimer_ = kFireInterval;
+	fireTimer_ = fireInterval_;
 
 	//移動
 	InitSpeed();
@@ -106,7 +107,7 @@ void Enemy1::Parameter() {
 
 	isDead_ = false;
 
-	kFireInterval = MyMath::RandomMTInt(100, 150);
+	
 }
 
 //リセット
@@ -343,7 +344,7 @@ void Enemy1::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer_ = MyMath::RandomMTInt(kFireInterval / 2, kFireInterval);
+		fireTimer_ = MyMath::RandomMTInt(fireInterval_ / 2, fireInterval_);
 	}
 
 	if (!onGround_)

@@ -47,9 +47,9 @@ private:
 	XMFLOAT3 velocity_;
 
 	//Žõ–½
-	static const int32_t kLifeTime_ = 60 * 5;
+	static const int32_t lifeTime_ = 60 * 5;
 	//Ž€–SŽžŠÔ
-	int32_t deathTimer_ = kLifeTime_;
+	int32_t deathTimer_ = lifeTime_;
 	//Ž€–Sƒtƒ‰ƒO
 	bool isDead_ = false;
 	//”¼Œa

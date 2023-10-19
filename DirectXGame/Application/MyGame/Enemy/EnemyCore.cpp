@@ -71,8 +71,10 @@ void EnemyCore::Parameter() {
 
 
 	isReverse_ = false;
+
+	fireInterval_ = MyMath::RandomMTInt(50, 100);
 	//発射タイマー初期化
-	fireTimer_ = kFireInterval;
+	fireTimer_ = fireInterval_;
 
 	isDead_ = false;
 
@@ -222,7 +224,7 @@ void EnemyCore::UpdateCore()
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer_ = MyMath::RandomMTInt(kFireInterval, kFireInterval * 2);
+		fireTimer_ = MyMath::RandomMTInt(fireInterval_, fireInterval_ * 2);
 	}
 	//死んだら自機の弾みたいに
 	if (life_ == 0) {

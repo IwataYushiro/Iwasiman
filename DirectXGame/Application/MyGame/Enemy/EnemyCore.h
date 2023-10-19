@@ -33,7 +33,7 @@ public:
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr, unsigned short stage = 1);
 
 	//’e”­ËŠÔŠu
-	static const int kFireInterval = 40;
+	int fireInterval_ = 40;
 	//‰Šú‰»
 	bool Initialize()override;
 

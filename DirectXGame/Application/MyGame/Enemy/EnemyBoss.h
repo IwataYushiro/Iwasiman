@@ -30,8 +30,7 @@ public:
 	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン)
 	static std::unique_ptr<EnemyBoss> Create(Model* model = nullptr, Model* bullet = nullptr,
 		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
-	//弾発射間隔
-	static const int kFireInterval = 40;
+	
 	//初期化
 	bool Initialize()override;
 
@@ -86,6 +85,8 @@ private:
 
 	//フェーズ
 	Phase phase_;
+	//弾発射間隔
+	int fireInterval_;
 	//弾発射タイマー
 	int32_t fireTimer_ = 0;
 	
