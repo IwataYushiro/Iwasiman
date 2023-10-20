@@ -253,9 +253,9 @@ void StageSelectScene::UpdateIsDone()
 
 	//座標セット
 	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
-	spriteTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
-	spriteStage1_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
-	spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
+	if (menuCount_ != SSSMI_StageTutorial_Tutorial)spriteTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+	if (menuCount_ != SSSMI_Stage1_SkyStage)spriteStage1_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
+	if (menuCount_ != SSSMI_Stage2_TowerStage)spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
 	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
 	spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
 

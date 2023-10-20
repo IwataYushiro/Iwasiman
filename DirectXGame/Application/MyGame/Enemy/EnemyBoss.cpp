@@ -77,7 +77,7 @@ void EnemyBoss::Parameter() {
 
 
 	isReverse_ = false;
-	fireInterval_ = MyMath::RandomMTInt(100, 150);
+	fireInterval_ = MyMath::RandomMTInt(40, 75);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 
