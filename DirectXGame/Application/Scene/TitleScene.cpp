@@ -82,7 +82,12 @@ void TitleScene::Initialize()
 
 	spCommon_->LoadTexture(TSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, TSTI_FadeInOutTex);
-	spriteFadeInOut_->SetColor({ 0.0f,0.0f, 0.0f, easeFadeInOut_.start });
+	spriteFadeInOut_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.start });
+
+	spCommon_->LoadTexture(TSTI_LoadingTex, "texture/load.png");
+	spriteLoad_->Initialize(spCommon_, TSTI_LoadingTex);
+	spriteLoad_->SetPosition(loadPos_);
+	spriteLoad_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.end });//透明化
 
 	//FBX
 	//objF = ObjectFbx::Create();
@@ -118,8 +123,8 @@ void TitleScene::Update()
 	else
 	{
 		easeFadeInOut_.ease_in_out_quint();
-		spriteFadeInOut_->SetColor({ 0.0f,0.0f, 0.0f, easeFadeInOut_.num_X });//透明度だけ変える
-
+		spriteFadeInOut_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.num_X });//透明度だけ変える
+	
 		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.end)
 		{
 			if (input_->TriggerKey(DIK_SPACE))
@@ -147,6 +152,7 @@ void TitleScene::Update()
 	spriteMenuDone_->Update();
 	spriteBack_->Update();
 	spriteFadeInOut_->Update();
+	spriteLoad_->Update();
 
 	for (Object3d*& player : objPlayers_)
 	{
@@ -225,7 +231,7 @@ void TitleScene::UpdateIsStartGame()
 		goal->SetPosition(move);
 		if (goal->GetPosition().x <= gameStartPos_)
 		{
-			FadeOut({ 1.0f,1.0f,1.0f });//ゲームプレイ遷移時は白くする
+			FadeOut(white_);//ゲームプレイ遷移時は白くする
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 			{
 				//チュートリアルステージへ
@@ -261,7 +267,7 @@ void TitleScene::UpdateIsStageSelect()
 
 		if (spriteMenu_->GetPosition().x == easeMenuPosX_[0].start)
 		{
-			FadeOut({ 0.0f,0.0f,0.0f });//黒くする
+			FadeOut(black_);//黒くする
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 			{
 				//ステージ選択
@@ -391,7 +397,7 @@ void TitleScene::FadeOut(DirectX::XMFLOAT3 rgb)
 	{
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
-
+		spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
 	}
 }
 
@@ -434,6 +440,7 @@ void TitleScene::Draw()
 	spriteMenuDone_->Draw();
 	spriteBack_->Draw();
 	spriteFadeInOut_->Draw();
+	spriteLoad_->Draw();
 
 }
 
@@ -450,6 +457,7 @@ void TitleScene::Finalize()
 	delete spriteMenuDone_;
 	delete spriteBack_;
 	delete spriteFadeInOut_;
+	delete spriteLoad_;
 
 	//レベルデータ用オブジェクト
 	for (Object3d*& player : objPlayers_)delete player;

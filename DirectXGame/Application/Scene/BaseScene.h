@@ -1,4 +1,5 @@
 #pragma once
+#include <DirectXMath.h>
 //前方宣言
 //シーンマネージャー
 class SceneManager;
@@ -14,7 +15,7 @@ class BaseScene
 {
 public://メンバ関数
 	virtual~BaseScene() = default;
-	
+
 	//初期化
 	virtual void Initialize() = 0;
 	//更新
@@ -23,6 +24,13 @@ public://メンバ関数
 	virtual void Draw() = 0;
 	//終了処理
 	virtual void Finalize() = 0;
+
+protected://継承メンバ変数
+	//ローディング中のポジション
+	DirectX::XMFLOAT2 loadPos_ = { 350.0f,600.0f };
+	//色サンプル
+	DirectX::XMFLOAT3 white_ = { 1.0f,1.0f,1.0f };//白
+	DirectX::XMFLOAT3 black_ = { 0.0f,0.0f,0.0f };//黒
 
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)

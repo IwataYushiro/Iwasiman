@@ -40,6 +40,7 @@ enum GamePlaySceneTextureIndex
 	GPSTI_QuitHowToPlayTex = 7,
 	GPSTI_ReadyTex = 8,
 	GPSTI_GoTex = 9,
+	GPSTI_LoadingTex = 10,
 	GPSTI_FadeInOutTex,
 
 };
@@ -96,6 +97,7 @@ enum TitleSceneTextureIndex
 	TSTI_MenuDoneTex = 5,
 	TSTI_BackTitleTex = 6,
 	TSTI_FadeInOutTex = 7,
+	TSTI_LoadingTex = 8,
 };
 
 //タイトル用メニュー番号
@@ -117,6 +119,7 @@ enum StageSelectSceneTextureIndex
 	SSSTI_MenuDoneTex = 4,
 	SSSTI_BackTitleTex = 5,
 	SSSTI_FadeInOutTex = 6,
+	SSSTI_LoadingTex = 7,
 };
 
 //ステージセレクト用メニューインデックス
@@ -138,6 +141,7 @@ enum StageClearSceneTextureIndex
 	SCSTI_TitleTex = 3,
 	SCSTI_MenuDoneTex = 4,
 	SCSTI_FadeInOutTex = 5,
+	SCSTI_LoadingTex = 6,
 };
 //ステージクリア用メニューインデックス
 enum StageClearSceneMenuIndex
@@ -157,6 +161,7 @@ enum GameOverSceneTextureIndex
 	GOSTI_TitleTex = 3,
 	GOSTI_MenuDoneTex = 4,
 	GOSTI_FadeInOutTex = 5,
+	GOSTI_LoadingTex = 8,
 };
 
 //ゲームオーバー用メニューインデックス
