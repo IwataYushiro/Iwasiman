@@ -64,7 +64,7 @@ void TitleScene::Initialize()
 
 	spCommon_->LoadTexture(TSTI_MenuTutorialTex, "texture/titlemenut.png");
 	spriteMenuTutorial_->Initialize(spCommon_, TSTI_MenuTutorialTex);
-	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].start,150.0f });
+	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].start,easeStartStagePosY_.start });
 
 	spCommon_->LoadTexture(TSTI_MenuStageSerectTex, "texture/titlemenus.png");
 	spriteMenuStageSelect_->Initialize(spCommon_, TSTI_MenuStageSerectTex);
@@ -208,9 +208,11 @@ void TitleScene::UpdateIsStartGame()
 	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
 	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_in_out_expo();
 	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_in_out_expo();
+	easeStartStagePosX_.ease_out_expo();
+	easeStartStagePosY_.ease_out_expo();
 
 	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
-	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+	spriteMenuTutorial_->SetPosition({ easeStartStagePosX_.num_X,easeStartStagePosY_.num_X });
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
 	spriteMenuDone_->SetPosition({ easeMenuPosX_[3].num_X,550.0f });
 	spriteBack_->SetPosition({ easeMenuPosX_[4].num_X,50.0f });
@@ -359,6 +361,8 @@ void TitleScene::UpdateIsMenu()
 			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
 			for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
 			for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
+			easeStartStagePosX_.Standby(false);
+			easeStartStagePosY_.Standby(false);
 			isStartGame_ = true;
 		}
 		else if (menuCount_ == TSMI_StageSelect)

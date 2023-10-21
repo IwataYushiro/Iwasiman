@@ -128,6 +128,11 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.6f),		//スペースで選択
 		Easing(1300.0f, 900.0f, 1.8f),		//戻る
 	};
+	//選んだステージを真ん中に移動させるイージング
+	Easing easeStartStagePosX_ = Easing(0.0f, 200.0f, 1.5f);//チュートリアルへ
+	
+	//選んだステージを上に移動させるイージング
+	Easing easeStartStagePosY_ = Easing(150.0f, 0.0f, 1.5f);//チュートリアルへ
 
 	//タイトル→タイトルメニューの視点カメラワークイージング
 	Easing easeEyeMenu_[3]

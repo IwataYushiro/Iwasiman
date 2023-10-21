@@ -238,8 +238,8 @@ void StageSelectScene::UpdateIsStageSelect()
 		for (int i = 0; i < 3; i++)easeEyeDoneMenu_[i].Standby(false);
 		for (int i = 0; i < 3; i++)easeTargetDoneMenu_[i].Standby(false);
 		
-			for (int i = 0; i < 3; i++)easeStartStagePosX_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easeStartStagePosY_[i].Standby(false);
+		for (int i = 0; i < 3; i++)easeStartStagePosX_[i].Standby(false);
+		for (int i = 0; i < 3; i++)easeStartStagePosY_[i].Standby(false);
 		
 		isDone_ = true;
 		isStageSelect_ = false;
