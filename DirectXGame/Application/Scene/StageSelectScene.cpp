@@ -84,7 +84,13 @@ void StageSelectScene::Initialize()
 
 	spCommon_->LoadTexture(SSSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, SSSTI_FadeInOutTex);
-	spriteFadeInOut_->SetColor({ 0.0f,0.0f, 0.0f, easeFadeInOut_.start });
+	spriteFadeInOut_->SetColor({ 
+		black_.x,black_.y,black_.z,easeFadeInOut_.start });
+
+	spCommon_->LoadTexture(SSSTI_LoadingTex, "texture/load.png");
+	spriteLoad_->Initialize(spCommon_, SSSTI_LoadingTex);
+	spriteLoad_->SetPosition(loadPos_);
+	spriteLoad_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.end });//透明化
 
 	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
 	modelStage1_ = Model::LoadFromOBJ("skydome");
@@ -140,6 +146,7 @@ void StageSelectScene::Update()
 	spriteDone_->Update();
 	spriteBack_->Update();
 	spriteFadeInOut_->Update();
+	spriteLoad_->Update();
 
 	pm1_->Update();
 
@@ -172,7 +179,8 @@ void StageSelectScene::UpdateIsStageSelect()
 	spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
 
 	//カラーセット
-	spriteFadeInOut_->SetColor({ 0.0f,0.0f, 0.0f, easeFadeInOut_.num_X });//透明度だけ変える
+	spriteFadeInOut_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.num_X });	//透明度だけ変える
+	//spriteLoad_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.num_X });		//色はネガポジの応用
 
 	//カメラもセット
 	camera_->SetEye({ easeEyeStageSelect_[0].num_X, easeEyeStageSelect_[1].num_X, easeEyeStageSelect_[2].num_X });
@@ -391,6 +399,7 @@ void StageSelectScene::Draw()
 	spriteDone_->Draw();
 	spriteBack_->Draw();
 	spriteFadeInOut_->Draw();
+	spriteLoad_->Draw();
 }
 
 void StageSelectScene::Finalize()
@@ -405,7 +414,7 @@ void StageSelectScene::Finalize()
 	delete spriteDone_;
 	delete spriteBack_;
 	delete spriteFadeInOut_;
-
+	delete spriteLoad_;
 	//ステージ
 	delete objStage_;
 	//レベルデータ用オブジェクト
@@ -440,7 +449,7 @@ void StageSelectScene::FadeOut(DirectX::XMFLOAT3 rgb)
 	{
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
-
+		spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
 	}
 }
 

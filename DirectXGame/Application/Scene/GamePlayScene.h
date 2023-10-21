@@ -117,6 +117,7 @@ private:
 	Sprite* spriteReady_ = new Sprite();				//Ready表記文字用のスプライト
 	Sprite* spriteGo_ = new Sprite();					//Go表記文字用のスプライト
 	Sprite* spriteFadeInOut_ = new Sprite();			//フェードインアウトのスプライト
+	Sprite* spriteLoad_ = new Sprite();					//ロードスプライト
 
 
 	Sprite* spriteTutorialHTPMove_ = new Sprite();		//チュートリアルの移動方法スプライト

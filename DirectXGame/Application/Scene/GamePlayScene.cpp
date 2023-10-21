@@ -140,6 +140,7 @@ void GamePlayScene::Update()
 	spriteReady_->Update();
 	spriteGo_->Update();
 	spriteFadeInOut_->Update();
+	spriteLoad_->Update();
 
 	//チュートリアル関係
 	UpdateTutorial();
@@ -184,7 +185,7 @@ void GamePlayScene::UpdateIsStartGame()
 	for (int i = 0; i < 3; i++)easePlayerPositionGameStart_[i].ease_in_out_quint();
 
 	//フェードインアウト
-	spriteFadeInOut_->SetColor({ 1.0f, 1.0f, 1.0f, easeFadeInOut_.num_X });
+	spriteFadeInOut_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.num_X });
 
 	//カメラもセット
 	camera_->SetEye({ easeEyeGameStart_[0].num_X, easeEyeGameStart_[1].num_X, easeEyeGameStart_[2].num_X });
@@ -435,9 +436,9 @@ void GamePlayScene::UpdateIsPause()
 
 	if (isBack_)
 	{
-		if (menuCount_ == GPSPMI_Resume) FadeIn({ 0.0f,0.0f,0.0f });
-		else if (menuCount_ == GPSPMI_StageSelect) FadeIn({ 0.0f,0.0f,0.0f });
-		else if (menuCount_ == GPSPMI_Title) FadeIn({ 0.0f,0.0f,0.0f });
+		if (menuCount_ == GPSPMI_Resume) FadeIn(black_);
+		else if (menuCount_ == GPSPMI_StageSelect) FadeIn(black_);
+		else if (menuCount_ == GPSPMI_Title) FadeIn(black_);
 
 	}
 	//到達したらPause解除
@@ -527,27 +528,27 @@ void GamePlayScene::UpdateHowToPlay()
 
 void GamePlayScene::UpdateIsStageClear()
 {
-	FadeOut({ 1.0f,1.0f,1.0f });
+	FadeOut(white_);
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
 		sceneManager_->ChangeScene("STAGECLEAR", stageNum_);
-		isClear_ = false;
+		
 	}
 }
 
 void GamePlayScene::UpdateIsGameOver()
 {
-	FadeOut({ 0.2f,0.0f,0.0f });
+	FadeOut(deepRed_);
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
 		sceneManager_->ChangeScene("GAMEOVER", stageNum_);
-		isGameOver_ = false;
+		
 	}
 }
 
 void GamePlayScene::UpdateIsQuitGame()
 {
-	FadeOut({ 0.0f,0.0f,0.0f });
+	FadeOut(black_);
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
 		//ポーズからステージセレクト、タイトルを選んだとき
@@ -559,7 +560,6 @@ void GamePlayScene::UpdateIsQuitGame()
 			else sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 		}
 		else if (menuCount_ == GPSPMI_Title) sceneManager_->ChangeScene("TITLE", stageNum_);
-		isQuit_ = false;
 	}
 
 
@@ -617,7 +617,7 @@ void GamePlayScene::FadeOut(DirectX::XMFLOAT3 rgb)
 		{
 			easeFadeInOut_.ease_in_out_quint();
 			spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
-
+			if(isQuit_)spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
 		}
 	}
 }
@@ -742,9 +742,9 @@ void GamePlayScene::Draw()
 		}
 
 
-		//フェードインアウト
+		//フェードインアウトとロード
 		spriteFadeInOut_->Draw();
-
+		spriteLoad_->Draw();
 		//レディーゴー
 		spriteReady_->Draw();
 		spriteGo_->Draw();
@@ -807,6 +807,7 @@ void GamePlayScene::Finalize()
 	delete spriteReady_;
 	delete spriteGo_;
 	delete spriteFadeInOut_;
+	delete spriteLoad_;
 
 	delete spriteTutorialInfo1_;
 	delete spriteTutorialInfo2_;
@@ -1287,19 +1288,23 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(GPSTI_ReadyTex, "texture/ready2.png");
 	spriteReady_->Initialize(spCommon_, GPSTI_ReadyTex);
 	spriteReady_->SetPosition({ easeReadyPosition_[0].start,easeReadyPosition_[1].start });
-	spriteReady_->SetColor({ 0.0f,0.0f, 0.0f,1.0f });
+	spriteReady_->SetColor({ black_.x,black_.y,black_.z,1.0f });
 
 	spCommon_->LoadTexture(GPSTI_GoTex, "texture/go.png");
 	spriteGo_->Initialize(spCommon_, GPSTI_GoTex);
 	spriteGo_->SetSize({ easeGoSizeAndAlpha_[0].start,easeGoSizeAndAlpha_[1].start });
 	spriteGo_->SetPosition({ goPosition_[0],goPosition_[1] });
 	spriteGo_->SetAnchorPoint({ 0.5f,0.5f });
-	spriteGo_->SetColor({ 0.0f,0.0f, 0.0f,easeGoSizeAndAlpha_[2].start });
+	spriteGo_->SetColor({ black_.x,black_.y,black_.z,easeGoSizeAndAlpha_[2].start });
 
 	spCommon_->LoadTexture(GPSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, GPSTI_FadeInOutTex);
-	spriteFadeInOut_->SetColor({ 1.0f,1.0f, 1.0f, easeFadeInOut_.start });//真っ白
+	spriteFadeInOut_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.start });//真っ白
 
+	spCommon_->LoadTexture(GPSTI_LoadingTex, "texture/load.png");
+	spriteLoad_->Initialize(spCommon_, GPSTI_LoadingTex);
+	spriteLoad_->SetPosition(loadPos_);
+	spriteLoad_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
 	spCommon_->LoadTexture(GPSTTI_TutorialInfo1Tex, "texture/info/tinfo1.png");//1
 	spriteTutorialInfo1_->Initialize(spCommon_, GPSTTI_TutorialInfo1Tex);

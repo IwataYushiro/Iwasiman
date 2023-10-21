@@ -75,8 +75,12 @@ void StageClearScene::Initialize()
 
 	spCommon_->LoadTexture(SCSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, SCSTI_FadeInOutTex);
-	spriteFadeInOut_->SetColor({ 1.0f,1.0f, 1.0f, easeFadeInOut_.start });
+	spriteFadeInOut_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.start });
 
+	spCommon_->LoadTexture(SCSTI_LoadingTex, "texture/load.png");
+	spriteLoad_->Initialize(spCommon_, SCSTI_LoadingTex);
+	spriteLoad_->SetPosition(loadPos_);
+	spriteLoad_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
@@ -153,7 +157,7 @@ void StageClearScene::Update()
 	spriteTitle_->Update();
 	spriteDone_->Update();
 	spriteFadeInOut_->Update();
-
+	spriteLoad_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
@@ -194,7 +198,7 @@ void StageClearScene::UpdateIsNextStage()
 		goal->SetPosition(move);
 		if (goal->GetPosition().x <= gameStartPos_)
 		{
-			FadeOut({ 1.0f,1.0f,1.0f });//ゲームプレイ遷移時は白くする
+			FadeOut(white_);//ゲームプレイ遷移時は白くする
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 			{
 				if (stageNum_ == SL_Stage1_AreaBoss) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
@@ -231,7 +235,7 @@ void StageClearScene::UpdateIsStageSelect()
 
 		if (spriteStageClear_->GetPosition().x == easeMenuPosX_[0].start)
 		{
-			FadeOut({ 0.0f,0.0f,0.0f });//黒くする
+			FadeOut(black_);//黒くする
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 			{
 				//ステージ選択
@@ -254,7 +258,7 @@ void StageClearScene::UpdateIsQuitTitle()
 	spriteTitle_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
 	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
 
-	if(spriteStageClear_->GetPosition().x == easeMenuPosX_[0].start)FadeOut({ 0.0f,0.0f,0.0f });//黒くする
+	if(spriteStageClear_->GetPosition().x == easeMenuPosX_[0].start)FadeOut(black_);//黒くする
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
 		//タイトルへ
@@ -392,6 +396,7 @@ void StageClearScene::Draw()
 	spriteTitle_->Draw();
 	spriteDone_->Draw();
 	spriteFadeInOut_->Draw();
+	spriteLoad_->Draw();
 
 }
 
@@ -406,7 +411,7 @@ void StageClearScene::FadeOut(DirectX::XMFLOAT3 rgb)
 	{
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
-
+		spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
 	}
 }
 
@@ -421,6 +426,7 @@ void StageClearScene::Finalize()
 	delete spriteTitle_;
 	delete spriteDone_;
 	delete spriteFadeInOut_;
+	delete spriteLoad_;
 
 	//レベルデータ用オブジェクト
 	for (Object3d*& player : objPlayers_)delete player;

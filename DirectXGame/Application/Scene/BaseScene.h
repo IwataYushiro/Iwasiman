@@ -29,8 +29,9 @@ protected://継承メンバ変数
 	//ローディング中のポジション
 	DirectX::XMFLOAT2 loadPos_ = { 350.0f,600.0f };
 	//色サンプル
-	DirectX::XMFLOAT3 white_ = { 1.0f,1.0f,1.0f };//白
-	DirectX::XMFLOAT3 black_ = { 0.0f,0.0f,0.0f };//黒
+	DirectX::XMFLOAT3 white_ = { 1.0f,1.0f,1.0f };	//白
+	DirectX::XMFLOAT3 black_ = { 0.0f,0.0f,0.0f };	//黒
+	DirectX::XMFLOAT3 deepRed_ = { 0.2f,0.0f,0.0f };	//濃い赤
 
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)

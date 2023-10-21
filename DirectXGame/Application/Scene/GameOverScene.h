@@ -83,6 +83,7 @@ private://メンバ変数
 	Sprite* spriteTitle_ = new Sprite();			//タイトル表示スプライト
 	Sprite* spriteDone_ = new Sprite();				//決定スプライト
 	Sprite* spriteFadeInOut_ = new Sprite();		//フェードインアウトスプライト
+	Sprite* spriteLoad_ = new Sprite();					//ロードスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
