@@ -85,6 +85,7 @@ private://メンバ変数
 	Sprite* spriteBack_ = new Sprite();					//タイトルメニュー→タイトル移行のスプライト
 	Sprite* spriteFadeInOut_ = new Sprite();			//フェードインアウトスプライト
 	Sprite* spriteLoad_ = new Sprite();					//ロードスプライト
+	Sprite* spriteStageInfoNow_ = new Sprite();			//現在ステージスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;

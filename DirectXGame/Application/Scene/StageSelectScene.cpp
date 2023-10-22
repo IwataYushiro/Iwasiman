@@ -92,6 +92,11 @@ void StageSelectScene::Initialize()
 	spriteLoad_->SetPosition(loadPos_);
 	spriteLoad_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.end });//透明化
 
+	spCommon_->LoadTexture(SSSTI_StageInfoNowTex, "texture/stage1.png");
+	spriteStageInfoNow_->Initialize(spCommon_, SSSTI_StageInfoNowTex);
+	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
+	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
 	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
 	modelStage1_ = Model::LoadFromOBJ("skydome");
 	modelStage2_ = Model::LoadFromOBJ("skydome2");
@@ -147,6 +152,7 @@ void StageSelectScene::Update()
 	spriteBack_->Update();
 	spriteFadeInOut_->Update();
 	spriteLoad_->Update();
+	spriteStageInfoNow_->Update();
 
 	pm1_->Update();
 
@@ -400,6 +406,7 @@ void StageSelectScene::Draw()
 	spriteBack_->Draw();
 	spriteFadeInOut_->Draw();
 	spriteLoad_->Draw();
+	spriteStageInfoNow_->Draw();
 }
 
 void StageSelectScene::Finalize()
@@ -415,6 +422,7 @@ void StageSelectScene::Finalize()
 	delete spriteBack_;
 	delete spriteFadeInOut_;
 	delete spriteLoad_;
+	delete spriteStageInfoNow_;
 	//ステージ
 	delete objStage_;
 	//レベルデータ用オブジェクト
@@ -450,6 +458,7 @@ void StageSelectScene::FadeOut(DirectX::XMFLOAT3 rgb)
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
+		if (isStart_)spriteStageInfoNow_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });
 	}
 }
 

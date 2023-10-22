@@ -82,6 +82,15 @@ void GameOverScene::Initialize()
 	spriteLoad_->SetPosition(loadPos_);
 	spriteLoad_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
+	const int remainderNum = stageNum_ % 10;//余りによってスプライトを変える
+	if (remainderNum == SNL_Stage1) spCommon_->LoadTexture(GOSTI_StageInfoNowTex, "texture/stage1.png");
+	else if (remainderNum == SNL_Stage2) spCommon_->LoadTexture(GOSTI_StageInfoNowTex, "texture/stage2.png");
+	else if (remainderNum == SNL_Stage3) spCommon_->LoadTexture(GOSTI_StageInfoNowTex, "texture/stage3.png");
+	else if (remainderNum == SNL_Stage4) spCommon_->LoadTexture(GOSTI_StageInfoNowTex, "texture/stagef.png");
+
+	spriteStageInfoNow_->Initialize(spCommon_, GOSTI_StageInfoNowTex);
+	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
+	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
@@ -151,6 +160,7 @@ void GameOverScene::Update()
 	spriteDone_->Update();
 	spriteFadeInOut_->Update();
 	spriteLoad_->Update();
+	spriteStageInfoNow_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
@@ -422,6 +432,7 @@ void GameOverScene::Draw()
 	spriteDone_->Draw();
 	spriteFadeInOut_->Draw();
 	spriteLoad_->Draw();
+	spriteStageInfoNow_->Draw();
 }
 
 void GameOverScene::Finalize()
@@ -436,6 +447,7 @@ void GameOverScene::Finalize()
 	delete spriteDone_;
 	delete spriteFadeInOut_;
 	delete spriteLoad_;
+	delete spriteStageInfoNow_;
 
 	//モデル
 	//レベルデータ用オブジェクト
@@ -580,6 +592,7 @@ void GameOverScene::FadeOut(DirectX::XMFLOAT3 rgb)
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
+		if (isContinue_)spriteStageInfoNow_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });
 	}
 }
 

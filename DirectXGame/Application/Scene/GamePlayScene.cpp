@@ -141,6 +141,7 @@ void GamePlayScene::Update()
 	spriteGo_->Update();
 	spriteFadeInOut_->Update();
 	spriteLoad_->Update();
+	spriteStageInfoNow_->Update();
 
 	//チュートリアル関係
 	UpdateTutorial();
@@ -186,7 +187,8 @@ void GamePlayScene::UpdateIsStartGame()
 
 	//フェードインアウト
 	spriteFadeInOut_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.num_X });
-
+	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.num_X });
+	
 	//カメラもセット
 	camera_->SetEye({ easeEyeGameStart_[0].num_X, easeEyeGameStart_[1].num_X, easeEyeGameStart_[2].num_X });
 	camera_->SetTarget({ easeTargetGameStart_[0].num_X, easeTargetGameStart_[1].num_X, easeTargetGameStart_[2].num_X });
@@ -742,9 +744,10 @@ void GamePlayScene::Draw()
 		}
 
 
-		//フェードインアウトとロード
+		//フェードインアウトとロードと現ステージ
 		spriteFadeInOut_->Draw();
 		spriteLoad_->Draw();
+		spriteStageInfoNow_->Draw();
 		//レディーゴー
 		spriteReady_->Draw();
 		spriteGo_->Draw();
@@ -808,6 +811,7 @@ void GamePlayScene::Finalize()
 	delete spriteGo_;
 	delete spriteFadeInOut_;
 	delete spriteLoad_;
+	delete spriteStageInfoNow_;
 
 	delete spriteTutorialInfo1_;
 	delete spriteTutorialInfo2_;
@@ -1305,6 +1309,17 @@ void GamePlayScene::LoadSprite()
 	spriteLoad_->Initialize(spCommon_, GPSTI_LoadingTex);
 	spriteLoad_->SetPosition(loadPos_);
 	spriteLoad_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
+	const int remainderNum = stageNum_ % 10;//余りによってスプライトを変える
+	if (remainderNum == SNL_Stage1) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage1.png");
+	else if (remainderNum == SNL_Stage2) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage2.png");
+	else if (remainderNum == SNL_Stage3) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage3.png");
+	else if (remainderNum == SNL_Stage4) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stagef.png");
+
+	spriteStageInfoNow_->Initialize(spCommon_, GPSTI_StageInfoNowTex);
+	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
+	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
 
 	spCommon_->LoadTexture(GPSTTI_TutorialInfo1Tex, "texture/info/tinfo1.png");//1
 	spriteTutorialInfo1_->Initialize(spCommon_, GPSTTI_TutorialInfo1Tex);

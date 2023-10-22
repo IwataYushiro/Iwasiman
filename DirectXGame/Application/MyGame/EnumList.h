@@ -26,6 +26,14 @@ enum StageList
 	SL_StageTutorial_Final = 104,
 	SL_StageTutorial_StageID = 110,
 };
+//ステージ番号リスト
+enum StageNumberList
+{
+	SNL_Stage1 = 1,
+	SNL_Stage2 = 2,
+	SNL_Stage3 = 3,
+	SNL_Stage4 = 4,
+};
 
 //ゲームシーンのテクスチャインデックスとフェードインアウトテクスチャインデックス
 enum GamePlaySceneTextureIndex
@@ -41,6 +49,7 @@ enum GamePlaySceneTextureIndex
 	GPSTI_ReadyTex = 8,
 	GPSTI_GoTex = 9,
 	GPSTI_LoadingTex = 10,
+	GPSTI_StageInfoNowTex = 11,
 	GPSTI_FadeInOutTex,
 
 };
@@ -98,6 +107,7 @@ enum TitleSceneTextureIndex
 	TSTI_BackTitleTex = 6,
 	TSTI_FadeInOutTex = 7,
 	TSTI_LoadingTex = 8,
+	TSTI_StageInfoNowTex = 9,
 };
 
 //タイトル用メニュー番号
@@ -120,6 +130,7 @@ enum StageSelectSceneTextureIndex
 	SSSTI_BackTitleTex = 5,
 	SSSTI_FadeInOutTex = 6,
 	SSSTI_LoadingTex = 7,
+	SSSTI_StageInfoNowTex = 8,
 };
 
 //ステージセレクト用メニューインデックス
@@ -142,6 +153,7 @@ enum StageClearSceneTextureIndex
 	SCSTI_MenuDoneTex = 4,
 	SCSTI_FadeInOutTex = 5,
 	SCSTI_LoadingTex = 6,
+	SCSTI_StageInfoNowTex = 7,
 };
 //ステージクリア用メニューインデックス
 enum StageClearSceneMenuIndex
@@ -161,7 +173,8 @@ enum GameOverSceneTextureIndex
 	GOSTI_TitleTex = 3,
 	GOSTI_MenuDoneTex = 4,
 	GOSTI_FadeInOutTex = 5,
-	GOSTI_LoadingTex = 8,
+	GOSTI_LoadingTex = 6,
+	GOSTI_StageInfoNowTex = 7,
 };
 
 //ゲームオーバー用メニューインデックス

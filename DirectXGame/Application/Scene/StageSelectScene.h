@@ -73,14 +73,15 @@ private://メンバ変数
 	Camera* camera_ = nullptr;
 
 	//Sprite
-	Sprite* spriteMenu_ = new Sprite();			//メニュー画面スプライト
-	Sprite* spriteTutorial_ = new Sprite();		//チュートリアルステージスプライト
-	Sprite* spriteStage1_ = new Sprite();		//ステージ1スプライト
-	Sprite* spriteStage2_ = new Sprite();		//ステージ2スプライト
-	Sprite* spriteDone_ = new Sprite();			//決定表示スプライト
-	Sprite* spriteBack_ = new Sprite();			//タイトルに戻るスプライト
-	Sprite* spriteFadeInOut_ = new Sprite();	//フェードインアウトスプライト
-	Sprite* spriteLoad_ = new Sprite();			//ロードスプライト
+	Sprite* spriteMenu_ = new Sprite();				//メニュー画面スプライト
+	Sprite* spriteTutorial_ = new Sprite();			//チュートリアルステージスプライト
+	Sprite* spriteStage1_ = new Sprite();			//ステージ1スプライト
+	Sprite* spriteStage2_ = new Sprite();			//ステージ2スプライト
+	Sprite* spriteDone_ = new Sprite();				//決定表示スプライト
+	Sprite* spriteBack_ = new Sprite();				//タイトルに戻るスプライト
+	Sprite* spriteFadeInOut_ = new Sprite();		//フェードインアウトスプライト
+	Sprite* spriteLoad_ = new Sprite();				//ロードスプライト
+	Sprite* spriteStageInfoNow_ = new Sprite();		//現在ステージスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;

@@ -26,6 +26,8 @@ public://メンバ関数
 	virtual void Finalize() = 0;
 
 protected://継承メンバ変数
+	//現在ステージのポジション
+	DirectX::XMFLOAT2 stageInfoNowPos_ = { 300.0f,100.0f };
 	//ローディング中のポジション
 	DirectX::XMFLOAT2 loadPos_ = { 350.0f,600.0f };
 	//色サンプル

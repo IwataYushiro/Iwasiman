@@ -77,13 +77,14 @@ private://メンバ変数
 	//メニュー番号
 	int menuCount_ = 0;
 	//Sprite
-	Sprite* spriteStageClear_ = new Sprite();	//ステージクリア時のスプライト
-	Sprite* spriteNextStage_ = new Sprite();	//次のステージ表示のスプライト
-	Sprite* spriteStageSelect_ = new Sprite();	//ステージセレクト表示のスプライト
-	Sprite* spriteTitle_ = new Sprite();		//タイトル表示のスプライト
-	Sprite* spriteDone_ = new Sprite();			//決定表示のスプライト
-	Sprite* spriteFadeInOut_ = new Sprite();	//フェードインアウトのスプライト
-	Sprite* spriteLoad_ = new Sprite();					//ロードスプライト
+	Sprite* spriteStageClear_ = new Sprite();		//ステージクリア時のスプライト
+	Sprite* spriteNextStage_ = new Sprite();		//次のステージ表示のスプライト
+	Sprite* spriteStageSelect_ = new Sprite();		//ステージセレクト表示のスプライト
+	Sprite* spriteTitle_ = new Sprite();			//タイトル表示のスプライト
+	Sprite* spriteDone_ = new Sprite();				//決定表示のスプライト
+	Sprite* spriteFadeInOut_ = new Sprite();		//フェードインアウトのスプライト
+	Sprite* spriteLoad_ = new Sprite();				//ロードスプライト
+	Sprite* spriteStageInfoNow_ = new Sprite();		//現在ステージスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;			

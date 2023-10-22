@@ -81,6 +81,16 @@ void StageClearScene::Initialize()
 	spriteLoad_->Initialize(spCommon_, SCSTI_LoadingTex);
 	spriteLoad_->SetPosition(loadPos_);
 	spriteLoad_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
+	const int remainderNum = stageNum_ % 10;//余りによってスプライトを変える
+	if (remainderNum == SNL_Stage1) spCommon_->LoadTexture(SCSTI_StageInfoNowTex, "texture/stage2.png");
+	else if (remainderNum == SNL_Stage2) spCommon_->LoadTexture(SCSTI_StageInfoNowTex, "texture/stage3.png");
+	else if (remainderNum == SNL_Stage3) spCommon_->LoadTexture(SCSTI_StageInfoNowTex, "texture/stagef.png");
+	
+	spriteStageInfoNow_->Initialize(spCommon_, SCSTI_StageInfoNowTex);
+	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
+	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
@@ -158,6 +168,7 @@ void StageClearScene::Update()
 	spriteDone_->Update();
 	spriteFadeInOut_->Update();
 	spriteLoad_->Update();
+	spriteStageInfoNow_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
@@ -397,6 +408,7 @@ void StageClearScene::Draw()
 	spriteDone_->Draw();
 	spriteFadeInOut_->Draw();
 	spriteLoad_->Draw();
+	spriteStageInfoNow_->Draw();
 
 }
 
@@ -412,6 +424,7 @@ void StageClearScene::FadeOut(DirectX::XMFLOAT3 rgb)
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
+		if (isNextStage_)spriteStageInfoNow_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });
 	}
 }
 
@@ -427,6 +440,7 @@ void StageClearScene::Finalize()
 	delete spriteDone_;
 	delete spriteFadeInOut_;
 	delete spriteLoad_;
+	delete spriteStageInfoNow_;
 
 	//レベルデータ用オブジェクト
 	for (Object3d*& player : objPlayers_)delete player;
