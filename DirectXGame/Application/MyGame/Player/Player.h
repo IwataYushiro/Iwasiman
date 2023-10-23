@@ -1,5 +1,6 @@
 #pragma once
 #include "Input.h"
+#include "Sprite.h"
 #include "Model.h"
 #include "Object3d.h"
 #include "PlayerBullet.h"
@@ -68,6 +69,8 @@ public:
 
 	//描画
 	void Draw();
+	//スプライト描画
+	void DrawSprite();
 	//パーティクル描画
 	void DrawParticle();
 
@@ -87,6 +90,15 @@ private:
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	//右を向いてるか
 	bool isRight_ = true;
+	//ライフバー
+	SpriteCommon* spCommon_ = nullptr;
+	Sprite* spriteLifeBar_ = new Sprite();
+	
+	const XMFLOAT2 lifeBarPos_ = { 800.0f,25.0f };	//ライフバーの座標
+	const XMFLOAT4 green_ = { 0.2f,1.0f,0.2f,1.0f };//緑
+	const XMFLOAT4 red_ = { 1.0f,0.2f,0.2f,1.0f };	//赤
+	const float lifeBarDamageSize_ = 32.0f;			//ダメージを負うとこの値分サイズが縮小
+
 	//モデル
 	Model* modelBullet_ = nullptr;
 	

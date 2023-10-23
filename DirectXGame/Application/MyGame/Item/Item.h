@@ -99,7 +99,7 @@ public: //アクセッサ、インライン関数
 
 private:
 	//スプライト基盤クラス
-	SpriteCommon* spCommon_ = SpriteCommon::GetInstance();
+	SpriteCommon* spCommon_ = nullptr;
 	//ジャンプアイテム取得時のUIスプライト
 	Sprite* spriteItemJumpBar_ = new Sprite();
 

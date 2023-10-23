@@ -4,6 +4,7 @@
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
 #include "GamePlayScene.h"
+#include "EnumList.h"
 
 using namespace DirectX;
 
@@ -19,6 +20,8 @@ using namespace DirectX;
 CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
+	//スプライト解放
+	delete spriteLifeBar_;
 	//モデルの解放
 	delete particleDash_;
 	delete pmDash_;
@@ -46,6 +49,9 @@ std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScen
 bool Player::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
+
+	//シングルトンインスタンス
+	spCommon_ = SpriteCommon::GetInstance();
 	input_ = Input::GetInstance();
 
 	life_ = 10;
@@ -68,6 +74,13 @@ bool Player::Initialize() {
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
 	maxTime_ = 1.0f;					//全体時間
 	
+	//スプライト
+	spCommon_->LoadTexture(GPSPTI_PlayerLifeBar, "texture/plife2.png");
+	spriteLifeBar_->Initialize(spCommon_, GPSPTI_PlayerLifeBar);
+	spriteLifeBar_->SetPosition(lifeBarPos_);
+	spriteLifeBar_->SetColor(green_);//基本は緑
+	spriteLifeBar_->Update();
+
 	//パーティクル
 	particleDash_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmDash_ = ParticleManager::Create();
@@ -164,9 +177,23 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 	collider_->Update();
 	//着地処理
 	Landing(COLLISION_ATTR_LANDSHAPE);
+
+	spriteLifeBar_->SetTextureSize({ lifeBarDamageSize_ * life_,lifeBarDamageSize_ });
+	spriteLifeBar_->SetSize({ lifeBarDamageSize_ * life_,lifeBarDamageSize_ });
+	const int dangerLifeZone = 3;
+
+	if (life_<=dangerLifeZone){spriteLifeBar_->SetColor(red_);}
+	else { spriteLifeBar_->SetColor(green_); }
+
+	spriteLifeBar_->Update();
 }
 
 void Player::Draw() { Object3d::Draw(); }
+
+void Player::DrawSprite()
+{
+	spriteLifeBar_->Draw();
+}
 
 void Player::DrawParticle() { pmDash_->Draw(); }
 

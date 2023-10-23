@@ -256,12 +256,6 @@ void GamePlayScene::UpdateIsPlayGame()
 		}
 		//ImGui	
 		imguiManager_->Begin();
-		int plife[1] = { player->GetLife() };
-		ImGui::Begin("Player");
-		ImGui::SetWindowPos(ImVec2(1090.0f, 50.0f));
-		ImGui::SetWindowSize(ImVec2(150.0f, 50.0f));
-		ImGui::InputInt("plife", plife);
-		ImGui::End();
 		imguiManager_->End();
 	}
 	//’eXV
@@ -716,10 +710,8 @@ void GamePlayScene::Draw()
 
 		if (isGamePlay_)spritePauseInfo_->Draw();
 
-		for (std::unique_ptr<Item>& item : items_)
-		{
-			item->DrawSprite();
-		}
+		for (std::unique_ptr<Player>& player : players_) { player->DrawSprite(); }
+		for (std::unique_ptr<Item>& item : items_){item->DrawSprite();}
 
 		if (stageNum_ == SL_StageTutorial_Area1)
 		{

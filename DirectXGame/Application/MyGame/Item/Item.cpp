@@ -51,6 +51,8 @@ std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short 
 bool Item::Initialize()
 {
 	if (!Object3d::Initialize()) return false;
+	//シングルトンインスタンス
+	spCommon_ = SpriteCommon::GetInstance();
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
