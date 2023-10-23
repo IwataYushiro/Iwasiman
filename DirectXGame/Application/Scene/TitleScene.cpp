@@ -231,9 +231,9 @@ void TitleScene::UpdateIsStartGame()
 	{
 
 		DirectX::XMFLOAT3 move = goal->GetPosition();
-		DirectX::XMFLOAT3 speed = { -1.0f,0.0f,0.0f };
+		DirectX::XMFLOAT3 speed = { -1.5f,0.0f,0.0f };
 		//X値がここまで来たらイージング
-		const float gameStartPos_ = 50.0f;
+		const float gameStartPos_ = 60.0f;
 
 		move.x += speed.x;
 		goal->SetPosition(move);
