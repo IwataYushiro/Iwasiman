@@ -230,6 +230,8 @@ void GameOverScene::UpdateIsGameOver()
 			for (int i = 0; i < 3; i++)easeEyeContinue_[i].Standby(false);
 			for (int i = 0; i < 3; i++)easeTargetContinue_[i].Standby(false);
 			for (int i = 0; i < 3; i++)easePlayerRotateContinue_[i].Standby(false);
+			easeContinuePosX_.Standby(false);
+			easeContinuePosY_.Standby(false);
 			//コンティニュー
 			isContinue_ = true;
 			isGameover_ = false;
@@ -271,10 +273,11 @@ void GameOverScene::UpdateIsContinue()
 	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
 	for (int i = 0; i < 3; i++)easeEyeContinue_[i].ease_in_out_expo();
 	for (int i = 0; i < 3; i++)easeTargetContinue_[i].ease_in_out_expo();
-
+	easeContinuePosX_.ease_in_out_expo();
+	easeContinuePosY_.ease_in_out_expo();
 	//座標セット
 	spriteGameOver_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
-	spriteContinue_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
+	spriteContinue_->SetPosition({ easeContinuePosX_.num_X,easeContinuePosY_.num_X });
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
 	spriteTitle_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
 	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });

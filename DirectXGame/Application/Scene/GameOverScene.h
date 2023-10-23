@@ -125,6 +125,12 @@ private://メンバ変数
 		Easing(1300.0f, 0.0f, 1.6f),			//タイトルへ
 		Easing(1300.0f, 0.0f, 1.8f),			//スペースで選択
 	};
+	//コンティニュー文字を真ん中に移動させるイージング
+	Easing easeContinuePosX_ = Easing(0.0f, 380.0f, 1.0f);//チュートリアルへ
+
+	//コンティニュー文字を上に移動させるイージング
+	Easing easeContinuePosY_ = Easing(150.0f, 0.0f, 1.0f);//チュートリアルへ
+
 	//コンティニューするときの視点イージング
 	Easing easeEyeContinue_[3]
 	{
