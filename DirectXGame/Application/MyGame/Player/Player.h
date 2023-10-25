@@ -5,6 +5,7 @@
 #include "Object3d.h"
 #include "PlayerBullet.h"
 #include "ParticleManager.h"
+#include "Easing.h"
 
 #include <DirectXMath.h>
 #include <list>
@@ -90,14 +91,22 @@ private:
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	//右を向いてるか
 	bool isRight_ = true;
-	//ライフバー
-	SpriteCommon* spCommon_ = nullptr;
-	Sprite* spriteLifeBar_ = new Sprite();
-	
+	//スプライト
+	SpriteCommon* spCommon_ = nullptr;//基盤
+
+	Sprite* spriteLifeBar_ = new Sprite();			//ライフバー
 	const XMFLOAT2 lifeBarPos_ = { 800.0f,25.0f };	//ライフバーの座標
 	const XMFLOAT4 green_ = { 0.2f,1.0f,0.2f,1.0f };//緑
 	const XMFLOAT4 red_ = { 1.0f,0.2f,0.2f,1.0f };	//赤
 	const float lifeBarDamageSize_ = 32.0f;			//ダメージを負うとこの値分サイズが縮小
+
+	
+	Sprite* spriteHit_ = new Sprite();				//ヒットエフェクト
+	//
+	int mutekiCount_ = 0;							//無敵時間
+	const float hitTimer_ = MUTEKI_COUNT / 60.0f;	//イージング効果時間
+	Easing easeHit_ = Easing(1.0f, 0.0f, hitTimer_);//イージング
+	const XMFLOAT4 hitColor_ = { 0.5f,0.0f,0.0f,0.0f };	//赤く光る
 
 	//モデル
 	Model* modelBullet_ = nullptr;
@@ -139,10 +148,9 @@ private:
 	
 	//死亡フラグ
 	bool isDead_ = false;
-	//無敵時間
-	int mutekiCount_ = 0;
+	
 	//ライフ
-	int life_ = 5;
+	int life_ = 10;
 	//敵の攻撃やトゲ等に当たったか
 	bool isHit_ = false;
 	//シェイク時用のカメラムーブ
@@ -162,6 +170,8 @@ private:
 	XMFLOAT3 nowTarget_;
 	//シェイク時にスクロールしても元のカメラ視点、注視点に戻るための座標
 	XMFLOAT3 hitMove_;
+	//シェイク終了時にhitMoveをリセットする用の定数
+	const XMFLOAT3 resetHitMove_ = { 0.0f,0.0f,0.0f };
 
 public: //アクセッサ、インライン関数
 	//死んだかどうか

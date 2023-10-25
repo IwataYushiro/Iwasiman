@@ -22,6 +22,7 @@ CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 Player::~Player() {
 	//スプライト解放
 	delete spriteLifeBar_;
+	delete spriteHit_;
 	//モデルの解放
 	delete particleDash_;
 	delete pmDash_;
@@ -75,11 +76,16 @@ bool Player::Initialize() {
 	maxTime_ = 1.0f;					//全体時間
 	
 	//スプライト
-	spCommon_->LoadTexture(GPSPTI_PlayerLifeBar, "texture/plife2.png");
-	spriteLifeBar_->Initialize(spCommon_, GPSPTI_PlayerLifeBar);
+	spCommon_->LoadTexture(GPSPTI_PlayerLifeBarTex, "texture/plife2.png");
+	spriteLifeBar_->Initialize(spCommon_, GPSPTI_PlayerLifeBarTex);
 	spriteLifeBar_->SetPosition(lifeBarPos_);
 	spriteLifeBar_->SetColor(green_);//基本は緑
 	spriteLifeBar_->Update();
+
+	spCommon_->LoadTexture(GPSPTI_PlayerHitEffectTex, "texture/fade2.png");
+	spriteHit_->Initialize(spCommon_, GPSPTI_PlayerHitEffectTex);
+	spriteHit_->SetColor(hitColor_);//色は赤いが基本は透明
+	spriteHit_->Update();
 
 	//パーティクル
 	particleDash_ = Particle::LoadFromParticleTexture("particle1.png");
@@ -139,20 +145,29 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 			{
 				nowEye_ = camera_->GetEye();
 				nowTarget_ = camera_->GetTarget();
-
+				easeHit_.Standby(false);
 				isShake_ = true;
 				isHit_ = false;
 			}
 			if (isShake_)
 			{
+				//視点シェイク
 				XMFLOAT3 Eye = nowEye_ + hitMove_;
-				XMFLOAT3 Target = nowTarget_ + hitMove_;
-				camera_->ShakeEye(Eye, 10, { Eye.x - 2.0f,Eye.y - 2.0f,Eye.z - 2.0f },
-					{ Eye.x + 2.0f,Eye.y + 2.0f,Eye.z + 2.0f });
+				const XMFLOAT3 hitEye = { 1.0f,1.0f,1.0f };
+				camera_->ShakeEye(Eye, 1, { Eye.x - hitEye.x,Eye.y - hitEye.y,Eye.z - hitEye.z },
+					{ Eye.x + hitEye.x,Eye.y + hitEye.y,Eye.z + hitEye.z });
 
-				camera_->ShakeTarget(Target, 10, { Target.x - 2.0f,Target.y - 2.0f,Target.z - 2.0f },
-					{ Target.x + 2.0f,Target.y + 2.0f,Target.z + 2.0f });
+				//注視点シェイク
+				XMFLOAT3 Target = nowTarget_ + hitMove_;
+				const XMFLOAT3 hitTarget = { 1.0f,1.0f,1.0f };
+				camera_->ShakeTarget(Target, 1, { Target.x - hitTarget.x,Target.y - hitTarget.y,Target.z - hitTarget.z },
+					{ Target.x + hitTarget.x,Target.y + hitTarget.y,Target.z + hitTarget.z });
 				camera_->Update();
+
+				//+してイージング
+				easeHit_.ease_out_cubic();
+				spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
+
 				mutekiCount_++;
 			}
 
@@ -162,7 +177,7 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 				camera_->SetTarget(nowTarget_ + hitMove_);
 				isShake_ = false;
 				mutekiCount_ = 0;
-				hitMove_ = { 0.0f,0.0f,0.0f };
+				hitMove_ = resetHitMove_;
 			}
 			//移動制限
 			Trans();
@@ -186,6 +201,7 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 	else { spriteLifeBar_->SetColor(green_); }
 
 	spriteLifeBar_->Update();
+	spriteHit_->Update();
 }
 
 void Player::Draw() { Object3d::Draw(); }
@@ -193,6 +209,7 @@ void Player::Draw() { Object3d::Draw(); }
 void Player::DrawSprite()
 {
 	spriteLifeBar_->Draw();
+	spriteHit_->Draw();
 }
 
 void Player::DrawParticle() { pmDash_->Draw(); }

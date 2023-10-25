@@ -82,7 +82,8 @@ enum GamePlaySceneTutorialTextureIndex
 //プレイヤーテクスチャインデックス
 enum GamePlayScenePlayerTextureIndex
 {
-	GPSPTI_PlayerLifeBar = 1100,
+	GPSPTI_PlayerLifeBarTex = 1100,
+	GPSPTI_PlayerHitEffectTex = 1101,
 };
 //アイテムテクスチャインデックス
 enum GamePlaySceneItemTextureIndex
