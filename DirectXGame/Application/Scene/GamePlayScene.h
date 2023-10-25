@@ -183,11 +183,14 @@ private:
 	//入場用のプレイヤーポジションイージング
 	Easing easePlayerPositionGameStart_[3];
 	//入場用のレディー表記のイージング
-	Easing easeReadyPosition_[2]
+	Easing easeReadyPosition_[3]
 	{
-		Easing(1300.0f, -1000.0f, 3.0f),				//X
-		Easing(300.0f, 300.0f, 3.0f)					//Y
+		Easing(1300.0f, 375.0f, 1.5f),				//X(パート1)
+		Easing(375.0f,-600.0f,1.5f),				//X(パート2)
+		Easing(300.0f, 300.0f, 3.0f)				//Y
 	};
+	//レディーイージングその2が始まるフラグ
+	bool isStartReadyPart2_ = false;
 	//レディーイージングが終わったかのフラグ
 	bool isEndReady_ = false;
 

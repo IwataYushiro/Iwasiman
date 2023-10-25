@@ -162,25 +162,38 @@ void GamePlayScene::UpdateIsStartGame()
 	easeTargetGameStart_[2].ease_in_sine();
 
 
-	if (!isEndReady_)
-	{
-		easeReadyPosition_[0].ease_in_circ();
-		//座標セット
-		spriteReady_->SetPosition({ easeReadyPosition_[0].num_X,easeReadyPosition_[1].start });
-		//移動が終わったら
-		if (spriteReady_->GetPosition().x == easeReadyPosition_[0].end)
-		{
-			for (int i = 0; i < 3; i++)easeGoSizeAndAlpha_[i].Standby(false);
-			isEndReady_ = true;
-		}
-
-	}
-	else
-	{
-		for (int i = 0; i < 3; i++)easeGoSizeAndAlpha_[i].ease_out_cubic();
+	if (isEndReady_)
+	{for (int i = 0; i < 3; i++)easeGoSizeAndAlpha_[i].ease_out_cubic();
 		//サイズ、カラーセット
 		spriteGo_->SetSize({ easeGoSizeAndAlpha_[0].num_X,easeGoSizeAndAlpha_[1].num_X });
 		spriteGo_->SetColor({ 0.0f,0.0f, 0.0f,easeGoSizeAndAlpha_[2].num_X });
+		
+	}
+	else if(isStartReadyPart2_)
+	{
+		easeReadyPosition_[1].ease_in_back();
+		//座標セット
+		spriteReady_->SetPosition({ easeReadyPosition_[1].num_X,easeReadyPosition_[2].start });
+		//移動が終わったら
+		if (spriteReady_->GetPosition().x == easeReadyPosition_[1].end)
+		{
+			for (int i = 0; i < 3; i++)easeGoSizeAndAlpha_[i].Standby(false);
+			isEndReady_ = true;
+			isStartReadyPart2_ = false;
+		}
+	}
+	else//スタート時
+	{
+		easeReadyPosition_[0].ease_out_circ();
+		//座標セット
+		spriteReady_->SetPosition({ easeReadyPosition_[0].num_X,easeReadyPosition_[2].start });
+		//移動が終わったら
+		if (spriteReady_->GetPosition().x == easeReadyPosition_[0].end)
+		{
+			easeReadyPosition_[1].Standby(false);
+			isStartReadyPart2_ = true; 
+		}
+
 	}
 
 	for (int i = 0; i < 3; i++)easePlayerPositionGameStart_[i].ease_in_out_quint();
@@ -1283,7 +1296,7 @@ void GamePlayScene::LoadSprite()
 
 	spCommon_->LoadTexture(GPSTI_ReadyTex, "texture/ready2.png");
 	spriteReady_->Initialize(spCommon_, GPSTI_ReadyTex);
-	spriteReady_->SetPosition({ easeReadyPosition_[0].start,easeReadyPosition_[1].start });
+	spriteReady_->SetPosition({ easeReadyPosition_[0].start,easeReadyPosition_[2].start });
 	spriteReady_->SetColor({ black_.x,black_.y,black_.z,1.0f });
 
 	spCommon_->LoadTexture(GPSTI_GoTex, "texture/go.png");

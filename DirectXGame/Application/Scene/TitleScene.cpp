@@ -56,7 +56,7 @@ void TitleScene::Initialize()
 
 	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space2.png");
 	spriteTitleDone_->Initialize(spCommon_, TSTI_TitleDoneTex);
-	spriteTitleDone_->SetPosition({ easeTitlePosX_[1].start,600.0f});
+	spriteTitleDone_->SetPosition({ easeTitlePosX_[1].start,600.0f });
 
 	spCommon_->LoadTexture(TSTI_MenuTex, "texture/titlemenu.png");
 	spriteMenu_->Initialize(spCommon_, TSTI_MenuTex);
@@ -130,7 +130,7 @@ void TitleScene::Update()
 	{
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.num_X });//透明度だけ変える
-	
+
 		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.end)
 		{
 			if (input_->TriggerKey(DIK_SPACE))
@@ -369,29 +369,30 @@ void TitleScene::UpdateIsMenu()
 		spriteMenuStageSelect_->SetColor(selectMenuColor);
 	}
 
-	if (input_->TriggerKey(DIK_SPACE))
-	{
-		if (menuCount_ == TSMI_Tutorial)
-		{
-			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
-			for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
-			easeStartStagePosX_.Standby(false);
-			easeStartStagePosY_.Standby(false);
-			isStartGame_ = true;
-		}
-		else if (menuCount_ == TSMI_StageSelect)
-		{
-			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
-			for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easePlayerMove_[i].Standby(false);
-			isStageSelect_ = true;
 
-		}
-	}
-	if (easeMenuPosX_[4].num_X == easeMenuPosX_[4].end)
+	if (easeMenuPosX_[0].num_X == easeMenuPosX_[0].end)
 	{
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			if (menuCount_ == TSMI_Tutorial)
+			{
+				for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
+				for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
+				easeStartStagePosX_.Standby(false);
+				easeStartStagePosY_.Standby(false);
+				isStartGame_ = true;
+			}
+			else if (menuCount_ == TSMI_StageSelect)
+			{
+				for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
+				for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
+				for (int i = 0; i < 3; i++)easePlayerMove_[i].Standby(false);
+				isStageSelect_ = true;
+
+			}
+		}
 		if (input_->TriggerKey(DIK_Q))
 		{
 			for (int i = 0; i < 2; i++)easeTitlePosX_[i].Standby(true);
@@ -417,7 +418,7 @@ void TitleScene::FadeOut(DirectX::XMFLOAT3 rgb)
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
-		if(isStartGame_)spriteStageInfoNow_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+		if (isStartGame_)spriteStageInfoNow_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ステージ開始時に出る
 	}
 }
 
