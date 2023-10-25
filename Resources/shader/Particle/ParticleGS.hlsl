@@ -39,6 +39,8 @@ void main(
 		//ビュー、射影変換
 		element.svpos = mul(mat, element.svpos);
 		element.uv = uv_array[i];
+        element.col = input[0].color;
+		
 		//頂点を1個出力する(出力リストに追加)
 		output.Append(element);
 	}

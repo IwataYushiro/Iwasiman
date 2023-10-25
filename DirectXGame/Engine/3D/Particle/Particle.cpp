@@ -206,6 +206,8 @@ void Particle::Update()
 		it->velocity = it->velocity + it->accel;
 		//速度による移動
 		it->position = it->position + it->velocity;
+		//色は固定
+		it->color = it->color;
 
 		//進行度を0~1の範囲に換算
 		float f = (float)it->frame / it->num_frame;
@@ -226,6 +228,8 @@ void Particle::Update()
 			vertMap->pos = it->position;
 			//スケール
 			vertMap->scale = it->scale;
+			//色
+			vertMap->color = it->color;
 			//次の頂点へ
 			vertMap++;
 		}
@@ -255,7 +259,7 @@ void Particle::Draw(ID3D12GraphicsCommandList* cmdList)
 
 }
 
-void Particle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale)
+void Particle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale,XMFLOAT4 color)
 {
 	//リストに要素を追加
 	particles_.emplace_front();
@@ -270,6 +274,8 @@ void Particle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 acce
 	p.s_scale = start_scale;
 	p.e_scale = end_scale;
 	p.scale = p.s_scale;
+
+	p.color = color;
 }
 
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)

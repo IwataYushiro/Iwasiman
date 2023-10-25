@@ -29,6 +29,7 @@ public://サブクラス
 	{
 		XMFLOAT3 pos; // xyz座標
 		float scale;  //スケール
+		XMFLOAT4 color;//色
 	};
 
 	//パーティクル一粒
@@ -54,6 +55,9 @@ public://サブクラス
 		float s_scale = 1.0f;
 		//最終値
 		float e_scale = 0.0f;
+
+		//カラー
+		XMFLOAT4 color = {};
 	};
 
 private://定数
@@ -75,9 +79,9 @@ public://メンバ関数
 	// 描画(コマンドリスト)
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	//パーティクルの追加(寿命、初期座標、速度、重力加速度、開始時スケール、終了時スケール)
+	//パーティクルの追加(寿命、初期座標、速度、重力加速度、開始時スケール、終了時スケール,色)
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
-		float start_scale, float end_scale);
+		float start_scale, float end_scale, XMFLOAT4 color = { 0.0f,1.0f,1.0f,1.0f });
 
 private://メンバ変数
 	// デバイス
