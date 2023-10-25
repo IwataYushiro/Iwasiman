@@ -81,7 +81,7 @@ public://メンバ関数
 
 	//パーティクルの追加(寿命、初期座標、速度、重力加速度、開始時スケール、終了時スケール,色)
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
-		float start_scale, float end_scale, XMFLOAT4 color = { 0.0f,1.0f,1.0f,1.0f });
+		float start_scale, float end_scale, XMFLOAT4 color);
 
 private://メンバ変数
 	// デバイス
