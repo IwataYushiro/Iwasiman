@@ -2,6 +2,7 @@
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
 #include "EnumList.h"
+#include "MyMath.h"
 
 #include <cassert>
 #include <sstream>
@@ -162,8 +163,16 @@ void TitleScene::Update()
 
 	for (Object3d*& player : objPlayers_)
 	{
+		//パーティクルカラー
+		DirectX::XMFLOAT4 particleColor =
+		{
+			MyMath::RandomMTFloat(0.0f,1.0f),
+			MyMath::RandomMTFloat(0.0f,1.0f),
+			MyMath::RandomMTFloat(0.0f,1.0f),
+			1.0f
+		};
 		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
-			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
+			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f },particleColor);
 
 		player->Update();
 	}
