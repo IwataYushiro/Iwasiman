@@ -73,7 +73,7 @@ void EnemyBoss::Parameter() {
 	life_ = 2;
 
 	isReverse_ = false;
-	const std::array<int, 2>RandomMinMax = { 40,75 };
+	std::array<int, 2>RandomMinMax = {40,75};
 	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;

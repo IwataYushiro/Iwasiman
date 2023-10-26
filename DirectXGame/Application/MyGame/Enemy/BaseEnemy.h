@@ -69,7 +69,7 @@ protected:
 	const int endFireTime_ = 0;
 	//ƒ‰ƒCƒt0ˆÈ‰º‚Å€–S
 	const int deathLife_ = 0;
-
+	
 	//’e”­ËŠÔ‚Íƒ‰ƒ“ƒ_ƒ€
 	int minInterval_;//Å¬
 	int maxInterval_;//Å‘å

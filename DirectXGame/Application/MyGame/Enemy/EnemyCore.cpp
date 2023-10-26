@@ -70,8 +70,8 @@ void EnemyCore::Parameter() {
 	life_ = 5;
 	isReverse_ = false;
 	//弾初期値
-	RandomMinMax_ = { 50,100 };
-	fireInterval_ = MyMath::RandomMTInt(RandomMinMax_[0], RandomMinMax_[1]);
+	std::array<int, 2>RandomMinMax = { 50,100 };
+	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 

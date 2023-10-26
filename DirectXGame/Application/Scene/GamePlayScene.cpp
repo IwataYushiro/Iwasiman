@@ -121,6 +121,7 @@ void GamePlayScene::Update()
 
 		skydome->Update();
 	}
+	
 	if (isStart_)			UpdateIsStartGame();			//ゲーム開始時
 	else if (isGamePlay_)	UpdateIsPlayGame();				//ゲームプレイ時
 	else if (isPause_)		UpdateIsPause();				//ポーズ時
@@ -146,6 +147,8 @@ void GamePlayScene::Update()
 	//チュートリアル関係
 	UpdateTutorial();
 	UpdateTutorialSprite();
+
+	
 
 }
 
@@ -304,9 +307,11 @@ void GamePlayScene::UpdateIsPlayGame()
 	{
 		item->Update();
 	}
-
-
 	for (Object3d*& object : objects_) object->Update();
+
+	imguiManager_->Begin();
+	//camera_->DebugCamera();
+	imguiManager_->End();
 
 	//カメラ
 	camera_->Update();

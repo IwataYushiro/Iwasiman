@@ -95,7 +95,7 @@ void Enemy1::Parameter() {
 	onGround_ = true;
 	//初期フェーズ
 	phase_ = Phase::Approach;
-	const std::array<int, 2>RandomMinMax = { 100,150 };
+	std::array<int, 2>RandomMinMax = { 100,150 };
 	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
