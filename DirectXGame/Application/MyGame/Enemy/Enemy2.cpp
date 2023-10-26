@@ -7,6 +7,7 @@
 #include "GamePlayScene.h"
 
 #include "MyMath.h"
+#include "Vector2.h"
 
 using namespace DirectX;
 
@@ -62,11 +63,11 @@ bool Enemy2::Initialize(int level) {
 
 void Enemy2::InitSubATTR(int level)
 {
-	if (level == 1)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
-	else if (level == 2)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
-	else if (level == 3)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
-	else if (level == 4)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
-	else if (level == 5)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
+	if (level == ET_Normal)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	else if (level == ET_Power)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
+	else if (level == ET_Guard)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
+	else if (level == ET_Speed)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
+	else if (level == ET_Death)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
 }
 
 void Enemy2::InitSpeed()
@@ -118,7 +119,8 @@ void Enemy2::Parameter() {
 	onGround_ = false;
 	//初期フェーズ
 	phase_ = Phase::Approach;
-	fireInterval_ = MyMath::RandomMTInt(75, 100);
+	const std::array<int, 2>RandomMinMax = { 75,100 };
+	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 
@@ -156,17 +158,19 @@ void Enemy2::Update(bool isStart) {
 		//発射タイマーカウントダウン
 		fireTimer_--;
 		//指定時間に達した
-		if (fireTimer_ <= 0) {
+		if (fireTimer_ <= endFireTime_) {
 			//弾発射
 			Fire();
 			//発射タイマー初期化
-			fireTimer_ = MyMath::RandomMTInt(fireInterval_ / 2, fireInterval_);
+			const int minInterval = fireInterval_ / 2;
+			fireTimer_ = MyMath::RandomMTInt(minInterval, fireInterval_);
 		}
 
+
 		//死んだら
-		if (life_ <= 0) {
+		if (life_ <= deathLife_) {
 			isDead_ = true;
-			life_ = 0;
+			life_ = deathLife_;
 		}
 	}
 
@@ -318,6 +322,8 @@ void Enemy2::Landing()
 	ray.start.m128_f32[1] += sphereCollider->GetRadius();
 	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
 	RaycastHit raycastHit;
+	//半径　X　2.0f(radiusMulNum)
+	const float radiusMulNum = 2.0f;
 	//接地状態
 	if (onGround_)
 	{
@@ -336,12 +342,12 @@ void Enemy2::Landing()
 	else
 	{
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
-			sphereCollider->GetRadius() * 2.0f))
+			sphereCollider->GetRadius() * radiusMulNum))
 		{
 			onGround_ = true;
 		}
 
-		if (position_.y >= 20.0f)
+		if (position_.y >= backUpPosY)
 		{
 			phase_ = Phase::Approach;
 		}
@@ -372,7 +378,7 @@ void Enemy2::UpdateApproach() {
 		position_.z += speed_.z;
 	}
 
-	if (position_.y <= -20.0f)
+	if (position_.y <= -backFallPosY)
 	{
 
 		phase_ = Phase::Leave;
@@ -385,7 +391,7 @@ void Enemy2::UpdateLeave() {
 	position_.y += backSpeed_.y;
 	position_.z += backSpeed_.z;
 
-	if (position_.y >= 20.0f) phase_ = Phase::Approach;
+	if (position_.y >= backUpPosY) phase_ = Phase::Approach;
 }
 
 //ワールド座標を取得

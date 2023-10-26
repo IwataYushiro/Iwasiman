@@ -107,6 +107,9 @@ private:
 	bool isReverse_ = false;
 	//地面に乗ってる時のカウント
 	int count_ = 0;
+	//Y軸がこの地点に達したら
+	const float backFallPosY = -20.0f;//上へ
+	const float backUpPosY = 20.0f;//下へ
 
 public:
 

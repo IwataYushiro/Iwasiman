@@ -56,6 +56,20 @@ protected:
 	//ボスの死亡フラグ
 	bool bossDead_;
 
+	//敵属性
+	enum EnemyType
+	{
+		ET_Normal = 1,	//通常
+		ET_Power = 2,	//攻撃型
+		ET_Guard = 3,	//防御型
+		ET_Speed = 4,	//速度型
+		ET_Death = 5,	//危険型
+	};
+	//発射
+	const int endFireTime_ = 0;
+	//ライフ0以下で死亡
+	const int deathLife_ = 0;
+
 public://アクセッサ
 	//死んだかどうか
 	virtual bool IsDead() const { return isDead_; }

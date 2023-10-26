@@ -60,11 +60,11 @@ bool Enemy1::Initialize(int level) {
 }
 void Enemy1::InitSubATTR(int level)
 {
-	if (level == 1)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
-	else if (level == 2)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
-	else if (level == 3)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
-	else if (level == 4)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
-	else if (level == 5)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
+	if (level == ET_Normal)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	else if (level == ET_Power)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
+	else if (level == ET_Guard)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
+	else if (level == ET_Speed)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
+	else if (level == ET_Death)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
 }
 
 void Enemy1::InitSpeed()
@@ -95,8 +95,8 @@ void Enemy1::Parameter() {
 	onGround_ = true;
 	//初期フェーズ
 	phase_ = Phase::Approach;
-
-fireInterval_ = MyMath::RandomMTInt(100, 150);
+	const std::array<int, 2>RandomMinMax = { 100,150 };
+	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 
@@ -276,7 +276,12 @@ void Enemy1::Landing()
 	ray.start = sphereCollider->center;
 	ray.start.m128_f32[1] += sphereCollider->GetRadius();
 	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
+	//レイキャスト
 	RaycastHit raycastHit;
+	//半径　X　2.0f(radiusMulNum)
+	const float radiusMulNum = 2.0f;
+	//落下状態になるY値のスピード
+	const float fallSpeedY = 0.0f;
 	//接地状態
 	if (onGround_)
 	{
@@ -284,10 +289,10 @@ void Enemy1::Landing()
 		const float adsDistance = 0.2f;
 		//接地を維持
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
-			sphereCollider->GetRadius() * 2.0f + adsDistance))
+			sphereCollider->GetRadius() * radiusMulNum + adsDistance))
 		{
 			onGround_ = true;
-			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * radiusMulNum);
 			//行列更新
 			Object3d::Update();
 		}
@@ -299,14 +304,14 @@ void Enemy1::Landing()
 		}
 	}
 	//落下状態
-	else if (fallVec_.y <= 0.0f)
+	else if (fallVec_.y <= fallSpeedY)
 	{
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
-			sphereCollider->GetRadius() * 2.0f))
+			sphereCollider->GetRadius() * radiusMulNum))
 		{
 			//着地
 			onGround_ = true;
-			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * radiusMulNum);
 			//行列更新
 			Object3d::Update();
 		}
@@ -330,21 +335,21 @@ void Enemy1::Draw() {
 //接近
 void Enemy1::UpdateApproach() {
 	
-
 	//移動
-	
 	position_.x += speed_.x;
 	position_.y += speed_.y;
 	position_.z += speed_.z;
 
 	//発射タイマーカウントダウン
 	fireTimer_--;
+	
 	//指定時間に達した
-	if (fireTimer_ <= 0) {
+	if (fireTimer_ <= endFireTime_) {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer_ = MyMath::RandomMTInt(fireInterval_ / 2, fireInterval_);
+		const int minInterval = fireInterval_ / 2;
+		fireTimer_ = MyMath::RandomMTInt(minInterval, fireInterval_);
 	}
 
 	if (!onGround_)
@@ -361,11 +366,13 @@ void Enemy1::UpdateApproach() {
 	}
 
 	//死んだら
-	if (life_ <= 0) {
+	if (life_ <= deathLife_) {
 		isDead_ = true;
-		life_ = 0;
+		life_ = deathLife_;
 	}
-	if (position_.y <= -60.0f)isDead_ = true;
+	//Y軸が一定座標に達しても死亡
+	const float deathFallPosY = -60.0f;
+	if (position_.y <= deathFallPosY)isDead_ = true;
 }
 
 //離脱
