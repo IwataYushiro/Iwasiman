@@ -83,7 +83,8 @@ void EnemyBullet::Update() {
 	camera_->Update();
 	Object3d::Update();
 	//ŽžŠÔŒo‰ß‚ÅŽ€–S
-	if (--deathTimer_ <= 0) {
+	const int deathTime = 0;
+	if (--deathTimer_ <= deathTime) {
 		isDead_ = true;
 	}
 }

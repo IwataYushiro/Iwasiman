@@ -348,8 +348,9 @@ void Enemy1::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		const int minInterval = fireInterval_ / 2;
-		fireTimer_ = MyMath::RandomMTInt(minInterval, fireInterval_);
+		minInterval_ = fireInterval_ / 2;
+		maxInterval_ = fireInterval_;
+		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
 
 	if (!onGround_)

@@ -378,7 +378,7 @@ void Enemy2::UpdateApproach() {
 		position_.z += speed_.z;
 	}
 
-	if (position_.y <= -backFallPosY)
+	if (position_.y <= backFallPosY)
 	{
 
 		phase_ = Phase::Leave;

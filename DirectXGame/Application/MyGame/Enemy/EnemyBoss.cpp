@@ -67,17 +67,14 @@ bool EnemyBoss::Initialize() {
 //パラメータ
 void EnemyBoss::Parameter() {
 
-
-
 	//初期フェーズ
-
 	phase_ = Phase::ApproachStage1;
 	maxTime_ = 5.0f;
 	life_ = 2;
 
-
 	isReverse_ = false;
-	fireInterval_ = MyMath::RandomMTInt(40, 75);
+	const std::array<int, 2>RandomMinMax = { 40,75 };
+	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 
@@ -208,11 +205,13 @@ void EnemyBoss::UpdateApproach() {
 	//発射タイマーカウントダウン
 	fireTimer_--;
 	//指定時間に達した
-	if (fireTimer_ <= 0) {
+	if (fireTimer_ <= endFireTime_) {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer_ = MyMath::RandomMTInt(fireInterval_, fireInterval_ * 2);
+		minInterval_ = fireInterval_ ;
+		maxInterval_ = fireInterval_ * 2;
+		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
 
 	//指定の位置に到達したら攻撃
@@ -248,11 +247,11 @@ void EnemyBoss::UpdateAttack() {
 		position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 	}
 	//指定の位置に到達したら反転
-	if (position_.x >= 30.0f + cameraMove) {
+	if (position_.x >= end_.x + cameraMove) {
 		isReverse_ = true;
 		startCount_ = std::chrono::steady_clock::now();
 	}
-	if (position_.x <= -30.0f + cameraMove) {
+	if (position_.x <= start_.x + cameraMove) {
 		isReverse_ = false;
 		startCount_ = std::chrono::steady_clock::now();
 	}
@@ -260,15 +259,17 @@ void EnemyBoss::UpdateAttack() {
 	//発射タイマーカウントダウン
 	fireTimer_--;
 	//指定時間に達した
-	if (fireTimer_ <= 0) {
+	if (fireTimer_ <= endFireTime_) {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer_ = MyMath::RandomMTInt(fireInterval_, fireInterval_ * 2);
+		minInterval_ = fireInterval_;
+		maxInterval_ = fireInterval_ * 2;
+		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
 	//死んだら
-	if (life_ <= 0) {
-		life_ = 0;
+	if (life_ <= deathLife_) {
+		life_ = deathLife_;
 		isDead_ = true;
 		bossDead_ = true;
 	}

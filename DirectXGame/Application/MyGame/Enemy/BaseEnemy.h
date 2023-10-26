@@ -70,6 +70,10 @@ protected:
 	//ライフ0以下で死亡
 	const int deathLife_ = 0;
 
+	//弾発射時間はランダム
+	int minInterval_;//最小
+	int maxInterval_;//最大
+
 public://アクセッサ
 	//死んだかどうか
 	virtual bool IsDead() const { return isDead_; }

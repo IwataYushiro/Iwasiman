@@ -68,11 +68,10 @@ void EnemyCore::Parameter() {
 	phase_ = Phase::CoreStage1;
 	maxTime_ = 2.0f;
 	life_ = 5;
-
-
 	isReverse_ = false;
-
-	fireInterval_ = MyMath::RandomMTInt(50, 100);
+	//弾初期値
+	RandomMinMax_ = { 50,100 };
+	fireInterval_ = MyMath::RandomMTInt(RandomMinMax_[0], RandomMinMax_[1]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 
@@ -208,32 +207,36 @@ void EnemyCore::UpdateCore()
 	position_.y += velocity.y;
 	position_.z += velocity.z;
 
-	//指定の位置に到達したら反転
-	if (position_.x >= 65.0f) {
+	//X軸が指定の位置に到達したら反転
+	const float reversePosX = 65.0f;
+
+	if (position_.x >= reversePosX) {
 		//→から←
 		isReverse_ = true;
 	}
-	if (position_.x <= -65.0f) {
+	if (position_.x <= -reversePosX) {
 		isReverse_ = false;
 	}
 
 	//発射タイマーカウントダウン
 	fireTimer_--;
 	//指定時間に達した
-	if (fireTimer_ <= 0) {
+	if (fireTimer_ <= endFireTime_) {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		fireTimer_ = MyMath::RandomMTInt(fireInterval_, fireInterval_ * 2);
+		minInterval_ = fireInterval_;
+		maxInterval_ = fireInterval_ * 2;
+		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
 	//死んだら自機の弾みたいに
-	if (life_ == 0) {
+	if (life_ <= deathLife_) {
 		nowPos_ = Object3d::GetPosition();
 
 		collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
 		collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
 
-		life_ = 0;
+		life_ = deathLife_;
 		startCount_ = std::chrono::steady_clock::now();	//開始時間
 		//敵にぶつける
 
