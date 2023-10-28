@@ -90,16 +90,16 @@ public: // メンバ関数
 
 	// パーティクル発射(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},色)
 	void Active(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
-		const int& setnum, const XMFLOAT2& setscale,const XMFLOAT4& color = { 1.0f,1.0f,1.0f,1.0f });
+		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4 start_color = { 1.0f,1.0f,1.0f,1.0f },const XMFLOAT4 end_color = { 0.0f,0.0f,0.0f,0.0f });
 	// パーティクル発射X軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},色)
 	void ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
- const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& color = { 1.0f,1.0f,1.0f,1.0f });
+		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4 start_color = { 1.0f,1.0f,1.0f,1.0f },const XMFLOAT4 end_color = { 0.0f,0.0f,0.0f,0.0f });
 	// パーティクル発射Y軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},色)
 	void ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
- const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& color = { 1.0f,1.0f,1.0f,1.0f });
+		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4 start_color = { 1.0f,1.0f,1.0f,1.0f },const XMFLOAT4 end_color = { 0.0f,0.0f,0.0f,0.0f });
 	// パーティクル発射Z軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},色)
 	void ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
- const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& color = { 1.0f,1.0f,1.0f,1.0f });
+		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4 start_color= { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4 end_color = { 0.0f,0.0f,0.0f,0.0f });
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff_; // 定数バッファ

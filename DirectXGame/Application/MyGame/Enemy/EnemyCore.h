@@ -93,7 +93,7 @@ private:
 	int32_t fireTimer_ = 0;
 
 	//”¼Œa
-	float radius_ = 5.0f;
+	float radius_ = 10.0f;
 	//ƒ{ƒXŽ€–S
 	bool bossDead_ = false;
 

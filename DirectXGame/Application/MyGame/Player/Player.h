@@ -1,4 +1,5 @@
 #pragma once
+#include "Easing.h"
 #include "Input.h"
 #include "Sprite.h"
 #include "Model.h"
@@ -25,7 +26,7 @@ class GamePlayScene;
 *	自機
 
 */
-class Player:public Object3d
+class Player :public Object3d
 {
 private:
 	// DirectX::を省略
@@ -47,12 +48,12 @@ public:
 	bool Initialize() override;
 	//リセット処理
 	void Reset();
-	
+
 	//更新(手前と背面ジャンプの有効化、攻撃処理の有効化、開始時演出だと全操作無効)
 	void Update(bool isBack = true, bool isAttack = true, bool isStart = false);
 	//プレイヤーの移動処理
 	void Move();
-	
+
 	//落ちる処理とジャンプ処理
 	void FallAndJump();
 	//奥へ移動
@@ -100,9 +101,8 @@ private:
 	const XMFLOAT4 red_ = { 1.0f,0.2f,0.2f,1.0f };	//赤
 	const float lifeBarDamageSize_ = 32.0f;			//ダメージを負うとこの値分サイズが縮小
 
-	
 	Sprite* spriteHit_ = new Sprite();				//ヒットエフェクト
-	//
+
 	int mutekiCount_ = 0;							//無敵時間
 	const float hitTimer_ = MUTEKI_COUNT / 60.0f;	//イージング効果時間
 	Easing easeHit_ = Easing(1.0f, 0.0f, hitTimer_);//イージング
@@ -110,10 +110,10 @@ private:
 
 	//モデル
 	Model* modelBullet_ = nullptr;
-	
+
 	//インプット
 	Input* input_ = nullptr;
-	
+
 	//アングル
 	XMFLOAT3 angle_;
 
@@ -133,22 +133,25 @@ private:
 
 	//時間計測
 	std::chrono::steady_clock::time_point startCount_;	//開始時間
-	std::chrono::steady_clock::time_point nowCount_;		//現在時間
-	std::chrono::microseconds elapsedCount_;				//経過時間 経過時間=現在時間-開始時間
-	float	maxTime_ = 1.0f;								//全体時間
+	std::chrono::steady_clock::time_point nowCount_;	//現在時間
+	std::chrono::microseconds elapsedCount_;			//経過時間 経過時間=現在時間-開始時間
+	float	maxTime_ = 1.0f;							//全体時間
 	float	timeRate_;									//どれくらい時間が進んだか
 	//制御点
-	XMFLOAT3 start_;										//最初点
+	XMFLOAT3 start_;									//最初点
 	XMFLOAT3 point1_;									//中間点1
 	XMFLOAT3 point2_;									//中間点2
 	XMFLOAT3 end_;										//最終点
 
 	//半径
-	float radius_ = 1.0f;
-	
+	float radius_ = 2.0f;
+
+	//死亡演出移行フラグ
+	bool isBrack_ = false;
+
 	//死亡フラグ
 	bool isDead_ = false;
-	
+
 	//ライフ
 	int life_ = 10;
 	//敵の攻撃やトゲ等に当たったか
@@ -189,5 +192,8 @@ public: //アクセッサ、インライン関数
 	const int& GetLife()const { return life_; }
 	//ゲームシーン
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+
+private://カプセル化メンバ関数
+	void UpdateAlive(bool isBack = true, bool isAttack = true);
 
 };

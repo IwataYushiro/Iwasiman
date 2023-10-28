@@ -315,7 +315,7 @@ void ParticleManager::Draw()
 }
 
 void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3& setpos, const XMFLOAT3& setvel,
- const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& color)
+ const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4 start_color, const XMFLOAT4 end_color)
 {
 	for (int i = 0; i < setnum; i++)
 	{
@@ -338,11 +338,11 @@ void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		p->Add(60, pos, vel, acc, setscale.x, setscale.y,color);
+		p->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
-	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& color)
+	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4 start_color, const XMFLOAT4 end_color)
 {
 	for (int i = 0; i < setnum; i++)
 	{
@@ -364,12 +364,12 @@ void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		p->Add(60, pos, vel, acc, setscale.x, setscale.y,color);
+		p->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 
 void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
-	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& color)
+	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4 start_color, const XMFLOAT4 end_color)
 {
 	for (int i = 0; i < setnum; i++)
 	{
@@ -391,12 +391,12 @@ void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		p->Add(60, pos, vel, acc, setscale.x, setscale.y,color);
+		p->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 
 void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
-	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& color)
+	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4 start_color, const XMFLOAT4 end_color)
 {
 	for (int i = 0; i < setnum; i++)
 	{
@@ -418,6 +418,6 @@ void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		p->Add(60, pos, vel, acc, setscale.x, setscale.y,color);
+		p->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }

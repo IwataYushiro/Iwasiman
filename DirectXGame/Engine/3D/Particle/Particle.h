@@ -58,6 +58,11 @@ public://サブクラス
 
 		//カラー
 		XMFLOAT4 color = {};
+		//初期値
+		XMFLOAT4 s_color = { 1.0f,1.0f,1.0f,1.0f };
+		//最終値
+		XMFLOAT4 e_color = { 0.0f,0.0f,0.0f,0.0f };
+
 	};
 
 private://定数
@@ -79,9 +84,10 @@ public://メンバ関数
 	// 描画(コマンドリスト)
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	//パーティクルの追加(寿命、初期座標、速度、重力加速度、開始時スケール、終了時スケール,色)
+	/*パーティクルの追加(寿命、初期座標、速度、重力加速度
+	、開始時スケール、終了時スケール, 開始色,終了色)*/
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
-		float start_scale, float end_scale, XMFLOAT4 color);
+		float start_scale, float end_scale, XMFLOAT4 start_color, XMFLOAT4 end_color);
 
 private://メンバ変数
 	// デバイス

@@ -192,7 +192,7 @@ void GameOverScene::UpdateIsGameOver()
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
 	spriteTitle_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
 	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
-	spriteFadeInOut_->SetColor({ 0.2f,0.0f, 0.0f, easeFadeInOut_.num_X });//“§–¾“x‚¾‚¯•Ï‚¦‚é
+	spriteFadeInOut_->SetColor({ deepRed_.x,deepRed_.y, deepRed_.z, easeFadeInOut_.num_X });//“§–¾“x‚¾‚¯•Ï‚¦‚é
 
 	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
 	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;

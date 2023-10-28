@@ -103,7 +103,7 @@ void TitleScene::Initialize()
 	//objF->PlayAnimation();//更新で呼ぶと止まるから注意
 
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle7.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
@@ -164,15 +164,38 @@ void TitleScene::Update()
 	for (Object3d*& player : objPlayers_)
 	{
 		//パーティクルカラーの反映テスト例(虹色)
-		/*DirectX::XMFLOAT4 particleColor =
+		/*DirectX::XMFLOAT4 particleColorS =
 		{
 			MyMath::RandomMTFloat(0.0f,1.0f),
 			MyMath::RandomMTFloat(0.0f,1.0f),
 			MyMath::RandomMTFloat(0.0f,1.0f),
 			1.0f
 		};*/
-		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
-			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
+		/*DirectX::XMFLOAT4 particleColorE =
+		{
+			MyMath::RandomMTFloat(0.0f,1.0f),
+			MyMath::RandomMTFloat(0.0f,1.0f),
+			MyMath::RandomMTFloat(0.0f,1.0f),
+			0.0f
+		};*/
+
+		DirectX::XMFLOAT4 particleColorS[2] =
+		{
+			{MyMath::RandomMTFloat(0.0f,1.0f),0.0f,0.0f,1.0f},
+			{MyMath::RandomMTFloat(0.7f,1.0f),0.0f,0.0f,1.0f}
+		};
+
+		DirectX::XMFLOAT4 particleColorE[2] =
+		{
+			{0.0f,0.0f,0.0f,0.0f},
+			{1.0f,1.0f,1.0f,1.0f},
+		};
+
+		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f }, { -3.0f,0.3f,0.3f },
+			{ 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f }, particleColorS[0], particleColorE[0]);
+
+		pm1_->Active(particle1_, player->GetPosition(), { 10.1f ,10.1f,10.1f }, { 0.1f,0.1f,0.1f },
+			{ 0.0f,0.001f,0.0f }, 5, { 1.0f, 3.0f }, particleColorS[1], particleColorE[1]);
 
 		player->Update();
 	}

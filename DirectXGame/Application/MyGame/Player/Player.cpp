@@ -74,7 +74,7 @@ bool Player::Initialize() {
 	nowCount_ = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
 	maxTime_ = 1.0f;					//全体時間
-	
+
 	//スプライト
 	spCommon_->LoadTexture(GPSPTI_PlayerLifeBarTex, "texture/plife2.png");
 	spriteLifeBar_->Initialize(spCommon_, GPSPTI_PlayerLifeBarTex);
@@ -124,67 +124,8 @@ void Player::Reset() {
 void Player::Update(bool isBack, bool isAttack, bool isStart) {
 
 	pmDash_->SetCamera(camera_);
-	if (!isStart)
-	{
-		if (!isDead_)
-		{
-			//移動処理
-			if (!isJumpBack_)Move();
-			//攻撃処理
-			FallAndJump();
-			if (isBack)JumpBack();
-			if (isAttack)Attack();
+	if (!isStart) { if (!isDead_)UpdateAlive(isBack, isAttack); }
 
-			if (life_ <= 0)
-			{
-				isDead_ = true;
-			}
-			if (position_.y <= -60.0f)isDead_ = true;
-
-			if (isHit_)
-			{
-				nowEye_ = camera_->GetEye();
-				nowTarget_ = camera_->GetTarget();
-				easeHit_.Standby(false);
-				isShake_ = true;
-				isHit_ = false;
-			}
-			if (isShake_)
-			{
-				//視点シェイク
-				XMFLOAT3 Eye = nowEye_ + hitMove_;
-				const XMFLOAT3 hitEye = { 1.0f,1.0f,1.0f };
-				camera_->ShakeEye(Eye, 1, { Eye.x - hitEye.x,Eye.y - hitEye.y,Eye.z - hitEye.z },
-					{ Eye.x + hitEye.x,Eye.y + hitEye.y,Eye.z + hitEye.z });
-
-				//注視点シェイク
-				XMFLOAT3 Target = nowTarget_ + hitMove_;
-				const XMFLOAT3 hitTarget = { 1.0f,1.0f,1.0f };
-				camera_->ShakeTarget(Target, 1, { Target.x - hitTarget.x,Target.y - hitTarget.y,Target.z - hitTarget.z },
-					{ Target.x + hitTarget.x,Target.y + hitTarget.y,Target.z + hitTarget.z });
-				camera_->Update();
-
-				//+してイージング
-				easeHit_.ease_out_cubic();
-				spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
-
-				mutekiCount_++;
-			}
-
-			if (mutekiCount_ == MUTEKI_COUNT)
-			{
-				camera_->SetEye(nowEye_ + hitMove_);
-				camera_->SetTarget(nowTarget_ + hitMove_);
-				isShake_ = false;
-				mutekiCount_ = 0;
-				hitMove_ = resetHitMove_;
-			}
-			//移動制限
-			Trans();
-
-		}
-		
-	}
 	camera_->Update();
 	UpdateWorldMatrix();
 	pmDash_->Update();
@@ -197,7 +138,7 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 	spriteLifeBar_->SetSize({ lifeBarDamageSize_ * life_,lifeBarDamageSize_ });
 	const int dangerLifeZone = 3;
 
-	if (life_<=dangerLifeZone){spriteLifeBar_->SetColor(red_);}
+	if (life_ <= dangerLifeZone) { spriteLifeBar_->SetColor(red_); }
 	else { spriteLifeBar_->SetColor(green_); }
 
 	spriteLifeBar_->Update();
@@ -611,4 +552,63 @@ const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMF
 		p1.z + 3 * (1.0f - t) * t * t * p2.z + t * t * t * p3.z;
 
 	return ans;
+}
+
+void Player::UpdateAlive(bool isBack, bool isAttack)
+{
+	if (!isDead_)
+		//移動処理
+		if (!isJumpBack_)Move();
+	//攻撃処理
+	FallAndJump();
+	if (isBack)JumpBack();
+	if (isAttack)Attack();
+
+	if (life_ <= 0)
+	{
+		isDead_ = true;
+	}
+	if (position_.y <= -60.0f)isDead_ = true;
+
+	if (isHit_)
+	{
+		nowEye_ = camera_->GetEye();
+		nowTarget_ = camera_->GetTarget();
+		easeHit_.Standby(false);
+		isShake_ = true;
+		isHit_ = false;
+	}
+	if (isShake_)
+	{
+		//視点シェイク
+		XMFLOAT3 Eye = nowEye_ + hitMove_;
+		const XMFLOAT3 hitEye = { 1.0f,1.0f,1.0f };
+		camera_->ShakeEye(Eye, 1, { Eye.x - hitEye.x,Eye.y - hitEye.y,Eye.z - hitEye.z },
+			{ Eye.x + hitEye.x,Eye.y + hitEye.y,Eye.z + hitEye.z });
+
+		//注視点シェイク
+		XMFLOAT3 Target = nowTarget_ + hitMove_;
+		const XMFLOAT3 hitTarget = { 1.0f,1.0f,1.0f };
+		camera_->ShakeTarget(Target, 1, { Target.x - hitTarget.x,Target.y - hitTarget.y,Target.z - hitTarget.z },
+			{ Target.x + hitTarget.x,Target.y + hitTarget.y,Target.z + hitTarget.z });
+		camera_->Update();
+
+		//+してイージング
+		easeHit_.ease_out_cubic();
+		spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
+
+		mutekiCount_++;
+	}
+
+	if (mutekiCount_ == MUTEKI_COUNT)
+	{
+		camera_->SetEye(nowEye_ + hitMove_);
+		camera_->SetTarget(nowTarget_ + hitMove_);
+		isShake_ = false;
+		mutekiCount_ = 0;
+		hitMove_ = resetHitMove_;
+	}
+	//移動制限
+	Trans();
+
 }

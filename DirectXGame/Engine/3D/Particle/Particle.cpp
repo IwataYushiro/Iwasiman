@@ -206,14 +206,29 @@ void Particle::Update()
 		it->velocity = it->velocity + it->accel;
 		//速度による移動
 		it->position = it->position + it->velocity;
-		//色は固定
-		it->color = it->color;
+		
 
 		//進行度を0~1の範囲に換算
 		float f = (float)it->frame / it->num_frame;
 		//スケールの線形補間
 		it->scale = (it->e_scale - it->s_scale) * f;
 		it->scale += it->s_scale;
+		
+		//R色の線形補間
+		it->color.x = (it->e_color.x - it->s_color.x) * f;
+		it->color.x += it->s_color.x;
+
+		//G色の線形補間
+		it->color.y = (it->e_color.y - it->s_color.y) * f;
+		it->color.y += it->s_color.y;
+
+		//B色の線形補間
+		it->color.z = (it->e_color.z - it->s_color.z) * f;
+		it->color.z += it->s_color.z;
+
+		//アルファ値の線形補間
+		it->color.w = (it->e_color.w - it->s_color.w) * f;
+		it->color.w += it->s_color.w;
 	}
 	//頂点バッファへデータ転送
 	VertexPosScale* vertMap = nullptr;
@@ -259,7 +274,7 @@ void Particle::Draw(ID3D12GraphicsCommandList* cmdList)
 
 }
 
-void Particle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale,XMFLOAT4 color)
+void Particle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float start_scale, float end_scale, XMFLOAT4 start_color, XMFLOAT4 end_color)
 {
 	//リストに要素を追加
 	particles_.emplace_front();
@@ -275,7 +290,9 @@ void Particle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 acce
 	p.e_scale = end_scale;
 	p.scale = p.s_scale;
 
-	p.color = color;
+	p.s_color = start_color;
+	p.e_color = end_color;
+	p.color = p.s_color;
 }
 
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)

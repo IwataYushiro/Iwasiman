@@ -248,7 +248,6 @@ void EnemyCore::UpdateBreakCore()
 {
 
 	//時間
-
 	//現在時間を取得する
 	nowCount_ = std::chrono::steady_clock::now();
 	//前回記録からの経過時間を取得する
@@ -256,7 +255,8 @@ void EnemyCore::UpdateBreakCore()
 
 	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	timeRate_ = min(elapsed / maxTime_, 1.0f);
+	const float minMaxTime = 1.0f;
+	timeRate_ = min(elapsed / maxTime_, minMaxTime);
 
 	position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 

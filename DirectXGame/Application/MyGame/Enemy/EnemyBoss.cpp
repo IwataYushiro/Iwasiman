@@ -53,7 +53,7 @@ bool EnemyBoss::Initialize() {
 	nowCount_ = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
 	maxTime_ = 5.0f;					//全体時間
-	
+
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
@@ -73,7 +73,7 @@ void EnemyBoss::Parameter() {
 	life_ = 2;
 
 	isReverse_ = false;
-	std::array<int, 2>RandomMinMax = {40,75};
+	std::array<int, 2>RandomMinMax = { 40,75 };
 	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
@@ -209,28 +209,27 @@ void EnemyBoss::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		minInterval_ = fireInterval_ ;
+		minInterval_ = fireInterval_;
 		maxInterval_ = fireInterval_ * 2;
 		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
-
+	//ここまで来たら攻撃フェーズへ
+	const float moveAttackPhasePosZ = 100.0f;
 	//指定の位置に到達したら攻撃
-	if (position_.z < 100.0f) {
+	if (position_.z < moveAttackPhasePosZ) {
+		//制御点
+		start_ = { position_.x ,10.0f,moveAttackPhasePosZ };
+		point1_ = { -10.0f ,-20.0f,moveAttackPhasePosZ };
+		point2_ = { 10.0f ,40.0f,moveAttackPhasePosZ };
+		end_ = { 30.0f ,10.0f,moveAttackPhasePosZ };
+
 		phase_ = Phase::AttackStage1;
 	}
 }
 //攻撃
 void EnemyBoss::UpdateAttack() {
 
-	//速度
-	float cameraMove = camera_->GetEye().x;
-	//制御点
-	start_ = { -30.0f + cameraMove,10.0f,100.0f };
-	point1_ = { -10.0f + cameraMove,-20.0f,100.0f };
-	point2_ = { 10.0f + cameraMove,40.0f,100.0f };
-	end_ = { 30.0f + cameraMove,10.0f,100.0f };
 	//時間
-
 	//現在時間を取得する
 	nowCount_ = std::chrono::steady_clock::now();
 	//前回記録からの経過時間を取得する
@@ -247,11 +246,22 @@ void EnemyBoss::UpdateAttack() {
 		position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 	}
 	//指定の位置に到達したら反転
-	if (position_.x >= end_.x + cameraMove) {
+	if (position_.x >= end_.x ) {
+		//制御点
+		start_ = { -30.0f ,10.0f,100.0f };
+		point1_ = { -10.0f ,-20.0f,100.0f };
+		point2_ = { 10.0f ,40.0f,100.0f };
+		end_ = { 30.0f ,10.0f,100.0f };
+
 		isReverse_ = true;
 		startCount_ = std::chrono::steady_clock::now();
 	}
-	if (position_.x <= start_.x + cameraMove) {
+	if (position_.x <= start_.x ) {
+		//制御点
+		start_ = { -30.0f ,10.0f,100.0f };
+		point1_ = { -10.0f ,-20.0f,100.0f };
+		point2_ = { 10.0f ,40.0f,100.0f };
+		end_ = { 30.0f ,10.0f,100.0f };
 		isReverse_ = false;
 		startCount_ = std::chrono::steady_clock::now();
 	}
