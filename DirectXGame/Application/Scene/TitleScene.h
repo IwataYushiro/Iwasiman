@@ -188,9 +188,10 @@ private://メンバ変数
 	LightGroup* lightGroup_ = nullptr;
 	//パーティクル
 	Particle* particle1_ = nullptr;
+	Particle* particle2_ = nullptr;
 	//パーティクルマネージャー
 	ParticleManager* pm1_ = nullptr;
-
+	
 	//開始時のポジション
 	DirectX::XMFLOAT3 startPos_;
 	

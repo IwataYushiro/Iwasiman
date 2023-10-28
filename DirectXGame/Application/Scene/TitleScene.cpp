@@ -103,10 +103,12 @@ void TitleScene::Initialize()
 	//objF->PlayAnimation();//更新で呼ぶと止まるから注意
 
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle7.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
+	particle2_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
+
 
 	easeFadeInOut_.Standby(false);
 }
@@ -179,23 +181,20 @@ void TitleScene::Update()
 			0.0f
 		};*/
 
-		DirectX::XMFLOAT4 particleColorS[2] =
+		DirectX::XMFLOAT4 particleColorS =
 		{
-			{MyMath::RandomMTFloat(0.0f,1.0f),0.0f,0.0f,1.0f},
-			{MyMath::RandomMTFloat(0.7f,1.0f),0.0f,0.0f,1.0f}
+			MyMath::RandomMTFloat(0.6f,1.0f),MyMath::RandomMTFloat(0.3f,1.0f),0.0f,1.0f
+			//{MyMath::RandomMTFloat(0.6f,1.0f),MyMath::RandomMTFloat(0.3f,1.0f),0.0f,1.0f}
 		};
 
-		DirectX::XMFLOAT4 particleColorE[2] =
+		DirectX::XMFLOAT4 particleColorE =
 		{
-			{0.0f,0.0f,0.0f,0.0f},
-			{1.0f,1.0f,1.0f,1.0f},
+			0.0f,0.0f,0.0f,1.0f
+			//{1.0f,1.0f,1.0f,0.0f},
 		};
 
-		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f }, { -3.0f,0.3f,0.3f },
-			{ 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f }, particleColorS[0], particleColorE[0]);
-
-		pm1_->Active(particle1_, player->GetPosition(), { 10.1f ,10.1f,10.1f }, { 0.1f,0.1f,0.1f },
-			{ 0.0f,0.001f,0.0f }, 5, { 1.0f, 3.0f }, particleColorS[1], particleColorE[1]);
+		pm1_->ActiveY(particle1_, player->GetPosition(), { 15.0f ,0.0f,15.0f },
+			{ 0.3f,3.3f,0.3f },{ 0.0f,0.001f,0.0f }, 7, { 7.0f, 0.0f }, particleColorS, particleColorE);
 
 		player->Update();
 	}
@@ -230,7 +229,7 @@ void TitleScene::Update()
 	camera_->Update();
 	lightGroup_->Update();
 	pm1_->Update();
-
+	
 	//objF->Update();
 
 	imguiManager_->Begin();
@@ -523,6 +522,7 @@ void TitleScene::Finalize()
 	delete lightGroup_;
 	//パーティクル
 	delete particle1_;
+	delete particle2_;
 	delete pm1_;
 	//FBX
 	//delete objF;
