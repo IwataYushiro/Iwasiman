@@ -190,37 +190,37 @@ void TitleScene::Update()
 		};*/
 
 		//‰Š(Œ¸Z)ŒÀ’è
-		DirectX::XMFLOAT4 particleColorS =
-		{
-			MyMath::RandomMTFloat(0.6f,1.0f),MyMath::RandomMTFloat(0.3f,1.0f),0.0f,1.0f
-			//{MyMath::RandomMTFloat(0.6f,1.0f),MyMath::RandomMTFloat(0.3f,1.0f),0.0f,1.0f}
-		};
+		//DirectX::XMFLOAT4 particleColorS =
+		//{
+		//	MyMath::RandomMTFloat(0.6f,1.0f),MyMath::RandomMTFloat(0.3f,1.0f),0.0f,1.0f
+		//	//{MyMath::RandomMTFloat(0.6f,1.0f),MyMath::RandomMTFloat(0.3f,1.0f),0.0f,1.0f}
+		//};
 
-		DirectX::XMFLOAT4 particleColorE =
-		{
-			0.0f,0.0f,0.0f,1.0f
-			//{1.0f,1.0f,1.0f,0.0f},
-		};
+		//DirectX::XMFLOAT4 particleColorE =
+		//{
+		//	0.0f,0.0f,0.0f,1.0f
+		//	//{1.0f,1.0f,1.0f,0.0f},
+		//};
 
-		pm1_->ActiveY(particle1_, player->GetPosition(), { 15.0f ,0.0f,15.0f },
-			{ 0.3f,3.3f,0.3f },{ 0.0f,0.001f,0.0f }, 7, { 7.0f, 0.0f }, particleColorS, particleColorE);
+		//pm1_->ActiveY(particle1_, player->GetPosition(), { 15.0f ,0.0f,15.0f },
+		//	{ 0.3f,3.3f,0.3f },{ 0.0f,0.001f,0.0f }, 7, { 7.0f, 0.0f }, particleColorS, particleColorE);
 
 		//•’Ê
 		pm2_->ActiveX(particle2_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
 		
-		if (input_->TriggerKey(DIK_X))
+		/*if (input_->TriggerKey(DIK_X))
 		{
-			pm1_->SetBlendMode(ParticleManager::BP_SUBTRACT);
+			pm2_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 		}
 		if (input_->TriggerKey(DIK_Z))
 		{
-			pm1_->SetBlendMode(ParticleManager::BP_ADD);
+			pm2_->SetBlendMode(ParticleManager::BP_ADD);
 		}
 		if (input_->TriggerKey(DIK_Y))
 		{
-			pm1_->SetBlendMode(ParticleManager::BP_ALPHA);
-		}
+			pm2_->SetBlendMode(ParticleManager::BP_ALPHA);
+		}*/
 
 		player->Update();
 	}
@@ -261,7 +261,7 @@ void TitleScene::Update()
 
 	imguiManager_->Begin();
 #ifdef _DEBUG
-	camera_->DebugCamera(true);
+	//camera_->DebugCamera(true);
 #endif // _DEBUG
 
 	imguiManager_->End();

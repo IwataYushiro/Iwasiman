@@ -24,9 +24,14 @@ Player::~Player() {
 	//スプライト解放
 	delete spriteLifeBar_;
 	delete spriteHit_;
-	//モデルの解放
-	delete particleDash_;
-	delete pmDash_;
+	delete spriteExplosion_;
+
+	//パーティクルモデルの解放
+	delete particleSmoke_;
+	delete pmSmoke_;
+
+	delete particleFire_;
+	delete pmFire_;
 }
 
 std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScene* gamescene)
@@ -88,10 +93,22 @@ bool Player::Initialize() {
 	spriteHit_->SetColor(hitColor_);//色は赤いが基本は透明
 	spriteHit_->Update();
 
+	spCommon_->LoadTexture(GPSPTI_PlayerExplosionTex, "texture/explosion2.png");
+	spriteExplosion_->Initialize(spCommon_, GPSPTI_PlayerExplosionTex);
+	spriteExplosion_->SetAnchorPoint({ 0.5f,0.5f });
+	spriteExplosion_->SetPosition(explosionPos_);
+	spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[0].start,easeExplosionSizeAndAlpha_[1].start });
+	spriteExplosion_->SetColor({ 1.0f,1.0f,1.0f,easeExplosionSizeAndAlpha_[2].start });
+	spriteExplosion_->Update();
+	
 	//パーティクル
-	particleDash_ = Particle::LoadFromParticleTexture("particle1.png");
-	pmDash_ = ParticleManager::Create();
-	pmDash_->SetParticleModel(particleDash_);
+	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
+	pmSmoke_ = ParticleManager::Create();
+	pmSmoke_->SetParticleModel(particleSmoke_);
+
+	particleFire_ = Particle::LoadFromParticleTexture("particle7.png");
+	pmFire_ = ParticleManager::Create();
+	pmFire_->SetParticleModel(particleFire_);
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
@@ -123,7 +140,9 @@ void Player::Reset() {
 
 }
 void Player::Update(bool isBack, bool isAttack, bool isStart) {
-	pmDash_->SetCamera(camera_);
+	
+	pmFire_->SetCamera(camera_);
+	pmSmoke_->SetCamera(camera_);
 	if (!isStart)
 	{
 		if (isAlive_)UpdateAlive(isBack, isAttack);
@@ -133,7 +152,8 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 
 	camera_->Update();
 	UpdateWorldMatrix();
-	pmDash_->Update();
+	pmFire_->Update();
+	pmSmoke_->Update();
 
 	collider_->Update();
 	//着地処理
@@ -148,9 +168,10 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 
 	spriteLifeBar_->Update();
 	spriteHit_->Update();
+	spriteExplosion_->Update();
 }
 
-void Player::Draw() { Object3d::Draw(); }
+void Player::Draw() { if (!isExplosion_)Object3d::Draw(); }
 
 void Player::DrawSprite()
 {
@@ -159,11 +180,16 @@ void Player::DrawSprite()
 		if (isAlive_)spriteLifeBar_->Draw();
 		spriteHit_->Draw();
 	}
+	else
+	{
+		spriteExplosion_->Draw();
+	}
 }
 
 void Player::DrawParticle() {
-
-	pmDash_->Draw();
+	pmSmoke_->Draw();
+	pmFire_->Draw();
+	
 }
 
 //移動処理
@@ -183,7 +209,7 @@ void Player::Move() {
 	{
 		if (input_->PushKey(DIK_A)) {
 			isRight_ = false;
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { 3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
+			pmSmoke_->ActiveX(particleSmoke_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { 3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
 			rot = { 0.0f,-90.0f,0.0f };
 			move.x -= moveSpeed * 1.5f;
 			cmove.x -= moveSpeed * 1.5f;
@@ -192,7 +218,7 @@ void Player::Move() {
 		}
 		if (input_->PushKey(DIK_D)) {
 			isRight_ = true;
-			pmDash_->ActiveX(particleDash_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
+			pmSmoke_->ActiveX(particleSmoke_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
 			rot = { 0.0f,90.0f,0.0f };
 			move.x += moveSpeed * 1.5f;
 			cmove.x += moveSpeed * 1.5f;
@@ -529,10 +555,10 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)life_ -= 6;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
 
-		pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+		pmSmoke_->ActiveZ(particleSmoke_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
-		pmDash_->Update();
+		pmSmoke_->Update();
 		isHit_ = true;
 	}
 
@@ -542,10 +568,10 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 		{
 			if (isShake_)return;
 			life_ -= 3;
-			pmDash_->ActiveZ(particleDash_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+			pmSmoke_->ActiveZ(particleSmoke_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
 				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
-			pmDash_->Update();
+			pmSmoke_->Update();
 			isHit_ = true;
 		}
 
@@ -666,10 +692,45 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 
 void Player::UpdateBrack()
 {
-	if (isCameraCentralEnd_)
+	if (isExplosion_)
 	{
+		easeExplosionSizeAndAlpha_[2].ease_out_sine();
+		spriteExplosion_->SetColor({ 1.0f,1.0f,1.0f,easeExplosionSizeAndAlpha_[2].num_X });
+		//炎プリセット
+		ParticleManager::Preset fire =
+		{
+			particleFire_,{position_.x,position_.y - 5.0f,position_.z},{ 15.0f ,15.0f,15.0f },
+			{ 3.3f,3.3f,3.3f },{ 0.0f,0.001f,0.0f },6,{ 7.0f, 0.0f },
+			{ MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
+			{ 0.0f,0.0f,0.0f,1.0f }
+		};
+		//
+		pmFire_->SetBlendMode(ParticleManager::BP_ALPHA);
+		pmFire_->ActiveY(fire.particle, fire.startPos, fire.pos, fire.vel,
+			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+
+		//煙プリセット
+		ParticleManager::Preset smoke =
+		{
+			particleSmoke_,{position_.x,position_.y+5.0f,position_.z},{ 25.0f ,10.0f,15.0f },
+			{ MyMath::RandomMTFloat(0.0f,0.1f),MyMath::RandomMTFloat(0.5f,3.0f),0.3f },
+			{ 0.0f,0.001f,0.0f },5,{ 4.0f, 0.0f },
+			{ MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.95f,1.0f),1.0f },
+			{ 1.0f,1.0f,1.0f,0.0f }
+		};
+
+		//煙も舞う
+		pmSmoke_->SetBlendMode(ParticleManager::BP_SUBTRACT);
+		pmSmoke_->ActiveY(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+
 		//カメラ速度
-		XMFLOAT3 cameraSppedEyeTarget = { MyMath::RandomMTFloat(-0.05f,0.05f),MyMath::RandomMTFloat(-0.05f,0.05f),0.5f };
+		XMFLOAT3 cameraSppedEyeTarget;
+		cameraSppedEyeTarget.x = MyMath::RandomMTFloat(-0.05f, 0.05f);
+		cameraSppedEyeTarget.y = MyMath::RandomMTFloat(-0.05f, 0.05f);
+		const float SpeedChangePosZ = -30.0f;
+		if (position_.z >= SpeedChangePosZ) cameraSppedEyeTarget.z = 2.5f;
+		else cameraSppedEyeTarget.z = 1.0f;
 
 		XMFLOAT3 cameraEye = camera_->GetEye();
 		XMFLOAT3 cameraTarget = camera_->GetTarget();
@@ -686,6 +747,20 @@ void Player::UpdateBrack()
 
 		if (camera_->GetEye().z <= -cameraEyeChangeGameover_) isDead_ = true;
 	}
+	else if (isCameraCentralEnd_)
+	{
+		//爆発
+		for (int i = 0; i < 2; i++)easeExplosionSizeAndAlpha_[i].ease_out_expo();
+
+		spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[0].num_X,easeExplosionSizeAndAlpha_[1].num_X });
+
+		if (spriteExplosion_->GetSize().x == easeExplosionSizeAndAlpha_[0].end)
+		{
+			easeExplosionSizeAndAlpha_[2].Standby(false);//カラーだけ
+			isExplosion_ = true;
+			isCameraCentralEnd_ = false;
+		}
+	}
 	else if (isCameraRightEnd_)
 	{
 		//カメラ移動第3波(中央)
@@ -697,9 +772,11 @@ void Player::UpdateBrack()
 		if (camera_->GetEye().z == easeDeadCameraEye_[2][2].end)
 		{
 
+			for (int i = 0; i < 2; i++)easeExplosionSizeAndAlpha_[i].Standby(false);//サイズだけ
 			isCameraCentralEnd_ = true;
 			isCameraRightEnd_ = false;
 		}
+
 	}
 	else if (isCameraLeftEnd_)
 	{

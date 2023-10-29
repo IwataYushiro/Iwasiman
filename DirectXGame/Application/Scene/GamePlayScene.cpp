@@ -105,8 +105,9 @@ void GamePlayScene::Update()
 	enemyBullets_.remove_if(
 		[](std::unique_ptr<EnemyBullet>& ebullet) { return ebullet->IsDead(); });
 
-	players_.remove_if(
-		[](std::unique_ptr<Player>& player) {return player->IsDead(); });
+	/*players_.remove_if(
+		[](std::unique_ptr<Player>& player) {return player->IsDead(); });*/
+
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
 
@@ -231,11 +232,11 @@ void GamePlayScene::UpdateIsStartGame()
 		}
 	}
 
-	for (std::unique_ptr<BaseEnemy>& enemy : enemys_)enemy->Update(true);
+	for (std::unique_ptr<Player>& player : players_)if (!player->IsBrack())for (std::unique_ptr<BaseEnemy>& enemy : enemys_)enemy->Update(true);
 	//弾更新
-	for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
+	for (std::unique_ptr<Player>& player : players_)if (!player->IsBrack())for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
 
-	for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
+	for (std::unique_ptr<Player>& player : players_)if (!player->IsBrack())for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
 
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Update();
 
@@ -273,40 +274,6 @@ void GamePlayScene::UpdateIsPlayGame()
 		}
 		//ImGui	
 		imguiManager_->Begin();
-		const int xyz = 3;
-		float debugPos[xyz] =
-		{
-			player->GetPosition().x,
-			player->GetPosition().y,
-			player->GetPosition().z,
-		};
-
-		float debugEye[xyz] =
-		{
-			camera_->GetEye().x,
-			camera_->GetEye().y,
-			camera_->GetEye().z,
-		};
-
-		float debugTarget[xyz] =
-		{
-			camera_->GetTarget().x,
-			camera_->GetTarget().y,
-			camera_->GetTarget().z,
-		};
-
-		ImGui::Begin("player");
-		ImGui::SetWindowPos(ImVec2(700, 0));
-		ImGui::SetWindowSize(ImVec2(500, 100));
-		ImGui::InputFloat3("Pos", debugPos);
-		ImGui::InputFloat3("Eye", debugEye);
-		ImGui::InputFloat3("Target", debugTarget);
-		ImGui::End();
-		if (player->IsBrack())
-		{
-			camera_->DebugCamera(true);
-		}
-			
 		imguiManager_->End();
 	}
 	//弾更新
@@ -352,7 +319,7 @@ void GamePlayScene::UpdateIsPlayGame()
 	camera_->Update();
 	lightGroup_->Update();
 	pm_->Update();
-	colManager_->CheckAllCollisions();
+	for (std::unique_ptr<Player>& player : players_)if (!player->IsBrack())colManager_->CheckAllCollisions();
 	//Pause機能
 	if (input_->TriggerKey(DIK_Q))
 	{
@@ -761,35 +728,37 @@ void GamePlayScene::Draw()
 	}
 	else
 	{
+for (std::unique_ptr<Item>& item : items_){item->DrawSprite();}
+		
 
-		if (isGamePlay_)spritePauseInfo_->Draw();
-
-		for (std::unique_ptr<Player>& player : players_) { player->DrawSprite(); }
-		for (std::unique_ptr<Item>& item : items_){item->DrawSprite();}
-
-		if (stageNum_ == SL_StageTutorial_Area1)
+		for (std::unique_ptr<Player>& player : players_) { player->DrawSprite(); 
+		
+		if (!player->IsBrack())
 		{
-			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-				nullptr, nullptr, spriteTutorialInfo1_);
+			if (isGamePlay_)spritePauseInfo_->Draw();
+			
+			if (stageNum_ == SL_StageTutorial_Area1)
+			{
+				DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+					nullptr, nullptr, spriteTutorialInfo1_);
+			}
+			else if (stageNum_ == SL_StageTutorial_Area2)
+			{
+				DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+					spriteTutorialHTPMoveBack_, nullptr, spriteTutorialInfo2_);
+			}
+			else if (stageNum_ == SL_StageTutorial_Area3)
+			{
+				DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+					spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo3_);
+			}
+			else if (stageNum_ == SL_StageTutorial_Final)
+			{
+				DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
+					spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
+			}
 		}
-
-		else if (stageNum_ == SL_StageTutorial_Area2)
-		{
-			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-				spriteTutorialHTPMoveBack_, nullptr, spriteTutorialInfo2_);
-		}
-		else if (stageNum_ == SL_StageTutorial_Area3)
-		{
-			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-				spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo3_);
-		}
-		else if (stageNum_ == SL_StageTutorial_Final)
-		{
-			DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-				spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
-		}
-
-
+}
 		//フェードインアウトとロードと現ステージ
 		spriteFadeInOut_->Draw();
 		spriteLoad_->Draw();

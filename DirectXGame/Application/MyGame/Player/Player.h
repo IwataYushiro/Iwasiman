@@ -103,6 +103,9 @@ private:
 
 	Sprite* spriteHit_ = new Sprite();				//ヒットエフェクト
 
+	Sprite* spriteExplosion_ = new Sprite();		//爆発エフェクト
+	const XMFLOAT2 explosionPos_ = { WinApp::WINDOW_WIDTH / 2.0f,WinApp::WINDOW_HEIGHT / 2.0f };	//ライフバーの座標
+
 	int mutekiCount_ = 0;							//無敵時間
 	const float hitTimer_ = MUTEKI_COUNT / 60.0f;	//イージング効果時間
 	Easing easeHit_ = Easing(1.0f, 0.0f, hitTimer_);//イージング
@@ -161,9 +164,11 @@ private:
 	//シェイク時用のカメラムーブ
 	bool cameramove_ = true;
 	//パーティクル
-	Particle* particleDash_ = nullptr;
+	Particle* particleFire_ = nullptr;
+	Particle* particleSmoke_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pmDash_ = nullptr;
+	ParticleManager* pmSmoke_ = nullptr;
+	ParticleManager* pmFire_ = nullptr;
 
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;
@@ -193,10 +198,19 @@ private:
 		{ {0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}}
 	};	//X,Y,Z
 	//カメラ切り替え
-	bool isCameraRightEnd_ = false;				//右からのカメラ
-	bool isCameraLeftEnd_ = false;				//左からのカメラ
-	bool isCameraCentralEnd_ = false;			//中央カメラ
+	bool isCameraRightEnd_ = false;						//右からのカメラ
+	bool isCameraLeftEnd_ = false;						//左からのカメラ
+	bool isCameraCentralEnd_ = false;					//中央カメラ
+	bool isExplosion_ = false;							//爆発してるか
 	const float cameraEyeChangeGameover_ = 150.0f;		//視点がある位置についたらゲームオーバー
+	
+	//爆発のサイズとアルファイージング
+	Easing easeExplosionSizeAndAlpha_[3] = {
+		{0.0f,1500.0f,1.0f},
+		{0.0f,1500.0f,1.0f},
+		{1.0f,0.0f,2.0f}
+	};
+
 	//イージング用のオフセット
 	XMFLOAT3 easeOffset_ = {};
 public: //アクセッサ、インライン関数

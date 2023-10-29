@@ -41,7 +41,19 @@ public: // サブクラス
 		XMMATRIX mat;	// ３Ｄ変換行列
 		XMMATRIX matBillboard;	//ビルボード行列
 	};
-
+	//プリセット
+	struct Preset
+	{
+		Particle* particle;
+		XMFLOAT3 startPos;
+		XMFLOAT3 pos;
+		XMFLOAT3 vel;
+		XMFLOAT3 acc;
+		int num = 7;
+		XMFLOAT2 scale;
+		XMFLOAT4 startColor;
+		XMFLOAT4 endColor;
+	};
 private: // 定数
 	static const int DIVISION = 50;					// 分割数
 	static const float RADIUS;				// 底面の半径
