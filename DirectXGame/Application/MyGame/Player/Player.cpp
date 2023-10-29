@@ -5,6 +5,7 @@
 #include "CollisionManager.h"
 #include "GamePlayScene.h"
 #include "EnumList.h"
+#include "MyMath.h"
 
 using namespace DirectX;
 
@@ -155,12 +156,12 @@ void Player::DrawSprite()
 {
 	if (!isBrack_)
 	{
-		if(isAlive_)spriteLifeBar_->Draw();
+		if (isAlive_)spriteLifeBar_->Draw();
 		spriteHit_->Draw();
 	}
 }
 
-void Player::DrawParticle() { 
+void Player::DrawParticle() {
 
 	pmDash_->Draw();
 }
@@ -576,23 +577,21 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 
 	if (life_ <= 0)
 	{
-		easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };
-		easeDeadCameraEye_[0].SetEasing(camera_->GetEye().x,
-			camera_->GetEye().x + easeOffset_.x, 1.0f);
-		easeDeadCameraEye_[1].SetEasing(camera_->GetEye().y,
-			camera_->GetEye().y + easeOffset_.y, 1.0f);
-		easeDeadCameraEye_[2].SetEasing(camera_->GetEye().z,
-			camera_->GetEye().z + easeOffset_.z, 1.0f);
+		nowEye_ = camera_->GetEye();
+		nowTarget_ = camera_->GetTarget();
 
-		easeDeadCameraTarget_[0].SetEasing(camera_->GetTarget().x,
-			camera_->GetTarget().x + easeOffset_.x, 1.0f);
-		easeDeadCameraTarget_[1].SetEasing(camera_->GetTarget().y,
-			camera_->GetTarget().y + easeOffset_.y, 1.0f);
-		easeDeadCameraTarget_[2].SetEasing(camera_->GetTarget().z,
-			camera_->GetTarget().z + easeOffset_.z, 1.0f);
+		easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };//最初にオフセットを足さないと右カメラ、1回足すと中央カメラ、2回足したら左カメラ
+		//右カメラ視点[i][0]
+		easeDeadCameraEye_[0][0].SetEasing(nowEye_.x, nowEye_.x + easeOffset_.x, 1.0f);
+		easeDeadCameraEye_[1][0].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
+		easeDeadCameraEye_[2][0].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, 1.0f);
+		//右カメラ注視点[i][0]
+		easeDeadCameraTarget_[0][0].SetEasing(nowTarget_.x, nowTarget_.x + easeOffset_.x, 1.0f);
+		easeDeadCameraTarget_[1][0].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, 1.0f);
+		easeDeadCameraTarget_[2][0].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, 1.0f);
 
-		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i].Standby(false);
-		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i].Standby(false);
+		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][0].Standby(false);
+		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][0].Standby(false);
 
 		isBrack_ = true;
 		isAlive_ = false;
@@ -643,23 +642,22 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 	//デバッグ用
 	if (input_->TriggerKey(DIK_M))
 	{
-		easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };
-		easeDeadCameraEye_[0].SetEasing(camera_->GetEye().x,
-			camera_->GetEye().x + easeOffset_.x, 1.0f);
-		easeDeadCameraEye_[1].SetEasing(camera_->GetEye().y,
-			camera_->GetEye().y + easeOffset_.y, 1.0f);
-		easeDeadCameraEye_[2].SetEasing(camera_->GetEye().z,
-			camera_->GetEye().z + easeOffset_.z, 1.0f);
+		nowEye_ = camera_->GetEye();
+		nowTarget_ = camera_->GetTarget();
 
-		easeDeadCameraTarget_[0].SetEasing(camera_->GetTarget().x,
-			camera_->GetTarget().x + easeOffset_.x, 1.0f);
-		easeDeadCameraTarget_[1].SetEasing(camera_->GetTarget().y,
-			camera_->GetTarget().y + easeOffset_.y, 1.0f);
-		easeDeadCameraTarget_[2].SetEasing(camera_->GetTarget().z,
-			camera_->GetTarget().z + easeOffset_.z, 1.0f);
+		easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };//最初にオフセットを足さないと右カメラ、1回足すと中央カメラ、2回足したら左カメラ
+		//右カメラ視点[i][0]
+		easeDeadCameraEye_[0][0].SetEasing(nowEye_.x, nowEye_.x + easeOffset_.x, 1.0f);
+		easeDeadCameraEye_[1][0].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
+		easeDeadCameraEye_[2][0].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, 1.0f);
+		//右カメラ注視点[i][0]
+		easeDeadCameraTarget_[0][0].SetEasing(nowTarget_.x, nowTarget_.x + easeOffset_.x, 1.0f);
+		easeDeadCameraTarget_[1][0].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, 1.0f);
+		easeDeadCameraTarget_[2][0].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, 1.0f);
 
-		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i].Standby(false);
-		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i].Standby(false);
+
+		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][0].Standby(false);
+		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][0].Standby(false);
 
 		isBrack_ = true;
 		isAlive_ = false;
@@ -668,12 +666,98 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 
 void Player::UpdateBrack()
 {
-	//カメラ移動第一波
-	for (int i = 0; i < 3; i++)easeDeadCameraEye_[i].ease_out_cubic();
-	for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i].ease_out_cubic();
+	if (isCameraCentralEnd_)
+	{
+		//カメラ速度
+		XMFLOAT3 cameraSppedEyeTarget = { MyMath::RandomMTFloat(-0.05f,0.05f),MyMath::RandomMTFloat(-0.05f,0.05f),0.5f };
 
-	camera_->SetEye({ easeDeadCameraEye_[0].num_X,easeDeadCameraEye_[1].num_X, easeDeadCameraEye_[2].num_X });
-	camera_->SetTarget({ easeDeadCameraTarget_[0].num_X,easeDeadCameraTarget_[1].num_X, easeDeadCameraTarget_[2].num_X });
+		XMFLOAT3 cameraEye = camera_->GetEye();
+		XMFLOAT3 cameraTarget = camera_->GetTarget();
+
+		cameraEye.x -= cameraSppedEyeTarget.x;
+		cameraEye.y -= cameraSppedEyeTarget.y;
+		cameraEye.z -= cameraSppedEyeTarget.z;
+		cameraTarget.x -= cameraSppedEyeTarget.x;
+		cameraTarget.y -= cameraSppedEyeTarget.y;
+		cameraTarget.z -= cameraSppedEyeTarget.z;
+
+		camera_->SetEye(cameraEye);
+		camera_->SetTarget(cameraTarget);
+
+		if (camera_->GetEye().z <= -cameraEyeChangeGameover_) isDead_ = true;
+	}
+	else if (isCameraRightEnd_)
+	{
+		//カメラ移動第3波(中央)
+		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][2].ease_out_cubic();
+		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][2].ease_out_cubic();
+
+		camera_->SetEye({ easeDeadCameraEye_[0][2].num_X,easeDeadCameraEye_[1][2].num_X, easeDeadCameraEye_[2][2].num_X });
+		camera_->SetTarget({ easeDeadCameraTarget_[0][2].num_X,easeDeadCameraTarget_[1][2].num_X, easeDeadCameraTarget_[2][2].num_X });
+		if (camera_->GetEye().z == easeDeadCameraEye_[2][2].end)
+		{
+
+			isCameraCentralEnd_ = true;
+			isCameraRightEnd_ = false;
+		}
+	}
+	else if (isCameraLeftEnd_)
+	{
+		//カメラ移動第2波(左)
+		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][1].ease_out_cubic();
+		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][1].ease_out_cubic();
+
+		camera_->SetEye({ easeDeadCameraEye_[0][1].num_X,easeDeadCameraEye_[1][1].num_X, easeDeadCameraEye_[2][1].num_X });
+		camera_->SetTarget({ easeDeadCameraTarget_[0][1].num_X,easeDeadCameraTarget_[1][1].num_X, easeDeadCameraTarget_[2][1].num_X });
+		if (camera_->GetEye().z == easeDeadCameraEye_[2][1].end)
+		{
+			//中央カメラ視点[i][2]
+			easeDeadCameraEye_[0][2].SetEasing(nowEye_.x + easeOffset_.x, nowEye_.x + easeOffset_.x, 1.0f);
+			easeDeadCameraEye_[1][2].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
+			easeDeadCameraEye_[2][2].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, 1.0f);
+			//中央カメラ注視点[i][2]
+			easeDeadCameraTarget_[0][2].SetEasing(nowTarget_.x + easeOffset_.x, nowTarget_.x + easeOffset_.x, 1.0f);
+			easeDeadCameraTarget_[1][2].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, 1.0f);
+			easeDeadCameraTarget_[2][2].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, 1.0f);
+			//カメラ移動第3波準備(中央)
+			for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][2].Standby(false);
+			for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][2].Standby(false);
+
+			camera_->SetEye({ easeDeadCameraEye_[0][2].start,easeDeadCameraEye_[1][2].start, easeDeadCameraEye_[2][2].start });
+			camera_->SetTarget({ easeDeadCameraTarget_[0][2].start,easeDeadCameraTarget_[1][2].start, easeDeadCameraTarget_[2][2].start });
+
+			isCameraRightEnd_ = true;
+			isCameraLeftEnd_ = false;
+		}
+	}
+	else
+	{
+		//カメラ移動第1波(右)
+		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][0].ease_out_cubic();
+		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][0].ease_out_cubic();
+
+		camera_->SetEye({ easeDeadCameraEye_[0][0].num_X,easeDeadCameraEye_[1][0].num_X, easeDeadCameraEye_[2][0].num_X });
+		camera_->SetTarget({ easeDeadCameraTarget_[0][0].num_X,easeDeadCameraTarget_[1][0].num_X, easeDeadCameraTarget_[2][0].num_X });
+		if (camera_->GetEye().z == easeDeadCameraEye_[2][0].end)
+		{
+			//左カメラ視点[i][1]
+			easeDeadCameraEye_[0][1].SetEasing(nowEye_.x + (easeOffset_.x + easeOffset_.x), nowEye_.x + easeOffset_.x, 1.0f);
+			easeDeadCameraEye_[1][1].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
+			easeDeadCameraEye_[2][1].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, 1.0f);
+			//左カメラ注視点[i][1]
+			easeDeadCameraTarget_[0][1].SetEasing(nowTarget_.x + (easeOffset_.x + easeOffset_.x), nowTarget_.x + easeOffset_.x, 1.0f);
+			easeDeadCameraTarget_[1][1].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, 1.0f);
+			easeDeadCameraTarget_[2][1].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, 1.0f);
+			//カメラ移動第2波準備(左)
+			for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][1].Standby(false);
+			for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][1].Standby(false);
+
+			camera_->SetEye({ easeDeadCameraEye_[0][1].start,easeDeadCameraEye_[1][1].start, easeDeadCameraEye_[2][1].start });
+			camera_->SetTarget({ easeDeadCameraTarget_[0][1].start,easeDeadCameraTarget_[1][1].start, easeDeadCameraTarget_[2][1].start });
+
+			isCameraLeftEnd_ = true;
+		}
+	}
 
 	if (input_->TriggerKey(DIK_M))isDead_ = true;
 }

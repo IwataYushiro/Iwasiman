@@ -178,10 +178,25 @@ private:
 	//シェイク終了時にhitMoveをリセットする用の定数
 	const XMFLOAT3 resetHitMove_ = { 0.0f,0.0f,0.0f };
 
-	//死んだときのカメラ視点イージング
-	Easing easeDeadCameraEye_[3]={};		//X,Y,Z
-	//死んだときのカメラ注視点イージング
-	Easing easeDeadCameraTarget_[3] = {};	//X,Y,Z
+	//死んだときのカメラ視点イージング三個
+	Easing easeDeadCameraEye_[3][3] = {
+		
+		{{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}},
+		{{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}},
+		{ {0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}}
+	};		//X,Y,Z
+	//死んだときのカメラ注視点イージング三個
+	Easing easeDeadCameraTarget_[3][3] = {
+
+		{{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}},
+		{{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}},
+		{ {0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}}
+	};	//X,Y,Z
+	//カメラ切り替え
+	bool isCameraRightEnd_ = false;				//右からのカメラ
+	bool isCameraLeftEnd_ = false;				//左からのカメラ
+	bool isCameraCentralEnd_ = false;			//中央カメラ
+	const float cameraEyeChangeGameover_ = 150.0f;		//視点がある位置についたらゲームオーバー
 	//イージング用のオフセット
 	XMFLOAT3 easeOffset_ = {};
 public: //アクセッサ、インライン関数

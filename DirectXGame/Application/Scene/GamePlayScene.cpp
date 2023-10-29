@@ -356,6 +356,7 @@ void GamePlayScene::UpdateIsPlayGame()
 	//Pause機能
 	if (input_->TriggerKey(DIK_Q))
 	{
+		for (std::unique_ptr<Player>& player : players_)if (player->IsBrack())return;
 		//ここでイージングの準備
 		for (int i = 0; i < 7; i++)easePauseMenuPosX_[i].Standby(false);
 		isBack_ = false;
