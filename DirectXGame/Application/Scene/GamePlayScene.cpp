@@ -83,6 +83,7 @@ void GamePlayScene::Initialize()
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm_ = ParticleManager::Create();
+	pm_->SetBlendMode(ParticleManager::BP_ADD);
 	pm_->SetParticleModel(particle1_);
 	pm_->SetCamera(camera_);
 

@@ -191,6 +191,7 @@ private://メンバ変数
 	Particle* particle2_ = nullptr;
 	//パーティクルマネージャー
 	ParticleManager* pm1_ = nullptr;
+	ParticleManager* pm2_ = nullptr;
 	
 	//開始時のポジション
 	DirectX::XMFLOAT3 startPos_;

@@ -26,14 +26,13 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public: // サブクラス
-	// 頂点データ構造体
-	//struct VertexPosNormalUv
-	//{
-	//	XMFLOAT3 pos; // xyz座標
-	//	XMFLOAT3 normal; // 法線ベクトル
-	//	XMFLOAT2 uv;  // uv座標
-	//};
-
+	//ブレンドパターン用の列挙型
+	enum BlendPattern
+	{
+		BP_ALPHA = 1,		//半透明合成
+		BP_ADD = 2,			//加算合成
+		BP_SUBTRACT = 3,	//減算合成
+	};
 
 	// 定数バッファ用データ構造体
 	struct ConstBufferData
@@ -42,16 +41,16 @@ public: // サブクラス
 		XMMATRIX mat;	// ３Ｄ変換行列
 		XMMATRIX matBillboard;	//ビルボード行列
 	};
-	
+
 private: // 定数
 	static const int DIVISION = 50;					// 分割数
 	static const float RADIUS;				// 底面の半径
 	static const float PRIZM_HEIGHT;			// 柱の高さ
 	static const int PLANE_COUNT = DIVISION * 2 + DIVISION * 2;		// 面の数
 	static const int VERTEX_COUNT = 1024;		// 頂点数
-	
+
 public: // 静的メンバ関数
-	
+
 	// 静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
 
@@ -70,14 +69,14 @@ private: // 静的メンバ変数
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList_;
 	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature_;
+	ComPtr<ID3D12RootSignature> rootsignature_;
 	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate_;
+	ComPtr<ID3D12PipelineState> pipelinestate_;
 
 private:// 静的メンバ関数
 
 	// グラフィックパイプライン生成
-	static void InitializeGraphicsPipeline();
+	void InitializeGraphicsPipeline(size_t blendmode = BP_ADD);
 
 public: // メンバ関数
 	//初期化
@@ -88,18 +87,18 @@ public: // メンバ関数
 	//描画
 	void Draw();
 
-	// パーティクル発射(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},色)
+	// パーティクル発射(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
 	void Active(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
-		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f },const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
-	// パーティクル発射X軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},色)
+		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+	// パーティクル発射X軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
 	void ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
-		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f },const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
-	// パーティクル発射Y軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},色)
+		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+	// パーティクル発射Y軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
 	void ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
-		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f },const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
-	// パーティクル発射Z軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},色)
+		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+	// パーティクル発射Z軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
 	void ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
-		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color= { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+		const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff_; // 定数バッファ
@@ -109,11 +108,17 @@ private: // メンバ変数
 	Particle* particle_ = nullptr;
 	//カメラ
 	Camera* camera_ = nullptr;
+	//ブレンドモード
+	size_t blendMode_ = BP_ADD;
+	//ダーティフラグ
+	bool dirty_ = false;
 
 public://アクセッサ置き場
 	//パーティクルモデルセット
 	void SetParticleModel(Particle* pmodel) { this->particle_ = pmodel; }
 	//カメラセット
 	void SetCamera(Camera* camera) { this->camera_ = camera; }
+	//ブレンドセット
+	void SetBlendMode(size_t blendmode) { this->blendMode_ = blendmode; dirty_ = true; }
 };
 

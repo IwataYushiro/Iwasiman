@@ -27,6 +27,8 @@ TitleScene::TitleScene(int stagenum) : stageNum_(stagenum) {}
 
 void TitleScene::Initialize()
 {
+	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
+
 	spCommon_ = SpriteCommon::GetInstance();
 
 	//カメラ初期化
@@ -106,8 +108,14 @@ void TitleScene::Initialize()
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	particle2_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
+	pm1_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
+
+	pm2_ = ParticleManager::Create();
+	pm2_->SetBlendMode(ParticleManager::BP_ADD);
+	pm2_->SetParticleModel(particle2_);
+	pm2_->SetCamera(camera_);
 
 
 	easeFadeInOut_.Standby(false);
@@ -181,6 +189,7 @@ void TitleScene::Update()
 			0.0f
 		};*/
 
+		//炎(減算)限定
 		DirectX::XMFLOAT4 particleColorS =
 		{
 			MyMath::RandomMTFloat(0.6f,1.0f),MyMath::RandomMTFloat(0.3f,1.0f),0.0f,1.0f
@@ -195,6 +204,23 @@ void TitleScene::Update()
 
 		pm1_->ActiveY(particle1_, player->GetPosition(), { 15.0f ,0.0f,15.0f },
 			{ 0.3f,3.3f,0.3f },{ 0.0f,0.001f,0.0f }, 7, { 7.0f, 0.0f }, particleColorS, particleColorE);
+
+		//普通
+		pm2_->ActiveX(particle2_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
+			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
+		
+		if (input_->TriggerKey(DIK_X))
+		{
+			pm1_->SetBlendMode(ParticleManager::BP_SUBTRACT);
+		}
+		if (input_->TriggerKey(DIK_Z))
+		{
+			pm1_->SetBlendMode(ParticleManager::BP_ADD);
+		}
+		if (input_->TriggerKey(DIK_Y))
+		{
+			pm1_->SetBlendMode(ParticleManager::BP_ALPHA);
+		}
 
 		player->Update();
 	}
@@ -229,12 +255,13 @@ void TitleScene::Update()
 	camera_->Update();
 	lightGroup_->Update();
 	pm1_->Update();
+	pm2_->Update();
 	
 	//objF->Update();
 
 	imguiManager_->Begin();
 #ifdef _DEBUG
-	//camera_->DebugCamera(true);
+	camera_->DebugCamera(true);
 #endif // _DEBUG
 
 	imguiManager_->End();
@@ -469,6 +496,7 @@ void TitleScene::Draw()
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
 	pm1_->Draw();
+	pm2_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -524,6 +552,7 @@ void TitleScene::Finalize()
 	delete particle1_;
 	delete particle2_;
 	delete pm1_;
+	delete pm2_;
 	//FBX
 	//delete objF;
 	//delete modelF;

@@ -22,8 +22,6 @@ const float ParticleManager::RADIUS = 5.0f;				// 底面の半径
 const float ParticleManager::PRIZM_HEIGHT = 8.0f;			// 柱の高さ
 ID3D12Device* ParticleManager::device_ = nullptr;
 ID3D12GraphicsCommandList* ParticleManager::cmdList_ = nullptr;
-ComPtr<ID3D12RootSignature> ParticleManager::rootsignature_;
-ComPtr<ID3D12PipelineState> ParticleManager::pipelinestate_;
 
 void ParticleManager::StaticInitialize(ID3D12Device* device)
 {
@@ -33,10 +31,6 @@ void ParticleManager::StaticInitialize(ID3D12Device* device)
 	device_ = device;
 
 	Particle::SetDevice(device_);
-
-	// パイプライン初期化
-	InitializeGraphicsPipeline();
-
 
 }
 
@@ -48,12 +42,6 @@ void ParticleManager::PreDraw(ID3D12GraphicsCommandList* cmdList)
 	// コマンドリストをセット
 	ParticleManager::cmdList_ = cmdList;
 
-	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipelinestate_.Get());
-	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(rootsignature_.Get());
-	// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 }
 
 void ParticleManager::PostDraw()
@@ -80,7 +68,7 @@ ParticleManager* ParticleManager::Create()
 	return ins;
 }
 
-void ParticleManager::InitializeGraphicsPipeline()
+void ParticleManager::InitializeGraphicsPipeline(size_t blendmode)
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -195,19 +183,27 @@ void ParticleManager::InitializeGraphicsPipeline()
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
 	blenddesc.BlendEnable = true;
-	//半透明合成
-	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-
-	//加算合成
-	/*blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-	blenddesc.SrcBlend = D3D12_BLEND_ONE;
-	blenddesc.DestBlend = D3D12_BLEND_ONE;*/
-	//減算合成
-	/*blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
-	blenddesc.SrcBlend = D3D12_BLEND_ONE;
-	blenddesc.DestBlend = D3D12_BLEND_ONE;*/
+	if (blendmode == BP_ALPHA)
+	{
+		//半透明合成
+		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	}
+	else if (blendmode == BP_ADD)
+	{
+		//加算合成
+		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+		blenddesc.SrcBlend = D3D12_BLEND_ONE;
+		blenddesc.DestBlend = D3D12_BLEND_ONE;
+	}
+	else if (blendmode == BP_SUBTRACT)
+	{
+		//減算合成
+		blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+		blenddesc.SrcBlend = D3D12_BLEND_ONE;
+		blenddesc.DestBlend = D3D12_BLEND_ONE;
+	}
 
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
@@ -282,6 +278,9 @@ bool ParticleManager::Initialize()
 		IID_PPV_ARGS(&constBuff_));
 	assert(SUCCEEDED(result));
 
+	// パイプライン初期化
+	InitializeGraphicsPipeline();
+
 	return true;
 }
 
@@ -290,6 +289,11 @@ void ParticleManager::Update()
 
 	HRESULT result;
 
+	if (dirty_)
+	{
+		InitializeGraphicsPipeline(blendMode_);
+		dirty_ = false;
+	}
 	particle_->Update();
 	XMMATRIX matView = camera_->GetMatViewProjection();
 	XMMATRIX matBillboard = camera_->GetMatBillboard();
@@ -308,6 +312,13 @@ void ParticleManager::Draw()
 	assert(device_);
 	assert(ParticleManager::cmdList_);
 
+	// パイプラインステートの設定
+	cmdList_->SetPipelineState(pipelinestate_.Get());
+	// ルートシグネチャの設定
+	cmdList_->SetGraphicsRootSignature(rootsignature_.Get());
+	// プリミティブ形状を設定
+	cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+
 	// 定数バッファビューをセット
 	cmdList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 
@@ -317,6 +328,7 @@ void ParticleManager::Draw()
 void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3& setpos, const XMFLOAT3& setvel,
  const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
+	particle_ = p;
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
@@ -338,12 +350,13 @@ void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		p->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
 	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
+	particle_ = p;
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
@@ -364,13 +377,14 @@ void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		p->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 
 void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
 	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
+	particle_ = p;
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
@@ -391,13 +405,14 @@ void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		p->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 
 void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
 	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
+	particle_ = p;
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
@@ -418,6 +433,6 @@ void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		p->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
