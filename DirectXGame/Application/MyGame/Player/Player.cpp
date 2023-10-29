@@ -122,9 +122,13 @@ void Player::Reset() {
 
 }
 void Player::Update(bool isBack, bool isAttack, bool isStart) {
-
 	pmDash_->SetCamera(camera_);
-	if (!isStart) { if (!isDead_)UpdateAlive(isBack, isAttack); }
+	if (!isStart)
+	{
+		if (isAlive_)UpdateAlive(isBack, isAttack);
+		else if (isBrack_)UpdateBrack();
+	}
+
 
 	camera_->Update();
 	UpdateWorldMatrix();
@@ -149,11 +153,17 @@ void Player::Draw() { Object3d::Draw(); }
 
 void Player::DrawSprite()
 {
-	spriteLifeBar_->Draw();
-	spriteHit_->Draw();
+	if (!isBrack_)
+	{
+		if(isAlive_)spriteLifeBar_->Draw();
+		spriteHit_->Draw();
+	}
 }
 
-void Player::DrawParticle() { pmDash_->Draw(); }
+void Player::DrawParticle() { 
+
+	pmDash_->Draw();
+}
 
 //移動処理
 void Player::Move() {
@@ -556,9 +566,9 @@ const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMF
 
 void Player::UpdateAlive(bool isBack, bool isAttack)
 {
-	if (!isDead_)
-		//移動処理
-		if (!isJumpBack_)Move();
+	if (isDead_)return;
+	//移動処理
+	if (!isJumpBack_)Move();
 	//攻撃処理
 	FallAndJump();
 	if (isBack)JumpBack();
@@ -566,7 +576,26 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 
 	if (life_ <= 0)
 	{
-		isDead_ = true;
+		easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };
+		easeDeadCameraEye_[0].SetEasing(camera_->GetEye().x,
+			camera_->GetEye().x + easeOffset_.x, 1.0f);
+		easeDeadCameraEye_[1].SetEasing(camera_->GetEye().y,
+			camera_->GetEye().y + easeOffset_.y, 1.0f);
+		easeDeadCameraEye_[2].SetEasing(camera_->GetEye().z,
+			camera_->GetEye().z + easeOffset_.z, 1.0f);
+
+		easeDeadCameraTarget_[0].SetEasing(camera_->GetTarget().x,
+			camera_->GetTarget().x + easeOffset_.x, 1.0f);
+		easeDeadCameraTarget_[1].SetEasing(camera_->GetTarget().y,
+			camera_->GetTarget().y + easeOffset_.y, 1.0f);
+		easeDeadCameraTarget_[2].SetEasing(camera_->GetTarget().z,
+			camera_->GetTarget().z + easeOffset_.z, 1.0f);
+
+		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i].Standby(false);
+		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i].Standby(false);
+
+		isBrack_ = true;
+		isAlive_ = false;
 	}
 	if (position_.y <= -60.0f)isDead_ = true;
 
@@ -611,4 +640,40 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 	//移動制限
 	Trans();
 
+	//デバッグ用
+	if (input_->TriggerKey(DIK_M))
+	{
+		easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };
+		easeDeadCameraEye_[0].SetEasing(camera_->GetEye().x,
+			camera_->GetEye().x + easeOffset_.x, 1.0f);
+		easeDeadCameraEye_[1].SetEasing(camera_->GetEye().y,
+			camera_->GetEye().y + easeOffset_.y, 1.0f);
+		easeDeadCameraEye_[2].SetEasing(camera_->GetEye().z,
+			camera_->GetEye().z + easeOffset_.z, 1.0f);
+
+		easeDeadCameraTarget_[0].SetEasing(camera_->GetTarget().x,
+			camera_->GetTarget().x + easeOffset_.x, 1.0f);
+		easeDeadCameraTarget_[1].SetEasing(camera_->GetTarget().y,
+			camera_->GetTarget().y + easeOffset_.y, 1.0f);
+		easeDeadCameraTarget_[2].SetEasing(camera_->GetTarget().z,
+			camera_->GetTarget().z + easeOffset_.z, 1.0f);
+
+		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i].Standby(false);
+		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i].Standby(false);
+
+		isBrack_ = true;
+		isAlive_ = false;
+	}
+}
+
+void Player::UpdateBrack()
+{
+	//カメラ移動第一波
+	for (int i = 0; i < 3; i++)easeDeadCameraEye_[i].ease_out_cubic();
+	for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i].ease_out_cubic();
+
+	camera_->SetEye({ easeDeadCameraEye_[0].num_X,easeDeadCameraEye_[1].num_X, easeDeadCameraEye_[2].num_X });
+	camera_->SetTarget({ easeDeadCameraTarget_[0].num_X,easeDeadCameraTarget_[1].num_X, easeDeadCameraTarget_[2].num_X });
+
+	if (input_->TriggerKey(DIK_M))isDead_ = true;
 }

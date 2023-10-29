@@ -273,6 +273,40 @@ void GamePlayScene::UpdateIsPlayGame()
 		}
 		//ImGui	
 		imguiManager_->Begin();
+		const int xyz = 3;
+		float debugPos[xyz] =
+		{
+			player->GetPosition().x,
+			player->GetPosition().y,
+			player->GetPosition().z,
+		};
+
+		float debugEye[xyz] =
+		{
+			camera_->GetEye().x,
+			camera_->GetEye().y,
+			camera_->GetEye().z,
+		};
+
+		float debugTarget[xyz] =
+		{
+			camera_->GetTarget().x,
+			camera_->GetTarget().y,
+			camera_->GetTarget().z,
+		};
+
+		ImGui::Begin("player");
+		ImGui::SetWindowPos(ImVec2(700, 0));
+		ImGui::SetWindowSize(ImVec2(500, 100));
+		ImGui::InputFloat3("Pos", debugPos);
+		ImGui::InputFloat3("Eye", debugEye);
+		ImGui::InputFloat3("Target", debugTarget);
+		ImGui::End();
+		if (player->IsBrack())
+		{
+			camera_->DebugCamera(true);
+		}
+			
 		imguiManager_->End();
 	}
 	//’eXV
@@ -310,9 +344,9 @@ void GamePlayScene::UpdateIsPlayGame()
 	}
 	for (Object3d*& object : objects_) object->Update();
 
-	imguiManager_->Begin();
+	//imguiManager_->Begin();
 	//camera_->DebugCamera();
-	imguiManager_->End();
+	//imguiManager_->End();
 
 	//ƒJƒƒ‰
 	camera_->Update();

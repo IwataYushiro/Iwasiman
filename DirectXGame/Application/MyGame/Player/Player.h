@@ -149,6 +149,8 @@ private:
 	//死亡演出移行フラグ
 	bool isBrack_ = false;
 
+	//生きてる
+	bool isAlive_ = true;
 	//死亡フラグ
 	bool isDead_ = false;
 
@@ -176,9 +178,17 @@ private:
 	//シェイク終了時にhitMoveをリセットする用の定数
 	const XMFLOAT3 resetHitMove_ = { 0.0f,0.0f,0.0f };
 
+	//死んだときのカメラ視点イージング
+	Easing easeDeadCameraEye_[3]={};		//X,Y,Z
+	//死んだときのカメラ注視点イージング
+	Easing easeDeadCameraTarget_[3] = {};	//X,Y,Z
+	//イージング用のオフセット
+	XMFLOAT3 easeOffset_ = {};
 public: //アクセッサ、インライン関数
 	//死んだかどうか
 	bool IsDead() const { return isDead_; }
+	//死亡演出移行時
+	bool IsBrack()const { return isBrack_; }
 	//立ってるかどうか
 	bool OnGround()const { return onGround_; }
 	//立ち判定のセット
@@ -194,6 +204,8 @@ public: //アクセッサ、インライン関数
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 
 private://カプセル化メンバ関数
+	//生存時
 	void UpdateAlive(bool isBack = true, bool isAttack = true);
-
+	//破壊時
+	void UpdateBrack();
 };

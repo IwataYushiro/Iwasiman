@@ -64,7 +64,7 @@
                 ]
             },
             "file_name": "skydome",
-            "objecttype": "SKYDOME"
+            "objecttype": "NONE"
         },
         {
             "type": "MESH",
@@ -130,7 +130,7 @@
             "transform": {
                 "translation": [
                     60.0,
-                    -33.126800537109375,
+                    -30.0,
                     -8.0
                 ],
                 "rotation": [
