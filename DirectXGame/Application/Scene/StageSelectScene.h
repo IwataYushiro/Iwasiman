@@ -119,9 +119,9 @@ private://メンバ変数
 	//選んだステージを真ん中に移動させるイージング
 	Easing easeStartStagePosX_[3] =
 	{
-		Easing(100.0f, 200.0f, 1.5f),				//チュートリアルへ
-		Easing(100.0f, 400.0f, 1.5f),				//ステージ1へ
-		Easing(100.0f, 350.0f, 1.5f),				//ステージ2へ
+		Easing(100.0f, 350.0f, 1.5f),				//チュートリアルへ
+		Easing(100.0f, 550.0f, 1.5f),				//ステージ1へ
+		Easing(100.0f, 500.0f, 1.5f),				//ステージ2へ
 	};
 	//選んだステージを上に移動させるイージング
 	Easing easeStartStagePosY_[3] =

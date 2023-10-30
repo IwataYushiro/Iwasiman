@@ -124,13 +124,13 @@ private://メンバ変数
 	Easing easeMenuPosX_[5] =
 	{
 		Easing(1300.0f, 0.0f, 1.0f),		//メニュー
-		Easing(1300.0f, 0.0f, 1.2f),		//チュートリアルへ
-		Easing(1300.0f, 0.0f, 1.4f),		//ステージセレクトへ
+		Easing(1300.0f, 50.0f, 1.2f),		//チュートリアルへ
+		Easing(1300.0f, 50.0f, 1.4f),		//ステージセレクトへ
 		Easing(1300.0f, 0.0f, 1.6f),		//スペースで選択
 		Easing(1300.0f, 900.0f, 1.8f),		//戻る
 	};
 	//選んだステージを真ん中に移動させるイージング
-	Easing easeStartStagePosX_ = Easing(0.0f, 200.0f, 1.5f);//チュートリアルへ
+	Easing easeStartStagePosX_ = Easing(0.0f, 350.0f, 1.5f);//チュートリアルへ
 	
 	//選んだステージを上に移動させるイージング
 	Easing easeStartStagePosY_ = Easing(150.0f, 0.0f, 1.5f);//チュートリアルへ
