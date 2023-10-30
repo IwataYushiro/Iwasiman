@@ -99,7 +99,9 @@ private:
 	const XMFLOAT2 lifeBarPos_ = { 800.0f,25.0f };	//ライフバーの座標
 	const XMFLOAT4 green_ = { 0.2f,1.0f,0.2f,1.0f };//緑
 	const XMFLOAT4 red_ = { 1.0f,0.2f,0.2f,1.0f };	//赤
-	const float lifeBarDamageSize_ = 32.0f;			//ダメージを負うとこの値分サイズが縮小
+
+	Easing easelifeBarSize_ = { 0.0f,32.0f,3.0f };
+	XMFLOAT2 lifeBarDamageSize_ = { 0.0f,32.0f };			//ダメージを負うとこの値分サイズが縮小
 
 	Sprite* spriteHit_ = new Sprite();				//ヒットエフェクト
 

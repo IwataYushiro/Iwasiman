@@ -115,6 +115,7 @@ bool Player::Initialize() {
 	collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 
+	easelifeBarSize_.Standby(false);
 	return true;
 }
 
@@ -150,7 +151,6 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 		else if (isGoal_)UpdateGoal();
 	}
 
-
 	camera_->Update();
 	UpdateWorldMatrix();
 	pmFire_->Update();
@@ -160,8 +160,11 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 	//’…’nˆ—
 	Landing(COLLISION_ATTR_LANDSHAPE);
 
-	spriteLifeBar_->SetTextureSize({ lifeBarDamageSize_ * life_,lifeBarDamageSize_ });
-	spriteLifeBar_->SetSize({ lifeBarDamageSize_ * life_,lifeBarDamageSize_ });
+	easelifeBarSize_.ease_in_cubic();
+	lifeBarDamageSize_.x = easelifeBarSize_.num_X;
+	
+	spriteLifeBar_->SetTextureSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
+	spriteLifeBar_->SetSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
 	const int dangerLifeZone = 3;
 
 	if (life_ <= dangerLifeZone) { spriteLifeBar_->SetColor(red_); }
