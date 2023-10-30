@@ -221,7 +221,7 @@ void EnemyCore::UpdateCore()
 	start_ = nowPos_;
 	point1_ = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
 	point2_ = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
-	end_ = { MyMath::RandomMTFloat(-20.0f,20.0f) + cameraMove,10.0f,100.0f };
+	end_ = { MyMath::RandomMTFloat(-15.0f,15.0f),10.0f,100.0f };
 
 	//‘¬“x
 	XMFLOAT3 velocity;
