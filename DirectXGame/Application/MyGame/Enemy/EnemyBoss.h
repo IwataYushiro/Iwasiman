@@ -1,9 +1,10 @@
 #pragma once
 #include "BaseEnemy.h"
-
 #include "Camera.h"
 #include "EnemyBullet.h"
 #include "Model.h"
+#include "ParticleManager.h"
+
 #include <chrono>
 #include <DirectXMath.h>
 #include <list>
@@ -49,6 +50,8 @@ public:
 	XMFLOAT3 GetWorldPosition();
 	//描画
 	void Draw()override;
+	//パーティクル描画
+	void DrawParticle()override;
 
 	//状態変化用の更新関数
 	//接近
@@ -94,6 +97,13 @@ private:
 	float radius_ = 5.0f;
 	//ボス死亡
 	bool bossDead_ = false;
+
+	//パーティクル
+	Particle* particleFire_ = nullptr;
+	Particle* particleSmoke_ = nullptr;
+	//パーティクルマネージャー
+	ParticleManager* pmSmoke_ = nullptr;
+	ParticleManager* pmFire_ = nullptr;
 
 //時間計測
 	std::chrono::steady_clock::time_point startCount_;	//開始時間

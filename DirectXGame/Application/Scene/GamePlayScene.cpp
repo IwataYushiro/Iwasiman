@@ -232,11 +232,11 @@ void GamePlayScene::UpdateIsStartGame()
 		}
 	}
 
-	for (std::unique_ptr<Player>& player : players_)if (!player->IsBrack())for (std::unique_ptr<BaseEnemy>& enemy : enemys_)enemy->Update(true);
+	for (std::unique_ptr<Player>& player : players_)if (!player->IsBreak())for (std::unique_ptr<BaseEnemy>& enemy : enemys_)enemy->Update(true);
 	//弾更新
-	for (std::unique_ptr<Player>& player : players_)if (!player->IsBrack())for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
+	for (std::unique_ptr<Player>& player : players_)if (!player->IsBreak())for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets_) enemyBullet->Update();
 
-	for (std::unique_ptr<Player>& player : players_)if (!player->IsBrack())for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
+	for (std::unique_ptr<Player>& player : players_)if (!player->IsBreak())for (std::unique_ptr<BaseGimmick>& gimmick : gimmicks_)gimmick->Update();
 
 	for (std::unique_ptr<Goal>& goal : goals_)goal->Update();
 
@@ -319,11 +319,11 @@ void GamePlayScene::UpdateIsPlayGame()
 	camera_->Update();
 	lightGroup_->Update();
 	pm_->Update();
-	for (std::unique_ptr<Player>& player : players_)if (!player->IsBrack())colManager_->CheckAllCollisions();
+	for (std::unique_ptr<Player>& player : players_)if (!player->IsBreak())colManager_->CheckAllCollisions();
 	//Pause機能
 	if (input_->TriggerKey(DIK_Q))
 	{
-		for (std::unique_ptr<Player>& player : players_)if (player->IsBrack())return;
+		for (std::unique_ptr<Player>& player : players_)if (player->IsBreak())return;
 		//ここでイージングの準備
 		for (int i = 0; i < 7; i++)easePauseMenuPosX_[i].Standby(false);
 		isBack_ = false;
@@ -683,6 +683,7 @@ void GamePlayScene::Draw()
 	//エフェクト描画
 	pm_->Draw();
 	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();
+	for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->DrawParticle();
 	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
@@ -733,7 +734,7 @@ for (std::unique_ptr<Item>& item : items_){item->DrawSprite();}
 
 		for (std::unique_ptr<Player>& player : players_) { player->DrawSprite(); 
 		
-		if (!player->IsBrack())
+		if (!player->IsBreak())
 		{
 			if (isGamePlay_)spritePauseInfo_->Draw();
 			

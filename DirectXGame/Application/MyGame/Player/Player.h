@@ -150,7 +150,7 @@ private:
 	float radius_ = 2.0f;
 
 	//死亡演出移行フラグ
-	bool isBrack_ = false;
+	bool isBreak_ = false;
 
 	//生きてる
 	bool isAlive_ = true;
@@ -217,7 +217,7 @@ public: //アクセッサ、インライン関数
 	//死んだかどうか
 	bool IsDead() const { return isDead_; }
 	//死亡演出移行時
-	bool IsBrack()const { return isBrack_; }
+	bool IsBreak()const { return isBreak_; }
 	//立ってるかどうか
 	bool OnGround()const { return onGround_; }
 	//立ち判定のセット
@@ -236,5 +236,5 @@ private://カプセル化メンバ関数
 	//生存時
 	void UpdateAlive(bool isBack = true, bool isAttack = true);
 	//破壊時
-	void UpdateBrack();
+	void UpdateBreak();
 };

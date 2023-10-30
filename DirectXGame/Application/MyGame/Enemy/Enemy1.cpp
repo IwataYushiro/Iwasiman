@@ -22,6 +22,12 @@ using namespace DirectX;
 CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
 
 Enemy1::~Enemy1() {
+	//パーティクルモデルの解放
+	delete particleSmoke_;
+	delete pmSmoke_;
+
+	delete particleFire_;
+	delete pmFire_;
 }
 
 std::unique_ptr<Enemy1> Enemy1::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene, int level)
@@ -55,6 +61,15 @@ bool Enemy1::Initialize(int level) {
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 	InitSubATTR(level);
 	Parameter();
+
+	//パーティクル
+	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
+	pmSmoke_ = ParticleManager::Create();
+	pmSmoke_->SetParticleModel(particleSmoke_);
+
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
+	pmFire_ = ParticleManager::Create();
+	pmFire_->SetParticleModel(particleFire_);
 
 	return true;
 }
@@ -116,12 +131,13 @@ void Enemy1::Reset() { Parameter(); }
 //更新
 void Enemy1::Update(bool isStart) {
 
+	pmFire_->SetCamera(camera_);
+	pmSmoke_->SetCamera(camera_);
 	if (!isStart)
 	{
 		//座標を移動させる
 		switch (phase_) {
 		case Enemy1::Phase::Approach:
-
 			UpdateApproach();
 			break;
 		case Enemy1::Phase::Leave:
@@ -136,6 +152,9 @@ void Enemy1::Update(bool isStart) {
 	collider_->Update();
 
 	Landing();
+	//パーティクル更新
+	pmFire_->Update();
+	pmSmoke_->Update();
 }
 
 //転送
@@ -325,9 +344,15 @@ void Enemy1::Landing()
 void Enemy1::Draw() {
 
 	//モデルの描画
-	Object3d::Draw();
+	if (phase_ != Phase::Leave)Object3d::Draw();
 
 
+}
+
+void Enemy1::DrawParticle()
+{
+	pmSmoke_->Draw();
+	pmFire_->Draw();
 }
 
 
@@ -368,8 +393,9 @@ void Enemy1::UpdateApproach() {
 
 	//死んだら
 	if (life_ <= deathLife_) {
-		isDead_ = true;
 		life_ = deathLife_;
+		phase_ = Phase::Leave;
+		
 	}
 	//Y軸が一定座標に達しても死亡
 	const float deathFallPosY = -60.0f;
@@ -378,8 +404,9 @@ void Enemy1::UpdateApproach() {
 
 //離脱
 void Enemy1::UpdateLeave() {
-	//速度
+	deathTimer_++;
 
+	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
 }
 
 //ワールド座標を取得
@@ -397,11 +424,32 @@ XMFLOAT3 Enemy1::GetWorldPosition() {
 }
 void Enemy1::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
+	if (phase_ == Phase::Leave)return;
+	const int HitLife = deathLife_ + 1;
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
+		{
+			if (life_ > HitLife)
+			{
+				pmSmoke_->ActiveZ(particleSmoke_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+
+				pmSmoke_->Update();
+				life_--;
+			}
+			else
+			{
+				pmFire_->ActiveZ(particleFire_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+
+				pmFire_->Update();
+				life_--;
+			}
+		}
+			
 	}
 
 }

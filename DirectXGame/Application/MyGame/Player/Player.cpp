@@ -106,7 +106,7 @@ bool Player::Initialize() {
 	pmSmoke_ = ParticleManager::Create();
 	pmSmoke_->SetParticleModel(particleSmoke_);
 
-	particleFire_ = Particle::LoadFromParticleTexture("particle7.png");
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetParticleModel(particleFire_);
 
@@ -146,7 +146,7 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 	if (!isStart)
 	{
 		if (isAlive_)UpdateAlive(isBack, isAttack);
-		else if (isBrack_)UpdateBrack();
+		else if (isBreak_)UpdateBreak();
 	}
 
 
@@ -175,7 +175,7 @@ void Player::Draw() { if (!isExplosion_)Object3d::Draw(); }
 
 void Player::DrawSprite()
 {
-	if (!isBrack_)
+	if (!isBreak_)
 	{
 		if (isAlive_)spriteLifeBar_->Draw();
 		spriteHit_->Draw();
@@ -619,7 +619,7 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][0].Standby(false);
 		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][0].Standby(false);
 
-		isBrack_ = true;
+		isBreak_ = true;
 		isAlive_ = false;
 	}
 	if (position_.y <= -60.0f)isDead_ = true;
@@ -685,12 +685,12 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][0].Standby(false);
 		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][0].Standby(false);
 
-		isBrack_ = true;
+		isBreak_ = true;
 		isAlive_ = false;
 	}
 }
 
-void Player::UpdateBrack()
+void Player::UpdateBreak()
 {
 	if (isExplosion_)
 	{

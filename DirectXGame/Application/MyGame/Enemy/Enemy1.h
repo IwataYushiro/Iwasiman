@@ -1,9 +1,9 @@
 #pragma once
 #include "BaseEnemy.h"
-
 #include "Camera.h"
-
 #include "Model.h"
+#include "ParticleManager.h"
+
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
@@ -57,6 +57,8 @@ public:
 	XMFLOAT3 GetWorldPosition();
 	//描画
 	void Draw()override;
+	//パーティクル描画
+	void DrawParticle()override;
 
 	//状態変化用の更新関数
 	//接近
@@ -93,7 +95,7 @@ private:
 	//アングル
 	XMFLOAT3 angle_;
 	//半径
-	float radius_ = 1.0f;
+	float radius_ = 3.0f;
 	
 	//地面に乗ってるか
 	bool onGround_ = true;
@@ -103,6 +105,12 @@ private:
 	//反転フラグ
 	bool isReverse_ = false;
 
+	//パーティクル
+	Particle* particleFire_ = nullptr;
+	Particle* particleSmoke_ = nullptr;
+	//パーティクルマネージャー
+	ParticleManager* pmSmoke_ = nullptr;
+	ParticleManager* pmFire_ = nullptr;
 public:
 	
 	//プレイヤーセット

@@ -1,10 +1,9 @@
 #pragma once
-#pragma once
 #include "BaseEnemy.h"
-
 #include "Camera.h"
 #include "EnemyBullet.h"
 #include "Model.h"
+#include "ParticleManager.h"
 #include <chrono>
 #include <DirectXMath.h>
 #include <list>
@@ -51,6 +50,8 @@ public:
 	XMFLOAT3 GetWorldPosition();
 	//描画
 	void Draw()override;
+	//パーティクル描画
+	void DrawParticle()override;
 
 	//状態変化用の更新関数
 	//コア更新
@@ -118,6 +119,13 @@ private:
 	bool isReverse_ = false;
 	//現在位置取得
 	XMFLOAT3 nowPos_ = {};
+
+	//パーティクル
+	Particle* particleFire_ = nullptr;
+	Particle* particleSmoke_ = nullptr;
+	//パーティクルマネージャー
+	ParticleManager* pmSmoke_ = nullptr;
+	ParticleManager* pmFire_ = nullptr;
 
 public:
 	//死んだかどうか

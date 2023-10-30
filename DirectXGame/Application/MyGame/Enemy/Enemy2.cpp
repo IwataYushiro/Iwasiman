@@ -23,6 +23,12 @@ using namespace DirectX;
 CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
 
 Enemy2::~Enemy2() {
+	//パーティクルモデルの解放
+	delete particleSmoke_;
+	delete pmSmoke_;
+
+	delete particleFire_;
+	delete pmFire_;
 }
 
 std::unique_ptr<Enemy2> Enemy2::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene, int level)
@@ -57,6 +63,15 @@ bool Enemy2::Initialize(int level) {
 	InitSubATTR(level);
 
 	Parameter();
+
+	//パーティクル
+	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
+	pmSmoke_ = ParticleManager::Create();
+	pmSmoke_->SetParticleModel(particleSmoke_);
+
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
+	pmFire_ = ParticleManager::Create();
+	pmFire_->SetParticleModel(particleFire_);
 
 	return true;
 }
@@ -140,37 +155,40 @@ void Enemy2::Reset() { Parameter(); }
 //更新
 void Enemy2::Update(bool isStart) {
 
+	pmFire_->SetCamera(camera_);
+	pmSmoke_->SetCamera(camera_);
 	if (!isStart)
 	{
-
-
 		//座標を移動させる
 		switch (phase_) {
 		case Enemy2::Phase::Approach:
 
 			UpdateApproach();
 			break;
+		case Enemy2::Phase::Back:
+			UpdateBack();
+			break;
 		case Enemy2::Phase::Leave:
 			UpdateLeave();
 			break;
 		}
-
-		//発射タイマーカウントダウン
-		fireTimer_--;
-		//指定時間に達した
-		if (fireTimer_ <= endFireTime_) {
-			//弾発射
-			Fire();
-			//発射タイマー初期化
-			const int minInterval = fireInterval_ / 2;
-			fireTimer_ = MyMath::RandomMTInt(minInterval, fireInterval_);
+		if (phase_ != Phase::Leave)
+		{
+			//発射タイマーカウントダウン
+			fireTimer_--;
+			//指定時間に達した
+			if (fireTimer_ <= endFireTime_) {
+				//弾発射
+				Fire();
+				//発射タイマー初期化
+				const int minInterval = fireInterval_ / 2;
+				fireTimer_ = MyMath::RandomMTInt(minInterval, fireInterval_);
+			}
 		}
-
 
 		//死んだら
 		if (life_ <= deathLife_) {
-			isDead_ = true;
-			life_ = deathLife_;
+			phase_ = Phase::Leave;
 		}
 	}
 
@@ -181,6 +199,9 @@ void Enemy2::Update(bool isStart) {
 	collider_->Update();
 
 	Landing();
+	//パーティクル更新
+	pmFire_->Update();
+	pmSmoke_->Update();
 }
 
 //転送
@@ -333,7 +354,7 @@ void Enemy2::Landing()
 			onGround_ = false;
 			count_ = 0;
 			upPos_ = Object3d::GetPosition();
-			phase_ = Phase::Leave;
+			phase_ = Phase::Back;
 		}
 
 		count_++;
@@ -360,9 +381,15 @@ void Enemy2::Landing()
 void Enemy2::Draw() {
 
 	//モデルの描画
-	Object3d::Draw();
+	if (phase_ != Phase::Leave)Object3d::Draw();
 
 
+}
+
+void Enemy2::DrawParticle()
+{
+	pmSmoke_->Draw();
+	pmFire_->Draw();
 }
 
 
@@ -385,13 +412,20 @@ void Enemy2::UpdateApproach() {
 	}
 }
 
-//離脱
-void Enemy2::UpdateLeave() {
+void Enemy2::UpdateBack()
+{
 	position_.x += backSpeed_.x;
 	position_.y += backSpeed_.y;
 	position_.z += backSpeed_.z;
 
 	if (position_.y >= backUpPosY) phase_ = Phase::Approach;
+}
+
+//離脱
+void Enemy2::UpdateLeave() {
+	deathTimer_++;
+
+	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
 }
 
 //ワールド座標を取得
@@ -409,11 +443,31 @@ XMFLOAT3 Enemy2::GetWorldPosition() {
 }
 void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
+	if (phase_ == Phase::Leave)return;
+	const int HitLife = deathLife_ + 1;
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
+		{
+			if (life_ > HitLife)
+			{
+				pmSmoke_->ActiveZ(particleSmoke_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+
+				pmSmoke_->Update();
+				life_--;
+			}
+			else
+			{
+				pmFire_->ActiveZ(particleFire_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+
+				pmFire_->Update();
+				life_--;
+			}
+		}
 	}
 
 }

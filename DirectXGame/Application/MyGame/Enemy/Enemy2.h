@@ -1,8 +1,8 @@
 #pragma once
-#pragma once
 #include "BaseEnemy.h"
 #include "Camera.h"
 #include "Model.h"
+#include "ParticleManager.h"
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
@@ -58,10 +58,14 @@ public:
 	XMFLOAT3 GetWorldPosition();
 	//描画
 	void Draw()override;
+	//パーティクル描画
+	void DrawParticle()override;
 
 	//状態変化用の更新関数
 	//接近
 	void UpdateApproach();
+	//戻る
+	void UpdateBack();
 	//離脱
 	void UpdateLeave();
 
@@ -79,8 +83,9 @@ private:
 	//行動フェーズ
 	enum class Phase {
 		//ここからステージ1
-		Approach,//登場
-		Leave, //離脱
+		Approach,	//登場
+		Back,		//戻る
+		Leave,		//離脱
 
 	};
 
@@ -95,7 +100,7 @@ private:
 	//アングル
 	XMFLOAT3 angle_;
 	//半径
-	float radius_ = 3.0f;
+	float radius_ = 2.0f;
 	//撤退スピード
 	XMFLOAT3 backSpeed_;
 	//地面に乗ってるか
@@ -107,6 +112,13 @@ private:
 	bool isReverse_ = false;
 	//地面に乗ってる時のカウント
 	int count_ = 0;
+
+	//パーティクル
+	Particle* particleFire_ = nullptr;
+	Particle* particleSmoke_ = nullptr;
+	//パーティクルマネージャー
+	ParticleManager* pmSmoke_ = nullptr;
+	ParticleManager* pmFire_ = nullptr;
 	//Y軸がこの地点に達したら
 	const float backFallPosY = -20.0f;//上へ
 	const float backUpPosY = 20.0f;//下へ

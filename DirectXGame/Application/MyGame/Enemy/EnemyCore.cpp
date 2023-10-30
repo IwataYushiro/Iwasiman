@@ -21,6 +21,12 @@ using namespace DirectX;
 CollisionManager* EnemyCore::colManager_ = CollisionManager::GetInstance();
 
 EnemyCore::~EnemyCore() {
+	//パーティクルモデルの解放
+	delete particleSmoke_;
+	delete pmSmoke_;
+
+	delete particleFire_;
+	delete pmFire_;
 }
 
 std::unique_ptr<EnemyCore> EnemyCore::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene, [[maybe_unused]] unsigned short stage)
@@ -60,6 +66,15 @@ bool EnemyCore::Initialize() {
 
 	Parameter();
 
+	//パーティクル
+	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
+	pmSmoke_ = ParticleManager::Create();
+	pmSmoke_->SetParticleModel(particleSmoke_);
+
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
+	pmFire_ = ParticleManager::Create();
+	pmFire_->SetParticleModel(particleFire_);
+
 	return true;
 }
 
@@ -86,6 +101,8 @@ void EnemyCore::Reset() { Parameter(); }
 //更新
 void EnemyCore::Update(bool isStart) {
 
+	pmFire_->SetCamera(camera_);
+	pmSmoke_->SetCamera(camera_);
 	if (!isStart)
 	{
 		//座標を移動させる
@@ -107,6 +124,11 @@ void EnemyCore::Update(bool isStart) {
 	Trans();
 	camera_->Update();
 	Object3d::Update();
+	collider_->Update();
+
+	//パーティクル更新
+	pmFire_->Update();
+	pmSmoke_->Update();
 }
 
 //転送
@@ -180,10 +202,14 @@ void EnemyCore::Fire() {
 void EnemyCore::Draw() {
 
 	//モデルの描画
-	Object3d::Draw();
+	if (phase_!=Phase::Leave)Object3d::Draw();
+}
 
-
-
+void EnemyCore::DrawParticle()
+{
+	//パーティクル更新
+	pmFire_->Draw();
+	pmSmoke_->Draw();
 }
 
 void EnemyCore::UpdateCore()
@@ -233,9 +259,6 @@ void EnemyCore::UpdateCore()
 	if (life_ <= deathLife_) {
 		nowPos_ = Object3d::GetPosition();
 
-		collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
-		collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
-
 		life_ = deathLife_;
 		startCount_ = std::chrono::steady_clock::now();	//開始時間
 		//敵にぶつける
@@ -246,7 +269,11 @@ void EnemyCore::UpdateCore()
 
 void EnemyCore::UpdateBreakCore()
 {
-
+	if (position_.z >= point2_.z)
+	{
+		collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
+		collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
+	}
 	//時間
 	//現在時間を取得する
 	nowCount_ = std::chrono::steady_clock::now();
@@ -265,8 +292,15 @@ void EnemyCore::UpdateBreakCore()
 //離脱
 void EnemyCore::UpdateLeave() {
 
-	isDead_ = true;
-	bossDead_ = true;
+	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	deathTimer_++;
+
+	if (deathTimer_ >= DEATH_TIME)
+	{
+		isDead_ = true;
+		bossDead_ = true;
+	}
 }
 
 const XMFLOAT3 EnemyCore::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
@@ -298,16 +332,43 @@ XMFLOAT3 EnemyCore::GetWorldPosition() {
 }
 void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
+	if (phase_ == Phase::Leave)return;
+
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
-	}
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
+		{
+			if (life_ > deathLife_)
+			{
+				pmSmoke_->ActiveZ(particleSmoke_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
 
+				pmSmoke_->Update();
+				life_--;
+			}
+			else
+			{
+				pmFire_->ActiveZ(particleFire_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+
+				pmFire_->Update();
+				life_--;
+			}
+		}
+	}
 	else if (attribute == COLLISION_ATTR_ENEMYS)
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_NONE) isDead_ = true;
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)
+		{
+			pmFire_->ActiveZ(particleFire_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
+				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+
+			pmFire_->Update();
+
+			phase_ = Phase::Leave;
+		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 	}
 }

@@ -35,6 +35,8 @@ public:
 	virtual void Update(bool isStart = false) = 0;
 	//描画
 	virtual void Draw() { Object3d::Draw(); }
+	//パーティクル描画
+	virtual void DrawParticle() = 0;
 
 protected:
 	//コリジョンマネージャー
@@ -73,6 +75,11 @@ protected:
 	//弾発射時間はランダム
 	int minInterval_;//最小
 	int maxInterval_;//最大
+
+	//死亡時間
+	int8_t deathTimer_ = 0;
+	//タイマーがこの位置に達したら死亡
+	const int8_t DEATH_TIME = 70;
 
 public://アクセッサ
 	//死んだかどうか
