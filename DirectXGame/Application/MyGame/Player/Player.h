@@ -206,10 +206,21 @@ private:
 	
 	//爆発のサイズとアルファイージング
 	Easing easeExplosionSizeAndAlpha_[3] = {
-		{0.0f,1500.0f,1.0f},
-		{0.0f,1500.0f,1.0f},
-		{1.0f,0.0f,2.0f}
+		{0.0f,1500.0f,1.0f},		//X
+		{0.0f,1500.0f,1.0f},		//Y
+		{1.0f,0.0f,2.0f}			//アルファ
 	};
+
+	//ステージクリア時のプレイヤーのスケールを変更
+	Easing easeChangeScaleStageClear_[3] = {
+		{1.0f,0.0f,1.5f},			//X
+		{1.0f,4.0f,1.5f},			//Y
+		{1.0f,0.0f,1.5f}			//Z
+	};
+	//ゴールしたか
+	bool isGoal_ = false;
+	//座標の停止
+	XMFLOAT3 stopPos_;
 
 	//イージング用のオフセット
 	XMFLOAT3 easeOffset_ = {};
@@ -237,4 +248,6 @@ private://カプセル化メンバ関数
 	void UpdateAlive(bool isBack = true, bool isAttack = true);
 	//破壊時
 	void UpdateBreak();
+	//ゴール時
+	void UpdateGoal();
 };

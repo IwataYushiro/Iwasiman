@@ -545,6 +545,8 @@ void GamePlayScene::UpdateHowToPlay()
 
 void GamePlayScene::UpdateIsStageClear()
 {
+	for (std::unique_ptr<Player>& player : players_)player->Update();
+
 	FadeOut(white_);
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
