@@ -55,7 +55,7 @@ private:
 	//ゴールしたか
 	bool isGoal_ = false;
 	//半径
-	float radius_ = 10.0f;
+	const float radius_ = 10.0f;
 
 public: //アクセッサ、インライン関数
 	//ゴールしたか

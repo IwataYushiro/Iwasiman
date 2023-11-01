@@ -45,7 +45,7 @@ bool FallAndRiseSphere::Initialize()
 	if (!Object3d::Initialize()) return false;
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
+	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 	collider_->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
 	
@@ -72,7 +72,7 @@ void FallAndRiseSphere::UpdateFallSphere()
 		const float downSpeed = 0.1f;
 		position_.y -= downSpeed;
 
-		if (position_.y <= startPos_.y - 50.0f)
+		if (position_.y <= startPos_.y - resetPosY_)
 		{
 			position_ = startPos_;
 			isRide_ = false;
@@ -112,7 +112,7 @@ void FallAndRiseSphere::UpdateRiseSphere()
 		const float Speed = 0.1f;
 		position_.y += Speed;
 
-		if (position_.y >= startPos_.y + 50.0f)
+		if (position_.y >= startPos_.y + resetPosY_)
 		{
 			position_ = startPos_;
 			isRide_ = false;

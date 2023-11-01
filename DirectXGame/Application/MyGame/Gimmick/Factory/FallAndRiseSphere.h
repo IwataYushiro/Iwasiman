@@ -61,7 +61,7 @@ private:
 	XMFLOAT3 scale_;
 
 	//半径
-	float radius_ = 9.0f;
+	const float radius_ = 8.0f;
 
 	//プレイヤー
 	Player* player_ = nullptr;
@@ -74,6 +74,7 @@ private:
 	//開始地点
 	XMFLOAT3 startPos_ = {};
 
+	const float resetPosY_ = 50.0f;
 public: //アクセッサ、インライン関数
 	
 	//プレイヤーセット

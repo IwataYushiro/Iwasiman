@@ -111,7 +111,8 @@ bool Player::Initialize() {
 	pmFire_->SetParticleModel(particleFire_);
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR(), radius_));
+	const XMVECTOR colliderOffset = { 0.0f,0.0f,0.0f,0.0f };
+	SetCollider(new SphereCollider(colliderOffset, radius_));
 	collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 

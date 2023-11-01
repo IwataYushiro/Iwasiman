@@ -55,7 +55,7 @@ bool Item::Initialize()
 	spCommon_ = SpriteCommon::GetInstance();
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
+	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ITEM);
 	
 	isGet_ = false;
@@ -83,8 +83,8 @@ void Item::Update()
 	pm_->SetCamera(camera_);
 	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP) UpdateJumpPowerup();
 
-
-	rotation_.y += 2.0f;
+	const float rotSpeedY = 2.0f;
+	rotation_.y += rotSpeedY;
 	Trans();
 	camera_->Update();
 	pm_->Update();
@@ -95,22 +95,26 @@ void Item::Update()
 
 void Item::UpdateJumpPowerup()
 {
+	const float jumpPowerUp = 3.0f;
+	const float jumpPowerReset = 2.0f;
+	const XMFLOAT3 asIsColor = { 1.0f,1.0f,1.0f };//素材そのままの色
 	if (isGetJump_)
 	{
-		ease_.ease_out_cubic();
-		if (player_->OnGround())player_->SetJumpVYFist(3.0f);
-		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f,1.0f, ease_.num_X });
+		ease_.ease_out_cubic();	
+		if (player_->OnGround())player_->SetJumpVYFist(jumpPowerUp);
+		spriteItemJumpBar_->SetColor({ asIsColor.x, asIsColor.y,asIsColor.z, ease_.num_X });
 		count_++;
 	}
 	else
 	{
-		if (player_->OnGround())player_->SetJumpVYFist(2.0f);
-		spriteItemJumpBar_->SetColor({ 1.0f, 1.0f, 1.0f,ease_.start });
+		if (player_->OnGround())player_->SetJumpVYFist(jumpPowerReset);
+		spriteItemJumpBar_->SetColor({ asIsColor.x, asIsColor.y, asIsColor.z,ease_.start });
 	}
 
 	if (count_ >= MAX_TIME)
 	{
-		count_ = 0.0f;
+		const float countReset = 0.0f;
+		count_ = countReset;
 		isGet_ = false;
 		isGetJump_ = false;
 		
@@ -172,12 +176,26 @@ void Item::DrawSprite()
 void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (isGet_)return;//多重ヒットを防止
+	//プリセット
+	const ParticleManager::Preset itemGet =
+	{
+		p_,
+		position_,
+		{ 8.0f ,8.0f,0.0f },
+		{ 0.1f,4.0f,0.1f },
+		{ 0.0f,0.001f,0.0f },
+		30,
+		{ 2.0f, 0.0f },
+		{ 1.0f,1.0f,1.0f,1.0f },
+		{ 0.0f,0.0f,0.0f,1.0f }
+	};
 
 	if (attribute == COLLISION_ATTR_PLAYERS)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			pm_->ActiveY(p_, position_, { 8.0f ,8.0f,0.0f }, { 0.1f,4.0f,0.1f }, { 0.0f,0.001f,0.0f }, 30, { 2.0f, 0.0f });
+			pm_->ActiveY(itemGet.particle, itemGet.startPos, itemGet.pos, itemGet.vel,
+				itemGet.acc, itemGet.num, itemGet.scale, itemGet.startColor, itemGet.endColor);
 			if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP)
 			{
 				ease_.Standby(false);
@@ -185,11 +203,10 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned shor
 			}
 			else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_HEAL)
 			{
-				
-
-				player_->SetLife(player_->GetLife() + 1);
-
+				const int healLife = player_->GetLife() + 1;
+				player_->SetLife(healLife);
 			}
+
 			isGet_ = true;
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;

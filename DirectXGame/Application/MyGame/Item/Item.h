@@ -73,17 +73,17 @@ private:
 	//ジャンプアイテムを取得したか
 	bool isGetJump_ = false;
 	//半径
-	float radius_ = 3.0f;
+	const float radius_ = 3.0f;
 	//プレイヤー
 	Player* player_ = nullptr;
 
 	//イージング
 	//アイテム取得した時の現在時間
-	float count_ = 0.0f;
+	float count_;
 	//タイマーの値まで来たら効果終了
 	const float timer_ = MAX_TIME / 60.0f;
 	//取得UIに使うイージング
-	Easing ease_ = Easing(1.0f, 0.0f, timer_);
+	Easing ease_ = { 1.0f, 0.0f, timer_ };
 
 	//パーティクル
 	Particle* p_ = nullptr;

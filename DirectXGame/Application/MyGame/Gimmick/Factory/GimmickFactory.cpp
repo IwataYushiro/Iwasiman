@@ -16,23 +16,25 @@
 
 std::unique_ptr<BaseGimmick> GimmickFactory::CreateGimmick(const std::string& gimmickName, Model* model, Player* player)
 {
+	//ƒ[ƒJƒ‹•Ï”
+	const bool findSuccess = 0;//‡‚Á‚Ä‚é‚Æ‚«
 	//ƒgƒQ
-	if (gimmickName.find("SPIKE") == 0)
+	if (gimmickName.find("SPIKE") == findSuccess)
 	{
 		return Spike::Create(model, player);
 	}
 	//—‚¿‚é‹…
-	else if(gimmickName.find("FALLSPHERE") == 0)
+	else if (gimmickName.find("FALLSPHERE") == findSuccess)
 	{
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE);
 	}
 	//—‚¿‚Ä–ß‚Á‚Ä‚­‚é‹…
-	else if (gimmickName.find("FALLSPHERERETURN") == 0)
+	else if (gimmickName.find("FALLSPHERERETURN") == findSuccess)
 	{
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN);
 	}
 	//¸‚é‹…
-	else if (gimmickName.find("RISESPHERE") == 0)
+	else if (gimmickName.find("RISESPHERE") == findSuccess)
 	{
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_UPSPHERE);
 	}

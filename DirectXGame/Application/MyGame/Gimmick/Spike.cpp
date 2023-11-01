@@ -42,7 +42,7 @@ bool Spike::Initialize()
 	if (!Object3d::Initialize()) return false;
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
+	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 	collider_->SetAttribute(COLLISION_ATTR_GIMMICK);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_GIMMICK_SPIKE);
 

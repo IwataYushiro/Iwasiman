@@ -39,7 +39,7 @@ bool Goal::Initialize()
 	if (!Object3d::Initialize()) return false;
 	isGoal_ = false;
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, radius_));
+	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 	collider_->SetAttribute(COLLISION_ATTR_GOAL);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	return true;
