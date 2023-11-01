@@ -73,13 +73,11 @@ protected:
 	const int deathLife_ = 0;
 	
 	//弾発射時間はランダム
-	int minInterval_;//最小
-	int maxInterval_;//最大
 
 	//死亡時間
-	int8_t deathTimer_ = 0;
+	int32_t deathTimer_ = 0;
 	//タイマーがこの位置に達したら死亡
-	const int8_t DEATH_TIME = 70;
+	const int32_t DEATH_TIME = 70;
 
 public://アクセッサ
 	//死んだかどうか

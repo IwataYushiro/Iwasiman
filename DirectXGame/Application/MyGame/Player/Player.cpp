@@ -619,7 +619,8 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 		nowEye_ = camera_->GetEye();
 		nowTarget_ = camera_->GetTarget();
 
-		easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };//最初にオフセットを足さないと右カメラ、1回足すと中央カメラ、2回足したら左カメラ
+		const XMFLOAT3 offset={ -18.0f,position_.y,85.0f + position_.z };
+		easeOffset_ = offset;//最初にオフセットを足さないと右カメラ、1回足すと中央カメラ、2回足したら左カメラ
 		//右カメラ視点[i][0]
 		easeDeadCameraEye_[0][0].SetEasing(nowEye_.x, nowEye_.x + easeOffset_.x, 1.0f);
 		easeDeadCameraEye_[1][0].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
@@ -712,10 +713,15 @@ void Player::UpdateBreak()
 		easeExplosionSizeAndAlpha_[2].ease_out_sine();
 		spriteExplosion_->SetColor({ 1.0f,1.0f,1.0f,easeExplosionSizeAndAlpha_[2].num_X });
 		//炎プリセット
-		ParticleManager::Preset fire =
+		const ParticleManager::Preset fire =
 		{
-			particleFire_,{position_.x,position_.y - 5.0f,position_.z},{ 15.0f ,15.0f,15.0f },
-			{ 3.3f,3.3f,3.3f },{ 0.0f,0.001f,0.0f },6,{ 7.0f, 0.0f },
+			particleFire_,
+			{position_.x,position_.y - 5.0f,position_.z},
+			{ 15.0f ,15.0f,15.0f },
+			{ 3.3f,3.3f,3.3f },
+			{ 0.0f,0.001f,0.0f },
+			6,
+			{ 7.0f, 0.0f },
 			{ MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
@@ -725,11 +731,15 @@ void Player::UpdateBreak()
 			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
 		//煙プリセット
-		ParticleManager::Preset smoke =
+		const ParticleManager::Preset smoke =
 		{
-			particleSmoke_,{position_.x,position_.y+5.0f,position_.z},{ 25.0f ,10.0f,15.0f },
+			particleSmoke_,
+			{position_.x,position_.y+5.0f,position_.z},
+			{ 25.0f ,10.0f,15.0f },
 			{ MyMath::RandomMTFloat(0.0f,0.1f),MyMath::RandomMTFloat(0.5f,3.0f),0.3f },
-			{ 0.0f,0.001f,0.0f },5,{ 4.0f, 0.0f },
+			{ 0.0f,0.001f,0.0f },
+			5,
+			{ 4.0f, 0.0f },
 			{ MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.95f,1.0f),1.0f },
 			{ 1.0f,1.0f,1.0f,0.0f }
 		};

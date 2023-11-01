@@ -91,11 +91,11 @@ private:
 	//弾発射間隔
 	int fireInterval_;
 	//弾発射タイマー
-	int32_t fireTimer_ = 0;
+	int32_t fireTimer_;
 	//アングル
 	XMFLOAT3 angle_;
 	//半径
-	float radius_ = 3.0f;
+	const float radius_ = 3.0f;
 	
 	//地面に乗ってるか
 	bool onGround_ = true;

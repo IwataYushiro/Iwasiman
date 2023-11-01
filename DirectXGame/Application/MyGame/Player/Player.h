@@ -100,7 +100,7 @@ private:
 	const XMFLOAT4 green_ = { 0.2f,1.0f,0.2f,1.0f };//緑
 	const XMFLOAT4 red_ = { 1.0f,0.2f,0.2f,1.0f };	//赤
 
-	Easing easelifeBarSize_ = { 0.0f,32.0f,3.0f };
+	Easing easelifeBarSize_ = { 0.0f,32.0f,3.0f };			//ライフを貯めるイージング
 	XMFLOAT2 lifeBarDamageSize_ = { 0.0f,32.0f };			//ダメージを負うとこの値分サイズが縮小
 
 	Sprite* spriteHit_ = new Sprite();				//ヒットエフェクト

@@ -57,10 +57,9 @@ bool EnemyCore::Initialize() {
 	startCount_ = std::chrono::steady_clock::now();	//開始時間
 	nowCount_ = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
-	maxTime_ = 5.0f;					//全体時間
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
+	SetCollider(new SphereCollider(XMVECTOR(), this->radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
 
@@ -81,8 +80,8 @@ bool EnemyCore::Initialize() {
 //パラメータ
 void EnemyCore::Parameter() {
 	phase_ = Phase::CoreStage1;
-	maxTime_ = 2.0f;
-	life_ = 5;
+	const int32_t startLife = 5;
+	life_ = startLife;
 	isReverse_ = false;
 	//弾初期値
 	std::array<int, 2>RandomMinMax = { 50,100 };
@@ -217,12 +216,6 @@ void EnemyCore::UpdateCore()
 	//速度
 	float cameraMove = camera_->GetEye().x;
 
-	//制御点
-	start_ = nowPos_;
-	point1_ = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
-	point2_ = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
-	end_ = { MyMath::RandomMTFloat(-15.0f,15.0f),10.0f,100.0f };
-
 	//速度
 	XMFLOAT3 velocity;
 	//移動
@@ -251,8 +244,8 @@ void EnemyCore::UpdateCore()
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		minInterval_ = fireInterval_;
-		maxInterval_ = fireInterval_ * 2;
+		const int32_t minInterval_ = fireInterval_;
+		const int32_t maxInterval_ = fireInterval_ * 2;
 		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
 	//死んだら自機の弾みたいに
@@ -260,6 +253,18 @@ void EnemyCore::UpdateCore()
 		nowPos_ = Object3d::GetPosition();
 
 		life_ = deathLife_;
+
+		//ベジェ曲線の値
+		const XMFLOAT3 startBezier3Pos = nowPos_;
+		const XMFLOAT3 point1Bezier3Pos = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
+		const XMFLOAT3 point2Bezier3Pos = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
+		const XMFLOAT3 endBezier3Pos = { MyMath::RandomMTFloat(-15.0f,15.0f),10.0f,100.0f };
+		//制御点
+		start_ = startBezier3Pos;
+		point1_ = point1Bezier3Pos;
+		point2_ = point2Bezier3Pos;
+		end_ = endBezier3Pos;
+
 		startCount_ = std::chrono::steady_clock::now();	//開始時間
 		//敵にぶつける
 
@@ -280,10 +285,11 @@ void EnemyCore::UpdateBreakCore()
 	//前回記録からの経過時間を取得する
 	elapsedCount_ = std::chrono::duration_cast<std::chrono::microseconds>(nowCount_ - startCount_);
 
-	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
-
-	const float minMaxTime = 1.0f;
-	timeRate_ = min(elapsed / maxTime_, minMaxTime);
+	const float micro = 1'000'000.0f;//マイクロ秒
+	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / micro;//マイクロ秒を秒に単位変換
+	
+	const float timeRateMax = 1.0f;
+	timeRate_ = min(elapsed / maxTime_, timeRateMax);
 
 	position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 
@@ -305,14 +311,15 @@ void EnemyCore::UpdateLeave() {
 
 const XMFLOAT3 EnemyCore::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
-	XMFLOAT3 ans;
-	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
-		p1.x + 3 * (1.0f - t) * t * t * p2.x + t * t * t * p3.x;
-	ans.y = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.y + 3.0f * (1.0f - t) * (1.0f - t) * t *
-		p1.y + 3 * (1.0f - t) * t * t * p2.y + t * t * t * p3.y;
-	ans.z = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.z + 3.0f * (1.0f - t) * (1.0f - t) * t *
-		p1.z + 3 * (1.0f - t) * t * t * p2.z + t * t * t * p3.z;
-
+	const XMFLOAT3 ans =
+	{
+	(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.x + 3.0f * (1.0f - t) * t * t * p2.x + t * t * t * p3.x,
+	(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.y + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.y + 3.0f * (1.0f - t) * t * t * p2.y + t * t * t * p3.y,
+	(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.z + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.z + 3.0f * (1.0f - t) * t * t * p2.z + t * t * t * p3.z
+	};
 	return ans;
 }
 
@@ -334,6 +341,33 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned
 {
 	if (phase_ == Phase::Leave)return;
 
+	//煙プリセット
+	const ParticleManager::Preset smoke =
+	{
+		particleSmoke_,
+		position_,
+		{ 0.0f ,0.0f,25.0f },
+		{ 4.0f,4.0f,0.0f },
+		{ 0.0f,0.001f,0.0f },
+		30,
+		{ 3.0f, 0.0f },
+		{ 1.0f,1.0f,1.0f,1.0f },
+		{ 0.0f,0.0f,0.0f,1.0f }
+	};
+	//爆発プリセット
+	const ParticleManager::Preset fire =
+	{
+		particleFire_,
+		position_,
+		{ 0.0f ,0.0f,25.0f },
+		{ 4.0f,4.0f,0.0f },
+		{ 0.0f,0.001f,0.0f },
+		30,
+		{ 3.0f, 0.0f },
+		{ 1.0f,1.0f,1.0f,1.0f },
+		{ 0.0f,0.0f,0.0f,1.0f }
+	};
+
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
 	{
@@ -342,16 +376,16 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned
 		{
 			if (life_ > deathLife_)
 			{
-				pmSmoke_->ActiveZ(particleSmoke_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+				pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 				pmSmoke_->Update();
 				life_--;
 			}
 			else
 			{
-				pmFire_->ActiveZ(particleFire_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+				pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
+					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
 				pmFire_->Update();
 				life_--;
@@ -362,8 +396,8 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			pmFire_->ActiveZ(particleFire_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+			pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
+				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
 			pmFire_->Update();
 

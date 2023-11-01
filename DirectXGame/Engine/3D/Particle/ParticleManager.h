@@ -49,7 +49,7 @@ public: // サブクラス
 		XMFLOAT3 pos;
 		XMFLOAT3 vel;
 		XMFLOAT3 acc;
-		int num = 7;
+		int num;
 		XMFLOAT2 scale;
 		XMFLOAT4 startColor;
 		XMFLOAT4 endColor;

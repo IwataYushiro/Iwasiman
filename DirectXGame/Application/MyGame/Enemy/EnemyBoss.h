@@ -91,10 +91,10 @@ private:
 	//弾発射間隔
 	int fireInterval_;
 	//弾発射タイマー
-	int32_t fireTimer_ = 0;
+	int32_t fireTimer_;
 	
 	//半径
-	float radius_ = 5.0f;
+	const float radius_ = 5.0f;
 	//ボス死亡
 	bool bossDead_ = false;
 
@@ -109,7 +109,7 @@ private:
 	std::chrono::steady_clock::time_point startCount_;	//開始時間
 	std::chrono::steady_clock::time_point nowCount_;	//現在時間
 	std::chrono::microseconds elapsedCount_;			//経過時間 経過時間=現在時間-開始時間
-	float	maxTime_ = 5.0f;							//全体時間
+	const float	maxTime_ = 5.0f;						//全体時間
 	float	timeRate_;									//どれくらい時間が進んだか
 	//制御点
 	XMFLOAT3 start_;	//最初点

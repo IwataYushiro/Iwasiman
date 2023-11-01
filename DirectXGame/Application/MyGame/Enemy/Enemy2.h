@@ -94,13 +94,13 @@ private:
 	//弾発射間隔
 	int fireInterval_;
 	//弾発射タイマー
-	int32_t fireTimer_ = 0;
+	int32_t fireTimer_;
 	//地面に当たった時
 	XMFLOAT3 upPos_;
 	//アングル
 	XMFLOAT3 angle_;
 	//半径
-	float radius_ = 2.0f;
+	const float radius_ = 2.0f;
 	//撤退スピード
 	XMFLOAT3 backSpeed_;
 	//地面に乗ってるか
@@ -111,7 +111,7 @@ private:
 	//反転フラグ
 	bool isReverse_ = false;
 	//地面に乗ってる時のカウント
-	int count_ = 0;
+	int count_;
 
 	//パーティクル
 	Particle* particleFire_ = nullptr;

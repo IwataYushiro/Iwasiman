@@ -57,7 +57,7 @@ bool Enemy1::Initialize(int level) {
 	
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR{ 0.0f,0.0f,0.0f,0.0f }, this->radius_));
+	SetCollider(new SphereCollider(XMVECTOR(), this->radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 	InitSubATTR(level);
 	Parameter();
@@ -83,23 +83,43 @@ void Enemy1::InitSubATTR(int level)
 }
 
 void Enemy1::InitSpeed()
-{//移動
-	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) speed_ = { -0.2f, 0.0f, 0.0f };
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) speed_ = { -0.1f,0.0f,0.0f };
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) speed_ = { -0.2f,0.0f,0.0f };
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) speed_ = { -0.4f,0.0f,0.0f };
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) speed_ = { -0.2f,0.0f,0.0f };
+{
+	struct SpeedType
+	{
+		const XMFLOAT3 none = { -0.2f,0.0f,0.0f }; 
+		const XMFLOAT3 power = { -0.1f,0.0f,0.0f };
+		const XMFLOAT3 guard = { -0.2f,0.0f,0.0f };
+		const XMFLOAT3 speed = { -0.4f,0.0f,0.0f };
+		const XMFLOAT3 death = { -0.2f,0.0f,0.0f };
+	};
+	SpeedType speedType;
+	
+	//移動
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) speed_ = speedType.none;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) speed_ = speedType.power;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) speed_ = speedType.guard;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) speed_ = speedType.speed;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) speed_ = speedType.death;
 
 }
 
 void Enemy1::InitLife()
 {
+	struct LifeType
+	{
+		const int32_t none = 3;
+		const int32_t power = 3;
+		const int32_t guard = 5;
+		const int32_t speed = 2;
+		const int32_t death = 2;
+	};
+	LifeType lifeType;
 	//ライフ
-	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = 3;
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) life_ = 3;
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) life_ = 5;
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) life_ = 2;
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) life_ = 2;
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = lifeType.none;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) life_ = lifeType.power;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) life_ = lifeType.guard;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) life_ = lifeType.speed;
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) life_ = lifeType.death;
 }
 
 //パラメータ
@@ -292,9 +312,10 @@ void Enemy1::Landing()
 
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
+	const XMVECTOR rayDir = { 0.0f,-1.0f,0.0f,0.0f };
 	ray.start = sphereCollider->center;
 	ray.start.m128_f32[1] += sphereCollider->GetRadius();
-	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
+	ray.dir = rayDir;
 	//レイキャスト
 	RaycastHit raycastHit;
 	//半径　X　2.0f(radiusMulNum)
@@ -373,9 +394,9 @@ void Enemy1::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		minInterval_ = fireInterval_ / 2;
-		maxInterval_ = fireInterval_;
-		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
+		const int32_t minInterval = fireInterval_ / 2;
+		const int32_t maxInterval = fireInterval_;
+		fireTimer_ = MyMath::RandomMTInt(minInterval, maxInterval);
 	}
 
 	if (!onGround_)
@@ -425,25 +446,52 @@ XMFLOAT3 Enemy1::GetWorldPosition() {
 void Enemy1::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;
-	const int HitLife = deathLife_ + 1;
+	const int hitLife = deathLife_ + 1;
+	//煙プリセット
+	const ParticleManager::Preset smoke =
+	{
+		particleSmoke_,
+		position_,
+		{ 0.0f ,0.0f,25.0f },
+		{ 4.0f,4.0f,0.0f },
+		{ 0.0f,0.001f,0.0f },
+		30,
+		{ 3.0f, 0.0f },
+		{ 1.0f,1.0f,1.0f,1.0f },
+		{ 0.0f,0.0f,0.0f,1.0f }
+	};
+	//爆発プリセット
+	const ParticleManager::Preset fire =
+	{
+		particleFire_,
+		position_,
+		{ 0.0f ,0.0f,25.0f },
+		{ 4.0f,4.0f,0.0f },
+		{ 0.0f,0.001f,0.0f },
+		30,
+		{ 3.0f, 0.0f },
+		{ 1.0f,1.0f,1.0f,1.0f },
+		{ 0.0f,0.0f,0.0f,1.0f }
+	};
+
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
 		{
-			if (life_ > HitLife)
+			if (life_ > hitLife)
 			{
-				pmSmoke_->ActiveZ(particleSmoke_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+				pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 				pmSmoke_->Update();
 				life_--;
 			}
 			else
 			{
-				pmFire_->ActiveZ(particleFire_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-					{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+				pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
+					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
 				pmFire_->Update();
 				life_--;
