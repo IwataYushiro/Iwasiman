@@ -164,8 +164,14 @@ void Enemy2::Parameter() {
 	onGround_ = false;
 	//初期フェーズ
 	phase_ = Phase::Approach;
-	std::array<int, 2>RandomMinMax = { 75,100 };
-	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
+	enum MinMax
+	{
+		MM_min = 0,
+		MM_max=1,
+		MM_num=2,
+	};
+	const std::array<int, MM_num>randomMinMax = { 75,100 };
+	fireInterval_ = MyMath::RandomMTInt(randomMinMax[MM_min], randomMinMax[MM_max]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 
@@ -351,16 +357,16 @@ void Enemy2::Landing()
 	//球と地形の交差を全検索
 	colManager_->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
 	//交差による排斥分動かす
-	position_.x += callback.move.m128_f32[0];
-	position_.y += callback.move.m128_f32[1];
+	position_.x += callback.move.m128_f32[XYZ_X];
+	position_.y += callback.move.m128_f32[XYZ_Y];
 	//position_.z += callback.move.m128_f32[2];
 
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
 
-	eyepos.x += callback.move.m128_f32[0];
+	eyepos.x += callback.move.m128_f32[XYZ_X];
 
-	tarpos.x += callback.move.m128_f32[0];
+	tarpos.x += callback.move.m128_f32[XYZ_X];
 
 	//コライダー更新
 	UpdateWorldMatrix();

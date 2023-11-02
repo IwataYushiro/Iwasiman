@@ -130,8 +130,14 @@ void Enemy1::Parameter() {
 	onGround_ = true;
 	//初期フェーズ
 	phase_ = Phase::Approach;
-	std::array<int, 2>RandomMinMax = { 100,150 };
-	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
+	enum MinMax
+	{
+		MM_min = 0,
+		MM_max = 1,
+		MM_num = 2,
+	};
+	const std::array<int, MM_num>randomMinMax = { 100,150 };
+	fireInterval_ = MyMath::RandomMTInt(randomMinMax[MM_min], randomMinMax[MM_max]);
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 
@@ -264,7 +270,7 @@ void Enemy1::Landing()
 			//排斥方向
 			XMVECTOR rejectDir = XMVector3Normalize(info.reject);
 			//上方向と排斥方向の角度差のコサイン値
-			float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
+			float cos = XMVector3Dot(rejectDir, up).m128_f32[XYZ_X];
 
 			//地面判定のしきい値角度
 			const float threshold = cosf(XMConvertToRadians(30.0f));
@@ -293,16 +299,16 @@ void Enemy1::Landing()
 	//球と地形の交差を全検索
 	colManager_->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
 	//交差による排斥分動かす
-	position_.x += callback.move.m128_f32[0];
-	position_.y += callback.move.m128_f32[1];
+	position_.x += callback.move.m128_f32[XYZ_X];
+	position_.y += callback.move.m128_f32[XYZ_Y];
 	//position_.z += callback.move.m128_f32[2];
 
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
 
-	eyepos.x += callback.move.m128_f32[0];
+	eyepos.x += callback.move.m128_f32[XYZ_X];
 
-	tarpos.x += callback.move.m128_f32[0];
+	tarpos.x += callback.move.m128_f32[XYZ_X];
 
 	//コライダー更新
 	UpdateWorldMatrix();
@@ -312,9 +318,10 @@ void Enemy1::Landing()
 
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
-	const XMVECTOR rayDir = { 0.0f,-1.0f,0.0f,0.0f };
+	
 	ray.start = sphereCollider->center;
 	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	const XMVECTOR rayDir = { 0.0f,-1.0f,0.0f,0.0f };
 	ray.dir = rayDir;
 	//レイキャスト
 	RaycastHit raycastHit;

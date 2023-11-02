@@ -61,7 +61,8 @@ bool Player::Initialize() {
 	spCommon_ = SpriteCommon::GetInstance();
 	input_ = Input::GetInstance();
 
-	life_ = 10;
+	const int32_t startLife = 10;
+	life_ = startLife;
 	isDead_ = false;
 	isHit_ = false;
 	mutekiCount_ = 0;
@@ -69,6 +70,9 @@ bool Player::Initialize() {
 	isRight_ = true;
 	//ジャンプしたか
 	onGround_ = true;
+
+	const float startJumpVYFist = 2.0f;
+	jumpVYFist_ = startJumpVYFist;
 
 	//奥側にいるか
 	isJumpBack_ = false;
@@ -79,7 +83,6 @@ bool Player::Initialize() {
 	startCount_ = std::chrono::steady_clock::now();	//開始時間
 	nowCount_ = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
-	maxTime_ = 1.0f;					//全体時間
 
 	//スプライト
 	spCommon_->LoadTexture(GPSPTI_PlayerLifeBarTex, "texture/plife2.png");
@@ -95,12 +98,12 @@ bool Player::Initialize() {
 
 	spCommon_->LoadTexture(GPSPTI_PlayerExplosionTex, "texture/explosion2.png");
 	spriteExplosion_->Initialize(spCommon_, GPSPTI_PlayerExplosionTex);
-	spriteExplosion_->SetAnchorPoint({ 0.5f,0.5f });
+	spriteExplosion_->SetAnchorPoint(explosionAnchorPoint_);
 	spriteExplosion_->SetPosition(explosionPos_);
 	spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[0].start,easeExplosionSizeAndAlpha_[1].start });
-	spriteExplosion_->SetColor({ 1.0f,1.0f,1.0f,easeExplosionSizeAndAlpha_[2].start });
+	spriteExplosion_->SetColor({ asIsColor_.x,asIsColor_.y,asIsColor_.z,easeExplosionSizeAndAlpha_[2].start });
 	spriteExplosion_->Update();
-	
+
 	//パーティクル
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmSmoke_ = ParticleManager::Create();
@@ -122,7 +125,8 @@ bool Player::Initialize() {
 
 void Player::Reset() {
 
-	life_ = 10;
+	const int32_t resetLife = 10;
+	life_ = resetLife;
 	isDead_ = false;
 
 	isRight_ = true;
@@ -138,11 +142,9 @@ void Player::Reset() {
 	startCount_ = std::chrono::steady_clock::now();	//開始時間
 	nowCount_ = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
-	maxTime_ = 1.0f;					//全体時間
-
 }
 void Player::Update(bool isBack, bool isAttack, bool isStart) {
-	
+
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
 	if (!isStart)
@@ -163,7 +165,7 @@ void Player::Update(bool isBack, bool isAttack, bool isStart) {
 
 	easelifeBarSize_.ease_in_cubic();
 	lifeBarDamageSize_.x = easelifeBarSize_.num_X;
-	
+
 	spriteLifeBar_->SetTextureSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
 	spriteLifeBar_->SetSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
 	const int dangerLifeZone = 3;
@@ -194,7 +196,7 @@ void Player::DrawSprite()
 void Player::DrawParticle() {
 	pmSmoke_->Draw();
 	pmFire_->Draw();
-	
+
 }
 
 //移動処理
@@ -204,8 +206,26 @@ void Player::Move() {
 	XMFLOAT3 rot = Object3d::GetRotation();
 	XMFLOAT3 cmove = camera_->GetEye();
 	XMFLOAT3 tmove = camera_->GetTarget();
-	float moveSpeed = 0.5f;
+	//スピード
+	const float moveSpeed = 0.5f;//通常時
+	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
+	//方向は左で-,右で+
+	const XMFLOAT3 rotMoveLeft = { 0.0f,-90.0f,0.0f };
+	const XMFLOAT3 rotMoveRight = { 0.0f,90.0f,0.0f };
 
+	//パーティクル
+	const ParticleManager::Preset smoke =
+	{
+		particleSmoke_,
+		position_,
+		{ 0.0f ,3.0f,0.0f },
+		{ 3.0f,0.3f,0.3f },
+		{ 0.0f,0.001f,0.0f },
+		2,
+		{ 1.0f, 0.0f },
+		{1.0f,1.0f,1.0f,1.0f},
+		{0.0f,0.0f,0.0f,1.0f}
+	};
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
 
@@ -214,28 +234,30 @@ void Player::Move() {
 	{
 		if (input_->PushKey(DIK_A)) {
 			isRight_ = false;
-			pmSmoke_->ActiveX(particleSmoke_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { 3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
-			rot = { 0.0f,-90.0f,0.0f };
-			move.x -= moveSpeed * 1.5f;
-			cmove.x -= moveSpeed * 1.5f;
-			tmove.x -= moveSpeed * 1.5f;
-			if (isShake_)hitMove_.x -= moveSpeed * 1.5f;
+			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+			rot = rotMoveLeft;
+			move.x -= moveSpeed * dashSpeed;
+			cmove.x -= moveSpeed * dashSpeed;
+			tmove.x -= moveSpeed * dashSpeed;
+			if (isShake_)hitMove_.x -= moveSpeed * dashSpeed;
 		}
 		if (input_->PushKey(DIK_D)) {
 			isRight_ = true;
-			pmSmoke_->ActiveX(particleSmoke_, Object3d::GetPosition(), { 0.0f ,3.0f,0.0f }, { -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 2, { 1.0f, 0.0f });
-			rot = { 0.0f,90.0f,0.0f };
-			move.x += moveSpeed * 1.5f;
-			cmove.x += moveSpeed * 1.5f;
-			tmove.x += moveSpeed * 1.5f;
-			if (isShake_)hitMove_.x += moveSpeed * 1.5f;
+			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, { -smoke.vel.x,-smoke.vel.y, -smoke.vel.z },
+				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+			rot = rotMoveRight;
+			move.x += moveSpeed * dashSpeed;
+			cmove.x += moveSpeed * dashSpeed;
+			tmove.x += moveSpeed * dashSpeed;
+			if (isShake_)hitMove_.x += moveSpeed * dashSpeed;
 		}
 	}
 	else
 	{
 		if (input_->PushKey(DIK_A)) {
 			isRight_ = false;//左向き
-			rot = { 0.0f,-90.0f,0.0f };
+			rot = rotMoveLeft;
 			move.x -= moveSpeed;
 			cmove.x -= moveSpeed;
 			tmove.x -= moveSpeed;
@@ -243,7 +265,7 @@ void Player::Move() {
 		}
 		if (input_->PushKey(DIK_D)) {
 			isRight_ = true;
-			rot = { 0.0f,90.0f,0.0f };
+			rot = rotMoveRight;
 			move.x += moveSpeed;
 			cmove.x += moveSpeed;
 			tmove.x += moveSpeed;
@@ -307,7 +329,8 @@ void Player::FallAndJump()
 	{
 		onGround_ = false;
 
-		fallVec_ = { 0.0f,jumpVYFist_,0.0f };
+		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
+		fallVec_ = startJumpVec;
 	}
 
 }
@@ -333,20 +356,29 @@ void Player::JumpBack()
 	{
 		const float offsetPosY = 1.0f;
 		const float JumpBackPosY = 20.0f;
+
+		//ベジェ曲線の値
+		const XMFLOAT3 startBezier3Pos = { move.x,jumpBackPos_.y - offsetPosY,-60.0f };
+		const XMFLOAT3 point1Bezier3Pos = { move.x,jumpBackPos_.y + JumpBackPosY,-40.0f };
+		const XMFLOAT3 point2Bezier3Pos = { move.x,jumpBackPos_.y + JumpBackPosY,-20.0f };
+		const XMFLOAT3 endBezier3Pos = { move.x,jumpBackPos_.y - offsetPosY,0.0f };
+
 		//制御点
-		start_ = { move.x,jumpBackPos_.y - offsetPosY,-60.0f };
-		point1_ = { move.x,jumpBackPos_.y + JumpBackPosY,-40.0f };
-		point2_ = { move.x,jumpBackPos_.y + JumpBackPosY,-20.0f };
-		end_ = { move.x,jumpBackPos_.y - offsetPosY,0.0f };
+		start_ = startBezier3Pos;
+		point1_ = point1Bezier3Pos;
+		point2_ = point2Bezier3Pos;
+		end_ = endBezier3Pos;
 
 		//現在時間を取得する
 		nowCount_ = std::chrono::steady_clock::now();
 		//前回記録からの経過時間を取得する
 		elapsedCount_ = std::chrono::duration_cast<std::chrono::microseconds>(nowCount_ - startCount_);
 
-		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
+		const float micro = 1'000'000.0f;
+		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / micro;//マイクロ秒を秒に単位変換
 
-		timeRate_ = min(elapsed / maxTime_, 1.0f);
+		const float timeRateMax = 1.0f;
+		timeRate_ = min(elapsed / maxTime_, timeRateMax);
 
 		if (isBack_)move = Bezier3(end_, point2_, point1_, start_, timeRate_);
 
@@ -437,8 +469,14 @@ void Player::Landing(unsigned short attribute)
 	Ray ray;
 	ray.start = sphereCollider->center;
 	ray.start.m128_f32[1] += sphereCollider->GetRadius();
-	ray.dir = { 0.0f,-1.0f,0.0f,0.0f };
+	const XMVECTOR rayDir = { 0.0f,-1.0f,0.0f,0.0f };
+	ray.dir = rayDir;
 	RaycastHit raycastHit;
+
+	//半径　X　2.0f(radiusMulNum)
+	const float radiusMulNum = 2.0f;
+	//落下状態になるY値のスピード
+	const float fallSpeedY = 0.0f;
 	//接地状態
 	if (onGround_)
 	{
@@ -446,10 +484,10 @@ void Player::Landing(unsigned short attribute)
 		const float adsDistance = 0.2f;
 		//接地を維持
 		if (colManager_->RayCast(ray, attribute, &raycastHit,
-			sphereCollider->GetRadius() * 2.0f + adsDistance))
+			sphereCollider->GetRadius() * radiusMulNum + adsDistance))
 		{
 			onGround_ = true;
-			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * radiusMulNum);
 			//行列更新
 			Object3d::Update();
 		}
@@ -461,14 +499,14 @@ void Player::Landing(unsigned short attribute)
 		}
 	}
 	//落下状態
-	else if (fallVec_.y <= 0.0f)
+	else if (fallVec_.y <= fallSpeedY)
 	{
 		if (colManager_->RayCast(ray, attribute, &raycastHit,
-			sphereCollider->GetRadius() * 2.0f))
+			sphereCollider->GetRadius() * radiusMulNum))
 		{
 			//着地
 			onGround_ = true;
-			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * radiusMulNum);
 			//行列更新
 			Object3d::Update();
 		}
@@ -483,17 +521,24 @@ void Player::Attack() {
 
 	if (input_->TriggerKey(DIK_X)) {
 		//弾の速度
-		const float kBulletSpeed = 1.0f;
+		const float bulletSpeed = 1.0f;
 		XMFLOAT3 velocity;
-		if (isRight_)velocity = { kBulletSpeed, 0.0f, 0.0f };
-		else velocity = { -kBulletSpeed, 0.0f, 0.0f };
+		//向きによってスピードが変わる
+		const XMFLOAT3 velLeft = { -bulletSpeed, 0.0f, 0.0f };
+		const XMFLOAT3 velRight = { bulletSpeed, 0.0f, 0.0f };
+
+		if (isRight_)velocity = velRight;
+		else velocity = velLeft;
+		//行列に速度値を渡す
+		const XMFLOAT4 velosityMoveMatrix = { velocity.x,velocity.y,velocity.z,0.0f };
 
 		XMMATRIX matVec = XMMatrixIdentity();
-		matVec.r[0].m128_f32[0] = velocity.x;
-		matVec.r[0].m128_f32[1] = velocity.y;
-		matVec.r[0].m128_f32[2] = velocity.z;
-		matVec.r[0].m128_f32[3] = 0.0f;
+		matVec.r[XYZW_X].m128_f32[XYZW_X] = velosityMoveMatrix.x;
+		matVec.r[XYZW_X].m128_f32[XYZW_Y] = velosityMoveMatrix.y;
+		matVec.r[XYZW_X].m128_f32[XYZW_Z] = velosityMoveMatrix.z;
+		matVec.r[XYZW_X].m128_f32[XYZW_W] = velosityMoveMatrix.w;
 		matVec *= Object3d::GetWorld();
+
 		//自キャラの座標をコピー
 		XMFLOAT3 pos = Object3d::GetPosition();
 
@@ -549,19 +594,47 @@ XMFLOAT3 Player::GetWorldPosition() {
 
 //衝突を検出したら呼び出されるコールバック関数
 void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
+	
+	//ダメージ管理の構造体
+	struct DamageType
+	{
+		const int32_t enemyNone = 2;
+		const int32_t enemyPower = 4;
+		const int32_t enemyGuard = 1;
+		const int32_t enemySpeed = 1;
+		const int32_t enemyDeath = 6;
+		const int32_t enemyBullet = 1;
+		const int32_t GimmickSpike = 3;
+	};
+	DamageType damege;
+	
+	//煙プリセット
+	const ParticleManager::Preset smoke =
+	{
+		particleSmoke_,
+		position_,
+		{ 0.0f ,0.0f,25.0f },
+		{ 4.0f,4.0f,0.0f },
+		{ 0.0f,0.001f,0.0f },
+		30,
+		{ 3.0f, 0.0f },
+		{ 1.0f,1.0f,1.0f,1.0f },
+		{ 0.0f,0.0f,0.0f,1.0f }
+	};
+
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
 		if (isShake_)return;
 
-		if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ -= 2;
-		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)life_ -= 4;
-		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)life_--;
-		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)life_--;
-		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)life_ -= 6;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_--;
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ -= damege.enemyNone;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)life_ -= damege.enemyPower;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)life_-=damege.enemyGuard;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)life_-=damege.enemySpeed;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)life_ -= damege.enemyDeath;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_-=damege.enemyBullet;
 
-		pmSmoke_->ActiveZ(particleSmoke_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-			{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+		pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 		pmSmoke_->Update();
 		isHit_ = true;
@@ -572,20 +645,20 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
 		{
 			if (isShake_)return;
-			life_ -= 3;
-			pmSmoke_->ActiveZ(particleSmoke_, { Object3d::GetPosition() }, { 0.0f ,0.0f,25.0f },
-				{ 4.2f,4.2f,0.0f }, { 0.0f,0.001f,0.0f }, 30, { 3.0f, 0.0f });
+			life_ -= damege.GimmickSpike;
+			pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 			pmSmoke_->Update();
 			isHit_ = true;
 		}
 
 	}
-	else if (attribute==COLLISION_ATTR_GOAL)
+	else if (attribute == COLLISION_ATTR_GOAL)
 	{
 		if (isGoal_)return;
-		scale_ = { easeChangeScaleStageClear_[0].start,easeChangeScaleStageClear_[1].start ,easeChangeScaleStageClear_[2].start };
-		for (int i = 0; i < 3; i++)easeChangeScaleStageClear_[i].Standby(false);
+		scale_ = { easeChangeScaleStageClear_[XYZ_X].start,easeChangeScaleStageClear_[XYZ_Y].start ,easeChangeScaleStageClear_[XYZ_Z].start };
+		for (int i = 0; i < XYZ_NUM; i++)easeChangeScaleStageClear_[i].Standby(false);
 		stopPos_ = position_;
 		isGoal_ = true;
 		isAlive_ = false;
@@ -594,13 +667,16 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 
 const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
+	//三点ベジェ曲線の式
+	//B(t) = (1-t)^3 * P0 + 3(1-t)^2 * t * P1 + 3(1-t)*t^2 * P2 + t^3 * P3 0<=t<=1
+
 	XMFLOAT3 ans;
 	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
-		p1.x + 3 * (1.0f - t) * t * t * p2.x + t * t * t * p3.x;
+		p1.x + 3.0f * (1.0f - t) * t * t * p2.x + t * t * t * p3.x;
 	ans.y = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.y + 3.0f * (1.0f - t) * (1.0f - t) * t *
-		p1.y + 3 * (1.0f - t) * t * t * p2.y + t * t * t * p3.y;
+		p1.y + 3.0f * (1.0f - t) * t * t * p2.y + t * t * t * p3.y;
 	ans.z = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.z + 3.0f * (1.0f - t) * (1.0f - t) * t *
-		p1.z + 3 * (1.0f - t) * t * t * p2.z + t * t * t * p3.z;
+		p1.z + 3.0f * (1.0f - t) * t * t * p2.z + t * t * t * p3.z;
 
 	return ans;
 }
@@ -614,30 +690,32 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 	FallAndJump();
 	if (isBack)JumpBack();
 	if (isAttack)Attack();
-
+	
 	if (life_ <= 0)
 	{
 		nowEye_ = camera_->GetEye();
 		nowTarget_ = camera_->GetTarget();
 
-		const XMFLOAT3 offset={ -18.0f,position_.y,85.0f + position_.z };
+		const XMFLOAT3 offset = { -18.0f,position_.y,85.0f + position_.z };
 		easeOffset_ = offset;//最初にオフセットを足さないと右カメラ、1回足すと中央カメラ、2回足したら左カメラ
-		//右カメラ視点[i][0]
-		easeDeadCameraEye_[0][0].SetEasing(nowEye_.x, nowEye_.x + easeOffset_.x, 1.0f);
-		easeDeadCameraEye_[1][0].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
-		easeDeadCameraEye_[2][0].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, 1.0f);
-		//右カメラ注視点[i][0]
-		easeDeadCameraTarget_[0][0].SetEasing(nowTarget_.x, nowTarget_.x + easeOffset_.x, 1.0f);
-		easeDeadCameraTarget_[1][0].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, 1.0f);
-		easeDeadCameraTarget_[2][0].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, 1.0f);
+		const float easeTime = 1.0f;
+		//右カメラ視点[i]
+		easeDeadCameraEye_[XYZ_X].SetEasing(nowEye_.x, nowEye_.x + easeOffset_.x, easeTime);
+		easeDeadCameraEye_[XYZ_Y].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, easeTime);
+		easeDeadCameraEye_[XYZ_Z].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, easeTime);
+		//右カメラ注視点[i]
+		easeDeadCameraTarget_[XYZ_X].SetEasing(nowTarget_.x, nowTarget_.x + easeOffset_.x, easeTime);
+		easeDeadCameraTarget_[XYZ_Y].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, easeTime);
+		easeDeadCameraTarget_[XYZ_Z].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, easeTime);
 
-		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][0].Standby(false);
-		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][0].Standby(false);
+		for (int i = 0; i < XYZ_NUM; i++)easeDeadCameraEye_[i].Standby(false);
+		for (int i = 0; i < XYZ_NUM; i++)easeDeadCameraTarget_[i].Standby(false);
 
 		isBreak_ = true;
 		isAlive_ = false;
 	}
-	if (position_.y <= -60.0f)isDead_ = true;
+	const float deadPosY = -60.0;
+	if (position_.y <= deadPosY)isDead_ = true;
 
 	if (isHit_)
 	{
@@ -711,8 +789,9 @@ void Player::UpdateBreak()
 {
 	if (isExplosion_)
 	{
-		easeExplosionSizeAndAlpha_[2].ease_out_sine();
-		spriteExplosion_->SetColor({ 1.0f,1.0f,1.0f,easeExplosionSizeAndAlpha_[2].num_X });
+		easeExplosionSizeAndAlpha_[XYW_W].ease_out_sine();
+		spriteExplosion_->SetColor({ asIsColor_.x,asIsColor_.y,asIsColor_.z,
+			easeExplosionSizeAndAlpha_[XYW_W].num_X });
 		//炎プリセット
 		const ParticleManager::Preset fire =
 		{
@@ -735,7 +814,7 @@ void Player::UpdateBreak()
 		const ParticleManager::Preset smoke =
 		{
 			particleSmoke_,
-			{position_.x,position_.y+5.0f,position_.z},
+			{position_.x,position_.y + 5.0f,position_.z},
 			{ 25.0f ,10.0f,15.0f },
 			{ MyMath::RandomMTFloat(0.0f,0.1f),MyMath::RandomMTFloat(0.5f,3.0f),0.3f },
 			{ 0.0f,0.001f,0.0f },
@@ -752,11 +831,13 @@ void Player::UpdateBreak()
 
 		//カメラ速度
 		XMFLOAT3 cameraSppedEyeTarget;
-		cameraSppedEyeTarget.x = MyMath::RandomMTFloat(-0.05f, 0.05f);
-		cameraSppedEyeTarget.y = MyMath::RandomMTFloat(-0.05f, 0.05f);
-		const float SpeedChangePosZ = -30.0f;
-		if (position_.z >= SpeedChangePosZ) cameraSppedEyeTarget.z = 2.5f;
-		else cameraSppedEyeTarget.z = 1.0f;
+		const XMFLOAT2 shakeEyeTargetMinMax = { -0.05f,0.05f };
+		cameraSppedEyeTarget.x = MyMath::RandomMTFloat(shakeEyeTargetMinMax.x, shakeEyeTargetMinMax.y);
+		cameraSppedEyeTarget.y = MyMath::RandomMTFloat(shakeEyeTargetMinMax.x, shakeEyeTargetMinMax.y);
+		const float speedChangePosZ = -30.0f;
+		const XMFLOAT2 cameraSpeedZ = { 2.5f,1.0f };//奥側と手前側
+		if (position_.z >= speedChangePosZ) cameraSppedEyeTarget.z = cameraSpeedZ.x;
+		else cameraSppedEyeTarget.z = cameraSpeedZ.y;
 
 		XMFLOAT3 cameraEye = camera_->GetEye();
 		XMFLOAT3 cameraTarget = camera_->GetTarget();
@@ -773,103 +854,43 @@ void Player::UpdateBreak()
 
 		if (camera_->GetEye().z <= -cameraEyeChangeGameover_) isDead_ = true;
 	}
-	else if (isCameraCentralEnd_)
+	else if (isCameraEnd_)
 	{
 		//爆発
-		for (int i = 0; i < 2; i++)easeExplosionSizeAndAlpha_[i].ease_out_expo();
+		for (int i = 0; i < XY_NUM; i++)easeExplosionSizeAndAlpha_[i].ease_out_expo();
 
-		spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[0].num_X,easeExplosionSizeAndAlpha_[1].num_X });
+		spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[XYW_X].num_X,easeExplosionSizeAndAlpha_[XYW_Y].num_X });
 
-		if (spriteExplosion_->GetSize().x == easeExplosionSizeAndAlpha_[0].end)
+		if (spriteExplosion_->GetSize().x == easeExplosionSizeAndAlpha_[XYW_X].end)
 		{
-			easeExplosionSizeAndAlpha_[2].Standby(false);//カラーだけ
+			easeExplosionSizeAndAlpha_[XYW_W].Standby(false);//カラーだけ
 			isExplosion_ = true;
-			isCameraCentralEnd_ = false;
-		}
-	}
-	else if (isCameraRightEnd_)
-	{
-		//カメラ移動第3波(中央)
-		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][2].ease_out_cubic();
-		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][2].ease_out_cubic();
-
-		camera_->SetEye({ easeDeadCameraEye_[0][2].num_X,easeDeadCameraEye_[1][2].num_X, easeDeadCameraEye_[2][2].num_X });
-		camera_->SetTarget({ easeDeadCameraTarget_[0][2].num_X,easeDeadCameraTarget_[1][2].num_X, easeDeadCameraTarget_[2][2].num_X });
-		if (camera_->GetEye().z == easeDeadCameraEye_[2][2].end)
-		{
-
-			for (int i = 0; i < 2; i++)easeExplosionSizeAndAlpha_[i].Standby(false);//サイズだけ
-			isCameraCentralEnd_ = true;
-			isCameraRightEnd_ = false;
-		}
-
-	}
-	else if (isCameraLeftEnd_)
-	{
-		//カメラ移動第2波(左)
-		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][1].ease_out_cubic();
-		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][1].ease_out_cubic();
-
-		camera_->SetEye({ easeDeadCameraEye_[0][1].num_X,easeDeadCameraEye_[1][1].num_X, easeDeadCameraEye_[2][1].num_X });
-		camera_->SetTarget({ easeDeadCameraTarget_[0][1].num_X,easeDeadCameraTarget_[1][1].num_X, easeDeadCameraTarget_[2][1].num_X });
-		if (camera_->GetEye().z == easeDeadCameraEye_[2][1].end)
-		{
-			//中央カメラ視点[i][2]
-			easeDeadCameraEye_[0][2].SetEasing(nowEye_.x + easeOffset_.x, nowEye_.x + easeOffset_.x, 1.0f);
-			easeDeadCameraEye_[1][2].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
-			easeDeadCameraEye_[2][2].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, 1.0f);
-			//中央カメラ注視点[i][2]
-			easeDeadCameraTarget_[0][2].SetEasing(nowTarget_.x + easeOffset_.x, nowTarget_.x + easeOffset_.x, 1.0f);
-			easeDeadCameraTarget_[1][2].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, 1.0f);
-			easeDeadCameraTarget_[2][2].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, 1.0f);
-			//カメラ移動第3波準備(中央)
-			for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][2].Standby(false);
-			for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][2].Standby(false);
-
-			camera_->SetEye({ easeDeadCameraEye_[0][2].start,easeDeadCameraEye_[1][2].start, easeDeadCameraEye_[2][2].start });
-			camera_->SetTarget({ easeDeadCameraTarget_[0][2].start,easeDeadCameraTarget_[1][2].start, easeDeadCameraTarget_[2][2].start });
-
-			isCameraRightEnd_ = true;
-			isCameraLeftEnd_ = false;
+			isCameraEnd_ = false;
 		}
 	}
 	else
 	{
-		//カメラ移動第1波(右)
-		for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][0].ease_out_cubic();
-		for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][0].ease_out_cubic();
+		//カメラ移動
+		for (int i = 0; i < XYZ_NUM; i++)easeDeadCameraEye_[i].ease_out_cubic();
+		for (int i = 0; i < XYZ_NUM; i++)easeDeadCameraTarget_[i].ease_out_cubic();
 
-		camera_->SetEye({ easeDeadCameraEye_[0][0].num_X,easeDeadCameraEye_[1][0].num_X, easeDeadCameraEye_[2][0].num_X });
-		camera_->SetTarget({ easeDeadCameraTarget_[0][0].num_X,easeDeadCameraTarget_[1][0].num_X, easeDeadCameraTarget_[2][0].num_X });
-		if (camera_->GetEye().z == easeDeadCameraEye_[2][0].end)
+		camera_->SetEye({ easeDeadCameraEye_[XYZ_X].num_X,easeDeadCameraEye_[XYZ_Y].num_X, easeDeadCameraEye_[XYZ_Z].num_X });
+		camera_->SetTarget({ easeDeadCameraTarget_[XYZ_X].num_X,easeDeadCameraTarget_[XYZ_Y].num_X, easeDeadCameraTarget_[XYZ_Z].num_X });
+		if (camera_->GetEye().z == easeDeadCameraEye_[XYZ_Z].end)
 		{
-			//左カメラ視点[i][1]
-			easeDeadCameraEye_[0][1].SetEasing(nowEye_.x + (easeOffset_.x + easeOffset_.x), nowEye_.x + easeOffset_.x, 1.0f);
-			easeDeadCameraEye_[1][1].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
-			easeDeadCameraEye_[2][1].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, 1.0f);
-			//左カメラ注視点[i][1]
-			easeDeadCameraTarget_[0][1].SetEasing(nowTarget_.x + (easeOffset_.x + easeOffset_.x), nowTarget_.x + easeOffset_.x, 1.0f);
-			easeDeadCameraTarget_[1][1].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, 1.0f);
-			easeDeadCameraTarget_[2][1].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, 1.0f);
-			//カメラ移動第2波準備(左)
-			for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][1].Standby(false);
-			for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][1].Standby(false);
-
-			camera_->SetEye({ easeDeadCameraEye_[0][1].start,easeDeadCameraEye_[1][1].start, easeDeadCameraEye_[2][1].start });
-			camera_->SetTarget({ easeDeadCameraTarget_[0][1].start,easeDeadCameraTarget_[1][1].start, easeDeadCameraTarget_[2][1].start });
-
-			isCameraLeftEnd_ = true;
+			for (int i = 0; i < XY_NUM; i++)easeExplosionSizeAndAlpha_[i].Standby(false);//サイズだけ
+			isCameraEnd_ = true;
 		}
 	}
 
-	if (input_->TriggerKey(DIK_M))isDead_ = true;
+	//if (input_->TriggerKey(DIK_M))isDead_ = true;
 }
 
 void Player::UpdateGoal()
 {
 	//座標を固定してスケールをイージング
 	position_ = stopPos_;
-	for (int i = 0; i < 3; i++)easeChangeScaleStageClear_[i].ease_out_cubic();
-	scale_ = { easeChangeScaleStageClear_[0].num_X,easeChangeScaleStageClear_[1].num_X ,easeChangeScaleStageClear_[2].num_X };
-	
+	for (int i = 0; i < XYZ_NUM; i++)easeChangeScaleStageClear_[i].ease_out_cubic();
+	scale_ = { easeChangeScaleStageClear_[XYZ_X].num_X,easeChangeScaleStageClear_[XYZ_Y].num_X ,easeChangeScaleStageClear_[XYZ_Z].num_X };
+
 }

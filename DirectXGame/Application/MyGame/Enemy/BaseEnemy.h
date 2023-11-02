@@ -1,6 +1,7 @@
 #pragma once
 #include "Object3d.h"
 #include "EnemyBullet.h"
+#include "XYZ.h"
 #include <DirectXMath.h>
 
 //前方宣言
@@ -67,6 +68,7 @@ protected:
 		ET_Speed = 4,	//速度型
 		ET_Death = 5,	//危険型
 	};
+	
 	//発射
 	const int endFireTime_ = 0;
 	//ライフ0以下で死亡

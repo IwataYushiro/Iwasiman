@@ -84,9 +84,14 @@ void EnemyCore::Parameter() {
 	life_ = startLife;
 	isReverse_ = false;
 	//弾初期値
-	std::array<int, 2>RandomMinMax = { 50,100 };
-	fireInterval_ = MyMath::RandomMTInt(RandomMinMax[0], RandomMinMax[1]);
-	//発射タイマー初期化
+	enum MinMax
+	{
+		MM_min = 0,
+		MM_max = 1,
+		MM_num = 2,
+	};
+	const std::array<int, MM_num>randomMinMax = { 50,100 };
+	fireInterval_ = MyMath::RandomMTInt(randomMinMax[MM_min], randomMinMax[MM_max]);	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 
 	isDead_ = false;
@@ -218,9 +223,13 @@ void EnemyCore::UpdateCore()
 
 	//速度
 	XMFLOAT3 velocity;
+
+	const XMFLOAT3 velDefault = { 0.3f, 0.0f, 0.0f };//通常時スピード
+	const XMFLOAT3 velReverse = { -0.3f, 0.0f, 0.0f };//反転時スピード
+	
 	//移動
-	if (!isReverse_)velocity = { 0.3f, 0.0f, 0.0f };
-	else velocity = { -0.3f, 0.0f, 0.0f };
+	if (!isReverse_)velocity = velDefault;
+	else velocity = velReverse;
 
 	position_.x += velocity.x;
 	position_.y += velocity.y;
@@ -311,15 +320,17 @@ void EnemyCore::UpdateLeave() {
 
 const XMFLOAT3 EnemyCore::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
-	const XMFLOAT3 ans =
-	{
-	(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
-		p1.x + 3.0f * (1.0f - t) * t * t * p2.x + t * t * t * p3.x,
-	(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.y + 3.0f * (1.0f - t) * (1.0f - t) * t *
-		p1.y + 3.0f * (1.0f - t) * t * t * p2.y + t * t * t * p3.y,
-	(1.0f - t) * (1.0f - t) * (1.0f - t) * p0.z + 3.0f * (1.0f - t) * (1.0f - t) * t *
-		p1.z + 3.0f * (1.0f - t) * t * t * p2.z + t * t * t * p3.z
-	};
+	//三点ベジェ曲線の式
+	//B(t) = (1-t)^3 * P0 + 3(1-t)^2 * t * P1 + 3(1-t)*t^2 * P2 + t^3 * P3 0<=t<=1
+
+	XMFLOAT3 ans;
+	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.x + 3.0f * (1.0f - t) * t * t * p2.x + t * t * t * p3.x;
+	ans.y = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.y + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.y + 3.0f * (1.0f - t) * t * t * p2.y + t * t * t * p3.y;
+	ans.z = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.z + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1.z + 3.0f * (1.0f - t) * t * t * p2.z + t * t * t * p3.z;
+
 	return ans;
 }
 

@@ -4,6 +4,7 @@
 #include "ParticleManager.h"
 #include "Model.h"
 #include "Object3d.h"
+#include "Vector2.h"
 #include <DirectXMath.h>
 #include "Sprite.h"
 #include <list>
@@ -83,7 +84,8 @@ private:
 	//タイマーの値まで来たら効果終了
 	const float timer_ = MAX_TIME / 60.0f;
 	//取得UIに使うイージング
-	Easing ease_ = { 1.0f, 0.0f, timer_ };
+	const Vector2 settingEase_ = { 1.0f,0.0f };//イージングのスタート、エンド地点
+	Easing ease_ = { settingEase_.x, settingEase_.y, timer_ };
 
 	//パーティクル
 	Particle* p_ = nullptr;

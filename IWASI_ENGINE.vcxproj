@@ -245,6 +245,7 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Player\Player.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Player\PlayerBullet.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\EnumList.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\XYZ.h" />
     <ClInclude Include="DirectXGame\Application\Scene\BaseScene.h" />
     <ClInclude Include="DirectXGame\Application\Scene\Factory\AbstractSceneFactory.h" />
     <ClInclude Include="DirectXGame\Application\Scene\Factory\SceneFactory.h" />

@@ -7,6 +7,7 @@
 #include "PlayerBullet.h"
 #include "ParticleManager.h"
 #include "Easing.h"
+#include "XYZ.h"
 
 #include <DirectXMath.h>
 #include <list>
@@ -107,8 +108,10 @@ private:
 
 	Sprite* spriteExplosion_ = new Sprite();		//爆発エフェクト
 	const XMFLOAT2 explosionPos_ = { WinApp::WINDOW_WIDTH / 2.0f,WinApp::WINDOW_HEIGHT / 2.0f };	//ライフバーの座標
+	//爆発は中央アンカーポイント
+	const XMFLOAT2 explosionAnchorPoint_ = { 0.5f,0.5f };
 
-	int mutekiCount_ = 0;							//無敵時間
+	int mutekiCount_;							//無敵時間
 	const float hitTimer_ = MUTEKI_COUNT / 60.0f;	//イージング効果時間
 	Easing easeHit_ = Easing(1.0f, 0.0f, hitTimer_);//イージング
 	const XMFLOAT4 hitColor_ = { 0.5f,0.0f,0.0f,0.0f };	//赤く光る
@@ -125,7 +128,7 @@ private:
 	//ジャンプしてるか
 	bool onGround_ = true;
 	//ジャンプ力
-	float jumpVYFist_ = 2.0f;
+	float jumpVYFist_;
 	//落下時ベクトル
 	XMFLOAT3 fallVec_;
 
@@ -140,7 +143,7 @@ private:
 	std::chrono::steady_clock::time_point startCount_;	//開始時間
 	std::chrono::steady_clock::time_point nowCount_;	//現在時間
 	std::chrono::microseconds elapsedCount_;			//経過時間 経過時間=現在時間-開始時間
-	float	maxTime_ = 1.0f;							//全体時間
+	const float	maxTime_ = 1.0f;							//全体時間
 	float	timeRate_;									//どれくらい時間が進んだか
 	//制御点
 	XMFLOAT3 start_;									//最初点
@@ -149,7 +152,7 @@ private:
 	XMFLOAT3 end_;										//最終点
 
 	//半径
-	float radius_ = 2.0f;
+	const float radius_ = 2.0f;
 
 	//死亡演出移行フラグ
 	bool isBreak_ = false;
@@ -160,7 +163,7 @@ private:
 	bool isDead_ = false;
 
 	//ライフ
-	int life_ = 10;
+	int life_;
 	//敵の攻撃やトゲ等に当たったか
 	bool isHit_ = false;
 	//シェイク時用のカメラムーブ
@@ -185,39 +188,37 @@ private:
 	//シェイク終了時にhitMoveをリセットする用の定数
 	const XMFLOAT3 resetHitMove_ = { 0.0f,0.0f,0.0f };
 
-	//死んだときのカメラ視点イージング三個
-	Easing easeDeadCameraEye_[3][3] = {
-		
-		{{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}},
-		{{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}},
-		{ {0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}}
-	};		//X,Y,Z
-	//死んだときのカメラ注視点イージング三個
-	Easing easeDeadCameraTarget_[3][3] = {
-
-		{{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}},
-		{{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}},
-		{ {0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f,1.0f}}
-	};	//X,Y,Z
+	//死んだときのカメラ視点イージング
+	Easing easeDeadCameraEye_[XYZ_NUM];		//X,Y,Z
+	//死んだときのカメラ注視点イージング
+	Easing easeDeadCameraTarget_[XYZ_NUM];	//X,Y,Z
 	//カメラ切り替え
-	bool isCameraRightEnd_ = false;						//右からのカメラ
-	bool isCameraLeftEnd_ = false;						//左からのカメラ
-	bool isCameraCentralEnd_ = false;					//中央カメラ
+	bool isCameraEnd_ = false;							//カメラ
 	bool isExplosion_ = false;							//爆発してるか
 	const float cameraEyeChangeGameover_ = 150.0f;		//視点がある位置についたらゲームオーバー
-	
+
+	//爆発のサイズとアルファイージングのプリセット
+	const Easing presetEaseExplosionSize_[XY_NUM] = { {0.0f,1500.0f,1.0f},{0.0f,1500.0f,1.0f} };//サイズ(始点、終点、かかる時間)
+	const Easing presetEaseExplosionAlpha_ = { 1.0f,0.0f,2.0f };//アルファ値(始点、終点、かかる時間)
 	//爆発のサイズとアルファイージング
-	Easing easeExplosionSizeAndAlpha_[3] = {
-		{0.0f,1500.0f,1.0f},		//X
-		{0.0f,1500.0f,1.0f},		//Y
-		{1.0f,0.0f,2.0f}			//アルファ
+	Easing easeExplosionSizeAndAlpha_[XYW_NUM] = {
+		presetEaseExplosionSize_[XY_X],		//X
+		presetEaseExplosionSize_[XY_Y],		//Y
+		presetEaseExplosionAlpha_			//アルファ
 	};
 
-	//ステージクリア時のプレイヤーのスケールを変更
-	Easing easeChangeScaleStageClear_[3] = {
+	//ステージクリア時のプレイヤーのスケールを変更のプリセット
+	const Easing presetEaseChangeScaleStageClear_[XYZ_NUM] =
+	{
 		{1.0f,0.0f,1.5f},			//X
 		{1.0f,4.0f,1.5f},			//Y
 		{1.0f,0.0f,1.5f}			//Z
+	};
+	//ステージクリア時のプレイヤーのスケールを変更
+	Easing easeChangeScaleStageClear_[XYZ_NUM] = {
+		presetEaseChangeScaleStageClear_[XYZ_X],	//X
+		presetEaseChangeScaleStageClear_[XYZ_Y],	//Y
+		presetEaseChangeScaleStageClear_[XYZ_Z]		//Z
 	};
 	//ゴールしたか
 	bool isGoal_ = false;
@@ -226,6 +227,11 @@ private:
 
 	//イージング用のオフセット
 	XMFLOAT3 easeOffset_ = {};
+
+	//素材そのままの色
+	const XMFLOAT3 asIsColor_ = { 1.0f,1.0f,1.0f };
+
+
 public: //アクセッサ、インライン関数
 	//死んだかどうか
 	bool IsDead() const { return isDead_; }
