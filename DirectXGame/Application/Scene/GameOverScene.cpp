@@ -37,9 +37,9 @@ void GameOverScene::Initialize()
 
 	//カメラ
 	// 視点座標
-	camera_->SetEye({ easeEyeContinue_[0].start, easeEyeContinue_[1].start, easeEyeContinue_[2].start });
+	camera_->SetEye({ easeEyeContinue_[XYZ_X].start, easeEyeContinue_[XYZ_Y].start, easeEyeContinue_[XYZ_Z].start });
 	// 注視点座標
-	camera_->SetTarget({ easeTargetContinue_[0].start, easeTargetContinue_[1].start, easeTargetContinue_[2].start });
+	camera_->SetTarget({ easeTargetContinue_[XYZ_X].start, easeTargetContinue_[XYZ_Y].start, easeTargetContinue_[XYZ_Z].start });
 
 
 	//レベルデータ読み込み
@@ -55,23 +55,23 @@ void GameOverScene::Initialize()
 
 	spCommon_->LoadTexture(GOSTI_MenuTex, "texture/gameover2.png");
 	spriteGameOver_->Initialize(spCommon_, GOSTI_MenuTex);
-	spriteGameOver_->SetPosition({ easeMenuPosX_[0].start,0.0f });
+	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].start,menuPosY_[GOMEN_Menu] });
 
 	spCommon_->LoadTexture(GOSTI_ContinueTex, "texture/continue.png");
 	spriteContinue_->Initialize(spCommon_, GOSTI_ContinueTex);
-	spriteContinue_->SetPosition({ easeMenuPosX_[1].start,150.0f });
+	spriteContinue_->SetPosition({ easeMenuPosX_[GOMEN_Continue].start,menuPosY_[GOMEN_Continue] });
 
 	spCommon_->LoadTexture(GOSTI_StageSelectTex, "texture/backstageselect.png");
 	spriteStageSelect_->Initialize(spCommon_, GOSTI_StageSelectTex);
-	spriteStageSelect_->SetPosition({ easeMenuPosX_[2].start,300.0f });
+	spriteStageSelect_->SetPosition({ easeMenuPosX_[GOMEN_StageSelect].start,menuPosY_[GOMEN_StageSelect] });
 
 	spCommon_->LoadTexture(GOSTI_TitleTex, "texture/backtitle.png");
 	spriteTitle_->Initialize(spCommon_, GOSTI_TitleTex);
-	spriteTitle_->SetPosition({ easeMenuPosX_[3].start,450.0f });
+	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].start,menuPosY_[GOMEN_Title] });
 
 	spCommon_->LoadTexture(GOSTI_MenuDoneTex, "texture/titlemenud.png");
 	spriteDone_->Initialize(spCommon_, GOSTI_MenuDoneTex);
-	spriteDone_->SetPosition({ easeMenuPosX_[4].start,580.0f });
+	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].start,menuPosY_[GOMEN_SelectSpace] });
 
 	spCommon_->LoadTexture(GOSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, GOSTI_FadeInOutTex);
@@ -98,7 +98,7 @@ void GameOverScene::Initialize()
 	pm1_->SetCamera(camera_);
 
 	easeFadeInOut_.Standby(false);
-	for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
+	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(false);
 
 
 }
@@ -116,12 +116,26 @@ void GameOverScene::Update()
 
 	for (Object3d*& player : objPlayers_)
 	{
+		//煙プリセット
+		const ParticleManager::Preset smoke =
+		{
+			particle1_,
+			player->GetPosition(),
+			{ 0.0f ,2.0f,0.0f },
+			{ 0.3f,3.0f,0.3f },
+			{ 0.0f,0.001f,0.0f },
+			3,
+			{ 1.0f, 0.0f },
+			{ 1.0f,1.0f,1.0f,1.0f },
+			{ 0.0f,0.0f,0.0f,1.0f }
+		};
+
 		if (!completeRotate_)
 		{
 			if (!isQuitStageSelect_)
 			{
-				pm1_->ActiveY(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
-					{ 0.3f,3.0f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
+				pm1_->ActiveY(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 			}
 			//プレイヤー回転用
 			DirectX::XMFLOAT3 rotPlayer = player->GetRotation();
@@ -132,9 +146,8 @@ void GameOverScene::Update()
 		}
 		else
 		{
-			pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
-				{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
-
+			pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, { -smoke.vel.y,smoke.vel.x,smoke.vel.z },
+				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 		}
 		player->Update();
 	}
@@ -176,22 +189,22 @@ void GameOverScene::Update()
 void GameOverScene::UpdateIsGameOver()
 {
 	//選択中のメニューカラー
-	DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
+	const DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
 	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,1.0f };
 	//決定指示スプライトのカラー
-	DirectX::XMFLOAT4 doneColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
+	const DirectX::XMFLOAT4 doneColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
 	UpdateChangeColor();
 
 	//イージング
-	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 	easeFadeInOut_.ease_in_out_quint();
 
 	//座標,カラーセット
-	spriteGameOver_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
-	spriteContinue_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
-	spriteStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
-	spriteTitle_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
-	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
+	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
+	spriteContinue_->SetPosition({ easeMenuPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue] });
+	spriteStageSelect_->SetPosition({ easeMenuPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
+	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
+	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
 	spriteFadeInOut_->SetColor({ deepRed_.x,deepRed_.y, deepRed_.z, easeFadeInOut_.num_X });//透明度だけ変える
 
 	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
@@ -226,10 +239,10 @@ void GameOverScene::UpdateIsGameOver()
 					easePlayerRotateContinue_[1].end,
 					easePlayerRotateContinue_[1].maxtime);
 			}
-			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
-			for (int i = 0; i < 3; i++)easeEyeContinue_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easeTargetContinue_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easePlayerRotateContinue_[i].Standby(false);
+			for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+			for (int i = 0; i < XYZ_Num; i++)easeEyeContinue_[i].Standby(false);
+			for (int i = 0; i < XYZ_Num; i++)easeTargetContinue_[i].Standby(false);
+			for (int i = 0; i < XYZ_Num; i++)easePlayerRotateContinue_[i].Standby(false);
 			easeContinuePosX_.Standby(false);
 			easeContinuePosY_.Standby(false);
 			//コンティニュー
@@ -245,17 +258,17 @@ void GameOverScene::UpdateIsGameOver()
 					easePlayerRotateQuitStageSelect_[1].end,
 					easePlayerRotateQuitStageSelect_[1].maxtime);
 			}
-			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
-			for (int i = 0; i < 3; i++)easeEyeQuitStageSelect_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easeTargetQuitStageSelect_[i].Standby(false);
-			for (int i = 0; i < 3; i++)easePlayerRotateQuitStageSelect_[i].Standby(false);
+			for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+			for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].Standby(false);
+			for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].Standby(false);
+			for (int i = 0; i < XYZ_Num; i++)easePlayerRotateQuitStageSelect_[i].Standby(false);
 			//ステージセレクトへ
 			isQuitStageSelect_ = true;
 			isGameover_ = false;
 		}
 		else if (menuCount_ == GOSMI_Title)
 		{
-			for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(true);
+			for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
 			//タイトルへ
 			isQuitTitle_ = true;
 			isGameover_ = false;
@@ -270,43 +283,46 @@ void GameOverScene::UpdateIsGameOver()
 
 void GameOverScene::UpdateIsContinue()
 {
-	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeContinue_[i].ease_in_out_expo();
-	for (int i = 0; i < 3; i++)easeTargetContinue_[i].ease_in_out_expo();
+	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeEyeContinue_[i].ease_in_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeTargetContinue_[i].ease_in_out_expo();
 	easeContinuePosX_.ease_in_out_expo();
 	easeContinuePosY_.ease_in_out_expo();
 	//座標セット
-	spriteGameOver_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
+	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu]});
 	spriteContinue_->SetPosition({ easeContinuePosX_.num_X,easeContinuePosY_.num_X });
-	spriteStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
-	spriteTitle_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
-	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
+	spriteStageSelect_->SetPosition({ easeMenuPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect]});
+	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title]});
+	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace]});
 
 	//カメラもセット
-	camera_->SetEye({ easeEyeContinue_[0].num_X, easeEyeContinue_[1].num_X, easeEyeContinue_[2].num_X });
-	camera_->SetTarget({ easeTargetContinue_[0].num_X, easeTargetContinue_[1].num_X, easeTargetContinue_[2].num_X });
+	camera_->SetEye({ easeEyeContinue_[XYZ_X].num_X, easeEyeContinue_[XYZ_Y].num_X, easeEyeContinue_[XYZ_Z].num_X });
+	camera_->SetTarget({ easeTargetContinue_[XYZ_X].num_X, easeTargetContinue_[XYZ_Y].num_X, easeTargetContinue_[XYZ_Z].num_X });
 
 	for (Object3d*& player : objPlayers_)
 	{
 		//回転
 		if (!completeRotate_)
 		{
-			for (int i = 0; i < 3; i++)easePlayerRotateContinue_[i].ease_in_expo();
-			player->SetRotation({ easePlayerRotateContinue_[0].num_X,easePlayerRotateContinue_[1].num_X ,easePlayerRotateContinue_[2].num_X });
+			for (int i = 0; i < XYZ_Num; i++)easePlayerRotateContinue_[i].ease_in_expo();
+			player->SetRotation({ easePlayerRotateContinue_[XYZ_X].num_X,easePlayerRotateContinue_[XYZ_Y].num_X,
+				easePlayerRotateContinue_[XYZ_Z].num_X });
+			
 			//回転が終わったら
 			if (player->GetRotation().x == easePlayerRotateContinue_[0].end)
 			{
-				for (int i = 0; i < 3; i++)easePlayerMoveContinue_[i].Standby(false);
+				for (int i = 0; i < XYZ_Num; i++)easePlayerMoveContinue_[i].Standby(false);
 				completeRotate_ = true;
 			}
 		}
 		else
 		{
-			for (int i = 0; i < 3; i++)easePlayerMoveContinue_[i].ease_in_back();
-			player->SetPosition({ easePlayerMoveContinue_[0].num_X,easePlayerMoveContinue_[1].num_X,easePlayerMoveContinue_[2].num_X });
+			for (int i = 0; i < XYZ_Num; i++)easePlayerMoveContinue_[i].ease_in_back();
+			player->SetPosition({ easePlayerMoveContinue_[XYZ_X].num_X,easePlayerMoveContinue_[XYZ_Y].num_X,
+				easePlayerMoveContinue_[XYZ_Z].num_X });
 		}
 
-		if (spriteDone_->GetPosition().x == easeMenuPosX_[4].start)
+		if (spriteDone_->GetPosition().x == easeMenuPosX_[GOMEN_SelectSpace].start)
 		{
 			FadeOut(white_);//白くする
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
@@ -320,42 +336,42 @@ void GameOverScene::UpdateIsContinue()
 
 void GameOverScene::UpdateIsQuitStageSelect()
 {
-	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeQuitStageSelect_[i].ease_in_out_expo();
-	for (int i = 0; i < 3; i++)easeTargetQuitStageSelect_[i].ease_in_out_expo();
-	
+	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].ease_in_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].ease_in_out_expo();
+
 	//座標セット
-	spriteGameOver_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
-	spriteContinue_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
-	spriteStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
-	spriteTitle_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
-	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
+	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu]});
+	spriteContinue_->SetPosition({ easeMenuPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue]});
+	spriteStageSelect_->SetPosition({ easeMenuPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect]});
+	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title]});
+	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace]});
 
 	//カメラもセット
-	camera_->SetEye({ easeEyeQuitStageSelect_[0].num_X, easeEyeQuitStageSelect_[1].num_X, easeEyeQuitStageSelect_[2].num_X });
-	camera_->SetTarget({ easeTargetQuitStageSelect_[0].num_X, easeTargetQuitStageSelect_[1].num_X, easeTargetQuitStageSelect_[2].num_X });
+	camera_->SetEye({ easeEyeQuitStageSelect_[XYZ_X].num_X, easeEyeQuitStageSelect_[XYZ_Y].num_X, easeEyeQuitStageSelect_[XYZ_Z].num_X });
+	camera_->SetTarget({ easeTargetQuitStageSelect_[XYZ_X].num_X, easeTargetQuitStageSelect_[XYZ_Y].num_X, easeTargetQuitStageSelect_[XYZ_Z].num_X });
 
 	for (Object3d*& player : objPlayers_)
 	{
 		//回転
 		if (!completeRotate_)
 		{
-			for (int i = 0; i < 3; i++)easePlayerRotateQuitStageSelect_[i].ease_in_expo();
-			player->SetRotation({ easePlayerRotateQuitStageSelect_[0].num_X,easePlayerRotateQuitStageSelect_[1].num_X ,easePlayerRotateQuitStageSelect_[2].num_X });
+			for (int i = 0; i < XYZ_Num; i++)easePlayerRotateQuitStageSelect_[i].ease_in_expo();
+			player->SetRotation({ easePlayerRotateQuitStageSelect_[XYZ_X].num_X,easePlayerRotateQuitStageSelect_[XYZ_Y].num_X ,easePlayerRotateQuitStageSelect_[XYZ_Z].num_X });
 			//回転が終わったら
-			if (player->GetRotation().x == easePlayerRotateQuitStageSelect_[0].end)
+			if (player->GetRotation().x == easePlayerRotateQuitStageSelect_[XYZ_X].end)
 			{
-				for (int i = 0; i < 3; i++)easePlayerMoveQuitStageSelect_[i].Standby(false);
+				for (int i = 0; i < XYZ_Num; i++)easePlayerMoveQuitStageSelect_[i].Standby(false);
 				completeRotate_ = true;
 			}
 		}
 		else
 		{
-			for (int i = 0; i < 3; i++)easePlayerMoveQuitStageSelect_[i].ease_in_quint();
-			player->SetPosition({ easePlayerMoveQuitStageSelect_[0].num_X,easePlayerMoveQuitStageSelect_[1].num_X,easePlayerMoveQuitStageSelect_[2].num_X });
+			for (int i = 0; i < XYZ_Num; i++)easePlayerMoveQuitStageSelect_[i].ease_in_quint();
+			player->SetPosition({ easePlayerMoveQuitStageSelect_[XYZ_X].num_X,easePlayerMoveQuitStageSelect_[XYZ_Y].num_X,easePlayerMoveQuitStageSelect_[XYZ_Z].num_X });
 		}
 
-		if (spriteDone_->GetPosition().x == easeMenuPosX_[4].start)
+		if (spriteDone_->GetPosition().x == easeMenuPosX_[GOMEN_SelectSpace].start)
 		{
 			FadeOut(black_);//黒くする
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
@@ -365,31 +381,31 @@ void GameOverScene::UpdateIsQuitStageSelect()
 				else if (stageNum_ <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 
 			}
-				
+
 		}
 	}
 }
 
 void GameOverScene::UpdateIsQuitTitle()
 {
-	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 
 	//座標セット
-	spriteGameOver_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
-	spriteContinue_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
-	spriteStageSelect_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
-	spriteTitle_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
-	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
+	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
+	spriteContinue_->SetPosition({ easeMenuPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue] });
+	spriteStageSelect_->SetPosition({ easeMenuPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
+	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
+	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
 
 	for (Object3d*& player : objPlayers_)
 	{
 		DirectX::XMFLOAT3 move = player->GetPosition();
-		DirectX::XMFLOAT3 speed = { 0.0f,-1.0f,0.0f };
+		const DirectX::XMFLOAT3 speed = { 0.0f,-1.0f,0.0f };
 
 		move.y += speed.y;
 		player->SetPosition(move);
 
-		if (spriteGameOver_->GetPosition().x == easeMenuPosX_[0].start)
+		if (spriteGameOver_->GetPosition().x == easeMenuPosX_[GOMEN_Menu].start)
 		{
 			FadeOut(black_);//黒くする
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
@@ -407,7 +423,7 @@ void GameOverScene::Draw()
 
 	for (Object3d*& player : objPlayers_)player->Draw();
 	for (Object3d*& stage : objStages_)stage->Draw();
-	if(!isQuitStageSelect_)for (Object3d*& goal : objGoals_)goal->Draw();
+	if (!isQuitStageSelect_)for (Object3d*& goal : objGoals_)goal->Draw();
 
 	//モデル描画後処理
 	Object3d::PostDraw();
@@ -592,10 +608,12 @@ void GameOverScene::FadeOut(DirectX::XMFLOAT3 rgb)
 	}
 	else
 	{
+		const XMFLOAT3 negapozi = { 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z };
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
-		spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
-		if (isContinue_)spriteStageInfoNow_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });
+		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
+		if (isContinue_)spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });
+
 	}
 }
 

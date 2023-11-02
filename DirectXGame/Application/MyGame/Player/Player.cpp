@@ -658,7 +658,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 	{
 		if (isGoal_)return;
 		scale_ = { easeChangeScaleStageClear_[XYZ_X].start,easeChangeScaleStageClear_[XYZ_Y].start ,easeChangeScaleStageClear_[XYZ_Z].start };
-		for (int i = 0; i < XYZ_NUM; i++)easeChangeScaleStageClear_[i].Standby(false);
+		for (int i = 0; i < XYZ_Num; i++)easeChangeScaleStageClear_[i].Standby(false);
 		stopPos_ = position_;
 		isGoal_ = true;
 		isAlive_ = false;
@@ -708,8 +708,8 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 		easeDeadCameraTarget_[XYZ_Y].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, easeTime);
 		easeDeadCameraTarget_[XYZ_Z].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, easeTime);
 
-		for (int i = 0; i < XYZ_NUM; i++)easeDeadCameraEye_[i].Standby(false);
-		for (int i = 0; i < XYZ_NUM; i++)easeDeadCameraTarget_[i].Standby(false);
+		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].Standby(false);
+		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].Standby(false);
 
 		isBreak_ = true;
 		isAlive_ = false;
@@ -857,7 +857,7 @@ void Player::UpdateBreak()
 	else if (isCameraEnd_)
 	{
 		//爆発
-		for (int i = 0; i < XY_NUM; i++)easeExplosionSizeAndAlpha_[i].ease_out_expo();
+		for (int i = 0; i < XY_Num; i++)easeExplosionSizeAndAlpha_[i].ease_out_expo();
 
 		spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[XYW_X].num_X,easeExplosionSizeAndAlpha_[XYW_Y].num_X });
 
@@ -871,14 +871,14 @@ void Player::UpdateBreak()
 	else
 	{
 		//カメラ移動
-		for (int i = 0; i < XYZ_NUM; i++)easeDeadCameraEye_[i].ease_out_cubic();
-		for (int i = 0; i < XYZ_NUM; i++)easeDeadCameraTarget_[i].ease_out_cubic();
+		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].ease_out_cubic();
+		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].ease_out_cubic();
 
 		camera_->SetEye({ easeDeadCameraEye_[XYZ_X].num_X,easeDeadCameraEye_[XYZ_Y].num_X, easeDeadCameraEye_[XYZ_Z].num_X });
 		camera_->SetTarget({ easeDeadCameraTarget_[XYZ_X].num_X,easeDeadCameraTarget_[XYZ_Y].num_X, easeDeadCameraTarget_[XYZ_Z].num_X });
 		if (camera_->GetEye().z == easeDeadCameraEye_[XYZ_Z].end)
 		{
-			for (int i = 0; i < XY_NUM; i++)easeExplosionSizeAndAlpha_[i].Standby(false);//サイズだけ
+			for (int i = 0; i < XY_Num; i++)easeExplosionSizeAndAlpha_[i].Standby(false);//サイズだけ
 			isCameraEnd_ = true;
 		}
 	}
@@ -890,7 +890,7 @@ void Player::UpdateGoal()
 {
 	//座標を固定してスケールをイージング
 	position_ = stopPos_;
-	for (int i = 0; i < XYZ_NUM; i++)easeChangeScaleStageClear_[i].ease_out_cubic();
+	for (int i = 0; i < XYZ_Num; i++)easeChangeScaleStageClear_[i].ease_out_cubic();
 	scale_ = { easeChangeScaleStageClear_[XYZ_X].num_X,easeChangeScaleStageClear_[XYZ_Y].num_X ,easeChangeScaleStageClear_[XYZ_Z].num_X };
 
 }

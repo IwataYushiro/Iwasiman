@@ -189,33 +189,33 @@ private:
 	const XMFLOAT3 resetHitMove_ = { 0.0f,0.0f,0.0f };
 
 	//死んだときのカメラ視点イージング
-	Easing easeDeadCameraEye_[XYZ_NUM];		//X,Y,Z
+	Easing easeDeadCameraEye_[XYZ_Num];		//X,Y,Z
 	//死んだときのカメラ注視点イージング
-	Easing easeDeadCameraTarget_[XYZ_NUM];	//X,Y,Z
+	Easing easeDeadCameraTarget_[XYZ_Num];	//X,Y,Z
 	//カメラ切り替え
 	bool isCameraEnd_ = false;							//カメラ
 	bool isExplosion_ = false;							//爆発してるか
 	const float cameraEyeChangeGameover_ = 150.0f;		//視点がある位置についたらゲームオーバー
 
 	//爆発のサイズとアルファイージングのプリセット
-	const Easing presetEaseExplosionSize_[XY_NUM] = { {0.0f,1500.0f,1.0f},{0.0f,1500.0f,1.0f} };//サイズ(始点、終点、かかる時間)
+	const Easing presetEaseExplosionSize_[XY_Num] = { {0.0f,1500.0f,1.0f},{0.0f,1500.0f,1.0f} };//サイズ(始点、終点、かかる時間)
 	const Easing presetEaseExplosionAlpha_ = { 1.0f,0.0f,2.0f };//アルファ値(始点、終点、かかる時間)
 	//爆発のサイズとアルファイージング
-	Easing easeExplosionSizeAndAlpha_[XYW_NUM] = {
+	Easing easeExplosionSizeAndAlpha_[XYW_Num] = {
 		presetEaseExplosionSize_[XY_X],		//X
 		presetEaseExplosionSize_[XY_Y],		//Y
 		presetEaseExplosionAlpha_			//アルファ
 	};
 
 	//ステージクリア時のプレイヤーのスケールを変更のプリセット
-	const Easing presetEaseChangeScaleStageClear_[XYZ_NUM] =
+	const Easing presetEaseChangeScaleStageClear_[XYZ_Num] =
 	{
 		{1.0f,0.0f,1.5f},			//X
 		{1.0f,4.0f,1.5f},			//Y
 		{1.0f,0.0f,1.5f}			//Z
 	};
 	//ステージクリア時のプレイヤーのスケールを変更
-	Easing easeChangeScaleStageClear_[XYZ_NUM] = {
+	Easing easeChangeScaleStageClear_[XYZ_Num] = {
 		presetEaseChangeScaleStageClear_[XYZ_X],	//X
 		presetEaseChangeScaleStageClear_[XYZ_Y],	//Y
 		presetEaseChangeScaleStageClear_[XYZ_Z]		//Z

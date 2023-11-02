@@ -9,7 +9,7 @@
 
 #include "ParticleManager.h"
 #include "Sprite.h"
-
+#include "XYZ.h"
 #include <DirectXMath.h>
 #include <map>
 
@@ -56,7 +56,7 @@ public://メンバ関数
 private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
-	
+
 	//インプット
 	static Input* input_;
 	//オーディオ
@@ -65,7 +65,7 @@ private://静的メンバ変数
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
-	
+
 
 private://メンバ変数
 
@@ -88,20 +88,20 @@ private://メンバ変数
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
-	
+
 	//モデル
 	Model* modelPlayer_ = nullptr;				//自機モデル
 	Model* modelGoal_ = nullptr;				//ゴールモデル
 	Model* modelStageTutorial_ = nullptr;		//チュートリアルステージモデル(天球)
 	Model* modelStage1_ = nullptr;				//ステージ1モデル(天球)
 	Model* modelStage2_ = nullptr;				//ステージ2モデル(天球)
-	
+
 	std::vector<Object3d*> objPlayers_;			//自機オブジェクト配列
 	std::vector<Object3d*> objGoals_;			//ゴールオブジェクト配列
 	std::vector<Object3d*> objStages_;			//ステージオブジェクト配列
 
 	//オブジェクト回転用
-	DirectX::XMFLOAT3 rot_ = { 0.0f,0.0f,0.0f };
+	DirectX::XMFLOAT3 rot_;
 
 	//マッピングモデル
 	std::map<std::string, Model*> models_;
@@ -115,85 +115,177 @@ private://メンバ変数
 	bool completeRotate_ = false;				//回り終わった時 
 	bool isQuitTitle_ = false;					//タイトルに戻る場合
 	bool isFadeOut_ = false;					//フェードインアウト
-	
+
+	//メニュー説明用の列挙体
+	enum GameOverMenuEasingNum
+	{
+		GOMEN_Menu = 0,				//メニュー
+		GOMEN_Continue = 1,			//コンティニューへ
+		GOMEN_StageSelect = 2,		//ステージセレクトへ
+		GOMEN_Title = 3,			//タイトルへ
+		GOMEN_SelectSpace = 4,		//スペースで選択
+		GOMEN_Num = 5,				//配列用
+	};
+	//メニュー表示用のイージングのプリセット
+	const Easing presetEaseMenuPosX_[GOMEN_Num]
+	{
+		{1300.0f, 0.0f, 1.0f},			//メニュー
+		{1300.0f, 0.0f, 1.2f},			//コンティニューへ
+		{1300.0f, 0.0f, 1.4f},			//ステージセレクトへ
+		{1300.0f, 0.0f, 1.6f},			//タイトルへ
+		{1300.0f, 0.0f, 1.8f}				//スペースで選択
+	};
 	//メニュー表示用のイージング
-	Easing easeMenuPosX_[5] =
+	Easing easeMenuPosX_[GOMEN_Num]
 	{
-		Easing(1300.0f, 0.0f, 1.0f),			//メニュー
-		Easing(1300.0f, 0.0f, 1.2f),			//チュートリアルへ
-		Easing(1300.0f, 0.0f, 1.4f),			//ステージセレクトへ
-		Easing(1300.0f, 0.0f, 1.6f),			//タイトルへ
-		Easing(1300.0f, 0.0f, 1.8f),			//スペースで選択
+		presetEaseMenuPosX_[GOMEN_Menu],				//メニュー
+		presetEaseMenuPosX_[GOMEN_Continue],			//コンティニューへ
+		presetEaseMenuPosX_[GOMEN_StageSelect],			//ステージセレクトへ
+		presetEaseMenuPosX_[GOMEN_Title],				//タイトルへ
+		presetEaseMenuPosX_[GOMEN_SelectSpace],			//スペースで選択
 	};
+	//メニューポジション
+	const float menuPosY_[GOMEN_Num] = { 0.0f,150.0f,300.0f,450.0f,550.0f };
+
+	//コンティニュー文字を真ん中に移動させるイージングのプリセット
+	const Easing presetEaseContinuePosX_ = Easing(0.0f, 380.0f, 1.0f);
 	//コンティニュー文字を真ん中に移動させるイージング
-	Easing easeContinuePosX_ = Easing(0.0f, 380.0f, 1.0f);//チュートリアルへ
+	Easing easeContinuePosX_ = presetEaseContinuePosX_;
 
+	//コンティニュー文字を上に移動させるイージングのプリセット
+	const Easing presetEaseContinuePosY_ = Easing(150.0f, 0.0f, 1.0f);
 	//コンティニュー文字を上に移動させるイージング
-	Easing easeContinuePosY_ = Easing(150.0f, 0.0f, 1.0f);//チュートリアルへ
+	Easing easeContinuePosY_ = presetEaseContinuePosY_;
 
-	//コンティニューするときの視点イージング
-	Easing easeEyeContinue_[3]
+	//コンティニューするときの視点イージングのプリセット
+	const Easing presetEaseEyeContinue_[XYZ_Num]
 	{
-		Easing(-6.0f, -21.0f, 1.0f),				//X
-		Easing(-8.0f, -5.0f, 1.0f),					//Y
-		Easing(-110.0f, -60.0f, 1.0f),				//Z
+		{-6.0f, -21.0f, 1.0f},				//X
+		{-8.0f, -5.0f, 1.0f},				//Y
+		{-110.0f, -60.0f, 1.0f}				//Z
 	};
-	//コンティニューするときの注視点イージング
-	Easing easeTargetContinue_[3]
+	//コンティニューするときの視点イージング
+	Easing easeEyeContinue_[XYZ_Num]
 	{
-		Easing(-32.0f, 90.0f, 1.0f),				//X
-		Easing(-24.0f, -22.0f, 1.0f),				//Y
-		Easing(-10.0f, -61.0f, 1.0f),				//Z
+		presetEaseEyeContinue_[XYZ_X],				//X
+		presetEaseEyeContinue_[XYZ_Y],				//Y
+		presetEaseEyeContinue_[XYZ_Z]				//Z
+	};
+
+	//コンティニューするときの注視点イージングのプリセット
+	const Easing presetEaseTargetContinue_[XYZ_Num]
+	{
+		{-32.0f, 90.0f, 1.0f},				//X
+		{-24.0f, -22.0f, 1.0f},				//Y
+		{-10.0f, -61.0f, 1.0f}				//Z
+	};
+
+	//コンティニューするときの注視点イージング
+	Easing easeTargetContinue_[XYZ_Num]
+	{
+		presetEaseTargetContinue_[XYZ_X],				//X
+		presetEaseTargetContinue_[XYZ_Y],				//Y
+		presetEaseTargetContinue_[XYZ_Z]				//Z
+	};
+
+	//コンティニューするときの自機回転イージングのプリセット
+	const Easing presetEasePlayerRotateContinue_[XYZ_Num]
+	{
+		{90.0f, 0.0f, 1.0f},				//X
+		{-90.0f, 90.0f, 1.0f},				//Y
+		{0.0f, 0.0f, 1.0f}					//Z
 	};
 	//コンティニューするときの自機回転イージング
-	Easing easePlayerRotateContinue_[3]
+	Easing easePlayerRotateContinue_[XYZ_Num]
 	{
-		Easing(90.0f, 0.0f, 1.0f),					//X
-		Easing(-90.0f, 90.0f, 1.0f),				//Y
-		Easing(0.0f, 0.0f, 1.0f),					//Z
+		presetEasePlayerRotateContinue_[XYZ_X],				//X
+		presetEasePlayerRotateContinue_[XYZ_Y],				//Y
+		presetEasePlayerRotateContinue_[XYZ_Z]				//Z
+	};
+
+	//コンティニューするときの自機移動イージングのプリセット
+	const Easing presetEasePlayerMoveContinue_[XYZ_Num]
+	{
+		{0.0f, 90.0f, 1.0f},				//X
+		{-8.0f, -8.0f, 1.0f},				//Y
+		{-60.0f, -60.0f, 1.0f}				//Z
 	};
 	//コンティニューするときの自機移動イージング
-	Easing easePlayerMoveContinue_[3]
+	Easing easePlayerMoveContinue_[XYZ_Num]
 	{
-		Easing(0.0f, 90.0f, 1.0f),					//X
-		Easing(-8.0f, -8.0f, 1.0f),					//Y
-		Easing(-60.0f, -60.0f, 1.0f),				//Z
+		presetEasePlayerMoveContinue_[XYZ_X],				//X
+		presetEasePlayerMoveContinue_[XYZ_Y],				//Y
+		presetEasePlayerMoveContinue_[XYZ_Z]				//Z
 	};
 
-	//ステージセレクトへ遷移するときの視点イージング
-	Easing easeEyeQuitStageSelect_[3]
+	//ステージセレクトへ遷移するときの視点イージングのプリセット
+	const Easing presetEaseEyeQuitStageSelect_[XYZ_Num]
 	{
-		Easing(-6.0f, -21.0f, 1.0f),				//X
-		Easing(-8.0f, -5.0f, 1.0f),					//Y
-		Easing(-110.0f, -60.0f, 1.0f),				//Z
+		{-6.0f, -21.0f, 1.0f},				//X
+		{-8.0f, -5.0f, 1.0f},				//Y
+		{-110.0f, -60.0f, 1.0f}				//Z
+	};
+	//ステージセレクトへ遷移するときの視点イージング
+	Easing easeEyeQuitStageSelect_[XYZ_Num]
+	{
+		presetEaseEyeQuitStageSelect_[XYZ_X],				//X
+		presetEaseEyeQuitStageSelect_[XYZ_Y],				//Y
+		presetEaseEyeQuitStageSelect_[XYZ_Z]				//Z
+	};
+
+	//ステージセレクトへ遷移するときの注視点イージングのプリセット
+	const Easing presetEaseTargetQuitStageSelect_[XYZ_Num]
+	{
+		{-32.0f, 90.0f, 1.0f},				//X
+		{-24.0f, -22.0f, 1.0f},				//Y
+		{-10.0f, -61.0f, 1.0f}				//Z
 	};
 	//ステージセレクトへ遷移するときの注視点イージング
-	Easing easeTargetQuitStageSelect_[3]
+	Easing easeTargetQuitStageSelect_[XYZ_Num]
 	{
-		Easing(-32.0f, 90.0f, 1.0f),				//X
-		Easing(-24.0f, -22.0f, 1.0f),				//Y
-		Easing(-10.0f, -61.0f, 1.0f),				//Z
+		presetEaseTargetQuitStageSelect_[XYZ_X],				//X
+		presetEaseTargetQuitStageSelect_[XYZ_Y],				//Y
+		presetEaseTargetQuitStageSelect_[XYZ_Z]					//Z
+	};
+
+	//ステージセレクトへ遷移するときの自機回転イージングのプリセット
+	const Easing presetEasePlayerRotateQuitStageSelect_[XYZ_Num]
+	{
+		{90.0f, 0.0f, 1.0f},				//X
+		{-90.0f, 90.0f, 1.0f},				//Y
+		{0.0f, 0.0f, 1.0f}					//Z
 	};
 	//ステージセレクトへ遷移するときの自機回転イージング
-	Easing easePlayerRotateQuitStageSelect_[3]
+	Easing easePlayerRotateQuitStageSelect_[XYZ_Num]
 	{
-		Easing(90.0f, 0.0f, 1.0f),					//X
-		Easing(-90.0f, 90.0f, 1.0f),				//Y
-		Easing(0.0f, 0.0f, 1.0f),					//Z
+		presetEasePlayerRotateQuitStageSelect_[XYZ_X],				//X
+		presetEasePlayerRotateQuitStageSelect_[XYZ_Y],				//Y
+		presetEasePlayerRotateQuitStageSelect_[XYZ_Z]				//Z
+	};
+
+	//ステージセレクトへ遷移するときの自機移動イージングのプリセット
+	const Easing presetEasePlayerMoveQuitStageSelect_[XYZ_Num]
+	{
+		{0.0f, 150.0f, 1.0f},					//X
+		{-8.0f, 20.0f, 1.0f},					//Y
+		{-60.0f, -60.0f, 1.0f}					//Z
 	};
 	//ステージセレクトへ遷移するときの自機移動イージング
-	Easing easePlayerMoveQuitStageSelect_[3]
+	Easing easePlayerMoveQuitStageSelect_[XYZ_Num]
 	{
-		Easing(0.0f, 150.0f, 1.0f),					//X
-		Easing(-8.0f, 20.0f, 1.0f),					//Y
-		Easing(-60.0f, -60.0f, 1.0f),				//Z
+		presetEasePlayerMoveQuitStageSelect_[XYZ_X],					//X
+		presetEasePlayerMoveQuitStageSelect_[XYZ_Y],					//Y
+		presetEasePlayerMoveQuitStageSelect_[XYZ_Z]						//Z
 	};
 
+	//フェードインアウトのプリセット
+	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
+	Easing easeFadeInOut_ = presetEaseFadeInOut_;
 
 	//選択中の色
-	DirectX::XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
+	const DirectX::XMFLOAT3 startSelectColor = { 0.0f,0.0f,0.0f };
+	DirectX::XMFLOAT3 selectColor_ = startSelectColor;//xyz=rgb
 	//選択しているメニュー表示
 	int menuCount_ = 0;
 	//色反転フラグ
@@ -205,6 +297,5 @@ private://メンバ変数
 	Particle* particle1_ = nullptr;
 	//パーティクルマネージャー
 	ParticleManager* pm1_ = nullptr;
-	
 
 };
