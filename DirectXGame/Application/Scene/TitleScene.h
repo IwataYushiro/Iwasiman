@@ -9,7 +9,8 @@
 
 #include "ParticleManager.h"
 #include "Sprite.h"
-
+#include "EnumList.h"
+#include "XYZ.h"
 
 #include <map>
 
@@ -66,6 +67,20 @@ private://静的メンバ変数
 	
 
 private://メンバ変数
+	//タイトル用テクスチャインデックス
+	enum TitleSceneTextureIndex
+	{
+		TSTI_TitleTex = 0,
+		TSTI_TitleDoneTex = 1,
+		TSTI_MenuTex = 2,
+		TSTI_MenuTutorialTex = 3,
+		TSTI_MenuStageSerectTex = 4,
+		TSTI_MenuDoneTex = 5,
+		TSTI_BackTitleTex = 6,
+		TSTI_FadeInOutTex = 7,
+		TSTI_LoadingTex = 8,
+		TSTI_StageInfoNowTex = 9,
+	};
 
 	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
@@ -113,70 +128,153 @@ private://メンバ変数
 	bool isStageSelect_ = false;		//ステージセレクトに行くとき
 	bool isFadeOut_ = false;			//フェードアウト
 
+	//タイトル→タイトルメニューの列挙体
+	enum TitleStart
+	{
+		TS_Title=0,		//タイトル
+		TS_Done=1,		//決定
+		TS_Num=2		//配列用
+	};
+	//最初の画面のY値
+	const std::array<float, TS_Num> startTitlePosY_ = { 50.0f,600.0f };
+
+	//タイトル→タイトルメニューのイージングのプリセット
+	const Easing presetEaseTitlePosX_[TS_Num] =
+	{
+		{225.0f, -1300.0f, 1.0f},
+		{300.0f, -1300.0f, 1.0f}
+	};
 	//タイトル→タイトルメニューのイージング
-	Easing easeTitlePosX_[2] =
+	Easing easeTitlePosX_[TS_Num] =
 	{
-		Easing(225.0f, -1300.0f, 1.0f),
-		Easing(300.0f, -1300.0f, 1.0f)
+		presetEaseTitlePosX_[TS_Title],
+		presetEaseTitlePosX_[TS_Done]
 	};
 
+	//メニュー説明用の列挙体
+	enum TitleMenuEasingNum
+	{
+		TMEN_Menu = 0,				//メニュー
+		TMEN_Tutorial = 1,			//チュートリアルへ
+		TMEN_StageSelect = 2,		//ステージセレクトへ
+		TMEN_SelectSpace = 3,		//スペースで選択
+		TMEN_Quit = 4,				//戻る
+		TMEN_Num = 5,				//配列用
+	};
+	//メニューのY値
+	const std::array<float, TMEN_Num> menuPosY_ = { 0.0f,150.0f,300.0f,550.0f,50.0f };
+
+	//タイトルメニューの出現イージングのプリセット
+	const Easing presetEaseMenuPosX_[TMEN_Num] =
+	{
+		{1300.0f, 0.0f, 1.0f},		//メニュー
+		{1300.0f, 50.0f, 1.2f},		//チュートリアルへ
+		{1300.0f, 50.0f, 1.4f},		//ステージセレクトへ
+		{1300.0f, 0.0f, 1.6f},		//スペースで選択
+		{1300.0f, 900.0f, 1.8f}		//戻る
+	};
 	//タイトルメニューの出現イージング
-	Easing easeMenuPosX_[5] =
+	Easing easeMenuPosX_[TMEN_Num] =
 	{
-		Easing(1300.0f, 0.0f, 1.0f),		//メニュー
-		Easing(1300.0f, 50.0f, 1.2f),		//チュートリアルへ
-		Easing(1300.0f, 50.0f, 1.4f),		//ステージセレクトへ
-		Easing(1300.0f, 0.0f, 1.6f),		//スペースで選択
-		Easing(1300.0f, 900.0f, 1.8f),		//戻る
+		presetEaseMenuPosX_[TMEN_Menu],			//メニュー
+		presetEaseMenuPosX_[TMEN_Tutorial],		//チュートリアルへ
+		presetEaseMenuPosX_[TMEN_StageSelect],	//ステージセレクトへ
+		presetEaseMenuPosX_[TMEN_SelectSpace],	//スペースで選択
+		presetEaseMenuPosX_[TMEN_Quit]			//戻る
 	};
-	//選んだステージを真ん中に移動させるイージング
-	Easing easeStartStagePosX_ = Easing(0.0f, 350.0f, 1.5f);//チュートリアルへ
-	
-	//選んだステージを上に移動させるイージング
-	Easing easeStartStagePosY_ = Easing(150.0f, 0.0f, 1.5f);//チュートリアルへ
 
-	//タイトル→タイトルメニューの視点カメラワークイージング
-	Easing easeEyeMenu_[3]
+	//選んだステージを真ん中に移動させるイージングのプリセット
+	const Easing presetEaseStartStagePosX_ = {0.0f, 350.0f, 1.5f};//チュートリアルへ
+	//選んだステージを真ん中に移動させるイージング
+	Easing easeStartStagePosX_ = presetEaseStartStagePosX_;//チュートリアルへ
+
+
+	//選んだステージを上に移動させるイージングのプリセット
+	const Easing presetEaseStartStagePosY_ = { menuPosY_[TMEN_Tutorial], 0.0f, 1.5f};//チュートリアルへ
+	//選んだステージを上に移動させるイージング
+	Easing easeStartStagePosY_ = presetEaseStartStagePosY_;//チュートリアルへ
+
+	//タイトル→タイトルメニューの視点カメラワークイージングのプリセット
+	const Easing presetEaseEyeMenu_[XYZ_Num] =
 	{
-		Easing(0.0f, 21.0f, 1.8f),			//X
-		Easing(1.0f, -4.0f, 1.8f),			//Y
-		Easing(-110.0f, -60.0f, 1.8f),		//Z
+		{0.0f, 21.0f, 1.8f},			//X
+		{1.0f, -4.0f, 1.8f},			//Y
+		{-110.0f, -60.0f, 1.8f}			//Z
+	};
+	//タイトル→タイトルメニューの視点カメラワークイージング
+	Easing easeEyeMenu_[XYZ_Num] =
+	{
+		presetEaseEyeMenu_[XYZ_X],		//X
+		presetEaseEyeMenu_[XYZ_Y],		//Y
+		presetEaseEyeMenu_[XYZ_Z]		//Z
+	};
+
+	//タイトル→タイトルメニューの注視点カメラワークイージングのプリセット
+	const Easing presetEaseTargetMenu_[XYZ_Num] =
+	{
+		{0.0f, -100.0f, 1.8f},			//X
+		{0.0f, -10.0f, 1.8f},			//Y
+		{-10.0f, -62.0f, 1.8f}			//Z
 	};
 	//タイトル→タイトルメニューの注視点カメラワークイージング
-	Easing easeTargetMenu_[3]
+	Easing easeTargetMenu_[XYZ_Num] =
 	{
-		Easing(0.0f, -100.0f, 1.8f),		//X
-		Easing(0.0f, -10.0f, 1.8f),			//Y
-		Easing(-10.0f, -62.0f, 1.8f),		//Z
+		presetEaseTargetMenu_[XYZ_X],			//X
+		presetEaseTargetMenu_[XYZ_Y],			//Y
+		presetEaseTargetMenu_[XYZ_Z]			//Z
 	};
 
-	//タイトルメニュー→ゲーム開始の視点カメラワークイージング
-	Easing easeEyeGameStart_[3]
+	//タイトルメニュー→ゲーム開始の視点カメラワークイージングのプリセット
+	const Easing presetEaseEyeGameStart_[XYZ_Num] =
 	{
-		Easing(21.0f, -22.0f, 1.0f),		//X
-		Easing(-4.0f, -1.0f, 1.0f),			//Y
-		Easing(-60.0f, -60.0f, 1.0f),		//Z
+		{21.0f, -22.0f, 1.0f},			//X
+		{-4.0f, -1.0f, 1.0f},			//Y
+		{-60.0f, -60.0f, 1.0f}			//Z
+	};
+	//タイトルメニュー→ゲーム開始の視点カメラワークイージング
+	Easing easeEyeGameStart_[XYZ_Num] =
+	{
+		presetEaseEyeGameStart_[XYZ_X],			//X
+		presetEaseEyeGameStart_[XYZ_Y],			//Y
+		presetEaseEyeGameStart_[XYZ_Z]			//Z
+	};
+
+	//タイトルメニュー→ゲーム開始の注視点カメラワークイージングのプリセット
+	const Easing presetEaseTargetGameStart_[XYZ_Num] =
+	{
+		{-100.0f, 50.0f, 1.0f},			//X
+		{-10.0f, -8.0f, 1.0f},			//Y
+		{-62.0f, -57.0f, 1.0f}			//Z
 	};
 	//タイトルメニュー→ゲーム開始の注視点カメラワークイージング
-	Easing easeTargetGameStart_[3]
+	Easing easeTargetGameStart_[XYZ_Num] =
 	{
-		Easing(-100.0f, 50.0f, 1.0f),		//X
-		Easing(-10.0f, -8.0f, 1.0f),		//Y
-		Easing(-62.0f, -57.0f, 1.0f),		//Z
+		presetEaseTargetGameStart_[XYZ_X],			//X
+		presetEaseTargetGameStart_[XYZ_Y],			//Y
+		presetEaseTargetGameStart_[XYZ_Z]			//Z
+	};
+
+	//タイトルメニュー→ステージセレクトの自機移動イージングのプリセット
+	const Easing presetEasePlayerMove_[XYZ_Num] =
+	{
+		{0.0f, 150.0f, 2.0f},			//X
+		{-8.0f, 40.0f, 2.0f},			//Y
+		{-60.0f, -60.0f, 2.0f}			//Z
 	};
 	//タイトルメニュー→ステージセレクトの自機移動イージング
-	Easing easePlayerMove_[3]
+	Easing easePlayerMove_[XYZ_Num] =
 	{
-		Easing(0.0f, 150.0f, 2.0f),			//X
-		Easing(-8.0f, 40.0f, 2.0f),			//Y
-		Easing(-60.0f, -60.0f, 2.0f),		//Z
+		presetEasePlayerMove_[XYZ_X],			//X
+		presetEasePlayerMove_[XYZ_Y],			//Y
+		presetEasePlayerMove_[XYZ_Z]			//Z
 	};
-
+	//フェードインアウトのプリセット
+	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
+	Easing easeFadeInOut_ = presetEaseFadeInOut_;
 
 	//選択中の色
-	DirectX::XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
+	DirectX::XMFLOAT3 selectColor_;//xyz=rgb
 	//選択されていない色
 	const DirectX::XMFLOAT4 otherMenuColor_ = { 0.0f,0.0f,0.0f,1.0f };
 	//タイトルメニュー→タイトルへ戻るスプライトの色

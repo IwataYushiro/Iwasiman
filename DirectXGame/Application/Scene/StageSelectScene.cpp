@@ -46,9 +46,9 @@ void StageSelectScene::Initialize()
 	//camera_->SetEye({ -10.0f,2.0f,0.0f });
 
 	// 視点座標
-	camera_->SetEye({ easeEyeStageSelect_[0].start, easeEyeStageSelect_[1].start, easeEyeStageSelect_[2].start });
+	camera_->SetEye({ easeEyeStageSelect_[XYZ_X].start, easeEyeStageSelect_[XYZ_Y].start, easeEyeStageSelect_[XYZ_Z].start });
 	// 注視点座標
-	camera_->SetTarget({ easeTargetStageSelect_[0].start, easeTargetStageSelect_[1].start, easeTargetStageSelect_[2].start });
+	camera_->SetTarget({ easeTargetStageSelect_[XYZ_X].start, easeTargetStageSelect_[XYZ_Y].start, easeTargetStageSelect_[XYZ_Z].start });
 
 	//レベルデータ読み込み
 	LoadLVData("scene/stageselect");
@@ -59,28 +59,29 @@ void StageSelectScene::Initialize()
 
 	spCommon_->LoadTexture(SSSTI_MenuTex, "texture/stageselect.png");
 	spriteMenu_->Initialize(spCommon_, SSSTI_MenuTex);
-	spriteMenu_->SetPosition({ easeMenuPosX_[0].start,0.0f });
+	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].start,menuPosY_[SSMEN_Menu]});
 
 	spCommon_->LoadTexture(SSSTI_MenuTutorialTex, "texture/titlemenut.png");
 	spriteTutorial_->Initialize(spCommon_, SSSTI_MenuTutorialTex);
-	spriteTutorial_->SetPosition({ easeMenuPosX_[1].start,easeStartStagePosY_[0].start });
+	spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].start,easeStartStagePosY_[SSSMI_StageTutorial_Tutorial].start });
 
 	spCommon_->LoadTexture(SSSTI_Menustage1Tex, "texture/stagesky.png");
 	spriteStage1_->Initialize(spCommon_, SSSTI_Menustage1Tex);
-	spriteStage1_->SetPosition({ easeMenuPosX_[2].start,easeStartStagePosY_[1].start });
+	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].start,easeStartStagePosY_[SSSMI_Stage1_SkyStage].start });
 
 	spCommon_->LoadTexture(SSSTI_Menustage2Tex, "texture/stagetower.png");
 	spriteStage2_->Initialize(spCommon_, SSSTI_Menustage2Tex);
-	spriteStage2_->SetPosition({ easeMenuPosX_[3].start,easeStartStagePosY_[2].start });
+	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].start,easeStartStagePosY_[SSSMI_Stage2_TowerStage].start });
 
 	spCommon_->LoadTexture(SSSTI_MenuDoneTex, "texture/titlemenud.png");
 	spriteDone_->Initialize(spCommon_, SSSTI_MenuDoneTex);
-	spriteDone_->SetPosition({ easeMenuPosX_[4].start,580.0f });
+	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].start,menuPosY_[SSMEN_SelectSpace] });
 
 	spCommon_->LoadTexture(SSSTI_BackTitleTex, "texture/back.png");
 	spriteBack_->Initialize(spCommon_, SSSTI_BackTitleTex);
-	spriteBack_->SetPosition({ easeMenuPosX_[5].start,50.0f });
-	spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].start,menuPosY_[SSMEN_Quit] });
+	const XMFLOAT4 backColor = { 0.0f,0.0f,0.1f,1.0f };
+	spriteBack_->SetColor(backColor);
 
 	spCommon_->LoadTexture(SSSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, SSSTI_FadeInOutTex);
@@ -104,7 +105,8 @@ void StageSelectScene::Initialize()
 	objStage_ = Object3d::Create();
 	objStage_->SetModel(modelStageTutorial_);
 	objStage_->SetCamera(camera_);
-	objStage_->SetScale({ 7.0f,7.0f,7.0f });
+	const XMFLOAT3 stageScale = { 7.0f,7.0f,7.0f };
+	objStage_->SetScale(stageScale);
 
 	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
 	pm1_ = ParticleManager::Create();
@@ -112,9 +114,9 @@ void StageSelectScene::Initialize()
 	pm1_->SetCamera(camera_);
 
 	//イージングStandby
-	for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(false);
-	for (int i = 0; i < 3; i++)easeEyeStageSelect_[i].Standby(false);
-	for (int i = 0; i < 3; i++)easeTargetStageSelect_[i].Standby(false);
+	for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(false);
+	for (int i = 0; i < XYZ_Num; i++)easeEyeStageSelect_[i].Standby(false);
+	for (int i = 0; i < XYZ_Num; i++)easeTargetStageSelect_[i].Standby(false);
 	easeFadeInOut_.Standby(false);
 
 }
@@ -131,16 +133,30 @@ void StageSelectScene::Update()
 
 	for (Object3d*& player : objPlayers_)
 	{
-		pm1_->ActiveX(particle1_, player->GetPosition(), { 0.0f ,2.0f,0.0f },
-			{ -3.0f,0.3f,0.3f }, { 0.0f,0.001f,0.0f }, 3, { 1.0f, 0.0f });
+		//煙プリセット
+		const ParticleManager::Preset smoke =
+		{
+			particle1_,
+			player->GetPosition(),
+			{ 0.0f ,2.0f,0.0f },
+			{ -3.0f,0.3f,0.3f },
+			{ 0.0f,0.001f,0.0f },
+			3,
+			{ 1.0f, 0.0f },
+			{ 1.0f,1.0f,1.0f,1.0f },
+			{ 0.0f,0.0f,0.0f,1.0f }
+		};
+
+		pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 		player->Update();
 	}
 	for (Object3d*& ground : objGrounds_)ground->Update();
 	for (Object3d*& goal : objGoals_)goal->Update();
 
-
-	rot_.y += 0.5f;
+	const float rotSpeed = 0.5f;
+	rot_.y += rotSpeed;
 
 	objStage_->SetRotation(rot_);
 
@@ -171,91 +187,94 @@ void StageSelectScene::Update()
 void StageSelectScene::UpdateIsStageSelect()
 {
 	//イージング
-	for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeStageSelect_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeTargetStageSelect_[i].ease_out_expo();
+	for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeEyeStageSelect_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeTargetStageSelect_[i].ease_out_expo();
 	easeFadeInOut_.ease_in_out_quint();
 
 	//座標セット
-	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
-	spriteTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
-	spriteStage1_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
-	spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
-	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
-	spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
+	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
+	spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
+	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
+	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].num_X,menuPosY_[SSMEN_Stage2_Tower] });
+	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
+	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 
 	//カラーセット
 	spriteFadeInOut_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.num_X });	//透明度だけ変える
-	//spriteLoad_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.num_X });		//色はネガポジの応用
 
 	//カメラもセット
-	camera_->SetEye({ easeEyeStageSelect_[0].num_X, easeEyeStageSelect_[1].num_X, easeEyeStageSelect_[2].num_X });
-	camera_->SetTarget({ easeTargetStageSelect_[0].num_X, easeTargetStageSelect_[1].num_X, easeTargetStageSelect_[2].num_X });
+	camera_->SetEye({ easeEyeStageSelect_[XYZ_X].num_X, easeEyeStageSelect_[XYZ_Y].num_X, easeEyeStageSelect_[XYZ_Z].num_X });
+	camera_->SetTarget({ easeTargetStageSelect_[XYZ_X].num_X, easeTargetStageSelect_[XYZ_Y].num_X, easeTargetStageSelect_[XYZ_Z].num_X });
 
 	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
 	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
-
-	if (isColorReverse_)speedColor_ -= 0.02f;
-	else speedColor_ += 0.02f;
-
-	if (speedColor_ >= 0.9f)
-	{
-		isColorReverse_ = true;
-	}
-	if (speedColor_ <= 0.0f)
-	{
-		isColorReverse_ = false;
-	}
+	
+	//選択中のメニューカラー
+	const DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
+	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,1.0f };
+	//選択中のメニューカラー(暗い背景時)
+	const DirectX::XMFLOAT4 selectMenuColorDark = { 1.0f,selectColor_.y + 0.1f,selectColor_.z + 0.1f,1.0f };
+	const DirectX::XMFLOAT4 otherMenuColorDark = { 1.0f,1.0f,1.0f,1.0f };
+	//決定指示スプライトのカラー
+	const DirectX::XMFLOAT4 doneColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
+	const DirectX::XMFLOAT4 doneColorDark = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };
+	//タイトルへ戻る指示スプライトのカラー
+	const DirectX::XMFLOAT4 quitColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
+	const DirectX::XMFLOAT4 quitColorDark = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };
+	//色替え
+	//色替え
+	UpdateChangeColor();
 
 	if (menuCount_ == SSSMI_StageTutorial_Tutorial)
 	{
 		objStage_->SetModel(modelStageTutorial_);
-		spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteTutorial_->SetColor({ 0.1f + speedColor_,0.1f,0.1f,1.0f });
-		spriteStage1_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteStage2_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+		spriteMenu_->SetColor(selectMenuColor);
+		spriteTutorial_->SetColor(selectMenuColor);
+		spriteStage1_->SetColor(otherMenuColor);
+		spriteStage2_->SetColor(otherMenuColor);
+		spriteDone_->SetColor(doneColor);
+		spriteBack_->SetColor(quitColor);
 	}
 	else if (menuCount_ == SSSMI_Stage1_SkyStage)
 	{
 		objStage_->SetModel(modelStage1_);
-		spriteMenu_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteTutorial_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteStage1_->SetColor({ 0.1f + speedColor_,0.1f,0.1f,1.0f });
-		spriteStage2_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteDone_->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		spriteBack_->SetColor({ 0.0f,0.0f,0.1f,1.0f });
+		spriteMenu_->SetColor(selectMenuColor);
+		spriteTutorial_->SetColor(otherMenuColor);
+		spriteStage1_->SetColor(selectMenuColor);
+		spriteStage2_->SetColor(otherMenuColor);
+		spriteDone_->SetColor(doneColor);
+		spriteBack_->SetColor(quitColor);
 	}
 	else if (menuCount_ == SSSMI_Stage2_TowerStage)
 	{
 		objStage_->SetModel(modelStage2_);
-		spriteMenu_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		spriteTutorial_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		spriteStage1_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		spriteStage2_->SetColor({ 1.0f,speedColor_ + 0.1f,speedColor_ + 0.1f,1.0f });
-		spriteDone_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
-		spriteBack_->SetColor({ 0.5f,0.5f,1.0f,1.0f });
+		spriteMenu_->SetColor(selectMenuColorDark);
+		spriteTutorial_->SetColor(otherMenuColorDark);
+		spriteStage1_->SetColor(otherMenuColorDark);
+		spriteStage2_->SetColor(selectMenuColorDark);
+		spriteDone_->SetColor(doneColorDark);
+		spriteBack_->SetColor(quitColorDark);
 	}
 
 	if (input_->TriggerKey(DIK_SPACE))
 	{
-		for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(true);
-		for (int i = 0; i < 3; i++)easeEyeDoneMenu_[i].Standby(false);
-		for (int i = 0; i < 3; i++)easeTargetDoneMenu_[i].Standby(false);
-		
-		for (int i = 0; i < 3; i++)easeStartStagePosX_[i].Standby(false);
-		for (int i = 0; i < 3; i++)easeStartStagePosY_[i].Standby(false);
+		for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+		for (int i = 0; i < XYZ_Num; i++)easeEyeDoneMenu_[i].Standby(false);
+		for (int i = 0; i < XYZ_Num; i++)easeTargetDoneMenu_[i].Standby(false);
+
+		for (int i = 0; i < XYZ_Num; i++)easeStartStagePosX_[i].Standby(false);
+		for (int i = 0; i < XYZ_Num; i++)easeStartStagePosY_[i].Standby(false);
 		
 		isDone_ = true;
 		isStageSelect_ = false;
 	}
-	if (easeMenuPosX_[5].num_X == easeMenuPosX_[5].end)
+	if (easeMenuPosX_[SSMEN_Quit].num_X == easeMenuPosX_[SSMEN_Quit].end)
 	{
 		if (input_->TriggerKey(DIK_Q))
 		{
-			for (int i = 0; i < 3; i++)easePlayerQuitMove_[i].Standby(false);
-			for (int i = 0; i < 6; i++)easeMenuPosX_[i].Standby(true);
+			for (int i = 0; i < XYZ_Num; i++)easePlayerQuitMove_[i].Standby(false);
+			for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(true);
 			outStageSelect_ = true;
 			isStageSelect_ = false;
 		}
@@ -265,46 +284,46 @@ void StageSelectScene::UpdateIsStageSelect()
 void StageSelectScene::UpdateIsDone()
 {
 	//イージング
-	for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeDoneMenu_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeTargetDoneMenu_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeStartStagePosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeStartStagePosY_[i].ease_out_expo();
+	for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeEyeDoneMenu_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeTargetDoneMenu_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeStartStagePosX_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeStartStagePosY_[i].ease_out_expo();
 	//座標セット
-	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
-	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
-	spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
+	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
+	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
+	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 	//ステージごとに座標が違う
 	if (menuCount_ == SSSMI_StageTutorial_Tutorial)
 	{
-		spriteTutorial_->SetPosition({ easeStartStagePosX_[0].num_X,easeStartStagePosY_[0].num_X });
-		spriteStage1_->SetPosition({ easeMenuPosX_[2].num_X,easeStartStagePosY_[1].num_X });
-		spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,easeStartStagePosY_[2].num_X });
+		spriteTutorial_->SetPosition({ easeStartStagePosX_[SSSMI_StageTutorial_Tutorial].num_X,easeStartStagePosY_[SSSMI_StageTutorial_Tutorial].num_X });
+		spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky]});
+		spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].num_X,menuPosY_[SSMEN_Stage2_Tower] });
 	}
 	else if (menuCount_ == SSSMI_Stage1_SkyStage)
 	{
-		spriteTutorial_->SetPosition({ easeMenuPosX_[1].num_X,easeStartStagePosY_[0].num_X });
-		spriteStage1_->SetPosition({ easeStartStagePosX_[1].num_X,easeStartStagePosY_[1].num_X });
-		spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,easeStartStagePosY_[2].num_X });
+		spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
+		spriteStage1_->SetPosition({ easeStartStagePosX_[SSSMI_Stage1_SkyStage].num_X,easeStartStagePosY_[SSSMI_Stage1_SkyStage].num_X });
+		spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].num_X,menuPosY_[SSMEN_Stage2_Tower] });
 
 	}
 	else if (menuCount_ == SSSMI_Stage2_TowerStage)
 	{
-		spriteTutorial_->SetPosition({ easeMenuPosX_[1].num_X,easeStartStagePosY_[0].num_X });
-		spriteStage1_->SetPosition({ easeMenuPosX_[2].num_X,easeStartStagePosY_[1].num_X });
-		spriteStage2_->SetPosition({ easeStartStagePosX_[2].num_X,easeStartStagePosY_[2].num_X });
+		spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
+		spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
+		spriteStage2_->SetPosition({ easeStartStagePosX_[SSSMI_Stage2_TowerStage].num_X,easeStartStagePosY_[SSSMI_Stage2_TowerStage].num_X });
 	}
 
 	//カメラもセット
-	camera_->SetEye({ easeEyeDoneMenu_[0].num_X, easeEyeDoneMenu_[1].num_X, easeEyeDoneMenu_[2].num_X });
-	camera_->SetTarget({ easeTargetDoneMenu_[0].num_X, easeTargetDoneMenu_[1].num_X, easeTargetDoneMenu_[2].num_X });
+	camera_->SetEye({ easeEyeDoneMenu_[XYZ_X].num_X, easeEyeDoneMenu_[XYZ_Y].num_X, easeEyeDoneMenu_[XYZ_Z].num_X });
+	camera_->SetTarget({ easeTargetDoneMenu_[XYZ_X].num_X, easeTargetDoneMenu_[XYZ_Y].num_X, easeTargetDoneMenu_[XYZ_Z].num_X });
 
 	//イージングが終わったら
 	if (camera_->GetEye().x == easeEyeDoneMenu_[0].end)
 	{
-		for (int i = 0; i < 3; i++)easePlayerStartMove_[i].Standby(false);
-		for (int i = 0; i < 3; i++)easeEyeGameStart_[i].Standby(false);
-		for (int i = 0; i < 3; i++)easeTargetGameStart_[i].Standby(false);
+		for (int i = 0; i < XYZ_Num; i++)easePlayerStartMove_[i].Standby(false);
+		for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].Standby(false);
+		for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].Standby(false);
 		isStart_ = true;
 		isDone_ = false;
 	}
@@ -315,19 +334,19 @@ void StageSelectScene::UpdateIsGameStart()
 	//プレイヤーのX値がここまで来たらフェードアウト
 	const float gameStartPosX_ = 200.0f;
 	//イージング
-	for (int i = 0; i < 3; i++)easePlayerStartMove_[i].ease_in_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeGameStart_[i].ease_in_quint();
-	for (int i = 0; i < 3; i++)easeTargetGameStart_[i].ease_in_quint();
+	for (int i = 0; i < XYZ_Num; i++)easePlayerStartMove_[i].ease_in_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].ease_in_quint();
+	for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].ease_in_quint();
 
 	//カメラセット
-	camera_->SetEye({ easeEyeGameStart_[0].num_X, easeEyeGameStart_[1].num_X, easeEyeGameStart_[2].num_X });
-	camera_->SetTarget({ easeTargetGameStart_[0].num_X, easeTargetGameStart_[1].num_X, easeTargetGameStart_[2].num_X });
+	camera_->SetEye({ easeEyeDoneMenu_[XYZ_X].num_X, easeEyeDoneMenu_[XYZ_Y].num_X, easeEyeDoneMenu_[XYZ_Z].num_X });
+	camera_->SetTarget({ easeTargetDoneMenu_[XYZ_X].num_X, easeTargetDoneMenu_[XYZ_Y].num_X, easeTargetDoneMenu_[XYZ_Z].num_X });
 
 	//プレイヤー座標もセット
 	for (Object3d*& player : objPlayers_)
 	{
-		player->SetPosition({ easePlayerStartMove_[0].num_X,easePlayerStartMove_[1].num_X ,easePlayerStartMove_[2].num_X });;
-		if (player->GetPosition().x >= gameStartPosX_)FadeOut({ 1.0f,1.0f,1.0f });//ゲームプレイ遷移時は白くする
+		player->SetPosition({ easePlayerStartMove_[XYZ_X].num_X,easePlayerStartMove_[XYZ_Y].num_X ,easePlayerStartMove_[XYZ_Z].num_X });
+		if (player->GetPosition().x >= gameStartPosX_)FadeOut(white_);//ゲームプレイ遷移時は白くする
 	}
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -341,23 +360,24 @@ void StageSelectScene::UpdateIsGameStart()
 void StageSelectScene::UpdateIsQuitTitle()
 {
 	//イージング
-	for (int i = 0; i < 3; i++)easePlayerQuitMove_[i].ease_in_expo();
-	for (int i = 0; i < 6; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easePlayerQuitMove_[i].ease_in_expo();
+	for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 
 	//座標セット
-	spriteMenu_->SetPosition({ easeMenuPosX_[0].num_X,0.0f });
-	spriteTutorial_->SetPosition({ easeMenuPosX_[1].num_X,150.0f });
-	spriteStage1_->SetPosition({ easeMenuPosX_[2].num_X,300.0f });
-	spriteStage2_->SetPosition({ easeMenuPosX_[3].num_X,450.0f });
-	spriteDone_->SetPosition({ easeMenuPosX_[4].num_X,550.0f });
-	spriteBack_->SetPosition({ easeMenuPosX_[5].num_X,50.0f });
+	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
+	spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
+	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
+	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].num_X,menuPosY_[SSMEN_Stage2_Tower] });
+	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
+	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
+
 	//メニュー標記のイージングが終わったらフェードアウト
-	if (spriteMenu_->GetPosition().x == easeMenuPosX_[0].start) FadeOut({ 0.0f,0.0f,0.0f });//黒くする
+	if (spriteMenu_->GetPosition().x == easeMenuPosX_[SSMEN_Menu].start) FadeOut(black_);//黒くする
 
 	//プレイヤー座標もセット
 	for (Object3d*& player : objPlayers_)
 	{
-		player->SetPosition({ easePlayerQuitMove_[0].num_X,easePlayerQuitMove_[1].num_X ,easePlayerQuitMove_[2].num_X });
+		player->SetPosition({ easePlayerQuitMove_[XYZ_X].num_X,easePlayerQuitMove_[XYZ_Y].num_X ,easePlayerQuitMove_[XYZ_Z].num_X });
 	}
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -455,10 +475,12 @@ void StageSelectScene::FadeOut(DirectX::XMFLOAT3 rgb)
 	}
 	else
 	{
+		const DirectX::XMFLOAT3 negapozi = { 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z };
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
-		spriteLoad_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });//ネガポジの応用
-		if (isStart_)spriteStageInfoNow_->SetColor({ 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z, easeFadeInOut_.num_X });
+		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
+		if (isStart_)spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });
+
 	}
 }
 
@@ -485,7 +507,7 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 			model = it->second;
 		}
 
-		if (objectData.objectType.find("PLAYER") == 0)
+		if (objectData.objectType.find("PLAYER") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			Object3d* newObject = Object3d::Create();
@@ -511,7 +533,7 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 			// 配列に登録
 			objPlayers_.push_back(newObject);
 		}
-		else if (objectData.objectType.find("PLANE") == 0)
+		else if (objectData.objectType.find("PLANE") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			Object3d* newObject = Object3d::Create();
@@ -537,7 +559,7 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 			// 配列に登録
 			objGrounds_.push_back(newObject);
 		}
-		else if (objectData.objectType.find("GOAL") == 0)
+		else if (objectData.objectType.find("GOAL") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			Object3d* newObject = Object3d::Create();
@@ -566,4 +588,36 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 
 	}
 
+}
+
+void StageSelectScene::UpdateChangeColor()
+{
+	//色を変えるスピード
+	const float speedColor = 0.02f;
+
+	if (isColorReverse_)
+	{
+		selectColor_.x -= speedColor;
+		selectColor_.y -= speedColor;
+		selectColor_.z -= speedColor;
+	}
+
+	else
+	{
+		selectColor_.x += speedColor;
+		selectColor_.y += speedColor;
+		selectColor_.z += speedColor;
+
+	}
+
+	const DirectX::XMFLOAT2 maxAndMinSpeedColor = { 0.7f,0.0f };//{max,min}
+
+	if (selectColor_.x >= maxAndMinSpeedColor.x)
+	{
+		isColorReverse_ = true;
+	}
+	if (selectColor_.x <= maxAndMinSpeedColor.y)
+	{
+		isColorReverse_ = false;
+	}
 }

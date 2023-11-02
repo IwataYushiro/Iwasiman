@@ -148,6 +148,9 @@ private://メンバ変数
 		GOMEN_SelectSpace = 4,		//スペースで選択
 		GOMEN_Num = 5,				//配列用
 	};
+	//メニューポジション
+	const std::array<float,GOMEN_Num> menuPosY_= { 0.0f,150.0f,300.0f,450.0f,550.0f };
+
 	//メニュー表示用のイージングのプリセット
 	const Easing presetEaseMenuPosX_[GOMEN_Num]
 	{
@@ -166,9 +169,7 @@ private://メンバ変数
 		presetEaseMenuPosX_[GOMEN_Title],				//タイトルへ
 		presetEaseMenuPosX_[GOMEN_SelectSpace],			//スペースで選択
 	};
-	//メニューポジション
-	const float menuPosY_[GOMEN_Num] = { 0.0f,150.0f,300.0f,450.0f,550.0f };
-
+	
 	//コンティニュー文字を真ん中に移動させるイージングのプリセット
 	const Easing presetEaseContinuePosX_ = Easing(0.0f, 380.0f, 1.0f);
 	//コンティニュー文字を真ん中に移動させるイージング

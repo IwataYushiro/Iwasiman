@@ -92,45 +92,7 @@ enum GamePlaySceneItemTextureIndex
 	GPSITI_ItemJumpBar = 2000,
 };
 
-//タイトルシーン
-
-//タイトル用テクスチャインデックス
-enum TitleSceneTextureIndex
-{
-	TSTI_TitleTex = 0,
-	TSTI_TitleDoneTex = 1,
-	TSTI_MenuTex = 2,
-	TSTI_MenuTutorialTex = 3,
-	TSTI_MenuStageSerectTex = 4,
-	TSTI_MenuDoneTex = 5,
-	TSTI_BackTitleTex = 6,
-	TSTI_FadeInOutTex = 7,
-	TSTI_LoadingTex = 8,
-	TSTI_StageInfoNowTex = 9,
-};
-
-//タイトル用メニュー番号
-enum TitleSceneMenuIndex
-{
-	TSMI_Tutorial = 0,
-	TSMI_StageSelect = 1,
-};
-
 //ステージセレクトシーン
-
-//ステージセレクト用テクスチャインデックス
-enum StageSelectSceneTextureIndex
-{
-	SSSTI_MenuTex = 0,
-	SSSTI_MenuTutorialTex = 1,
-	SSSTI_Menustage1Tex = 2,
-	SSSTI_Menustage2Tex = 3,
-	SSSTI_MenuDoneTex = 4,
-	SSSTI_BackTitleTex = 5,
-	SSSTI_FadeInOutTex = 6,
-	SSSTI_LoadingTex = 7,
-	SSSTI_StageInfoNowTex = 8,
-};
 
 //ステージセレクト用メニューインデックス
 enum StageSelectSceneMenuIndex
@@ -138,6 +100,16 @@ enum StageSelectSceneMenuIndex
 	SSSMI_StageTutorial_Tutorial = 0,
 	SSSMI_Stage1_SkyStage = 1,
 	SSSMI_Stage2_TowerStage = 2,
+	SSSMI_Num = 3,//配列用
+};
+
+//タイトルシーン
+
+//タイトル用メニュー番号
+enum TitleSceneMenuIndex
+{
+	TSMI_Tutorial = 0,
+	TSMI_StageSelect = 1,
 };
 
 //その他便利な
