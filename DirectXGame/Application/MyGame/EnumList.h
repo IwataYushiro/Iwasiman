@@ -140,50 +140,6 @@ enum StageSelectSceneMenuIndex
 	SSSMI_Stage2_TowerStage = 2,
 };
 
-//ステージクリアシーン
-
-//ステージクリア用テクスチャインデックス
-enum StageClearSceneTextureIndex
-{
-	SCSTI_MenuTex = 0,
-	SCSTI_ContinueTex = 1,
-	SCSTI_StageSelectTex = 2,
-	SCSTI_TitleTex = 3,
-	SCSTI_MenuDoneTex = 4,
-	SCSTI_FadeInOutTex = 5,
-	SCSTI_LoadingTex = 6,
-	SCSTI_StageInfoNowTex = 7,
-};
-//ステージクリア用メニューインデックス
-enum StageClearSceneMenuIndex
-{
-	SCSMI_Continue = 0,
-	SCSMI_StageSelect = 1,
-	SCSMI_Title = 2,
-};
-//ゲームオーバーシーン
-
-//ゲームオーバー用テクスチャインデックス
-enum GameOverSceneTextureIndex
-{
-	GOSTI_MenuTex = 0,
-	GOSTI_ContinueTex = 1,
-	GOSTI_StageSelectTex = 2,
-	GOSTI_TitleTex = 3,
-	GOSTI_MenuDoneTex = 4,
-	GOSTI_FadeInOutTex = 5,
-	GOSTI_LoadingTex = 6,
-	GOSTI_StageInfoNowTex = 7,
-};
-
-//ゲームオーバー用メニューインデックス
-enum GameOverSceneMenuIndex
-{
-	GOSMI_Continue = 0,
-	GOSMI_StageSelect = 1,
-	GOSMI_Title = 2,
-};
-
 //その他便利な
 //レベルデータ読み込むのに使う0ナンバーの代わり
 enum LevelDataTrueOrFalse { LDTOF_TRUE = 0 };

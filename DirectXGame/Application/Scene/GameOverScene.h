@@ -71,6 +71,26 @@ private://静的メンバ変数
 
 private://メンバ変数
 
+	//ゲームオーバー用テクスチャインデックス
+	enum GameOverSceneTextureIndex
+	{
+		GOSTI_MenuTex = 0,
+		GOSTI_ContinueTex = 1,
+		GOSTI_StageSelectTex = 2,
+		GOSTI_TitleTex = 3,
+		GOSTI_MenuDoneTex = 4,
+		GOSTI_FadeInOutTex = 5,
+		GOSTI_LoadingTex = 6,
+		GOSTI_StageInfoNowTex = 7,
+	};
+
+	//ゲームオーバー用メニューインデックス
+	enum GameOverSceneMenuIndex
+	{
+		GOSMI_Continue = 0,
+		GOSMI_StageSelect = 1,
+		GOSMI_Title = 2,
+	};
 	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
 	//カメラ

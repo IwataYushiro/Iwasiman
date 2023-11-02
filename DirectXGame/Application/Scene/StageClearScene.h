@@ -9,6 +9,8 @@
 
 #include "ParticleManager.h"
 #include "Sprite.h"
+#include "EnumList.h"
+#include "XYZ.h"
 
 #include <map>
 
@@ -66,7 +68,26 @@ private://静的メンバ変数
 	
 
 private://メンバ変数
-	
+	//ステージクリア用テクスチャインデックス
+	enum StageClearSceneTextureIndex
+	{
+		SCSTI_MenuTex = 0,
+		SCSTI_NextStageTex = 1,
+		SCSTI_StageSelectTex = 2,
+		SCSTI_TitleTex = 3,
+		SCSTI_MenuDoneTex = 4,
+		SCSTI_FadeInOutTex = 5,
+		SCSTI_LoadingTex = 6,
+		SCSTI_StageInfoNowTex = 7,
+	};
+	//ステージクリア用メニューインデックス
+	enum StageClearSceneMenuIndex
+	{
+		SCSMI_NextStage = 0,
+		SCSMI_StageSelect = 1,
+		SCSMI_Title = 2,
+	};
+
 	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
 	//カメラ
@@ -75,7 +96,7 @@ private://メンバ変数
 	//ステージ番号
 	int stageNum_;
 	//メニュー番号
-	int menuCount_ = 0;
+	int menuCount_ = SCSMI_NextStage;
 	//Sprite
 	Sprite* spriteStageClear_ = new Sprite();		//ステージクリア時のスプライト
 	Sprite* spriteNextStage_ = new Sprite();		//次のステージ表示のスプライト
@@ -112,42 +133,90 @@ private://メンバ変数
 	bool isQuitTitle_ = false;					//タイトルに戻る場合
 	bool isFadeOut_ = false;					//フェードインアウト
 
-	//イージング類
-	//メニュー画面出現イージング
-	Easing easeMenuPosX_[5] =
+	//メニュー説明用の列挙体
+	enum StageClearMenuEasingNum
 	{
-		Easing(1300.0f, 200.0f, 1.0f),			//メニュー
-		Easing(1300.0f, 0.0f, 1.2f),			//チュートリアルへ
-		Easing(1300.0f, 0.0f, 1.4f),			//ステージセレクトへ
-		Easing(1300.0f, 0.0f, 1.6f),			//タイトルへ
-		Easing(1300.0f, 0.0f, 1.8f),			//スペースで選択
+		SCMEN_Menu = 0,					//メニュー
+		SCMEN_NextStage = 1,			//コンティニューへ
+		SCMEN_StageSelect = 2,			//ステージセレクトへ
+		SCMEN_Title = 3,				//タイトルへ
+		SCMEN_SelectSpace = 4,			//スペースで選択
+		SCMEN_Num = 5,					//配列用
+	};
+	//イージング類
+	//メニュー表示用のイージングのプリセット
+	const Easing presetEaseMenuPosX_[SCMEN_Num]
+	{
+		{1300.0f, 200.0f, 1.0f},			//メニュー
+		{1300.0f, 0.0f, 1.2f},				//次のステージへ
+		{1300.0f, 0.0f, 1.4f},				//ステージセレクトへ
+		{1300.0f, 0.0f, 1.6f},				//タイトルへ
+		{1300.0f, 0.0f, 1.8f}				//スペースで選択
+	};
+	//メニュー表示用のイージング
+	Easing easeMenuPosX_[SCMEN_Num]
+	{
+		presetEaseMenuPosX_[SCMEN_Menu],				//メニュー
+		presetEaseMenuPosX_[SCMEN_NextStage],			//次のステージへ
+		presetEaseMenuPosX_[SCMEN_StageSelect],			//ステージセレクトへ
+		presetEaseMenuPosX_[SCMEN_Title],				//タイトルへ
+		presetEaseMenuPosX_[SCMEN_SelectSpace],			//スペースで選択
+	};
+	//メニューポジション
+	const std::array<float, SCMEN_Num> menuPosY_ = { 0.0f,150.0f,300.0f,450.0f,550.0f };
+
+	//次のステージへ行くときの視点イージングのプリセット
+	const Easing presetEaseEyeStageClear_[XYZ_Num]
+	{
+		{0.0f, -22.0f, 1.8f},				//X
+		{1.0f, -1.0f, 1.8f},				//Y
+		{-110.0f, -60.0f, 1.8f},			//Z
 	};
 	//次のステージへ行くときの視点イージング
-	Easing easeEyeStageClear_[3]
+	Easing easeEyeStageClear_[XYZ_Num]
 	{
-		Easing(0.0f, -22.0f, 1.8f),				//X
-		Easing(1.0f, -1.0f, 1.8f),				//Y
-		Easing(-110.0f, -60.0f, 1.8f),			//Z
+		presetEaseEyeStageClear_[XYZ_X],			//X
+		presetEaseEyeStageClear_[XYZ_Y],			//Y
+		presetEaseEyeStageClear_[XYZ_Z]				//Z
+	};
+
+	//次のステージへ行くときの注視点イージングのプリセット
+	const Easing presetEaseTargetStageClear_[XYZ_Num]
+	{
+		{0.0f, 50.0f, 1.8f},				//X
+		{0.0f, -8.0f, 1.8f},				//Y
+		{-10.0f, -57.0f, 1.8f},				//Z
 	};
 	//次のステージへ行くときの注視点イージング
-	Easing easeTargetStageClear_[3]
+	Easing easeTargetStageClear_[XYZ_Num]
 	{
-		Easing(0.0f, 50.0f, 1.8f),				//X
-		Easing(0.0f, -8.0f, 1.8f),				//Y
-		Easing(-10.0f, -57.0f, 1.8f),			//Z
+		 presetEaseTargetStageClear_[XYZ_X],			//X
+		 presetEaseTargetStageClear_[XYZ_Y],			//Y
+		 presetEaseTargetStageClear_[XYZ_Z]				//Z
+	};
+
+	//ステージセレクトへ行くときの自機移動イージングのプリセット
+	const Easing presetEasePlayerMoveStageSelect_[XYZ_Num]
+	{
+		{0.0f, 150.0f, 2.0f},				//X
+		{-8.0f, 40.0f, 2.0f},				//Y
+		{-60.0f, -60.0f, 2.0f},				//Z
 	};
 	//ステージセレクトへ行くときの自機移動イージング
-	Easing easePlayerMoveStageSelect_[3]
+	Easing easePlayerMoveStageSelect_[XYZ_Num]
 	{
-		Easing(0.0f, 150.0f, 2.0f),				//X
-		Easing(-8.0f, 40.0f, 2.0f),				//Y
-		Easing(-60.0f, -60.0f, 2.0f),			//Z
+		presetEasePlayerMoveStageSelect_[XYZ_X],			//X
+		presetEasePlayerMoveStageSelect_[XYZ_Y],			//Y
+		presetEasePlayerMoveStageSelect_[XYZ_Z],			//Z
 	};
+
+	//フェードインアウトのプリセット
+	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = Easing(1.0f, 0.0f, 1.0f);
+	Easing easeFadeInOut_ = presetEaseFadeInOut_;
 
 	//選択中の色
-	DirectX::XMFLOAT3 selectColor_ = { 0.0f,0.0f,0.0f };//xyz=rgb
+	DirectX::XMFLOAT3 selectColor_;//xyz=rgb
 
 	//色反転フラグ
 	bool isColorReverse_ = false;
