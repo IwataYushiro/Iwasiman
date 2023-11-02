@@ -92,14 +92,6 @@ enum GamePlaySceneItemTextureIndex
 	GPSITI_ItemJumpBar = 2000,
 };
 
-//チュートリアル用のイージング状態
-enum GamePlaySceneSettingTutorialEasingNum
-{
-	GPSSTEN_Stundby = 0,
-	GPSSTEN_Active = 1,
-};
-
-
 //タイトルシーン
 
 //タイトル用テクスチャインデックス

@@ -5,7 +5,6 @@
 #include <cassert>
 #include <sstream>
 #include <iomanip>
-#include "EnumList.h"
 
 using namespace DirectX;
 
@@ -516,7 +515,7 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 			model = it->second;
 		}
 
-		if (objectData.objectType.find("PLAYER") == 0)
+		if (objectData.objectType.find("PLAYER") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			Object3d* newObject = Object3d::Create();
@@ -542,7 +541,7 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 			// 配列に登録
 			objPlayers_.push_back(newObject);
 		}
-		else if (objectData.objectType.find("SKYDOME") == 0)
+		else if (objectData.objectType.find("SKYDOME") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			Object3d* newObject = Object3d::Create();
@@ -568,7 +567,7 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 			// 配列に登録
 			objStages_.push_back(newObject);
 		}
-		else if (objectData.objectType.find("GOAL") == 0)
+		else if (objectData.objectType.find("GOAL") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
 			Object3d* newObject = Object3d::Create();

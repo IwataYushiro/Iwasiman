@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseScene.h"
 #include "AbstractSceneFactory.h"
+#include "EnumList.h"
 
 /*
 
@@ -16,7 +17,7 @@ public://シングルトンインスタンス
 
 public://メンバ関数
 	//次のシーンを予約(シーン名、ステージ番号)
-	void ChangeScene(const std::string& sceneName, int stagenum = 0);
+	void ChangeScene(const std::string& sceneName, int stagenum = SL_Default);
 	//更新
 	void Update();
 

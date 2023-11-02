@@ -10,6 +10,8 @@
 #include "ParticleManager.h"
 #include "Sprite.h"
 #include "XYZ.h"
+#include "EnumList.h"
+
 #include <DirectXMath.h>
 #include <map>
 
@@ -284,10 +286,9 @@ private://メンバ変数
 	Easing easeFadeInOut_ = presetEaseFadeInOut_;
 
 	//選択中の色
-	const DirectX::XMFLOAT3 startSelectColor = { 0.0f,0.0f,0.0f };
-	DirectX::XMFLOAT3 selectColor_ = startSelectColor;//xyz=rgb
+	DirectX::XMFLOAT3 selectColor_;//xyz=rgb
 	//選択しているメニュー表示
-	int menuCount_ = 0;
+	int menuCount_ = GOSMI_Continue;
 	//色反転フラグ
 	bool isColorReverse_ = false;
 
