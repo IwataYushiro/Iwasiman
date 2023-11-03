@@ -24,13 +24,13 @@ public://構造体類
     {
         XMFLOAT4 color;
     };
-
+    const UINT CBDM_REGISTER = 0;
     //座標
     struct ConstBufferDataTransform
     {
         XMMATRIX mat;	//3D変換行列
     };
-
+    const UINT CBDT_REGISTER = 1;
     //頂点番号
     enum VertexNumber
     {
@@ -47,6 +47,33 @@ public://構造体類
         XMFLOAT3 pos;		//xyz座標
         XMFLOAT2 uv;		//uv座標
     };
+    //画面クリアカラー
+    enum ClearColorRGBW
+    {
+        CCRGBW_R=0,
+        CCRGBW_G = 1,
+        CCRGBW_B = 2,
+        CCRGBW_W = 3,
+        CCRGBW_Num = 4,
+    };
+    //リソースデスクの設定
+    struct ResDescPreset
+    {
+        const UINT16 arraysize = 1;
+        const UINT16 mipLevels = 0;
+        const UINT sampleCount = 1;
+        const UINT sampleQuality = 0;
+    };
+    ResDescPreset resDescPreset;
+    //ルートパラメータインデックス
+    enum RootParameterIndex
+    {
+        RPI_ConstBuff0=0,
+        RPI_TexBuff0 = 1,
+        RPI_ConstBuff1 = 2,
+        RPI_TexBuff1 = 3,
+        RPI_Num=4,
+    };
 private://静的メンバ変数
     //ベースディレクトリ
     static const std::string baseDirectory_;
@@ -54,8 +81,8 @@ private://静的メンバ変数
     static const std::string directoryVS_;
     //ピクセルシェーダー
     static const std::string directoryPS_;
-    //画面クリアカラー
-    static const float clearcolor_[4];
+
+    static const float clearColor_[CCRGBW_Num];
 
 public:
     //コンストラクタ
@@ -94,12 +121,19 @@ public:
     void PostDraw(ID3D12GraphicsCommandList* cmdList);
 
 private:
-    //頂点データ
-    Vertex verticesPost_[verticesCount] = {
+    //頂点データのプリセット
+    const Vertex presetVerticesPost_[verticesCount] = {
         {{-1.0f,-1.0f,0.0f},{0.0f,1.0f}},	//左下
         {{-1.0f,+1.0f,0.0f},{0.0f,0.0f}},	//左上
         {{+1.0f,-1.0f,0.0f},{1.0f,1.0f}},	//右下
         {{+1.0f,+1.0f,0.0f},{1.0f,0.0f}},	//右上
+    };
+    //頂点データ
+    Vertex verticesPost_[verticesCount] = {
+        presetVerticesPost_[LB],	//左下
+        presetVerticesPost_[LT],	//左上
+        presetVerticesPost_[RB],	//右下
+        presetVerticesPost_[RT],	//右上
     };
 
     //定数バッファのGPUリソースのポインタ
@@ -118,7 +152,13 @@ private:
     //頂点バッファビュー
     D3D12_VERTEX_BUFFER_VIEW vbView_{};
     //テクスチャバッファ
-    ComPtr<ID3D12Resource> texBuff_[2];
+    enum TexBuffCount
+    {
+        TBC_TexBuff0=0,
+        TBC_TexBuff1=1,
+        TBC_Num=2,
+    };
+    ComPtr<ID3D12Resource> texBuff_[TBC_Num];
     //SRV用デスクリプタヒープ
     ComPtr<ID3D12DescriptorHeap> descHeapSRV_;
     //深度バッファ
@@ -133,7 +173,9 @@ private:
     ComPtr<ID3D12RootSignature> rootSignature_;
   
     //色(RGBA)
-    XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+    const XMFLOAT4 defaultColor_ = { 1.0f,1.0f,1.0f,1.0f };
+    XMFLOAT4 color_ = defaultColor_;
+
 public:
     //カラーセット
     void SetColor(const XMFLOAT4& color) { color_ = color; }
