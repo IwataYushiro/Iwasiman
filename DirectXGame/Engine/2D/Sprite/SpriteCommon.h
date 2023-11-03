@@ -30,9 +30,9 @@ public://構造体、列挙体
 	//ルートパラメータインデックス
 	enum RootParameterIndex
 	{
-		RPI_ConstBuff0 = 0,
-		RPI_TexBuff0 = 1,
-		RPI_ConstBuff1 = 2,
+		RPI_ConstBuffMaterial = 0,
+		RPI_TexBuff = 1,
+		RPI_ConstBuffTransform = 2,
 		RPI_Num = 3,
 	};
 

@@ -62,7 +62,7 @@ private://エイリアス
 
 public://定数
 	//ボーンインデックスの最大数
-	static const int MAX_BONE_INDICES = 4;
+	static const int32_t MAX_BONE_INDICES = 4;
 
 public://フレンド、サブクラス
 	//フレンドクラス
@@ -132,9 +132,11 @@ private://メンバ変数
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV_;
 	
 	//アンビエント係数
-	XMFLOAT3 ambient_ = { 1.0f,1.0f,1.0f };
+	const XMFLOAT3 presetAmbient_ = { 1.0f,1.0f,1.0f };//プリセット
+	XMFLOAT3 ambient_ = presetAmbient_;
 	//ディフューズ係数
-	XMFLOAT3 diffuse_ = { 1.0f,1.0f,1.0f };
+	const XMFLOAT3 presetDiffuse_ = { 1.0f,1.0f,1.0f };//プリセット
+	XMFLOAT3 diffuse_ = presetDiffuse_;
 	//テクスチャメタデータ
 	TexMetadata metadata_ = {};
 	//スクラッチイメージ

@@ -23,7 +23,8 @@ void ModelFbx::Draw(ID3D12GraphicsCommandList* cmdList)
 	assert(cmdList);
 
 	// 頂点バッファの設定
-	cmdList->IASetVertexBuffers(0, 1, &vbView_);
+	const UINT viewsNum = 1;
+	cmdList->IASetVertexBuffers(0, viewsNum, &vbView_);
 	// インデックスバッファの設定
 	cmdList->IASetIndexBuffer(&ibView_);
 
@@ -32,11 +33,13 @@ void ModelFbx::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(1,
+	const int32_t texBuffSRV = 1;
+	cmdList->SetGraphicsRootDescriptorTable(texBuffSRV,
 		descHeapSRV_->GetGPUDescriptorHandleForHeapStart());
 	
 	// 描画コマンド
-	cmdList->DrawIndexedInstanced((UINT)indices_.size(), 1, 0, 0, 0);
+	const UINT instanceCount = 1;
+	cmdList->DrawIndexedInstanced((UINT)indices_.size(), instanceCount, 0, 0, 0);
 
 }
 
@@ -67,7 +70,8 @@ void ModelFbx::CreateBuffers(ID3D12Device* device)
 	// 頂点バッファビューの作成
 	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
 	vbView_.SizeInBytes = sizeVB;
-	vbView_.StrideInBytes = sizeof(vertices_[0]);
+	const int32_t startVerticesNum = 0;
+	vbView_.StrideInBytes = sizeof(vertices_[startVerticesNum]);
 
 	//頂点インデックス全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices_.size());
@@ -131,11 +135,12 @@ void ModelFbx::CreateBuffers(ID3D12Device* device)
 		(UINT)img->slicePitch // 1枚サイズ
 	);
 
-	// SRV用のデスクリプタヒープを生成	
+	// SRV用のデスクリプタヒープを生成
+	const UINT descriptorNum = 1;
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダから見えるように
-	descHeapDesc.NumDescriptors = 1; // シェーダーリソースビュー1つ
+	descHeapDesc.NumDescriptors = descriptorNum; // シェーダーリソースビュー1つ
 	result = device->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeapSRV_));//生成
 	
 	// SRVのシェーダリソースビュー作成
@@ -145,7 +150,8 @@ void ModelFbx::CreateBuffers(ID3D12Device* device)
 	srvDesc.Format = resDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = 1;
+	const UINT tex2DMipLevelNum = 1;
+	srvDesc.Texture2D.MipLevels = tex2DMipLevelNum;
 
 	device->CreateShaderResourceView(texbuff_.Get(), //ビューと関連付けるバッファ
 		&srvDesc, //テクスチャ設定情報

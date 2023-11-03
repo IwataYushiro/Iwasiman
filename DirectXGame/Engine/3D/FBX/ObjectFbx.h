@@ -31,6 +31,15 @@ public://定数
 	//ボーンの最大数
 	static const int MAX_BONES = 32;
 
+	//ルートパラメータインデックス
+	enum RootParameterIndex
+	{
+		RPI_ConstBuffTransform = 0,
+		RPI_TexBuffSRV = 1,
+		RPI_ConstBuffSkin = 2,
+		RPI_Num = 3,
+	};
+
 public://サブクラス
 	
 	//定数バッファ構造体(座標変換行列)
@@ -112,7 +121,7 @@ protected://メンバ変数
 	FbxTime currentTime_;
 	//アニメーション再生中フラグ
 	bool isPlayAnimation_ = false;
-
+	
 	//カメラ
 	Camera* camera_ = nullptr;
 public://アクセッサ置き場

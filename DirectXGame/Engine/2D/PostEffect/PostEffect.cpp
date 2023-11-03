@@ -502,25 +502,25 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 
 
 	//ルートパラメータ設定
-	const UINT CBDM_Register = 0;//マテリアル定数バッファ
-	const UINT CBDT_Register = 1;//座標定数バッファ
+	const UINT CBDM_Register = 0;//マテリアル定数バッファのレジスタ
+	const UINT CBDT_Register = 1;//座標定数バッファのレジスタ
 
 	D3D12_ROOT_PARAMETER rootParams[RPI_Num] = {};
 	//定数バッファ0番
-	rootParams[RPI_ConstBuff0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
-	rootParams[RPI_ConstBuff0].Descriptor.ShaderRegister = CBDM_Register;						//定数バッファ番号
-	rootParams[RPI_ConstBuff0].Descriptor.RegisterSpace = 0;							//デフォルト値
-	rootParams[RPI_ConstBuff0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
+	rootParams[RPI_ConstBuffMaterial].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
+	rootParams[RPI_ConstBuffMaterial].Descriptor.ShaderRegister = CBDM_Register;						//定数バッファ番号
+	rootParams[RPI_ConstBuffMaterial].Descriptor.RegisterSpace = 0;							//デフォルト値
+	rootParams[RPI_ConstBuffMaterial].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
 	//テクスチャレジスタ0番
 	rootParams[RPI_TexBuff0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
 	rootParams[RPI_TexBuff0].DescriptorTable.pDescriptorRanges = &descriptorRange[DRN_SRV0];		//デスクリプタレンジ
 	rootParams[RPI_TexBuff0].DescriptorTable.NumDescriptorRanges = descriptorNum;						//デスクリプタレンジ数
 	rootParams[RPI_TexBuff0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//全てのシェーダから見える
 	//定数バッファ1番
-	rootParams[RPI_ConstBuff1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
-	rootParams[RPI_ConstBuff1].Descriptor.ShaderRegister = CBDT_Register;						//定数バッファ番号
-	rootParams[RPI_ConstBuff1].Descriptor.RegisterSpace = 0;							//デフォルト値
-	rootParams[RPI_ConstBuff1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
+	rootParams[RPI_ConstBuffTransform].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
+	rootParams[RPI_ConstBuffTransform].Descriptor.ShaderRegister = CBDT_Register;						//定数バッファ番号
+	rootParams[RPI_ConstBuffTransform].Descriptor.RegisterSpace = 0;							//デフォルト値
+	rootParams[RPI_ConstBuffTransform].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
 	//テクスチャレジスタ1番
 	rootParams[RPI_TexBuff1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;			//種類
 	rootParams[RPI_TexBuff1].DescriptorTable.pDescriptorRanges = &descriptorRange[DRN_SRV1];				//デスクリプタレンジ
@@ -585,9 +585,9 @@ void PostEffect::Draw([[maybe_unused]] ID3D12GraphicsCommandList* cmdList)
 	spCommon_->GetDxCommon()->GetCommandList()->IASetVertexBuffers(0, viewsNum, &vbView_);
 
 	//定数バッファビュー(CBVの設定コマンド)
-	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(RPI_ConstBuff0, constBuffMaterialPost_->GetGPUVirtualAddress());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(RPI_ConstBuffMaterial, constBuffMaterialPost_->GetGPUVirtualAddress());
 
-	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(RPI_ConstBuff1, constBuffTransformPost_->GetGPUVirtualAddress());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(RPI_ConstBuffTransform, constBuffTransformPost_->GetGPUVirtualAddress());
 	//描画コマンド
 	const UINT instanceCount = 1;
 	spCommon_->GetDxCommon()->GetCommandList()->DrawInstanced(_countof(verticesPost_), instanceCount, 0, 0);

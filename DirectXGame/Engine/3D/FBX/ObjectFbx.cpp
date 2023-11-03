@@ -65,7 +65,7 @@ ObjectFbx* ObjectFbx::Create()
 		return nullptr;
 	}
 	//スケールをセット
-	float scale_val = 1.0f;
+	const float scale_val = 1.0f;
 	objectFbx->scale_ = { scale_val,scale_val ,scale_val };
 	// 初期化
 	if (!objectFbx->Initialize()) {
@@ -187,9 +187,15 @@ void ObjectFbx::CreateGraphicsPipeline()
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
-	// ブレンドステートの設定　37
-	gpipeline.BlendState.RenderTarget[0] = blenddesc;
-	gpipeline.BlendState.RenderTarget[1] = blenddesc;
+	// ブレンドステートの設定
+	enum RenderTargetNum
+	{
+		RTN_RenderTarget0 = 0,
+		RTN_RenderTarget1 = 1,
+		RTN_Num = 2,//配列用、2個ある
+	};
+	gpipeline.BlendState.RenderTarget[RTN_RenderTarget0] = blenddesc;
+	gpipeline.BlendState.RenderTarget[RTN_RenderTarget1] = blenddesc;
 
 	// 深度バッファのフォーマット
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
@@ -201,30 +207,35 @@ void ObjectFbx::CreateGraphicsPipeline()
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-	gpipeline.NumRenderTargets = 2;    // 描画対象は1つ37 1->2
-	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA37
-	gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA37
-	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+	gpipeline.NumRenderTargets = RTN_Num;    // 描画対象は1つ37 1->2
+	gpipeline.RTVFormats[RTN_RenderTarget0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA37
+	gpipeline.RTVFormats[RTN_RenderTarget1] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA37
+	const UINT samplingCountNum = 1;
+	gpipeline.SampleDesc.Count = samplingCountNum; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
+	const UINT descriptorNum = 1;
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
-	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
+	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, descriptorNum, 0); // t0 レジスタ
 
+	const UINT CBDM_Register = 0;//マテリアル定数バッファのレジスタ
+	const UINT CBDS_Register = 3;//スキン定数バッファのレジスタ
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[3]{};
+	CD3DX12_ROOT_PARAMETER rootparams[RPI_Num]{};
 	// CBV（座標変換行列用）
-	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[RPI_ConstBuffTransform].InitAsConstantBufferView(CBDM_Register, 0, D3D12_SHADER_VISIBILITY_ALL);
 	// SRV（テクスチャ）
-	rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[RPI_TexBuffSRV].InitAsDescriptorTable(descriptorNum, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
 	// CBV（スキニング用）
-	rootparams[2].InitAsConstantBufferView(3, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[RPI_ConstBuffSkin].InitAsConstantBufferView(CBDS_Register, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
 	// ルートシグネチャの設定
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
-	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	const UINT staticSamplersNum = 1;
+	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, staticSamplersNum, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob;
 	// バージョン自動判定のシリアライズ
@@ -247,7 +258,7 @@ bool ObjectFbx::Initialize()
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	
-	CD3DX12_RESOURCE_DESC bufferTransform = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
+	const CD3DX12_RESOURCE_DESC bufferTransform = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataTransform) + 0xff) & ~0xff);
 	// 定数バッファの生成
 	//座標系
 	result = device_->CreateCommittedResource(
@@ -258,7 +269,7 @@ bool ObjectFbx::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBufferTransform_));
 
-	CD3DX12_RESOURCE_DESC bufferDataSkin = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
+	const CD3DX12_RESOURCE_DESC bufferDataSkin = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataSkin) + 0xff) & ~0xff);
 	//スキニング
 	result = device_->CreateCommittedResource(
 		&heapProps, // アップロード可能
@@ -268,7 +279,8 @@ bool ObjectFbx::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBufferSkin_));
 
-	frameTime_.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
+	const int32_t startFlame = 1;
+	frameTime_.SetTime(0, 0, 0, startFlame, 0, FbxTime::EMode::eFrames60);
 	//定数バッファへデータを転送
 	ConstBufferDataSkin* constMapSkin = nullptr;
 	result = constBufferSkin_->Map(0, nullptr, (void**)&constMapSkin);
@@ -361,8 +373,8 @@ void ObjectFbx::Draw()
 		return;
 	}
 	//定数バッファビューセット
-	cmdList_->SetGraphicsRootConstantBufferView(0, constBufferTransform_->GetGPUVirtualAddress());
-	cmdList_->SetGraphicsRootConstantBufferView(2, constBufferSkin_->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(RPI_ConstBuffTransform, constBufferTransform_->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(RPI_ConstBuffSkin, constBufferSkin_->GetGPUVirtualAddress());
 
 	//モデル描画
 	modelF_->Draw(cmdList_);

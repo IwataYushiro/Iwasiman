@@ -169,25 +169,25 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 	
 	//ルートパラメータ設定
-	const UINT CBDM_Register= 0;//マテリアル定数バッファ
-	const UINT CBDT_Register= 1;//座標定数バッファ
+	const UINT CBDM_Register= 0;//マテリアル定数バッファのレジスタ
+	const UINT CBDT_Register= 1;//座標定数バッファのレジスタ
 
 	D3D12_ROOT_PARAMETER rootParams[RPI_Num] = {};
 	//定数バッファ0番
-	rootParams[RPI_ConstBuff0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
-	rootParams[RPI_ConstBuff0].Descriptor.ShaderRegister = CBDM_Register;						//定数バッファ番号
-	rootParams[RPI_ConstBuff0].Descriptor.RegisterSpace = 0;							//デフォルト値
-	rootParams[RPI_ConstBuff0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
+	rootParams[RPI_ConstBuffMaterial].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
+	rootParams[RPI_ConstBuffMaterial].Descriptor.ShaderRegister = CBDM_Register;						//定数バッファ番号
+	rootParams[RPI_ConstBuffMaterial].Descriptor.RegisterSpace = 0;							//デフォルト値
+	rootParams[RPI_ConstBuffMaterial].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
 	//テクスチャレジスタ0番
-	rootParams[RPI_TexBuff0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
-	rootParams[RPI_TexBuff0].DescriptorTable.pDescriptorRanges = &descriptorRange;			//デスクリプタレンジ
-	rootParams[RPI_TexBuff0].DescriptorTable.NumDescriptorRanges = descriptorNum;						//デスクリプタレンジ数
-	rootParams[RPI_TexBuff0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//全てのシェーダから見える
+	rootParams[RPI_TexBuff].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
+	rootParams[RPI_TexBuff].DescriptorTable.pDescriptorRanges = &descriptorRange;			//デスクリプタレンジ
+	rootParams[RPI_TexBuff].DescriptorTable.NumDescriptorRanges = descriptorNum;						//デスクリプタレンジ数
+	rootParams[RPI_TexBuff].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//全てのシェーダから見える
 	//定数バッファ1番
-	rootParams[RPI_ConstBuff1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
-	rootParams[RPI_ConstBuff1].Descriptor.ShaderRegister = CBDT_Register;						//定数バッファ番号
-	rootParams[RPI_ConstBuff1].Descriptor.RegisterSpace = 0;							//デフォルト値
-	rootParams[RPI_ConstBuff1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
+	rootParams[RPI_ConstBuffTransform].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
+	rootParams[RPI_ConstBuffTransform].Descriptor.ShaderRegister = CBDT_Register;						//定数バッファ番号
+	rootParams[RPI_ConstBuffTransform].Descriptor.RegisterSpace = 0;							//デフォルト値
+	rootParams[RPI_ConstBuffTransform].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
 	//テクスチャサンプラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
 	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;					//横繰り返し(タイリング)
@@ -359,5 +359,5 @@ void SpriteCommon::SetTextureCommands(uint32_t index)
 	srvGpuHandle_.ptr += index * incrementSize_;
 
 	// SRVヒープの先頭にあるSRVルートパラメータ1番に設定5
-	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(RPI_TexBuff0, srvGpuHandle_);
+	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(RPI_TexBuff, srvGpuHandle_);
 }

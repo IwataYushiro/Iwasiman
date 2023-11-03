@@ -1,5 +1,6 @@
 ﻿#include "FbxLoader.h"
 #include <cassert>
+#include "XYZ.h"
 
 using namespace DirectX;
 
@@ -24,10 +25,10 @@ FbxLoader* FbxLoader::GetInstance()
 void FbxLoader::ConvertMatrixFromFBX(DirectX::XMMATRIX* dst, const FbxAMatrix& src)
 {
 	//行
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < XYZW_Num; i++)
 	{
 		//列
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < XYZW_Num; j++)
 		{
 			//1要素をコピー
 			dst->r[i].m128_f32[j] = (float)src.Get(i, j);
@@ -69,8 +70,9 @@ ModelFbx* FbxLoader::LoadModelFromFile(const string& modelName)
 	const string filename = modelName + ".fbx";
 	//連結してフルパスを得る
 	const string fullPath = directoryPath + filename;
+	const int32_t fileFormat = -1;
 	//ファイル名を指定してFBXファイルを読み込む
-	if (!fbxImporter_->Initialize(fullPath.c_str(), -1,
+	if (!fbxImporter_->Initialize(fullPath.c_str(), fileFormat,
 		fbxManager_->GetIOSettings()))
 	{
 		assert(0);
@@ -112,14 +114,18 @@ void FbxLoader::ParseNodeRecursive(ModelFbx* modelF, FbxNode* fbxNode, Node* par
 	FbxDouble3 rotation = fbxNode->LclRotation.Get();
 	FbxDouble3 scaling = fbxNode->LclScaling.Get();
 	FbxDouble3 translation = fbxNode->LclTranslation.Get();
+
+	const float rotW = 0.0f;
+	const float scaleW = 0.0f;
+	const float positionW = 1.0f;
 	// 形式変換して代入
-	node.rotation = { (float)rotation[0],(float)rotation[1],(float)rotation[2],0.0f };
-	node.scaling = { (float)scaling[0],(float)scaling[1],(float)scaling[2],0.0f };
-	node.translation = { (float)translation[0],(float)translation[1],(float)translation[2],1.0f };
+	node.rotation = { (float)rotation[XYZ_X],(float)rotation[XYZ_Y],(float)rotation[XYZ_Z],rotW };
+	node.scaling = { (float)scaling[XYZ_X],(float)scaling[XYZ_Y],(float)scaling[XYZ_Z],scaleW};
+	node.translation = { (float)translation[XYZ_X],(float)translation[XYZ_Y],(float)translation[XYZ_Z],positionW };
 	// 回転角を度からラジアンに
-	node.rotation.m128_f32[0] = XMConvertToRadians(node.rotation.m128_f32[0]);
-	node.rotation.m128_f32[1] = XMConvertToRadians(node.rotation.m128_f32[1]);
-	node.rotation.m128_f32[2] = XMConvertToRadians(node.rotation.m128_f32[2]);
+	node.rotation.m128_f32[XYZ_X] = XMConvertToRadians(node.rotation.m128_f32[XYZ_X]);
+	node.rotation.m128_f32[XYZ_Y] = XMConvertToRadians(node.rotation.m128_f32[XYZ_Y]);
+	node.rotation.m128_f32[XYZ_Z] = XMConvertToRadians(node.rotation.m128_f32[XYZ_Z]);
 	// 三種行列の計算
 	XMMATRIX matScale, matRot, matTrans;
 	matScale = XMMatrixScalingFromVector(node.scaling);
@@ -190,9 +196,9 @@ void FbxLoader::ParseMeshVertices(ModelFbx* modelF, FbxMesh* fbxMesh)
 	{
 		ModelFbx::VertexPosNormalUvSkin& vertex = vertices[i];
 		//座標のコピー
-		vertex.pos.x = (float)pCoord[i][0];
-		vertex.pos.y = (float)pCoord[i][1];
-		vertex.pos.z = (float)pCoord[i][2];
+		vertex.pos.x = (float)pCoord[i][XYZ_X];
+		vertex.pos.y = (float)pCoord[i][XYZ_Y];
+		vertex.pos.z = (float)pCoord[i][XYZ_Z];
 	}
 }
 
@@ -229,9 +235,9 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 			FbxVector4 normal;
 			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
 			{
-				vertex.normal.x = static_cast<float>(normal[0]);
-				vertex.normal.y = static_cast<float>(normal[1]);
-				vertex.normal.z = static_cast<float>(normal[2]);
+				vertex.normal.x = static_cast<float>(normal[XYZ_X]);
+				vertex.normal.y = static_cast<float>(normal[XYZ_Y]);
+				vertex.normal.z = static_cast<float>(normal[XYZ_Z]);
 			}
 			//テクスチャUV読み込み
 			if (textureCount > 0)
@@ -240,15 +246,16 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 				bool lUnmappedUV;
 				//0番決め打ちで代入
 				if (fbxMesh->GetPolygonVertexUV(i, j,
-					uvNames[0], uvs, lUnmappedUV))
+					uvNames[XY_X], uvs, lUnmappedUV))
 				{
-					vertex.uv.x = static_cast<float>(uvs[0]);
-					vertex.uv.y = static_cast<float>(uvs[1]);
+					vertex.uv.x = static_cast<float>(uvs[XY_X]);
+					vertex.uv.y = static_cast<float>(uvs[XY_Y]);
 				}
 			}
 			//インデックス配列に頂点インデックスを追加
 			//3頂点目までなら
-			if (j < 3)
+			const int inPoligonVertexTriangle = 3;
+			if (j < inPoligonVertexTriangle)
 			{
 				//1点追加し、他の2点と三角形を構築
 				indices.push_back(static_cast<unsigned short>(index));
@@ -256,11 +263,17 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 			//4頂点目
 			else
 			{
+				//インデックス参照用
+				enum TriangleIndexNum
+				{
+					TIN_Index2 = 1,
+					TIN_Index0 = 3,
+				};
 				//3点追加
 				//四角形の0,1,2,3の内 2,3,0で三角形を構築する
-				int index2 = indices[indices.size() - 1];
+				int index2 = indices[indices.size() - TIN_Index2];
 				int index3 = static_cast<unsigned short>(index);
-				int index0 = indices[indices.size() - 3];
+				int index0 = indices[indices.size() - TIN_Index0];
 				indices.push_back(static_cast<unsigned short>(index2));
 				indices.push_back(static_cast<unsigned short>(index3));
 				indices.push_back(static_cast<unsigned short>(index0));
@@ -288,14 +301,14 @@ void FbxLoader::ParseMaterial(ModelFbx* modelF, FbxNode* fbxNode)
 				static_cast<FbxSurfaceLambert*>(material);
 				//アンビエント係数
 				FbxPropertyT<FbxDouble3> ambient = lambert->Ambient;
-				modelF->ambient_.x = (float)ambient.Get()[0];
-				modelF->ambient_.y = (float)ambient.Get()[1];
-				modelF->ambient_.z = (float)ambient.Get()[2];
+				modelF->ambient_.x = (float)ambient.Get()[XYZ_X];
+				modelF->ambient_.y = (float)ambient.Get()[XYZ_Y];
+				modelF->ambient_.z = (float)ambient.Get()[XYZ_Z];
 				//ディフューズ係数
 				FbxPropertyT<FbxDouble3> diffuse = lambert->Diffuse;
-				modelF->diffuse_.x = (float)diffuse.Get()[0];
-				modelF->diffuse_.y = (float)diffuse.Get()[1];
-				modelF->diffuse_.z = (float)diffuse.Get()[2];
+				modelF->diffuse_.x = (float)diffuse.Get()[XYZ_X];
+				modelF->diffuse_.y = (float)diffuse.Get()[XYZ_Y];
+				modelF->diffuse_.z = (float)diffuse.Get()[XYZ_Z];
 			}
 			//ディフューズテクスチャを取り出す
 			const FbxProperty diffuseProperty =
@@ -331,8 +344,10 @@ void FbxLoader::LoadTexture(ModelFbx* modelF, const std::string& fullpath)
 	TexMetadata& metadata = modelF->metadata_;
 	ScratchImage& scratchImg = modelF->scratchImg_;
 	//ユニコード文字列に変換
-	wchar_t wfilePath[128];
-	MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), -1, wfilePath, _countof(wfilePath));
+	const int maxPathNum = 128;
+	wchar_t wfilePath[maxPathNum];
+	const int cbMultiByte = -1;
+	MultiByteToWideChar(CP_ACP, 0, fullpath.c_str(), cbMultiByte, wfilePath, _countof(wfilePath));
 	result = LoadFromWICFile(wfilePath, WIC_FLAGS_NONE, &metadata, scratchImg);
 	if (FAILED(result))
 	{
@@ -347,12 +362,20 @@ void FbxLoader::ParseSkin(ModelFbx* modelF, FbxMesh* fbxMesh)
 	//スキニング情報が無ければ終了
 	if (fbxSkin == nullptr)
 	{
+		//インデックスと重さの初期値
+		struct DefaultBoneIndexWeight
+		{
+			const int startIndex = 0;
+			const int index = 0;
+			const float weight = 1.0f;
+		};
+		DefaultBoneIndexWeight defaultBIW;
 		//各頂点について処理
 		for (int i = 0; i < modelF->vertices_.size(); i++)
 		{
 			//最初のボーンの影響を100％にする
-			modelF->vertices_[i].boneIndex[0] = 0;
-			modelF->vertices_[i].boneWeight[0] = 1.0f;
+			modelF->vertices_[i].boneIndex[defaultBIW.startIndex] = defaultBIW.index;
+			modelF->vertices_[i].boneWeight[defaultBIW.startIndex] = defaultBIW.weight;
 		}
 		return;
 	}
@@ -449,7 +472,10 @@ void FbxLoader::ParseSkin(ModelFbx* modelF, FbxMesh* fbxMesh)
 					weight += vertices[i].boneWeight[j];
 				}
 				//合計で1.0f(100％)になるように調整
-				vertices[i].boneWeight[0] = 1.0f - weight;
+				const int32_t index0 = 0;
+				const float weightCalculation = 1.0f - weight;
+
+				vertices[i].boneWeight[index0] = weightCalculation;
 				break;
 			}
 		}
@@ -460,17 +486,18 @@ void FbxLoader::ParseSkin(ModelFbx* modelF, FbxMesh* fbxMesh)
 std::string FbxLoader::ExtractFileName(const std::string path)
 {
 	size_t pos1;
+	const int32_t offsetNum = 1;
 	//区切り文字‘\\’が出てくる一番最後の文字を検索
 	pos1 = path.rfind('\\');
 	if (pos1 != string::npos)
 	{
-		return path.substr(pos1 + 1, path.size() - pos1 - 1);
+		return path.substr(pos1 + offsetNum, path.size() - pos1 - offsetNum);
 	}
 	//区切り文字‘/’が出てくる一番最後の文字を検索
 	pos1 = path.rfind('/');
 	if (pos1 != string::npos)
 	{
-		return path.substr(pos1 + 1, path.size() - pos1 - 1);
+		return path.substr(pos1 + offsetNum, path.size() - pos1 - offsetNum);
 	}
 	return path;
 }
