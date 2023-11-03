@@ -1,5 +1,6 @@
 #include "MeshCollider.h"
 #include "Collision.h"
+#include "XYZ.h"
 
 using namespace DirectX;
 
@@ -28,21 +29,31 @@ void MeshCollider::ConstructTriangles(Model* model)
 		const std::vector<unsigned short>& indices = mesh->GetIndices();
 		//インデックスは三角形の数ｘ3個あるので
 		//そこからメッシュ内の三角形の数を逆算
-		size_t triangleNum = indices.size() / 3;
+		const int32_t triangleIndex = 3;
+		size_t triangleNum = indices.size() / triangleIndex;
 		//現在のメッシュの三角形の数だけ三角形リストにスペースを追加
 		triangles_.resize(triangles_.size() + triangleNum);
+		//インデックス参照用
+		enum TriangleIndexNum
+		{
+			TIN_Index0=0,
+			TIN_Index1 = 1,
+			TIN_Index2 = 2,
+		};
+		//W座標のマジックナンバーを修正する用の定数
+		const float trianglePositionW = 1.0f;
 		//全三角形について順に処理する
 		for (int i = 0; i < triangleNum; i++)
 		{
 			//今から計算する三角形の参照
 			Triangle& tri = triangles_[start + i];
-			int idx0 = indices[i * 3 + 0];
-			int idx1 = indices[i * 3 + 1];
-			int idx2 = indices[i * 3 + 2];
+			int idx0 = indices[i * triangleIndex + TIN_Index0];
+			int idx1 = indices[i * triangleIndex + TIN_Index1];
+			int idx2 = indices[i * triangleIndex + TIN_Index2];
 			//三角形の3頂点の座標を代入
-			tri.p0 = { vertices[idx0].pos.x,vertices[idx0].pos.y,vertices[idx0].pos.z,1.0f };
-			tri.p1 = { vertices[idx1].pos.x,vertices[idx1].pos.y,vertices[idx1].pos.z,1.0f };
-			tri.p2 = { vertices[idx2].pos.x,vertices[idx2].pos.y,vertices[idx2].pos.z,1.0f };
+			tri.p0 = { vertices[idx0].pos.x,vertices[idx0].pos.y,vertices[idx0].pos.z,trianglePositionW };
+			tri.p1 = { vertices[idx1].pos.x,vertices[idx1].pos.y,vertices[idx1].pos.z,trianglePositionW };
+			tri.p2 = { vertices[idx2].pos.x,vertices[idx2].pos.y,vertices[idx2].pos.z,trianglePositionW };
 			//3頂点から法線を計算
 			tri.ComputeNormal();
 		}
@@ -66,7 +77,7 @@ bool MeshCollider::CheckCollisionSphere(const Sphere& sphere,
 	//オブジェクトのローカル座標形での球を得る(半径はXスケールを参照)
 	Sphere localSphere;
 	localSphere.center = XMVector3Transform(sphere.center, invMatWorld_);
-	localSphere.radius *= XMVector3Length(invMatWorld_.r[0]).m128_f32[0];
+	localSphere.radius *= XMVector3Length(invMatWorld_.r[XYZW_X]).m128_f32[XYZW_X];
 
 	//ローカル座標系で交差チェック
 	std::vector<Triangle>::const_iterator it = triangles_.cbegin();
@@ -120,7 +131,7 @@ bool MeshCollider::CheckCollisionRay(const Ray& ray, float* distance, DirectX::X
 			{
 				//交点とレイ始点の距離を計算
 				XMVECTOR sub = tempInter - ray.start;
-				*distance = XMVector3Dot(sub, ray.dir).m128_f32[0];
+				*distance = XMVector3Dot(sub, ray.dir).m128_f32[XYZW_X];
 			}
 			if (inter)
 			{

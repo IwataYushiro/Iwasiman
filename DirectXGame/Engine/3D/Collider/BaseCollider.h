@@ -60,7 +60,9 @@ protected:
 	//形状タイプ
 	CollisionShapeType shapeType_ = SHAPE_UNKNOWN;
 	//当たり判定属性
-	unsigned short attribute_ = 0b1111111111111111;
+	const unsigned short defaultAttribute_= 0b1111111111111111;
+	unsigned short attribute_ = defaultAttribute_;
 	//当たり判定サブ属性
-	unsigned short subAttribute_ = 0b1111111111111111;
+	const unsigned short defaultSubAttribute_ = 0b1111111111111111;
+	unsigned short subAttribute_ = defaultSubAttribute_;
 };

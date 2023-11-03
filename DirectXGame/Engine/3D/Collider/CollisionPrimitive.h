@@ -1,6 +1,6 @@
 #pragma once
 #include <DirectXMath.h>
-
+#include "XYZ.h"
 /*
 
 *	CollisionPrimitive.h
@@ -11,25 +11,30 @@
 //AABB(箱)
 struct AABB
 {
-	DirectX::XMVECTOR center = { 0.0f,0.0f,0.0f,1.0f };
-	float radius[3];
+	const DirectX::XMVECTOR presetCenter = { 0.0f,0.0f,0.0f,1.0f };//プリセット
+	DirectX::XMVECTOR center = presetCenter;
+	float radius[XYZ_Num];
 };
 
 //球
 struct Sphere
 {
 	//中心座標
-	DirectX::XMVECTOR center = { 0.0f,0.0f,0.0f,1.0f };
+	const DirectX::XMVECTOR presetCenter = { 0.0f,0.0f,0.0f,1.0f };//プリセット
+	DirectX::XMVECTOR center = presetCenter;
 	//半径
-	float radius = 1.0f;
+	const float presetRadius = 1.0f;//プリセット
+	float radius = presetRadius;
 };
 //平面
 struct Plane
 {
 	//法線ベクトル
-	DirectX::XMVECTOR normal = { 0.0f,1.0f,0.0f,0.0f };
+	const DirectX::XMVECTOR presetNormal = { 0.0f,1.0f,0.0f,0.0f };//プリセット
+	DirectX::XMVECTOR normal = presetNormal;
 	//原点からの座標
-	float distance = 0.0f;
+	const float presetDistance = 0.0f;//プリセット
+	float distance = presetDistance;
 };
 //三角形
 struct Triangle
@@ -49,7 +54,9 @@ struct Triangle
 struct Ray
 {
 	//始点座標
-	DirectX::XMVECTOR	start = { 0.0f,0.0f,0.0f,1.0f };
+	const DirectX::XMVECTOR	presetStart = { 0.0f,0.0f,0.0f,1.0f };//プリセット
+	DirectX::XMVECTOR	start = presetStart;
 	//方向
-	DirectX::XMVECTOR	dir = { 1.0f,0.0f,0.0f,0.0f };
+	const DirectX::XMVECTOR	presetDir = { 1.0f,0.0f,0.0f,0.0f };//プリセット
+	DirectX::XMVECTOR	dir = presetDir;
 };

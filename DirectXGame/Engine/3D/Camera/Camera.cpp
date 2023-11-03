@@ -3,6 +3,7 @@
 #include "WinApp.h"
 #include "Input.h"
 #include "ImGuiManager.h"
+#include "XYZ.h"
 
 using namespace DirectX;
 
@@ -34,11 +35,11 @@ Camera::~Camera()
 void Camera::Reset()
 {
 	// 視点座標
-	eye_ = { -10.0f, 1.0f, -100.0f };
+	eye_ = presetEye_;
 	// 注視点座標
-	target_ = { -10.0f,0.0f,0.0f };
+	target_ = presetTarget_;
 	// 上方向ベクトル
-	up_ = { 0.0f,1.0f,0.0f };
+	up_ = presetUp_;
 
 	// ビュー行列の生成
 	UpdateViewMatrix();
@@ -153,14 +154,18 @@ void Camera::UpdateViewMatrix()
 	XMVECTOR cameraAxisY;
 	//Y軸はZ軸→X軸の外積で決まる
 	cameraAxisY = XMVector3Cross(cameraAxisZ, cameraAxisX);
-
+	
+	//W軸という名の固定位置
+	const XMVECTOR cameraAxisW = { 0.0f, 0.0f, 0.0f, 1.0f };
+	
 	//カメラ回転行列
 	XMMATRIX matCameraRot;
+	
 	//カメラ座標系→ワールド座標系の変換行列
-	matCameraRot.r[0] = cameraAxisX;
-	matCameraRot.r[1] = cameraAxisY;
-	matCameraRot.r[2] = cameraAxisZ;
-	matCameraRot.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	matCameraRot.r[XYZW_X] = cameraAxisX;
+	matCameraRot.r[XYZW_Y] = cameraAxisY;
+	matCameraRot.r[XYZW_Z] = cameraAxisZ;
+	matCameraRot.r[XYZW_W] = cameraAxisW;
 
 	//転置により逆行列(逆回転)を計算
 	matView_ = XMMatrixTranspose(matCameraRot);
@@ -171,23 +176,25 @@ void Camera::UpdateViewMatrix()
 	XMVECTOR tX = XMVector3Dot(cameraAxisX, reverseEyePosition);	//X成分
 	XMVECTOR tY = XMVector3Dot(cameraAxisY, reverseEyePosition);	//Y成分
 	XMVECTOR tZ = XMVector3Dot(cameraAxisZ, reverseEyePosition);	//Z成分
+	const float translationW = 1.0f;
 	//一つのベクトルにまとめる
-	XMVECTOR translation = XMVectorSet(tX.m128_f32[0], tY.m128_f32[1], tZ.m128_f32[2], 1.0f);
+	XMVECTOR translation = XMVectorSet(tX.m128_f32[XYZW_X], tY.m128_f32[XYZW_Y],
+		tZ.m128_f32[XYZW_Z], translationW);
 
 	//ビュー行列に平行移動成分を設定
-	matView_.r[3] = translation;
+	matView_.r[XYZW_W] = translation;
 
 #pragma region 全方向ビルボード行列の計算
 	//ビルボード行列
-	matBillboard_.r[0] = cameraAxisX;
-	matBillboard_.r[1] = cameraAxisY;
-	matBillboard_.r[2] = cameraAxisZ;
-	matBillboard_.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	matBillboard_.r[XYZW_X] = cameraAxisX;
+	matBillboard_.r[XYZW_Y] = cameraAxisY;
+	matBillboard_.r[XYZW_Z] = cameraAxisZ;
+	matBillboard_.r[XYZW_W] = cameraAxisW;
 #pragma endregion
 
 #pragma region Y軸回りビルボード行列の計算
-	//カメラX,Y,Z軸
-	XMVECTOR yBillCameraAxisX, yBillCameraAxisY, yBillCameraAxisZ;
+	//カメラX,Y,Z,W軸
+	XMVECTOR yBillCameraAxisX, yBillCameraAxisY, yBillCameraAxisZ, yBillCameraAxisW;
 
 	//X軸は共通
 	yBillCameraAxisX = cameraAxisX;
@@ -195,22 +202,31 @@ void Camera::UpdateViewMatrix()
 	yBillCameraAxisY = XMVector3Normalize(upVector);
 	//Z軸はX軸→Y軸の外積で決まる
 	yBillCameraAxisZ = XMVector3Cross(yBillCameraAxisX, yBillCameraAxisY);
-
+	//W軸はそもそも固定なので共通(マジックナンバーも消えてお得ネ)
+	yBillCameraAxisW = cameraAxisW;
 	//Y軸回りビルボード行列
-	matBillboardY_.r[0] = yBillCameraAxisX;
-	matBillboardY_.r[1] = yBillCameraAxisY;
-	matBillboardY_.r[2] = yBillCameraAxisZ;
-	matBillboardY_.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	matBillboardY_.r[XYZW_X] = yBillCameraAxisX;
+	matBillboardY_.r[XYZW_Y] = yBillCameraAxisY;
+	matBillboardY_.r[XYZW_Z] = yBillCameraAxisZ;
+	matBillboardY_.r[XYZW_W] = yBillCameraAxisW;
 
 #pragma endregion
 
 }
 void Camera::UpdateProjectionMatrix()
 {
+	struct ProjectionPreset
+	{
+		const float degree = 45.0f;
+		const float fovAngleY = XMConvertToRadians(degree);
+		const float aspectRatio = (float)WinApp::WINDOW_WIDTH / WinApp::WINDOW_HEIGHT;
+		const float nearZ = 0.1f;
+		const float farZ = 1000.0f;
+	};
+	ProjectionPreset projectionPreset;
 	matProjection_ = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(45.0f),
-		(float)WinApp::WINDOW_WIDTH / WinApp::WINDOW_HEIGHT,
-		0.1f, 1000.0f
+		projectionPreset.fovAngleY, projectionPreset.aspectRatio,
+		projectionPreset.nearZ, projectionPreset.farZ
 	);
 }
 void Camera::CameraMoveVector(const XMFLOAT3& move)
@@ -260,28 +276,62 @@ void Camera::DebugCamera(bool eyeTargetMix)
 	//ImGuiに渡す用の変数
 	float ieye[VECTOR3COUNT] = { eye_.x,eye_.y,eye_.z };
 	float itarget[VECTOR3COUNT] = { target_.x,target_.y,target_.z };
+	//スピード
+	struct CameraSpeed
+	{
+		const XMFLOAT3 eyeXPlus = { 1.0f,0.0f,0.0f };
+		const XMFLOAT3 eyeYPlus = { 0.0f,1.0f,0.0f };
+		const XMFLOAT3 eyeZPlus = { 0.0f,0.0f,1.0f };
+		const XMFLOAT3 eyeXMinus = { -1.0f,0.0f,0.0f };
+		const XMFLOAT3 eyeYMinus = { 0.0f,-1.0f,0.0f };
+		const XMFLOAT3 eyeZMinus = { 0.0f,0.0f,-1.0f };
+
+		const XMFLOAT3 targetXPlus = { 1.0f,0.0f,0.00001f };
+		const XMFLOAT3 targetYPlus = { 0.0f,1.0f,0.00001f };
+		const XMFLOAT3 targetZPlus = { 0.0f,0.0f,1.00001f };
+		const XMFLOAT3 targetXMinus = { -1.0f,0.0f,-0.00001f };
+		const XMFLOAT3 targetYMinus = { 0.0f,-1.0f,-0.00001f };
+		const XMFLOAT3 targetZMinus = { 0.0f,0.0f,-1.00001f };
+	};
+	CameraSpeed speed;
+
+	//ウィンドウポジション
+	struct ImGuiWindowPosition
+	{
+		const float X = 700.0f;
+		const float Y = 0.0f;
+	};
+	ImGuiWindowPosition iPos;
+	//ウィンドウサイズ
+	struct ImguiWindowSize
+	{
+		const float width = 560.0f;
+		const float height = 150.0f;
+	};
+	ImguiWindowSize iSize;
+	
 	if (!eyeTargetMix)
 	{
 		//視点
-		if (input_->PushKey(DIK_W))CameraMoveVectorEye({ 0.0f,1.0f,0.0f });
-		else if (input_->PushKey(DIK_S))CameraMoveVectorEye({ 0.0f,-1.0f,0.0f });
-		else if (input_->PushKey(DIK_A))CameraMoveVectorEye({ -1.0f,0.0f,0.0f });
-		else if (input_->PushKey(DIK_D))CameraMoveVectorEye({ 1.0f,0.0f,0.0f });
-		else if (input_->PushKey(DIK_Z))CameraMoveVectorEye({ 0.0f,0.0f,1.0f });
-		else if (input_->PushKey(DIK_X))CameraMoveVectorEye({ 0.0f,0.0f,-1.0f });
+		if (input_->PushKey(DIK_W))CameraMoveVectorEye(speed.eyeYPlus);
+		else if (input_->PushKey(DIK_S))CameraMoveVectorEye(speed.eyeYMinus);
+		else if (input_->PushKey(DIK_A))CameraMoveVectorEye(speed.eyeXMinus);
+		else if (input_->PushKey(DIK_D))CameraMoveVectorEye(speed.eyeXPlus);
+		else if (input_->PushKey(DIK_Z))CameraMoveVectorEye(speed.eyeZPlus);
+		else if (input_->PushKey(DIK_X))CameraMoveVectorEye(speed.eyeZMinus);
 
 		//注視点
-		if (input_->PushKey(DIK_UP))CameraMoveVectorTarget({ 0.0f,1.0f,0.00001f });
-		else if (input_->PushKey(DIK_DOWN))CameraMoveVectorTarget({ 0.0f,-1.0f,0.00001f });
-		else if (input_->PushKey(DIK_LEFT))CameraMoveVectorTarget({ -1.0f,0.0f,0.00001f });
-		else if (input_->PushKey(DIK_RIGHT))CameraMoveVectorTarget({ 1.0f,0.0f,0.00001f });
-		else if (input_->PushKey(DIK_Q))CameraMoveVectorTarget({ 0.0f,0.0f,1.0f });
-		else if (input_->PushKey(DIK_E))CameraMoveVectorTarget({ 0.0f,0.0f,-1.0f });
+		if (input_->PushKey(DIK_UP))CameraMoveVectorTarget(speed.targetYPlus);
+		else if (input_->PushKey(DIK_DOWN))CameraMoveVectorTarget(speed.targetYMinus);
+		else if (input_->PushKey(DIK_LEFT))CameraMoveVectorTarget(speed.targetXMinus);
+		else if (input_->PushKey(DIK_RIGHT))CameraMoveVectorTarget(speed.targetXPlus);
+		else if (input_->PushKey(DIK_Q))CameraMoveVectorTarget(speed.targetZPlus);
+		else if (input_->PushKey(DIK_E))CameraMoveVectorTarget(speed.targetZMinus);
 
 		//imguiManager_->Begin();
 		ImGui::Begin("Camera");
-		ImGui::SetWindowPos(ImVec2(700, 0));
-		ImGui::SetWindowSize(ImVec2(560, 150));
+		ImGui::SetWindowPos(ImVec2(iPos.X, iPos.Y));
+		ImGui::SetWindowSize(ImVec2(iSize.width, iSize.height));
 		ImGui::InputFloat3("Eye", ieye);
 		ImGui::Text("eye W += x S -= x  D += y A -= y Z += z X -= z");
 		ImGui::InputFloat3("Target", itarget);
@@ -295,39 +345,39 @@ void Camera::DebugCamera(bool eyeTargetMix)
 		//視点
 		if (input_->PushKey(DIK_W))
 		{
-			CameraMoveVectorEye({ 0.0f,1.0f,0.0f });
-			CameraMoveVectorTarget({ 0.0f,1.0f,0.00001f });
+			CameraMoveVectorEye(speed.eyeYPlus);
+			CameraMoveVectorTarget(speed.targetYPlus);
 		}
 		else if (input_->PushKey(DIK_S))
 		{
-			CameraMoveVectorEye({ 0.0f,-1.0f,0.0f });
-			CameraMoveVectorTarget({ 0.0f,-1.0f,0.00001f });
+			CameraMoveVectorEye(speed.eyeYMinus);
+			CameraMoveVectorTarget(speed.targetYMinus);
 		}
 		else if (input_->PushKey(DIK_A))
 		{
-			CameraMoveVectorEye({ -1.0f,0.0f,0.0f });
-			CameraMoveVectorTarget({ -1.0f,0.0f,0.00001f });
+			CameraMoveVectorEye(speed.eyeXMinus);
+			CameraMoveVectorTarget(speed.targetXMinus);
 		}
 		else if (input_->PushKey(DIK_D))
 		{
-			CameraMoveVectorEye({ 1.0f,0.0f,0.0f });
-			CameraMoveVectorTarget({ 1.0f,0.0f,0.00001f });
+			CameraMoveVectorEye(speed.eyeXPlus);
+			CameraMoveVectorTarget(speed.targetXPlus);
 		}
 		else if (input_->PushKey(DIK_Z))
 		{
-			CameraMoveVectorEye({ 0.0f,0.0f,1.0f });
-			CameraMoveVectorTarget({ 0.0f,0.0f,1.00001f });
+			CameraMoveVectorEye(speed.eyeZPlus);
+			CameraMoveVectorTarget(speed.targetZPlus);
 		}
 		else if (input_->PushKey(DIK_X))
 		{
-			CameraMoveVectorEye({ 0.0f,0.0f,-1.0f });
-			CameraMoveVectorTarget({ 0.0f,0.0f,-1.00001f });
+			CameraMoveVectorEye(speed.eyeZMinus);
+			CameraMoveVectorTarget(speed.targetZMinus);
 		}
 
 		//imguiManager_->Begin();
 		ImGui::Begin("Camera Mix Mode");
-		ImGui::SetWindowPos(ImVec2(700, 0));
-		ImGui::SetWindowSize(ImVec2(560, 150));
+		ImGui::SetWindowPos(ImVec2(iPos.X, iPos.Y));
+		ImGui::SetWindowSize(ImVec2(iSize.width, iSize.height));
 		ImGui::InputFloat3("Eye", ieye);
 		ImGui::InputFloat3("Target", itarget);
 		ImGui::Text("W += x S -= x  D += y A -= y Z += z X -= z");

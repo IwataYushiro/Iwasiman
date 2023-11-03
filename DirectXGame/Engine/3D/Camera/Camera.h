@@ -56,11 +56,14 @@ protected:
 	// Y軸回りビルボード行列
 	XMMATRIX matBillboardY_ = {};
 	// 視点座標
-	XMFLOAT3 eye_ = { -10.0f, 0.0f, -100.0f };
+	const XMFLOAT3 presetEye_ = { -10.0f, 0.0f, -100.0f };//プリセット
+	XMFLOAT3 eye_ = presetEye_;
 	// 注視点座標
-	XMFLOAT3 target_ = { -10.0f,0.0f,0.0f };
+	const XMFLOAT3 presetTarget_ = { -10.0f,0.0f,0.0f };//プリセット
+	XMFLOAT3 target_ = presetTarget_;
 	// 上方向ベクトル
-	XMFLOAT3 up_ = { 0.0f,1.0f,0.0f };
+	const XMFLOAT3 presetUp_ = { 0.0f,1.0f,0.0f };//プリセット
+	XMFLOAT3 up_ = presetUp_;
 
 public://アクセッサ
 	//ビュー行列ゲット
