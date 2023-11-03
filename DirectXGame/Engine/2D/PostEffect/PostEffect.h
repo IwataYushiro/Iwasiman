@@ -24,13 +24,13 @@ public://構造体類
     {
         XMFLOAT4 color;
     };
-    const UINT CBDM_REGISTER = 0;
+   
     //座標
     struct ConstBufferDataTransform
     {
         XMMATRIX mat;	//3D変換行列
     };
-    const UINT CBDT_REGISTER = 1;
+   
     //頂点番号
     enum VertexNumber
     {
@@ -56,15 +56,7 @@ public://構造体類
         CCRGBW_W = 3,
         CCRGBW_Num = 4,
     };
-    //リソースデスクの設定
-    struct ResDescPreset
-    {
-        const UINT16 arraysize = 1;
-        const UINT16 mipLevels = 0;
-        const UINT sampleCount = 1;
-        const UINT sampleQuality = 0;
-    };
-    ResDescPreset resDescPreset;
+   
     //ルートパラメータインデックス
     enum RootParameterIndex
     {
@@ -151,6 +143,16 @@ private:
     ComPtr<ID3D12Resource> vertBuff_;
     //頂点バッファビュー
     D3D12_VERTEX_BUFFER_VIEW vbView_{};
+    //リソースデスクの設定
+    struct ResDescPreset
+    {
+        const UINT16 arraysize = 1;
+        const UINT16 mipLevels = 0;
+        const UINT sampleCount = 1;
+        const UINT sampleQuality = 0;
+    };
+    ResDescPreset resDescPreset_;
+
     //テクスチャバッファ
     enum TexBuffCount
     {

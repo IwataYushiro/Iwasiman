@@ -49,25 +49,31 @@ public://構造体類
 		XMFLOAT3 pos;		//xyz座標
 		XMFLOAT2 uv;		//uv座標
 	};
+
+	
+
 protected://構造体類に関係あるメンバ変数
 	//定数バッファのGPUリソースのポインタ
 	ComPtr<ID3D12Resource> constBuffMaterial_ = nullptr;
 	//マッピング用のポインタ
 	ConstBufferDataMaterial* constMapMaterial_ = nullptr;
-
+	
 	//アンカーポイント
-	XMFLOAT2 anchorPoint_ = { 0.0f,0.0f };
+	const XMFLOAT2 defaultAnchorPoint_ = { 0.0f,0.0f };
+	XMFLOAT2 anchorPoint_ = defaultAnchorPoint_;
 	//表示サイズ
-	XMFLOAT2 size_ = { 100.0f,100.0f };
+	const XMFLOAT2 defaultSize_ = { 100.0f,100.0f };
+	XMFLOAT2 size_ = defaultSize_;
 	
-	
-
 	//回転
-	float rotationZ_ = 0.0f;
+	const float defalutRotationZ_ = 0.0f;
+	float rotationZ_ = defalutRotationZ_;
 	//座標
-	XMFLOAT2 position_ = { 0.0f,0.0f };
+	const XMFLOAT2 defalutPosition_ = { 0.0f,0.0f };
+	XMFLOAT2 position_ = defalutPosition_;
 	//色(RGBA)
-	XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+	const XMFLOAT4 defalutColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	XMFLOAT4 color_ = defalutColor_;
 
 	//左右フリップ
 	bool isFlipX_ = false;
@@ -78,9 +84,11 @@ protected://構造体類に関係あるメンバ変数
 	bool isInvisible_ = false;
 
 	//テクスチャ左上座標
-	XMFLOAT2 textureLeftTop_ = { 0.0f,0.0f };
+	const XMFLOAT2 defalutTextureLeftTop_ = { 0.0f,0.0f };
+	XMFLOAT2 textureLeftTop_ = defalutTextureLeftTop_;
 	//テクスチャ切り出しサイズ
-	XMFLOAT2 textureSize_ = { 100.0f,100.0f };
+	const XMFLOAT2 defaultTextureSize_ = { 100.0f,100.0f };
+	XMFLOAT2 textureSize_ = defaultTextureSize_;
 
 	//射影行列
 	XMMATRIX matProjection_;
@@ -90,7 +98,28 @@ protected://構造体類に関係あるメンバ変数
 	XMMATRIX matTrans_;
 	XMMATRIX matWorld_ = DirectX::XMMatrixIdentity();
 
+	//リソースデスクの設定
+	struct ResDescPreset
+	{
+		const UINT height = 1;
+		const UINT16 arraysize = 1;
+		const UINT16 mipLevels = 1;
+		const UINT sampleCount = 1;
 
+	};
+	ResDescPreset resDescPreset_;
+
+	//プロジェクション変換行列の設定
+	struct ProjectionPreset
+	{
+		const float viewLeft = 0.0f;
+		const float viewRight = (float)WinApp::WINDOW_WIDTH;
+		const float viewBottom = (float)WinApp::WINDOW_HEIGHT;
+		const float viewTop = 0.0f;
+		const float nearZ = 0.0f;
+		const float farZ = 1.0f;
+	};
+	ProjectionPreset projectionPreset_;
 	//定数バッファのGPUリソースのポインタ
 	ComPtr<ID3D12Resource> constBuffTransform_ = nullptr;
 	//マッピング用のポインタ
@@ -113,12 +142,19 @@ public://メンバ関数
 
 //private://メンバ変数
 protected:
-	//頂点データ
-	Vertex vertices_[verticesCount] = {
+	//頂点データのプリセット
+	const Vertex presetVertices_[verticesCount] = {
 		{{  0.0f,size_.y,0.0f},{0.0f,1.0f}},	//左下
 		{{  0.0f,  0.0f,0.0f},{0.0f,0.0f}},		//左上
 		{{size_.x,size_.y,0.0f},{1.0f,1.0f}},	//右下
 		{{size_.x,  0.0f,0.0f},{1.0f,0.0f}},	//右上
+	};
+	//頂点データ
+	Vertex vertices_[verticesCount] = {
+		presetVertices_[LB],		//左下
+		presetVertices_[LT],		//左上
+		presetVertices_[RB],		//右下
+		presetVertices_[RT]			//右上
 	};
 
 	//GPU上のバッファに対応した仮想メモリを取得

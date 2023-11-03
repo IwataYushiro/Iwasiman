@@ -26,6 +26,16 @@ public:
 public://シングルトンインスタンス
 	static SpriteCommon* GetInstance();
 
+public://構造体、列挙体
+	//ルートパラメータインデックス
+	enum RootParameterIndex
+	{
+		RPI_ConstBuff0 = 0,
+		RPI_TexBuff0 = 1,
+		RPI_ConstBuff1 = 2,
+		RPI_Num = 3,
+	};
+
 public://メンバ関数
 
 	//初期化(DirectX基盤)

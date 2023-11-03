@@ -172,8 +172,8 @@ void PostEffect::CreateTexture()
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		WinApp::WINDOW_WIDTH,
 		(UINT)WinApp::WINDOW_HEIGHT,
-		resDescPreset.arraysize, resDescPreset.mipLevels, resDescPreset.sampleCount,
-		resDescPreset.sampleQuality, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+		resDescPreset_.arraysize, resDescPreset_.mipLevels, resDescPreset_.sampleCount,
+		resDescPreset_.sampleQuality, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 
 	CD3DX12_HEAP_PROPERTIES CHP = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
 	CD3DX12_CLEAR_VALUE CCV = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, clearColor_);
@@ -280,8 +280,8 @@ void PostEffect::CreateDepthBuffer()
 		DXGI_FORMAT_D32_FLOAT,
 		WinApp::WINDOW_WIDTH,
 		WinApp::WINDOW_HEIGHT,
-		resDescPreset.arraysize, resDescPreset.mipLevels, resDescPreset.sampleCount,
-		resDescPreset.sampleQuality,D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+		resDescPreset_.arraysize, resDescPreset_.mipLevels, resDescPreset_.sampleCount,
+		resDescPreset_.sampleQuality,D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 		
 
 	const CD3DX12_HEAP_PROPERTIES CHP = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
@@ -432,7 +432,8 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 	pipelineDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;//常に上書き
 	//ブレンドステート
-	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
+	const int defaultRenderTargetNum = 0;
+	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[defaultRenderTargetNum];
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	//RGBA全てのチャンネルを描画
 
 	//ブレンド共通設定(これ＋合成で動く)
@@ -472,9 +473,12 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 	//その他
-	pipelineDesc.NumRenderTargets = 1;								//描画対象は1つ
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	//0～255指定のRGBA
-	pipelineDesc.SampleDesc.Count = 1;								//1ピクセルにつき1回サンプリング
+	const UINT renderTargetNum = 1;
+	const UINT sampleDescCount = 1;
+
+	pipelineDesc.NumRenderTargets = renderTargetNum;								//描画対象は1つ
+	pipelineDesc.RTVFormats[defaultRenderTargetNum] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	//0～255指定のRGBA
+	pipelineDesc.SampleDesc.Count = sampleDescCount;								//1ピクセルにつき1回サンプリング
 
 	//デスクリプタレンジの設定
 	const UINT descriptorNum = 1;
@@ -498,11 +502,13 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 
 
 	//ルートパラメータ設定
+	const UINT CBDM_Register = 0;//マテリアル定数バッファ
+	const UINT CBDT_Register = 1;//座標定数バッファ
 
 	D3D12_ROOT_PARAMETER rootParams[RPI_Num] = {};
 	//定数バッファ0番
 	rootParams[RPI_ConstBuff0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
-	rootParams[RPI_ConstBuff0].Descriptor.ShaderRegister = CBDM_REGISTER;						//定数バッファ番号
+	rootParams[RPI_ConstBuff0].Descriptor.ShaderRegister = CBDM_Register;						//定数バッファ番号
 	rootParams[RPI_ConstBuff0].Descriptor.RegisterSpace = 0;							//デフォルト値
 	rootParams[RPI_ConstBuff0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
 	//テクスチャレジスタ0番
@@ -512,7 +518,7 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 	rootParams[RPI_TexBuff0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//全てのシェーダから見える
 	//定数バッファ1番
 	rootParams[RPI_ConstBuff1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
-	rootParams[RPI_ConstBuff1].Descriptor.ShaderRegister = CBDT_REGISTER;						//定数バッファ番号
+	rootParams[RPI_ConstBuff1].Descriptor.ShaderRegister = CBDT_Register;						//定数バッファ番号
 	rootParams[RPI_ConstBuff1].Descriptor.RegisterSpace = 0;							//デフォルト値
 	rootParams[RPI_ConstBuff1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
 	//テクスチャレジスタ1番

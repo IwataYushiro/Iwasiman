@@ -111,7 +111,8 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	pipelineDesc.RasterizerState.DepthClipEnable = true;	//深度クリッピングを有効化
 
 	//ブレンドステート
-	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
+	const int defaultRenderTargetNum = 0;
+	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[defaultRenderTargetNum];
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	//RGBA全てのチャンネルを描画
 
 	//ブレンド共通設定(これ＋合成で動く)
@@ -149,34 +150,44 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 	//その他
-	pipelineDesc.NumRenderTargets = 1;								//描画対象は1つ
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	//0～255指定のRGBA
-	pipelineDesc.SampleDesc.Count = 1;								//1ピクセルにつき1回サンプリング
+	const UINT renderTargetNum = 1;
+	const UINT sampleDescCount = 1;
+	pipelineDesc.NumRenderTargets = renderTargetNum;								//描画対象は1つ
+	pipelineDesc.RTVFormats[defaultRenderTargetNum] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	//0～255指定のRGBA
+	pipelineDesc.SampleDesc.Count = sampleDescCount;								//1ピクセルにつき1回サンプリング
 
 	//デスクリプタレンジの設定
+	const UINT descriptorNum = 1;
+	enum DescriptoeRangeNum
+	{
+		DRN_SRV0 = 0,
+	};
 	D3D12_DESCRIPTOR_RANGE descriptorRange{};
-	descriptorRange.NumDescriptors = 1;								//一度の描画に使うテクスチャが1枚なので1
+	descriptorRange.NumDescriptors = descriptorNum;								//一度の描画に使うテクスチャが1枚なので1
 	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange.BaseShaderRegister = 0;							//テクスチャレジスタ0番
+	descriptorRange.BaseShaderRegister = DRN_SRV0;							//テクスチャレジスタ0番
 	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 	
 	//ルートパラメータ設定
-	D3D12_ROOT_PARAMETER rootParams[3] = {};
+	const UINT CBDM_Register= 0;//マテリアル定数バッファ
+	const UINT CBDT_Register= 1;//座標定数バッファ
+
+	D3D12_ROOT_PARAMETER rootParams[RPI_Num] = {};
 	//定数バッファ0番
-	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
-	rootParams[0].Descriptor.ShaderRegister = 0;						//定数バッファ番号
-	rootParams[0].Descriptor.RegisterSpace = 0;							//デフォルト値
-	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
+	rootParams[RPI_ConstBuff0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
+	rootParams[RPI_ConstBuff0].Descriptor.ShaderRegister = CBDM_Register;						//定数バッファ番号
+	rootParams[RPI_ConstBuff0].Descriptor.RegisterSpace = 0;							//デフォルト値
+	rootParams[RPI_ConstBuff0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
 	//テクスチャレジスタ0番
-	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
-	rootParams[1].DescriptorTable.pDescriptorRanges = &descriptorRange;			//デスクリプタレンジ
-	rootParams[1].DescriptorTable.NumDescriptorRanges = 1;						//デスクリプタレンジ数
-	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//全てのシェーダから見える
+	rootParams[RPI_TexBuff0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//種類
+	rootParams[RPI_TexBuff0].DescriptorTable.pDescriptorRanges = &descriptorRange;			//デスクリプタレンジ
+	rootParams[RPI_TexBuff0].DescriptorTable.NumDescriptorRanges = descriptorNum;						//デスクリプタレンジ数
+	rootParams[RPI_TexBuff0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;				//全てのシェーダから見える
 	//定数バッファ1番
-	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
-	rootParams[2].Descriptor.ShaderRegister = 1;						//定数バッファ番号
-	rootParams[2].Descriptor.RegisterSpace = 0;							//デフォルト値
-	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
+	rootParams[RPI_ConstBuff1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;		//定数バッファビュー(種類)
+	rootParams[RPI_ConstBuff1].Descriptor.ShaderRegister = CBDT_Register;						//定数バッファ番号
+	rootParams[RPI_ConstBuff1].Descriptor.RegisterSpace = 0;							//デフォルト値
+	rootParams[RPI_ConstBuff1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;		//全てのシェーダから見える
 	//テクスチャサンプラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
 	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;					//横繰り返し(タイリング)
@@ -196,7 +207,8 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	rootSignatureDesc.pParameters = rootParams;		//ルートパラメータの先頭アドレス
 	rootSignatureDesc.NumParameters = _countof(rootParams);			//ルートパラメータ数
 	rootSignatureDesc.pStaticSamplers = &samplerDesc;
-	rootSignatureDesc.NumStaticSamplers = 1;
+	const UINT staticSamplersNum = 1;
+	rootSignatureDesc.NumStaticSamplers = staticSamplersNum;
 
 	// ルートシグネチャのシリアライズ
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob_, &errorBlob_);
@@ -237,7 +249,8 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 
 	//ワイド文字列に変換
 	std::vector<wchar_t> wfilePath(filePathBufferSize);
-	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath.data(), filePathBufferSize);
+	const int cbMultiByte = -1;
+	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), cbMultiByte, wfilePath.data(), filePathBufferSize);
 
 	//画像ファイルの用意
 	TexMetadata metadata{};
@@ -277,7 +290,8 @@ void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
 	textureResourceDesc.Height = (UINT)metadata.height;				//高さ
 	textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
 	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
-	textureResourceDesc.SampleDesc.Count = 1;
+	const UINT TRDSampleDescCount = 1;
+	textureResourceDesc.SampleDesc.Count = TRDSampleDescCount;
 
 	//テクスチャバッファの生成
 	result = dxCommon_->GetDevice()->CreateCommittedResource(
@@ -345,5 +359,5 @@ void SpriteCommon::SetTextureCommands(uint32_t index)
 	srvGpuHandle_.ptr += index * incrementSize_;
 
 	// SRVヒープの先頭にあるSRVルートパラメータ1番に設定5
-	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvGpuHandle_);
+	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(RPI_TexBuff0, srvGpuHandle_);
 }

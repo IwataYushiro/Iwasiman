@@ -25,7 +25,7 @@ void Sprite::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 	}
 
 	//サイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(vertices_[0]) * _countof(vertices_));
+	UINT sizeVB = static_cast<UINT>(sizeof(vertices_[LB]) * _countof(vertices_));
 
 	//頂点バッファ
 	D3D12_HEAP_PROPERTIES heapProp{};	//ヒープ設定
@@ -34,10 +34,10 @@ void Sprite::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 
 	resDesc_.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc_.Width = sizeVB;
-	resDesc_.Height = 1;
-	resDesc_.DepthOrArraySize = 1;
-	resDesc_.MipLevels = 1;
-	resDesc_.SampleDesc.Count = 1;
+	resDesc_.Height = resDescPreset_.height;
+	resDesc_.DepthOrArraySize = resDescPreset_.arraysize;
+	resDesc_.MipLevels = resDescPreset_.mipLevels;
+	resDesc_.SampleDesc.Count = resDescPreset_.sampleCount;
 	resDesc_.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//頂点バッファ生成
@@ -71,7 +71,8 @@ void Sprite::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 	//変換行列
 	CreateConstBufferTransform();
 
-	matProjection_ = XMMatrixOrthographicOffCenterLH(0, (float)WinApp::WINDOW_WIDTH, (float)WinApp::WINDOW_HEIGHT, 0, 0, 1);
+	matProjection_ = XMMatrixOrthographicOffCenterLH(projectionPreset_.viewLeft, projectionPreset_.viewRight,
+ projectionPreset_.viewBottom, projectionPreset_.viewTop, projectionPreset_.nearZ, projectionPreset_.farZ);
 
 
 	//スケーリング等計算
@@ -92,7 +93,7 @@ void Sprite::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
 	//頂点バッファのサイズ
 	vbView_.SizeInBytes = sizeVB;
 	//頂点一つ分のサイズ
-	vbView_.StrideInBytes = sizeof(vertices_[0]);
+	vbView_.StrideInBytes = sizeof(vertices_[LB]);
 
 }
 void Sprite::Update()
@@ -100,10 +101,19 @@ void Sprite::Update()
 	//色情報をGPUに転送
 	constMapMaterial_->color = color_;
 
-	float left = (0.0f - anchorPoint_.x) * size_.x;
-	float right = (1.0f - anchorPoint_.x) * size_.x;
-	float top = (0.0f - anchorPoint_.y) * size_.y;
-	float bottom = (1.0f - anchorPoint_.y) * size_.y;
+	struct AnchorPointPreset
+	{
+		const float left = 0.0f;
+		const float right = 1.0f;
+		const float top = 0.0f;
+		const float bottom = 1.0f;
+	};
+	AnchorPointPreset anchorPointPreset;
+
+	float left = (anchorPointPreset.left - anchorPoint_.x) * size_.x;
+	float right = (anchorPointPreset.right - anchorPoint_.x) * size_.x;
+	float top = (anchorPointPreset.top - anchorPoint_.y) * size_.y;
+	float bottom = (anchorPointPreset.bottom - anchorPoint_.y) * size_.y;
 	//左右反転
 	if (isFlipX_)
 	{
@@ -145,7 +155,8 @@ void Sprite::Update()
 	std::copy(std::begin(vertices_), std::end(vertices_), vertMap_);
 
 	//平行投影変換
-	matProjection_ = XMMatrixOrthographicOffCenterLH(0, (float)WinApp::WINDOW_WIDTH, (float)WinApp::WINDOW_HEIGHT, 0, 0, 1);
+	matProjection_ = XMMatrixOrthographicOffCenterLH(projectionPreset_.viewLeft, projectionPreset_.viewRight,
+		projectionPreset_.viewBottom, projectionPreset_.viewTop, projectionPreset_.nearZ, projectionPreset_.farZ);
 
 	//スケーリング等計算
 	matRot_ = XMMatrixIdentity();
@@ -172,14 +183,16 @@ void Sprite::Draw()
 	//テクスチャコマンド
 	spCommon_->SetTextureCommands(textureIndex_);
 	//頂点バッファビューの設定コマンド
-	spCommon_->GetDxCommon()->GetCommandList()->IASetVertexBuffers(0, 1, &vbView_);
+	const UINT viewsNum = 1;
+	spCommon_->GetDxCommon()->GetCommandList()->IASetVertexBuffers(0, viewsNum, &vbView_);
 
 	//定数バッファビュー(CBVの設定コマンド)
-	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuffMaterial_->GetGPUVirtualAddress());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(spCommon_->RPI_ConstBuff0, constBuffMaterial_->GetGPUVirtualAddress());
 
-	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(2, constBuffTransform_->GetGPUVirtualAddress());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(spCommon_->RPI_ConstBuff1, constBuffTransform_->GetGPUVirtualAddress());
 	//描画コマンド
-	spCommon_->GetDxCommon()->GetCommandList()->DrawInstanced(_countof(vertices_), 1, 0, 0);
+	const UINT instanceCount = 1;
+	spCommon_->GetDxCommon()->GetCommandList()->DrawInstanced(_countof(vertices_), instanceCount, 0, 0);
 }
 
 void Sprite::CreateConstBufferMaterial()
@@ -189,13 +202,14 @@ void Sprite::CreateConstBufferMaterial()
 	D3D12_HEAP_PROPERTIES cbHeapProp{};		//ヒープ設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUへの転送用
 	//リソース設定
+	const UINT64 buffWidth = 0xff;
 	D3D12_RESOURCE_DESC cbResourseDesc{};
 	cbResourseDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourseDesc.Width = (sizeof(ConstBufferDataMaterial) + 0xff) & ~0xff;//256バイトアラインメント
-	cbResourseDesc.Height = 1;
-	cbResourseDesc.DepthOrArraySize = 1;
-	cbResourseDesc.MipLevels = 1;
-	cbResourseDesc.SampleDesc.Count = 1;
+	cbResourseDesc.Width = (sizeof(ConstBufferDataMaterial) + buffWidth) & ~buffWidth;//256バイトアラインメント
+	cbResourseDesc.Height = resDescPreset_.height;
+	cbResourseDesc.DepthOrArraySize = resDescPreset_.arraysize;
+	cbResourseDesc.MipLevels = resDescPreset_.mipLevels;
+	cbResourseDesc.SampleDesc.Count = resDescPreset_.sampleCount;
 	cbResourseDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//定数バッファの生成
@@ -219,13 +233,14 @@ void Sprite::CreateConstBufferTransform()
 	D3D12_HEAP_PROPERTIES cbHeapProp{};		//ヒープ設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUへの転送用
 	//リソース設定
+	const UINT64 buffWidth = 0xff;
 	D3D12_RESOURCE_DESC cbResourseDesc{};
 	cbResourseDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourseDesc.Width = (sizeof(ConstBufferDataTransform) + 0xff) & ~0xff;//256バイトアラインメント
-	cbResourseDesc.Height = 1;
-	cbResourseDesc.DepthOrArraySize = 1;
-	cbResourseDesc.MipLevels = 1;
-	cbResourseDesc.SampleDesc.Count = 1;
+	cbResourseDesc.Width = (sizeof(ConstBufferDataTransform) + buffWidth) & ~buffWidth;//256バイトアラインメント
+	cbResourseDesc.Height = resDescPreset_.height;
+	cbResourseDesc.DepthOrArraySize = resDescPreset_.arraysize;
+	cbResourseDesc.MipLevels = resDescPreset_.mipLevels;
+	cbResourseDesc.SampleDesc.Count = resDescPreset_.sampleCount;
 	cbResourseDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//定数バッファの生成

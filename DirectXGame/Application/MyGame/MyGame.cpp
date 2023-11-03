@@ -45,7 +45,7 @@ void MyGame::Finalize()
 void MyGame::PostInitialize()
 {
 	pe_ = new PostEffect();
-	pe_->Initialize(sprCommon_,"Cold");
+	pe_->Initialize(sprCommon_);
 }
 
 void MyGame::PostDraw()
