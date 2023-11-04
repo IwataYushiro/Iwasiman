@@ -72,8 +72,9 @@ void WinApp::Initialize() {
 	//ウィンドゥを表示状態にする
 	ShowWindow(hwnd_, SW_SHOW);
 
+	const UINT uPeriod = 1;//分解能を上げる用の変数
 	//システムタイマーの分解能を上げる
-	timeBeginPeriod(1);
+	timeBeginPeriod(uPeriod);
 }
 
 //プロセスメッセージ

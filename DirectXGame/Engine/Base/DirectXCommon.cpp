@@ -162,14 +162,23 @@ void DirectXCommon::InitializeSwapchain()
 	HRESULT result;
 
 #pragma region スワップチェーンの生成
-	// スワップチェーンの設定
+	//マジックナンバー撲滅用のプリセット
+	struct SwapChainPreset
+	{
+		const UINT width = 1280;
+		const UINT height = 720;
+		const UINT sampleDescCount = 1;
+		const UINT bufferCount = 2;
+	};
+	SwapChainPreset preset;
 
-	swapChainDesc_.Width = 1280;
-	swapChainDesc_.Height = 720;
+	// スワップチェーンの設定
+	swapChainDesc_.Width = preset.width;
+	swapChainDesc_.Height = preset.height;
 	swapChainDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 色情報の書式
-	swapChainDesc_.SampleDesc.Count = 1; // マルチサンプルしない
+	swapChainDesc_.SampleDesc.Count = preset.sampleDescCount; // マルチサンプルしない
 	swapChainDesc_.BufferUsage = DXGI_USAGE_BACK_BUFFER; // バックバッファ用
-	swapChainDesc_.BufferCount = 2; // バッファ数を2つに設定
+	swapChainDesc_.BufferCount = preset.bufferCount; // バッファ数を2つに設定
 	swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // フリップ後は破棄
 	swapChainDesc_.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	// スワップチェーンの生成
@@ -229,14 +238,17 @@ void DirectXCommon::InitializeDepthBuffer()
 {
 
 	HRESULT result;
+	//プリセット
+	const UINT16 depthOrArraySize = 1;
+	const UINT sampleDescCount = 1;
 	//深度バッファ設定
 	D3D12_RESOURCE_DESC depthResourceDesc{};
 	depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	depthResourceDesc.Width = winApp_->WINDOW_WIDTH;		//レンダーターゲットに合わせる
 	depthResourceDesc.Height = winApp_->WINDOW_HEIGHT;	//レンダーターゲットに合わせる
-	depthResourceDesc.DepthOrArraySize = 1;
+	depthResourceDesc.DepthOrArraySize = depthOrArraySize;
 	depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT;//深度値フォーマット
-	depthResourceDesc.SampleDesc.Count = 1;
+	depthResourceDesc.SampleDesc.Count = sampleDescCount;
 	depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;//デプスステンシル
 
 	//深度値用ヒーププロパティ
@@ -244,7 +256,8 @@ void DirectXCommon::InitializeDepthBuffer()
 	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
 	//深度値のクリア設定
 	D3D12_CLEAR_VALUE depthClearValue{};
-	depthClearValue.DepthStencil.Depth = 1.0f;//深度値1.0f(最大値)でクリア
+	const float defaultDepthNum = 1.0f;
+	depthClearValue.DepthStencil.Depth = defaultDepthNum;//深度値1.0f(最大値)でクリア
 	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;//深度値フォーマット
 
 	//深度バッファ生成
@@ -259,7 +272,8 @@ void DirectXCommon::InitializeDepthBuffer()
 
 	//深度ビュー用デスクリプタヒープ生成
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
-	dsvHeapDesc.NumDescriptors = 1;//深度ビューは1つ
+	const UINT descriptorNum = 1;
+	dsvHeapDesc.NumDescriptors = descriptorNum;//深度ビューは1つ
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; //デプスステンシルビュー
 
 	result = device_->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap_));
@@ -296,9 +310,11 @@ void DirectXCommon::PreDraw()
 	barrierDesc_.Transition.pResource = backBuffers_[bbIndex].Get(); // バックバッファを指定
 	barrierDesc_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT; // 表示状態から
 	barrierDesc_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET; // 描画状態へ
-	commandList_->ResourceBarrier(1, &barrierDesc_);
+	const UINT barrierNum = 1;
+	commandList_->ResourceBarrier(barrierNum, &barrierDesc_);
 
 	// 2.描画先の変更
+	const int RTVNum = 1;//レンダーターゲットビューの数
 	// レンダーターゲットビューのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
 	rtvHandle.ptr += static_cast<unsigned long long>(bbIndex) * device_->GetDescriptorHandleIncrementSize(rtvHeapDesc_.Type);
@@ -307,21 +323,25 @@ void DirectXCommon::PreDraw()
 	commandList_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 3.画面クリア			R	  G		B	A
-	FLOAT clearColor[] = { 0.25f,0.25f,0.25f,0.0f }; //青っぽい色
+	const FLOAT clearColor[] = { 0.25f,0.25f,0.25f,0.0f }; //青っぽい色
 	commandList_->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-	commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	//深度バッファクリア
+	const float depthNum = 1.0f;
+	commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, depthNum, 0, 0, nullptr);
 
 	// 4.描画コマンドここから
 	//ビューポート設定コマンド
+	const float maxDepthNum = 1.0f;
+
 	D3D12_VIEWPORT viewport{};
 	viewport.Width = WinApp::WINDOW_WIDTH;
 	viewport.Height = WinApp::WINDOW_HEIGHT;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
+	viewport.TopLeftX = 0.0f;
+	viewport.TopLeftY = 0.0f;
 	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
+	viewport.MaxDepth = maxDepthNum;
 	//ビューポート設定コマンドを、コマンドリストに積む
-	commandList_->RSSetViewports(1, &viewport);
+	commandList_->RSSetViewports(RTVNum, &viewport);
 
 	//シザー矩形
 	D3D12_RECT scissorRect{};
@@ -330,7 +350,7 @@ void DirectXCommon::PreDraw()
 	scissorRect.top = 0;
 	scissorRect.bottom = scissorRect.top + WinApp::WINDOW_HEIGHT;
 	//シザー矩形設定コマンドを、コマンドリストに積む
-	commandList_->RSSetScissorRects(1, &scissorRect);
+	commandList_->RSSetScissorRects(RTVNum, &scissorRect);
 }
 
 void DirectXCommon::PostDraw()
@@ -352,7 +372,8 @@ void DirectXCommon::PostDraw()
 	commandQueue_->ExecuteCommandLists(1, commandLists);
 
 	// 画面に表示するバッファをフリップ(裏表の入替え)
-	result = swapChain_->Present(1, 0);
+	const UINT syncInterval = 1;
+	result = swapChain_->Present(syncInterval, 0);
 	assert(SUCCEEDED(result));
 	//FPS固定
 	UpdateFixFPS();

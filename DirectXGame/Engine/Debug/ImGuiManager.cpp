@@ -78,24 +78,45 @@ void ImGuiManager::End()
 	ImGui::Render();
 }
 void ImGuiManager::ImGuiStyleShowSample() {
-	static char buf[50] = {};
-	static float f = 0.0f;
+	const int32_t maxBuff = 50;
+	static char buf[maxBuff] = {};
+	const float defaultFloatNum = 0.0f;
+	static float f = defaultFloatNum;
 
-	ImGui::Text("Hello, world %d", 184);
+	const int32_t defaultIntTextNum = 184;
+	ImGui::Text("Hello, world %d", defaultIntTextNum);
 
 	if (ImGui::Button("Style Classic")) { ImGui::StyleColorsClassic(); }
 	if (ImGui::Button("Style Light")) { ImGui::StyleColorsLight(); }
 	if (ImGui::Button("Style Dack")) { ImGui::StyleColorsDark(); }
 
 	ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
-	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+	enum MinMaxNum
+	{
+		MMN_Min=0,
+		MMN_Max=1,
+		MMN_Num=2,
+	};
+
+	const float minMax[MMN_Num] = { 0.0f,1.0f };
+	ImGui::SliderFloat("float", &f, minMax[MMN_Min], minMax[MMN_Max]);
 }
 
 void ImGuiManager::ImGuiMyFirstToolColor()
 {
 	// Create a window called "My First Tool", with a menu bar.
+	enum ColorPatternIndex
+	{
+		CPI_R=0,
+		CPI_G = 1,
+		CPI_B = 2,
+		CPI_A = 3,
+		CPI_Num = 4,
+	};
 	static bool my_tool_active = true;
-	static float my_color[4] = { 0.0f,0.0f,0.0f,0.0f };
+	const float defaultColor[CPI_Num] = { 0.0f,0.0f,0.0f,0.0f };
+	static float my_color[CPI_Num] = { defaultColor[CPI_R],defaultColor[CPI_G] ,
+		defaultColor[CPI_B],defaultColor[CPI_A] };
 
 	ImGui::Begin("My First Tool", &my_tool_active, ImGuiWindowFlags_MenuBar);
 	if (ImGui::BeginMenuBar())
@@ -114,15 +135,23 @@ void ImGuiManager::ImGuiMyFirstToolColor()
 	ImGui::ColorEdit4("Color", my_color);
 
 	// Generate samples and plot them
-	float samples[100];
-	for (float n = 0.0f; n < 100.0f; n++)
-		samples[(int)n] = sinf(n * 0.2f + (float)ImGui::GetTime() * 1.5f);
-	ImGui::PlotLines("Samples", samples, 100);
+	const int32_t samplesNum = 100;
+	const float roopMaxNum = 100.0f;
+	float samples[samplesNum];
+	for (float n = 0.0f; n < roopMaxNum; n++)
+	{
+		const float sampleCalculation = sinf(n * 0.2f + (float)ImGui::GetTime() * 1.5f);
+		samples[(int)n] = sampleCalculation;
+	}
+		
+	ImGui::PlotLines("Samples", samples, samplesNum);
 
 	// Display contents in a scrolling region
-	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Important Stuff");
+	const ImVec4 defaultTextColor = { 1.0f,1.0f,1.0f,1.0f };
+	const int32_t roopText = 50;
+	ImGui::TextColored(defaultTextColor, "Important Stuff");
 	ImGui::BeginChild("Scrolling");
-	for (int n = 0; n < 50; n++)
+	for (int n = 0; n < roopText; n++)
 		ImGui::Text("%04d: Some text", n);
 	ImGui::EndChild();
 	ImGui::End();
