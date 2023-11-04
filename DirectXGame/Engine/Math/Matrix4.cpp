@@ -27,13 +27,16 @@ Matrix4 identity()
 //拡大縮小の設定
 Matrix4 scale(const Vector3& s)
 {
-	Matrix4 result
+	//プリセット
+	const Matrix4 preset
 	{
 		s.x,0.0f,0.0f,0.0f,
 		0.0f,s.y,0.0f,0.0f,
 		0.0f,0.0f,s.z,0.0f,
 		0.0f,0.0f,0.0f,1.0f
 	};
+
+	Matrix4 result = preset;
 
 	return result;
 }
@@ -44,13 +47,16 @@ Matrix4 rotateX(float angle)
 	float sin = std::sin(angle);
 	float cos = std::cos(angle);
 
-	Matrix4 result
+	//プリセット
+	const Matrix4 preset
 	{
 		1.0f,0.0f,0.0f,0.0f,
 		0.0f,cos,sin,0.0f,
 		0.0f,-sin,cos,0.0f,
 		0.0f,0.0f,0.0f,1.0f
 	};
+
+	Matrix4 result = preset;
 
 	return result;
 }
@@ -60,13 +66,16 @@ Matrix4 rotateY(float angle)
 	float sin = std::sin(angle);
 	float cos = std::cos(angle);
 
-	Matrix4 result
+	//プリセット
+	const Matrix4 preset
 	{
 		cos,0.0f,-sin,0.0f,
 		0.0f,1.0f,0.0f,0.0f,
 		sin,0.0f,cos,0.0f,
 		0.0f,0.0f,0.0f,1.0f
 	};
+
+	Matrix4 result = preset;
 
 	return result;
 }
@@ -77,13 +86,15 @@ Matrix4 rotateZ(float angle)
 	float sin = std::sin(angle);
 	float cos = std::cos(angle);
 
-	Matrix4 result
+	//プリセット
+	const Matrix4 preset
 	{
 		cos,sin,0.0f,0.0f,
 		-sin,cos,0.0f,0.0f,
 		0.0f,0.0f,1.0f,0.0f,
 		0.0f,0.0f,0.0f,1.0f
 	};
+	Matrix4 result = preset;
 
 	return result;
 }
@@ -92,13 +103,15 @@ Matrix4 rotateZ(float angle)
 //平行移動
 Matrix4 translate(const Vector3& t)
 {
-	Matrix4 result
+	//プリセット
+	const Matrix4 preset
 	{
 		1.0f,0.0f,0.0f,0.0f,
 		0.0f,1.0f,0.0f,0.0f,
 		0.0f,0.0f,1.0f,0.0f,
 		t.x,t.y,t.z,1.0f
 	};
+	Matrix4 result = preset;
 
 	return result;
 }
@@ -106,13 +119,13 @@ Matrix4 translate(const Vector3& t)
 //座標変換
 Vector3 transform(const Vector3& v, const Matrix4& m)
 {
-	float w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];
+	float w = v.x * m.m[XYZW_X][XYZW_W] + v.y * m.m[XYZW_Y][XYZW_W] + v.z * m.m[XYZW_Z][XYZW_W] + m.m[XYZW_W][XYZW_W];
 
 	Vector3 result
 	{
-		(v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + m.m[3][0]) / w,
-		(v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + m.m[3][1]) / w,
-		(v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + m.m[3][2]) / w
+		(v.x * m.m[XYZW_X][XYZW_X] + v.y * m.m[XYZW_Y][XYZW_X] + v.z * m.m[XYZW_Z][XYZW_X] + m.m[XYZW_W][XYZW_X]) / w,
+		(v.x * m.m[XYZW_X][XYZW_Y] + v.y * m.m[XYZW_Y][XYZW_Y] + v.z * m.m[XYZW_Z][XYZW_Y] + m.m[XYZW_W][XYZW_Y]) / w,
+		(v.x * m.m[XYZW_X][XYZW_Z] + v.y * m.m[XYZW_Y][XYZW_Z] + v.z * m.m[XYZW_Z][XYZW_Z] + m.m[XYZW_W][XYZW_Z]) / w
 	};
 
 	return result;
@@ -122,14 +135,14 @@ Vector3 transform(const Vector3& v, const Matrix4& m)
 //代入演算子オーバーロード
 Matrix4& operator*=(Matrix4& m1, Matrix4& m2)
 {
-	Matrix4 result{ 0.0f };
+	Matrix4 result;
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < XYZW_Num; i++)
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < XYZW_Num; j++)
 		{
 
-			for (int k = 0; k < 4; k++)
+			for (int k = 0; k < XYZW_Num; k++)
 			{
 				result.m[i][j] += m1.m[i][k] * m2.m[k][j];
 			}

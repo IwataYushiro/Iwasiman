@@ -1,4 +1,5 @@
 #include "LevelLoaderJson.h"
+#include "XYZ.h"
 
 #include <json.hpp>
 #include <fstream>
@@ -81,35 +82,40 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName)
 			// トランスフォームのパラメータ読み込み
 			nlohmann::json& transform = object["transform"];
 			// 平行移動
-			objectData.trans.m128_f32[0] = (float)transform["translation"][1];
-			objectData.trans.m128_f32[1] = (float)transform["translation"][2];
-			objectData.trans.m128_f32[2] = -(float)transform["translation"][0];
-			objectData.trans.m128_f32[3] = 1.0f;
+			const float transW = 1.0f;
+			objectData.trans.m128_f32[XYZW_X] = (float)transform["translation"][XYZ_Y];
+			objectData.trans.m128_f32[XYZW_Y] = (float)transform["translation"][XYZ_Z];
+			objectData.trans.m128_f32[XYZW_Z] = -(float)transform["translation"][XYZ_X];
+			objectData.trans.m128_f32[XYZW_W] = transW;
 			// 回転角
-			objectData.rot.m128_f32[0] = -(float)transform["rotation"][1];
-			objectData.rot.m128_f32[1] = -(float)transform["rotation"][2];
-			objectData.rot.m128_f32[2] = (float)transform["rotation"][0];
-			objectData.rot.m128_f32[3] = 0.0f;
+			const float rotW = 0.0f;
+			objectData.rot.m128_f32[XYZW_X] = -(float)transform["rotation"][XYZ_Y];
+			objectData.rot.m128_f32[XYZW_Y] = -(float)transform["rotation"][XYZ_Z];
+			objectData.rot.m128_f32[XYZW_Z] = (float)transform["rotation"][XYZ_X];
+			objectData.rot.m128_f32[XYZW_W] = rotW;
 			// スケーリング
-			objectData.scale.m128_f32[0] = (float)transform["scaling"][1];
-			objectData.scale.m128_f32[1] = (float)transform["scaling"][2];
-			objectData.scale.m128_f32[2] = (float)transform["scaling"][0];
-			objectData.scale.m128_f32[3] = 0.0f;
+			const float scaleW = 0.0f;
+			objectData.scale.m128_f32[XYZW_X] = (float)transform["scaling"][XYZ_Y];
+			objectData.scale.m128_f32[XYZW_Y] = (float)transform["scaling"][XYZ_Z];
+			objectData.scale.m128_f32[XYZW_Z] = (float)transform["scaling"][XYZ_X];
+			objectData.scale.m128_f32[XYZW_W] = scaleW;
 
 			// コライダーのパラメータ読み込み
 			nlohmann::json& collider = object["collider"];
 			if (type.compare("BOX") == 0)
 			{
 				// 平行移動
-				objectData.centerCollider.m128_f32[0] = (float)collider["center"][1];
-				objectData.centerCollider.m128_f32[1] = (float)collider["center"][2];
-				objectData.centerCollider.m128_f32[2] = -(float)collider["center"][0];
-				objectData.centerCollider.m128_f32[3] = 1.0f;
+				const float centerColliderW = 1.0f;
+				objectData.centerCollider.m128_f32[XYZW_X] = (float)collider["center"][XYZ_Y];
+				objectData.centerCollider.m128_f32[XYZW_Y] = (float)collider["center"][XYZ_Z];
+				objectData.centerCollider.m128_f32[XYZW_Z] = -(float)collider["center"][XYZ_X];
+				objectData.centerCollider.m128_f32[XYZW_W] = centerColliderW;
 				// 回転角
-				objectData.sizeCollider.m128_f32[0] = -(float)collider["size"][1];
-				objectData.sizeCollider.m128_f32[1] = -(float)collider["size"][2];
-				objectData.sizeCollider.m128_f32[2] = (float)collider["size"][0];
-				objectData.sizeCollider.m128_f32[3] = 0.0f;
+				const float sizeColliderW = 0.0f;
+				objectData.sizeCollider.m128_f32[XYZW_X] = -(float)collider["size"][XYZ_Y];
+				objectData.sizeCollider.m128_f32[XYZW_Y] = -(float)collider["size"][XYZ_Z];
+				objectData.sizeCollider.m128_f32[XYZW_Z] = (float)collider["size"][XYZ_X];
+				objectData.sizeCollider.m128_f32[XYZW_W] = sizeColliderW;
 			}
 		}
 		//オブジェクト走査を再帰関数で走査(一旦後で)

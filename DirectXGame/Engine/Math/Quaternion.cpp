@@ -1,4 +1,5 @@
 #include "Quaternion.h"
+#include "Vector2.h"
 #include <cmath>
 
 /*
@@ -63,7 +64,8 @@ Quaternion Quaternion::Multiply(const Quaternion& lhs, const Quaternion& rhs)
 
 Quaternion Quaternion::Identity()
 {
-	return Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+	const Quaternion identity = { 0.0f,0.0f,0.0f,1.0f };
+	return identity;
 }
 
 Quaternion Quaternion::Conjugate(const Quaternion& q)
@@ -94,13 +96,14 @@ Quaternion Quaternion::Normalize(const Quaternion& q)
 Quaternion Quaternion::Inverse(const Quaternion& q)
 {
 	float len = norm(q);
+	const float inverseNum = 1.0f;
 	if (len != 0.0f)
 	{
 		Quaternion in;
-		in.x = 1.0f * Conjugate(q).x / (len * len);
-		in.y = 1.0f * Conjugate(q).y / (len * len);
-		in.z = 1.0f * Conjugate(q).z / (len * len);
-		in.w = 1.0f * Conjugate(q).w / (len * len);
+		in.x = inverseNum * Conjugate(q).x / (len * len);
+		in.y = inverseNum * Conjugate(q).y / (len * len);
+		in.z = inverseNum * Conjugate(q).z / (len * len);
+		in.w = inverseNum * Conjugate(q).w / (len * len);
 		return in;
 	}
 	return *this;
@@ -109,12 +112,12 @@ Quaternion Quaternion::Inverse(const Quaternion& q)
 //”CˆÓ²‰ñ“]‚ğ•\‚·Quaternion‚Ì¶¬(axis‚Ì³‹K‰»‚Í•K{)
 Quaternion Quaternion::MakeAxisAngle(const Vector3& axis, float angle)
 {
-
+	const float axisOffset = 2.0f;
 	Quaternion result;
-	result.x = axis.x * sinf(angle / 2.0f);
-	result.y = axis.y * sinf(angle / 2.0f);
-	result.z = axis.z * sinf(angle / 2.0f);
-	result.w = cosf(angle / 2.0f);
+	result.x = axis.x * sinf(angle / axisOffset);
+	result.y = axis.y * sinf(angle / axisOffset);
+	result.z = axis.z * sinf(angle / axisOffset);
+	result.w = cosf(angle / axisOffset);
 
 	return result;
 }
@@ -138,13 +141,16 @@ Vector3 Quaternion::RotateVector(const Vector3& v, const Quaternion& q)
 //Quaternion‚©‚ç‰ñ“]s—ñ‚ğ‹‚ß‚é
 Matrix4 Quaternion::MakeRotateMatrix(const Quaternion& q)
 {
-	Matrix4 result
+	const Matrix4 preset
 	{
 		q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z,2.0f * (q.x * q.y + q.w * q.z),2.0f * (q.x * q.z - q.w * q.y),0.0f,
 		2.0f * (q.x * q.y - q.w * q.z),q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z,2.0f * (q.y * q.z + q.w * q.x),0.0f,
 		2.0f * (q.x * q.z + q.w * q.y),2.0f * (q.y * q.z - q.w * q.x),q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z,0.0f,
 		0.0f,0.0f,0.0f,1.0f
 	};
+
+	Matrix4 result = preset;
+
 	return result;
 }
 
@@ -156,23 +162,24 @@ Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t
 	float dot = dotQW(q0, q1);
 
 	Quaternion Q0 = q0;
-	
-	if (dot < 0.0f)
+	// x = min , y = max
+	const Vector2 minMax = { 0.0f,1.0f };
+	if (dot < minMax.x)
 	{
 		Q0 = -Q0;		//‚à‚¤•Ğ•û‚Ì‰ñ“]‚ğ—˜—p
 		dot = -dot;		//“àÏ‚à‰ñ“]
 	}
 
-	if (dot >= 1.0f - epsiron)
+	if (dot >= minMax.y - epsiron)
 	{
-		return (1.0f - t) * q0 + t * q1;
+		return (minMax.y - t) * q0 + t * q1;
 	}
 
 	//‚È‚·Šp‚ğ‹‚ß‚é
 	float thera = std::acos(dot);
 
 	//•âŠÔŒW”
-	float scale0 = sinf((1.0f - t) * thera) / sinf(thera);
+	float scale0 = sinf((minMax.y - t) * thera) / sinf(thera);
 	float scale1 = sinf(t * thera) / sinf(thera);
 
 	//•âŠÔŒW”‚ğ—˜—p‚µ‚Ä•âŠ®‚µ‚½Quaternion‚ğ•Ô‚·
@@ -194,13 +201,15 @@ Quaternion Quaternion::DirectionToDirection(const Vector3& u, const Vector3& v)
 	float theta = std::acos(dot);
 
 	//axis,theta‚Å”CˆÓ²‰ñ“]‚ğì‚Á‚Ä•Ô‚·
-	Quaternion result;
-
-	result = Quaternion
-	({ axis.x * sinf(theta / 2.0f),
+	const Quaternion preset
+	{
+		axis.x * sinf(theta / 2.0f),
 		axis.y * sinf(theta / 2.0f) ,
 		axis.z * sinf(theta / 2.0f),
-		cosf(theta / 2.0f) });
+		cosf(theta / 2.0f) 
+	};
+	
+	Quaternion result = preset;
 	return result;
 
 }

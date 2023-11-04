@@ -96,11 +96,12 @@ private://メンバ変数
 	ComPtr<IDirectInput8> directInput_ = nullptr;
 	//キーボード
 	ComPtr <IDirectInputDevice8> keyboard_ = nullptr;
-	
+	//キーのバッファ
+	static const int32_t keysBufferNum_ = 256;
 	//全キーの状態
-	BYTE keys_[256] = {};
+	BYTE keys_[keysBufferNum_] = {};
 	//1フレーム前の全キーの状態
-	BYTE preKeys_[256] = {};
+	BYTE preKeys_[keysBufferNum_] = {};
 
 	//マウス
 	ComPtr <IDirectInputDevice8> mouse_ = nullptr;
@@ -110,6 +111,8 @@ private://メンバ変数
 	DIMOUSESTATE2 mouseStatePre_;
 	//マウス座標
 	DirectX::XMFLOAT2 mousePos_;
+	//マウスが押されているとき識別するために必要な計算番号
+	const BYTE mouseTrueNum_ = 0x80;
 
 	//ジョイスティック(コントローラー)
 	ComPtr<IDirectInputDevice8> joyStick_ = nullptr;

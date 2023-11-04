@@ -11,8 +11,9 @@
 
 Vector2::Vector2()
 {
-	x = 0.0f;
-	y = 0.0f;
+	const Vector2 vector0 = { 0.0f,0.0f };
+	x = vector0.x;
+	y = vector0.y;
 }
 
 Vector2::Vector2(float x, float y)
@@ -28,7 +29,7 @@ float Vector2::length() const
 Vector2& Vector2::normalize()
 {
 	float len = length();
-	if (len != 0)
+	if (len != 0.0f)
 	{
 		return *this /= len;
 

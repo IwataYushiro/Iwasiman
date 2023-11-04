@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.h"
+#include "XYZ.h"
 
 /*
 
@@ -11,7 +12,7 @@
 */
 struct Matrix4
 {
-	float m[4][4];
+	float m[XYZW_Num][XYZW_Num];
 };
 
 //’PˆÊs—ñ‚ğ‹‚ß‚é

@@ -16,10 +16,17 @@ Easing::Easing()
 	startCount_ = chrono::steady_clock::now();	//開始時間
 	nowCount_ = chrono::steady_clock::now();		//現在時間
 
+	struct DefaultNum
+	{
+		const float start = 0.0f;
+		const float end = 1.0f;
+		const float maxTime = 1.0f;
+	};
+	DefaultNum defaultNum;
 	//0から1のサンプル
-	this->start = 0.0f;
-	this->end = 1.0f;
-	this->maxtime = 1.0f;
+	this->start = defaultNum.start;
+	this->end = defaultNum.end;
+	this->maxtime = defaultNum.maxTime;
 
 	//イージングプロパティ
 	num_X = 0.0f;
@@ -77,11 +84,11 @@ float Easing::ease_in_sine()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = 1.0f - cosf((x * PI) / 2.0f);
+	const float v = 1.0f - cosf((x * PI) / 2.0f);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -99,11 +106,11 @@ float Easing::ease_out_sine()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = sinf((x * PI) / 2.0f);
+	const float v = sinf((x * PI) / 2.0f);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -121,11 +128,11 @@ float Easing::ease_in_out_sine()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = -(cosf(PI * x) - 1.0f) / 2.0f;
+	const float v = -(cosf(PI * x) - 1.0f) / 2.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -143,11 +150,11 @@ float Easing::ease_in_quad()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x * x;
+	const float v = x * x;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -165,11 +172,11 @@ float Easing::ease_out_quad()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = 1.0f - (1.0f - x) * (1.0f - x);
+	const float v = 1.0f - (1.0f - x) * (1.0f - x);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -187,11 +194,11 @@ float Easing::ease_in_out_quad()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x < 0.5f ? 2.0f * x * x : 1.0f - powf(-2.0f * x + 2.0f, 2.0f) / 2.0f;
+	const float v = x < 0.5f ? 2.0f * x * x : 1.0f - powf(-2.0f * x + 2.0f, 2.0f) / 2.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -209,11 +216,11 @@ float Easing::ease_in_cubic()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x * x * x;
+	const float v = x * x * x;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -231,11 +238,11 @@ float Easing::ease_out_cubic()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = 1.0f - powf(1.0f - x, 3.0f);
+	const float v = 1.0f - powf(1.0f - x, 3.0f);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -253,11 +260,11 @@ float Easing::ease_in_out_cubic()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x < 0.5f ? 4.0f * x * x * x : 1.0f - powf(-2.0f * x + 2.0f, 3.0f) / 2.0f;
+	const float v = x < 0.5f ? 4.0f * x * x * x : 1.0f - powf(-2.0f * x + 2.0f, 3.0f) / 2.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -275,11 +282,11 @@ float Easing::ease_in_quart()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x * x * x * x;
+	const float v = x * x * x * x;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -297,11 +304,11 @@ float Easing::ease_out_quart()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = 1.0f - powf(1.0f - x, 4.0f);
+	const float v = 1.0f - powf(1.0f - x, 4.0f);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -319,11 +326,11 @@ float Easing::ease_in_out_quart()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x < 0.5f ? 8.0f * x * x * x * x : 1.0f - powf(-2.0f * x + 2.0f, 4.0f) / 2.0f;
+	const float v = x < 0.5f ? 8.0f * x * x * x * x : 1.0f - powf(-2.0f * x + 2.0f, 4.0f) / 2.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -341,11 +348,11 @@ float Easing::ease_in_quint()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x * x * x * x * x;
+	const float v = x * x * x * x * x;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -363,11 +370,11 @@ float Easing::ease_out_quint()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = 1.0f - powf(1.0f - x, 5.0f);
+	const float v = 1.0f - powf(1.0f - x, 5.0f);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -385,11 +392,11 @@ float Easing::ease_in_out_quint()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x < 0.5f ? 16.0f * x * x * x * x * x : 1.0f - powf(-2.0f * x + 2.0f, 5.0f) / 2.0f;
+	const float v = x < 0.5f ? 16.0f * x * x * x * x * x : 1.0f - powf(-2.0f * x + 2.0f, 5.0f) / 2.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -407,11 +414,11 @@ float Easing::ease_in_expo()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x == 0.0f ? 0.0f : powf(2.0f, 10.0f * x - 10.0f);
+	const float v = x == 0.0f ? 0.0f : powf(2.0f, 10.0f * x - 10.0f);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -429,11 +436,11 @@ float Easing::ease_out_expo()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x == 1.0f ? 1.0f : 1.0f - powf(2.0f, -10.0f * x);
+	const float v = x == 1.0f ? 1.0f : 1.0f - powf(2.0f, -10.0f * x);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -451,12 +458,12 @@ float Easing::ease_in_out_expo()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x == 0.0f ? 0.0f : x == 1.0f ? 1.0f : x < 0.5f ? powf(2.0f, 20.0f * x - 10.0f) / 2.0f
+	const float v = x == 0.0f ? 0.0f : x == 1.0f ? 1.0f : x < 0.5f ? powf(2.0f, 20.0f * x - 10.0f) / 2.0f
 		: (2.0f - powf(2.0f, -20.0f * x + 10.0f)) / 2.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -474,11 +481,11 @@ float Easing::ease_in_circ()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = 1.0f - sqrtf(1.0f - powf(x, 2.0f));
+	const float v = 1.0f - sqrtf(1.0f - powf(x, 2.0f));
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -496,11 +503,11 @@ float Easing::ease_out_circ()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = sqrtf(1.0f - powf(x - 1.0f, 2.0f));
+	const float v = sqrtf(1.0f - powf(x - 1.0f, 2.0f));
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -518,12 +525,12 @@ float Easing::ease_in_out_circ()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x < 0.5f ? (1.0f - sqrtf(1.0f - powf(2.0f * x, 2.0f))) / 2.0f :
+	const float v = x < 0.5f ? (1.0f - sqrtf(1.0f - powf(2.0f * x, 2.0f))) / 2.0f :
 		(sqrtf(1.0f - powf(-2.0f * x + 2.0f, 2.0f)) + 1.0f) / 2.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -541,13 +548,13 @@ float Easing::ease_in_back()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
 	const float c1 = 1.70158f;
 	const float c3 = c1 + 1.0f;
-	float v = c3 * x * x * x - c1 * x * x;
+	const float v = c3 * x * x * x - c1 * x * x;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -565,13 +572,13 @@ float Easing::ease_out_back()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
 	const float c1 = 1.70158f;
 	const float c3 = c1 + 1.0f;
-	float v = 1.0f + c3 * powf(x - 1.0f, 3.0f) + c1 * pow(x - 1.0f, 2.0f);
+	const float v = 1.0f + c3 * powf(x - 1.0f, 3.0f) + c1 * pow(x - 1.0f, 2.0f);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -589,15 +596,15 @@ float Easing::ease_in_out_back()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
 	const float c1 = 1.70158f;
 	const float c2 = c1 * 1.525f;
-	float v = x < 0.5f
+	const float v = x < 0.5f
 		? (powf(2.0f * x, 2.0f) * ((c2 + 1.0f) * 2.0f * x - c2)) / 2.0f
 		: (powf(2.0f * x - 2.0f, 2.0f) * ((c2 + 1.0f) * (x * 2.0f - 2.0f) + c2) + 2.0f) / 2.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -617,12 +624,12 @@ float Easing::ease_in_elastic()
 
 	const float c4 = (2.0f * PI) / 3.0f;
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x == 0.0f ? 0.0f : x == 1.0f ? 1.0f :
+	const float v = x == 0.0f ? 0.0f : x == 1.0f ? 1.0f :
 		-powf(2.0f, 10.0f * x - 10.0f) * sinf((x * 10.0f - 10.75f) * c4);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -642,12 +649,12 @@ float Easing::ease_out_elastic()
 
 	const float c4 = (2.0f * PI) / 3.0f;
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x == 0.0f ? 0.0f : x == 1.0f ? 1.0f :
+	const float v = x == 0.0f ? 0.0f : x == 1.0f ? 1.0f :
 		powf(2.0f, -10.0f * x) * sinf((x * 10.0f - 0.75f) * c4) + 1.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -667,13 +674,13 @@ float Easing::ease_in_out_elastic()
 
 	const float c5 = (2.0f * PI) / 4.5f;
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x == 0.0f ? 0.0f : x == 1.0f ? 1.0f : x < 0.5f ?
+	const float v = x == 0.0f ? 0.0f : x == 1.0f ? 1.0f : x < 0.5f ?
 		-(powf(2.0f, 20.0f * x - 10.0f) * sinf((20.0f * x - 11.125f) * c5)) / 2.0f :
 		(powf(2.0f, -20.0f * x + 10.0f) * sinf((20.0f * x - 11.125f) * c5)) / 2.0f + 1.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -691,11 +698,11 @@ float Easing::ease_in_bounce()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = 1.0f - bounceCalculation(1.0f - x);
+	const float v = 1.0f - bounceCalculation(1.0f - x);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -713,11 +720,11 @@ float Easing::ease_out_bounce()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = bounceCalculation(x);
+	const float v = bounceCalculation(x);
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -735,13 +742,13 @@ float Easing::ease_in_out_bounce()
 	timeNow_ = chrono::duration_cast<chrono::microseconds>
 		(elapsedCount_).count() / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
-	float x = min(timeNow_ / totalTime_, 1.0f);
+	const float x = min(timeNow_ / totalTime_, 1.0f);
 
-	float v = x < 0.5f
+	const float v = x < 0.5f
 		? (1.0f - bounceCalculation(1.0f - 2.0f * x)) / 2.0f
 		: (1.0f + bounceCalculation(2.0f * x - 1.0f)) / 2.0f;
 
-	float ret = differencePos_ * v + startPos_;
+	const float ret = differencePos_ * v + startPos_;
 
 	num_X = ret;
 
@@ -754,11 +761,32 @@ float Easing::bounceCalculation(float x)
 
 	const float n1 = 7.5625f;
 	const float d1 = 2.75f;
-	if (x < 1.0f / d1)v = n1 * x * x;
-	else if (x < 2.0f / d1)v = n1 * (x -= 1.5f / d1) * x + 0.75f;
-	else if (x < 2.5f / d1)v = n1 * (x -= 2.25f / d1) * x + 0.9375f;
-	else v = n1 * (x -= 2.625f / d1) * x + 0.984375f;
 
+	//計算パターン
+	const float cal1 = 1.0f;
+	const float cal2 = 2.0f;
+	const float cal3 = 2.5f;
+
+	if (x < cal1 / d1)
+	{
+		const float calculation = n1 * x * x;
+		v = calculation;
+	}
+	else if (x < cal2 / d1)
+	{
+		const float calculation = n1 * (x -= 1.5f / d1) * x + 0.75f;
+		v = calculation;
+	}
+	else if (x < cal3 / d1)
+	{
+		const float calculation = n1 * (x -= 2.25f / d1) * x + 0.9375f;
+		v = calculation;
+	}
+	else
+	{
+		const float calculation = n1 * (x -= 2.625f / d1) * x + 0.984375f;
+		v = calculation;
+	}
 	return v;
 }
 

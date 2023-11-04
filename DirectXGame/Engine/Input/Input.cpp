@@ -179,7 +179,7 @@ bool Input::PressMouse(int32_t mouseNumber)
 {
 	//指定番号(0～2)が無いときはエラー
 	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState_.rgbButtons));
-	if ((mouseState_.rgbButtons[mouseNumber]& 0x80))
+	if ((mouseState_.rgbButtons[mouseNumber]& mouseTrueNum_))
 	{
 		return true;
 	}
@@ -191,8 +191,8 @@ bool Input::TriggerMouse(int32_t mouseNumber)
 	//指定番号(0～2)が無いときはエラー
 	assert(0 <= mouseNumber && mouseNumber < _countof(mouseStatePre_.rgbButtons));
 	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState_.rgbButtons));
-	if (!(mouseStatePre_.rgbButtons[mouseNumber] & 0x80)
-		&& (mouseState_.rgbButtons[mouseNumber] & 0x80))
+	if (!(mouseStatePre_.rgbButtons[mouseNumber] & mouseTrueNum_)
+		&& (mouseState_.rgbButtons[mouseNumber] & mouseTrueNum_))
 	{
 		return true;
 	}
@@ -203,8 +203,8 @@ bool Input::ReleaseMouse(int32_t mouseNumber)
 {//指定番号(0～2)が無いときはエラー
 	assert(0 <= mouseNumber && mouseNumber < _countof(mouseStatePre_.rgbButtons));
 	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState_.rgbButtons));
-	if ((mouseStatePre_.rgbButtons[mouseNumber] & 0x80)
-		&& !(mouseState_.rgbButtons[mouseNumber] & 0x80))
+	if ((mouseStatePre_.rgbButtons[mouseNumber] & mouseTrueNum_)
+		&& !(mouseState_.rgbButtons[mouseNumber] & mouseTrueNum_))
 	{
 		return true;
 	}
