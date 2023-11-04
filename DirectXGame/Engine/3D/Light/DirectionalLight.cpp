@@ -42,13 +42,25 @@ void DirectionalLight::Initialize()
 	D3D12_HEAP_PROPERTIES cbHeapProp{};		//ヒープ設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUへの転送用
 	//リソース設定
+	//リソースデスクのプリセット
+	struct ResDescPreset
+	{
+		const UINT64 width = 0xff;
+		const UINT height = 1;
+		const UINT16 arraysize = 1;
+		const UINT16 mipLevels = 1;
+		const UINT sampleCount = 1;
+		
+	};
+	ResDescPreset resDescPreset;
+
 	D3D12_RESOURCE_DESC cbResourseDesc{};
 	cbResourseDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourseDesc.Width = (sizeof(ConstBufferData) + 0xff) & ~0xff;//256バイトアラインメント
-	cbResourseDesc.Height = 1;
-	cbResourseDesc.DepthOrArraySize = 1;
-	cbResourseDesc.MipLevels = 1;
-	cbResourseDesc.SampleDesc.Count = 1;
+	cbResourseDesc.Width = (sizeof(ConstBufferData) + resDescPreset.width) & ~resDescPreset.width;//256バイトアラインメント
+	cbResourseDesc.Height = resDescPreset.height;
+	cbResourseDesc.DepthOrArraySize = resDescPreset.arraysize;
+	cbResourseDesc.MipLevels = resDescPreset.mipLevels;
+	cbResourseDesc.SampleDesc.Count = resDescPreset.sampleCount;
 	cbResourseDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//定数バッファの生成

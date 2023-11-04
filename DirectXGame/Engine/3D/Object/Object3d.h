@@ -108,6 +108,26 @@ public: // メンバ関数
 	//衝突時のコールバック(コリジョン情報、メイン属性、サブ属性)
 	virtual void OnCollision([[maybe_unused]] const CollisionInfo& info,
 		[[maybe_unused]] unsigned short attribute, [[maybe_unused]] unsigned short subAttribute) {}
+
+private://プリセット
+	// 色
+	const XMFLOAT4 presetColor_ = { 1.0f,1.0f,1.0f,1.0f };//プリセット
+	// ローカルスケール
+	const XMFLOAT3 presetScale_ = { 1.0f,1.0f,1.0f };//プリセット
+	// X,Y,Z軸回りのローカル回転角
+	const XMFLOAT3 presetRotation_ = { 0.0f,0.0f,0.0f };//プリセット
+	// ローカル座標
+	const XMFLOAT3 presetPosition_ = { 0.0f,0.0f,0.0f };//プリセット
+
+	//ルートパラメータインデックス
+	enum RootParameterIndex
+	{
+		RPI_ConstBuffTransform = 0,
+		RPI_ConstBuffMaterial = 1,
+		RPI_TexBuff = 2,
+		RPI_ConstBuffLight = 3,
+		RPI_Num = 4,
+	};
 protected: // メンバ変数
 	//モデル
 	Model* model_ = nullptr;
@@ -120,13 +140,13 @@ protected: // メンバ変数
 	//定数バッファのマッピング
 	ConstBufferDataB0* constMap0_ = nullptr;
 	// 色
-	XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+	XMFLOAT4 color_ = presetColor_;
 	// ローカルスケール
-	XMFLOAT3 scale_ = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 scale_ = presetScale_;
 	// X,Y,Z軸回りのローカル回転角
-	XMFLOAT3 rotation_ = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 rotation_ = presetRotation_;
 	// ローカル座標
-	XMFLOAT3 position_ = { 0.0f,0.0f,0.0f };
+	XMFLOAT3 position_ = presetPosition_;
 	// ローカルワールド変換行列
 	XMMATRIX matWorld_;
 	// 親オブジェクト

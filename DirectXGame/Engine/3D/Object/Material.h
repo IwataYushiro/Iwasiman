@@ -44,6 +44,12 @@ public://静的メンバ関数
 private://静的メンバ変数
 	static ID3D12Device* device_;
 
+private://プリセット
+	const XMFLOAT3 presetAmbient_ = { 0.3f,0.3f,0.3f };				//アンビエント影響度のプリセット
+	const XMFLOAT3 presetDiffuse_ = { 0.0f,0.0f,0.0f };				//ディフューズ影響度のプリセット
+	const XMFLOAT3 presetSpecular_= { 0.0f,0.0f,0.0f };				//スペキュラー影響度のプリセット
+	const float presetAlpha_ = 1.0f;								//アルファ値のプリセット
+
 public://共有メンバ変数
 	std::string name;				//マテリアル名
 	XMFLOAT3 ambient;				//アンビエント影響度
@@ -75,10 +81,10 @@ private://メンバ変数
 private://カプセル化メンバ関数
 	//コンストラクタ
 	Material() {
-		ambient = { 0.3f,0.3f,0.3f };
-		diffuse = { 0.0f,0.0f,0.0f };
-		specular = { 0.0f,0.0f,0.0f };
-		alpha = 1.0f;
+		ambient = presetAmbient_;
+		diffuse = presetDiffuse_;
+		specular = presetSpecular_;
+		alpha = presetAlpha_;
 		cpuDescHandleSRV_ = {};
 		gpuDescHandleSRV_ = {};
 	}

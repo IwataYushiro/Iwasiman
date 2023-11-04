@@ -90,7 +90,7 @@ Object3d* Object3d::Create()
 		return nullptr;
 	}
 	//スケールをセット
-	float scale_val = 1.0f;
+	const float scale_val = 1.0f;
 	object3d->scale_ = { scale_val,scale_val ,scale_val };
 	// 初期化
 	if (!object3d->Initialize()) {
@@ -129,7 +129,7 @@ void Object3d::InitializeGraphicsPipeline()
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(errstr.c_str());
-		exit(1);
+		assert(0);
 	}
 
 	// ピクセルシェーダの読み込みとコンパイル
@@ -152,7 +152,7 @@ void Object3d::InitializeGraphicsPipeline()
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(errstr.c_str());
-		exit(1);
+		assert(0);
 	}
 
 	// 頂点レイアウト
@@ -201,7 +201,8 @@ void Object3d::InitializeGraphicsPipeline()
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	// ブレンドステートの設定
-	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+	const int defaultRenderTargetNum = 0;
+	gpipeline.BlendState.RenderTarget[defaultRenderTargetNum] = blenddesc;
 
 	// 深度バッファのフォーマット
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
@@ -213,27 +214,37 @@ void Object3d::InitializeGraphicsPipeline()
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
-	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
-	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+	//その他
+	const UINT renderTargetNum = 1;
+	const UINT sampleDescCount = 1;
+
+	gpipeline.NumRenderTargets = renderTargetNum;	// 描画対象は1つ
+	gpipeline.RTVFormats[defaultRenderTargetNum] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = sampleDescCount; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
+	const UINT descriptorNum = 1;
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
-	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
+	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, descriptorNum, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[4];
-	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
-	rootparams[3].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
+	const UINT CBDT_Register = 0;//座標定数バッファのレジスタ
+	const UINT CBDM_Register = 1;//マテリアル定数バッファのレジスタ
+	const UINT CBDL_Register = 2;//ライト定数バッファのレジスタ
+
+	CD3DX12_ROOT_PARAMETER rootparams[RPI_Num];
+	rootparams[RPI_ConstBuffTransform].InitAsConstantBufferView(CBDT_Register, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[RPI_ConstBuffMaterial].InitAsConstantBufferView(CBDM_Register, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[RPI_TexBuff].InitAsDescriptorTable(descriptorNum, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[RPI_ConstBuffLight].InitAsConstantBufferView(CBDL_Register, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
 	// ルートシグネチャの設定
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
-	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	const UINT staticSamplersNum = 1;
+	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, staticSamplersNum, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	
 	// バージョン自動判定のシリアライズ
@@ -259,7 +270,7 @@ bool Object3d::Initialize()
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	// リソース設定
-	CD3DX12_RESOURCE_DESC resourceDescB0 =
+	const CD3DX12_RESOURCE_DESC resourceDescB0 =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB0) + 0xff) & ~0xff);
 	
 	HRESULT result;
@@ -349,11 +360,11 @@ void Object3d::Draw()
 	if (model_ == nullptr) return;
 
 	// 定数バッファビューをセット
-	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffB0_->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(RPI_ConstBuffTransform, constBuffB0_->GetGPUVirtualAddress());
 
 	//cmdList->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	//ライト描画
-	lightGroup_->Draw(cmdList_, 3);
+	lightGroup_->Draw(cmdList_, RPI_ConstBuffLight);
 	//モデルを描画
 	model_->Draw(cmdList_);
 }

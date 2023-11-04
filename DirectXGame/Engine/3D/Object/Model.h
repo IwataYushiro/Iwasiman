@@ -65,7 +65,13 @@ private:
 	Material* defaultMaterial_ = nullptr;
 	// デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeap_;
-	
+
+	//インデックス参照用
+	enum TriangleIndexNum
+	{
+		TIN_Index2 = 1,
+		TIN_Index0 = 3,
+	};
 	
 public://アクセッサ置き場
 	//デバイスセット

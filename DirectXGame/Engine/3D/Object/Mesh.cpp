@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "XYZ.h"
 #include <d3dcompiler.h>
 #include <cassert>
 
@@ -40,14 +41,14 @@ void Mesh::CalculateSmoothedVertexNormals()
 		XMVECTOR normal = {};
 		for (unsigned short index : v)
 		{
-			normal += XMVectorSet(vertices_[index].normal.x, vertices_[index].normal.y, vertices_[index].normal.z, 0);
+			normal += XMVectorSet(vertices_[index].normal.x, vertices_[index].normal.y, vertices_[index].normal.z, 0.0f);
 		}
 		normal = XMVector3Normalize(normal / (float)v.size());
 
 		//共通法線を使用する全ての頂点データに書き込む
 		for (unsigned short index : v)
 		{
-			vertices_[index].normal = { normal.m128_f32[0],normal.m128_f32[1],normal.m128_f32[2] };
+			vertices_[index].normal = { normal.m128_f32[XYZ_X],normal.m128_f32[XYZ_Y],normal.m128_f32[XYZ_Z] };
 		}
 	}
 }
@@ -66,13 +67,23 @@ void Mesh::CreateBuffers()
 	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
 	// リソース設定
+	//リソースデスクのプリセット
+	struct ResDescPreset
+	{
+		const UINT height = 1;
+		const UINT16 arraysize = 1;
+		const UINT16 mipLevels = 1;
+		const UINT sampleCount = 1;
+
+	};
+	ResDescPreset resDescPreset;
 	D3D12_RESOURCE_DESC resourceDesc{};
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resourceDesc.Width = sizeVB;
-	resourceDesc.Height = 1;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.MipLevels = 1;
-	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.Height = resDescPreset.height;
+	resourceDesc.DepthOrArraySize = resDescPreset.arraysize;
+	resourceDesc.MipLevels = resDescPreset.mipLevels;
+	resourceDesc.SampleDesc.Count = resDescPreset.sampleCount;
 	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 
@@ -93,7 +104,8 @@ void Mesh::CreateBuffers()
 	// 頂点バッファビューの作成(頂点、インデックスビューはデスクリプタ外で作る)
 	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
 	vbView_.SizeInBytes = sizeVB;
-	vbView_.StrideInBytes = sizeof(vertices_[0]);
+	const int32_t startVerticesNum = 0;
+	vbView_.StrideInBytes = sizeof(vertices_[startVerticesNum]);
 
 	// リソース設定
 	resourceDesc.Width = sizeIB;
@@ -122,16 +134,20 @@ void Mesh::CreateBuffers()
 void Mesh::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	// 頂点バッファの設定
-	cmdList->IASetVertexBuffers(0, 1, &vbView_);
+	const UINT viewsNum = 1;
+	cmdList->IASetVertexBuffers(0, viewsNum, &vbView_);
 	// インデックスバッファの設定
 	cmdList->IASetIndexBuffer(&ibView_);
 	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(2, material_->GetGpuHandle());
+	const int32_t SRVNum = 2;
+	cmdList->SetGraphicsRootDescriptorTable(SRVNum, material_->GetGpuHandle());
 
 	//定数バッファビューのセット(マテリアル)
 	ID3D12Resource* constBuff = material_->GetConstantBuffer();
-	cmdList->SetGraphicsRootConstantBufferView(1, constBuff->GetGPUVirtualAddress());
+	const int32_t constBuffMaterialNum = 1;
+	cmdList->SetGraphicsRootConstantBufferView(constBuffMaterialNum, constBuff->GetGPUVirtualAddress());
 	// 描画コマンド
-	cmdList->DrawIndexedInstanced((UINT)indices_.size(), 1, 0, 0, 0);
+	const UINT instanceCount = 1;
+	cmdList->DrawIndexedInstanced((UINT)indices_.size(), instanceCount, 0, 0, 0);
 
 }

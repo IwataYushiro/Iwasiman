@@ -106,7 +106,7 @@ void ObjectFbx::CreateGraphicsPipeline()
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(errstr.c_str());
-		exit(1);
+		assert(0);
 	}
 
 	// ピクセルシェーダの読み込みとコンパイル
@@ -129,7 +129,7 @@ void ObjectFbx::CreateGraphicsPipeline()
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(errstr.c_str());
-		exit(1);
+		assert(0);
 	}
 
 	// 頂点レイアウト

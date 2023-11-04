@@ -44,9 +44,11 @@ private://静的メンバ変数
 
 private://メンバ変数
 	//ライト光線方向(単位ベクトル)
-	XMVECTOR lightDir_ = { 1.0f,0.0f,0.0f,0.0f };
+	const XMVECTOR presetLightDir_ = { 1.0f,0.0f,0.0f,0.0f };//プリセット
+	XMVECTOR lightDir_ = presetLightDir_;
 	//ライトカラー
-	XMFLOAT3 lightColor_ = { 1.0f,1.0f,1.0f };
+	const XMFLOAT3 presetLightColor_ = { 1.0f,1.0f,1.0f };//プリセット
+	XMFLOAT3 lightColor_ = presetLightColor_;
 	//ダーティフラグ
 	bool dirty_ = false;
 	//有効フラグ

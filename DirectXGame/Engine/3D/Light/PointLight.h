@@ -36,16 +36,19 @@ public://サブクラス
 
 private://メンバ変数
 	//ライト座標
-	XMFLOAT3 lightPos_ = { 0.0f,0.0f,0.0f };
+	const XMFLOAT3 presetLightPos_ = { 0.0f,0.0f,0.0f };//プリセット
+	XMFLOAT3 lightPos_ = presetLightPos_;
 	//ライトの色
-	XMFLOAT3 lightColor_ = { 1.0f,1.0f,1.0f };
+	const XMFLOAT3 presetLightColor_ = { 1.0f,1.0f,1.0f };//プリセット
+	XMFLOAT3 lightColor_ = presetLightColor_;
 	//ライト距離の減衰係数
-	XMFLOAT3 lightAtten_ = { 1.0f,1.0f,1.0f };
+	const XMFLOAT3 presetLightAtten_ = { 1.0f,1.0f,1.0f };//プリセット
+	XMFLOAT3 lightAtten_ = presetLightAtten_;
 	//アクティブフラグ
 	bool active_ = false;
 
 public://アクセッサ置き場
-	
+
 	//ライト座標セット
 	inline void SetLightPos(const XMFLOAT3& lightPos) { this->lightPos_ = lightPos; }
 	//ライト座標ゲット

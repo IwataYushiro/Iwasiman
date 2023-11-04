@@ -115,7 +115,8 @@ public: // メンバ関数
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff_; // 定数バッファ
 	// ローカルスケール
-	XMFLOAT3 scale_ = { 1.0f,1.0f,1.0f };
+	const XMFLOAT3 presetScale_ = { 1.0f,1.0f,1.0f };//プリセット
+	XMFLOAT3 scale_ = presetScale_;
 	//一粒のパーティクル
 	Particle* particle_ = nullptr;
 	//カメラ
@@ -125,6 +126,10 @@ private: // メンバ変数
 	//ダーティフラグ
 	bool dirty_ = false;
 
+	//計算オフセット
+	const float calculationPosVelOffset_ = 2.0f;
+	//寿命
+	const int32_t lifeTime_ = 60;
 public://アクセッサ置き場
 	//パーティクルモデルセット
 	void SetParticleModel(Particle* pmodel) { this->particle_ = pmodel; }

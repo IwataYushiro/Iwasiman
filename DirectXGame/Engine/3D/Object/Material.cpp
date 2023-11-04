@@ -51,11 +51,13 @@ void Material::LoadTexture(const std::string& directoryPath, D3D12_CPU_DESCRIPTO
 	string filepath = directoryPath + textureFilename;
 
 	//ユニコード文字列に変換する
-	wchar_t wfilepath[128];
+	const int maxPathNum = 128;
+	wchar_t wfilePath[maxPathNum];
+	const int cbMultiByte = -1;
 	MultiByteToWideChar(CP_ACP, 0,
-		filepath.c_str(), -1, wfilepath, _countof(wfilepath));
+		filepath.c_str(), cbMultiByte, wfilePath, _countof(wfilePath));
 	// WICテクスチャのロード
-	result = LoadFromWICFile(wfilepath, WIC_FLAGS_NONE, &metadata, scratchImg);
+	result = LoadFromWICFile(wfilePath, WIC_FLAGS_NONE, &metadata, scratchImg);
 	assert(SUCCEEDED(result));
 
 	ScratchImage mipChain{};
@@ -85,7 +87,8 @@ void Material::LoadTexture(const std::string& directoryPath, D3D12_CPU_DESCRIPTO
 	texresDesc.Height = (UINT)metadata.height;
 	texresDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
 	texresDesc.MipLevels = (UINT16)metadata.mipLevels;
-	texresDesc.SampleDesc.Count = 1;
+	const UINT sampleCountNum = 1;
+	texresDesc.SampleDesc.Count = sampleCountNum;
 	
 	// テクスチャ用バッファの生成
 	result = device_->CreateCommittedResource(
@@ -113,7 +116,8 @@ void Material::LoadTexture(const std::string& directoryPath, D3D12_CPU_DESCRIPTO
 	srvDesc.Format = resDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = 1;
+	const UINT tex2DMipLevelsNum = 1;
+	srvDesc.Texture2D.MipLevels = tex2DMipLevelsNum;
 
 	device_->CreateShaderResourceView(texBuff_.Get(), //ビューと関連付けるバッファ
 		&srvDesc, //テクスチャ設定情報
@@ -145,13 +149,24 @@ void Material::CreateConstBuffer()
 	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
 	//リソース設定
+	//リソースデスクのプリセット
+	struct ResDescPreset
+	{
+		const UINT64 width = 0xff;
+		const UINT height = 1;
+		const UINT16 arraysize = 1;
+		const UINT16 mipLevels = 1;
+		const UINT sampleCount = 1;
+
+	};
+	ResDescPreset resDescPreset;
 	D3D12_RESOURCE_DESC resourceDesc{};
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resourceDesc.Width = (sizeof(ConstBufferDataB1) + 0xff) & ~0xff;
-	resourceDesc.Height = 1;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.MipLevels = 1;
-	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.Width = (sizeof(ConstBufferDataB1) + resDescPreset.width) & ~resDescPreset.width;
+	resourceDesc.Height = resDescPreset.height;
+	resourceDesc.DepthOrArraySize = resDescPreset.arraysize;
+	resourceDesc.MipLevels = resDescPreset.mipLevels;
+	resourceDesc.SampleDesc.Count = resDescPreset.sampleCount;
 	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//定数バッファ生成

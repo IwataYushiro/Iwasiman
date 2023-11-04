@@ -96,7 +96,7 @@ void ParticleManager::InitializeGraphicsPipeline(size_t blendmode)
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(errstr.c_str());
-		exit(1);
+		assert(0);
 	}
 
 	// ジオメトリシェーダの読み込みとコンパイル
@@ -119,7 +119,7 @@ void ParticleManager::InitializeGraphicsPipeline(size_t blendmode)
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(errstr.c_str());
-		exit(1);
+		assert(0);
 	}
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
@@ -141,7 +141,7 @@ void ParticleManager::InitializeGraphicsPipeline(size_t blendmode)
 		errstr += "\n";
 		// エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(errstr.c_str());
-		exit(1);
+		assert(0);
 	}
 
 	// 頂点レイアウト
@@ -210,7 +210,8 @@ void ParticleManager::InitializeGraphicsPipeline(size_t blendmode)
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	// ブレンドステートの設定
-	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+	const int defaultRenderTargetNum = 0;
+	gpipeline.BlendState.RenderTarget[defaultRenderTargetNum] = blenddesc;
 
 	// 深度バッファのフォーマット
 	gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT;
@@ -221,26 +222,34 @@ void ParticleManager::InitializeGraphicsPipeline(size_t blendmode)
 
 	// 図形の形状設定（三角形）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
-
-	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
-	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
-	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+	
+	//その他
+	const UINT renderTargetNum = 1;
+	const UINT sampleDescCount = 1;
+	gpipeline.NumRenderTargets = renderTargetNum;	// 描画対象は1つ
+	gpipeline.RTVFormats[defaultRenderTargetNum] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0～255指定のRGBA
+	gpipeline.SampleDesc.Count = sampleDescCount; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
+	const UINT descriptorNum = 1;
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
-	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
+	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, descriptorNum, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[2];
-	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	const UINT CBDT_Register = 0;//座標定数バッファのレジスタ
+	CD3DX12_ROOT_PARAMETER rootparams[Particle::RootParameterIndex::RPI_Num];
+	rootparams[Particle::RootParameterIndex::RPI_ConstBuffTransform].
+		InitAsConstantBufferView(CBDT_Register, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[Particle::RootParameterIndex::RPI_TexBuff].
+		InitAsDescriptorTable(descriptorNum, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
 	// ルートシグネチャの設定
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
-	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	const UINT staticSamplersNum = 1;
+	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, staticSamplersNum, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob;
 	// バージョン自動判定のシリアライズ
@@ -266,7 +275,7 @@ bool ParticleManager::Initialize()
 	// ヒーププロパティ
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	// リソース設定
-	CD3DX12_RESOURCE_DESC resourceDesc =
+	const CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff);
 
 	HRESULT result;
@@ -320,7 +329,8 @@ void ParticleManager::Draw()
 	cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	// 定数バッファビューをセット
-	cmdList_->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView
+	(Particle::RootParameterIndex::RPI_ConstBuffTransform, constBuff_->GetGPUVirtualAddress());
 
 	particle_->Draw(cmdList_);
 }
@@ -328,111 +338,116 @@ void ParticleManager::Draw()
 void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3& setpos, const XMFLOAT3& setvel,
  const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
+	//パーティクルセット
 	particle_ = p;
+
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
 		const XMFLOAT3 md_move = setmove;
 		XMFLOAT3 pos{};
-		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f) + setmove.x;
-		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f) + setmove.y;
-		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f) + setmove.z;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + setmove.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + setmove.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + setmove.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
-		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / 2.0f;
+		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / calculationPosVelOffset_;
+		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / calculationPosVelOffset_;
+		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / calculationPosVelOffset_;
 		//重力に見立ててYのみ{0.001f,0}でランダムに分布
 		XMFLOAT3 acc{};
 		const XMFLOAT3 md_acc = setacc;
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		particle_->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
 	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
+	//パーティクルセット
 	particle_ = p;
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
 		XMFLOAT3 pos{};
-		pos.x = ((float)rand() / RAND_MAX * md_pos.x / 2.0f) + setmove.x;
-		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f) + setmove.y;
-		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f) + setmove.z;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x / calculationPosVelOffset_) + setmove.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + setmove.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + setmove.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
-		vel.x = (float)rand() / RAND_MAX * md_vel.x / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / 2.0f;
+		vel.x = (float)rand() / RAND_MAX * md_vel.x / calculationPosVelOffset_;
+		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / calculationPosVelOffset_;
+		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / calculationPosVelOffset_;
 		//重力に見立ててYのみ{0.001f,0}でランダムに分布
 		XMFLOAT3 acc{};
 		const XMFLOAT3 md_acc = setacc;
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		particle_->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 
 void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
 	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
+	//パーティクルセット
 	particle_ = p;
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
 		XMFLOAT3 pos{};
-		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f) + setmove.x;
-		pos.y = ((float)rand() / RAND_MAX * md_pos.y / 2.0f) + setmove.y;
-		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / 2.0f) + setmove.z;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + setmove.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y / calculationPosVelOffset_) + setmove.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + setmove.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
-		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * md_vel.y / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / 2.0f;
+		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / calculationPosVelOffset_;
+		vel.y = (float)rand() / RAND_MAX * md_vel.y / calculationPosVelOffset_;
+		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / calculationPosVelOffset_;
 		//重力に見立ててYのみ{0.001f,0}でランダムに分布
 		XMFLOAT3 acc{};
 		const XMFLOAT3 md_acc = setacc;
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		particle_->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 
 void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
 	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
+	//パーティクルセット
 	particle_ = p;
 	for (int i = 0; i < setnum; i++)
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
 		XMFLOAT3 pos{};
-		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / 2.0f) + setmove.x;
-		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / 2.0f) + setmove.y;
-		pos.z = ((float)rand() / RAND_MAX * md_pos.z / 2.0f) + setmove.z;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + setmove.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + setmove.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z / calculationPosVelOffset_) + setmove.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
-		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * md_vel.z / 2.0f;
+		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / calculationPosVelOffset_;
+		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / calculationPosVelOffset_;
+		vel.z = (float)rand() / RAND_MAX * md_vel.z / calculationPosVelOffset_;
 		//重力に見立ててYのみ{0.001f,0}でランダムに分布
 		XMFLOAT3 acc{};
 		const XMFLOAT3 md_acc = setacc;
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		particle_->Add(60, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }

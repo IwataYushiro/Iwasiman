@@ -23,8 +23,32 @@ private://エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-public://サブクラス
+private:
+	//プリセット
+	struct PresetParticle
+	{
+		//スケール
+		const float scale = 1.0f;
+		//初期値
+		const float s_scale = 1.0f;
+		//最終値
+		const float e_scale = 0.0f;
 
+		//カラー
+		//初期値
+		const XMFLOAT4 s_color = { 1.0f,1.0f,1.0f,1.0f };
+		//最終値
+		const XMFLOAT4 e_color = { 0.0f,0.0f,0.0f,0.0f };
+	};
+	
+public://サブクラス
+	//ルートパラメータインデックス
+	enum RootParameterIndex
+	{
+		RPI_ConstBuffTransform=0,
+		RPI_TexBuff = 1,
+		RPI_Num = 2,
+	};
 	struct VertexPosScale
 	{
 		XMFLOAT3 pos; // xyz座標
@@ -37,6 +61,8 @@ public://サブクラス
 	{
 		//DirectX::を省略
 		using XMFLOAT3 = DirectX::XMFLOAT3;
+		//プリセット
+		PresetParticle preset;
 
 		//座標
 		XMFLOAT3 position = {};
@@ -50,18 +76,18 @@ public://サブクラス
 		int num_frame = 0;
 
 		//スケール
-		float scale = 1.0f;
+		float scale = preset.scale;
 		//初期値
-		float s_scale = 1.0f;
+		float s_scale = preset.s_scale;
 		//最終値
-		float e_scale = 0.0f;
+		float e_scale = preset.e_scale;
 
 		//カラー
 		XMFLOAT4 color = {};
 		//初期値
-		XMFLOAT4 s_color = { 1.0f,1.0f,1.0f,1.0f };
+		XMFLOAT4 s_color = preset.s_color;
 		//最終値
-		XMFLOAT4 e_color = { 0.0f,0.0f,0.0f,0.0f };
+		XMFLOAT4 e_color = preset.e_color;
 
 	};
 

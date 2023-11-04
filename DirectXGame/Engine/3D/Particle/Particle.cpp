@@ -66,12 +66,13 @@ void Particle::LoadTexture(const std::string& fileName)
 	//ディレクトリパスとファイル名を連結してフルパスを得る
 	std::string fullPath = defaultTextureDirectoryPath_ + fileName;
 
+	const int cbMultiByte = -1;
 	//ワイド文字列に変換した際の文字列バッファサイズを計算
-	int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
+	int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), cbMultiByte, nullptr, 0);
 
 	//ワイド文字列に変換
 	std::vector<wchar_t> wfilePath(filePathBufferSize);
-	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath.data(), filePathBufferSize);
+	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), cbMultiByte, wfilePath.data(), filePathBufferSize);
 
 	//画像ファイルの用意
 	TexMetadata metadata{};
@@ -111,7 +112,8 @@ void Particle::LoadTexture(const std::string& fileName)
 	textureResourceDesc.Height = (UINT)metadata.height;				//高さ
 	textureResourceDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
 	textureResourceDesc.MipLevels = (UINT16)metadata.mipLevels;
-	textureResourceDesc.SampleDesc.Count = 1;
+	const UINT sampleDescCount = 1;
+	textureResourceDesc.SampleDesc.Count = sampleDescCount;
 
 	//テクスチャバッファの生成
 	result = device_->CreateCommittedResource(
@@ -186,7 +188,8 @@ void Particle::CreateBuffers()
 	// 頂点バッファビューの作成
 	vbView_.BufferLocation = vertBuff_->GetGPUVirtualAddress();
 	vbView_.SizeInBytes = sizeof(vertices_);
-	vbView_.StrideInBytes = sizeof(vertices_[0]);
+	const int32_t startVerticesNum = 0;
+	vbView_.StrideInBytes = sizeof(vertices_[startVerticesNum]);
 
 	
 }
@@ -260,17 +263,19 @@ void Particle::Draw(ID3D12GraphicsCommandList* cmdList)
 	assert(cmdList);
 
 	// 頂点バッファの設定
-	cmdList->IASetVertexBuffers(0, 1, &vbView_);
+	const UINT viewsNum = 1;
+	cmdList->IASetVertexBuffers(0, viewsNum, &vbView_);
 	
 	// デスクリプタヒープの配列
 	ID3D12DescriptorHeap* ppHeaps[] = { descHeap_.Get() };
 	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	
 	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV_);
+	cmdList->SetGraphicsRootDescriptorTable(RPI_TexBuff, gpuDescHandleSRV_);
 	
 	// 描画コマンド
-	cmdList->DrawInstanced((UINT)std::distance(particles_.begin(), particles_.end()), 1, 0, 0);
+	const UINT instanceCount = 1;
+	cmdList->DrawInstanced((UINT)std::distance(particles_.begin(), particles_.end()), instanceCount, 0, 0);
 
 }
 

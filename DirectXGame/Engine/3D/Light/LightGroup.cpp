@@ -44,13 +44,25 @@ void LightGroup::Initialize()
 	D3D12_HEAP_PROPERTIES cbHeapProp{};		//ヒープ設定
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUへの転送用
 	//リソース設定
+	//リソースデスクのプリセット
+	struct ResDescPreset
+	{
+		const UINT64 width = 0xff;
+		const UINT height = 1;
+		const UINT16 arraysize = 1;
+		const UINT16 mipLevels = 1;
+		const UINT sampleCount = 1;
+
+	};
+	ResDescPreset resDescPreset;
+
 	D3D12_RESOURCE_DESC cbResourseDesc{};
 	cbResourseDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResourseDesc.Width = (sizeof(ConstBufferData) + 0xff) & ~0xff;//256バイトアラインメント
-	cbResourseDesc.Height = 1;
-	cbResourseDesc.DepthOrArraySize = 1;
-	cbResourseDesc.MipLevels = 1;
-	cbResourseDesc.SampleDesc.Count = 1;
+	cbResourseDesc.Width = (sizeof(ConstBufferData) + resDescPreset.width) & ~resDescPreset.width;//256バイトアラインメント
+	cbResourseDesc.Height = resDescPreset.height;
+	cbResourseDesc.DepthOrArraySize = resDescPreset.arraysize;
+	cbResourseDesc.MipLevels = resDescPreset.mipLevels;
+	cbResourseDesc.SampleDesc.Count = resDescPreset.sampleCount;
 	cbResourseDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	//定数バッファの生成
@@ -91,6 +103,11 @@ void LightGroup::TransferConstBuffer()
 	result = constBuff_->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
+		enum LightActiveNum
+		{
+			LAN_False=0,
+			LAN_True=1,
+		};
 		//環境光
 		constMap->ambientColor = ambientColor_;
 		//平行光源
@@ -99,14 +116,14 @@ void LightGroup::TransferConstBuffer()
 			//lightが有効なら設定を転送
 			if (dirLights_[i].IsActive())
 			{
-				constMap->dirLights[i].active = 1;
+				constMap->dirLights[i].active = LAN_True;
 				constMap->dirLights[i].lightV = -dirLights_[i].GetLightDir();
 				constMap->dirLights[i].lightColor = dirLights_[i].GetLightColor();
 			}
 			//無効なら転送しない
 			else
 			{
-				constMap->dirLights[i].active = 0;
+				constMap->dirLights[i].active = LAN_False;
 			}
 		}
 		//点光源
@@ -115,7 +132,7 @@ void LightGroup::TransferConstBuffer()
 			//lightが有効なら設定を転送
 			if (pointLights_[i].IsActive())
 			{
-				constMap->pointLights[i].active = 1;
+				constMap->pointLights[i].active = LAN_True;
 				constMap->pointLights[i].lightPos = pointLights_[i].GetLightPos();
 				constMap->pointLights[i].lightColor = pointLights_[i].GetLightColor();
 				constMap->pointLights[i].lightatten = pointLights_[i].GetLightAtten();
@@ -123,7 +140,7 @@ void LightGroup::TransferConstBuffer()
 			//無効なら転送しない
 			else
 			{
-				constMap->pointLights[i].active = 0;
+				constMap->pointLights[i].active = LAN_False;
 			}
 		}
 		constBuff_->Unmap(0, nullptr);
@@ -132,22 +149,61 @@ void LightGroup::TransferConstBuffer()
 
 void LightGroup::DefaultLightSetting()
 {
-	dirLights_[0].SetActive(true);
-	dirLights_[0].SetLightColor({ 1.0f,1.0f,1.0f });
-	dirLights_[0].SetLightDir({ 0.0f,-1.0f,0.0f,0.0f });
+	//ライト番号
+	enum LightNum
+	{
+		LN_Light0=0, 
+		LN_Light1 = 1,
+		LN_Light2 = 2,
+	};
+	//点光源番号
+	enum PointLightNum
+	{
+		PLN_Light0=0,
+	};
+	//デフォルトプリセット
+	struct DefaultLightPreset
+	{
+		//0番
+		const XMVECTOR light0Dir = { 0.0f,-1.0f,0.0f,0.0f };
+		const XMFLOAT3 light0Color = { 1.0f,1.0f,1.0f };
+		const float pad0 = 0.0f;
+		//1番
+		const XMVECTOR light1Dir = { 0.5f,0.1f,0.2f,0.0f };
+		const XMFLOAT3 light1Color = { 1.0f,1.0f,1.0f };
+		const float pad1 = 0.0f;
+		//2番
+		const XMVECTOR light2Dir = { -0.5f,0.1f,-0.2f,0.0f };
+		const XMFLOAT3 light2Color = { 1.0f,1.0f,1.0f };
+		const float pad2 = 0.0f;
 
-	dirLights_[1].SetActive(true);
-	dirLights_[1].SetLightColor({ 1.0f,1.0f,1.0f });
-	dirLights_[1].SetLightDir({ 0.5f,0.1f,0.2f,0.0f });
+		//点光源
+		//0番
+		const XMFLOAT3 pointLight0Color = { 1.0f,1.0f,1.0f };
+		const float padp0 = 0.0f;
+		const XMFLOAT3 pointLight0Pos = { 0.0f,0.0f,0.0f };
+		const float padp1 = 0.0f;
+		const XMFLOAT3 pointLight0Atten = { 1.0f,1.0f,1.0f };
+		const float padp2 = 0.0f;
+	};
+	DefaultLightPreset preset;
 
-	dirLights_[2].SetActive(true);
-	dirLights_[2].SetLightColor({ 1.0f,1.0f,1.0f });
-	dirLights_[2].SetLightDir({ -0.5f,0.1f,-0.2f,0.0f });
+	dirLights_[LN_Light0].SetActive(true);
+	dirLights_[LN_Light0].SetLightColor(preset.light0Color);
+	dirLights_[LN_Light0].SetLightDir(preset.light0Dir);
 
-	pointLights_[0].SetActive(false);
-	pointLights_[0].SetLightColor({ 1.0f,1.0f,1.0f });
-	pointLights_[0].SetLightPos({ 0.0f,0.0f,0.0f });
-	pointLights_[0].SetLightAtten({ 1.0f,1.0f,1.0f });
+	dirLights_[LN_Light1].SetActive(true);
+	dirLights_[LN_Light1].SetLightColor(preset.light1Color);
+	dirLights_[LN_Light1].SetLightDir(preset.light1Dir);
+
+	dirLights_[LN_Light2].SetActive(true);
+	dirLights_[LN_Light2].SetLightColor(preset.light2Color);
+	dirLights_[LN_Light2].SetLightDir(preset.light2Dir);
+
+	pointLights_[PLN_Light0].SetActive(false);
+	pointLights_[PLN_Light0].SetLightColor(preset.pointLight0Color);
+	pointLights_[PLN_Light0].SetLightPos(preset.pointLight0Pos);
+	pointLights_[PLN_Light0].SetLightAtten(preset.pointLight0Atten);
 }
 
 void LightGroup::SetAmbientColor(const XMFLOAT3& color)

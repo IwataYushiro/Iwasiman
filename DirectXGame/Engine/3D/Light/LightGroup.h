@@ -53,7 +53,8 @@ public://静的メンバ関数
 private://メンバ変数
 	
 	//環境光の色
-	XMFLOAT3 ambientColor_ = { 1.0f,1.0f,1.0f };
+	const XMFLOAT3 presetAmbientColor_ = { 1.0f,1.0f,1.0f };//プリセット
+	XMFLOAT3 ambientColor_ = presetAmbientColor_;
 	//平行光源の配列
 	DirectionalLight dirLights_[DirLightNum];
 	//定数バッファ

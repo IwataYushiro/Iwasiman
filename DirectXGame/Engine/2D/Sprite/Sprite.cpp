@@ -187,9 +187,9 @@ void Sprite::Draw()
 	spCommon_->GetDxCommon()->GetCommandList()->IASetVertexBuffers(0, viewsNum, &vbView_);
 
 	//定数バッファビュー(CBVの設定コマンド)
-	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(spCommon_->RPI_ConstBuff0, constBuffMaterial_->GetGPUVirtualAddress());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(spCommon_->RPI_ConstBuffMaterial, constBuffMaterial_->GetGPUVirtualAddress());
 
-	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(spCommon_->RPI_ConstBuff1, constBuffTransform_->GetGPUVirtualAddress());
+	spCommon_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(spCommon_->RPI_ConstBuffTransform, constBuffTransform_->GetGPUVirtualAddress());
 	//描画コマンド
 	const UINT instanceCount = 1;
 	spCommon_->GetDxCommon()->GetCommandList()->DrawInstanced(_countof(vertices_), instanceCount, 0, 0);

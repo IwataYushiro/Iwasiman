@@ -108,7 +108,8 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 		getline(line_stream, key, ' ');
 
 		//先頭のタブ文字は無視
-		if (key[0] == '\t')
+		const int32_t startKeyNum = 0;
+		if (key[startKeyNum] == '\t')
 		{
 			key.erase(key.begin());//先頭の文字を削除
 		}
@@ -155,18 +156,19 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 			line_stream >> material->textureFilename;
 			//フルパスからファイル名取り出し
 			size_t pos1;
+			const int32_t offsetPos1Num = 1;
 			pos1 = material->textureFilename.rfind('\\');
 			if (pos1!=string::npos)
 			{
 				material->textureFilename = material->textureFilename.substr(
-					pos1 + 1, material->textureFilename.size() - pos1 - 1);
+					pos1 + offsetPos1Num, material->textureFilename.size() - pos1 - offsetPos1Num);
 			}
 
 			pos1 = material->textureFilename.rfind('/');
 			if (pos1 != string::npos)
 			{
 				material->textureFilename = material->textureFilename.substr(
-					pos1 + 1, material->textureFilename.size() - pos1 - 1);
+					pos1 + offsetPos1Num, material->textureFilename.size() - pos1 - offsetPos1Num);
 			}
 		}
 	}
@@ -308,7 +310,8 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 			line_stream >> texcoord.y;
 
 			//V方向反転
-			texcoord.y = 1.0f - texcoord.y;
+			const float reverseCalculation = 1.0f - texcoord.y;
+			texcoord.y = reverseCalculation;
 			//テクスチャ座標データに追加
 			texcoords.emplace_back(texcoord);
 
@@ -349,6 +352,18 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 			int faceIndexCount = 0;
 			//半角スペース区切りで行の続きを読み込む
 			string index_string;
+			//スラッシュのスキップするためのオフセット
+			const int32_t seekSkipSlashOffset = 1;
+			//頂点インデックスのオフセット
+			const int32_t indexOffset = 1;
+			//デフォルトの法線ベクトルとUV
+			struct DefaultNormalAndUV
+			{
+				const XMFLOAT3 normal = { 0.0f,0.0f,1.0f };
+				const XMFLOAT2 uv = { 0.0f,0.0f };
+			};
+			DefaultNormalAndUV defaultNormalAndUV;
+
 			while (getline(line_stream, index_string, ' '))
 			{
 				//頂点インデックス1個分の文字列をストリームに変換して解析しやすくする
@@ -359,24 +374,24 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 
 				Material* material = mesh->GetMaterial();
 				//スラッシュを飛ばす
-				index_stream.seekg(1, ios_base::cur);
+				index_stream.seekg(seekSkipSlashOffset, ios_base::cur);
 				//マテリアル、テクスチャがある場合
 				if (material && material->textureFilename.size() > 0)
 				{
 					index_stream >> indexTexcoord;
-					index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+					index_stream.seekg(seekSkipSlashOffset, ios_base::cur);//スラッシュを飛ばす
 					index_stream >> indexNormal;
 
 					//頂点データの追加
 					Mesh::VertexPosNormalUv vertex{};
-					vertex.pos = positions[indexPosition - 1];
-					vertex.normal = normals[indexNormal - 1];
-					vertex.uv = texcoords[indexTexcoord - 1];
+					vertex.pos = positions[indexPosition - indexOffset];
+					vertex.normal = normals[indexNormal - indexOffset];
+					vertex.uv = texcoords[indexTexcoord - indexOffset];
 					mesh->AddVertex(vertex);
 					//エッジ平滑化データの追加
 					if (smoothing)
 					{
-						mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
+						mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - indexOffset);
 					}
 				}
 				else
@@ -388,9 +403,9 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 					{
 						//頂点データ追加
 						Mesh::VertexPosNormalUv vertex{};
-						vertex.pos = positions[indexPosition - 1];
-						vertex.normal = { 0.0f,0.0f,1.0f };
-						vertex.uv = { 0.0f,0.0f };
+						vertex.pos = positions[indexPosition - indexOffset];
+						vertex.normal = defaultNormalAndUV.normal;
+						vertex.uv = defaultNormalAndUV.uv;
 						mesh->AddVertex(vertex);
 						//エッジ平滑化データの追加
 						if (smoothing)
@@ -400,31 +415,34 @@ void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
 					}
 					else
 					{
-						index_stream.seekg(-1, ios_base::cur);//ヒトマスモドル
+						index_stream.seekg(-seekSkipSlashOffset, ios_base::cur);//ヒトマスモドル
 						index_stream >> indexTexcoord;
-						index_stream.seekg(1, ios_base::cur);//スラッシュを飛ばす
+						index_stream.seekg(seekSkipSlashOffset, ios_base::cur);//スラッシュを飛ばす
 						index_stream >> indexNormal;
 						//頂点データの追加
 						Mesh::VertexPosNormalUv vertex{};
-						vertex.pos = positions[indexPosition - 1];
-						vertex.normal = normals[indexNormal - 1];
-						vertex.uv = { 0.0f,0.0f };
+						vertex.pos = positions[indexPosition - indexOffset];
+						vertex.normal = normals[indexNormal - indexOffset];
+						vertex.uv = defaultNormalAndUV.uv;
 						mesh->AddVertex(vertex);
 						//エッジ平滑化データの追加
 						if (smoothing)
 						{
-							mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
+							mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - indexOffset);
 						}
 					}
 				}
 				//インデックスデータの追加
-				if (faceIndexCount >= 3)
+				//3頂点目
+				const int inPoligonVertexTriangle = 3;
+				if (faceIndexCount >= inPoligonVertexTriangle)
 				{
+					
 					// 四角形ポリゴンの4点目なので、
 					// 四角形の0,1,2,3の内 2,3,0で三角形を構築する
-					mesh->AddIndex(static_cast<unsigned short>(indexCountTex - 1));
+					mesh->AddIndex(static_cast<unsigned short>(indexCountTex - TIN_Index2));
 					mesh->AddIndex(static_cast<unsigned short>(indexCountTex));
-					mesh->AddIndex(static_cast<unsigned short>(indexCountTex - 3));
+					mesh->AddIndex(static_cast<unsigned short>(indexCountTex - TIN_Index0));
 				}
 				else
 				{
