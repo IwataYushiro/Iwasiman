@@ -100,12 +100,12 @@ bool Player::Initialize() {
 	spriteExplosion_->Initialize(spCommon_, GPSPTI_PlayerExplosionTex);
 	spriteExplosion_->SetAnchorPoint(explosionAnchorPoint_);
 	spriteExplosion_->SetPosition(explosionPos_);
-	spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[0].start,easeExplosionSizeAndAlpha_[1].start });
-	spriteExplosion_->SetColor({ asIsColor_.x,asIsColor_.y,asIsColor_.z,easeExplosionSizeAndAlpha_[2].start });
+	spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[XYW_X].start,easeExplosionSizeAndAlpha_[XYW_Y].start });
+	spriteExplosion_->SetColor({ asIsColor_.x,asIsColor_.y,asIsColor_.z,easeExplosionSizeAndAlpha_[XYW_W].start });
 	spriteExplosion_->Update();
 
 	//パーティクル
-	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
+	particleSmoke_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmSmoke_ = ParticleManager::Create();
 	pmSmoke_->SetParticleModel(particleSmoke_);
 
@@ -223,7 +223,7 @@ void Player::Move() {
 		{ 0.0f,0.001f,0.0f },
 		2,
 		{ 1.0f, 0.0f },
-		{1.0f,1.0f,1.0f,1.0f},
+		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 		{0.0f,0.0f,0.0f,1.0f}
 	};
 	//キーボード入力による移動処理

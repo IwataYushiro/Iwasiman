@@ -106,9 +106,9 @@ void TitleScene::Initialize()
 
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
-	particle2_ = Particle::LoadFromParticleTexture("particle1.png");
+	particle2_ = Particle::LoadFromParticleTexture("particle8.png");
 	pm1_ = ParticleManager::Create();
-	pm1_->SetBlendMode(ParticleManager::BP_SUBTRACT);
+	pm1_->SetBlendMode(ParticleManager::BP_ADD);
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
 
@@ -183,7 +183,7 @@ void TitleScene::Update()
 			{ 0.0f,0.001f,0.0f },
 			3,
 			{ 1.0f, 0.0f },
-			{ 1.0f,1.0f,1.0f,1.0f },
+			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 		//パーティクル
@@ -388,7 +388,7 @@ void TitleScene::UpdateIsMenu()
 	}
 
 
-	if (easeMenuPosX_[0].num_X == easeMenuPosX_[0].end)
+	if (spriteMenu_->GetPosition().x == easeMenuPosX_[TMEN_Menu].end)
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{

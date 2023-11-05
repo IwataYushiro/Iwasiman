@@ -3,6 +3,7 @@
 #include "LevelLoaderJson.h"
 #include "TouchableObject.h"
 #include "EnumList.h"
+#include "MyMath.h"
 
 #include <cassert>
 #include <sstream>
@@ -108,7 +109,7 @@ void StageSelectScene::Initialize()
 	const XMFLOAT3 stageScale = { 7.0f,7.0f,7.0f };
 	objStage_->SetScale(stageScale);
 
-	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
@@ -143,7 +144,7 @@ void StageSelectScene::Update()
 			{ 0.0f,0.001f,0.0f },
 			3,
 			{ 1.0f, 0.0f },
-			{ 1.0f,1.0f,1.0f,1.0f },
+			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 
@@ -319,7 +320,7 @@ void StageSelectScene::UpdateIsDone()
 	camera_->SetTarget({ easeTargetDoneMenu_[XYZ_X].num_X, easeTargetDoneMenu_[XYZ_Y].num_X, easeTargetDoneMenu_[XYZ_Z].num_X });
 
 	//イージングが終わったら
-	if (camera_->GetEye().x == easeEyeDoneMenu_[0].end)
+	if (camera_->GetEye().x == easeEyeDoneMenu_[XYZ_X].end)
 	{
 		for (int i = 0; i < XYZ_Num; i++)easePlayerStartMove_[i].Standby(false);
 		for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].Standby(false);
@@ -339,8 +340,8 @@ void StageSelectScene::UpdateIsGameStart()
 	for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].ease_in_quint();
 
 	//カメラセット
-	camera_->SetEye({ easeEyeDoneMenu_[XYZ_X].num_X, easeEyeDoneMenu_[XYZ_Y].num_X, easeEyeDoneMenu_[XYZ_Z].num_X });
-	camera_->SetTarget({ easeTargetDoneMenu_[XYZ_X].num_X, easeTargetDoneMenu_[XYZ_Y].num_X, easeTargetDoneMenu_[XYZ_Z].num_X });
+	camera_->SetEye({ easeEyeGameStart_[XYZ_X].num_X, easeEyeGameStart_[XYZ_Y].num_X, easeEyeGameStart_[XYZ_Z].num_X });
+	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
 
 	//プレイヤー座標もセット
 	for (Object3d*& player : objPlayers_)

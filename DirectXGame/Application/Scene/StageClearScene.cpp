@@ -1,11 +1,13 @@
 #include "StageClearScene.h"
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
+#include "MyMath.h"
 
 #include <cassert>
 #include <sstream>
 #include <iomanip>
 
+using namespace MyMath;
 /*
 
 *	StageClearScene.cpp
@@ -349,7 +351,7 @@ void StageClearScene::UpdateIsMenu()
 		spriteTitle_->SetColor(selectMenuColor);
 	}
 
-	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.end)
+	if (spriteDone_->GetPosition().x == easeMenuPosX_[SCMEN_SelectSpace].end)
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{
@@ -377,6 +379,33 @@ void StageClearScene::UpdateIsMenu()
 
 
 		}
+	}
+	else
+	{
+		//クリア演出プリセット
+		const ParticleManager::Preset clear =
+		{
+			particle1_,
+			{0.0f,0.0f,0.0f},//使わない
+			{ 5.0f ,2.0f,0.0f },
+			{ 3.0f,6.0f,0.3f },
+			{ 0.0f,0.001f,0.0f },
+			6,
+			{ RandomMTFloat(4.0f,6.0f), 0.0f },
+			{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
+			{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),0.0f }
+		};
+		
+		const DirectX::XMFLOAT3 clearStartPosLeft = { -30.0f,-30.0f,-5.0f };//左側
+		const DirectX::XMFLOAT3 clearStartPosRight = { 30.0f,-30.0f,-5.0f };//右側
+
+		//左側に
+		pm1_->ActiveY(clear.particle, clearStartPosLeft, clear.pos, clear.vel,
+			clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
+
+		//右側に
+		pm1_->ActiveY(clear.particle, clearStartPosRight, clear.pos, clear.vel,
+			clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
 	}
 
 	spriteStageClear_->SetColor(doneColor);
@@ -424,7 +453,7 @@ void StageClearScene::Draw()
 	spriteFadeInOut_->Draw();
 	spriteLoad_->Draw();
 	spriteStageInfoNow_->Draw();
-
+	
 }
 
 void StageClearScene::FadeOut(DirectX::XMFLOAT3 rgb)

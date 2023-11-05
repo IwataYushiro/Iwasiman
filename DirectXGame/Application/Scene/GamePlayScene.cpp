@@ -6,6 +6,7 @@
 #include "TouchableObject.h"
 #include "CollisionAttribute.h"
 #include "EnumList.h"
+#include "MyMath.h"
 
 #include <cassert>
 #include <sstream>
@@ -79,7 +80,7 @@ void GamePlayScene::Initialize()
 	Object3d::SetLightGroup(lightGroup_);
 
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	pm_ = ParticleManager::Create();
 	pm_->SetBlendMode(ParticleManager::BP_ADD);
 	pm_->SetParticleModel(particle1_);
@@ -221,7 +222,7 @@ void GamePlayScene::UpdateIsStartGame()
 			{ 0.0f,0.001f,0.0f },
 			2,
 			{ 1.0f, 0.0f },
-			{1.0f,1.0f,1.0f,1.0f},
+			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{0.0f,0.0f,0.0f,1.0f}
 		};
 		pm_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
@@ -529,7 +530,7 @@ void GamePlayScene::UpdateHowToPlay()
 	spriteTutorialHTPAttack_->SetPosition({ easeHowToPlayPosX_[HTPEN_Attack].num_X,howToPlayPosY_[HTPEN_Attack] });
 	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].num_X,howToPlayPosY_[HTPEN_Quit] });
 	//到達するまで遊び方説明画面解除不可
-	if (spriteDone_->GetPosition().x == easePauseMenuPosX_[5].start)
+	if (spriteDone_->GetPosition().x == easePauseMenuPosX_[HTPEN_Quit].start)
 	{
 		//到達した後スペースで戻る
 		if (input_->TriggerKey(DIK_SPACE))
@@ -1341,7 +1342,7 @@ void GamePlayScene::LoadSprite()
 	spriteLoad_->SetPosition(loadPos_);
 	spriteLoad_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
-	const int remainderNum = stageNum_ % 10;//余りによってスプライトを変える
+	const int32_t remainderNum = stageNum_ % 10;//余りによってスプライトを変える
 	if (remainderNum == SNL_Stage1) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage1.png");
 	else if (remainderNum == SNL_Stage2) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage2.png");
 	else if (remainderNum == SNL_Stage3) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage3.png");

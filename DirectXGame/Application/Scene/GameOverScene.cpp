@@ -2,6 +2,8 @@
 #include "FbxLoader.h"
 #include "LevelLoaderJson.h"
 #include "TouchableObject.h"
+#include "MyMath.h"
+
 #include <cassert>
 #include <sstream>
 #include <iomanip>
@@ -91,7 +93,7 @@ void GameOverScene::Initialize()
 	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
 	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
+	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	pm1_ = ParticleManager::Create();
 	pm1_->SetParticleModel(particle1_);
 	pm1_->SetCamera(camera_);
@@ -125,7 +127,7 @@ void GameOverScene::Update()
 			{ 0.0f,0.001f,0.0f },
 			3,
 			{ 1.0f, 0.0f },
-			{ 1.0f,1.0f,1.0f,1.0f },
+			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 
