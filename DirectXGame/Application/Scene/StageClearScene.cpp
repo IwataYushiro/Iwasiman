@@ -93,10 +93,15 @@ void StageClearScene::Initialize()
 	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle1.png");
-	pm1_ = ParticleManager::Create();
-	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);
+	particleClear_ = Particle::LoadFromParticleTexture("particle7.png");
+	pmClear_ = ParticleManager::Create();
+	pmClear_->SetParticleModel(particleClear_);
+	pmClear_->SetCamera(camera_);
+
+	particleSmoke_ = Particle::LoadFromParticleTexture("particle8.png");
+	pmSmoke_ = ParticleManager::Create();
+	pmSmoke_->SetParticleModel(particleSmoke_);
+	pmSmoke_->SetCamera(camera_);
 
 	if (stageNum_ == SL_Stage1_AreaBoss)
 	{
@@ -130,18 +135,18 @@ void StageClearScene::Update()
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
-			particle1_,
+			particleSmoke_,
 			player->GetPosition(),
 			{ 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
 			{ 0.0f,0.001f,0.0f },
 			3,
 			{ 1.0f, 0.0f },
-			{ 1.0f,1.0f,1.0f,1.0f },
+			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 
-		pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+		pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 		player->Update();
@@ -187,7 +192,8 @@ void StageClearScene::Update()
 
 	camera_->Update();
 	lightGroup_->Update();
-	pm1_->Update();
+	pmClear_->Update();
+	pmSmoke_->Update();
 
 	imguiManager_->Begin();
 	imguiManager_->End();
@@ -211,6 +217,27 @@ void StageClearScene::UpdateIsNextStage()
 	//カメラもセット
 	camera_->SetEye({ easeEyeStageClear_[XYZ_X].num_X, easeEyeStageClear_[XYZ_Y].num_X, easeEyeStageClear_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetStageClear_[XYZ_X].num_X, easeTargetStageClear_[XYZ_Y].num_X, easeTargetStageClear_[XYZ_Z].num_X });
+
+	for (Object3d*& player : objPlayers_)
+	{
+		//煙プリセット
+		const ParticleManager::Preset clear =
+		{
+			particleClear_,
+			{player->GetPosition().x+70.0f,player->GetPosition().y + 30.0f ,player->GetPosition().z},
+			{ 0.0f ,60.0f,75.0f },
+			{  RandomMTFloat(-15.0f,-8.0f),0.0f,0.0f},
+			{ 0.0f,0.001f,0.0f },
+			3,
+			{ RandomMTFloat(4.0f,6.0f), 0.0f },
+			{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
+			{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f }
+		};
+
+		pmClear_->ActiveX(clear.particle, clear.startPos, clear.pos, clear.vel,
+			clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
+
+	}
 
 	for (Object3d*& goal : objGoals_)
 	{
@@ -385,7 +412,7 @@ void StageClearScene::UpdateIsMenu()
 		//クリア演出プリセット
 		const ParticleManager::Preset clear =
 		{
-			particle1_,
+			particleClear_,
 			{0.0f,0.0f,0.0f},//使わない
 			{ 5.0f ,2.0f,0.0f },
 			{ 3.0f,6.0f,0.3f },
@@ -393,18 +420,18 @@ void StageClearScene::UpdateIsMenu()
 			6,
 			{ RandomMTFloat(4.0f,6.0f), 0.0f },
 			{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
-			{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),0.0f }
+			{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f }
 		};
 		
 		const DirectX::XMFLOAT3 clearStartPosLeft = { -30.0f,-30.0f,-5.0f };//左側
 		const DirectX::XMFLOAT3 clearStartPosRight = { 30.0f,-30.0f,-5.0f };//右側
 
 		//左側に
-		pm1_->ActiveY(clear.particle, clearStartPosLeft, clear.pos, clear.vel,
+		pmClear_->ActiveY(clear.particle, clearStartPosLeft, clear.pos, clear.vel,
 			clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
 
 		//右側に
-		pm1_->ActiveY(clear.particle, clearStartPosRight, clear.pos, clear.vel,
+		pmClear_->ActiveY(clear.particle, clearStartPosRight, clear.pos, clear.vel,
 			clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
 	}
 
@@ -437,8 +464,8 @@ void StageClearScene::Draw()
 
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
-
-	pm1_->Draw();
+	pmClear_->Draw();
+	pmSmoke_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -505,10 +532,11 @@ void StageClearScene::Finalize()
 	//ライト
 	delete lightGroup_;
 	//パーティクル
-	delete particle1_;
-	delete pm1_;
+	delete particleClear_;
+	delete pmClear_;
 
-
+	delete particleSmoke_;
+	delete pmSmoke_;
 }
 
 void StageClearScene::LoadLVData(const std::string& stagePath)
