@@ -74,7 +74,7 @@ void StageSelectScene::Initialize()
 	spriteStage2_->Initialize(spCommon_, SSSTI_Menustage2Tex);
 	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].start,easeStartStagePosY_[SSSMI_Stage2_TowerStage].start });
 
-	spCommon_->LoadTexture(SSSTI_MenuDoneTex, "texture/titlemenud.png");
+	spCommon_->LoadTexture(SSSTI_MenuDoneTex, "texture/space.png");
 	spriteDone_->Initialize(spCommon_, SSSTI_MenuDoneTex);
 	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].start,menuPosY_[SSMEN_SelectSpace] });
 
@@ -218,8 +218,7 @@ void StageSelectScene::UpdateIsStageSelect()
 	const DirectX::XMFLOAT4 selectMenuColorDark = { 1.0f,selectColor_.y + 0.1f,selectColor_.z + 0.1f,1.0f };
 	const DirectX::XMFLOAT4 otherMenuColorDark = { 1.0f,1.0f,1.0f,1.0f };
 	//決定指示スプライトのカラー
-	const DirectX::XMFLOAT4 doneColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
-	const DirectX::XMFLOAT4 doneColorDark = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };
+	const DirectX::XMFLOAT4 doneColor = { 1.0f,1.0f,1.0f,0.6f + selectColor_.x };
 	//タイトルへ戻る指示スプライトのカラー
 	const DirectX::XMFLOAT4 quitColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
 	const DirectX::XMFLOAT4 quitColorDark = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };
@@ -234,7 +233,6 @@ void StageSelectScene::UpdateIsStageSelect()
 		spriteTutorial_->SetColor(selectMenuColor);
 		spriteStage1_->SetColor(otherMenuColor);
 		spriteStage2_->SetColor(otherMenuColor);
-		spriteDone_->SetColor(doneColor);
 		spriteBack_->SetColor(quitColor);
 	}
 	else if (menuCount_ == SSSMI_Stage1_SkyStage)
@@ -244,7 +242,6 @@ void StageSelectScene::UpdateIsStageSelect()
 		spriteTutorial_->SetColor(otherMenuColor);
 		spriteStage1_->SetColor(selectMenuColor);
 		spriteStage2_->SetColor(otherMenuColor);
-		spriteDone_->SetColor(doneColor);
 		spriteBack_->SetColor(quitColor);
 	}
 	else if (menuCount_ == SSSMI_Stage2_TowerStage)
@@ -254,10 +251,11 @@ void StageSelectScene::UpdateIsStageSelect()
 		spriteTutorial_->SetColor(otherMenuColorDark);
 		spriteStage1_->SetColor(otherMenuColorDark);
 		spriteStage2_->SetColor(selectMenuColorDark);
-		spriteDone_->SetColor(doneColorDark);
 		spriteBack_->SetColor(quitColorDark);
 	}
-
+	//共通カラー
+	spriteDone_->SetColor(doneColor);
+	
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(true);

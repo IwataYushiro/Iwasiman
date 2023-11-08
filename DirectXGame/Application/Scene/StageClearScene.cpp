@@ -70,7 +70,7 @@ void StageClearScene::Initialize()
 	spriteTitle_->Initialize(spCommon_, SCSTI_TitleTex);
 	spriteTitle_->SetPosition({ easeMenuPosX_[SCMEN_Title].start,menuPosY_[SCMEN_Title] });
 
-	spCommon_->LoadTexture(SCSTI_MenuDoneTex, "texture/titlemenud.png");
+	spCommon_->LoadTexture(SCSTI_MenuDoneTex, "texture/space.png");
 	spriteDone_->Initialize(spCommon_, SCSTI_MenuDoneTex);
 	spriteDone_->SetPosition({ easeMenuPosX_[SCMEN_SelectSpace].start,menuPosY_[SCMEN_SelectSpace] });
 
@@ -93,7 +93,7 @@ void StageClearScene::Initialize()
 	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
 	//パーティクル
-	particleClear_ = Particle::LoadFromParticleTexture("particle7.png");
+	particleClear_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmClear_ = ParticleManager::Create();
 	pmClear_->SetParticleModel(particleClear_);
 	pmClear_->SetCamera(camera_);
@@ -336,13 +336,16 @@ void StageClearScene::UpdateIsMenu()
 
 	//選択中のメニューカラー
 	const DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
-	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,1.0f };
+	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,0.5f };
+	//ステージクリアのカラー
+	const DirectX::XMFLOAT4 clearColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
 	//決定指示スプライトのカラー
-	const DirectX::XMFLOAT4 doneColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
+	const DirectX::XMFLOAT4 doneColor = { 1.0f,1.0f,1.0f,0.6f + selectColor_.x };
 	UpdateChangeColor();
 
 	//イージング
-	for (int i = 0; i < SCMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	easeMenuPosX_[SCMEN_Menu].ease_out_expo();
+	for (int i = SCMEN_NextStage; i < SCMEN_Num; i++)easeMenuPosX_[i].ease_in_expo();
 	easeFadeInOut_.ease_in_out_quint();
 
 	//座標セット
@@ -407,35 +410,33 @@ void StageClearScene::UpdateIsMenu()
 
 		}
 	}
-	else
+	
+	//クリア演出プリセット
+	const ParticleManager::Preset clear =
 	{
-		//クリア演出プリセット
-		const ParticleManager::Preset clear =
-		{
-			particleClear_,
-			{0.0f,0.0f,0.0f},//使わない
-			{ 5.0f ,2.0f,0.0f },
-			{ 3.0f,6.0f,0.3f },
-			{ 0.0f,0.001f,0.0f },
-			6,
-			{ RandomMTFloat(4.0f,6.0f), 0.0f },
-			{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
-			{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f }
-		};
-		
-		const DirectX::XMFLOAT3 clearStartPosLeft = { -30.0f,-30.0f,-5.0f };//左側
-		const DirectX::XMFLOAT3 clearStartPosRight = { 30.0f,-30.0f,-5.0f };//右側
+		particleClear_,
+		{0.0f,0.0f,0.0f},//使わない
+		{ 5.0f ,2.0f,0.0f },
+		{ 3.0f,6.0f,0.3f },
+		{ 0.0f,0.001f,0.0f },
+		3,
+		{ RandomMTFloat(4.0f,6.0f), 0.0f },
+		{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
+		{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f }
+	};
+	
+	const DirectX::XMFLOAT3 clearStartPosLeft = { -30.0f,-30.0f,-5.0f };//左側
+	const DirectX::XMFLOAT3 clearStartPosRight = { 30.0f,-30.0f,-5.0f };//右側
 
-		//左側に
-		pmClear_->ActiveY(clear.particle, clearStartPosLeft, clear.pos, clear.vel,
-			clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
+	//左側に
+	pmClear_->ActiveY(clear.particle, clearStartPosLeft, clear.pos, clear.vel,
+		clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
 
-		//右側に
-		pmClear_->ActiveY(clear.particle, clearStartPosRight, clear.pos, clear.vel,
-			clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
-	}
+	//右側に
+	pmClear_->ActiveY(clear.particle, clearStartPosRight, clear.pos, clear.vel,
+		clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
 
-	spriteStageClear_->SetColor(doneColor);
+	spriteStageClear_->SetColor(clearColor);
 	spriteDone_->SetColor(doneColor);
 }
 

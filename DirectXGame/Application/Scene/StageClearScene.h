@@ -151,7 +151,7 @@ private://メンバ変数
 		{1300.0f, 0.0f, 1.2f},				//次のステージへ
 		{1300.0f, 0.0f, 1.4f},				//ステージセレクトへ
 		{1300.0f, 0.0f, 1.6f},				//タイトルへ
-		{1300.0f, 0.0f, 2.0f}				//スペースで選択
+		{1300.0f, 425.0f, 2.0f}				//スペースで選択
 	};
 	//メニュー表示用のイージング
 	Easing easeMenuPosX_[SCMEN_Num]
@@ -163,7 +163,7 @@ private://メンバ変数
 		presetEaseMenuPosX_[SCMEN_SelectSpace],			//スペースで選択
 	};
 	//メニューポジション
-	const std::array<float, SCMEN_Num> menuPosY_ = { 0.0f,150.0f,300.0f,450.0f,550.0f };
+	const std::array<float, SCMEN_Num> menuPosY_ = { 50.0f,150.0f,300.0f,450.0f,550.0f };
 
 	//次のステージへ行くときの視点イージングのプリセット
 	const Easing presetEaseEyeStageClear_[XYZ_Num]

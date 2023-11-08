@@ -142,7 +142,7 @@ private://メンバ変数
 	const Easing presetEaseTitlePosX_[TS_Num] =
 	{
 		{225.0f, -1300.0f, 1.0f},
-		{300.0f, -1300.0f, 1.0f}
+		{425.0f, -1300.0f, 1.0f}
 	};
 	//タイトル→タイトルメニューのイージング
 	Easing easeTitlePosX_[TS_Num] =
@@ -162,7 +162,7 @@ private://メンバ変数
 		TMEN_Num = 5,				//配列用
 	};
 	//メニューのY値
-	const std::array<float, TMEN_Num> menuPosY_ = { 0.0f,150.0f,300.0f,550.0f,50.0f };
+	const std::array<float, TMEN_Num> menuPosY_ = { 50.0f,200.0f,350.0f,600.0f,50.0f };
 
 	//タイトルメニューの出現イージングのプリセット
 	const Easing presetEaseMenuPosX_[TMEN_Num] =
@@ -170,7 +170,7 @@ private://メンバ変数
 		{1300.0f, 0.0f, 1.0f},		//メニュー
 		{1300.0f, 50.0f, 1.2f},		//チュートリアルへ
 		{1300.0f, 50.0f, 1.4f},		//ステージセレクトへ
-		{1300.0f, 0.0f, 1.6f},		//スペースで選択
+		{1300.0f, 425.0f, 1.6f},	//スペースで選択
 		{1300.0f, 900.0f, 1.8f}		//戻る
 	};
 	//タイトルメニューの出現イージング
@@ -275,8 +275,7 @@ private://メンバ変数
 
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor_;//xyz=rgb
-	//選択されていない色
-	const DirectX::XMFLOAT4 otherMenuColor_ = { 0.0f,0.0f,0.0f,1.0f };
+	
 	//タイトルメニュー→タイトルへ戻るスプライトの色
 	const DirectX::XMFLOAT4 backTitleColor_ = { 0.0f,0.0f,0.1f,1.0f };
 

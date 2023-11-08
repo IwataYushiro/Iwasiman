@@ -351,9 +351,11 @@ void GamePlayScene::UpdateIsPause()
 	else if (menuCount_ >= GPSPMI_Title)menuCount_ = GPSPMI_Title;
 	//選択中のメニューカラー
 	const DirectX::XMFLOAT4 selectMenuColor = { 0.5f + infoColor_.x,0.1f,0.1f,1.0f };
-	const DirectX::XMFLOAT4 otherMenuColor = { 0.5f,0.5f,0.5f,1.0f };
+	const DirectX::XMFLOAT4 otherMenuColor = { 1.0f,1.0f,1.0f,0.5f };
+	//ポーズカラー
+	const DirectX::XMFLOAT4 pauseColor = { 0.1f ,0.1f,0.5f + infoColor_.z,1.0f };
 	//決定指示スプライトのカラー
-	const DirectX::XMFLOAT4 doneColor = { 0.1f,0.1f,0.5f + infoColor_.z,1.0f };
+	const DirectX::XMFLOAT4 doneColor = { 1.0f,1.0f,1.0f,0.5f + infoColor_.x };
 	//カラー更新
 	UpdateChangeColor();
 
@@ -409,6 +411,10 @@ void GamePlayScene::UpdateIsPause()
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(selectMenuColor);
 	}
+	
+	//デフォルトカラー
+	spritePause_->SetColor(pauseColor);
+	spriteDone_->SetColor(doneColor);
 
 	if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
 	{
@@ -504,9 +510,6 @@ void GamePlayScene::UpdateIsPause()
 
 	}
 
-	//デフォルトカラー
-	spritePause_->SetColor(doneColor);
-	spriteDone_->SetColor(doneColor);
 }
 
 void GamePlayScene::UpdateHowToPlay()
@@ -1311,11 +1314,11 @@ void GamePlayScene::LoadSprite()
 	spritePauseTitle_->Initialize(spCommon_, GPSTI_PauseTitleTex);
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].start,pausePosY_[PMEN_Title] });
 
-	spCommon_->LoadTexture(GPSTI_PauseDoneTex, "texture/done.png");
+	spCommon_->LoadTexture(GPSTI_PauseDoneTex, "texture/space.png");
 	spriteDone_->Initialize(spCommon_, GPSTI_PauseDoneTex);
 	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].start,pausePosY_[PMEN_SelectSpace] });
 
-	spCommon_->LoadTexture(GPSTI_QuitHowToPlayTex, "texture/howtoplayquit.png");
+	spCommon_->LoadTexture(GPSTI_QuitHowToPlayTex, "texture/space.png");
 	spriteQuitHowtoPlay_->Initialize(spCommon_, GPSTI_QuitHowToPlayTex);
 	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].start,howToPlayPosY_[HTPEN_Quit] });
 

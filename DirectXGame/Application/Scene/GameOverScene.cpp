@@ -70,7 +70,7 @@ void GameOverScene::Initialize()
 	spriteTitle_->Initialize(spCommon_, GOSTI_TitleTex);
 	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].start,menuPosY_[GOMEN_Title] });
 
-	spCommon_->LoadTexture(GOSTI_MenuDoneTex, "texture/titlemenud.png");
+	spCommon_->LoadTexture(GOSTI_MenuDoneTex, "texture/space.png");
 	spriteDone_->Initialize(spCommon_, GOSTI_MenuDoneTex);
 	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].start,menuPosY_[GOMEN_SelectSpace] });
 
@@ -193,7 +193,7 @@ void GameOverScene::UpdateIsGameOver()
 	const DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
 	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,1.0f };
 	//決定指示スプライトのカラー
-	const DirectX::XMFLOAT4 doneColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
+	const DirectX::XMFLOAT4 doneColor = { 1.0f,1.0f,1.0f,0.6f + selectColor_.x };
 	UpdateChangeColor();
 
 	//イージング

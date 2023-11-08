@@ -56,15 +56,14 @@ void TitleScene::Initialize()
 	spriteTitle_->SetColor(backTitleColor_);
 	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].start,startTitlePosY_[TS_Title]});
 
-	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space2.png");
+	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space3.png");
 	spriteTitleDone_->Initialize(spCommon_, TSTI_TitleDoneTex);
 	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].start,startTitlePosY_[TS_Done] });
 
 	spCommon_->LoadTexture(TSTI_MenuTex, "texture/titlemenu.png");
 	spriteMenu_->Initialize(spCommon_, TSTI_MenuTex);
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].start,menuPosY_[TMEN_Menu]});
-	spriteMenu_->SetColor(otherMenuColor_);
-
+	
 	spCommon_->LoadTexture(TSTI_MenuTutorialTex, "texture/titlemenut.png");
 	spriteMenuTutorial_->Initialize(spCommon_, TSTI_MenuTutorialTex);
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].start,easeStartStagePosY_.start });
@@ -73,11 +72,10 @@ void TitleScene::Initialize()
 	spriteMenuStageSelect_->Initialize(spCommon_, TSTI_MenuStageSerectTex);
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[TMEN_StageSelect].start,menuPosY_[TMEN_StageSelect] });
 
-	spCommon_->LoadTexture(TSTI_MenuDoneTex, "texture/titlemenud.png");
+	spCommon_->LoadTexture(TSTI_MenuDoneTex, "texture/space.png");
 	spriteMenuDone_->Initialize(spCommon_, TSTI_MenuDoneTex);
 	spriteMenuDone_->SetPosition({ easeMenuPosX_[TMEN_SelectSpace].start,menuPosY_[TMEN_SelectSpace] });
-	spriteMenuDone_->SetColor(otherMenuColor_);
-
+	
 	spCommon_->LoadTexture(TSTI_BackTitleTex, "texture/back.png");
 	spriteBack_->Initialize(spCommon_, TSTI_BackTitleTex);
 	spriteBack_->SetPosition({ easeMenuPosX_[TMEN_Quit].start,menuPosY_[TMEN_Quit] });
@@ -128,7 +126,19 @@ void TitleScene::Update()
 	if (menuCount_ <= TSMI_Tutorial)menuCount_ = TSMI_Tutorial;
 	else if (menuCount_ >= TSMI_StageSelect)menuCount_ = TSMI_StageSelect;
 
-	const DirectX::XMFLOAT4 TitleDoneColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
+	//タイトルカラー
+	DirectX::XMFLOAT4 titleColor;
+	const DirectX::XMFLOAT4 isLightBackGroundTitleColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };//明るい背景
+	const DirectX::XMFLOAT4 isDarkBackGroundTitleColor = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };//暗い背景
+
+	if (stageNum_ == SL_Default)titleColor = isLightBackGroundTitleColor;
+	else if (stageNum_ <= SL_Stage1_StageID)titleColor = isLightBackGroundTitleColor;
+	else if (stageNum_ <= SL_Stage2_StageID)titleColor = isDarkBackGroundTitleColor;
+	else titleColor = isLightBackGroundTitleColor;
+
+	//決定指示スプライトのカラー
+	const DirectX::XMFLOAT4 doneColor = { 1.0f,1.0f,1.0f,0.6f + selectColor_.x };
+
 	//SetColorより前に呼び出す
 	UpdateChangeColor();
 
@@ -154,9 +164,11 @@ void TitleScene::Update()
 			}
 		}
 	}
-	spriteTitleDone_->SetColor(TitleDoneColor);
-	spriteMenu_->SetColor(TitleDoneColor);
-	spriteMenuDone_->SetColor(TitleDoneColor);
+
+	spriteTitle_->SetColor(titleColor);
+	spriteMenu_->SetColor(titleColor);
+	spriteTitleDone_->SetColor(doneColor);
+	spriteMenuDone_->SetColor(doneColor);
 
 
 
@@ -352,7 +364,25 @@ void TitleScene::UpdateIsBack()
 
 void TitleScene::UpdateIsMenu()
 {
-	const DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
+	//選択してる色
+	DirectX::XMFLOAT4 selectMenuColor;
+	const DirectX::XMFLOAT4 isLightBackGroundSelectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
+	const DirectX::XMFLOAT4 isDarkBackGroundSelectMenuColor = { 1.0f,selectColor_.y + 0.1f,selectColor_.z + 0.1f,1.0f };
+	
+	if (stageNum_ == SL_Default)selectMenuColor = isLightBackGroundSelectMenuColor;
+	else if (stageNum_ <= SL_Stage1_StageID)selectMenuColor = isLightBackGroundSelectMenuColor;
+	else if (stageNum_ <= SL_Stage2_StageID)selectMenuColor = isDarkBackGroundSelectMenuColor;
+	else selectMenuColor = isLightBackGroundSelectMenuColor;
+
+	//選択されていない色
+	DirectX::XMFLOAT4 otherMenuColor;
+	const DirectX::XMFLOAT4 isLightBackGroundOtherMenuColor = { 0.0f,0.0f,0.0f,0.5f };//明るい背景
+	const DirectX::XMFLOAT4 isDarkBackGroundOtherMenuColor = { 1.0f,1.0f,1.0f,0.5f };//暗い背景
+
+	if (stageNum_ == SL_Default)otherMenuColor = isLightBackGroundOtherMenuColor;
+	else if (stageNum_ <= SL_Stage1_StageID)otherMenuColor = isLightBackGroundOtherMenuColor;
+	else if (stageNum_ <= SL_Stage2_StageID)otherMenuColor = isDarkBackGroundOtherMenuColor;
+	else otherMenuColor = isLightBackGroundOtherMenuColor;
 
 	//イージング
 	for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].ease_out_expo();
@@ -379,11 +409,11 @@ void TitleScene::UpdateIsMenu()
 	if (menuCount_ == TSMI_Tutorial)
 	{
 		spriteMenuTutorial_->SetColor(selectMenuColor);
-		spriteMenuStageSelect_->SetColor(otherMenuColor_);
+		spriteMenuStageSelect_->SetColor(otherMenuColor);
 	}
 	else if (menuCount_ == TSMI_StageSelect)
 	{
-		spriteMenuTutorial_->SetColor(otherMenuColor_);
+		spriteMenuTutorial_->SetColor(otherMenuColor);
 		spriteMenuStageSelect_->SetColor(selectMenuColor);
 	}
 

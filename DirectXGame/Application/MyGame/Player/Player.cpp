@@ -805,7 +805,7 @@ void Player::UpdateBreak()
 			{ MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
-		//
+		//ëÂîöî≠
 		pmFire_->SetBlendMode(ParticleManager::BP_ALPHA);
 		pmFire_->ActiveY(fire.particle, fire.startPos, fire.pos, fire.vel,
 			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
@@ -831,7 +831,7 @@ void Player::UpdateBreak()
 
 		//ÉJÉÅÉâë¨ìx
 		XMFLOAT3 cameraSppedEyeTarget;
-		const XMFLOAT2 shakeEyeTargetMinMax = { -0.05f,0.05f };
+		const XMFLOAT2 shakeEyeTargetMinMax = { -0.1f,0.1f };
 		cameraSppedEyeTarget.x = MyMath::RandomMTFloat(shakeEyeTargetMinMax.x, shakeEyeTargetMinMax.y);
 		cameraSppedEyeTarget.y = MyMath::RandomMTFloat(shakeEyeTargetMinMax.x, shakeEyeTargetMinMax.y);
 		const float speedChangePosZ = -30.0f;

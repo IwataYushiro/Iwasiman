@@ -221,7 +221,7 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 	{
 		//面を構成する頂点の数を取得(3なら三角形ポリゴン)
 		const int polygonSize = fbxMesh->GetPolygonSize(i);
-		const int porigonSizeSquare = 4;
+		static const int porigonSizeSquare = 4;
 		assert(polygonSize <= porigonSizeSquare);
 
 		//1頂点ずつ処理
