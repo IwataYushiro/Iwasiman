@@ -1231,7 +1231,7 @@ void GamePlayScene::UpdateTutorialSprite()
 		//操作説明文字カラー
 		const DirectX::XMFLOAT4 howToPlayColorActiveRed = { 1.0f,0.1f,0.1f,1.0f };
 		const DirectX::XMFLOAT4 howToPlayColorActiveBlue = { 0.1f,0.1f,1.0f,1.0f };
-		const DirectX::XMFLOAT4 howToPlayColorDefault = { 0.1f,0.1f,0.1f,1.0f };
+		const DirectX::XMFLOAT4 howToPlayColorDefault = { 0.01f,0.01f,0.01f,1.0f };
 
 		UpdateChangeColor();
 
@@ -1400,7 +1400,7 @@ void GamePlayScene::LoadSprite()
 		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
 			spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
 	}
-	else//チュートリアルステージ以外場合
+	else//チュートリアルステージ以外の場合
 	{
 		//カラーセット
 		const DirectX::XMFLOAT4 howToPlayColor = { 1.0f,0.15f,0.15f,1.0f };

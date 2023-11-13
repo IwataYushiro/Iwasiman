@@ -154,7 +154,7 @@ private:
 		TIEN_Num=6,					//配列用
 	};
 	//チュートリアル説明のY軸の値
-	const std::array<float, TIEN_Num> tutorialInfoPosY_ = { 50.0f,50.0f,110.0f,110.0f,110.0f,200.0f };
+	const std::array<float, TIEN_Num> tutorialInfoPosY_ = { 70.0f,70.0f,130.0f,130.0f,130.0f,200.0f };
 
 	//チュートリアル表示のイージングのプリセット
 	const Easing presetEaseInfoTutorial_[TIEN_Num] =
