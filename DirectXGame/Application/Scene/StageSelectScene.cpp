@@ -213,16 +213,15 @@ void StageSelectScene::UpdateIsStageSelect()
 	
 	//選択中のメニューカラー
 	const DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
-	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,1.0f };
+	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,0.7f };
 	//選択中のメニューカラー(暗い背景時)
 	const DirectX::XMFLOAT4 selectMenuColorDark = { 1.0f,selectColor_.y + 0.1f,selectColor_.z + 0.1f,1.0f };
-	const DirectX::XMFLOAT4 otherMenuColorDark = { 1.0f,1.0f,1.0f,1.0f };
+	const DirectX::XMFLOAT4 otherMenuColorDark = { 1.0f,1.0f,1.0f,0.7f };
 	//決定指示スプライトのカラー
 	const DirectX::XMFLOAT4 doneColor = { 1.0f,1.0f,1.0f,0.6f + selectColor_.x };
 	//タイトルへ戻る指示スプライトのカラー
 	const DirectX::XMFLOAT4 quitColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
 	const DirectX::XMFLOAT4 quitColorDark = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };
-	//色替え
 	//色替え
 	UpdateChangeColor();
 

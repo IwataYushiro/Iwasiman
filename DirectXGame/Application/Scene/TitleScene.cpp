@@ -376,8 +376,8 @@ void TitleScene::UpdateIsMenu()
 
 	//ëIëÇ≥ÇÍÇƒÇ¢Ç»Ç¢êF
 	DirectX::XMFLOAT4 otherMenuColor;
-	const DirectX::XMFLOAT4 isLightBackGroundOtherMenuColor = { 0.0f,0.0f,0.0f,0.5f };//ñæÇÈÇ¢îwåi
-	const DirectX::XMFLOAT4 isDarkBackGroundOtherMenuColor = { 1.0f,1.0f,1.0f,0.5f };//à√Ç¢îwåi
+	const DirectX::XMFLOAT4 isLightBackGroundOtherMenuColor = { 0.0f,0.0f,0.0f,0.7f };//ñæÇÈÇ¢îwåi
+	const DirectX::XMFLOAT4 isDarkBackGroundOtherMenuColor = { 1.0f,1.0f,1.0f,0.7f };//à√Ç¢îwåi
 
 	if (stageNum_ == SL_Default)otherMenuColor = isLightBackGroundOtherMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)otherMenuColor = isLightBackGroundOtherMenuColor;

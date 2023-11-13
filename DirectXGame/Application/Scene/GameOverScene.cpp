@@ -189,11 +189,39 @@ void GameOverScene::Update()
 
 void GameOverScene::UpdateIsGameOver()
 {
-	//選択中のメニューカラー
-	const DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
-	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,1.0f };
+	//ゲームオーバーカラー
+	DirectX::XMFLOAT4 gameOverColor;
+	const DirectX::XMFLOAT4 isLightBackGroundGameOverColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };//明るい背景
+	const DirectX::XMFLOAT4 isDarkBackGroundGameOverColor = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };//暗い背景
+
+	if (stageNum_ == SL_Default)gameOverColor = isLightBackGroundGameOverColor;
+	else if (stageNum_ <= SL_Stage1_StageID)gameOverColor = isLightBackGroundGameOverColor;
+	else if (stageNum_ <= SL_Stage2_StageID)gameOverColor = isDarkBackGroundGameOverColor;
+	else gameOverColor = isLightBackGroundGameOverColor;
+
+	//選択してる色
+	DirectX::XMFLOAT4 selectMenuColor;
+	const DirectX::XMFLOAT4 isLightBackGroundSelectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
+	const DirectX::XMFLOAT4 isDarkBackGroundSelectMenuColor = { 1.0f,selectColor_.y + 0.1f,selectColor_.z + 0.1f,1.0f };
+
+	if (stageNum_ == SL_Default)selectMenuColor = isLightBackGroundSelectMenuColor;
+	else if (stageNum_ <= SL_Stage1_StageID)selectMenuColor = isLightBackGroundSelectMenuColor;
+	else if (stageNum_ <= SL_Stage2_StageID)selectMenuColor = isDarkBackGroundSelectMenuColor;
+	else selectMenuColor = isLightBackGroundSelectMenuColor;
+
+	//選択されていない色
+	DirectX::XMFLOAT4 otherMenuColor;
+	const DirectX::XMFLOAT4 isLightBackGroundOtherMenuColor = { 0.0f,0.0f,0.0f,0.7f };//明るい背景
+	const DirectX::XMFLOAT4 isDarkBackGroundOtherMenuColor = { 1.0f,1.0f,1.0f,0.7f };//暗い背景
+
+	if (stageNum_ == SL_Default)otherMenuColor = isLightBackGroundOtherMenuColor;
+	else if (stageNum_ <= SL_Stage1_StageID)otherMenuColor = isLightBackGroundOtherMenuColor;
+	else if (stageNum_ <= SL_Stage2_StageID)otherMenuColor = isDarkBackGroundOtherMenuColor;
+	else otherMenuColor = isLightBackGroundOtherMenuColor;
+	
 	//決定指示スプライトのカラー
 	const DirectX::XMFLOAT4 doneColor = { 1.0f,1.0f,1.0f,0.6f + selectColor_.x };
+
 	UpdateChangeColor();
 
 	//イージング
@@ -277,7 +305,7 @@ void GameOverScene::UpdateIsGameOver()
 		}
 	}
 
-	spriteGameOver_->SetColor(doneColor);
+	spriteGameOver_->SetColor(gameOverColor);
 	spriteDone_->SetColor(doneColor);
 
 }

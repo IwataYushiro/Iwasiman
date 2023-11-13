@@ -336,7 +336,7 @@ void StageClearScene::UpdateIsMenu()
 
 	//選択中のメニューカラー
 	const DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
-	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,0.5f };
+	const DirectX::XMFLOAT4 otherMenuColor = { 0.0f,0.0f,0.0f,0.7f };
 	//ステージクリアのカラー
 	const DirectX::XMFLOAT4 clearColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };
 	//決定指示スプライトのカラー

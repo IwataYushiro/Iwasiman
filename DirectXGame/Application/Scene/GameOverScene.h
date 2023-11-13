@@ -149,12 +149,12 @@ private://メンバ変数
 		GOMEN_Num = 5,				//配列用
 	};
 	//メニューポジション
-	const std::array<float,GOMEN_Num> menuPosY_= { 0.0f,150.0f,300.0f,450.0f,600.0f };
+	const std::array<float,GOMEN_Num> menuPosY_= { 50.0f,150.0f,300.0f,450.0f,600.0f };
 
 	//メニュー表示用のイージングのプリセット
 	const Easing presetEaseMenuPosX_[GOMEN_Num]
 	{
-		{1300.0f, 0.0f, 1.0f},			//メニュー
+		{1300.0f, 230.0f, 1.0f},		//メニュー
 		{1300.0f, 0.0f, 1.2f},			//コンティニューへ
 		{1300.0f, 0.0f, 1.4f},			//ステージセレクトへ
 		{1300.0f, 0.0f, 1.6f},			//タイトルへ
