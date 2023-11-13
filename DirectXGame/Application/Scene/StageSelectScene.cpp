@@ -70,9 +70,9 @@ void StageSelectScene::Initialize()
 	spriteStage1_->Initialize(spCommon_, SSSTI_Menustage1Tex);
 	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].start,easeStartStagePosY_[SSSMI_Stage1_SkyStage].start });
 
-	spCommon_->LoadTexture(SSSTI_Menustage2Tex, "texture/stagetower.png");
+	spCommon_->LoadTexture(SSSTI_Menustage2Tex, "texture/stagespace.png");
 	spriteStage2_->Initialize(spCommon_, SSSTI_Menustage2Tex);
-	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].start,easeStartStagePosY_[SSSMI_Stage2_TowerStage].start });
+	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].start,easeStartStagePosY_[SSSMI_Stage2_SpaceStage].start });
 
 	spCommon_->LoadTexture(SSSTI_MenuDoneTex, "texture/space.png");
 	spriteDone_->Initialize(spCommon_, SSSTI_MenuDoneTex);
@@ -125,7 +125,7 @@ void StageSelectScene::Initialize()
 void StageSelectScene::Update()
 {
 	if (menuCount_ <= SSSMI_StageTutorial_Tutorial)menuCount_ = SSSMI_StageTutorial_Tutorial;
-	else if (menuCount_ >= SSSMI_Stage2_TowerStage)menuCount_ = SSSMI_Stage2_TowerStage;
+	else if (menuCount_ >= SSSMI_Stage2_SpaceStage)menuCount_ = SSSMI_Stage2_SpaceStage;
 
 	if (isStageSelect_)UpdateIsStageSelect();
 	else if (isDone_)UpdateIsDone();
@@ -197,7 +197,7 @@ void StageSelectScene::UpdateIsStageSelect()
 	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
 	spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
 	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
-	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].num_X,menuPosY_[SSMEN_Stage2_Tower] });
+	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].num_X,menuPosY_[SSMEN_Stage2_Space] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
 	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 
@@ -244,7 +244,7 @@ void StageSelectScene::UpdateIsStageSelect()
 		spriteStage2_->SetColor(otherMenuColor);
 		spriteBack_->SetColor(quitColor);
 	}
-	else if (menuCount_ == SSSMI_Stage2_TowerStage)
+	else if (menuCount_ == SSSMI_Stage2_SpaceStage)
 	{
 		objStage_->SetModel(modelStage2_);
 		spriteMenu_->SetColor(selectMenuColorDark);
@@ -297,20 +297,20 @@ void StageSelectScene::UpdateIsDone()
 	{
 		spriteTutorial_->SetPosition({ easeStartStagePosX_[SSSMI_StageTutorial_Tutorial].num_X,easeStartStagePosY_[SSSMI_StageTutorial_Tutorial].num_X });
 		spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky]});
-		spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].num_X,menuPosY_[SSMEN_Stage2_Tower] });
+		spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].num_X,menuPosY_[SSMEN_Stage2_Space] });
 	}
 	else if (menuCount_ == SSSMI_Stage1_SkyStage)
 	{
 		spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
 		spriteStage1_->SetPosition({ easeStartStagePosX_[SSSMI_Stage1_SkyStage].num_X,easeStartStagePosY_[SSSMI_Stage1_SkyStage].num_X });
-		spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].num_X,menuPosY_[SSMEN_Stage2_Tower] });
+		spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].num_X,menuPosY_[SSMEN_Stage2_Space] });
 
 	}
-	else if (menuCount_ == SSSMI_Stage2_TowerStage)
+	else if (menuCount_ == SSSMI_Stage2_SpaceStage)
 	{
 		spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
 		spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
-		spriteStage2_->SetPosition({ easeStartStagePosX_[SSSMI_Stage2_TowerStage].num_X,easeStartStagePosY_[SSSMI_Stage2_TowerStage].num_X });
+		spriteStage2_->SetPosition({ easeStartStagePosX_[SSSMI_Stage2_SpaceStage].num_X,easeStartStagePosY_[SSSMI_Stage2_SpaceStage].num_X });
 	}
 
 	//カメラもセット
@@ -351,7 +351,7 @@ void StageSelectScene::UpdateIsGameStart()
 	{
 		if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);//チュートリアルステージ
 		else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);//ステージ1
-		else if (menuCount_ == SSSMI_Stage2_TowerStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//ステージ2はまだ未完成
+		else if (menuCount_ == SSSMI_Stage2_SpaceStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//ステージ2はまだ未完成
 
 	}
 }
@@ -366,7 +366,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
 	spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
 	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
-	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Tower].num_X,menuPosY_[SSMEN_Stage2_Tower] });
+	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].num_X,menuPosY_[SSMEN_Stage2_Space] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
 	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 
@@ -382,7 +382,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 	{
 		if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("TITLE", SL_StageTutorial_StageID);
 		else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("TITLE", SL_Stage1_StageID);
-		else if (menuCount_ == SSSMI_Stage2_TowerStage)sceneManager_->ChangeScene("TITLE", SL_Stage2_StageID);
+		else if (menuCount_ == SSSMI_Stage2_SpaceStage)sceneManager_->ChangeScene("TITLE", SL_Stage2_StageID);
 	}
 }
 

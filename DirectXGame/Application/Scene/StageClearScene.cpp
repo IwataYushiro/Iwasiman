@@ -254,7 +254,7 @@ void StageClearScene::UpdateIsNextStage()
 			FadeOut(white_);//ゲームプレイ遷移時は白くする
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 			{
-				if (stageNum_ == SL_Stage1_AreaBoss) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+				if (stageNum_ == SL_Stage1_AreaBoss) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
 				else if (stageNum_ == SL_StageTutorial_Final) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
 				else sceneManager_->ChangeScene("GAMEPLAY", ++stageNum_);
 			}
@@ -294,7 +294,7 @@ void StageClearScene::UpdateIsStageSelect()
 			{
 				//ステージ選択
 				if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-				else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_TowerStage);
+				else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
 				else sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);//ここはチュートリアルに飛ばしてもいい
 			}
 		}

@@ -126,7 +126,7 @@ private://メンバ変数
 		SSMEN_Menu = 0,				//メニュー
 		SSMEN_Tutorial = 1,			//チュートリアル
 		SSMEN_Stage1_Sky = 2,		//ステージ1
-		SSMEN_Stage2_Tower = 3,		//ステージ2
+		SSMEN_Stage2_Space = 3,		//ステージ2
 		SSMEN_SelectSpace = 4,		//スペースで選択
 		SSMEN_Quit = 5,				//戻る
 		SSMEN_Num = 6,				//配列用
@@ -151,7 +151,7 @@ private://メンバ変数
 		presetEaseMenuPosX_[SSMEN_Menu],					//メニュー
 		presetEaseMenuPosX_[SSMEN_Tutorial],				//チュートリアル
 		presetEaseMenuPosX_[SSMEN_Stage1_Sky],				//ステージ1
-		presetEaseMenuPosX_[SSMEN_Stage2_Tower],			//ステージ2
+		presetEaseMenuPosX_[SSMEN_Stage2_Space],			//ステージ2
 		presetEaseMenuPosX_[SSMEN_SelectSpace],				//スペースで選択
 		presetEaseMenuPosX_[SSMEN_Quit]						//戻る
 	};
@@ -169,7 +169,7 @@ private://メンバ変数
 	{
 		presetEaseStartStagePosX_[SSSMI_StageTutorial_Tutorial],		//チュートリアルへ
 		presetEaseStartStagePosX_[SSSMI_Stage1_SkyStage],				//ステージ1へ
-		presetEaseStartStagePosX_[SSSMI_Stage2_TowerStage]				//ステージ2へ
+		presetEaseStartStagePosX_[SSSMI_Stage2_SpaceStage]				//ステージ2へ
 	};
 
 	//選んだステージを上に移動させるイージングのプリセット
@@ -177,14 +177,14 @@ private://メンバ変数
 	{
 		{menuPosY_[SSMEN_Tutorial], 0.0f, 1.5f},				//チュートリアルへ
 		{menuPosY_[SSMEN_Stage1_Sky], 0.0f, 1.5f},				//ステージ1へ
-		{menuPosY_[SSMEN_Stage2_Tower], 0.0f, 1.5f}				//ステージ2へ
+		{menuPosY_[SSMEN_Stage2_Space], 0.0f, 1.5f}				//ステージ2へ
 	};
 	//選んだステージを上に移動させるイージング
 	Easing easeStartStagePosY_[SSSMI_Num] =
 	{
 		presetEaseStartStagePosY_[SSSMI_StageTutorial_Tutorial],		//チュートリアルへ
 		presetEaseStartStagePosY_[SSSMI_Stage1_SkyStage],				//ステージ1へ
-		presetEaseStartStagePosY_[SSSMI_Stage2_TowerStage]				//ステージ2へ
+		presetEaseStartStagePosY_[SSSMI_Stage2_SpaceStage]				//ステージ2へ
 	};
 
 	//遷移時すぐに起動するステージセレクト視点カメラワークイージングのプリセット

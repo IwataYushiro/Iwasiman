@@ -99,7 +99,7 @@ enum StageSelectSceneMenuIndex
 {
 	SSSMI_StageTutorial_Tutorial = 0,
 	SSSMI_Stage1_SkyStage = 1,
-	SSSMI_Stage2_TowerStage = 2,
+	SSSMI_Stage2_SpaceStage = 2,
 	SSSMI_Num = 3,//”z—ñ—p
 };
 
