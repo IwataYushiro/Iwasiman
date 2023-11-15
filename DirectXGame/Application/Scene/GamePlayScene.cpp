@@ -1255,7 +1255,8 @@ void GamePlayScene::UpdateTutorialSprite()
 		//ジャンプ
 		if (input_->PushKey(DIK_SPACE))spriteTutorialHTPJump_->SetColor(howToPlayColorActiveRed);
 		//奥側ジャンプ
-		if (input_->PushKey(DIK_Z))spriteTutorialHTPMoveBack_->SetColor(howToPlayColorActiveRed);
+		if (input_->PushKey(DIK_W))spriteTutorialHTPMoveBack_->SetColor(howToPlayColorActiveRed);
+		if (input_->PushKey(DIK_S))spriteTutorialHTPMoveBack_->SetColor(howToPlayColorActiveBlue);
 		//攻撃
 		if (input_->PushKey(DIK_X))spriteTutorialHTPAttack_->SetColor(howToPlayColorActiveRed);
 
@@ -1374,7 +1375,7 @@ void GamePlayScene::LoadSprite()
 	spriteTutorialHTPDash_->Initialize(spCommon_, GPSTTI_HowToPlayDashTex);
 	spCommon_->LoadTexture(GPSTTI_HowToPlayJumpTex, "texture/info/jumpinfo.png");//1~
 	spriteTutorialHTPJump_->Initialize(spCommon_, GPSTTI_HowToPlayJumpTex);
-	spCommon_->LoadTexture(GPSTTI_HowToPlayBackMoveTex, "texture/info/backmoveinfo1.png");//2~
+	spCommon_->LoadTexture(GPSTTI_HowToPlayBackMoveTex, "texture/info/backmoveinfo.png");//2~
 	spriteTutorialHTPMoveBack_->Initialize(spCommon_, GPSTTI_HowToPlayBackMoveTex);
 	spCommon_->LoadTexture(GPSTTI_HowToPlayAttackTex, "texture/info/attackinfo.png");//3~
 	spriteTutorialHTPAttack_->Initialize(spCommon_, GPSTTI_HowToPlayAttackTex);

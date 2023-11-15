@@ -356,15 +356,20 @@ void Player::JumpBack()
 	{
 		if (!isJumpBack_)
 		{
-			if (input_->TriggerKey(DIK_Z))
+			if (input_->TriggerKey(DIK_W))
 			{
-				
-
+				if (isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
-
 				jumpBackPos_ = position_;
-				if (isBack_)isBack_ = false;
-				else isBack_ = true;
+				isBack_ = true;
+				isJumpBack_ = true;
+			}
+			if (input_->TriggerKey(DIK_S))
+			{
+				if (!isBack_)return;
+				startCount_ = std::chrono::steady_clock::now();
+				jumpBackPos_ = position_;
+				isBack_ = false;
 				isJumpBack_ = true;
 			}
 		}
