@@ -699,7 +699,7 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 		nowEye_ = camera_->GetEye();
 		nowTarget_ = camera_->GetTarget();
 
-		const XMFLOAT3 offset = { -18.0f,position_.y,85.0f + position_.z };
+		const XMFLOAT3 offset = { -10.0f,position_.y,85.0f + position_.z };
 		easeOffset_ = offset;//最初にオフセットを足さないと右カメラ、1回足すと中央カメラ、2回足したら左カメラ
 		const float easeTime = 1.0f;
 		//右カメラ視点[i]
@@ -730,16 +730,17 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 	}
 	if (isShake_)
 	{
+		const int32_t shakeCount = 1;
 		//視点シェイク
 		XMFLOAT3 Eye = nowEye_ + hitMove_;
 		const XMFLOAT3 hitEye = { 1.0f,1.0f,1.0f };
-		camera_->ShakeEye(Eye, 1, { Eye.x - hitEye.x,Eye.y - hitEye.y,Eye.z - hitEye.z },
+		camera_->ShakeEye(Eye, shakeCount, { Eye.x - hitEye.x,Eye.y - hitEye.y,Eye.z - hitEye.z },
 			{ Eye.x + hitEye.x,Eye.y + hitEye.y,Eye.z + hitEye.z });
 
 		//注視点シェイク
 		XMFLOAT3 Target = nowTarget_ + hitMove_;
 		const XMFLOAT3 hitTarget = { 1.0f,1.0f,1.0f };
-		camera_->ShakeTarget(Target, 1, { Target.x - hitTarget.x,Target.y - hitTarget.y,Target.z - hitTarget.z },
+		camera_->ShakeTarget(Target, shakeCount, { Target.x - hitTarget.x,Target.y - hitTarget.y,Target.z - hitTarget.z },
 			{ Target.x + hitTarget.x,Target.y + hitTarget.y,Target.z + hitTarget.z });
 		camera_->Update();
 

@@ -253,7 +253,7 @@ private:
 	//入場用の視点カメラワークイージングのプリセット
 	const Easing presetEaseEyeGameStart_[XYZ_Num]=
 	{
-		{-110.0f, -10.0f, 4.0f},				//X
+		{-110.0f, -20.0f, 4.0f},				//X
 		{101.0f, 1.0f, 4.0f},					//Y
 		{-210.0f, -100.0f, 3.5f}				//Z
 	};
@@ -267,7 +267,7 @@ private:
 	//入場用の注視点カメラワークイージングのプリセット
 	const Easing presetEaseTargetGameStart_[XYZ_Num]
 	{
-		{-110.0f, -10.0f, 4.0f},				//X
+		{-110.0f, -20.0f, 4.0f},				//X
 		{100.0f, 0.0f, 4.0f},					//Y
 		{-110.0f, 0.0f, 3.5f}					//Z
 	};
@@ -279,7 +279,7 @@ private:
 		presetEaseTargetGameStart_[XYZ_Z]				//Z
 	};
 	//入場用のプレイヤーポジションイージング
-	Easing easePlayerPositionGameStart_[3];
+	Easing easePlayerPositionGameStart_[XYZ_Num];
 
 	//入場用のイージングの表記は少し特殊
 	enum XXY
