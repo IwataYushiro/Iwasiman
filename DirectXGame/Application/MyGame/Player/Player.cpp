@@ -337,7 +337,20 @@ void Player::FallAndJump()
 
 void Player::JumpBack()
 {
-	XMFLOAT3 move = Object3d::GetPosition();
+	const float offsetPosY = 1.0f;
+	const float JumpBackPosY = 20.0f;
+
+	//ベジェ曲線の値
+	const XMFLOAT3 startBezier3Pos = { position_.x,jumpBackPos_.y - offsetPosY,-60.0f };
+	const XMFLOAT3 point1Bezier3Pos = { position_.x,jumpBackPos_.y + JumpBackPosY,-40.0f };
+	const XMFLOAT3 point2Bezier3Pos = { position_.x,jumpBackPos_.y + JumpBackPosY,-20.0f };
+	const XMFLOAT3 endBezier3Pos = { position_.x,jumpBackPos_.y - offsetPosY,0.0f };
+
+	//制御点
+	start_ = startBezier3Pos;
+	point1_ = point1Bezier3Pos;
+	point2_ = point2Bezier3Pos;
+	end_ = endBezier3Pos;
 
 	if (onGround_)
 	{
@@ -345,6 +358,10 @@ void Player::JumpBack()
 		{
 			if (input_->TriggerKey(DIK_Z))
 			{
+				
+
+				startCount_ = std::chrono::steady_clock::now();
+
 				jumpBackPos_ = position_;
 				if (isBack_)isBack_ = false;
 				else isBack_ = true;
@@ -354,20 +371,6 @@ void Player::JumpBack()
 	}
 	if (isJumpBack_)
 	{
-		const float offsetPosY = 1.0f;
-		const float JumpBackPosY = 20.0f;
-
-		//ベジェ曲線の値
-		const XMFLOAT3 startBezier3Pos = { move.x,jumpBackPos_.y - offsetPosY,-60.0f };
-		const XMFLOAT3 point1Bezier3Pos = { move.x,jumpBackPos_.y + JumpBackPosY,-40.0f };
-		const XMFLOAT3 point2Bezier3Pos = { move.x,jumpBackPos_.y + JumpBackPosY,-20.0f };
-		const XMFLOAT3 endBezier3Pos = { move.x,jumpBackPos_.y - offsetPosY,0.0f };
-
-		//制御点
-		start_ = startBezier3Pos;
-		point1_ = point1Bezier3Pos;
-		point2_ = point2Bezier3Pos;
-		end_ = endBezier3Pos;
 
 		//現在時間を取得する
 		nowCount_ = std::chrono::steady_clock::now();
@@ -380,23 +383,18 @@ void Player::JumpBack()
 		const float timeRateMax = 1.0f;
 		timeRate_ = min(elapsed / maxTime_, timeRateMax);
 
-		if (isBack_)move = Bezier3(end_, point2_, point1_, start_, timeRate_);
-
-		else move = Bezier3(start_, point1_, point2_, end_, timeRate_);
-
-		if (move.z >= end_.z)
+		if (isBack_)
 		{
-			startCount_ = std::chrono::steady_clock::now();
-			isJumpBack_ = false;
+			position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
+			if (position_.z >= end_.z)isJumpBack_ = false;
 		}
-		else if (move.z <= start_.z)
+		else
 		{
-			startCount_ = std::chrono::steady_clock::now();
-			isJumpBack_ = false;
+			position_ = Bezier3(end_, point2_, point1_, start_, timeRate_);
+			if (position_.z <= start_.z)isJumpBack_ = false;
 		}
 	}
 
-	Object3d::SetPosition(move);
 }
 
 void Player::Landing(unsigned short attribute)
@@ -419,7 +417,7 @@ void Player::Landing(unsigned short attribute)
 			//排斥方向
 			XMVECTOR rejectDir = XMVector3Normalize(info.reject);
 			//上方向と排斥方向の角度差のコサイン値
-			float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
+			float cos = XMVector3Dot(rejectDir, up).m128_f32[XYZ_X];
 
 			//地面判定のしきい値角度
 			const float threshold = cosf(XMConvertToRadians(30.0f));
@@ -448,16 +446,16 @@ void Player::Landing(unsigned short attribute)
 	//球と地形の交差を全検索
 	colManager_->QuerySphere(*sphereCollider, &callback, attribute);
 	//交差による排斥分動かす
-	position_.x += callback.move.m128_f32[0];
-	position_.y += callback.move.m128_f32[1];
+	position_.x += callback.move.m128_f32[XYZ_X];
+	position_.y += callback.move.m128_f32[XYZ_Y];
 	//position_.z += callback.move.m128_f32[2];
 
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
 
-	eyepos.x += callback.move.m128_f32[0];
+	eyepos.x += callback.move.m128_f32[XYZ_X];
 
-	tarpos.x += callback.move.m128_f32[0];
+	tarpos.x += callback.move.m128_f32[XYZ_X];
 
 	//コライダー更新
 	UpdateWorldMatrix();
@@ -468,7 +466,7 @@ void Player::Landing(unsigned short attribute)
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
 	ray.start = sphereCollider->center;
-	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	ray.start.m128_f32[XYZ_Y] += sphereCollider->GetRadius();
 	const XMVECTOR rayDir = { 0.0f,-1.0f,0.0f,0.0f };
 	ray.dir = rayDir;
 	RaycastHit raycastHit;
@@ -594,7 +592,7 @@ XMFLOAT3 Player::GetWorldPosition() {
 
 //衝突を検出したら呼び出されるコールバック関数
 void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
-	
+
 	//ダメージ管理の構造体
 	struct DamageType
 	{
@@ -607,7 +605,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 		const int32_t GimmickSpike = 3;
 	};
 	DamageType damege;
-	
+
 	//煙プリセット
 	const ParticleManager::Preset smoke =
 	{
@@ -628,13 +626,13 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ -= damege.enemyNone;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)life_ -= damege.enemyPower;
-		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)life_-=damege.enemyGuard;
-		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)life_-=damege.enemySpeed;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)life_ -= damege.enemyGuard;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)life_ -= damege.enemySpeed;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)life_ -= damege.enemyDeath;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_-=damege.enemyBullet;
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_ -= damege.enemyBullet;
 
 		pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 		pmSmoke_->Update();
 		isHit_ = true;
@@ -647,7 +645,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 			if (isShake_)return;
 			life_ -= damege.GimmickSpike;
 			pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 			pmSmoke_->Update();
 			isHit_ = true;
@@ -685,12 +683,12 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 {
 	if (isDead_)return;
 	//移動処理
-	if (!isJumpBack_)Move();
+	Move();
 	//攻撃処理
 	FallAndJump();
 	if (isBack)JumpBack();
 	if (isAttack)Attack();
-	
+
 	if (life_ <= 0)
 	{
 		nowEye_ = camera_->GetEye();

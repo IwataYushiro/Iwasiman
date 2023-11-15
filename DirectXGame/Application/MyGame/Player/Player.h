@@ -143,7 +143,7 @@ private:
 	std::chrono::steady_clock::time_point startCount_;	//開始時間
 	std::chrono::steady_clock::time_point nowCount_;	//現在時間
 	std::chrono::microseconds elapsedCount_;			//経過時間 経過時間=現在時間-開始時間
-	const float	maxTime_ = 1.0f;							//全体時間
+	const float	maxTime_ = 1.0f;						//全体時間
 	float	timeRate_;									//どれくらい時間が進んだか
 	//制御点
 	XMFLOAT3 start_;									//最初点
