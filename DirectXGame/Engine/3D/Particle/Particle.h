@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <wrl.h>
 #include <forward_list>
+#include <memory>
 
 /*
 
@@ -97,7 +98,7 @@ private://定数
 public://メンバ関数
 
 	//OBJファイルからパーティクルモデルを読み込む(使用パーティクルモデル)
-	static Particle* LoadFromParticleTexture(const std::string& fileName);
+	static std::unique_ptr<Particle> LoadFromParticleTexture(const std::string& fileName);
 	// デスクリプタヒープの初期化
 	void InitializeDescriptorHeap();
 	// テクスチャ読み込み(テクスチャファイルネーム)

@@ -1,6 +1,7 @@
 #pragma once
 #include "Mesh.h"
 #include <DirectXMath.h>
+#include <memory>
 #include <unordered_map>
 
 /*
@@ -28,8 +29,9 @@ public://コンストラクタ等
 public://静的メンバ関数
 	//静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
+	
 	//OBJファイルから3Dモデルを読み込む(モデル名、スムージングするか)
-	static Model* LoadFromOBJ(const std::string& modelName, bool smoothing = false);
+	static std::unique_ptr<Model> LoadFromOBJ(const std::string& modelName, bool smoothing = false);
 	
 public://メンバ関数
 	

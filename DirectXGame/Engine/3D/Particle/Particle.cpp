@@ -22,10 +22,10 @@ using namespace std;
 ID3D12Device* Particle::device_ = nullptr;
 std::string Particle::defaultTextureDirectoryPath_ = "Resources/particle/";
 
-Particle* Particle::LoadFromParticleTexture(const std::string& fileName)
+std::unique_ptr<Particle> Particle::LoadFromParticleTexture(const std::string& fileName)
 {
 	//新たなModel型のインスタンスのメモリを確保
-	Particle* particle = new Particle();
+	std::unique_ptr<Particle> particle = std::make_unique<Particle>();
 
 	//デスクリプタヒープ生成
 	particle->InitializeDescriptorHeap();

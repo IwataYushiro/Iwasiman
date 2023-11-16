@@ -97,7 +97,7 @@ private://メンバ変数
 	Camera* camera_ = nullptr;
 
 	//ステージ番号
-	int stageNum_;
+	int32_t stageNum_;
 	//Sprite
 	Sprite* spriteGameOver_ = new Sprite();			//ゲームオーバースプライト
 	Sprite* spriteContinue_ = new Sprite();			//コンティニュー表示スプライト

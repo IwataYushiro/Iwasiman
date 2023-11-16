@@ -44,10 +44,10 @@ void Model::StaticInitialize(ID3D12Device* device)
 }
 
 //OBJファイルから3Dモデルを読み込む
-Model* Model::LoadFromOBJ(const std::string& modelName, bool smoothing)
+std::unique_ptr<Model> Model::LoadFromOBJ(const std::string& modelName, bool smoothing)
 {
 	//新たなModel型のインスタンスのメモリを確保
-	Model* model = new Model();
+	std::unique_ptr<Model> model = std::make_unique<Model>();
 	//OBJファイルからのデータ読み込み
 	model->LoadFromOBJInternal(modelName, smoothing);
 

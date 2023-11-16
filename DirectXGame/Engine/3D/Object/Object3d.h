@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "LightGroup.h"
 #include <unordered_map>
+#include <memory>
 #include "CollisionInfo.h"
 
 class BaseCollider;
@@ -68,7 +69,7 @@ public: // 静的メンバ関数
 
 
 	// 生成
-	static Object3d* Create();
+	static std::unique_ptr<Object3d> Create();
 
 private: // 静的メンバ変数
 	// デバイス

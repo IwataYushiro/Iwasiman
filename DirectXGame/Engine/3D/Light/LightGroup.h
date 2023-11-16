@@ -1,5 +1,6 @@
 #pragma once
 #include <DirectXMath.h>
+#include <memory>
 #include "DirectionalLight.h"
 #include "PointLight.h"
 
@@ -48,7 +49,7 @@ public://静的メンバ関数
 	//静的初期化(デバイス)
 	static void StaticInitialize(ID3D12Device* device);
 	//インスタンス生成
-	static LightGroup* Create();
+	static std::unique_ptr<LightGroup> Create();
 
 private://メンバ変数
 	

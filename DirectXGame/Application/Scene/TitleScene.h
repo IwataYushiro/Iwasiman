@@ -13,6 +13,7 @@
 #include "XYZ.h"
 
 #include <map>
+#include <memory>
 
 #include "SceneManager.h"
 
@@ -55,7 +56,7 @@ public://メンバ関数(ステージ番号)
 private://静的メンバ変数
 	//DirectX基盤
 	static DirectXCommon* dxCommon_;
-	
+
 	//インプット
 	static Input* input_;
 	//オーディオ
@@ -64,7 +65,7 @@ private://静的メンバ変数
 	static SceneManager* sceneManager_;
 	//imgui
 	static ImGuiManager* imguiManager_;
-	
+
 
 private://メンバ変数
 	//タイトル用テクスチャインデックス
@@ -85,38 +86,38 @@ private://メンバ変数
 	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
 	//カメラ
-	Camera* camera_ = nullptr;
+	std::unique_ptr<Camera> camera_ = nullptr;
 
 	//選択しているメニュー表示
 	int menuCount_;
 
 	//Sprite
-	Sprite* spriteTitle_ = new Sprite();				//タイトル画面スプライト
-	Sprite* spriteTitleDone_ = new Sprite();			//タイトル決定表示スプライト
-	Sprite* spriteMenu_ = new Sprite();					//タイトルメニュー画面スプライト
-	Sprite* spriteMenuTutorial_ = new Sprite();			//チュートリアル表示スプライト
-	Sprite* spriteMenuStageSelect_ = new Sprite();		//ステージセレクト表示スプライト
-	Sprite* spriteMenuDone_ = new Sprite();				//タイトルメニュー決定表示スプライト
-	Sprite* spriteBack_ = new Sprite();					//タイトルメニュー→タイトル移行のスプライト
-	Sprite* spriteFadeInOut_ = new Sprite();			//フェードインアウトスプライト
-	Sprite* spriteLoad_ = new Sprite();					//ロードスプライト
-	Sprite* spriteStageInfoNow_ = new Sprite();			//現在ステージスプライト
+	std::unique_ptr<Sprite> spriteTitle_ = std::make_unique<Sprite>();				//タイトル画面スプライト
+	std::unique_ptr<Sprite> spriteTitleDone_ = std::make_unique<Sprite>();			//タイトル決定表示スプライト
+	std::unique_ptr<Sprite> spriteMenu_ = std::make_unique<Sprite>();				//タイトルメニュー画面スプライト
+	std::unique_ptr<Sprite> spriteMenuTutorial_ = std::make_unique<Sprite>();		//チュートリアル表示スプライト
+	std::unique_ptr<Sprite> spriteMenuStageSelect_ = std::make_unique<Sprite>();	//ステージセレクト表示スプライト
+	std::unique_ptr<Sprite> spriteMenuDone_ = std::make_unique<Sprite>();			//タイトルメニュー決定表示スプライト
+	std::unique_ptr<Sprite> spriteBack_ = std::make_unique<Sprite>();				//タイトルメニュー→タイトル移行のスプライト
+	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトスプライト
+	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
+	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
 
 	//モデル
-	Model* modelPlayer_ = nullptr;						//自機モデル
-	Model* modelSkydome_ = nullptr;						//チュートリアルステージモデル(天球)
-	Model* modelSkydomeStage1_ = nullptr;				//ステージ1モデル(天球)
-	Model* modelSkydomeStage2_ = nullptr;				//ステージ2モデル(天球)
-	Model* modelGround_ = nullptr;						//床モデル
-	Model* modelGoal_ = nullptr;						//ゴールモデル
+	std::unique_ptr<Model> modelPlayer_ = nullptr;					//自機モデル
+	std::unique_ptr<Model> modelSkydome_ = nullptr;					//チュートリアルステージモデル(天球)
+	std::unique_ptr<Model> modelSkydomeStage1_ = nullptr;			//ステージ1モデル(天球)
+	std::unique_ptr<Model> modelSkydomeStage2_ = nullptr;			//ステージ2モデル(天球)
+	std::unique_ptr<Model> modelGround_ = nullptr;					//床モデル
+	std::unique_ptr<Model> modelGoal_ = nullptr;					//ゴールモデル
 
-	std::vector<Object3d*> objPlayers_;					//自機オブジェクト配列
-	std::vector<Object3d*> objSkydomes_;				//天球オブジェクト配列
-	std::vector<Object3d*> objGrounds_;					//床オブジェクト配列
-	std::vector<Object3d*> objGoals_;					//ゴールオブジェクト配列
+	std::vector<std::unique_ptr<Object3d>> objPlayers_;					//自機オブジェクト配列
+	std::vector<std::unique_ptr<Object3d>> objSkydomes_;				//天球オブジェクト配列
+	std::vector<std::unique_ptr<Object3d>> objGrounds_;					//床オブジェクト配列
+	std::vector<std::unique_ptr<Object3d>> objGoals_;					//ゴールオブジェクト配列
 
 	//マッピングモデル
 	std::map<std::string, Model*> models_;
@@ -131,9 +132,9 @@ private://メンバ変数
 	//タイトル→タイトルメニューの列挙体
 	enum TitleStart
 	{
-		TS_Title=0,		//タイトル
-		TS_Done=1,		//決定
-		TS_Num=2		//配列用
+		TS_Title = 0,		//タイトル
+		TS_Done = 1,		//決定
+		TS_Num = 2		//配列用
 	};
 	//最初の画面のY値
 	const std::array<float, TS_Num> startTitlePosY_ = { 50.0f,600.0f };
@@ -184,13 +185,13 @@ private://メンバ変数
 	};
 
 	//選んだステージを真ん中に移動させるイージングのプリセット
-	const Easing presetEaseStartStagePosX_ = {0.0f, 350.0f, 1.5f};//チュートリアルへ
+	const Easing presetEaseStartStagePosX_ = { 0.0f, 350.0f, 1.5f };//チュートリアルへ
 	//選んだステージを真ん中に移動させるイージング
 	Easing easeStartStagePosX_ = presetEaseStartStagePosX_;//チュートリアルへ
 
 
 	//選んだステージを上に移動させるイージングのプリセット
-	const Easing presetEaseStartStagePosY_ = { menuPosY_[TMEN_Tutorial], 0.0f, 1.5f};//チュートリアルへ
+	const Easing presetEaseStartStagePosY_ = { menuPosY_[TMEN_Tutorial], 0.0f, 1.5f };//チュートリアルへ
 	//選んだステージを上に移動させるイージング
 	Easing easeStartStagePosY_ = presetEaseStartStagePosY_;//チュートリアルへ
 
@@ -275,24 +276,24 @@ private://メンバ変数
 
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor_;//xyz=rgb
-	
+
 	//タイトルメニュー→タイトルへ戻るスプライトの色
 	const DirectX::XMFLOAT4 backTitleColor_ = { 0.0f,0.0f,0.1f,1.0f };
 
 	//色反転フラグ
 	bool isColorReverse_ = false;
 	//ライト
-	LightGroup* lightGroup_ = nullptr;
+	std::unique_ptr<LightGroup> lightGroup_ = nullptr;
 	//パーティクル
-	Particle* particle1_ = nullptr;
-	Particle* particle2_ = nullptr;
+	std::unique_ptr<Particle> particle1_ = nullptr;
+	std::unique_ptr<Particle> particle2_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pm1_ = nullptr;
-	ParticleManager* pm2_ = nullptr;
-	
+	std::unique_ptr<ParticleManager> pm1_ = nullptr;
+	std::unique_ptr<ParticleManager> pm2_ = nullptr;
+
 	//開始時のポジション
 	DirectX::XMFLOAT3 startPos_;
-	
+
 	//どのステージにいるのかを受け取るための変数
 	int stageNum_;
 

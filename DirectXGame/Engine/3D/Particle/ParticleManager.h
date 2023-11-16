@@ -4,6 +4,7 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
+#include <memory>
 #include "Camera.h"
 #include "Particle.h"
 
@@ -73,7 +74,7 @@ public: // 静的メンバ関数
 	static void PostDraw();
 
 	//生成
-	static ParticleManager* Create();
+	static std::unique_ptr<ParticleManager> Create();
 
 private: // 静的メンバ変数
 	// デバイス
