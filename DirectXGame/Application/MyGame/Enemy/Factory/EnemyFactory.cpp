@@ -18,7 +18,7 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 	Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
 {
 	//ƒ[ƒJƒ‹•Ï”
-	const int findSuccess = 0;//‡‚Á‚Ä‚é‚Æ‚«
+	const int8_t findSuccess = 0;//‡‚Á‚Ä‚é‚Æ‚«
 	//“G‘®«
 	enum EnemyType
 	{

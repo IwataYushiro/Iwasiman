@@ -94,33 +94,33 @@ private://メンバ変数
 	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
 	//カメラ
-	Camera* camera_ = nullptr;
+	std::unique_ptr<Camera> camera_ = nullptr;
 
 	//ステージ番号
 	int32_t stageNum_;
 	//Sprite
-	Sprite* spriteGameOver_ = new Sprite();			//ゲームオーバースプライト
-	Sprite* spriteContinue_ = new Sprite();			//コンティニュー表示スプライト
-	Sprite* spriteStageSelect_ = new Sprite();		//ステージセレクト表示スプライト
-	Sprite* spriteTitle_ = new Sprite();			//タイトル表示スプライト
-	Sprite* spriteDone_ = new Sprite();				//決定スプライト
-	Sprite* spriteFadeInOut_ = new Sprite();		//フェードインアウトスプライト
-	Sprite* spriteLoad_ = new Sprite();				//ロードスプライト
-	Sprite* spriteStageInfoNow_ = new Sprite();		//現在ステージスプライト
+	std::unique_ptr<Sprite> spriteGameOver_ = std::make_unique<Sprite>();			//ゲームオーバースプライト
+	std::unique_ptr<Sprite> spriteContinue_ = std::make_unique<Sprite>();			//コンティニュー表示スプライト
+	std::unique_ptr<Sprite> spriteStageSelect_ = std::make_unique<Sprite>();		//ステージセレクト表示スプライト
+	std::unique_ptr<Sprite> spriteTitle_ = std::make_unique<Sprite>();			//タイトル表示スプライト
+	std::unique_ptr<Sprite> spriteDone_ = std::make_unique<Sprite>();				//決定スプライト
+	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();		//フェードインアウトスプライト
+	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
+	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
 
 	//モデル
-	Model* modelPlayer_ = nullptr;				//自機モデル
-	Model* modelGoal_ = nullptr;				//ゴールモデル
-	Model* modelStageTutorial_ = nullptr;		//チュートリアルステージモデル(天球)
-	Model* modelStage1_ = nullptr;				//ステージ1モデル(天球)
-	Model* modelStage2_ = nullptr;				//ステージ2モデル(天球)
+	std::unique_ptr<Model> modelPlayer_ = nullptr;				//自機モデル
+	std::unique_ptr<Model> modelGoal_ = nullptr;				//ゴールモデル
+	std::unique_ptr<Model> modelStageTutorial_ = nullptr;		//チュートリアルステージモデル(天球)
+	std::unique_ptr<Model> modelStage1_ = nullptr;				//ステージ1モデル(天球)
+	std::unique_ptr<Model> modelStage2_ = nullptr;				//ステージ2モデル(天球)
 
-	std::vector<Object3d*> objPlayers_;			//自機オブジェクト配列
-	std::vector<Object3d*> objGoals_;			//ゴールオブジェクト配列
-	std::vector<Object3d*> objStages_;			//ステージオブジェクト配列
+	std::vector<std::unique_ptr<Object3d>> objPlayers_;			//自機オブジェクト配列
+	std::vector<std::unique_ptr<Object3d>> objGoals_;			//ゴールオブジェクト配列
+	std::vector<std::unique_ptr<Object3d>> objStages_;			//ステージオブジェクト配列
 
 	//オブジェクト回転用
 	DirectX::XMFLOAT3 rot_;
@@ -128,7 +128,7 @@ private://メンバ変数
 	//マッピングモデル
 	std::map<std::string, Model*> models_;
 	//オブジェクト配列
-	std::vector<Object3d*> objects_;
+	std::vector<std::unique_ptr<Object3d>> objects_;
 
 	//フラグ類
 	bool isGameover_ = true;					//メニュー時フラグ
@@ -314,10 +314,10 @@ private://メンバ変数
 	bool isColorReverse_ = false;
 
 	//ライト
-	LightGroup* lightGroup_ = nullptr;
+	std::unique_ptr<LightGroup> lightGroup_ = nullptr;
 	//パーティクル
-	Particle* particle1_ = nullptr;
+	std::unique_ptr<Particle> particle1_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pm1_ = nullptr;
+	std::unique_ptr<ParticleManager> pm1_ = nullptr;
 
 };

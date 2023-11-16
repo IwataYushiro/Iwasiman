@@ -22,12 +22,7 @@ using namespace DirectX;
 CollisionManager* EnemyBoss::colManager_ = CollisionManager::GetInstance();
 
 EnemyBoss::~EnemyBoss() {
-	//パーティクルモデルの解放
-	delete particleSmoke_;
-	delete pmSmoke_;
-
-	delete particleFire_;
-	delete pmFire_;
+	
 }
 
 std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
@@ -69,11 +64,11 @@ bool EnemyBoss::Initialize() {
 	//パーティクル
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmSmoke_ = ParticleManager::Create();
-	pmSmoke_->SetParticleModel(particleSmoke_);
+	pmSmoke_->SetParticleModel(particleSmoke_.get());
 
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
-	pmFire_->SetParticleModel(particleFire_);
+	pmFire_->SetParticleModel(particleFire_.get());
 
 	return true;
 }
@@ -382,7 +377,7 @@ void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned
 	//煙プリセット
 	const ParticleManager::Preset smoke =
 	{
-		particleSmoke_,
+		particleSmoke_.get(),
 		position_,
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },
@@ -395,7 +390,7 @@ void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned
 	//爆発プリセット
 	const ParticleManager::Preset fire =
 	{
-		particleFire_,
+		particleFire_.get(),
 		position_,
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },

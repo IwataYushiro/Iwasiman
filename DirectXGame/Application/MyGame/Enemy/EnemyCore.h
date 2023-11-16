@@ -121,11 +121,11 @@ private:
 	XMFLOAT3 nowPos_ = {};
 
 	//パーティクル
-	Particle* particleFire_ = nullptr;
-	Particle* particleSmoke_ = nullptr;
+	std::unique_ptr<Particle> particleFire_ = nullptr;
+	std::unique_ptr<Particle> particleSmoke_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pmSmoke_ = nullptr;
-	ParticleManager* pmFire_ = nullptr;
+	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
+	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
 
 public:
 	//死んだかどうか

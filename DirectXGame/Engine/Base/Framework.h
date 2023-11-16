@@ -9,6 +9,7 @@
 #include "Input.h"
 #include "SceneManager.h"
 #include "SpriteCommon.h"
+#include <memory>
 
 /*
 
@@ -49,7 +50,7 @@ protected:
 	//シーン
 	SceneManager* sceneManager_ = nullptr;
 	//シーンファクトリー
-	AbstractSceneFactory* sceneFactory_ = nullptr;
+	std::unique_ptr<AbstractSceneFactory> sceneFactory_ = nullptr;
 	//imgui
 	ImGuiManager* imguiManager_ = nullptr;
 	

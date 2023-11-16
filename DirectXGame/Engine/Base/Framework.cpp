@@ -73,7 +73,6 @@ void Framework::Finalize()
 {
 	//scene
 	sceneManager_->Finalize();
-	delete sceneFactory_;
 	//FBX
 	FbxLoader::GetInstance()->Finalize();
 	//imgui

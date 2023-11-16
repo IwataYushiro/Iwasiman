@@ -108,32 +108,32 @@ private:
 	Audio::SoundData sound_;
 
 	//スプライト	
-	Sprite* spritePause_ = new Sprite();				//ポーズ時のスプライト
-	Sprite* spritePauseInfo_ = new Sprite();			//どのキーでポーズするのかを書いたスプライト
-	Sprite* spritePauseResume_ = new Sprite();			//ポーズ時にゲーム再開するかを書いたスプライト
-	Sprite* spritePauseHowToPlay_ = new Sprite();		//ポーズ時に遊び方を確認するかを書いたスプライト
-	Sprite* spritePauseStageSelect_ = new Sprite();		//ポーズ時にステージセレクトへ戻るかを書いたスプライト
-	Sprite* spritePauseTitle_ = new Sprite();			//ポーズ時にタイトルへ戻るかを書いたスプライト
-	Sprite* spriteDone_ = new Sprite();					//決定表示のスプライト
-	Sprite* spriteQuitHowtoPlay_ = new Sprite();		//遊び方説明時ポーズに戻る案内用のスプライト
-	Sprite* spriteReady_ = new Sprite();				//Ready表記文字用のスプライト
-	Sprite* spriteGo_ = new Sprite();					//Go表記文字用のスプライト
-	Sprite* spriteFadeInOut_ = new Sprite();			//フェードインアウトのスプライト
-	Sprite* spriteLoad_ = new Sprite();					//ロードスプライト
-	Sprite* spriteStageInfoNow_ = new Sprite();			//現在ステージスプライト
+	std::unique_ptr<Sprite> spritePause_ = std::make_unique<Sprite>();				//ポーズ時のスプライト
+	std::unique_ptr<Sprite> spritePauseInfo_ = std::make_unique<Sprite>();			//どのキーでポーズするのかを書いたスプライト
+	std::unique_ptr<Sprite> spritePauseResume_ = std::make_unique<Sprite>();		//ポーズ時にゲーム再開するかを書いたスプライト
+	std::unique_ptr<Sprite> spritePauseHowToPlay_ = std::make_unique<Sprite>();		//ポーズ時に遊び方を確認するかを書いたスプライト
+	std::unique_ptr<Sprite> spritePauseStageSelect_ = std::make_unique<Sprite>();	//ポーズ時にステージセレクトへ戻るかを書いたスプライト
+	std::unique_ptr<Sprite> spritePauseTitle_ = std::make_unique<Sprite>();			//ポーズ時にタイトルへ戻るかを書いたスプライト
+	std::unique_ptr<Sprite> spriteDone_ = std::make_unique<Sprite>();				//決定表示のスプライト
+	std::unique_ptr<Sprite> spriteQuitHowtoPlay_ = std::make_unique<Sprite>();		//遊び方説明時ポーズに戻る案内用のスプライト
+	std::unique_ptr<Sprite> spriteReady_ = std::make_unique<Sprite>();				//Ready表記文字用のスプライト
+	std::unique_ptr<Sprite> spriteGo_ = std::make_unique<Sprite>();					//Go表記文字用のスプライト
+	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトのスプライト
+	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
+	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
 
 
-	Sprite* spriteTutorialHTPMove_ = new Sprite();		//チュートリアルの移動方法スプライト
-	Sprite* spriteTutorialHTPDash_ = new Sprite();		//チュートリアルのダッシュ方法スプライト
-	Sprite* spriteTutorialHTPJump_ = new Sprite();		//チュートリアルのジャンプ方法スプライト
-	Sprite* spriteTutorialHTPMoveBack_ = new Sprite();	//チュートリアルの手前、奥側移動方法スプライト
-	Sprite* spriteTutorialHTPAttack_ = new Sprite();	//チュートリアルの攻撃方法スプライト
+	std::unique_ptr<Sprite> spriteTutorialHTPMove_ = std::make_unique<Sprite>();		//チュートリアルの移動方法スプライト
+	std::unique_ptr<Sprite> spriteTutorialHTPDash_ = std::make_unique<Sprite>();		//チュートリアルのダッシュ方法スプライト
+	std::unique_ptr<Sprite> spriteTutorialHTPJump_ = std::make_unique<Sprite>();		//チュートリアルのジャンプ方法スプライト
+	std::unique_ptr<Sprite> spriteTutorialHTPMoveBack_ = std::make_unique<Sprite>();	//チュートリアルの手前、奥側移動方法スプライト
+	std::unique_ptr<Sprite> spriteTutorialHTPAttack_ = std::make_unique<Sprite>();		//チュートリアルの攻撃方法スプライト
 
-	Sprite* spriteTutorialInfo1_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル1面)
-	Sprite* spriteTutorialInfo2_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル2面)
-	Sprite* spriteTutorialInfo3_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル3面)
-	Sprite* spriteTutorialInfo4_ = new Sprite();		//チュートリアル説明文字スプライト(チュートリアル4面)
-	Sprite* spriteTutorialInfoHowToPlay_ = new Sprite();//チュートリアル説明文字スプライト(チュートリアル中の遊び方説明について)
+	std::unique_ptr<Sprite> spriteTutorialInfo1_ = std::make_unique<Sprite>();			//チュートリアル説明文字スプライト(チュートリアル1面)
+	std::unique_ptr<Sprite> spriteTutorialInfo2_ = std::make_unique<Sprite>();			//チュートリアル説明文字スプライト(チュートリアル2面)
+	std::unique_ptr<Sprite> spriteTutorialInfo3_ = std::make_unique<Sprite>();			//チュートリアル説明文字スプライト(チュートリアル3面)
+	std::unique_ptr<Sprite> spriteTutorialInfo4_ = std::make_unique<Sprite>();			//チュートリアル説明文字スプライト(チュートリアル4面)
+	std::unique_ptr<Sprite> spriteTutorialInfoHowToPlay_ = std::make_unique<Sprite>();	//チュートリアル説明文字スプライト(チュートリアル中の遊び方説明について)
 
 	//チュートリアル用のイージング状態
 	enum GamePlaySceneSettingTutorialEasingNum
@@ -365,38 +365,38 @@ private:
 	bool isFadeInPause_ = false;
 	//モデル
 	//自機
-	std::list<std::unique_ptr<Player>> players_;		//自機リスト
-	Model* modelPlayer_ = nullptr;						//自機モデル
-	Model* modelPlayerBullet_ = nullptr;				//自機弾モデル
+	std::list<std::unique_ptr<Player>> players_;						//自機リスト
+	std::unique_ptr<Model> modelPlayer_ = nullptr;						//自機モデル
+	std::unique_ptr<Model> modelPlayerBullet_ = nullptr;				//自機弾モデル
 
 	//敵
-	std::unique_ptr<AbstractEnemyFactory> enemyFactory_;	//敵の工場
-	std::list<std::unique_ptr<BaseEnemy>> enemys_;			//敵リスト
-	Model* modelEnemy1_ = nullptr;							//敵モデル
-	Model* modelEnemyBullet_ = nullptr;						//敵弾モデル
-	Model* modelBoss1_ = nullptr;							//ステージ1のボスモデル
-	Model* modelBossCore1_ = nullptr;						//ステージ1のボスの周りにあるコアのモデル
+	std::unique_ptr<AbstractEnemyFactory> enemyFactory_;					//敵の工場
+	std::list<std::unique_ptr<BaseEnemy>> enemys_;							//敵リスト
+	std::unique_ptr<Model> modelEnemy1_ = nullptr;							//敵モデル
+	std::unique_ptr<Model> modelEnemyBullet_ = nullptr;						//敵弾モデル
+	std::unique_ptr<Model> modelBoss1_ = nullptr;							//ステージ1のボスモデル
+	std::unique_ptr<Model> modelBossCore1_ = nullptr;						//ステージ1のボスの周りにあるコアのモデル
 
 	//ギミック
-	std::unique_ptr<AbstractGimmickFactory> gimmickFactory_;	//ギミックの工場
-	std::list<std::unique_ptr<BaseGimmick>> gimmicks_;			//ギミックリスト
-	Model* modelSpike_ = nullptr;								//トゲのモデル
+	std::unique_ptr<AbstractGimmickFactory> gimmickFactory_;					//ギミックの工場
+	std::list<std::unique_ptr<BaseGimmick>> gimmicks_;							//ギミックリスト
+	std::unique_ptr<Model> modelSpike_ = nullptr;								//トゲのモデル
 
 	//ゴール
-	std::list<std::unique_ptr<Goal>> goals_;	//ゴールリスト
-	Model* modelGoal_ = nullptr;				//ゴールモデル
+	std::list<std::unique_ptr<Goal>> goals_;					//ゴールリスト
+	std::unique_ptr<Model> modelGoal_ = nullptr;				//ゴールモデル
 
 	//アイテム
-	std::list<std::unique_ptr<Item>> items_;	//アイテムリスト
-	Model* modelItemJump_ = nullptr;			//ジャンプ力強化アイテムモデル
-	Model* modelItemHeal_ = nullptr;			//ライフ回復アイテムモデル
-	Model* modelStageT_ = nullptr;				//チュートリアルステージモデル(天球)
-	Model* modelStage1_ = nullptr;				//ステージ1モデル(天球)
-	Model* modelStage2_ = nullptr;				//ステージ2モデル(天球)
+	std::list<std::unique_ptr<Item>> items_;					//アイテムリスト
+	std::unique_ptr<Model> modelItemJump_ = nullptr;			//ジャンプ力強化アイテムモデル
+	std::unique_ptr<Model> modelItemHeal_ = nullptr;			//ライフ回復アイテムモデル
+	std::unique_ptr<Model> modelStageT_ = nullptr;				//チュートリアルステージモデル(天球)
+	std::unique_ptr<Model> modelStage1_ = nullptr;				//ステージ1モデル(天球)
+	std::unique_ptr<Model> modelStage2_ = nullptr;				//ステージ2モデル(天球)
 
 	//床
-	Model* modelGround_ = nullptr;				//床のモデル
-	Model* modelBox_ = nullptr;					//AABB床モデル
+	std::unique_ptr<Model> modelGround_ = nullptr;				//床のモデル
+	std::unique_ptr<Model> modelBox_ = nullptr;					//AABB床モデル
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
@@ -404,21 +404,21 @@ private:
 	//マッピングモデル
 	std::map<std::string, Model*> models_;
 	//オブジェクト配列
-	std::vector<Object3d*> objects_;
+	std::vector<std::unique_ptr<Object3d>> objects_;
 	//天球配列
-	std::vector<Object3d*> skydomes_;
+	std::vector<std::unique_ptr<Object3d>> skydomes_;
 
 	//パーティクル
-	Particle* particle1_ = nullptr;
+	std::unique_ptr<Particle> particle1_ = nullptr;
 
 	//パーティクルマネージャー
-	ParticleManager* pm_ = nullptr;
+	std::unique_ptr<ParticleManager> pm_ = nullptr;
 
 	//カメラ
-	Camera* camera_ = nullptr;
+	std::unique_ptr<Camera> camera_ = nullptr;
 
 	//ライト
-	LightGroup* lightGroup_ = nullptr;
+	std::unique_ptr<LightGroup> lightGroup_ = nullptr;
 
 	//コリジョンマネージャー
 	CollisionManager* colManager_ = nullptr;

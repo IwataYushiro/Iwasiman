@@ -88,9 +88,9 @@ private:
 	Easing ease_ = { settingEase_.x, settingEase_.y, timer_ };
 
 	//パーティクル
-	Particle* p_ = nullptr;
+	std::unique_ptr<Particle> p_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pm_ = nullptr;
+	std::unique_ptr<ParticleManager> pm_ = nullptr;
 
 public: //アクセッサ、インライン関数
 	//ジャンプアイテムを取得したかどうか
@@ -103,7 +103,7 @@ private:
 	//スプライト基盤クラス
 	SpriteCommon* spCommon_ = nullptr;
 	//ジャンプアイテム取得時のUIスプライト
-	Sprite* spriteItemJumpBar_ = new Sprite();
+	std::unique_ptr<Sprite> spriteItemJumpBar_ = std::make_unique<Sprite>();
 
 private:
 	//スプライトのロード

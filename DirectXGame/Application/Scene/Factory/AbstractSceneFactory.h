@@ -1,8 +1,7 @@
 #pragma once
-
 #include "BaseScene.h"
 #include <string>
-
+#include <memory>
 
 /*
 
@@ -18,6 +17,6 @@ public:
 	virtual ~AbstractSceneFactory() = default;
 
 	//シーン生成(シーン名、ステージ情報)
-	virtual BaseScene* CreateScene(const std::string& sceneName, int stagenum = 0) = 0;
+	virtual std::unique_ptr<BaseScene> CreateScene(const std::string& sceneName, int stagenum = 0) = 0;
 
 };

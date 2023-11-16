@@ -85,35 +85,35 @@ private://メンバ変数
 	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
 	//カメラ
-	Camera* camera_ = nullptr;
+	std::unique_ptr<Camera> camera_ = nullptr;
 
 	//Sprite
-	Sprite* spriteMenu_ = new Sprite();				//メニュー画面スプライト
-	Sprite* spriteTutorial_ = new Sprite();			//チュートリアルステージスプライト
-	Sprite* spriteStage1_ = new Sprite();			//ステージ1スプライト
-	Sprite* spriteStage2_ = new Sprite();			//ステージ2スプライト
-	Sprite* spriteDone_ = new Sprite();				//決定表示スプライト
-	Sprite* spriteBack_ = new Sprite();				//タイトルに戻るスプライト
-	Sprite* spriteFadeInOut_ = new Sprite();		//フェードインアウトスプライト
-	Sprite* spriteLoad_ = new Sprite();				//ロードスプライト
-	Sprite* spriteStageInfoNow_ = new Sprite();		//現在ステージスプライト
+	std::unique_ptr<Sprite> spriteMenu_ = std::make_unique<Sprite>();				//メニュー画面スプライト
+	std::unique_ptr<Sprite> spriteTutorial_ = std::make_unique<Sprite>();			//チュートリアルステージスプライト
+	std::unique_ptr<Sprite> spriteStage1_ = std::make_unique<Sprite>();				//ステージ1スプライト
+	std::unique_ptr<Sprite> spriteStage2_ = std::make_unique<Sprite>();				//ステージ2スプライト
+	std::unique_ptr<Sprite> spriteDone_ = std::make_unique<Sprite>();				//決定表示スプライト
+	std::unique_ptr<Sprite> spriteBack_ = std::make_unique<Sprite>();				//タイトルに戻るスプライト
+	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトスプライト
+	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
+	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
 
 	//オブジェクト
-	Object3d* objStage_ = nullptr;				//ステージオブジェクト
-	std::vector<Object3d*> objPlayers_;			//自機オブジェクト配列
-	std::vector<Object3d*> objGoals_;			//ゴールオブジェクト配列
-	std::vector<Object3d*> objGrounds_;			//床オブジェクト配列
+	std::unique_ptr<Object3d> objStage_ = nullptr;				//ステージオブジェクト
+	std::vector<std::unique_ptr<Object3d>> objPlayers_;			//自機オブジェクト配列
+	std::vector<std::unique_ptr<Object3d>> objGoals_;			//ゴールオブジェクト配列
+	std::vector<std::unique_ptr<Object3d>> objGrounds_;			//床オブジェクト配列
 
 	//モデル
-	Model* modelPlayer_ = nullptr;				//自機モデル
-	Model* modelGoal_ = nullptr;				//ゴールモデル
-	Model* modelGround_ = nullptr;				//床モデル
-	Model* modelStageTutorial_ = nullptr;		//チュートリアルステージモデル(天球)
-	Model* modelStage1_ = nullptr;				//ステージ1モデル(天球)
-	Model* modelStage2_ = nullptr;				//ステージ2モデル(天球)
+	std::unique_ptr<Model> modelPlayer_ = nullptr;				//自機モデル
+	std::unique_ptr<Model> modelGoal_ = nullptr;				//ゴールモデル
+	std::unique_ptr<Model> modelGround_ = nullptr;				//床モデル
+	std::unique_ptr<Model> modelStageTutorial_ = nullptr;		//チュートリアルステージモデル(天球)
+	std::unique_ptr<Model> modelStage1_ = nullptr;				//ステージ1モデル(天球)
+	std::unique_ptr<Model> modelStage2_ = nullptr;				//ステージ2モデル(天球)
 	//マッピングモデル
 	std::map<std::string, Model*> models_;
 
@@ -327,11 +327,11 @@ private://メンバ変数
 	bool isFadeOut_ = false;		//フェードアウト
 
 	//ライト
-	LightGroup* lightGroup_ = nullptr;
+	std::unique_ptr<LightGroup> lightGroup_ = nullptr;
 	//パーティクル
-	Particle* particle1_ = nullptr;
+	std::unique_ptr<Particle> particle1_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pm1_ = nullptr;
+	std::unique_ptr<ParticleManager> pm1_ = nullptr;
 
 public:
 	//色が変わる処理

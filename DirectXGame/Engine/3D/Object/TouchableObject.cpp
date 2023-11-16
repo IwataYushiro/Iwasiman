@@ -10,14 +10,13 @@
 
 */
 
-TouchableObject* TouchableObject::Create(Model* model, bool Touth)
+std::unique_ptr<TouchableObject> TouchableObject::Create(Model* model, bool Touth)
 {
-	TouchableObject* ins = new TouchableObject();
+	std::unique_ptr<TouchableObject> ins = std::make_unique<TouchableObject>();
 	if (ins == nullptr)return nullptr;
 	//‰Šú‰»
 	if (!ins->Initialize(model,Touth))
 	{
-		delete ins;
 		assert(0);
 	}
 	return ins;

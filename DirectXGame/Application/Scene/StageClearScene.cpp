@@ -30,7 +30,7 @@ void StageClearScene::Initialize()
 	spCommon_ = SpriteCommon::GetInstance();
 
 	//カメラ
-	camera_ = new Camera();
+	camera_ = std::make_unique<Camera>();
 	//オーディオ
 	audio_->Initialize();
 
@@ -47,7 +47,7 @@ void StageClearScene::Initialize()
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
-	Object3d::SetLightGroup(lightGroup_);
+	Object3d::SetLightGroup(lightGroup_.get());
 
 	//スプライト
 	if (stageNum_ == SL_Stage1_AreaBoss)spCommon_->LoadTexture(SCSTI_MenuTex, "texture/areaclear.png");
@@ -95,13 +95,13 @@ void StageClearScene::Initialize()
 	//パーティクル
 	particleClear_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmClear_ = ParticleManager::Create();
-	pmClear_->SetParticleModel(particleClear_);
-	pmClear_->SetCamera(camera_);
+	pmClear_->SetParticleModel(particleClear_.get());
+	pmClear_->SetCamera(camera_.get());
 
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmSmoke_ = ParticleManager::Create();
-	pmSmoke_->SetParticleModel(particleSmoke_);
-	pmSmoke_->SetCamera(camera_);
+	pmSmoke_->SetParticleModel(particleSmoke_.get());
+	pmSmoke_->SetCamera(camera_.get());
 
 	if (stageNum_ == SL_Stage1_AreaBoss)
 	{
@@ -130,12 +130,12 @@ void StageClearScene::Update()
 	else if (isQuitTitle_)UpdateIsQuitTitle();
 	else UpdateIsMenu();
 
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
-			particleSmoke_,
+			particleSmoke_.get(),
 			player->GetPosition(),
 			{ 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
@@ -152,7 +152,7 @@ void StageClearScene::Update()
 		player->Update();
 	}
 
-	for (Object3d*& ground : objGrounds_)
+	for (std::unique_ptr<Object3d>& ground : objGrounds_)
 	{
 		DirectX::XMFLOAT3 move = ground->GetPosition();
 		const DirectX::XMFLOAT3 speed = { -1.0f,0.0f,0.0f };
@@ -166,7 +166,7 @@ void StageClearScene::Update()
 		ground->Update();
 	}
 
-	for (Object3d*& skydome : objSkydomes_)
+	for (std::unique_ptr<Object3d>& skydome : objSkydomes_)
 	{
 		//天球回転用
 		DirectX::XMFLOAT3 rotSkydome = skydome->GetRotation();
@@ -177,7 +177,7 @@ void StageClearScene::Update()
 
 		skydome->Update();
 	}
-	for (Object3d*& goal : objGoals_)goal->Update();
+	for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Update();
 
 
 
@@ -218,12 +218,12 @@ void StageClearScene::UpdateIsNextStage()
 	camera_->SetEye({ easeEyeStageClear_[XYZ_X].num_X, easeEyeStageClear_[XYZ_Y].num_X, easeEyeStageClear_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetStageClear_[XYZ_X].num_X, easeTargetStageClear_[XYZ_Y].num_X, easeTargetStageClear_[XYZ_Z].num_X });
 
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		//煙プリセット
 		const ParticleManager::Preset clear =
 		{
-			particleClear_,
+			particleClear_.get(),
 			{player->GetPosition().x+70.0f,player->GetPosition().y + 30.0f ,player->GetPosition().z},
 			{ 0.0f ,60.0f,75.0f },
 			{  RandomMTFloat(-15.0f,-8.0f),0.0f,0.0f},
@@ -239,7 +239,7 @@ void StageClearScene::UpdateIsNextStage()
 
 	}
 
-	for (Object3d*& goal : objGoals_)
+	for (std::unique_ptr<Object3d>& goal : objGoals_)
 	{
 
 		DirectX::XMFLOAT3 move = goal->GetPosition();
@@ -283,7 +283,7 @@ void StageClearScene::UpdateIsStageSelect()
 	camera_->SetEye({ easeEyeStageClear_[XYZ_X].num_X, easeEyeStageClear_[XYZ_Y].num_X, easeEyeStageClear_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetStageClear_[XYZ_X].num_X, easeTargetStageClear_[XYZ_Y].num_X, easeTargetStageClear_[XYZ_Z].num_X });
 
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		player->SetPosition({ easePlayerMoveStageSelect_[XYZ_X].num_X,easePlayerMoveStageSelect_[XYZ_Y].num_X,easePlayerMoveStageSelect_[XYZ_Z].num_X });
 
@@ -414,7 +414,7 @@ void StageClearScene::UpdateIsMenu()
 	//クリア演出プリセット
 	const ParticleManager::Preset clear =
 	{
-		particleClear_,
+		particleClear_.get(),
 		{0.0f,0.0f,0.0f},//使わない
 		{ 5.0f ,2.0f,0.0f },
 		{ 3.0f,6.0f,0.3f },
@@ -448,10 +448,10 @@ void StageClearScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
-	for (Object3d*& player : objPlayers_)player->Draw();
-	for (Object3d*& ground : objGrounds_)ground->Draw();
-	for (Object3d*& skydome : objSkydomes_)skydome->Draw();
-	if (!isStageSelect_)for (Object3d*& goal : objGoals_)goal->Draw();
+	for (std::unique_ptr<Object3d>& player : objPlayers_)player->Draw();
+	for (std::unique_ptr<Object3d>& ground : objGrounds_)ground->Draw();
+	for (std::unique_ptr<Object3d>& skydome : objSkydomes_)skydome->Draw();
+	if (!isStageSelect_)for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Draw();
 
 	//モデル描画後処理
 	Object3d::PostDraw();
@@ -505,39 +505,6 @@ void StageClearScene::Finalize()
 {
 	//音声
 	audio_->Finalize();
-	//スプライト
-	delete spriteStageClear_;
-	delete spriteNextStage_;
-	delete spriteStageSelect_;
-	delete spriteTitle_;
-	delete spriteDone_;
-	delete spriteFadeInOut_;
-	delete spriteLoad_;
-	delete spriteStageInfoNow_;
-
-	//レベルデータ用オブジェクト
-	for (Object3d*& player : objPlayers_)delete player;
-	for (Object3d*& ground : objGrounds_)delete ground;
-	for (Object3d*& skydome : objSkydomes_)delete skydome;
-	for (Object3d*& goal : objGoals_)delete goal;
-
-	delete modelPlayer_;
-	delete modelSkydome_;
-	delete modelSkydomeStage1_;
-	delete modelSkydomeStage2_;
-	delete modelGround_;
-	delete modelGoal_;
-
-	//カメラ
-	delete camera_;
-	//ライト
-	delete lightGroup_;
-	//パーティクル
-	delete particleClear_;
-	delete pmClear_;
-
-	delete particleSmoke_;
-	delete pmSmoke_;
 }
 
 void StageClearScene::LoadLVData(const std::string& stagePath)
@@ -553,12 +520,12 @@ void StageClearScene::LoadLVData(const std::string& stagePath)
 	modelGround_ = Model::LoadFromOBJ("ground");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 
-	models_.insert(std::make_pair("player", modelPlayer_));
-	models_.insert(std::make_pair("skydomet", modelSkydome_));
-	models_.insert(std::make_pair("skydome", modelSkydomeStage1_));
-	models_.insert(std::make_pair("skydome2", modelSkydomeStage2_));
-	models_.insert(std::make_pair("ground", modelGround_));
-	models_.insert(std::make_pair("sphere", modelGoal_));
+	models_.insert(std::make_pair("player", modelPlayer_.get()));
+	models_.insert(std::make_pair("skydomet", modelSkydome_.get()));
+	models_.insert(std::make_pair("skydome", modelSkydomeStage1_.get()));
+	models_.insert(std::make_pair("skydome2", modelSkydomeStage2_.get()));
+	models_.insert(std::make_pair("ground", modelGround_.get()));
+	models_.insert(std::make_pair("sphere", modelGoal_.get()));
 
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData_->objects) {
@@ -572,7 +539,7 @@ void StageClearScene::LoadLVData(const std::string& stagePath)
 		if (objectData.objectType.find("PLAYER") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -591,14 +558,14 @@ void StageClearScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objPlayers_.push_back(newObject);
+			objPlayers_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("PLANE") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -618,14 +585,14 @@ void StageClearScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objGrounds_.push_back(newObject);
+			objGrounds_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("SKYDOME") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -644,14 +611,14 @@ void StageClearScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objSkydomes_.push_back(newObject);
+			objSkydomes_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("GOAL") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -670,9 +637,9 @@ void StageClearScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objGoals_.push_back(newObject);
+			objGoals_.push_back(std::move(newObject));
 		}
 
 	}

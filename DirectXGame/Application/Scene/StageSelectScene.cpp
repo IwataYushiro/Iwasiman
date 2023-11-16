@@ -35,7 +35,7 @@ void StageSelectScene::Initialize()
 	spCommon_ = SpriteCommon::GetInstance();
 
 	//カメラ初期化
-	camera_ = new Camera();
+	camera_ = std::make_unique<Camera>();
 	//オーディオ
 	audio_->Initialize();
 
@@ -56,7 +56,7 @@ void StageSelectScene::Initialize()
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
-	Object3d::SetLightGroup(lightGroup_);
+	Object3d::SetLightGroup(lightGroup_.get());
 
 	spCommon_->LoadTexture(SSSTI_MenuTex, "texture/stageselect.png");
 	spriteMenu_->Initialize(spCommon_, SSSTI_MenuTex);
@@ -104,15 +104,15 @@ void StageSelectScene::Initialize()
 	modelStage2_ = Model::LoadFromOBJ("skydome2");
 
 	objStage_ = Object3d::Create();
-	objStage_->SetModel(modelStageTutorial_);
-	objStage_->SetCamera(camera_);
+	objStage_->SetModel(modelStageTutorial_.get());
+	objStage_->SetCamera(camera_.get());
 	const XMFLOAT3 stageScale = { 7.0f,7.0f,7.0f };
 	objStage_->SetScale(stageScale);
 
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	pm1_ = ParticleManager::Create();
-	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);
+	pm1_->SetParticleModel(particle1_.get());
+	pm1_->SetCamera(camera_.get());
 
 	//イージングStandby
 	for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(false);
@@ -132,12 +132,12 @@ void StageSelectScene::Update()
 	else if (isStart_) UpdateIsGameStart();
 	else UpdateIsQuitTitle();
 
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
-			particle1_,
+			particle1_.get(),
 			player->GetPosition(),
 			{ 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
@@ -153,8 +153,8 @@ void StageSelectScene::Update()
 
 		player->Update();
 	}
-	for (Object3d*& ground : objGrounds_)ground->Update();
-	for (Object3d*& goal : objGoals_)goal->Update();
+	for (std::unique_ptr<Object3d>& ground : objGrounds_)ground->Update();
+	for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Update();
 
 	const float rotSpeed = 0.5f;
 	rot_.y += rotSpeed;
@@ -227,7 +227,7 @@ void StageSelectScene::UpdateIsStageSelect()
 
 	if (menuCount_ == SSSMI_StageTutorial_Tutorial)
 	{
-		objStage_->SetModel(modelStageTutorial_);
+		objStage_->SetModel(modelStageTutorial_.get());
 		spriteMenu_->SetColor(selectMenuColor);
 		spriteTutorial_->SetColor(selectMenuColor);
 		spriteStage1_->SetColor(otherMenuColor);
@@ -236,7 +236,7 @@ void StageSelectScene::UpdateIsStageSelect()
 	}
 	else if (menuCount_ == SSSMI_Stage1_SkyStage)
 	{
-		objStage_->SetModel(modelStage1_);
+		objStage_->SetModel(modelStage1_.get());
 		spriteMenu_->SetColor(selectMenuColor);
 		spriteTutorial_->SetColor(otherMenuColor);
 		spriteStage1_->SetColor(selectMenuColor);
@@ -245,7 +245,7 @@ void StageSelectScene::UpdateIsStageSelect()
 	}
 	else if (menuCount_ == SSSMI_Stage2_SpaceStage)
 	{
-		objStage_->SetModel(modelStage2_);
+		objStage_->SetModel(modelStage2_.get());
 		spriteMenu_->SetColor(selectMenuColorDark);
 		spriteTutorial_->SetColor(otherMenuColorDark);
 		spriteStage1_->SetColor(otherMenuColorDark);
@@ -341,7 +341,7 @@ void StageSelectScene::UpdateIsGameStart()
 	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
 
 	//プレイヤー座標もセット
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		player->SetPosition({ easePlayerStartMove_[XYZ_X].num_X,easePlayerStartMove_[XYZ_Y].num_X ,easePlayerStartMove_[XYZ_Z].num_X });
 		if (player->GetPosition().x >= gameStartPosX_)FadeOut(white_);//ゲームプレイ遷移時は白くする
@@ -373,7 +373,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 	if (spriteMenu_->GetPosition().x == easeMenuPosX_[SSMEN_Menu].start) FadeOut(black_);//黒くする
 
 	//プレイヤー座標もセット
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		player->SetPosition({ easePlayerQuitMove_[XYZ_X].num_X,easePlayerQuitMove_[XYZ_Y].num_X ,easePlayerQuitMove_[XYZ_Z].num_X });
 	}
@@ -391,9 +391,9 @@ void StageSelectScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
-	for (Object3d*& player : objPlayers_)player->Draw();
-	for (Object3d*& ground : objGrounds_)ground->Draw();
-	for (Object3d*& goal : objGoals_)goal->Draw();
+	for (std::unique_ptr<Object3d>& player : objPlayers_)player->Draw();
+	for (std::unique_ptr<Object3d>& ground : objGrounds_)ground->Draw();
+	for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Draw();
 	objStage_->Draw();
 
 	//モデル描画後処理
@@ -431,37 +431,6 @@ void StageSelectScene::Finalize()
 {
 	//音声
 	audio_->Finalize();
-	//sprite
-	delete spriteMenu_;
-	delete spriteTutorial_;
-	delete spriteStage1_;
-	delete spriteStage2_;
-	delete spriteDone_;
-	delete spriteBack_;
-	delete spriteFadeInOut_;
-	delete spriteLoad_;
-	delete spriteStageInfoNow_;
-	//ステージ
-	delete objStage_;
-	//レベルデータ用オブジェクト
-	for (Object3d*& player : objPlayers_)delete player;
-	for (Object3d*& ground : objGrounds_)delete ground;
-	for (Object3d*& goal : objGoals_)delete goal;
-
-	delete modelStageTutorial_;
-	delete modelStage1_;
-	delete modelStage2_;
-	delete modelPlayer_;
-	delete modelGround_;
-	delete modelGoal_;
-	//パーティクル
-	delete particle1_;
-	delete pm1_;
-
-	//カメラ
-	delete camera_;
-	//ライト
-	delete lightGroup_;
 }
 
 void StageSelectScene::FadeOut(DirectX::XMFLOAT3 rgb)
@@ -492,9 +461,9 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 	modelGround_ = Model::LoadFromOBJ("ground");
 
-	models_.insert(std::make_pair("player", modelPlayer_));
-	models_.insert(std::make_pair("sphere", modelGoal_));
-	models_.insert(std::make_pair("ground", modelGround_));
+	models_.insert(std::make_pair("player", modelPlayer_.get()));
+	models_.insert(std::make_pair("sphere", modelGoal_.get()));
+	models_.insert(std::make_pair("ground", modelGround_.get()));
 
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData_->objects) {
@@ -508,7 +477,7 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 		if (objectData.objectType.find("PLAYER") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -527,14 +496,14 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objPlayers_.push_back(newObject);
+			objPlayers_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("PLANE") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -553,14 +522,14 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objGrounds_.push_back(newObject);
+			objGrounds_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("GOAL") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -579,9 +548,9 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objGoals_.push_back(newObject);
+			objGoals_.push_back(std::move(newObject));
 		}
 
 	}

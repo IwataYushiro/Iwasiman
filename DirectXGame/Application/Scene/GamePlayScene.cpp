@@ -45,7 +45,7 @@ void GamePlayScene::Initialize()
 #pragma region 描画初期化処理
 
 	//カメラ生成
-	camera_ = new Camera();
+	camera_ = std::make_unique<Camera>();
 
 	//音声データ
 	sound_ = audio_->SoundLoadWave("Resources/TestMusic.wav");
@@ -77,14 +77,14 @@ void GamePlayScene::Initialize()
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
-	Object3d::SetLightGroup(lightGroup_);
+	Object3d::SetLightGroup(lightGroup_.get());
 
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	pm_ = ParticleManager::Create();
 	pm_->SetBlendMode(ParticleManager::BP_ADD);
-	pm_->SetParticleModel(particle1_);
-	pm_->SetCamera(camera_);
+	pm_->SetParticleModel(particle1_.get());
+	pm_->SetCamera(camera_.get());
 
 	//イージングスタンバイ
 	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].Standby(false);
@@ -111,7 +111,7 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
 
 	//天球は常時ぐるぐる
-	for (Object3d*& skydome : skydomes_)
+	for (std::unique_ptr<Object3d>& skydome : skydomes_)
 	{
 		//天球回転用
 		XMFLOAT3 rotSkydome = skydome->GetRotation();
@@ -215,7 +215,7 @@ void GamePlayScene::UpdateIsStartGame()
 		//パーティクル
 		const ParticleManager::Preset smoke =
 		{
-			particle1_,
+			particle1_.get(),
 			player->GetPosition(),
 			{ 0.0f ,3.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
@@ -254,7 +254,7 @@ void GamePlayScene::UpdateIsStartGame()
 
 	for (std::unique_ptr<Item>& item : items_)item->Update();
 
-	for (Object3d*& object : objects_) object->Update();
+	for (std::unique_ptr<Object3d>& object : objects_) object->Update();
 	//カメラ
 	camera_->Update();
 	lightGroup_->Update();
@@ -321,7 +321,7 @@ void GamePlayScene::UpdateIsPlayGame()
 	{
 		item->Update();
 	}
-	for (Object3d*& object : objects_) object->Update();
+	for (std::unique_ptr<Object3d>& object : objects_) object->Update();
 
 	//imguiManager_->Begin();
 	//camera_->DebugCamera();
@@ -602,23 +602,23 @@ void GamePlayScene::UpdateTutorial()
 {
 	if (stageNum_ == SL_StageTutorial_Area1)
 	{
-		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-			nullptr, nullptr, spriteTutorialInfo1_);
+		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			nullptr, nullptr, spriteTutorialInfo1_.get());
 	}
 	else if (stageNum_ == SL_StageTutorial_Area2)
 	{
-		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-			spriteTutorialHTPMoveBack_, nullptr, spriteTutorialInfo2_);
+		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			spriteTutorialHTPMoveBack_.get(), nullptr, spriteTutorialInfo2_.get());
 	}
 	else if (stageNum_ == SL_StageTutorial_Area3)
 	{
-		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-			spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo3_);
+		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo3_.get());
 	}
 	else if (stageNum_ == SL_StageTutorial_Final)
 	{
-		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-			spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
+		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo4_.get());
 	}
 }
 
@@ -757,23 +757,23 @@ for (std::unique_ptr<Item>& item : items_){item->DrawSprite();}
 			
 			if (stageNum_ == SL_StageTutorial_Area1)
 			{
-				DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-					nullptr, nullptr, spriteTutorialInfo1_);
+				DrawTutorialSprite(spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+					nullptr, nullptr, spriteTutorialInfo1_.get());
 			}
 			else if (stageNum_ == SL_StageTutorial_Area2)
 			{
-				DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-					spriteTutorialHTPMoveBack_, nullptr, spriteTutorialInfo2_);
+				DrawTutorialSprite(spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+					spriteTutorialHTPMoveBack_.get(), nullptr, spriteTutorialInfo2_.get());
 			}
 			else if (stageNum_ == SL_StageTutorial_Area3)
 			{
-				DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-					spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo3_);
+				DrawTutorialSprite(spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+					spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo3_.get());
 			}
 			else if (stageNum_ == SL_StageTutorial_Final)
 			{
-				DrawTutorialSprite(spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-					spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
+				DrawTutorialSprite(spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+					spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo4_.get());
 			}
 		}
 }
@@ -797,66 +797,11 @@ void GamePlayScene::Finalize()
 	//各種音声
 	audio_->SoundUnLoad(&sound_);
 
-	//パーティクル
-	delete particle1_;
-	delete pm_;
-
-	//カメラ
-	delete camera_;
-	//ライト
-	delete lightGroup_;
-	//モデル
-
-	for (Object3d*& object : objects_)delete object;
-	for (Object3d*& skydome : skydomes_)delete skydome;
 	objects_.clear();
 	skydomes_.clear();
 
-	//3Dモデル
-	delete modelPlayer_;
-	delete modelPlayerBullet_;
-	delete modelEnemy1_;
-	delete modelEnemyBullet_;
-	delete modelBoss1_;
-	delete modelBossCore1_;
-	delete modelStageT_;
-	delete modelStage1_;
-	delete modelStage2_;
-	delete modelItemJump_;
-	delete modelItemHeal_;
-	delete modelSpike_;
-	delete modelGround_;
-	delete modelBox_;
-	delete modelGoal_;
-
 	models_.clear();
 
-	//スプライト
-	delete spritePause_;
-	delete spritePauseInfo_;
-	delete spritePauseResume_;
-	delete spritePauseHowToPlay_;
-	delete spritePauseStageSelect_;
-	delete spritePauseTitle_;
-	delete spriteDone_;
-	delete spriteQuitHowtoPlay_;
-	delete spriteReady_;
-	delete spriteGo_;
-	delete spriteFadeInOut_;
-	delete spriteLoad_;
-	delete spriteStageInfoNow_;
-
-	delete spriteTutorialInfo1_;
-	delete spriteTutorialInfo2_;
-	delete spriteTutorialInfo3_;
-	delete spriteTutorialInfo4_;
-	delete spriteTutorialInfoHowToPlay_;
-
-	delete spriteTutorialHTPDash_;
-	delete spriteTutorialHTPMove_;
-	delete spriteTutorialHTPJump_;
-	delete spriteTutorialHTPMoveBack_;
-	delete spriteTutorialHTPAttack_;
 }
 
 void GamePlayScene::LoadLVData(const std::string& stagePath)
@@ -885,7 +830,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			const float maxTime = 4.0f;
 
 			//生成
-			newplayer = Player::Create(model, modelPlayerBullet_, this);
+			newplayer = Player::Create(model, modelPlayerBullet_.get(), this);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -902,11 +847,11 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newplayer->SetScale(scale);
 			//ここで開始時プレイヤー演出セット
-			easePlayerPositionGameStart_[0].SetEasing(startEasePlayerPosition_.x, endEasePlayerPosition.x, maxTime);
-			easePlayerPositionGameStart_[1].SetEasing(startEasePlayerPosition_.y, endEasePlayerPosition.y, maxTime);
-			easePlayerPositionGameStart_[2].SetEasing(startEasePlayerPosition_.z, endEasePlayerPosition.z, maxTime);
+			easePlayerPositionGameStart_[XYZ_X].SetEasing(startEasePlayerPosition_.x, endEasePlayerPosition.x, maxTime);
+			easePlayerPositionGameStart_[XYZ_Y].SetEasing(startEasePlayerPosition_.y, endEasePlayerPosition.y, maxTime);
+			easePlayerPositionGameStart_[XYZ_Z].SetEasing(startEasePlayerPosition_.z, endEasePlayerPosition.z, maxTime);
 
-			newplayer->SetCamera(camera_);
+			newplayer->SetCamera(camera_.get());
 			newplayer->Update();
 			//リストに登録
 			players_.push_back(std::move(newplayer));
@@ -919,7 +864,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			std::unique_ptr<Player>& player = players_.front();
 
 			newenemy = enemyFactory_->CreateEnemy(objectData.objectPattern,
-				model, modelEnemyBullet_, player.get(), this);
+				model, modelEnemyBullet_.get(), player.get(), this);
 
 			// 座標
 			DirectX::XMFLOAT3 pos;
@@ -936,7 +881,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newenemy->SetScale(scale);
 
-			newenemy->SetCamera(camera_);
+			newenemy->SetCamera(camera_.get());
 			newenemy->Update();
 			//リストに登録
 			enemys_.push_back(std::move(newenemy));
@@ -966,7 +911,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newGimmick->SetScale(scale);
 
-			newGimmick->SetCamera(camera_);
+			newGimmick->SetCamera(camera_.get());
 			newGimmick->Update();
 			//リストに登録
 			gimmicks_.push_back(std::move(newGimmick));
@@ -992,7 +937,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newgoal->SetScale(scale);
 
-			newgoal->SetCamera(camera_);
+			newgoal->SetCamera(camera_.get());
 			newgoal->Update();
 			//リストに登録
 			goals_.push_back(std::move(newgoal));
@@ -1005,10 +950,10 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			std::unique_ptr<Player>& player = players_.front();
 			//ジャンプ
 			if (objectData.objectPattern.find("JUMP") == LDTOF_TRUE)
-				newitem = Item::Create(modelItemJump_, player.get(), SUBCOLLISION_ATTR_ITEM_JUMP);
+				newitem = Item::Create(modelItemJump_.get(), player.get(), SUBCOLLISION_ATTR_ITEM_JUMP);
 			//回復アイテム
 			else if (objectData.objectPattern.find("HEAL") == LDTOF_TRUE)
-				newitem = Item::Create(modelItemHeal_, player.get(), SUBCOLLISION_ATTR_ITEM_HEAL);
+				newitem = Item::Create(modelItemHeal_.get(), player.get(), SUBCOLLISION_ATTR_ITEM_HEAL);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -1024,7 +969,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newitem->SetScale(scale);
 
-			newitem->SetCamera(camera_);
+			newitem->SetCamera(camera_.get());
 			newitem->Update();
 			//リストに登録
 			items_.push_back(std::move(newitem));
@@ -1033,7 +978,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 		else if (objectData.objectType.find("NONE") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -1049,17 +994,17 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 
 
 			// 配列に登録
-			objects_.push_back(newObject);
+			objects_.push_back(std::move(newObject));
 		}
 		//天球
 		else if (objectData.objectType.find("SKYDOME") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -1078,15 +1023,15 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			skydomes_.push_back(newObject);
+			skydomes_.push_back(std::move(newObject));
 		}
 		//地形
 		else
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			TouchableObject* newObject = TouchableObject::Create(model, true);
+			std::unique_ptr<TouchableObject> newObject = TouchableObject::Create(model, true);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -1102,11 +1047,11 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 
 
 			// 配列に登録
-			objects_.push_back(newObject);
+			objects_.push_back(std::move(newObject));
 		}
 
 	}
@@ -1176,21 +1121,21 @@ void GamePlayScene::LoadModel()
 	modelGround_ = Model::LoadFromOBJ("ground");
 	modelBox_ = Model::LoadFromOBJ("sphere2", true);
 
-	models_.insert(std::make_pair("player", modelPlayer_));
-	models_.insert(std::make_pair("playerbullet", modelPlayerBullet_));
-	models_.insert(std::make_pair("enemy1", modelEnemy1_));
-	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_));
-	models_.insert(std::make_pair("boss1", modelBoss1_));
-	models_.insert(std::make_pair("core1", modelBossCore1_));
-	models_.insert(std::make_pair("sphere", modelGoal_));
-	models_.insert(std::make_pair("Itemjump", modelItemJump_));
-	models_.insert(std::make_pair("itemheal", modelItemHeal_));
-	models_.insert(std::make_pair("spikeball", modelSpike_));
-	models_.insert(std::make_pair("skydomet", modelStageT_));
-	models_.insert(std::make_pair("skydome", modelStage1_));
-	models_.insert(std::make_pair("skydome2", modelStage2_));
-	models_.insert(std::make_pair("ground", modelGround_));
-	models_.insert(std::make_pair("sphere2", modelBox_));
+	models_.insert(std::make_pair("player", modelPlayer_.get()));
+	models_.insert(std::make_pair("playerbullet", modelPlayerBullet_.get()));
+	models_.insert(std::make_pair("enemy1", modelEnemy1_.get()));
+	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_.get()));
+	models_.insert(std::make_pair("boss1", modelBoss1_.get()));
+	models_.insert(std::make_pair("core1", modelBossCore1_.get()));
+	models_.insert(std::make_pair("sphere", modelGoal_.get()));
+	models_.insert(std::make_pair("Itemjump", modelItemJump_.get()));
+	models_.insert(std::make_pair("itemheal", modelItemHeal_.get()));
+	models_.insert(std::make_pair("spikeball", modelSpike_.get()));
+	models_.insert(std::make_pair("skydomet", modelStageT_.get()));
+	models_.insert(std::make_pair("skydome", modelStage1_.get()));
+	models_.insert(std::make_pair("skydome2", modelStage2_.get()));
+	models_.insert(std::make_pair("ground", modelGround_.get()));
+	models_.insert(std::make_pair("sphere2", modelBox_.get()));
 
 }
 
@@ -1382,24 +1327,24 @@ void GamePlayScene::LoadSprite()
 
 	if (stageNum_ == SL_StageTutorial_Area1)
 	{
-		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-			nullptr, nullptr, spriteTutorialInfo1_);
+		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			nullptr, nullptr, spriteTutorialInfo1_.get());
 	}
 
 	else if (stageNum_ == SL_StageTutorial_Area2)
 	{
-		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-			spriteTutorialHTPMoveBack_, nullptr, spriteTutorialInfo2_);
+		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			spriteTutorialHTPMoveBack_.get(), nullptr, spriteTutorialInfo2_.get());
 	}
 	else if (stageNum_ == SL_StageTutorial_Area3)
 	{
-		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-			spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo3_);
+		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo3_.get());
 	}
 	else if (stageNum_ == SL_StageTutorial_Final)
 	{
-		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_, spriteTutorialHTPDash_, spriteTutorialHTPJump_,
-			spriteTutorialHTPMoveBack_, spriteTutorialHTPAttack_, spriteTutorialInfo4_);
+		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo4_.get());
 	}
 	else//チュートリアルステージ以外の場合
 	{

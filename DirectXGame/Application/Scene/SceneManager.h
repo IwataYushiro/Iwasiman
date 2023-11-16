@@ -3,6 +3,7 @@
 #include "AbstractSceneFactory.h"
 #include "EnumList.h"
 
+#include <memory>
 /*
 
 *	SceneManager.h
@@ -29,9 +30,9 @@ public://メンバ関数
 
 private://メンバ変数
 	//現在シーン
-	BaseScene* scene_ = nullptr;
+	std::unique_ptr<BaseScene> scene_ = nullptr;
 	//次のシーン
-	BaseScene* nextScene_ = nullptr;
+	std::unique_ptr<BaseScene> nextScene_ = nullptr;
 	//借りてくるシーンファクトリー
 	AbstractSceneFactory* sceneFactory_ = nullptr;
 

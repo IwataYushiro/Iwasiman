@@ -21,10 +21,6 @@ CollisionManager* Item::colManager_ = CollisionManager::GetInstance();
 
 Item::~Item()
 {
-	delete p_;
-	delete pm_;
-
-	delete spriteItemJumpBar_;
 }
 
 std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short subAttribute)
@@ -64,7 +60,7 @@ bool Item::Initialize()
 	//パーティクル
 	p_ = Particle::LoadFromParticleTexture("particle6.png");
 	pm_ = ParticleManager::Create();
-	pm_->SetParticleModel(p_);
+	pm_->SetParticleModel(p_.get());
 
 	LoadSprite();
 
@@ -179,7 +175,7 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned shor
 	//プリセット
 	const ParticleManager::Preset itemGet =
 	{
-		p_,
+		p_.get(),
 		position_,
 		{ 8.0f ,8.0f,0.0f },
 		{ 0.1f,4.0f,0.1f },

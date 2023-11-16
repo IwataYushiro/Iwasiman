@@ -13,30 +13,30 @@
 
 */
 
-BaseScene* SceneFactory::CreateScene(const std::string& sceneName, int stagenum)
+std::unique_ptr<BaseScene> SceneFactory::CreateScene(const std::string& sceneName, int stagenum)
 {
 	//éüÇÃÉVÅ[ÉìÇê∂ê¨
-	BaseScene* newScene = nullptr;
+	std::unique_ptr<BaseScene> newScene = nullptr;
 
 	if (sceneName == "TITLE")
 	{
-		newScene = new TitleScene(stagenum);
+		newScene = std::make_unique<TitleScene>(stagenum);
 	}
 	else if (sceneName == "GAMEPLAY")
 	{
-		newScene = new GamePlayScene(stagenum);
+		newScene = std::make_unique<GamePlayScene>(stagenum);
 	}
 	else if (sceneName == "STAGECLEAR")
 	{
-		newScene = new StageClearScene(stagenum);
+		newScene = std::make_unique<StageClearScene>(stagenum);
 	}
 	else if (sceneName == "STAGESELECT")
 	{
-		newScene = new StageSelectScene(stagenum);
+		newScene = std::make_unique<StageSelectScene>(stagenum);
 	}
 	else if (sceneName == "GAMEOVER")
 	{
-		newScene = new GameOverScene(stagenum);
+		newScene = std::make_unique<GameOverScene>(stagenum);
 	}
 	return newScene;
 }

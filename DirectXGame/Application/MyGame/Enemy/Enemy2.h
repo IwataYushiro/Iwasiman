@@ -114,11 +114,11 @@ private:
 	int count_;
 
 	//パーティクル
-	Particle* particleFire_ = nullptr;
-	Particle* particleSmoke_ = nullptr;
+	std::unique_ptr<Particle> particleFire_ = nullptr;
+	std::unique_ptr<Particle> particleSmoke_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pmSmoke_ = nullptr;
-	ParticleManager* pmFire_ = nullptr;
+	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
+	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
 	//Y軸がこの地点に達したら
 	const float backFallPosY = -20.0f;//上へ
 	const float backUpPosY = 20.0f;//下へ

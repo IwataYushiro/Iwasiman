@@ -32,7 +32,7 @@ void GameOverScene::Initialize()
 	spCommon_ = SpriteCommon::GetInstance();
 
 	//カメラ初期化
-	camera_ = new Camera();
+	camera_ = std::make_unique<Camera>();
 	//オーディオ
 	audio_->Initialize();
 
@@ -52,7 +52,7 @@ void GameOverScene::Initialize()
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
-	Object3d::SetLightGroup(lightGroup_);
+	Object3d::SetLightGroup(lightGroup_.get());
 
 	spCommon_->LoadTexture(GOSTI_MenuTex, "texture/gameover2.png");
 	spriteGameOver_->Initialize(spCommon_, GOSTI_MenuTex);
@@ -95,8 +95,8 @@ void GameOverScene::Initialize()
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	pm1_ = ParticleManager::Create();
-	pm1_->SetParticleModel(particle1_);
-	pm1_->SetCamera(camera_);
+	pm1_->SetParticleModel(particle1_.get());
+	pm1_->SetCamera(camera_.get());
 
 	easeFadeInOut_.Standby(false);
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(false);
@@ -115,12 +115,12 @@ void GameOverScene::Update()
 	else if (isQuitTitle_)UpdateIsQuitTitle();				//タイトル遷移
 	else UpdateIsGameOver();								//メニュー画面
 
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
-			particle1_,
+			particle1_.get(),
 			player->GetPosition(),
 			{ 0.0f ,2.0f,0.0f },
 			{ 0.3f,3.0f,0.3f },
@@ -152,7 +152,7 @@ void GameOverScene::Update()
 		}
 		player->Update();
 	}
-	for (Object3d*& stage : objStages_)
+	for (std::unique_ptr<Object3d>& stage : objStages_)
 	{
 		//天球回転用
 		DirectX::XMFLOAT3 rotStage = stage->GetRotation();
@@ -163,7 +163,7 @@ void GameOverScene::Update()
 
 		stage->Update();
 	}
-	for (Object3d*& goal : objGoals_)goal->Update();
+	for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Update();
 
 
 
@@ -262,7 +262,7 @@ void GameOverScene::UpdateIsGameOver()
 	{
 		if (menuCount_ == GOSMI_Continue)
 		{
-			for (Object3d*& player : objPlayers_)
+			for (std::unique_ptr<Object3d>& player : objPlayers_)
 			{
 				easePlayerRotateContinue_[1].SetEasing(player->GetRotation().y,
 					easePlayerRotateContinue_[1].end,
@@ -281,7 +281,7 @@ void GameOverScene::UpdateIsGameOver()
 		}
 		else if (menuCount_ == GOSMI_StageSelect)
 		{
-			for (Object3d*& player : objPlayers_)
+			for (std::unique_ptr<Object3d>& player : objPlayers_)
 			{
 				easePlayerRotateQuitStageSelect_[1].SetEasing(player->GetRotation().y,
 					easePlayerRotateQuitStageSelect_[1].end,
@@ -328,7 +328,7 @@ void GameOverScene::UpdateIsContinue()
 	camera_->SetEye({ easeEyeContinue_[XYZ_X].num_X, easeEyeContinue_[XYZ_Y].num_X, easeEyeContinue_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetContinue_[XYZ_X].num_X, easeTargetContinue_[XYZ_Y].num_X, easeTargetContinue_[XYZ_Z].num_X });
 
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		//回転
 		if (!completeRotate_)
@@ -380,7 +380,7 @@ void GameOverScene::UpdateIsQuitStageSelect()
 	camera_->SetEye({ easeEyeQuitStageSelect_[XYZ_X].num_X, easeEyeQuitStageSelect_[XYZ_Y].num_X, easeEyeQuitStageSelect_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetQuitStageSelect_[XYZ_X].num_X, easeTargetQuitStageSelect_[XYZ_Y].num_X, easeTargetQuitStageSelect_[XYZ_Z].num_X });
 
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		//回転
 		if (!completeRotate_)
@@ -426,7 +426,7 @@ void GameOverScene::UpdateIsQuitTitle()
 	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
 
-	for (Object3d*& player : objPlayers_)
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		DirectX::XMFLOAT3 move = player->GetPosition();
 		const DirectX::XMFLOAT3 speed = { 0.0f,-1.0f,0.0f };
@@ -450,9 +450,9 @@ void GameOverScene::Draw()
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
-	for (Object3d*& player : objPlayers_)player->Draw();
-	for (Object3d*& stage : objStages_)stage->Draw();
-	if (!isQuitStageSelect_)for (Object3d*& goal : objGoals_)goal->Draw();
+	for (std::unique_ptr<Object3d>& player : objPlayers_)player->Draw();
+	for (std::unique_ptr<Object3d>& stage : objStages_)stage->Draw();
+	if (!isQuitStageSelect_)for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Draw();
 
 	//モデル描画後処理
 	Object3d::PostDraw();
@@ -487,35 +487,7 @@ void GameOverScene::Finalize()
 {
 	//音声
 	audio_->Finalize();
-	//sprite
-	delete spriteGameOver_;
-	delete spriteContinue_;
-	delete spriteStageSelect_;
-	delete spriteTitle_;
-	delete spriteDone_;
-	delete spriteFadeInOut_;
-	delete spriteLoad_;
-	delete spriteStageInfoNow_;
-
-	//モデル
-	//レベルデータ用オブジェクト
-	for (Object3d*& player : objPlayers_)delete player;
-	for (Object3d*& stage : objStages_)delete stage;
-	for (Object3d*& goal : objGoals_)delete goal;
-
-	delete modelPlayer_;
-	delete modelGoal_;
-	delete modelStageTutorial_;
-	delete modelStage1_;
-	delete modelStage2_;
-
-	//カメラ
-	delete camera_;
-	//ライト
-	delete lightGroup_;
-	//パーティクル
-	delete particle1_;
-	delete pm1_;
+	
 }
 
 void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
@@ -530,11 +502,11 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 	modelStage1_ = Model::LoadFromOBJ("skydome");
 	modelStage2_ = Model::LoadFromOBJ("skydome2");
 
-	models_.insert(std::make_pair("player", modelPlayer_));
-	models_.insert(std::make_pair("sphere", modelGoal_));
-	models_.insert(std::make_pair("skydomet", modelStageTutorial_));
-	models_.insert(std::make_pair("skydome", modelStage1_));
-	models_.insert(std::make_pair("skydome2", modelStage2_));
+	models_.insert(std::make_pair("player", modelPlayer_.get()));
+	models_.insert(std::make_pair("sphere", modelGoal_.get()));
+	models_.insert(std::make_pair("skydomet", modelStageTutorial_.get()));
+	models_.insert(std::make_pair("skydome", modelStage1_.get()));
+	models_.insert(std::make_pair("skydome2", modelStage2_.get()));
 
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData_->objects) {
@@ -548,7 +520,7 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 		if (objectData.objectType.find("PLAYER") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -567,14 +539,14 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objPlayers_.push_back(newObject);
+			objPlayers_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("SKYDOME") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -593,14 +565,14 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objStages_.push_back(newObject);
+			objStages_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("GOAL") == LDTOF_TRUE)
 		{
 			// モデルを指定して3Dオブジェクトを生成
-			Object3d* newObject = Object3d::Create();
+			std::unique_ptr<Object3d> newObject = Object3d::Create();
 			//オブジェクトにモデル紐付ける
 			newObject->SetModel(model);
 
@@ -619,9 +591,9 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			newObject->SetCamera(camera_);
+			newObject->SetCamera(camera_.get());
 			// 配列に登録
-			objGoals_.push_back(newObject);
+			objGoals_.push_back(std::move(newObject));
 		}
 
 	}

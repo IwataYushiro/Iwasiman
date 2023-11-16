@@ -16,8 +16,8 @@ void MyGame::Initialize()
 	Framework::Initialize();
 	
 	
-	sceneFactory_ = new SceneFactory();
-	sceneManager_->SetSceneFactory(sceneFactory_);
+	sceneFactory_ = std::make_unique<SceneFactory>();
+	sceneManager_->SetSceneFactory(sceneFactory_.get());
 	sceneManager_->ChangeScene("TITLE");
 
 	//ポストエフェクト
@@ -38,13 +38,12 @@ void MyGame::Draw()
 
 void MyGame::Finalize()
 {
-	PostDelete();
 	Framework::Finalize();
 }
 
 void MyGame::PostInitialize()
 {
-	pe_ = new PostEffect();
+	pe_ = std::make_unique<PostEffect>();
 	pe_->Initialize(sprCommon_);
 }
 
@@ -66,8 +65,3 @@ void MyGame::PostDraw()
 	dxCommon_->PostDraw();
 }
 
-
-void MyGame::PostDelete()
-{
-	delete pe_;
-}

@@ -34,11 +34,10 @@ void SceneManager::Update()
 		if (scene_)
 		{
 			scene_->Finalize();
-			delete scene_;
 		}
 
 		//シーン切り替え
-		scene_ = nextScene_;
+		scene_ = std::move(nextScene_);
 		nextScene_ = nullptr;
 
 		//SceneManagerのセット
@@ -60,5 +59,4 @@ void SceneManager::Draw()
 void SceneManager::Finalize()
 {
 	scene_->Finalize();
-	delete scene_;
 }

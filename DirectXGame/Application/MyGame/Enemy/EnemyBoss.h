@@ -99,11 +99,11 @@ private:
 	bool bossDead_ = false;
 
 	//パーティクル
-	Particle* particleFire_ = nullptr;
-	Particle* particleSmoke_ = nullptr;
+	std::unique_ptr<Particle> particleFire_ = nullptr;
+	std::unique_ptr<Particle> particleSmoke_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pmSmoke_ = nullptr;
-	ParticleManager* pmFire_ = nullptr;
+	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
+	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
 
 //時間計測
 	std::chrono::steady_clock::time_point startCount_;	//開始時間

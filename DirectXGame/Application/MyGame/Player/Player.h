@@ -96,7 +96,7 @@ private:
 	//スプライト
 	SpriteCommon* spCommon_ = nullptr;//基盤
 
-	Sprite* spriteLifeBar_ = new Sprite();			//ライフバー
+	std::unique_ptr<Sprite> spriteLifeBar_ = std::make_unique<Sprite>();			//ライフバー
 	const XMFLOAT2 lifeBarPos_ = { 800.0f,25.0f };	//ライフバーの座標
 	const XMFLOAT4 green_ = { 0.2f,1.0f,0.2f,1.0f };//緑
 	const XMFLOAT4 red_ = { 1.0f,0.2f,0.2f,1.0f };	//赤
@@ -104,9 +104,9 @@ private:
 	Easing easelifeBarSize_ = { 0.0f,32.0f,3.0f };			//ライフを貯めるイージング
 	XMFLOAT2 lifeBarDamageSize_ = { 0.0f,32.0f };			//ダメージを負うとこの値分サイズが縮小
 
-	Sprite* spriteHit_ = new Sprite();				//ヒットエフェクト
+	std::unique_ptr<Sprite> spriteHit_ = std::make_unique<Sprite>();				//ヒットエフェクト
 
-	Sprite* spriteExplosion_ = new Sprite();		//爆発エフェクト
+	std::unique_ptr<Sprite> spriteExplosion_ = std::make_unique<Sprite>();		//爆発エフェクト
 	const XMFLOAT2 explosionPos_ = { WinApp::WINDOW_WIDTH / 2.0f,WinApp::WINDOW_HEIGHT / 2.0f };	//ライフバーの座標
 	//爆発は中央アンカーポイント
 	const XMFLOAT2 explosionAnchorPoint_ = { 0.5f,0.5f };
@@ -169,11 +169,11 @@ private:
 	//シェイク時用のカメラムーブ
 	bool cameramove_ = true;
 	//パーティクル
-	Particle* particleFire_ = nullptr;
-	Particle* particleSmoke_ = nullptr;
+	std::unique_ptr<Particle> particleFire_ = nullptr;
+	std::unique_ptr<Particle> particleSmoke_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pmSmoke_ = nullptr;
-	ParticleManager* pmFire_ = nullptr;
+	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
+	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
 
 	//ゲームシーン
 	GamePlayScene* gameScene_ = nullptr;

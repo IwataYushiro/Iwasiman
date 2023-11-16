@@ -91,37 +91,37 @@ private://メンバ変数
 	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
 	//カメラ
-	Camera* camera_ = nullptr;
+	std::unique_ptr<Camera> camera_ = nullptr;
 	
 	//ステージ番号
 	int stageNum_;
 	//メニュー番号
 	int menuCount_ = SCSMI_NextStage;
 	//Sprite
-	Sprite* spriteStageClear_ = new Sprite();		//ステージクリア時のスプライト
-	Sprite* spriteNextStage_ = new Sprite();		//次のステージ表示のスプライト
-	Sprite* spriteStageSelect_ = new Sprite();		//ステージセレクト表示のスプライト
-	Sprite* spriteTitle_ = new Sprite();			//タイトル表示のスプライト
-	Sprite* spriteDone_ = new Sprite();				//決定表示のスプライト
-	Sprite* spriteFadeInOut_ = new Sprite();		//フェードインアウトのスプライト
-	Sprite* spriteLoad_ = new Sprite();				//ロードスプライト
-	Sprite* spriteStageInfoNow_ = new Sprite();		//現在ステージスプライト
+	std::unique_ptr<Sprite> spriteStageClear_ =std::make_unique<Sprite>();		//ステージクリア時のスプライト
+	std::unique_ptr<Sprite> spriteNextStage_ =std::make_unique<Sprite>();		//次のステージ表示のスプライト
+	std::unique_ptr<Sprite> spriteStageSelect_ =std::make_unique<Sprite>();		//ステージセレクト表示のスプライト
+	std::unique_ptr<Sprite> spriteTitle_ =std::make_unique<Sprite>();			//タイトル表示のスプライト
+	std::unique_ptr<Sprite> spriteDone_ =std::make_unique<Sprite>();			//決定表示のスプライト
+	std::unique_ptr<Sprite> spriteFadeInOut_ =std::make_unique<Sprite>();		//フェードインアウトのスプライト
+	std::unique_ptr<Sprite> spriteLoad_ =std::make_unique<Sprite>();			//ロードスプライト
+	std::unique_ptr<Sprite> spriteStageInfoNow_ =std::make_unique<Sprite>();	//現在ステージスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;			
 
 	//モデル
-	Model* modelPlayer_ = nullptr;				//自機モデル
-	Model* modelSkydome_ = nullptr;				//チュートリアルステージモデル(天球)
-	Model* modelSkydomeStage1_ = nullptr;		//ステージ1モデル(天球)
-	Model* modelSkydomeStage2_ = nullptr;		//ステージ2モデル(天球)
-	Model* modelGround_ = nullptr;				//床のモデル
-	Model* modelGoal_ = nullptr;				//ゴールモデル
+	std::unique_ptr<Model> modelPlayer_ = nullptr;				//自機モデル
+	std::unique_ptr<Model> modelSkydome_ = nullptr;				//チュートリアルステージモデル(天球)
+	std::unique_ptr<Model> modelSkydomeStage1_ = nullptr;		//ステージ1モデル(天球)
+	std::unique_ptr<Model> modelSkydomeStage2_ = nullptr;		//ステージ2モデル(天球)
+	std::unique_ptr<Model> modelGround_ = nullptr;				//床のモデル
+	std::unique_ptr<Model> modelGoal_ = nullptr;				//ゴールモデル
 
-	std::vector<Object3d*> objPlayers_;			//自機配列
-	std::vector<Object3d*> objSkydomes_;		//天球配列
-	std::vector<Object3d*> objGrounds_;			//床配列
-	std::vector<Object3d*> objGoals_;			//ゴール配列
+	std::vector<std::unique_ptr<Object3d>> objPlayers_;			//自機配列
+	std::vector<std::unique_ptr<Object3d>> objSkydomes_;		//天球配列
+	std::vector<std::unique_ptr<Object3d>> objGrounds_;			//床配列
+	std::vector<std::unique_ptr<Object3d>> objGoals_;			//ゴール配列
 
 	//マッピングモデル
 	std::map<std::string, Model*> models_;
@@ -221,13 +221,13 @@ private://メンバ変数
 	//色反転フラグ
 	bool isColorReverse_ = false;
 	//ライト
-	LightGroup* lightGroup_ = nullptr;
+	std::unique_ptr<LightGroup> lightGroup_ = nullptr;
 	//パーティクル
-	Particle* particleClear_ = nullptr;
-	Particle* particleSmoke_ = nullptr;
+	std::unique_ptr<Particle> particleClear_ = nullptr;
+	std::unique_ptr<Particle> particleSmoke_ = nullptr;
 	//パーティクルマネージャー
-	ParticleManager* pmClear_ = nullptr;
-	ParticleManager* pmSmoke_ = nullptr;
+	std::unique_ptr<ParticleManager> pmClear_ = nullptr;
+	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
 
 	//開始時のポジション
 	DirectX::XMFLOAT3 startPos_;

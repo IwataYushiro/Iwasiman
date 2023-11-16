@@ -29,12 +29,11 @@ public:
 	
 private:
 	//ポストエフェクト
-	PostEffect* pe_;
+	std::unique_ptr<PostEffect> pe_;
 
 private:
 	void PostInitialize();	//ポストエフェクト初期化
 	void PostDraw();		//ポストエフェクト描画
-	void PostDelete();		//ポストエフェクト解放
 		
 };
 

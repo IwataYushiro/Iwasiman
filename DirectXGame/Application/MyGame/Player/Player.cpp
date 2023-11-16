@@ -21,17 +21,7 @@ using namespace DirectX;
 CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
-	//スプライト解放
-	delete spriteLifeBar_;
-	delete spriteHit_;
-	delete spriteExplosion_;
-
-	//パーティクルモデルの解放
-	delete particleSmoke_;
-	delete pmSmoke_;
-
-	delete particleFire_;
-	delete pmFire_;
+	
 }
 
 std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScene* gamescene)
@@ -107,11 +97,11 @@ bool Player::Initialize() {
 	//パーティクル
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmSmoke_ = ParticleManager::Create();
-	pmSmoke_->SetParticleModel(particleSmoke_);
+	pmSmoke_->SetParticleModel(particleSmoke_.get());
 
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
-	pmFire_->SetParticleModel(particleFire_);
+	pmFire_->SetParticleModel(particleFire_.get());
 
 	//コライダー追加
 	const XMVECTOR colliderOffset = { 0.0f,0.0f,0.0f,0.0f };
@@ -216,7 +206,7 @@ void Player::Move() {
 	//パーティクル
 	const ParticleManager::Preset smoke =
 	{
-		particleSmoke_,
+		particleSmoke_.get(),
 		position_,
 		{ 0.0f ,3.0f,0.0f },
 		{ 3.0f,0.3f,0.3f },
@@ -614,7 +604,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 	//煙プリセット
 	const ParticleManager::Preset smoke =
 	{
-		particleSmoke_,
+		particleSmoke_.get(),
 		position_,
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },
@@ -799,7 +789,7 @@ void Player::UpdateBreak()
 		//炎プリセット
 		const ParticleManager::Preset fire =
 		{
-			particleFire_,
+			particleFire_.get(),
 			{position_.x,position_.y - 5.0f,position_.z},
 			{ 15.0f ,15.0f,15.0f },
 			{ 3.3f,3.3f,3.3f },
@@ -817,7 +807,7 @@ void Player::UpdateBreak()
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
-			particleSmoke_,
+			particleSmoke_.get(),
 			{position_.x,position_.y + 5.0f,position_.z},
 			{ 25.0f ,10.0f,15.0f },
 			{ MyMath::RandomMTFloat(0.0f,0.1f),MyMath::RandomMTFloat(0.5f,3.0f),0.3f },
