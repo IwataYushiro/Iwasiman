@@ -512,7 +512,7 @@ void Player::Landing(unsigned short attribute)
 //UŒ‚ˆ—
 void Player::Attack() {
 
-	if (input_->TriggerKey(DIK_X)) {
+	if (input_->TriggerKey(DIK_L)) {
 		//’e‚Ì‘¬“x
 		const float bulletSpeed = 1.0f;
 		XMFLOAT3 velocity;

@@ -1203,7 +1203,7 @@ void GamePlayScene::UpdateTutorialSprite()
 		if (input_->PushKey(DIK_W))spriteTutorialHTPMoveBack_->SetColor(howToPlayColorActiveRed);
 		if (input_->PushKey(DIK_S))spriteTutorialHTPMoveBack_->SetColor(howToPlayColorActiveBlue);
 		//UŒ‚
-		if (input_->PushKey(DIK_X))spriteTutorialHTPAttack_->SetColor(howToPlayColorActiveRed);
+		if (input_->PushKey(DIK_L))spriteTutorialHTPAttack_->SetColor(howToPlayColorActiveRed);
 
 		spriteTutorialInfo1_->SetColor(infoColorRed);
 		spriteTutorialInfo2_->SetColor(infoColorRed);
@@ -1322,7 +1322,7 @@ void GamePlayScene::LoadSprite()
 	spriteTutorialHTPJump_->Initialize(spCommon_, GPSTTI_HowToPlayJumpTex);
 	spCommon_->LoadTexture(GPSTTI_HowToPlayBackMoveTex, "texture/info/backmoveinfo.png");//2~
 	spriteTutorialHTPMoveBack_->Initialize(spCommon_, GPSTTI_HowToPlayBackMoveTex);
-	spCommon_->LoadTexture(GPSTTI_HowToPlayAttackTex, "texture/info/attackinfo.png");//3~
+	spCommon_->LoadTexture(GPSTTI_HowToPlayAttackTex, "texture/info/attackinfo2.png");//3~
 	spriteTutorialHTPAttack_->Initialize(spCommon_, GPSTTI_HowToPlayAttackTex);
 
 	if (stageNum_ == SL_StageTutorial_Area1)
