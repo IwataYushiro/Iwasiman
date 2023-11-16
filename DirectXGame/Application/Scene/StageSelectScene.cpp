@@ -254,27 +254,29 @@ void StageSelectScene::UpdateIsStageSelect()
 	}
 	//‹¤’ÊƒJƒ‰[
 	spriteDone_->SetColor(doneColor);
-	
-	if (input_->TriggerKey(DIK_SPACE))
+	if (spriteDone_->GetPosition().x == easeMenuPosX_[SSMEN_SelectSpace].end)
 	{
-		for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(true);
-		for (int i = 0; i < XYZ_Num; i++)easeEyeDoneMenu_[i].Standby(false);
-		for (int i = 0; i < XYZ_Num; i++)easeTargetDoneMenu_[i].Standby(false);
-
-		for (int i = 0; i < XYZ_Num; i++)easeStartStagePosX_[i].Standby(false);
-		for (int i = 0; i < XYZ_Num; i++)easeStartStagePosY_[i].Standby(false);
-		
-		isDone_ = true;
-		isStageSelect_ = false;
-	}
-	if (easeMenuPosX_[SSMEN_Quit].num_X == easeMenuPosX_[SSMEN_Quit].end)
-	{
-		if (input_->TriggerKey(DIK_Q))
+		if (input_->TriggerKey(DIK_SPACE))
 		{
-			for (int i = 0; i < XYZ_Num; i++)easePlayerQuitMove_[i].Standby(false);
 			for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(true);
-			outStageSelect_ = true;
+			for (int i = 0; i < XYZ_Num; i++)easeEyeDoneMenu_[i].Standby(false);
+			for (int i = 0; i < XYZ_Num; i++)easeTargetDoneMenu_[i].Standby(false);
+
+			for (int i = 0; i < XYZ_Num; i++)easeStartStagePosX_[i].Standby(false);
+			for (int i = 0; i < XYZ_Num; i++)easeStartStagePosY_[i].Standby(false);
+
+			isDone_ = true;
 			isStageSelect_ = false;
+		}
+		if (easeMenuPosX_[SSMEN_Quit].num_X == easeMenuPosX_[SSMEN_Quit].end)
+		{
+			if (input_->TriggerKey(DIK_Q))
+			{
+				for (int i = 0; i < XYZ_Num; i++)easePlayerQuitMove_[i].Standby(false);
+				for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+				outStageSelect_ = true;
+				isStageSelect_ = false;
+			}
 		}
 	}
 }

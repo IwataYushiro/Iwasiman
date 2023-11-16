@@ -257,57 +257,57 @@ void GameOverScene::UpdateIsGameOver()
 		spriteStageSelect_->SetColor(otherMenuColor);
 		spriteTitle_->SetColor(selectMenuColor);
 	}
-
-	if (input_->TriggerKey(DIK_SPACE))
+	if (spriteDone_->GetPosition().x == easeMenuPosX_[GOMEN_SelectSpace].end)
 	{
-		if (menuCount_ == GOSMI_Continue)
+		if (input_->TriggerKey(DIK_SPACE))
 		{
-			for (std::unique_ptr<Object3d>& player : objPlayers_)
+			if (menuCount_ == GOSMI_Continue)
 			{
-				easePlayerRotateContinue_[1].SetEasing(player->GetRotation().y,
-					easePlayerRotateContinue_[1].end,
-					easePlayerRotateContinue_[1].maxtime);
-			}
-			for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
-			for (int i = 0; i < XYZ_Num; i++)easeEyeContinue_[i].Standby(false);
-			for (int i = 0; i < XYZ_Num; i++)easeTargetContinue_[i].Standby(false);
-			for (int i = 0; i < XYZ_Num; i++)easePlayerRotateContinue_[i].Standby(false);
-			easeContinuePosX_.Standby(false);
-			easeContinuePosY_.Standby(false);
-			//コンティニュー
-			isContinue_ = true;
-			isGameover_ = false;
+				for (std::unique_ptr<Object3d>& player : objPlayers_)
+				{
+					easePlayerRotateContinue_[1].SetEasing(player->GetRotation().y,
+						easePlayerRotateContinue_[1].end,
+						easePlayerRotateContinue_[1].maxtime);
+				}
+				for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+				for (int i = 0; i < XYZ_Num; i++)easeEyeContinue_[i].Standby(false);
+				for (int i = 0; i < XYZ_Num; i++)easeTargetContinue_[i].Standby(false);
+				for (int i = 0; i < XYZ_Num; i++)easePlayerRotateContinue_[i].Standby(false);
+				easeContinuePosX_.Standby(false);
+				easeContinuePosY_.Standby(false);
+				//コンティニュー
+				isContinue_ = true;
+				isGameover_ = false;
 
-		}
-		else if (menuCount_ == GOSMI_StageSelect)
-		{
-			for (std::unique_ptr<Object3d>& player : objPlayers_)
+			}
+			else if (menuCount_ == GOSMI_StageSelect)
 			{
-				easePlayerRotateQuitStageSelect_[1].SetEasing(player->GetRotation().y,
-					easePlayerRotateQuitStageSelect_[1].end,
-					easePlayerRotateQuitStageSelect_[1].maxtime);
+				for (std::unique_ptr<Object3d>& player : objPlayers_)
+				{
+					easePlayerRotateQuitStageSelect_[1].SetEasing(player->GetRotation().y,
+						easePlayerRotateQuitStageSelect_[1].end,
+						easePlayerRotateQuitStageSelect_[1].maxtime);
+				}
+				for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+				for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].Standby(false);
+				for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].Standby(false);
+				for (int i = 0; i < XYZ_Num; i++)easePlayerRotateQuitStageSelect_[i].Standby(false);
+				//ステージセレクトへ
+				isQuitStageSelect_ = true;
+				isGameover_ = false;
 			}
-			for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
-			for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].Standby(false);
-			for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].Standby(false);
-			for (int i = 0; i < XYZ_Num; i++)easePlayerRotateQuitStageSelect_[i].Standby(false);
-			//ステージセレクトへ
-			isQuitStageSelect_ = true;
-			isGameover_ = false;
-		}
-		else if (menuCount_ == GOSMI_Title)
-		{
-			for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
-			//タイトルへ
-			isQuitTitle_ = true;
-			isGameover_ = false;
+			else if (menuCount_ == GOSMI_Title)
+			{
+				for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+				//タイトルへ
+				isQuitTitle_ = true;
+				isGameover_ = false;
 
+			}
 		}
 	}
-
 	spriteGameOver_->SetColor(gameOverColor);
 	spriteDone_->SetColor(doneColor);
-
 }
 
 void GameOverScene::UpdateIsContinue()
