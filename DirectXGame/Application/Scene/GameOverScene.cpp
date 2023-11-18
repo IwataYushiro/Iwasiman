@@ -83,7 +83,7 @@ void GameOverScene::Initialize()
 	spriteLoad_->SetPosition(loadPos_);
 	spriteLoad_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
-	const int remainderNum = stageNum_ % 10;//余りによってスプライトを変える
+	const int32_t remainderNum = stageNum_ % 10;//余りによってスプライトを変える
 	if (remainderNum == SNL_Stage1) spCommon_->LoadTexture(GOSTI_StageInfoNowTex, "texture/stage1.png");
 	else if (remainderNum == SNL_Stage2) spCommon_->LoadTexture(GOSTI_StageInfoNowTex, "texture/stage2.png");
 	else if (remainderNum == SNL_Stage3) spCommon_->LoadTexture(GOSTI_StageInfoNowTex, "texture/stage3.png");
@@ -92,6 +92,11 @@ void GameOverScene::Initialize()
 	spriteStageInfoNow_->Initialize(spCommon_, GOSTI_StageInfoNowTex);
 	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
 	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
+	spCommon_->LoadTexture(GOSTI_CursorTex, "texture/cursor.png");
+	spriteCursor_->Initialize(spCommon_, GOSTI_CursorTex);
+	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[GOMEN_Continue] });
+
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	pm1_ = ParticleManager::Create();
@@ -100,7 +105,7 @@ void GameOverScene::Initialize()
 
 	easeFadeInOut_.Standby(false);
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(false);
-
+	easeCursorPosX_.Standby(false);
 
 }
 
@@ -175,6 +180,7 @@ void GameOverScene::Update()
 	spriteFadeInOut_->Update();
 	spriteLoad_->Update();
 	spriteStageInfoNow_->Update();
+	spriteCursor_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
@@ -227,6 +233,7 @@ void GameOverScene::UpdateIsGameOver()
 	//イージング
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 	easeFadeInOut_.ease_in_out_quint();
+	easeCursorPosX_.ease_in_out_quint();
 
 	//座標,カラーセット
 	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
@@ -244,18 +251,21 @@ void GameOverScene::UpdateIsGameOver()
 		spriteContinue_->SetColor(selectMenuColor);
 		spriteStageSelect_->SetColor(otherMenuColor);
 		spriteTitle_->SetColor(otherMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[GOMEN_Continue] });
 	}
 	else if (menuCount_ == GOSMI_StageSelect)
 	{
 		spriteContinue_->SetColor(otherMenuColor);
 		spriteStageSelect_->SetColor(selectMenuColor);
 		spriteTitle_->SetColor(otherMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[GOMEN_StageSelect] });
 	}
 	else if (menuCount_ == GOSMI_Title)
 	{
 		spriteContinue_->SetColor(otherMenuColor);
 		spriteStageSelect_->SetColor(otherMenuColor);
 		spriteTitle_->SetColor(selectMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[GOMEN_Title] });
 	}
 	if (spriteDone_->GetPosition().x == easeMenuPosX_[GOMEN_SelectSpace].end)
 	{
@@ -265,9 +275,9 @@ void GameOverScene::UpdateIsGameOver()
 			{
 				for (std::unique_ptr<Object3d>& player : objPlayers_)
 				{
-					easePlayerRotateContinue_[1].SetEasing(player->GetRotation().y,
-						easePlayerRotateContinue_[1].end,
-						easePlayerRotateContinue_[1].maxtime);
+					easePlayerRotateContinue_[XYZ_Y].SetEasing(player->GetRotation().y,
+						easePlayerRotateContinue_[XYZ_Y].end,
+						easePlayerRotateContinue_[XYZ_Y].maxtime);
 				}
 				for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeContinue_[i].Standby(false);
@@ -275,6 +285,7 @@ void GameOverScene::UpdateIsGameOver()
 				for (int i = 0; i < XYZ_Num; i++)easePlayerRotateContinue_[i].Standby(false);
 				easeContinuePosX_.Standby(false);
 				easeContinuePosY_.Standby(false);
+				easeCursorPosX_.Standby(true);
 				//コンティニュー
 				isContinue_ = true;
 				isGameover_ = false;
@@ -284,14 +295,15 @@ void GameOverScene::UpdateIsGameOver()
 			{
 				for (std::unique_ptr<Object3d>& player : objPlayers_)
 				{
-					easePlayerRotateQuitStageSelect_[1].SetEasing(player->GetRotation().y,
-						easePlayerRotateQuitStageSelect_[1].end,
-						easePlayerRotateQuitStageSelect_[1].maxtime);
+					easePlayerRotateQuitStageSelect_[XYZ_Y].SetEasing(player->GetRotation().y,
+						easePlayerRotateQuitStageSelect_[XYZ_Y].end,
+						easePlayerRotateQuitStageSelect_[XYZ_Y].maxtime);
 				}
 				for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easePlayerRotateQuitStageSelect_[i].Standby(false);
+				easeCursorPosX_.Standby(true);
 				//ステージセレクトへ
 				isQuitStageSelect_ = true;
 				isGameover_ = false;
@@ -299,6 +311,7 @@ void GameOverScene::UpdateIsGameOver()
 			else if (menuCount_ == GOSMI_Title)
 			{
 				for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+				easeCursorPosX_.Standby(true);
 				//タイトルへ
 				isQuitTitle_ = true;
 				isGameover_ = false;
@@ -317,13 +330,14 @@ void GameOverScene::UpdateIsContinue()
 	for (int i = 0; i < XYZ_Num; i++)easeTargetContinue_[i].ease_in_out_expo();
 	easeContinuePosX_.ease_in_out_expo();
 	easeContinuePosY_.ease_in_out_expo();
+	easeCursorPosX_.ease_out_expo();
 	//座標セット
 	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu]});
 	spriteContinue_->SetPosition({ easeContinuePosX_.num_X,easeContinuePosY_.num_X });
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect]});
 	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title]});
 	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace]});
-
+	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
 	camera_->SetEye({ easeEyeContinue_[XYZ_X].num_X, easeEyeContinue_[XYZ_Y].num_X, easeEyeContinue_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetContinue_[XYZ_X].num_X, easeTargetContinue_[XYZ_Y].num_X, easeTargetContinue_[XYZ_Z].num_X });
@@ -368,14 +382,14 @@ void GameOverScene::UpdateIsQuitStageSelect()
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].ease_in_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].ease_in_out_expo();
-
+	easeCursorPosX_.ease_out_expo();
 	//座標セット
 	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu]});
 	spriteContinue_->SetPosition({ easeMenuPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue]});
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect]});
 	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title]});
 	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace]});
-
+	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
 	camera_->SetEye({ easeEyeQuitStageSelect_[XYZ_X].num_X, easeEyeQuitStageSelect_[XYZ_Y].num_X, easeEyeQuitStageSelect_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetQuitStageSelect_[XYZ_X].num_X, easeTargetQuitStageSelect_[XYZ_Y].num_X, easeTargetQuitStageSelect_[XYZ_Z].num_X });
@@ -418,14 +432,14 @@ void GameOverScene::UpdateIsQuitStageSelect()
 void GameOverScene::UpdateIsQuitTitle()
 {
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
-
+	easeCursorPosX_.ease_out_expo();
 	//座標セット
 	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
 	spriteContinue_->SetPosition({ easeMenuPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue] });
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
-
+	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		DirectX::XMFLOAT3 move = player->GetPosition();
@@ -481,6 +495,7 @@ void GameOverScene::Draw()
 	spriteFadeInOut_->Draw();
 	spriteLoad_->Draw();
 	spriteStageInfoNow_->Draw();
+	spriteCursor_->Draw();
 }
 
 void GameOverScene::Finalize()

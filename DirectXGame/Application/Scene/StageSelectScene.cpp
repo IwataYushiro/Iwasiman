@@ -98,6 +98,10 @@ void StageSelectScene::Initialize()
 	spriteStageInfoNow_->Initialize(spCommon_, SSSTI_StageInfoNowTex);
 	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
 	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+	
+	spCommon_->LoadTexture(SSSTI_CursorTex, "texture/cursor.png");
+	spriteCursor_->Initialize(spCommon_, SSSTI_CursorTex);
+	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[SSMEN_Tutorial] });
 
 	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
 	modelStage1_ = Model::LoadFromOBJ("skydome");
@@ -119,7 +123,7 @@ void StageSelectScene::Initialize()
 	for (int i = 0; i < XYZ_Num; i++)easeEyeStageSelect_[i].Standby(false);
 	for (int i = 0; i < XYZ_Num; i++)easeTargetStageSelect_[i].Standby(false);
 	easeFadeInOut_.Standby(false);
-
+	easeCursorPosX_.Standby(false);
 }
 
 void StageSelectScene::Update()
@@ -170,6 +174,7 @@ void StageSelectScene::Update()
 	spriteFadeInOut_->Update();
 	spriteLoad_->Update();
 	spriteStageInfoNow_->Update();
+	spriteCursor_->Update();
 
 	pm1_->Update();
 
@@ -192,6 +197,7 @@ void StageSelectScene::UpdateIsStageSelect()
 	for (int i = 0; i < XYZ_Num; i++)easeEyeStageSelect_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetStageSelect_[i].ease_out_expo();
 	easeFadeInOut_.ease_in_out_quint();
+	easeCursorPosX_.ease_in_out_quint();
 
 	//座標セット
 	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
@@ -233,6 +239,7 @@ void StageSelectScene::UpdateIsStageSelect()
 		spriteStage1_->SetColor(otherMenuColor);
 		spriteStage2_->SetColor(otherMenuColor);
 		spriteBack_->SetColor(quitColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[SSMEN_Tutorial] });
 	}
 	else if (menuCount_ == SSSMI_Stage1_SkyStage)
 	{
@@ -242,6 +249,7 @@ void StageSelectScene::UpdateIsStageSelect()
 		spriteStage1_->SetColor(selectMenuColor);
 		spriteStage2_->SetColor(otherMenuColor);
 		spriteBack_->SetColor(quitColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[SSMEN_Stage1_Sky] });
 	}
 	else if (menuCount_ == SSSMI_Stage2_SpaceStage)
 	{
@@ -251,6 +259,7 @@ void StageSelectScene::UpdateIsStageSelect()
 		spriteStage1_->SetColor(otherMenuColorDark);
 		spriteStage2_->SetColor(selectMenuColorDark);
 		spriteBack_->SetColor(quitColorDark);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[SSMEN_Stage2_Space] });
 	}
 	//共通カラー
 	spriteDone_->SetColor(doneColor);
@@ -264,6 +273,7 @@ void StageSelectScene::UpdateIsStageSelect()
 
 			for (int i = 0; i < XYZ_Num; i++)easeStartStagePosX_[i].Standby(false);
 			for (int i = 0; i < XYZ_Num; i++)easeStartStagePosY_[i].Standby(false);
+			easeCursorPosX_.Standby(true);
 
 			isDone_ = true;
 			isStageSelect_ = false;
@@ -274,6 +284,8 @@ void StageSelectScene::UpdateIsStageSelect()
 			{
 				for (int i = 0; i < XYZ_Num; i++)easePlayerQuitMove_[i].Standby(false);
 				for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+				easeCursorPosX_.Standby(true);
+
 				outStageSelect_ = true;
 				isStageSelect_ = false;
 			}
@@ -289,10 +301,13 @@ void StageSelectScene::UpdateIsDone()
 	for (int i = 0; i < XYZ_Num; i++)easeTargetDoneMenu_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeStartStagePosX_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeStartStagePosY_[i].ease_out_expo();
+	easeCursorPosX_.ease_out_expo();
+
 	//座標セット
 	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
 	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
+	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//ステージごとに座標が違う
 	if (menuCount_ == SSSMI_StageTutorial_Tutorial)
 	{
@@ -362,6 +377,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 	//イージング
 	for (int i = 0; i < XYZ_Num; i++)easePlayerQuitMove_[i].ease_in_expo();
 	for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	easeCursorPosX_.ease_out_expo();
 
 	//座標セット
 	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
@@ -370,7 +386,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].num_X,menuPosY_[SSMEN_Stage2_Space] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
 	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
-
+	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//メニュー標記のイージングが終わったらフェードアウト
 	if (spriteMenu_->GetPosition().x == easeMenuPosX_[SSMEN_Menu].start) FadeOut(black_);//黒くする
 
@@ -427,6 +443,7 @@ void StageSelectScene::Draw()
 	spriteFadeInOut_->Draw();
 	spriteLoad_->Draw();
 	spriteStageInfoNow_->Draw();
+	spriteCursor_->Draw();
 }
 
 void StageSelectScene::Finalize()

@@ -92,6 +92,10 @@ void StageClearScene::Initialize()
 	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
 	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
+	spCommon_->LoadTexture(SCSTI_CursorTex, "texture/cursor.png");
+	spriteCursor_->Initialize(spCommon_, SCSTI_CursorTex);
+	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[SCMEN_NextStage] });
+
 	//パーティクル
 	particleClear_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmClear_ = ParticleManager::Create();
@@ -121,6 +125,7 @@ void StageClearScene::Initialize()
 
 	easeFadeInOut_.Standby(false);
 	for (int i = 0; i < SCMEN_Num; i++)easeMenuPosX_[i].Standby(false);
+	easeCursorPosX_.Standby(false);
 }
 
 void StageClearScene::Update()
@@ -189,6 +194,7 @@ void StageClearScene::Update()
 	spriteFadeInOut_->Update();
 	spriteLoad_->Update();
 	spriteStageInfoNow_->Update();
+	spriteCursor_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
@@ -206,6 +212,7 @@ void StageClearScene::UpdateIsNextStage()
 	for (int i = 0; i < SCMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeStageClear_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetStageClear_[i].ease_out_expo();
+	easeCursorPosX_.ease_out_expo();
 
 	//座標セット
 	spriteStageClear_->SetPosition({ easeMenuPosX_[SCMEN_Menu].num_X,menuPosY_[SCMEN_Menu] });
@@ -213,7 +220,7 @@ void StageClearScene::UpdateIsNextStage()
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
-
+	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
 	camera_->SetEye({ easeEyeStageClear_[XYZ_X].num_X, easeEyeStageClear_[XYZ_Y].num_X, easeEyeStageClear_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetStageClear_[XYZ_X].num_X, easeTargetStageClear_[XYZ_Y].num_X, easeTargetStageClear_[XYZ_Z].num_X });
@@ -271,14 +278,14 @@ void StageClearScene::UpdateIsStageSelect()
 	for (int i = 0; i < XYZ_Num; i++)easeEyeStageClear_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetStageClear_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easePlayerMoveStageSelect_[i].ease_in_out_expo();
-
+	easeCursorPosX_.ease_out_expo();
 	//座標セット
 	spriteStageClear_->SetPosition({ easeMenuPosX_[SCMEN_Menu].num_X,menuPosY_[SCMEN_Menu] });
 	spriteNextStage_->SetPosition({ easeMenuPosX_[SCMEN_NextStage].num_X,menuPosY_[SCMEN_NextStage] });
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
-
+	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
 	camera_->SetEye({ easeEyeStageClear_[XYZ_X].num_X, easeEyeStageClear_[XYZ_Y].num_X, easeEyeStageClear_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetStageClear_[XYZ_X].num_X, easeTargetStageClear_[XYZ_Y].num_X, easeTargetStageClear_[XYZ_Z].num_X });
@@ -305,12 +312,14 @@ void StageClearScene::UpdateIsQuitTitle()
 {
 	//イージング
 	for (int i = 0; i < SCMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	easeCursorPosX_.ease_out_expo();
 	//座標セット
 	spriteStageClear_->SetPosition({ easeMenuPosX_[SCMEN_Menu].num_X,menuPosY_[SCMEN_Menu] });
 	spriteNextStage_->SetPosition({ easeMenuPosX_[SCMEN_NextStage].num_X,menuPosY_[SCMEN_NextStage] });
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
+	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 
 	if (spriteStageClear_->GetPosition().x == easeMenuPosX_[SCMEN_Menu].start)FadeOut(black_);//黒くする
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
@@ -347,7 +356,7 @@ void StageClearScene::UpdateIsMenu()
 	easeMenuPosX_[SCMEN_Menu].ease_out_expo();
 	for (int i = SCMEN_NextStage; i < SCMEN_Num; i++)easeMenuPosX_[i].ease_in_expo();
 	easeFadeInOut_.ease_in_out_quint();
-
+	easeCursorPosX_.ease_in_out_quint();
 	//座標セット
 	spriteStageClear_->SetPosition({ easeMenuPosX_[SCMEN_Menu].num_X,menuPosY_[SCMEN_Menu] });
 	spriteNextStage_->SetPosition({ easeMenuPosX_[SCMEN_NextStage].num_X,menuPosY_[SCMEN_NextStage] });
@@ -367,18 +376,21 @@ void StageClearScene::UpdateIsMenu()
 		spriteNextStage_->SetColor(selectMenuColor);
 		spriteStageSelect_->SetColor(otherMenuColor);
 		spriteTitle_->SetColor(otherMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[SCMEN_NextStage] });
 	}
 	else if (menuCount_ == SCSMI_StageSelect)
 	{
 		spriteNextStage_->SetColor(otherMenuColor);
 		spriteStageSelect_->SetColor(selectMenuColor);
 		spriteTitle_->SetColor(otherMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[SCMEN_StageSelect] });
 	}
 	else if (menuCount_ == SCSMI_Title)
 	{
 		spriteNextStage_->SetColor(otherMenuColor);
 		spriteStageSelect_->SetColor(otherMenuColor);
 		spriteTitle_->SetColor(selectMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[SCMEN_Title] });
 	}
 
 	if (spriteDone_->GetPosition().x == easeMenuPosX_[SCMEN_SelectSpace].end)
@@ -391,6 +403,7 @@ void StageClearScene::UpdateIsMenu()
 				for (int i = 0; i < SCMEN_Num; i++)easeMenuPosX_[i].Standby(true);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeStageClear_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetStageClear_[i].Standby(false);
+				easeCursorPosX_.Standby(true);
 				isNextStage_ = true;
 			}
 			else if (menuCount_ == SCSMI_StageSelect)
@@ -399,11 +412,13 @@ void StageClearScene::UpdateIsMenu()
 				for (int i = 0; i < XYZ_Num; i++)easeEyeStageClear_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetStageClear_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easePlayerMoveStageSelect_[i].Standby(false);
+				easeCursorPosX_.Standby(true);
 				isStageSelect_ = true;
 			}
 			else if (menuCount_ == SCSMI_Title)
 			{
 				for (int i = 0; i < SCMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+				easeCursorPosX_.Standby(true);
 				isQuitTitle_ = true;
 			}
 
@@ -481,7 +496,7 @@ void StageClearScene::Draw()
 	spriteFadeInOut_->Draw();
 	spriteLoad_->Draw();
 	spriteStageInfoNow_->Draw();
-	
+	spriteCursor_->Draw();
 }
 
 void StageClearScene::FadeOut(DirectX::XMFLOAT3 rgb)

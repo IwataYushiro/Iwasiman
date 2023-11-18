@@ -80,6 +80,7 @@ private://メンバ変数
 		SSSTI_FadeInOutTex = 6,
 		SSSTI_LoadingTex = 7,
 		SSSTI_StageInfoNowTex = 8,
+		SSSTI_CursorTex = 9,
 	};
 
 	//スプライト基盤
@@ -97,6 +98,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトスプライト
 	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
+	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
@@ -155,7 +157,10 @@ private://メンバ変数
 		presetEaseMenuPosX_[SSMEN_SelectSpace],				//スペースで選択
 		presetEaseMenuPosX_[SSMEN_Quit]						//戻る
 	};
-
+	//カーソルX値のイージングプリセット
+	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
+	//カーソルX値のイージング
+	Easing easeCursorPosX_ = presetEaseCursorPosX_;
 
 	//選んだステージを真ん中に移動させるイージング
 	const Easing presetEaseStartStagePosX_[SSSMI_Num] =

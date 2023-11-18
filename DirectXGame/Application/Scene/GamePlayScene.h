@@ -121,6 +121,7 @@ private:
 	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトのスプライト
 	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
+	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 
 
 	std::unique_ptr<Sprite> spriteTutorialHTPMove_ = std::make_unique<Sprite>();		//チュートリアルの移動方法スプライト
@@ -196,11 +197,11 @@ private:
 	const Easing presetEasePauseMenuPosX_[PMEN_Num] =
 	{
 		{1300.0f, 100.0f, 0.5f},			//メニュー
-		{1300.0f, 50.0f, 0.6f},				//再開
+		{1300.0f, 100.0f, 0.6f},			//再開
 		{1300.0f, 100.0f, 0.7f},			//遊び方確認
-		{1300.0f, 150.0f, 0.8f},			//ステージセレクトへ
-		{1300.0f, 200.0f, 0.9f},			//タイトルへ
-		{1300.0f, 425.0f, 1.0f},				//スペースで選択
+		{1300.0f, 100.0f, 0.8f},			//ステージセレクトへ
+		{1300.0f, 100.0f, 0.9f},			//タイトルへ
+		{1300.0f, 425.0f, 1.0f},			//スペースで選択
 		{1300.0f, 800.0f, 0.75f}			//チュートリアル時の遊び方説明について
 	};
 	//ポーズメニュー画面出現イージング
@@ -214,6 +215,11 @@ private:
 		presetEasePauseMenuPosX_[PMEN_SelectSpace],						//スペースで選択
 		presetEasePauseMenuPosX_[PMEN_TutorialHowToPlayInfo]			//チュートリアル時の遊び方説明について
 	};
+
+	//カーソルX値のイージングプリセット
+	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f};
+	//カーソルX値のイージング
+	Easing easeCursorPosX_ = presetEaseCursorPosX_;
 
 	//遊び方説明用の列挙体
 	enum HowToPlayEasingNum

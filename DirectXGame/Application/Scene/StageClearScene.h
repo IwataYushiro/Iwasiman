@@ -79,6 +79,7 @@ private://メンバ変数
 		SCSTI_FadeInOutTex = 5,
 		SCSTI_LoadingTex = 6,
 		SCSTI_StageInfoNowTex = 7,
+		SCSTI_CursorTex = 8,
 	};
 	//ステージクリア用メニューインデックス
 	enum StageClearSceneMenuIndex
@@ -106,6 +107,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteFadeInOut_ =std::make_unique<Sprite>();		//フェードインアウトのスプライト
 	std::unique_ptr<Sprite> spriteLoad_ =std::make_unique<Sprite>();			//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ =std::make_unique<Sprite>();	//現在ステージスプライト
+	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;			
@@ -148,9 +150,9 @@ private://メンバ変数
 	const Easing presetEaseMenuPosX_[SCMEN_Num]
 	{
 		{1300.0f, 200.0f, 1.0f},			//メニュー
-		{1300.0f, 0.0f, 1.2f},				//次のステージへ
-		{1300.0f, 0.0f, 1.4f},				//ステージセレクトへ
-		{1300.0f, 0.0f, 1.6f},				//タイトルへ
+		{1300.0f, 100.0f, 1.2f},			//次のステージへ
+		{1300.0f, 100.0f, 1.4f},			//ステージセレクトへ
+		{1300.0f, 100.0f, 1.6f},			//タイトルへ
 		{1300.0f, 425.0f, 2.0f}				//スペースで選択
 	};
 	//メニュー表示用のイージング
@@ -162,6 +164,11 @@ private://メンバ変数
 		presetEaseMenuPosX_[SCMEN_Title],				//タイトルへ
 		presetEaseMenuPosX_[SCMEN_SelectSpace],			//スペースで選択
 	};
+	//カーソルX値のイージングプリセット
+	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
+	//カーソルX値のイージング
+	Easing easeCursorPosX_ = presetEaseCursorPosX_;
+
 	//メニューポジション
 	const std::array<float, SCMEN_Num> menuPosY_ = { 50.0f,150.0f,300.0f,450.0f,550.0f };
 

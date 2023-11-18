@@ -144,6 +144,7 @@ void GamePlayScene::Update()
 	spriteFadeInOut_->Update();
 	spriteLoad_->Update();
 	spriteStageInfoNow_->Update();
+	spriteCursor_->Update();
 
 	//チュートリアル関係
 	UpdateTutorial();
@@ -338,6 +339,7 @@ void GamePlayScene::UpdateIsPlayGame()
 		for (std::unique_ptr<Player>& player : players_)if (player->IsBreak())return;
 		//ここでイージングの準備
 		for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(false);
+		easeCursorPosX_.Standby(false);
 		isBack_ = false;
 		isPause_ = true;
 		isGamePlay_ = false;
@@ -362,6 +364,7 @@ void GamePlayScene::UpdateIsPause()
 	//イージング(ポーズ中に準備してもここがやってくれる)
 	FadeOut(black_);
 	for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].ease_in_out_quint();
+	easeCursorPosX_.ease_in_out_quint();
 
 	//ポジションセット
 	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].num_X, pausePosY_[PMEN_Menu] });
@@ -389,6 +392,7 @@ void GamePlayScene::UpdateIsPause()
 		spritePauseHowToPlay_->SetColor(otherMenuColor);
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(otherMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_Resume] });
 	}
 	else if (menuCount_ == GPSPMI_HowToPlay)
 	{
@@ -396,6 +400,7 @@ void GamePlayScene::UpdateIsPause()
 		spritePauseHowToPlay_->SetColor(selectMenuColor);
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(otherMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_HowToPlay] });
 	}
 	else if (menuCount_ == GPSPMI_StageSelect)
 	{
@@ -403,6 +408,7 @@ void GamePlayScene::UpdateIsPause()
 		spritePauseHowToPlay_->SetColor(otherMenuColor);
 		spritePauseStageSelect_->SetColor(selectMenuColor);
 		spritePauseTitle_->SetColor(otherMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_StageSelect] });
 	}
 	else if (menuCount_ == GPSPMI_Title)
 	{
@@ -410,6 +416,7 @@ void GamePlayScene::UpdateIsPause()
 		spritePauseHowToPlay_->SetColor(otherMenuColor);
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(selectMenuColor);
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_Title] });
 	}
 	
 	//デフォルトカラー
@@ -426,6 +433,7 @@ void GamePlayScene::UpdateIsPause()
 				if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
 				{
 					for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(true);
+					easeCursorPosX_.Standby(true);
 				}
 				isBack_ = true;
 
@@ -439,7 +447,7 @@ void GamePlayScene::UpdateIsPause()
 					{
 						for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(true);
 						for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].Standby(false);
-
+						easeCursorPosX_.Standby(true);
 					}
 
 					isHowToPlay_ = true;
@@ -452,6 +460,7 @@ void GamePlayScene::UpdateIsPause()
 				if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
 				{
 					for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(true);
+					easeCursorPosX_.Standby(true);
 				}
 				isBack_ = true;
 			}
@@ -461,6 +470,7 @@ void GamePlayScene::UpdateIsPause()
 				if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
 				{
 					for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(true);
+					easeCursorPosX_.Standby(true);
 				}
 				isBack_ = true;
 			}
@@ -517,6 +527,7 @@ void GamePlayScene::UpdateHowToPlay()
 	//イージング
 	for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].ease_out_expo();
 	for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].ease_out_expo();
+	easeCursorPosX_.ease_out_expo();
 
 	//ポジションセット
 	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].num_X, pausePosY_[PMEN_Menu] });
@@ -525,6 +536,7 @@ void GamePlayScene::UpdateHowToPlay()
 	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[PMEN_StageSelect].num_X, pausePosY_[PMEN_StageSelect] });
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].num_X, pausePosY_[PMEN_Title] });
 	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].num_X, pausePosY_[PMEN_SelectSpace] });
+	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 
 	spriteTutorialHTPMove_->SetPosition({ easeHowToPlayPosX_[HTPEN_Move].num_X,howToPlayPosY_[HTPEN_Move] });
 	spriteTutorialHTPDash_->SetPosition({ easeHowToPlayPosX_[HTPEN_Dash].num_X,howToPlayPosY_[HTPEN_Dash] });
@@ -540,6 +552,7 @@ void GamePlayScene::UpdateHowToPlay()
 		{
 			for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(false);
 			for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].Standby(true);
+			easeCursorPosX_.Standby(false);
 			isBackPause_ = true;
 		}
 
@@ -548,6 +561,7 @@ void GamePlayScene::UpdateHowToPlay()
 	{
 		for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].ease_in_out_quint();
 		for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].ease_in_out_quint();
+		easeCursorPosX_.ease_in_out_quint();
 		if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
 		{
 			isPause_ = true;
@@ -719,6 +733,7 @@ void GamePlayScene::Draw()
 		spritePauseStageSelect_->Draw();
 		spritePauseTitle_->Draw();
 		spriteDone_->Draw();
+		spriteCursor_->Draw();
 		if (stageNum_ >= SL_StageTutorial_Area1)//チュートリアルステージ以外は書かない
 		{
 			if (menuCount_ == GPSPMI_HowToPlay)spriteTutorialInfoHowToPlay_->Draw();
@@ -736,6 +751,7 @@ void GamePlayScene::Draw()
 		spritePauseStageSelect_->Draw();
 		spritePauseTitle_->Draw();
 		spriteDone_->Draw();
+		spriteCursor_->Draw();
 
 		spriteTutorialHTPMove_->Draw();
 		spriteTutorialHTPDash_->Draw();
@@ -1300,6 +1316,10 @@ void GamePlayScene::LoadSprite()
 	spriteStageInfoNow_->Initialize(spCommon_, GPSTI_StageInfoNowTex);
 	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
 	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
+	spCommon_->LoadTexture(GPSTI_CursorTex, "texture/cursor.png");
+	spriteCursor_->Initialize(spCommon_, GPSTI_CursorTex);
+	spriteCursor_->SetPosition({ easeCursorPosX_.start,pausePosY_[PMEN_Resume] });
 
 
 	spCommon_->LoadTexture(GPSTTI_TutorialInfo1Tex, "texture/info/tinfo1.png");//1

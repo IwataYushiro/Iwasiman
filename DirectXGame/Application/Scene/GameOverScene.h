@@ -82,6 +82,7 @@ private://メンバ変数
 		GOSTI_FadeInOutTex = 5,
 		GOSTI_LoadingTex = 6,
 		GOSTI_StageInfoNowTex = 7,
+		GOSTI_CursorTex = 8,
 	};
 
 	//ゲームオーバー用メニューインデックス
@@ -102,11 +103,12 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteGameOver_ = std::make_unique<Sprite>();			//ゲームオーバースプライト
 	std::unique_ptr<Sprite> spriteContinue_ = std::make_unique<Sprite>();			//コンティニュー表示スプライト
 	std::unique_ptr<Sprite> spriteStageSelect_ = std::make_unique<Sprite>();		//ステージセレクト表示スプライト
-	std::unique_ptr<Sprite> spriteTitle_ = std::make_unique<Sprite>();			//タイトル表示スプライト
+	std::unique_ptr<Sprite> spriteTitle_ = std::make_unique<Sprite>();				//タイトル表示スプライト
 	std::unique_ptr<Sprite> spriteDone_ = std::make_unique<Sprite>();				//決定スプライト
-	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();		//フェードインアウトスプライト
+	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトスプライト
 	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
+	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
@@ -155,9 +157,9 @@ private://メンバ変数
 	const Easing presetEaseMenuPosX_[GOMEN_Num]
 	{
 		{1300.0f, 230.0f, 1.0f},		//メニュー
-		{1300.0f, 0.0f, 1.2f},			//コンティニューへ
-		{1300.0f, 0.0f, 1.4f},			//ステージセレクトへ
-		{1300.0f, 0.0f, 1.6f},			//タイトルへ
+		{1300.0f, 100.0f, 1.2f},		//コンティニューへ
+		{1300.0f, 100.0f, 1.4f},		//ステージセレクトへ
+		{1300.0f, 100.0f, 1.6f},		//タイトルへ
 		{1300.0f, 425.0f, 1.8f}			//スペースで選択
 	};
 	//メニュー表示用のイージング
@@ -169,7 +171,11 @@ private://メンバ変数
 		presetEaseMenuPosX_[GOMEN_Title],				//タイトルへ
 		presetEaseMenuPosX_[GOMEN_SelectSpace],			//スペースで選択
 	};
-	
+	//カーソルX値のイージングプリセット
+	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
+	//カーソルX値のイージング
+	Easing easeCursorPosX_ = presetEaseCursorPosX_;
+
 	//コンティニュー文字を真ん中に移動させるイージングのプリセット
 	const Easing presetEaseContinuePosX_ = Easing(0.0f, 380.0f, 1.0f);
 	//コンティニュー文字を真ん中に移動させるイージング

@@ -50,7 +50,8 @@ enum GamePlaySceneTextureIndex
 	GPSTI_GoTex = 9,
 	GPSTI_LoadingTex = 10,
 	GPSTI_StageInfoNowTex = 11,
-	GPSTI_FadeInOutTex,
+	GPSTI_FadeInOutTex=12,
+	GPSTI_CursorTex=13,
 
 };
 
