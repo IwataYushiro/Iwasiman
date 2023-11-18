@@ -188,6 +188,10 @@ public://アクセッサ置き場
 
 	//ポジションセット
 	void SetPosition(const XMFLOAT2& position) { position_ = position; }
+	//ポジションXセット
+	void SetPositionX(const float position) { position_.x = position; }
+	//ポジションYセット
+	void SetPositionY(const float position) { position_.y = position; }
 	//ポジションゲット
 	const XMFLOAT2& GetPosition()const { return position_; }
 

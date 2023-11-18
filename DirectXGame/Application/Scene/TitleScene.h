@@ -81,6 +81,7 @@ private://メンバ変数
 		TSTI_FadeInOutTex = 7,
 		TSTI_LoadingTex = 8,
 		TSTI_StageInfoNowTex = 9,
+		TSTI_CursorTex = 10,
 	};
 
 	//スプライト基盤
@@ -102,6 +103,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトスプライト
 	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
+	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
@@ -164,13 +166,12 @@ private://メンバ変数
 	};
 	//メニューのY値
 	const std::array<float, TMEN_Num> menuPosY_ = { 50.0f,200.0f,350.0f,600.0f,50.0f };
-
 	//タイトルメニューの出現イージングのプリセット
 	const Easing presetEaseMenuPosX_[TMEN_Num] =
 	{
 		{1300.0f, 0.0f, 1.0f},		//メニュー
-		{1300.0f, 50.0f, 1.2f},		//チュートリアルへ
-		{1300.0f, 50.0f, 1.4f},		//ステージセレクトへ
+		{1300.0f, 100.0f, 1.2f},	//チュートリアルへ
+		{1300.0f, 100.0f, 1.4f},	//ステージセレクトへ
 		{1300.0f, 425.0f, 1.6f},	//スペースで選択
 		{1300.0f, 900.0f, 1.8f}		//戻る
 	};
@@ -183,7 +184,10 @@ private://メンバ変数
 		presetEaseMenuPosX_[TMEN_SelectSpace],	//スペースで選択
 		presetEaseMenuPosX_[TMEN_Quit]			//戻る
 	};
-
+	//カーソルX値のイージングプリセット
+	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
+	//カーソルX値のイージング
+	Easing easeCursorPosX_ = presetEaseCursorPosX_;
 	//選んだステージを真ん中に移動させるイージングのプリセット
 	const Easing presetEaseStartStagePosX_ = { 0.0f, 350.0f, 1.5f };//チュートリアルへ
 	//選んだステージを真ん中に移動させるイージング
