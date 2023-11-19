@@ -325,7 +325,15 @@ void Player::FallAndJump()
 			tmove.x += fallVec_.x;
 			tmove.y += fallVec_.y;
 			tmove.z += fallVec_.z;
+			
+			if (isShake_)
+		{
+			hitMove_.x += fallVec_.x;
+			hitMove_.y += fallVec_.y;
+			hitMove_.z += fallVec_.z;
 		}
+		}
+		
 	}
 	//ジャンプ操作
 	else if (input_->TriggerKey(DIK_SPACE))
@@ -632,7 +640,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 	if (attribute == COLLISION_ATTR_ENEMYS)
 	{
 		if (isShake_)return;
-
+		if (isHit_)return;
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ -= damege.enemyNone;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)life_ -= damege.enemyPower;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)life_ -= damege.enemyGuard;
@@ -644,20 +652,31 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 		pmSmoke_->Update();
-		isHit_ = true;
+		
+		nowEye_ = camera_->GetEye();
+		nowTarget_ = camera_->GetTarget();
+		easeHit_.Standby(false);
+		if (onGround_) { isShake_ = true; }
+		else isHit_ = true;
 	}
 
 	else if (attribute == COLLISION_ATTR_GIMMICK)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
 		{
-			if (isShake_)return;
+			if (isShake_)return; 
+			if (isHit_)return;
 			life_ -= damege.GimmickSpike;
 			pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 			pmSmoke_->Update();
-			isHit_ = true;
+
+			nowEye_ = camera_->GetEye();
+			nowTarget_ = camera_->GetTarget();
+			easeHit_.Standby(false);
+			if (onGround_){isShake_ = true;}
+			else isHit_ = true;
 		}
 
 	}
@@ -726,11 +745,13 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 
 	if (isHit_)
 	{
-		nowEye_ = camera_->GetEye();
-		nowTarget_ = camera_->GetTarget();
-		easeHit_.Standby(false);
-		isShake_ = true;
-		isHit_ = false;
+		
+			//+してイージング
+			easeHit_.ease_out_cubic();
+			spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
+
+			mutekiCount_++;
+		
 	}
 	if (isShake_)
 	{
@@ -757,9 +778,13 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 
 	if (mutekiCount_ == MUTEKI_COUNT)
 	{
-		camera_->SetEye(nowEye_ + hitMove_);
-		camera_->SetTarget(nowTarget_ + hitMove_);
-		isShake_ = false;
+		if (isShake_)
+		{
+			camera_->SetEye(nowEye_ + hitMove_);
+			camera_->SetTarget(nowTarget_ + hitMove_);
+			isShake_ = false;
+		}
+		else isHit_ = false;
 		mutekiCount_ = 0;
 		hitMove_ = resetHitMove_;
 	}

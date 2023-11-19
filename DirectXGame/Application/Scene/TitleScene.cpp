@@ -55,6 +55,10 @@ void TitleScene::Initialize()
 	spriteTitle_->Initialize(spCommon_, TSTI_TitleTex);
 	spriteTitle_->SetColor(backTitleColor_);
 	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].start,startTitlePosY_[TS_Title] });
+	
+	spCommon_->LoadTexture(TSTI_TitleBackTex, "texture/titleback.png");
+	spriteTitleBack_->Initialize(spCommon_, TSTI_TitleBackTex);
+	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].start,startTitlePosY_[TS_Title] });
 
 	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space3.png");
 	spriteTitleDone_->Initialize(spCommon_, TSTI_TitleDoneTex);
@@ -181,6 +185,7 @@ void TitleScene::Update()
 	spriteLoad_->Update();
 	spriteStageInfoNow_->Update();
 	spriteCursor_->Update();
+	spriteTitleBack_->Update();
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
@@ -339,6 +344,7 @@ void TitleScene::UpdateIsBack()
 	easeCursorPosX_.ease_out_expo();
 	//座標セット
 	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title]});
+	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
 	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].num_X,startTitlePosY_[TS_Done] });
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial] });
@@ -396,6 +402,7 @@ void TitleScene::UpdateIsMenu()
 	easeCursorPosX_.ease_out_expo();
 	//座標セット
 	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
+	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
 	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].num_X,startTitlePosY_[TS_Done] });
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial] });
@@ -512,6 +519,7 @@ void TitleScene::Draw()
 	spCommon_->PreDraw();
 	//前景スプライト
 	//スプライト描画
+	spriteTitleBack_->Draw();
 	spriteTitle_->Draw();
 	spriteTitleDone_->Draw();
 	spriteMenu_->Draw();
@@ -523,6 +531,7 @@ void TitleScene::Draw()
 	spriteLoad_->Draw();
 	spriteStageInfoNow_->Draw();
 	spriteCursor_->Draw();
+	
 }
 
 void TitleScene::Finalize()

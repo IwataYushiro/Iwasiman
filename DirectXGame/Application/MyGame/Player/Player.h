@@ -166,8 +166,7 @@ private:
 	int life_;
 	//敵の攻撃やトゲ等に当たったか
 	bool isHit_ = false;
-	//シェイク時用のカメラムーブ
-	bool cameramove_ = true;
+
 	//パーティクル
 	std::unique_ptr<Particle> particleFire_ = nullptr;
 	std::unique_ptr<Particle> particleSmoke_ = nullptr;
