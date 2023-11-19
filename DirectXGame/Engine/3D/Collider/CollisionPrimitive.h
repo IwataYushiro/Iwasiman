@@ -1,6 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 #include "XYZ.h"
+#include <array>
 /*
 
 *	CollisionPrimitive.h
@@ -13,7 +14,7 @@ struct AABB
 {
 	const DirectX::XMVECTOR presetCenter = { 0.0f,0.0f,0.0f,1.0f };//プリセット
 	DirectX::XMVECTOR center = presetCenter;
-	float radius[XYZ_Num];
+	std::array<float,XYZ_Num> radius;
 };
 
 //球

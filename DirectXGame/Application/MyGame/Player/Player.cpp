@@ -301,6 +301,8 @@ void Player::FallAndJump()
 	//	}
 	//}
 	//Object3d::SetPosition(move);
+	XMFLOAT3 cmove = camera_->GetEye();
+	XMFLOAT3 tmove = camera_->GetTarget();
 
 	if (!onGround_)
 	{
@@ -313,6 +315,17 @@ void Player::FallAndJump()
 		position_.x += fallVec_.x;
 		position_.y += fallVec_.y;
 		position_.z += fallVec_.z;
+
+		if (!isJumpBack_)
+		{
+			cmove.x += fallVec_.x;
+			cmove.y += fallVec_.y;
+			cmove.z += fallVec_.z;
+
+			tmove.x += fallVec_.x;
+			tmove.y += fallVec_.y;
+			tmove.z += fallVec_.z;
+		}
 	}
 	//ƒWƒƒƒ“ƒv‘€ì
 	else if (input_->TriggerKey(DIK_SPACE))
@@ -322,7 +335,8 @@ void Player::FallAndJump()
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
 	}
-
+	camera_->SetEye(cmove);
+	camera_->SetTarget(tmove);
 }
 
 void Player::JumpBack()
