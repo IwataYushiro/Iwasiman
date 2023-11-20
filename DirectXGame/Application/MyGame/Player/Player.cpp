@@ -21,7 +21,7 @@ using namespace DirectX;
 CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
-	
+
 }
 
 std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScene* gamescene)
@@ -273,37 +273,6 @@ void Player::Move() {
 
 void Player::FallAndJump()
 {
-	//旧
-	//XMFLOAT3 move = Object3d::GetPosition();
-
-	////キーボード入力による移動処理
-	//XMMATRIX matTrans = XMMatrixIdentity();
-	//if ()
-	//{
-	//	if (input_->TriggerKey(DIK_SPACE)) {
-	//		isJump = true;
-	//		gravity = 0.0f;
-	//	}
-	//}
-	//else
-	//{
-	//	move.y += power + gravity;
-	//	gravity -= 0.1f;
-
-	//	if (gravity <= -4.0f)
-	//	{
-	//		gravity = -4.0f;
-	//	}
-	//	if (move.y <= -10.0f)
-	//	{
-	//		move.y = -10.0f;
-	//		isJump = false;
-	//	}
-	//}
-	//Object3d::SetPosition(move);
-	XMFLOAT3 cmove = camera_->GetEye();
-	XMFLOAT3 tmove = camera_->GetTarget();
-
 	if (!onGround_)
 	{
 		//下向き加速度
@@ -315,25 +284,6 @@ void Player::FallAndJump()
 		position_.x += fallVec_.x;
 		position_.y += fallVec_.y;
 		position_.z += fallVec_.z;
-
-		if (!isJumpBack_)
-		{
-			cmove.x += fallVec_.x;
-			cmove.y += fallVec_.y;
-			cmove.z += fallVec_.z;
-
-			tmove.x += fallVec_.x;
-			tmove.y += fallVec_.y;
-			tmove.z += fallVec_.z;
-			
-			if (isShake_)
-		{
-			hitMove_.x += fallVec_.x;
-			hitMove_.y += fallVec_.y;
-			hitMove_.z += fallVec_.z;
-		}
-		}
-		
 	}
 	//ジャンプ操作
 	else if (input_->TriggerKey(DIK_SPACE))
@@ -343,8 +293,7 @@ void Player::FallAndJump()
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
 	}
-	camera_->SetEye(cmove);
-	camera_->SetTarget(tmove);
+
 }
 
 void Player::JumpBack()
@@ -652,19 +601,21 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 		pmSmoke_->Update();
-		
+		/*
 		nowEye_ = camera_->GetEye();
 		nowTarget_ = camera_->GetTarget();
 		easeHit_.Standby(false);
 		if (onGround_) { isShake_ = true; }
 		else isHit_ = true;
+		*/
+		isHit_ = true;
 	}
 
 	else if (attribute == COLLISION_ATTR_GIMMICK)
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
 		{
-			if (isShake_)return; 
+			if (isShake_)return;
 			if (isHit_)return;
 			life_ -= damege.GimmickSpike;
 			pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
@@ -672,11 +623,14 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 
 			pmSmoke_->Update();
 
+			/*
 			nowEye_ = camera_->GetEye();
 			nowTarget_ = camera_->GetTarget();
 			easeHit_.Standby(false);
-			if (onGround_){isShake_ = true;}
+			if (onGround_) { isShake_ = true; }
 			else isHit_ = true;
+			*/
+			isHit_ = true;
 		}
 
 	}
@@ -745,13 +699,11 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 
 	if (isHit_)
 	{
-		
-			//+してイージング
-			easeHit_.ease_out_cubic();
-			spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
-
-			mutekiCount_++;
-		
+		nowEye_ = camera_->GetEye();
+		nowTarget_ = camera_->GetTarget();
+		easeHit_.Standby(false);
+		isShake_ = true;
+		isHit_ = false;
 	}
 	if (isShake_)
 	{
@@ -770,7 +722,7 @@ void Player::UpdateAlive(bool isBack, bool isAttack)
 		camera_->Update();
 
 		//+してイージング
-		easeHit_.ease_out_cubic();
+		easeHit_.ease_in_out_cubic();
 		spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
 
 		mutekiCount_++;
