@@ -192,6 +192,8 @@ void Player::DrawParticle() {
 //移動処理
 void Player::Move() {
 
+	easeRotateRightY_.ease_out_cubic();
+
 	XMFLOAT3 move = Object3d::GetPosition();
 	XMFLOAT3 rot = Object3d::GetRotation();
 	XMFLOAT3 cmove = camera_->GetEye();
@@ -199,10 +201,7 @@ void Player::Move() {
 	//スピード
 	const float moveSpeed = 0.5f;//通常時
 	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
-	//方向は左で-,右で+
-	const XMFLOAT3 rotMoveLeft = { 0.0f,-90.0f,0.0f };
-	const XMFLOAT3 rotMoveRight = { 0.0f,90.0f,0.0f };
-
+	
 	//パーティクル
 	const ParticleManager::Preset smoke =
 	{
@@ -216,6 +215,9 @@ void Player::Move() {
 		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 		{0.0f,0.0f,0.0f,1.0f}
 	};
+	const XMFLOAT3 reverseParticleVel = { -smoke.vel.x,-smoke.vel.y, -smoke.vel.z };
+	const int32_t walkParticleNum = 1;
+	const XMFLOAT4 walkStartColor = { MyMath::RandomMTFloat(0.9f,1.0f),0.6f,0.6f,1.0f };
 	//キーボード入力による移動処理
 	XMMATRIX matTrans = XMMatrixIdentity();
 
@@ -223,47 +225,70 @@ void Player::Move() {
 	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
 	{
 		if (input_->PushKey(DIK_A)) {
+			if (isRight_) 
+			{
+				easeRotateRightY_.Standby(true);
+				rot.y = easeRotateRightY_.end;
+			}
 			isRight_ = false;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-			rot = rotMoveLeft;
 			move.x -= moveSpeed * dashSpeed;
 			cmove.x -= moveSpeed * dashSpeed;
 			tmove.x -= moveSpeed * dashSpeed;
+			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x -= moveSpeed * dashSpeed;
 		}
-		if (input_->PushKey(DIK_D)) {
+		else if (input_->PushKey(DIK_D)) {
+			if (!isRight_)
+			{
+				easeRotateRightY_.Standby(false);	
+				rot.y = easeRotateRightY_.start;
+			}
 			isRight_ = true;
-			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, { -smoke.vel.x,-smoke.vel.y, -smoke.vel.z },
+			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-			rot = rotMoveRight;
 			move.x += moveSpeed * dashSpeed;
 			cmove.x += moveSpeed * dashSpeed;
 			tmove.x += moveSpeed * dashSpeed;
+			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x += moveSpeed * dashSpeed;
 		}
 	}
 	else
 	{
 		if (input_->PushKey(DIK_A)) {
-			isRight_ = false;//左向き
-			rot = rotMoveLeft;
+			if (isRight_)
+			{
+				easeRotateRightY_.Standby(true);
+				rot.y = easeRotateRightY_.end;
+			}
+			isRight_ = false;
+			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
 			move.x -= moveSpeed;
 			cmove.x -= moveSpeed;
 			tmove.x -= moveSpeed;
+			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x -= moveSpeed;
 		}
-		if (input_->PushKey(DIK_D)) {
+		else if (input_->PushKey(DIK_D)) {
+			if (!isRight_)
+			{
+				easeRotateRightY_.Standby(false);
+				rot.y = easeRotateRightY_.start;
+			}
 			isRight_ = true;
-			rot = rotMoveRight;
+			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
+				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
 			move.x += moveSpeed;
 			cmove.x += moveSpeed;
 			tmove.x += moveSpeed;
+			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x += moveSpeed;
 		}
-
-
 	}
+	
 
 	Object3d::SetPosition(move);
 	Object3d::SetRotation(rot);

@@ -93,6 +93,12 @@ private:
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	//右を向いてるか
 	bool isRight_ = true;
+	//振り向く用のイージングのプリセット
+	const Easing presetEaseRotateRightY_ = {-90.0f,90.0f,0.2f};//Y軸限定　左、右
+	//振り向く用のイージング
+	Easing easeRotateRightY_ = presetEaseRotateRightY_;
+	//最初は方向を変えない
+	bool startGameRotate_ = false;	//呼び出されるのは最初だけ
 	//スプライト
 	SpriteCommon* spCommon_ = nullptr;//基盤
 
@@ -111,7 +117,7 @@ private:
 	//爆発は中央アンカーポイント
 	const XMFLOAT2 explosionAnchorPoint_ = { 0.5f,0.5f };
 
-	int mutekiCount_;							//無敵時間
+	int32_t mutekiCount_;							//無敵時間
 	const float hitTimer_ = MUTEKI_COUNT / 60.0f;	//イージング効果時間
 	Easing easeHit_ = Easing(1.0f, 0.0f, hitTimer_);//イージング
 	const XMFLOAT4 hitColor_ = { 0.5f,0.0f,0.0f,0.0f };	//赤く光る
@@ -219,6 +225,7 @@ private:
 		presetEaseChangeScaleStageClear_[XYZ_Y],	//Y
 		presetEaseChangeScaleStageClear_[XYZ_Z]		//Z
 	};
+
 	//ゴールしたか
 	bool isGoal_ = false;
 	//座標の停止
