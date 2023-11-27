@@ -427,8 +427,8 @@ void Enemy1::UpdateApproach() {
 
 //—£’E
 void Enemy1::UpdateLeave() {
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
 	deathTimer_++;
-
 	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
 }
 
@@ -479,6 +479,7 @@ void Enemy1::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
 	else if (attribute == COLLISION_ATTR_PLAYERS)
 	{
+		if (phase_ == Phase::Leave) return;
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
 		{

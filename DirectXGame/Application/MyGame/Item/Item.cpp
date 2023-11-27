@@ -5,8 +5,10 @@
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
 #include "EnumList.h"
+#include "MyMath.h"
 
 using namespace DirectX;
+using namespace MyMath;
 
 /*
 
@@ -53,12 +55,12 @@ bool Item::Initialize()
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 	collider_->SetAttribute(COLLISION_ATTR_ITEM);
-	
+
 	isGet_ = false;
 	isGetJump_ = false;
 
 	//パーティクル
-	p_ = Particle::LoadFromParticleTexture("particle6.png");
+	p_ = Particle::LoadFromParticleTexture("particle3.png");
 	pm_ = ParticleManager::Create();
 	pm_->SetParticleModel(p_.get());
 
@@ -85,7 +87,7 @@ void Item::Update()
 	camera_->Update();
 	pm_->Update();
 	Object3d::Update();
-	
+
 	spriteItemJumpBar_->Update();
 }
 
@@ -96,7 +98,7 @@ void Item::UpdateJumpPowerup()
 	const XMFLOAT3 asIsColor = { 1.0f,1.0f,1.0f };//素材そのままの色
 	if (isGetJump_)
 	{
-		ease_.ease_out_cubic();	
+		ease_.ease_out_cubic();
 		if (player_->OnGround())player_->SetJumpVYFist(jumpPowerUp);
 		spriteItemJumpBar_->SetColor({ asIsColor.x, asIsColor.y,asIsColor.z, ease_.num_X });
 		count_++;
@@ -113,10 +115,10 @@ void Item::UpdateJumpPowerup()
 		count_ = countReset;
 		isGet_ = false;
 		isGetJump_ = false;
-		
+
 	}
 
-	
+
 }
 
 void Item::Trans()
@@ -178,12 +180,12 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned shor
 		p_.get(),
 		position_,
 		{ 8.0f ,8.0f,0.0f },
-		{ 0.1f,4.0f,0.1f },
+		{ 0.5f,4.0f,0.1f },
 		{ 0.0f,0.001f,0.0f },
 		30,
-		{ 2.0f, 0.0f },
-		{ 1.0f,1.0f,1.0f,1.0f },
-		{ 0.0f,0.0f,0.0f,1.0f }
+		{3.0f, 0.0f },
+		{0.3f,1.0f,0.3f,1.0f},
+		{0.0f,0.0f,0.0f,1.0f }
 	};
 
 	if (attribute == COLLISION_ATTR_PLAYERS)

@@ -442,7 +442,7 @@ void Enemy2::UpdateApproach() {
 	if (position_.y <= backFallPosY)
 	{
 
-		phase_ = Phase::Leave;
+		phase_ = Phase::Back;
 	}
 }
 
@@ -457,8 +457,8 @@ void Enemy2::UpdateBack()
 
 //—£’E
 void Enemy2::UpdateLeave() {
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
 	deathTimer_++;
-
 	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
 }
 
