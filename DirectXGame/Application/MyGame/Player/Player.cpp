@@ -620,6 +620,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)life_ -= damege.enemyGuard;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_SPEED)life_ -= damege.enemySpeed;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_DEATH)life_ -= damege.enemyDeath;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_ISDEAD)return;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_ -= damege.enemyBullet;
 
 		pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,

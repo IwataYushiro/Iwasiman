@@ -38,3 +38,5 @@ const unsigned short SUBCOLLISION_ATTR_ENEMY_POWER = (0b1 << 15) + 200;					//U
 const unsigned short SUBCOLLISION_ATTR_ENEMY_GUARD = (0b1 << 15) + 201;					//–hŒäŒ^
 const unsigned short SUBCOLLISION_ATTR_ENEMY_SPEED = (0b1 << 15) + 202;					//ƒXƒs[ƒhŒ^
 const unsigned short SUBCOLLISION_ATTR_ENEMY_DEATH = (0b1 << 15) + 203;					//“–‚½‚é‚Æ‚Ù‚ÚŽ€–S
+
+const unsigned short SUBCOLLISION_ATTR_ENEMY_ISDEAD = (0b1 << 15) + 299;				//Šù‚ÉŽ€‚ñ‚¾
