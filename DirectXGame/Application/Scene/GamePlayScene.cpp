@@ -1135,7 +1135,7 @@ void GamePlayScene::LoadModel()
 	modelStage1_ = Model::LoadFromOBJ("skydome");
 	modelStage2_ = Model::LoadFromOBJ("skydome2");
 	modelGround_ = Model::LoadFromOBJ("ground");
-	modelBox_ = Model::LoadFromOBJ("sphere2", true);
+	modelBox_ = Model::LoadFromOBJ("ground2");
 
 	models_.insert(std::make_pair("player", modelPlayer_.get()));
 	models_.insert(std::make_pair("playerbullet", modelPlayerBullet_.get()));
@@ -1151,7 +1151,7 @@ void GamePlayScene::LoadModel()
 	models_.insert(std::make_pair("skydome", modelStage1_.get()));
 	models_.insert(std::make_pair("skydome2", modelStage2_.get()));
 	models_.insert(std::make_pair("ground", modelGround_.get()));
-	models_.insert(std::make_pair("sphere2", modelBox_.get()));
+	models_.insert(std::make_pair("ground2", modelBox_.get()));
 
 }
 
