@@ -73,6 +73,8 @@ private:
 	bool isGet_ = false;
 	//ジャンプアイテムを取得したか
 	bool isGetJump_ = false;
+	//回復アイテムを取得したか
+	bool isGetHeal_ = false;
 	//半径
 	const float radius_ = 3.0f;
 	//プレイヤー

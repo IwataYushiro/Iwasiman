@@ -80,7 +80,14 @@ void Item::Update()
 {
 	pm_->SetCamera(camera_);
 	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP) UpdateJumpPowerup();
-
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_HEAL)
+	{
+		if (isGetHeal_)
+		{
+			collider_->SetSubAttribute(SUBCOLLISION_ATTR_ITEM_GET_ONCE);
+			isGetHeal_ = false;
+		}
+	}
 	const float rotSpeedY = 2.0f;
 	rotation_.y += rotSpeedY;
 	Trans();
@@ -198,6 +205,7 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned shor
 			}
 			else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_HEAL)
 			{
+				isGetHeal_ = true;
 			}
 
 			isGet_ = true;

@@ -39,6 +39,8 @@ private:
 public:
 	//最大無敵時間
 	const int MUTEKI_COUNT = 60;
+	//ジャンプ強化最大効果時間
+	const float JUMPITEM_MAX_TIME = 200.0f;
 public:
 	//デストラクタ
 	~Player();
@@ -238,14 +240,13 @@ private:
 	const XMFLOAT3 asIsColor_ = { 1.0f,1.0f,1.0f };
 	
 	//アイテム関係
-	//アイテムゲット
-	bool isGetItem_ = false;
+	//回復アイテムゲット
+	bool isGetHealItem_ = false;
 	//ジャンプアイテムゲット
 	bool isGetJumpItem_ = false;
 	//ジャンプアイテム効果時間
 	float jumpPowerUpcount_;
-	//最大効果時間
-	const float JUMPITEM_MAX_TIME = 200.0f;
+	
 
 public: //アクセッサ、インライン関数
 	//死んだかどうか
@@ -256,9 +257,6 @@ public: //アクセッサ、インライン関数
 	bool OnGround()const { return onGround_; }
 	//立ち判定のセット
 	void SetOnGround(bool og) { this->onGround_ = og; }
-
-	//ジャンプ力セット
-	void SetJumpVYFist(const float jumpFist) { this->jumpVYFist_ = jumpFist; }const
 	//ライフセット
 	void SetLife(const int life) { this->life_ = life; }
 	//ライフゲット

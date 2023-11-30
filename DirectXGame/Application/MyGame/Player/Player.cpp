@@ -201,7 +201,7 @@ void Player::Move() {
 	//スピード
 	const float moveSpeed = 0.5f;//通常時
 	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
-	
+
 	//パーティクル
 	const ParticleManager::Preset smoke =
 	{
@@ -225,7 +225,7 @@ void Player::Move() {
 	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
 	{
 		if (input_->PushKey(DIK_A)) {
-			if (isRight_) 
+			if (isRight_)
 			{
 				easeRotateRightY_.Standby(true);
 				rot.y = easeRotateRightY_.end;
@@ -242,7 +242,7 @@ void Player::Move() {
 		else if (input_->PushKey(DIK_D)) {
 			if (!isRight_)
 			{
-				easeRotateRightY_.Standby(false);	
+				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
 			isRight_ = true;
@@ -288,7 +288,7 @@ void Player::Move() {
 			if (isShake_)hitMove_.x += moveSpeed;
 		}
 	}
-	
+
 
 	Object3d::SetPosition(move);
 	Object3d::SetRotation(rot);
@@ -298,6 +298,18 @@ void Player::Move() {
 
 void Player::FallAndJump()
 {
+	const float jumpPowerUp = 3.0f;
+	const float jumpPowerDefault = 2.0f;
+	if (isGetJumpItem_)
+	{
+		if (onGround_)jumpVYFist_ = jumpPowerUp;
+		jumpPowerUpcount_++;
+	}
+	else
+	{
+		if (onGround_)jumpVYFist_ = jumpPowerDefault;
+	}
+
 	if (!onGround_)
 	{
 		//下向き加速度
@@ -313,29 +325,18 @@ void Player::FallAndJump()
 	//ジャンプ操作
 	else if (input_->TriggerKey(DIK_SPACE))
 	{
-		const float jumpPowerUp = 3.0f;
-		const float jumpPowerDefalut = 2.0f;
 		onGround_ = false;
-		if (isGetJumpItem_) 
-		{
-			jumpVYFist_ = jumpPowerUp;
-			jumpPowerUpcount_++;
-		}
-		else
-		{
-			jumpVYFist_ = jumpPowerDefalut;
-		}
-
-		if (jumpPowerUpcount_ >= JUMPITEM_MAX_TIME)
-		{
-			const float countReset = 0.0f;
-			jumpPowerUpcount_ = countReset;
-			isGetItem_ = false;
-			isGetJumpItem_ = false;
-		}
 
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
+	}
+	
+
+	if (jumpPowerUpcount_ >= JUMPITEM_MAX_TIME)
+	{
+		const float countReset = 0.0f;
+		jumpPowerUpcount_ = countReset;
+		isGetJumpItem_ = false;
 	}
 
 }
@@ -690,17 +691,19 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 	}
 	else if (attribute == COLLISION_ATTR_ITEM)
 	{
-		if (isGetItem_)return; //多重ヒット防止
+		
 		if (subAttribute == SUBCOLLISION_ATTR_ITEM_JUMP)
 		{
+			if (isGetJumpItem_)return; //多重ヒット防止
 			isGetJumpItem_ = true;
 		}
-		else if (subAttribute==SUBCOLLISION_ATTR_ITEM_HEAL)
+		else if (subAttribute == SUBCOLLISION_ATTR_ITEM_HEAL)
 		{
 			const int heal = 1;
 			life_ += heal;
+			
 		}
-		isGetItem_ = true;
+		
 	}
 }
 
