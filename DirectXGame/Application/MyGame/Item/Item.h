@@ -39,7 +39,7 @@ public:
 	~Item();
 	
 	//生成(使用モデル、プレイヤー、サブ属性)
-	static std::unique_ptr<Item> Create(Model* model = nullptr, Player* player = nullptr
+	static std::unique_ptr<Item> Create(const Model* model = nullptr, const Player* player = nullptr
 		, unsigned short subAttribute = 0b1000000000000001);
 	//初期化
 	bool Initialize()override;
@@ -76,7 +76,7 @@ private:
 	//半径
 	const float radius_ = 3.0f;
 	//プレイヤー
-	Player* player_ = nullptr;
+	const Player* player_ = nullptr;
 
 	//イージング
 	//アイテム取得した時の現在時間
@@ -97,7 +97,7 @@ public: //アクセッサ、インライン関数
 	bool IsGetJump() const { return isGetJump_; }
 
 	//プレイヤーセット
-	void SetPlayer(Player* player) { player_ = player; }
+	void SetPlayer(const Player* player) { player_ = player; }
 
 private:
 	//スプライト基盤クラス

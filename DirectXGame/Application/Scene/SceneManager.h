@@ -18,7 +18,7 @@ public://シングルトンインスタンス
 
 public://メンバ関数
 	//次のシーンを予約(シーン名、ステージ番号)
-	void ChangeScene(const std::string& sceneName, int stagenum = SL_Default);
+	void ChangeScene(const std::string& sceneName, const int stagenum = SL_Default);
 	//更新
 	void Update();
 
@@ -34,11 +34,11 @@ private://メンバ変数
 	//次のシーン
 	std::unique_ptr<BaseScene> nextScene_ = nullptr;
 	//借りてくるシーンファクトリー
-	AbstractSceneFactory* sceneFactory_ = nullptr;
+	const AbstractSceneFactory* sceneFactory_ = nullptr;
 
 public://アクセッサ置き場
 	//シーンファクトリーのセッター
-	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { this->sceneFactory_ = sceneFactory; }
+	void SetSceneFactory(const AbstractSceneFactory* sceneFactory) { this->sceneFactory_ = sceneFactory; }
 
 private:
 	//コンストラクタ（シングルトンパターン）

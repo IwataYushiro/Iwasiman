@@ -615,7 +615,7 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 
 }
 
-void GameOverScene::FadeOut(DirectX::XMFLOAT3 rgb)
+void GameOverScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 {
 	if (!isFadeOut_)
 	{

@@ -52,7 +52,7 @@ public://メンバ関数
 	//レベルデータ読み込み(ステージファイルパス)
 	void LoadLVData(const std::string& stagePath);
 	//フェードアウト
-	void FadeOut(DirectX::XMFLOAT3 rgb);
+	void FadeOut(const DirectX::XMFLOAT3& rgb);
 	//色が変わる処理
 	void UpdateChangeColor();
 private://静的メンバ変数

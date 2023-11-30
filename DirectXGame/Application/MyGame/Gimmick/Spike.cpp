@@ -18,7 +18,7 @@ using namespace DirectX;
 //静的メンバ変数の実体
 CollisionManager* Spike::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<Spike> Spike::Create(Model* model, Player* player)
+std::unique_ptr<Spike> Spike::Create(const Model* model, const Player* player)
 {
 	//インスタンス生成
 	std::unique_ptr<Spike> ins = std::make_unique<Spike>();

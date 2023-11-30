@@ -132,7 +132,7 @@ public://メンバ関数
 	//更新
 	void Update();
 	//描画
-	void Draw();
+	void Draw()const;
 
 	//定数バッファ
 	//マテリアル
@@ -187,7 +187,7 @@ public://アクセッサ置き場
 	const XMFLOAT2& GetSize()const { return size_; }
 
 	//ポジションセット
-	void SetPosition(const XMFLOAT2& position) { position_ = position; }
+	void SetPosition(const XMFLOAT2& position){ position_ = position; }
 	//ポジションXセット
 	void SetPositionX(const float position) { position_.x = position; }
 	//ポジションYセット

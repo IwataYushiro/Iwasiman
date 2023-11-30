@@ -23,7 +23,7 @@ Audio* TitleScene::audio_ = Audio::GetInstance();
 SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
 
-TitleScene::TitleScene(int stagenum) : stageNum_(stagenum) {}
+TitleScene::TitleScene(const int stagenum) : stageNum_(stagenum) {}
 
 void TitleScene::Initialize()
 {
@@ -470,7 +470,7 @@ void TitleScene::UpdateIsMenu()
 
 }
 
-void TitleScene::FadeOut(DirectX::XMFLOAT3 rgb)
+void TitleScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 {
 	if (!isFadeOut_)
 	{

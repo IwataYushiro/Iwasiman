@@ -26,9 +26,9 @@ public:
 	void Reset();
 	//シェイク
 	//視点シェイク(視点、シェイク時間、最小幅、最大幅)
-	XMFLOAT3 ShakeEye(XMFLOAT3 eye, int count, XMFLOAT3 min, XMFLOAT3 max);
+	XMFLOAT3 ShakeEye(const XMFLOAT3& eye, const int count, const XMFLOAT3& min, const XMFLOAT3& max);
 	//注視点シェイク(注視点、シェイク時間、最小幅、最大幅)
-	XMFLOAT3 ShakeTarget(XMFLOAT3 target, int count, XMFLOAT3 min, XMFLOAT3 max);
+	XMFLOAT3 ShakeTarget(const XMFLOAT3& target, const int count, const XMFLOAT3& min, const XMFLOAT3& max);
 	//更新
 	virtual void Update();
 	//ビュー行列更新
@@ -56,14 +56,14 @@ protected:
 	// Y軸回りビルボード行列
 	XMMATRIX matBillboardY_ = {};
 	// 視点座標
-	const XMFLOAT3 presetEye_ = { -10.0f, 0.0f, -100.0f };//プリセット
-	XMFLOAT3 eye_ = presetEye_;
+	const XMFLOAT3& presetEye_ = { -10.0f, 0.0f, -100.0f };//プリセット
+	XMFLOAT3 eye_ = {presetEye_.x,presetEye_.y,presetEye_.z};
 	// 注視点座標
-	const XMFLOAT3 presetTarget_ = { -10.0f,0.0f,0.0f };//プリセット
-	XMFLOAT3 target_ = presetTarget_;
+	const XMFLOAT3& presetTarget_ = { -10.0f,0.0f,0.0f };//プリセット
+	XMFLOAT3 target_ = { presetTarget_.x,presetTarget_.y,presetTarget_.z};
 	// 上方向ベクトル
-	const XMFLOAT3 presetUp_ = { 0.0f,1.0f,0.0f };//プリセット
-	XMFLOAT3 up_ = presetUp_;
+	const XMFLOAT3& presetUp_ = { 0.0f,1.0f,0.0f };//プリセット
+	XMFLOAT3 up_ = { presetUp_.x,presetUp_.y,presetUp_.z};
 
 public://アクセッサ
 	//ビュー行列ゲット
@@ -72,21 +72,21 @@ public://アクセッサ
 	//プロジェクション行列ゲット
 	const XMMATRIX& GetMatProjection() { return matProjection_; }
 	//ビュプロ行列ゲット
-	const XMMATRIX& GetMatViewProjection() { return matViewProjection_; }
+	const XMMATRIX& GetMatViewProjection(){ return matViewProjection_; }
 
 	
 	//ビルボード行列ゲット
 	const XMMATRIX& GetMatBillboard() { return matBillboard_; }
 	//Y軸回りビルボード行列ゲット
-	const XMMATRIX& GetMatBillboardY() { return matBillboardY_; }
+	const XMMATRIX& GetMatBillboardY(){ return matBillboardY_; }
 
 	//視点ゲット
-	const XMFLOAT3& GetEye() { return eye_; }
+	const XMFLOAT3& GetEye(){ return eye_; }
 	//視点セット
 	void SetEye(const XMFLOAT3& eye);
 
 	//注視点ゲット
-	const XMFLOAT3& GetTarget() { return target_; }
+	const XMFLOAT3& GetTarget(){ return target_; }
 	//注視点セット
 	void SetTarget(const XMFLOAT3& target);
 

@@ -29,7 +29,7 @@ private:
 public:
 	
 	//生成(使用モデル)
-	static std::unique_ptr<Goal> Create(Model* model = nullptr);
+	static std::unique_ptr<Goal> Create(const Model* model = nullptr);
 	//初期化
 	bool Initialize()override;
 	//リセット

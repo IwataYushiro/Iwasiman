@@ -13,6 +13,6 @@ class GimmickFactory :public AbstractGimmickFactory
 public:
 	//ギミック生成(ギミック名、使用モデル、プレイヤー)
 	std::unique_ptr<BaseGimmick> CreateGimmick(const std::string& gimmickName
-		, Model* model, Player* player) override;
+		, const Model* model, const Player* player) override;
 
 };

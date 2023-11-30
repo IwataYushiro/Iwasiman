@@ -31,7 +31,7 @@ class StageSelectScene :public BaseScene
 {
 public://メンバ関数
 	//コンストラクタ(ステージ番号や天球背景と連動した値)
-	StageSelectScene(int count);
+	StageSelectScene(const int count);
 	//初期化
 	void Initialize() override;
 	//更新
@@ -50,7 +50,7 @@ public://メンバ関数
 	//終了
 	void Finalize() override;
 	//フェードアウト
-	void FadeOut(DirectX::XMFLOAT3 rgb);
+	void FadeOut(const DirectX::XMFLOAT3& rgb);
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
 

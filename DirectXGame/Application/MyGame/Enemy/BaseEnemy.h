@@ -44,7 +44,7 @@ protected:
 	static CollisionManager* colManager_;
 
 	//自機
-	Player* player_ = nullptr;
+	const Player* player_ = nullptr;
 
 	//ゲームプレイシーン
 	GamePlayScene* gameScene_ = nullptr;

@@ -24,7 +24,7 @@ Player::~Player() {
 
 }
 
-std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScene* gamescene)
+std::unique_ptr<Player> Player::Create(const Model* model, Model* bullet, GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Player> ins = std::make_unique<Player>();
@@ -313,7 +313,26 @@ void Player::FallAndJump()
 	//ジャンプ操作
 	else if (input_->TriggerKey(DIK_SPACE))
 	{
+		const float jumpPowerUp = 3.0f;
+		const float jumpPowerDefalut = 2.0f;
 		onGround_ = false;
+		if (isGetJumpItem_) 
+		{
+			jumpVYFist_ = jumpPowerUp;
+			jumpPowerUpcount_++;
+		}
+		else
+		{
+			jumpVYFist_ = jumpPowerDefalut;
+		}
+
+		if (jumpPowerUpcount_ >= JUMPITEM_MAX_TIME)
+		{
+			const float countReset = 0.0f;
+			jumpPowerUpcount_ = countReset;
+			isGetItem_ = false;
+			isGetJumpItem_ = false;
+		}
 
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
@@ -568,7 +587,7 @@ void Player::Trans() {
 }
 
 //ワールド座標を取得
-XMFLOAT3 Player::GetWorldPosition() {
+const XMFLOAT3 Player::GetWorldPosition() const {
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -668,6 +687,20 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 		stopPos_ = position_;
 		isGoal_ = true;
 		isAlive_ = false;
+	}
+	else if (attribute == COLLISION_ATTR_ITEM)
+	{
+		if (isGetItem_)return; //多重ヒット防止
+		if (subAttribute == SUBCOLLISION_ATTR_ITEM_JUMP)
+		{
+			isGetJumpItem_ = true;
+		}
+		else if (subAttribute==SUBCOLLISION_ATTR_ITEM_HEAL)
+		{
+			const int heal = 1;
+			life_ += heal;
+		}
+		isGetItem_ = true;
 	}
 }
 

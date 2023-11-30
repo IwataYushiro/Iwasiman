@@ -173,7 +173,7 @@ void Sprite::Update()
 	
 
 }
-void Sprite::Draw()
+void Sprite::Draw()const
 {
 	//”ñ•\Ž¦
 	if (isInvisible_)

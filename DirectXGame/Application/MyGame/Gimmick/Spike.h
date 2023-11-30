@@ -26,7 +26,7 @@ private:
 
 public:
 	//生成(使用モデル、プレイヤー)
-	static std::unique_ptr<Spike> Create(Model* model = nullptr, Player* player = nullptr);
+	static std::unique_ptr<Spike> Create(const Model* model = nullptr, const Player* player = nullptr);
 	//初期化
 	bool Initialize()override;
 	//更新
@@ -50,10 +50,10 @@ private:
 	const float radius_ = 5.0f;
 
 	//プレイヤー
-	Player* player_ = nullptr;
+	const Player* player_ = nullptr;
 
 public: //アクセッサ、インライン関数
 	//プレイヤーセット
-	void SetPlayer(Player* player) { player_ = player; }
+	void SetPlayer(const Player* player) { player_ = player; }
 };
 #pragma once

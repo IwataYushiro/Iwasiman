@@ -17,7 +17,7 @@ using namespace DirectX;
 //静的メンバ変数の実体
 CollisionManager* Goal::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<Goal> Goal::Create(Model* model)
+std::unique_ptr<Goal> Goal::Create(const Model* model)
 {
 	//インスタンス生成
 	std::unique_ptr<Goal> ins = std::make_unique<Goal>();

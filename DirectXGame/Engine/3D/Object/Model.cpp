@@ -206,7 +206,7 @@ void Model::LoadTextures()
 }
 
 // 描画
-void Model::Draw(ID3D12GraphicsCommandList* cmdList) {
+void Model::Draw(ID3D12GraphicsCommandList* cmdList) const {
 	// nullptrチェック
 	assert(device_);
 	assert(cmdList);

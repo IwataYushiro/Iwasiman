@@ -28,8 +28,8 @@ public:
 	//デストラクタ
 	~EnemyCore();
 	////生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、パラメータレベル)
-	static std::unique_ptr<EnemyCore> Create(Model* model = nullptr, Model* bullet = nullptr,
-		Player* player = nullptr, GamePlayScene* gamescene = nullptr, unsigned short stage = 1);
+	static std::unique_ptr<EnemyCore> Create(const Model* model = nullptr, Model* bullet = nullptr,
+		const Player* player = nullptr,GamePlayScene* gamescene = nullptr, unsigned short stage = 1);
 
 	
 	//初期化
@@ -131,7 +131,7 @@ public:
 	//死んだかどうか
 	bool IsDead() const override{ return isDead_; }
 	//プレイヤーセット
-	void SetPlayer(Player* player) { player_ = player; }
+	void SetPlayer(const Player* player) { player_ = player; }
 	//ゲームシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

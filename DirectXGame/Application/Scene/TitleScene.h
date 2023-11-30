@@ -30,7 +30,7 @@ struct LevelData;
 class TitleScene :public BaseScene
 {
 public://メンバ関数(ステージ番号)
-	TitleScene(int stagenum);
+	TitleScene(const int stagenum);
 	//初期化
 	void Initialize() override;
 	//更新
@@ -44,7 +44,7 @@ public://メンバ関数(ステージ番号)
 	//状態更新(メニューのとき) 
 	void UpdateIsMenu();
 	//フェードアウト(色)
-	void FadeOut(DirectX::XMFLOAT3 rgb);
+	void FadeOut(const DirectX::XMFLOAT3& rgb);
 	//描画
 	void Draw() override;
 	//終了

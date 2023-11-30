@@ -46,7 +46,7 @@ public://メンバ関数
 	void LoadTextures();	
 
 	// 描画(コマンドリスト)
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw(ID3D12GraphicsCommandList* cmdList) const;
 
 private://静的メンバ変数
 	// デバイス

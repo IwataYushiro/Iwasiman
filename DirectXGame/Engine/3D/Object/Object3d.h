@@ -131,7 +131,7 @@ private://プリセット
 	};
 protected: // メンバ変数
 	//モデル
-	Model* model_ = nullptr;
+	const Model* model_ = nullptr;
 	//カメラ
 	Camera* camera_;
 	//ビルボード
@@ -160,7 +160,7 @@ protected: // メンバ変数
 
 public: //アクセッサ置き場
 	//モデルセット
-	void SetModel(Model* model) { this->model_ = model; }
+	void SetModel(const Model* model) { this->model_ = model; }
 	//スケーリングゲット
 	const XMFLOAT3& GetScale() const { return scale_; }
 	//スケーリングセット
@@ -182,7 +182,7 @@ public: //アクセッサ置き場
 	void SetPosition(const XMFLOAT3& position) { this->position_ = position; }
 
 	//カメラセット
-	void SetCamera(Camera* camera) { this->camera_ = camera; }
+	void SetCamera(Camera* camera){ this->camera_ = camera; }
 	//ライトグループセット
 	static void SetLightGroup(LightGroup* lightGroup) { Object3d::lightGroup_ = lightGroup; }
 	//ビルボードセット
@@ -191,7 +191,7 @@ public: //アクセッサ置き場
 	//コライダーセット
 	void SetCollider(BaseCollider* collider);
 	//モデルゲット
-	inline Model* GetModel() { return model_; }
+	const Model* GetModel() const { return model_; }
 
 };
 

@@ -135,7 +135,7 @@ public://アクセッサ置き場
 	//パーティクルモデルセット
 	void SetParticleModel(Particle* pmodel) { this->particle_ = pmodel; }
 	//カメラセット
-	void SetCamera(Camera* camera) { this->camera_ = camera; }
+	void SetCamera(Camera* camera) { camera_ = camera; }
 	//ブレンドセット
 	void SetBlendMode(size_t blendmode) { this->blendMode_ = blendmode; dirty_ = true; }
 };

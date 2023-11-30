@@ -43,7 +43,7 @@ public:
 	//デストラクタ
 	~Player();
 	//生成(使用モデル、使用弾モデル、ゲームプレイシーン)
-	static std::unique_ptr<Player> Create(Model* model = nullptr, Model* bullet = nullptr,
+	static std::unique_ptr<Player> Create(const Model* model = nullptr, Model* bullet = nullptr,
 		GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
@@ -68,7 +68,7 @@ public:
 	void Trans();
 
 	//ワールド座標を取得
-	XMFLOAT3 GetWorldPosition();
+	const XMFLOAT3 GetWorldPosition()const ;
 
 	//描画
 	void Draw();
@@ -181,7 +181,7 @@ private:
 	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
 
 	//ゲームシーン
-	GamePlayScene* gameScene_ = nullptr;
+	GamePlayScene* gameScene_;
 	//シェイク機能
 	bool isShake_ = false;
 	//現在視点
@@ -236,7 +236,16 @@ private:
 
 	//素材そのままの色
 	const XMFLOAT3 asIsColor_ = { 1.0f,1.0f,1.0f };
-
+	
+	//アイテム関係
+	//アイテムゲット
+	bool isGetItem_ = false;
+	//ジャンプアイテムゲット
+	bool isGetJumpItem_ = false;
+	//ジャンプアイテム効果時間
+	float jumpPowerUpcount_;
+	//最大効果時間
+	const float JUMPITEM_MAX_TIME = 200.0f;
 
 public: //アクセッサ、インライン関数
 	//死んだかどうか
@@ -249,9 +258,9 @@ public: //アクセッサ、インライン関数
 	void SetOnGround(bool og) { this->onGround_ = og; }
 
 	//ジャンプ力セット
-	void SetJumpVYFist(float jumpFist) { this->jumpVYFist_ = jumpFist; }
+	void SetJumpVYFist(const float jumpFist) { this->jumpVYFist_ = jumpFist; }const
 	//ライフセット
-	void SetLife(int life) { this->life_ = life; }
+	void SetLife(const int life) { this->life_ = life; }
 	//ライフゲット
 	const int& GetLife()const { return life_; }
 	//ゲームシーン

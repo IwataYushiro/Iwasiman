@@ -27,7 +27,8 @@ private:
 public:
 
 	//生成(使用モデル、プレイヤー、サブ属性)
-	static std::unique_ptr<FallAndRiseSphere> Create(Model* model = nullptr, Player* player = nullptr, unsigned short subAttribute = 0b1000000000000001);
+	static std::unique_ptr<FallAndRiseSphere> Create(const Model* model = nullptr, const Player* player = nullptr,
+		unsigned short subAttribute = 0b1000000000000001);
 	//初期化
 	bool Initialize()override;
 	//更新
@@ -64,7 +65,7 @@ private:
 	const float radius_ = 8.0f;
 
 	//プレイヤー
-	Player* player_ = nullptr;
+	const Player* player_ = nullptr;
 
 	//乗るとtrue
 	bool isRide_ = false;
@@ -78,5 +79,5 @@ private:
 public: //アクセッサ、インライン関数
 	
 	//プレイヤーセット
-	void SetPlayer(Player* player) { player_ = player; }
+	void SetPlayer(const Player* player) { player_ = player; }
 };
