@@ -45,15 +45,15 @@ public:
 	//デストラクタ
 	~Player();
 	//生成(使用モデル、使用弾モデル、ゲームプレイシーン)
-	static std::unique_ptr<Player> Create(const Model* model = nullptr, Model* bullet = nullptr,
-		GamePlayScene* gamescene = nullptr);
+	static std::unique_ptr<Player> Create(const Model* model = nullptr, const Model* bullet = nullptr,
+		const GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
 	//リセット処理
 	void Reset();
 
 	//更新(手前と背面ジャンプの有効化、攻撃処理の有効化、開始時演出だと全操作無効)
-	void Update(bool isBack = true, bool isAttack = true, bool isStart = false);
+	void Update(const bool isBack = true, const bool isAttack = true, const bool isStart = false);
 	//プレイヤーの移動処理
 	void Move();
 
@@ -62,7 +62,7 @@ public:
 	//奥へ移動
 	void JumpBack();
 	//着地(属性指定)
-	void Landing(unsigned short attribute);
+	void Landing(const unsigned short attribute);
 	//プレイヤーの攻撃処理
 	void Attack();
 
@@ -125,7 +125,7 @@ private:
 	const XMFLOAT4 hitColor_ = { 0.5f,0.0f,0.0f,0.0f };	//赤く光る
 
 	//モデル
-	Model* modelBullet_ = nullptr;
+	const Model* modelBullet_ = nullptr;
 
 	//インプット
 	Input* input_ = nullptr;
@@ -256,17 +256,18 @@ public: //アクセッサ、インライン関数
 	//立ってるかどうか
 	bool OnGround()const { return onGround_; }
 	//立ち判定のセット
-	void SetOnGround(bool og) { this->onGround_ = og; }
+	void SetOnGround(const bool og) { this->onGround_ = og; }
 	//ライフセット
 	void SetLife(const int life) { this->life_ = life; }
 	//ライフゲット
 	const int& GetLife()const { return life_; }
-	//ゲームシーン
-	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+	//ゲームシーンセット
+	void SetGameScene(const GamePlayScene* gameScene) { gameScene_ = const_cast<GamePlayScene*>(gameScene); }
+
 
 private://カプセル化メンバ関数
 	//生存時
-	void UpdateAlive(bool isBack = true, bool isAttack = true);
+	void UpdateAlive(const bool isBack = true, const bool isAttack = true);
 	//破壊時
 	void UpdateBreak();
 	//ゴール時

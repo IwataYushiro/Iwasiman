@@ -21,7 +21,7 @@ public:
 
 	//敵生成(敵の名前、使用モデル、使用モデル(弾)、プレイヤー、ゲームプレイシーン)
 	virtual std::unique_ptr<BaseEnemy> CreateEnemy(const std::string& enemyName,
-		const Model* model, Model* bullet, const Player* player, GamePlayScene* gamescene) = 0;
+		const Model* model, const Model* bullet, const Player* player, const GamePlayScene* gamescene) = 0;
 private:
 
 };

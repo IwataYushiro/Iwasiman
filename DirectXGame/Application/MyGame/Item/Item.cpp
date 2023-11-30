@@ -25,7 +25,7 @@ Item::~Item()
 {
 }
 
-std::unique_ptr<Item> Item::Create(const Model* model, const Player* player, unsigned short subAttribute)
+std::unique_ptr<Item> Item::Create(const Model* model, const Player* player, const unsigned short subAttribute)
 {
 	//インスタンス生成
 	std::unique_ptr<Item> ins = std::make_unique<Item>();

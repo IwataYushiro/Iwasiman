@@ -32,7 +32,7 @@ class GameOverScene :public BaseScene
 {
 public://メンバ関数
 	//コンストラクタ(ステージ情報)
-	GameOverScene(int stagenum);
+	GameOverScene(const int stagenum);
 	//初期化
 	void Initialize() override;
 	//更新

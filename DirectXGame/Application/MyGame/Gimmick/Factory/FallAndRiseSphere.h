@@ -28,7 +28,7 @@ public:
 
 	//生成(使用モデル、プレイヤー、サブ属性)
 	static std::unique_ptr<FallAndRiseSphere> Create(const Model* model = nullptr, const Player* player = nullptr,
-		unsigned short subAttribute = 0b1000000000000001);
+		const unsigned short subAttribute = 0b1000000000000001);
 	//初期化
 	bool Initialize()override;
 	//更新

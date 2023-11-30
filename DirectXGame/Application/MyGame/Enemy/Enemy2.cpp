@@ -26,8 +26,8 @@ Enemy2::~Enemy2() {
 	
 }
 
-std::unique_ptr<Enemy2> Enemy2::Create(const Model* model, Model* bullet, 
-	const Player* player,GamePlayScene* gamescene, int level)
+std::unique_ptr<Enemy2> Enemy2::Create(const Model* model, const Model* bullet, 
+	const Player* player,const GamePlayScene* gamescene, int level)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy2> ins = std::make_unique<Enemy2>();
@@ -48,7 +48,7 @@ std::unique_ptr<Enemy2> Enemy2::Create(const Model* model, Model* bullet,
 }
 
 // 初期化
-bool Enemy2::Initialize(int level) {
+bool Enemy2::Initialize(const int level) {
 
 	if (!Object3d::Initialize()) return false;
 
@@ -72,7 +72,7 @@ bool Enemy2::Initialize(int level) {
 	return true;
 }
 
-void Enemy2::InitSubATTR(int level)
+void Enemy2::InitSubATTR(const int level)
 {
 	if (level == ET_Normal)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	else if (level == ET_Power)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
@@ -185,7 +185,7 @@ void Enemy2::Parameter() {
 void Enemy2::Reset() { Parameter(); }
 
 //更新
-void Enemy2::Update(bool isStart) {
+void Enemy2::Update(const bool isStart) {
 
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);

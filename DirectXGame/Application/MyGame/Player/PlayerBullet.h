@@ -26,7 +26,7 @@ private:
 public:
 	//生成(初期座標、速度、使用モデル)
 	static std::unique_ptr<PlayerBullet> Create
-	(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model = nullptr);
+	(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model = nullptr);
 	//初期化(初期座標、速度)
 	bool Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity);
 	//リセット処理

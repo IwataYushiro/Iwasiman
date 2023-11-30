@@ -24,7 +24,7 @@ Player::~Player() {
 
 }
 
-std::unique_ptr<Player> Player::Create(const Model* model, Model* bullet, GamePlayScene* gamescene)
+std::unique_ptr<Player> Player::Create(const Model* model, const Model* bullet, const GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Player> ins = std::make_unique<Player>();
@@ -133,7 +133,7 @@ void Player::Reset() {
 	nowCount_ = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
 }
-void Player::Update(bool isBack, bool isAttack, bool isStart) {
+void Player::Update(const bool isBack, const bool isAttack, const bool isStart) {
 
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
@@ -408,7 +408,7 @@ void Player::JumpBack()
 
 }
 
-void Player::Landing(unsigned short attribute)
+void Player::Landing(const unsigned short attribute)
 {
 	//球コライダーの取得
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
@@ -723,7 +723,7 @@ const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMF
 	return ans;
 }
 
-void Player::UpdateAlive(bool isBack, bool isAttack)
+void Player::UpdateAlive(const bool isBack, const bool isAttack)
 {
 	if (isDead_)return;
 	//移動処理

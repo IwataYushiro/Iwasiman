@@ -25,8 +25,8 @@ EnemyBoss::~EnemyBoss() {
 	
 }
 
-std::unique_ptr<EnemyBoss> EnemyBoss::Create(const Model* model, Model* bullet,
-	const Player* player, GamePlayScene* gamescene)
+std::unique_ptr<EnemyBoss> EnemyBoss::Create(const Model* model, const Model* bullet,
+	const Player* player, const GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyBoss> ins = std::make_unique<EnemyBoss>();
@@ -105,7 +105,7 @@ void EnemyBoss::Parameter() {
 void EnemyBoss::Reset() { }
 
 //更新
-void EnemyBoss::Update(bool isStart) {
+void EnemyBoss::Update(const bool isStart) {
 
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);

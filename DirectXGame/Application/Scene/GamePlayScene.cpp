@@ -1110,13 +1110,13 @@ void GamePlayScene::UpdateChangeColor()
 	}
 }
 
-void GamePlayScene::AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet)
+void GamePlayScene::AddPlayerBullet(const std::unique_ptr<PlayerBullet> playerBullet)
 {
 	//ƒŠƒXƒg‚É“o˜^
 	playerBullets_.push_back(std::move(playerBullet));
 }
 
-void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
+void GamePlayScene::AddEnemyBullet(const std::unique_ptr<EnemyBullet> enemyBullet)
 {
 	//ƒŠƒXƒg‚É“o˜^
 	enemyBullets_.push_back(std::move(enemyBullet));
@@ -1162,7 +1162,7 @@ void GamePlayScene::LoadModel()
 }
 
 void GamePlayScene::SettingTutorialEase(const int num, Sprite* s1, Sprite* s2,
-	Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6)
+	Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6)const
 {
 	switch (num)
 	{

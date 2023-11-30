@@ -16,7 +16,7 @@ using namespace DirectX;
 //静的メンバ変数の実体
 CollisionManager* EnemyBullet::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<EnemyBullet> EnemyBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model)
+std::unique_ptr<EnemyBullet> EnemyBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyBullet> ins = std::make_unique<EnemyBullet>();

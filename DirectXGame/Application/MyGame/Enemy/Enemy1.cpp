@@ -25,8 +25,8 @@ Enemy1::~Enemy1() {
 	
 }
 
-std::unique_ptr<Enemy1> Enemy1::Create(const Model* model, Model* bullet,
-	const Player* player,GamePlayScene* gamescene, int level)
+std::unique_ptr<Enemy1> Enemy1::Create(const Model* model, const Model* bullet,
+	const Player* player,const GamePlayScene* gamescene, int level)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy1> ins = std::make_unique<Enemy1>();
@@ -47,7 +47,7 @@ std::unique_ptr<Enemy1> Enemy1::Create(const Model* model, Model* bullet,
 }
 
 // 初期化
-bool Enemy1::Initialize(int level) {
+bool Enemy1::Initialize(const int level) {
 
 	if (!Object3d::Initialize()) return false;
 	
@@ -69,7 +69,7 @@ bool Enemy1::Initialize(int level) {
 
 	return true;
 }
-void Enemy1::InitSubATTR(int level)
+void Enemy1::InitSubATTR(const int level)
 {
 	if (level == ET_Normal)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	else if (level == ET_Power)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
@@ -151,7 +151,7 @@ void Enemy1::Parameter() {
 void Enemy1::Reset() { Parameter(); }
 
 //更新
-void Enemy1::Update(bool isStart) {
+void Enemy1::Update(const bool isStart) {
 
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
@@ -237,7 +237,7 @@ void Enemy1::Fire() {
 
 	//弾を生成し初期化
 	std::unique_ptr<EnemyBullet> newBullet;
-	newBullet = EnemyBullet::Create(pos, velocity, modelBullet_);
+	newBullet = EnemyBullet::Create(pos, velocity,modelBullet_);
 	newBullet->SetCamera(camera_);
 	newBullet->Update();
 

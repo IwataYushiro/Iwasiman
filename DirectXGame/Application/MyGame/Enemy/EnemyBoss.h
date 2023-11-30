@@ -29,8 +29,8 @@ public:
 	//デストラクタ
 	~EnemyBoss();
 	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン)
-	static std::unique_ptr<EnemyBoss> Create(const Model* model = nullptr,Model* bullet = nullptr,
-		const Player* player = nullptr, GamePlayScene* gamescene = nullptr);
+	static std::unique_ptr<EnemyBoss> Create(const Model* model = nullptr,const Model* bullet = nullptr,
+		const Player* player = nullptr, const GamePlayScene* gamescene = nullptr);
 	
 	//初期化
 	bool Initialize()override;
@@ -41,7 +41,7 @@ public:
 	//パラメータ
 	void Parameter();
 	//更新
-	void Update(bool isStart = false)override;
+	void Update(const bool isStart = false)override;
 	//転送　
 	void Trans();
 	//弾発射
@@ -74,7 +74,7 @@ private:
 	static CollisionManager* colManager_;
 	
 	//モデル	
-	Model* modelBullet_ = nullptr;
+	const Model* modelBullet_ = nullptr;
 
 	//行動フェーズ
 	enum class Phase {
@@ -131,7 +131,7 @@ public:
 	//プレイヤーセット
 	void SetPlayer(const Player* player) { player_ = player; }
 	//ゲームシーンセット
-	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+	void SetGameScene(const GamePlayScene* gameScene) { gameScene_ = const_cast<GamePlayScene*>(gameScene); }
 	//ボスが死んだかどうか
 	bool BossDead()const override{ return bossDead_; }
 };

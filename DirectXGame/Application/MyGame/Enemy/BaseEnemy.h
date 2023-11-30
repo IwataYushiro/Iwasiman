@@ -33,7 +33,7 @@ public:
 	virtual bool Initialize([[maybe_unused]] unsigned short subAttribute ) { return Object3d::Initialize(); }
 
 	//更新
-	virtual void Update(bool isStart = false) = 0;
+	virtual void Update(const bool isStart = false) = 0;
 	//描画
 	virtual void Draw() { Object3d::Draw(); }
 	//パーティクル描画

@@ -83,9 +83,9 @@ public://メンバ関数
 
 public:
 	//自機弾追加(自機の弾)
-	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
+	void AddPlayerBullet(const std::unique_ptr<PlayerBullet> playerBullet);
 	//敵弾追加(敵の弾)
-	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
+	void AddEnemyBullet(const std::unique_ptr<EnemyBullet> enemyBullet);
 
 private://静的メンバ変数
 
@@ -470,7 +470,7 @@ private:
 	num=1 イージング中
 	*/
 	void SettingTutorialEase(const int num, Sprite* s1, Sprite* s2,
-		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);
+		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6)const;
 
 	//チュートリアルスプライトの更新
 	void UpdateTutorialSprite();
