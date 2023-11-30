@@ -10,11 +10,11 @@ using namespace DirectX;
 
 */
 
-void Sprite::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
+void Sprite::Initialize(const SpriteCommon* spCommon, const uint32_t textureIndex)
 {
 	HRESULT result;
 	assert(spCommon);
-	this->spCommon_ = spCommon;
+	this->spCommon_ = const_cast<SpriteCommon*>(spCommon);
 	
 	if (textureIndex != UINT32_MAX)
 	{

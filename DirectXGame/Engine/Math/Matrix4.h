@@ -22,9 +22,9 @@ Matrix4 identity();
 Matrix4 scale(const Vector3& s);
 
 //‰ñ“]
-Matrix4 rotateX(float angle);//X²
-Matrix4 rotateY(float angle);//Y²
-Matrix4 rotateZ(float angle);//Z²
+Matrix4 rotateX(const float angle);//X²
+Matrix4 rotateY(const float angle);//Y²
+Matrix4 rotateZ(const float angle);//Z²
 
 //•½sˆÚ“®
 Matrix4 translate(const Vector3& t);

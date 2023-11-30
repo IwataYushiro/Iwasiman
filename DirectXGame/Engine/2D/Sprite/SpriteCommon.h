@@ -39,16 +39,16 @@ public://構造体、列挙体
 public://メンバ関数
 
 	//初期化(DirectX基盤)
-	void Initialize(DirectXCommon* dxCommon);
+	void Initialize(const DirectXCommon* dxCommon);
 
 	//テクスチャ読み込み(テクスチャインデックス、使用スプライト)
-	void LoadTexture(uint32_t index, const std::string& fileName);
+	void LoadTexture(const uint32_t index, const std::string& fileName);
 
 	//描画前処理
 	void PreDraw();
 
 	//描画用テクスチャコマンドの発行(テクスチャインデックス)
-	void SetTextureCommands(uint32_t index);
+	void SetTextureCommands(const uint32_t index);
 
 private://メンバ変数
 
@@ -97,7 +97,7 @@ public://アクセッサ
 	//SRVGPUヒープゲット
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUHandle() { return srvGpuHandle_; }
 	//テクスチャバッファゲット
-	ID3D12Resource* GetTextureBuffer(uint32_t index)const { return texBuffs_[index].Get(); }
+	ID3D12Resource* GetTextureBuffer(const uint32_t index)const { return texBuffs_[index].Get(); }
 	//パイプラインステートゲット
 	ID3D12PipelineState* GetPipelineState() { return pipelineState_.Get(); }
 	//ルートシグネチャゲット

@@ -13,7 +13,7 @@ Vector3::Vector3() :x(0.0f), y(0.0f), z(0.0f)
 {
 }
 
-Vector3::Vector3(float x, float y, float z) :x(x), y(y), z(z)
+Vector3::Vector3(const float x, const float y, const float z) :x(x), y(y), z(z)
 {
 }
 float Vector3::length() const {
@@ -77,7 +77,7 @@ const Vector3 Bezier3(const Vector3& p0, const Vector3& p1, const Vector3& p2, c
 
 }
 //スプラインのポジション
-Vector3 splinePosition(const std::vector<Vector3>& points, size_t startIndex, float t)
+Vector3 splinePosition(const std::vector<Vector3>& points, const size_t startIndex, const float t)
 {
 	enum IndexPointNum
 	{

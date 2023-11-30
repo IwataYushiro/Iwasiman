@@ -14,7 +14,7 @@ class Object3d;
 struct RaycastHit
 {
 	//衝突相手のオブジェクト
-	Object3d* object = nullptr;
+	const Object3d* object = nullptr;
 	//衝突相手のコライダー
 	BaseCollider* collider = nullptr;
 	//衝突点

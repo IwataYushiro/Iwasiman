@@ -24,7 +24,7 @@ public://シングルトンインスタンス
 public://メンバ関数
 	
 	//初期化(Windowsアプリケーション、DirectX基盤)
-	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
+	void Initialize(const WinApp* winApp, const DirectXCommon* dxCommon);
 	
 	//更新
 	void Update();
@@ -47,9 +47,9 @@ public://メンバ関数
 
 private:
 	//WinApp
-	WinApp* winApp_ = nullptr;
+	const WinApp* winApp_ = nullptr;
 	//DXCommon
-	DirectXCommon* dxCommon_ = nullptr;
+	const DirectXCommon* dxCommon_ = nullptr;
 	//SRV用のデスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> srvHeap_;
 private:

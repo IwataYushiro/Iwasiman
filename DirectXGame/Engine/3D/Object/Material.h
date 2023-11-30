@@ -62,8 +62,8 @@ public://メンバ関数
 	
 	// テクスチャ読み込み(ディレクトリパス、CPUハンドル、GPUハンドル)
 	void LoadTexture(
-		const std::string& directoryPath, D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle,
-		D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
+		const std::string& directoryPath, const D3D12_CPU_DESCRIPTOR_HANDLE& cpuHandle,
+		const D3D12_GPU_DESCRIPTOR_HANDLE& gpuHandle);
 	// 更新
 	void Update();
 

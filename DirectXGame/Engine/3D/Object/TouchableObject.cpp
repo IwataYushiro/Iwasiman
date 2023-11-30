@@ -10,7 +10,7 @@
 
 */
 
-std::unique_ptr<TouchableObject> TouchableObject::Create(Model* model, bool Touth)
+std::unique_ptr<TouchableObject> TouchableObject::Create(Model* model,const bool Touth)
 {
 	std::unique_ptr<TouchableObject> ins = std::make_unique<TouchableObject>();
 	if (ins == nullptr)return nullptr;
@@ -22,7 +22,7 @@ std::unique_ptr<TouchableObject> TouchableObject::Create(Model* model, bool Tout
 	return ins;
 }
 
-bool TouchableObject::Initialize(Model* model, bool Touth)
+bool TouchableObject::Initialize(Model* model,const bool Touth)
 {
 	if (!Object3d::Initialize())return false;
 	SetModel(model);

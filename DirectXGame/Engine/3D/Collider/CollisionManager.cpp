@@ -78,12 +78,12 @@ void CollisionManager::CheckAllCollisions()
 
 }
 
-bool CollisionManager::RayCast(const Ray& ray, RaycastHit* hitInfo, float maxDistance)
+bool CollisionManager::RayCast(const Ray& ray, RaycastHit* hitInfo, const float maxDistance)
 {
 	return RayCast(ray,0xffff,hitInfo,maxDistance);
 }
 
-bool CollisionManager::RayCast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo, float maxDistance)
+bool CollisionManager::RayCast(const Ray& ray, const unsigned short attribute, RaycastHit* hitInfo, const float maxDistance)
 {
 	bool result = false;
 	//走査用イテレータ
@@ -147,7 +147,7 @@ bool CollisionManager::RayCast(const Ray& ray, unsigned short attribute, Raycast
 	return result;
 }
 
-void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback, unsigned short attribute)
+void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback, const unsigned short attribute)
 {
 	assert(callback);
 

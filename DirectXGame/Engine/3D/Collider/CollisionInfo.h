@@ -14,10 +14,10 @@ class BaseCollider;
 struct CollisionInfo
 {
 	//コンストラクタ(オブジェクト、コライダー、衝突点)
-	CollisionInfo(Object3d* object, BaseCollider* collider,
+	CollisionInfo(const Object3d* object, const BaseCollider* collider,
 		const DirectX::XMVECTOR& inter) {
-		this->object_ = object;
-		this->collider_ = collider;
+		this->object_ = const_cast<Object3d*>(object);
+		this->collider_ = const_cast<BaseCollider*>(collider);
 		this->inter_ = inter;
 	}
 

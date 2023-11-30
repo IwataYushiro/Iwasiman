@@ -42,7 +42,7 @@ public:
 	//カメラ注視点移動(移動値)
 	void CameraMoveVectorTarget(const XMFLOAT3& move);
 	//デバッグカメラ(視点と注視点を一緒に動かすか)
-	void DebugCamera(bool eyeTargetMix = false);
+	void DebugCamera(const bool eyeTargetMix = false);
 protected:
 	// ビュー行列
 	XMMATRIX matView_ = {};
@@ -67,31 +67,31 @@ protected:
 
 public://アクセッサ
 	//ビュー行列ゲット
-	const XMMATRIX& GetMatView() { return matView_; }
+	const XMMATRIX& GetMatView() const{ return matView_; }
 	
 	//プロジェクション行列ゲット
-	const XMMATRIX& GetMatProjection() { return matProjection_; }
+	const XMMATRIX& GetMatProjection() const{ return matProjection_; }
 	//ビュプロ行列ゲット
-	const XMMATRIX& GetMatViewProjection(){ return matViewProjection_; }
+	const XMMATRIX& GetMatViewProjection()const{ return matViewProjection_; }
 
 	
 	//ビルボード行列ゲット
-	const XMMATRIX& GetMatBillboard() { return matBillboard_; }
+	const XMMATRIX& GetMatBillboard() const{ return matBillboard_; }
 	//Y軸回りビルボード行列ゲット
-	const XMMATRIX& GetMatBillboardY(){ return matBillboardY_; }
+	const XMMATRIX& GetMatBillboardY()const{ return matBillboardY_; }
 
 	//視点ゲット
-	const XMFLOAT3& GetEye(){ return eye_; }
+	const XMFLOAT3& GetEye()const{ return eye_; }
 	//視点セット
 	void SetEye(const XMFLOAT3& eye);
 
 	//注視点ゲット
-	const XMFLOAT3& GetTarget(){ return target_; }
+	const XMFLOAT3& GetTarget()const{ return target_; }
 	//注視点セット
 	void SetTarget(const XMFLOAT3& target);
 
 	//上方向ベクトルゲット
-	const XMFLOAT3& GetUp() { return up_; }
+	const XMFLOAT3& GetUp()const { return up_; }
 	//上方向ベクトルセット
 	void SetUp(const XMFLOAT3& up);
 

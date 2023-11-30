@@ -106,13 +106,13 @@ Audio::SoundData Audio::SoundLoadWave(const char* filename)
 }
 
 //音声再生
-void Audio::SoundPlayWave(IXAudio2* xAudio2, const Audio::SoundData& soundData, bool loop)
+void Audio::SoundPlayWave(const IXAudio2* xAudio2, const Audio::SoundData& soundData, const bool loop)
 {
 	HRESULT result;
 
 	//波形フォーマットを元にSourceVoiceの生成
 	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
+	result = const_cast<IXAudio2*>(xAudio2)->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
 	assert(SUCCEEDED(result));
 
 	//再生する波形データの生成

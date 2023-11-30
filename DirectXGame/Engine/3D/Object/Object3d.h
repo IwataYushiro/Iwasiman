@@ -108,7 +108,7 @@ public: // メンバ関数
 
 	//衝突時のコールバック(コリジョン情報、メイン属性、サブ属性)
 	virtual void OnCollision([[maybe_unused]] const CollisionInfo& info,
-		[[maybe_unused]] unsigned short attribute, [[maybe_unused]] unsigned short subAttribute) {}
+		[[maybe_unused]] const unsigned short attribute, [[maybe_unused]] const unsigned short subAttribute) {}
 
 private://プリセット
 	// 色
@@ -182,11 +182,12 @@ public: //アクセッサ置き場
 	void SetPosition(const XMFLOAT3& position) { this->position_ = position; }
 
 	//カメラセット
-	void SetCamera(Camera* camera){ this->camera_ = camera; }
+	void SetCamera(const Camera* camera){ this->camera_ = const_cast<Camera*>(camera); }const
 	//ライトグループセット
-	static void SetLightGroup(LightGroup* lightGroup) { Object3d::lightGroup_ = lightGroup; }
+	static void SetLightGroup(const LightGroup* lightGroup) 
+	{ Object3d::lightGroup_ = const_cast<LightGroup*>(lightGroup); }const
 	//ビルボードセット
-	void SetBillboard(bool isBillboard) { this->isBillboard_ = isBillboard; }
+	void SetBillboard(const bool isBillboard) { this->isBillboard_ = isBillboard; }
 
 	//コライダーセット
 	void SetCollider(BaseCollider* collider);

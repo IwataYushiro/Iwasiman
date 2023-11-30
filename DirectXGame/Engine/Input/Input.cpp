@@ -141,7 +141,7 @@ void Input::GenerateMouse()
 //
 
 //キーが押されているか
-bool Input::PushKey(BYTE keyNumber) {
+bool Input::PushKey(const BYTE keyNumber) {
 
 	//指定キーを押していればtrue
 	if (keys_[keyNumber])
@@ -153,7 +153,7 @@ bool Input::PushKey(BYTE keyNumber) {
 }
 
 //トリガー版
-bool Input::TriggerKey(BYTE keyNumber) {
+bool Input::TriggerKey(const BYTE keyNumber) {
 
 	//指定キーを押していればtrue
 	if (keys_[keyNumber] && !preKeys_[keyNumber])
@@ -164,7 +164,7 @@ bool Input::TriggerKey(BYTE keyNumber) {
 	return false;
 }
 
-bool Input::ReleaseKey(BYTE keyNumber)
+bool Input::ReleaseKey(const BYTE keyNumber)
 {
 	//1フレーム前の地点で指定キーを押していればtrue
 	if (!keys_[keyNumber] && preKeys_[keyNumber])
@@ -175,7 +175,7 @@ bool Input::ReleaseKey(BYTE keyNumber)
 	return false;
 }
 
-bool Input::PressMouse(int32_t mouseNumber)
+bool Input::PressMouse(const int32_t mouseNumber)
 {
 	//指定番号(0～2)が無いときはエラー
 	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState_.rgbButtons));
@@ -186,7 +186,7 @@ bool Input::PressMouse(int32_t mouseNumber)
 	return false;
 }
 
-bool Input::TriggerMouse(int32_t mouseNumber)
+bool Input::TriggerMouse(const int32_t mouseNumber)
 {
 	//指定番号(0～2)が無いときはエラー
 	assert(0 <= mouseNumber && mouseNumber < _countof(mouseStatePre_.rgbButtons));
@@ -199,7 +199,7 @@ bool Input::TriggerMouse(int32_t mouseNumber)
 	return false;
 }
 
-bool Input::ReleaseMouse(int32_t mouseNumber)
+bool Input::ReleaseMouse(const int32_t mouseNumber)
 {//指定番号(0～2)が無いときはエラー
 	assert(0 <= mouseNumber && mouseNumber < _countof(mouseStatePre_.rgbButtons));
 	assert(0 <= mouseNumber && mouseNumber < _countof(mouseState_.rgbButtons));

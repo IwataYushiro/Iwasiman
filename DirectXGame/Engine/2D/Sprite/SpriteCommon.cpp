@@ -27,11 +27,11 @@ SpriteCommon* SpriteCommon::GetInstance()
 	return &instance;
 }
 
-void SpriteCommon::Initialize(DirectXCommon* dxCommon)
+void SpriteCommon::Initialize(const DirectXCommon* dxCommon)
 {
 	HRESULT result;
 	assert(dxCommon);
-	this->dxCommon_ = dxCommon;
+	this->dxCommon_ = const_cast<DirectXCommon*>(dxCommon);
 
 	//頂点シェーダ読み込み
 	result = D3DCompileFromFile(
@@ -237,7 +237,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 }
 
 //テクスチャ読み込み
-void SpriteCommon::LoadTexture(uint32_t index, const std::string& fileName)
+void SpriteCommon::LoadTexture(const uint32_t index, const std::string& fileName)
 {
 	HRESULT result;
 
@@ -351,7 +351,7 @@ void SpriteCommon::PreDraw()
 
 }
 
-void SpriteCommon::SetTextureCommands(uint32_t index)
+void SpriteCommon::SetTextureCommands(const uint32_t index)
 {
 	//SRVヒープの先頭ハンドルを取得
 	srvGpuHandle_ = srvHeap_->GetGPUDescriptorHandleForHeapStart();

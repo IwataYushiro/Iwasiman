@@ -15,7 +15,7 @@ ImGuiManager* ImGuiManager::GetInstance()
 	return &instance;
 }
 
-void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
+void ImGuiManager::Initialize(const WinApp* winApp, const DirectXCommon* dxCommon)
 {
 	HRESULT result;
 

@@ -26,7 +26,7 @@ public://シングルトンインスタンス
 public:
 	
 	//初期化(Windowsアプリケーション)
-	void Initialize(WinApp* winApp);
+	void Initialize(const WinApp* winApp);
 	//デバイスの初期化
 	void InitializeDevice();
 	//コマンド関連の初期化
@@ -78,7 +78,7 @@ private:
 	UINT64 fenceVal_ = 0;
 
 	//Windowsアプリケーション
-	WinApp* winApp_ = nullptr;
+	const WinApp* winApp_ = nullptr;
 
 	//リソースバリア
 	D3D12_RESOURCE_BARRIER barrierDesc_{};

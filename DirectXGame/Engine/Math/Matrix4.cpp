@@ -42,7 +42,7 @@ Matrix4 scale(const Vector3& s)
 }
 
 //‰ñ“]
-Matrix4 rotateX(float angle)
+Matrix4 rotateX(const float angle)
 {
 	float sin = std::sin(angle);
 	float cos = std::cos(angle);
@@ -61,7 +61,7 @@ Matrix4 rotateX(float angle)
 	return result;
 }
 
-Matrix4 rotateY(float angle)
+Matrix4 rotateY(const float angle)
 {
 	float sin = std::sin(angle);
 	float cos = std::cos(angle);
@@ -81,7 +81,7 @@ Matrix4 rotateY(float angle)
 }
 
 
-Matrix4 rotateZ(float angle)
+Matrix4 rotateZ(const float angle)
 {
 	float sin = std::sin(angle);
 	float cos = std::cos(angle);

@@ -34,7 +34,7 @@ public://メンバ関数
 	///	<param names="hitInfo">衝突情報</param>
 	/// <param names="maxDistance">最大距離</param>
 	/// <returns>レイが任意のコライダーと交わる場合true,それ以外はfalse</returns>
-	bool RayCast(const Ray& ray, RaycastHit* hitInfo = nullptr, float maxDistance = D3D12_FLOAT32_MAX);
+	bool RayCast(const Ray& ray, RaycastHit* hitInfo = nullptr, const float maxDistance = D3D12_FLOAT32_MAX);
 
 	/// <summary>
 	/// レイキャスト(属性指定版)
@@ -44,8 +44,8 @@ public://メンバ関数
 	///	<param names="hitInfo">衝突情報</param>
 	/// <param names="maxDistance">最大距離</param>
 	/// <returns>レイが任意のコライダーと交わる場合true,それ以外はfalse</returns>
-	bool RayCast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo = nullptr,
-		float maxDistance = D3D12_FLOAT32_MAX);
+	bool RayCast(const Ray& ray, const unsigned short attribute, RaycastHit* hitInfo = nullptr,
+		const float maxDistance = D3D12_FLOAT32_MAX);
 
 	/// <summary>
 	/// 球による衝突全要素
@@ -54,7 +54,7 @@ public://メンバ関数
 	///	<param names="callback">衝突時コールバック</param>
 	/// <param names="attribute">対象の衝突属性</param>
 	void QuerySphere(const Sphere& sphere, QueryCallback* callback,
-		unsigned short attribute = 0xffff);
+		const unsigned short attribute = 0xffff);
 
 private:
 	//コライダーのリスト

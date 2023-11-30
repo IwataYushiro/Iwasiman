@@ -22,38 +22,38 @@ public:
 	virtual ~BaseCollider() = default;
 
 	//オブジェクトセット
-	inline void SetObject(Object3d* object) { this->object3d_ = object; }
+	inline void SetObject(const Object3d* object) { this->object3d_ = const_cast<Object3d*>(object); }
 	//オブジェクトゲット
-	inline Object3d* GetObject3d() { return object3d_; }
+	inline const Object3d* GetObject3d() const{ return object3d_; }
 
 	//更新
 	virtual void Update() = 0;
 
 	//形状タイプ取得
-	CollisionShapeType GetShapeType() { return shapeType_; }
+	const CollisionShapeType GetShapeType() const { return shapeType_; }
 
 	//衝突時コールバック関数(コリジョン情報、メイン属性、サブ属性)
-	inline void OnCollision(const CollisionInfo& info, unsigned short attribute,
-		unsigned short subAttribute) {
+	inline void OnCollision(const CollisionInfo& info, const unsigned short attribute,
+		const unsigned short subAttribute) {
 		object3d_->OnCollision(info, attribute, subAttribute);
 	}
 
 	//メイン属性セット
-	inline void SetAttribute(unsigned short attribute) { this->attribute_ = attribute; }
+	inline void SetAttribute(const unsigned short attribute) { this->attribute_ = attribute; }
 	//メイン属性ゲット
 	inline unsigned short GetAttribute() { return attribute_; }
 	//メイン属性追加
-	inline void AddAttribute(unsigned short attribute) { this->attribute_ |= attribute; }
+	inline void AddAttribute(const unsigned short attribute) { this->attribute_ |= attribute; }
 	//メイン属性削除
-	inline void RemoveAttribute(unsigned short attribute) { this->attribute_ &= !attribute; }
+	inline void RemoveAttribute(const unsigned short attribute) { this->attribute_ &= !attribute; }
 	//サブ属性セット
-	inline void SetSubAttribute(unsigned short subAttribute) { this->subAttribute_ = subAttribute; }
+	inline void SetSubAttribute(const unsigned short subAttribute) { this->subAttribute_ = subAttribute; }
 	//サブ属性ゲット
 	inline unsigned short GetSubAttribute() { return subAttribute_; }
 	//サブ属性追加
-	inline void AddSubAttribute(unsigned short subAttribute) { this->subAttribute_ |= subAttribute; }
+	inline void AddSubAttribute(const unsigned short subAttribute) { this->subAttribute_ |= subAttribute; }
 	//サブ属性削除
-	inline void RemoveSubAttribute(unsigned short subAttribute) { this->subAttribute_ &= !subAttribute; }
+	inline void RemoveSubAttribute(const unsigned short subAttribute) { this->subAttribute_ &= !subAttribute; }
 protected:
 	//3Dオブジェクト(.obj)
 	Object3d* object3d_ = nullptr;

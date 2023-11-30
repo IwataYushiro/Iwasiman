@@ -20,8 +20,8 @@ public:
 public:
 	//コンストラクタ
 	Quaternion();								//零ベクトルとして生成
-	Quaternion(Vector3 v,float w);
-	Quaternion(float x, float y, float z, float w);		//x成分、y成分、z成分を指定して生成
+	Quaternion(const Vector3& v,const float w);
+	Quaternion(const float x, const float y, const float z, const float w);		//x成分、y成分、z成分を指定して生成
 
 	//内積(Vector3)
 	float dotV(const Vector3& v1, const Vector3& v2);
