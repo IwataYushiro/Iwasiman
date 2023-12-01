@@ -17,7 +17,7 @@ ModelFbx::~ModelFbx()
 	fbxScene_->Destroy();
 }
 
-void ModelFbx::Draw(ID3D12GraphicsCommandList* cmdList)
+void ModelFbx::Draw(ID3D12GraphicsCommandList* cmdList)const
 {
 	// nullptrチェック
 	assert(cmdList);

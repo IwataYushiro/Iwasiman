@@ -147,7 +147,7 @@ void Item::Trans()
 	Object3d::SetWorld(world);
 }
 
-XMFLOAT3 Item::GetWorldPosition()
+const XMFLOAT3 Item::GetWorldPosition()const
 {
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -175,7 +175,7 @@ void Item::DrawSprite()
 	if (isGetJump_)spriteItemJumpBar_->Draw();
 }
 
-void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Item::OnCollision([[maybe_unused]] const CollisionInfo& info,const unsigned short attribute,const unsigned short subAttribute)
 {
 	if (isGet_)return;//多重ヒットを防止
 	//プリセット

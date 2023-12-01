@@ -77,7 +77,7 @@ void Goal::Trans()
 	Object3d::SetWorld(world);
 }
 
-XMFLOAT3 Goal::GetWorldPosition()
+const XMFLOAT3 Goal::GetWorldPosition()const
 {
 	//ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
 	XMFLOAT3 worldPos;
@@ -95,7 +95,7 @@ void Goal::Draw()
 	Object3d::Draw();
 }
 
-void Goal::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Goal::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (attribute == COLLISION_ATTR_PLAYERS)
 	{

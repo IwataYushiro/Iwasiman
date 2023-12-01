@@ -80,7 +80,7 @@ void Spike::Trans()
 	Object3d::SetWorld(world);
 }
 
-XMFLOAT3 Spike::GetWorldPosition()
+const XMFLOAT3 Spike::GetWorldPosition()const
 {
 	//ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
 	XMFLOAT3 worldPos;
@@ -98,7 +98,7 @@ void Spike::Draw()
 	Object3d::Draw();
 }
 
-void Spike::OnCollision([[maybe_unused]] const CollisionInfo& info, [[maybe_unused]] unsigned short attribute, [[maybe_unused]] unsigned short subAttribute)
+void Spike::OnCollision([[maybe_unused]] const CollisionInfo& info, [[maybe_unused]] const unsigned short attribute, [[maybe_unused]] const unsigned short subAttribute)
 {
 	
 }

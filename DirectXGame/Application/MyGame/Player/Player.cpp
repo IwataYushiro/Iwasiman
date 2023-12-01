@@ -602,7 +602,8 @@ const XMFLOAT3 Player::GetWorldPosition() const {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
+void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, 
+	const unsigned short attribute, const unsigned short subAttribute) {
 
 	//ダメージ管理の構造体
 	struct DamageType

@@ -47,7 +47,7 @@ public:
 	//弾発射
 	void Fire();
 	//ワールド座標を取得
-	XMFLOAT3 GetWorldPosition();
+	const XMFLOAT3 GetWorldPosition()const;
 	//描画
 	void Draw()override;
 	//パーティクル描画
@@ -66,8 +66,8 @@ public:
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision(const CollisionInfo& info, unsigned short attribute,
-		unsigned short subAttribute)override;
+	void OnCollision(const CollisionInfo& info, const unsigned short attribute,
+		const unsigned short subAttribute)override;
 	
 private:
 	//コリジョンマネージャー

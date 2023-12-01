@@ -128,7 +128,7 @@ protected://構造体類に関係あるメンバ変数
 public://メンバ関数
 
 	//初期化(スプライト基盤、テクスチャインデックス)
-	void Initialize(const SpriteCommon* spCommon, const uint32_t textureIndex = UINT32_MAX);
+	void Initialize(SpriteCommon* spCommon, const uint32_t textureIndex = UINT32_MAX);
 	//更新
 	void Update();
 	//描画

@@ -83,7 +83,7 @@ public://アクセッサ置き場
 
 private://メンバ関数(カプセル化)
 	//OBJファイルから3Dモデルを読み込む(非公開)(モデル名、スムージングするか)
-	void LoadFromOBJInternal(const std::string& modelName, bool smoothing = false);
+	void LoadFromOBJInternal(const std::string& modelName, const bool smoothing = false);
 	
 };
 

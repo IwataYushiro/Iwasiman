@@ -95,7 +95,7 @@ public://メンバ関数
 	//デストラクタ
 	~ModelFbx();
 	//描画(コマンドリスト)
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw(ID3D12GraphicsCommandList* cmdList)const ;
 	//バッファ生成(デバイス)
 	void CreateBuffers(ID3D12Device* device);
 	//デバイス
@@ -144,9 +144,9 @@ private://メンバ変数
 
 public://アクセッサ置き場
 	//モデル変形行列
-	const XMMATRIX& GetModelTransform() { return meshNode_->globalTransform; }
+	const XMMATRIX& GetModelTransform() const { return meshNode_->globalTransform; }
 	//全ボーン
 	std::vector<Bone>& GetBones() { return bones_; }
 	//FBXシーン
-	FbxScene* GetFbxScene() { return fbxScene_; }
+	FbxScene* GetFbxScene() const { return fbxScene_; }
 };

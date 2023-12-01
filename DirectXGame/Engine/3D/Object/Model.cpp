@@ -225,7 +225,7 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList) const {
 }
 
 //OBJファイルから3Dモデルを読み込む(非公開)
-void Model::LoadFromOBJInternal(const std::string& modelName,bool smoothing) {
+void Model::LoadFromOBJInternal(const std::string& modelName,const bool smoothing) {
 	//ファイルストリーム
 	std::ifstream file;
 	//objファイルを開く

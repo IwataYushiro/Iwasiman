@@ -89,7 +89,7 @@ void LightGroup::Update()
 	}
 }
 
-void LightGroup::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex)
+void LightGroup::Draw(ID3D12GraphicsCommandList* cmdList,const UINT rootParameterIndex)
 {
 	//定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(rootParameterIndex, constBuff_->GetGPUVirtualAddress());
@@ -212,34 +212,34 @@ void LightGroup::SetAmbientColor(const XMFLOAT3& color)
 	dirty_ = true;
 }
 
-void LightGroup::SetDirLightActive(int index, bool active)
+void LightGroup::SetDirLightActive(const int index, const bool active)
 {
 	assert(0 <= index && index < DirLightNum);
 	dirLights_[index].SetActive(active);
 }
 
-void LightGroup::SetDirLightDir(int index, const XMVECTOR& lightdir)
+void LightGroup::SetDirLightDir(const int index, const XMVECTOR& lightdir)
 {
 	assert(0 <= index && index < DirLightNum);
 	dirLights_[index].SetLightDir(lightdir);
 	dirty_ = true;
 }
 
-void LightGroup::SetDirLightColor(int index, const XMFLOAT3& lightcolor)
+void LightGroup::SetDirLightColor(const int index, const XMFLOAT3& lightcolor)
 {
 	assert(0 <= index && index < DirLightNum);
 	dirLights_[index].SetLightColor(lightcolor);
 	dirty_ = true;
 }
 
-void LightGroup::SetPointLightPos(int index, const XMFLOAT3& lightPos)
+void LightGroup::SetPointLightPos(const int index, const XMFLOAT3& lightPos)
 {
 	assert(0 <= index && index < PointLightNum);
 	pointLights_[index].SetLightPos(lightPos);
 	dirty_ = true;
 }
 
-void LightGroup::SetPointLightColor(int index, const XMFLOAT3& lightColor)
+void LightGroup::SetPointLightColor(const int index, const XMFLOAT3& lightColor)
 {
 	assert(0 <= index && index < PointLightNum);
 	pointLights_[index].SetLightColor(lightColor);
@@ -247,14 +247,14 @@ void LightGroup::SetPointLightColor(int index, const XMFLOAT3& lightColor)
 
 }
 
-void LightGroup::SetPointLightAtten(int index, const XMFLOAT3& lightAtten)
+void LightGroup::SetPointLightAtten(const int index, const XMFLOAT3& lightAtten)
 {
 	assert(0 <= index && index < PointLightNum);
 	pointLights_[index].SetLightAtten(lightAtten);
 	dirty_ = true;
 }
 
-void LightGroup::SetPointLightActive(int index, bool active)
+void LightGroup::SetPointLightActive(const int index,const bool active)
 {
 	assert(0 <= index && index < PointLightNum);
 	pointLights_[index].SetActive(active);

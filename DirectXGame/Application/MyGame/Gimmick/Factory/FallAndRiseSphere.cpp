@@ -35,7 +35,7 @@ std::unique_ptr<FallAndRiseSphere> FallAndRiseSphere::Create(const Model* model,
 	if (model) ins->SetModel(model);
 	if (player)ins->SetPlayer(player);
 	if (subAttribute)ins->collider_->SetSubAttribute(subAttribute);
-	
+
 
 	return ins;
 }
@@ -48,14 +48,14 @@ bool FallAndRiseSphere::Initialize()
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 	collider_->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
-	
+
 	return true;
 
 }
 
 void FallAndRiseSphere::Update()
 {
-	
+
 	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();
 	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphereReturn();
 	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE)UpdateRiseSphere();
@@ -83,7 +83,7 @@ void FallAndRiseSphere::UpdateFallSphere()
 void FallAndRiseSphere::UpdateFallSphereReturn()
 {
 	const float speed = 0.1f;
-	
+
 	if (isRide_)
 	{
 		if (player_->OnGround())position_.y -= speed;
@@ -102,7 +102,7 @@ void FallAndRiseSphere::UpdateFallSphereReturn()
 			isReturn_ = false;
 		}
 	}
-	
+
 }
 
 void FallAndRiseSphere::UpdateRiseSphere()
@@ -166,7 +166,7 @@ void FallAndRiseSphere::Trans()
 	Object3d::SetWorld(world);
 }
 
-XMFLOAT3 FallAndRiseSphere::GetWorldPosition()
+const XMFLOAT3 FallAndRiseSphere::GetWorldPosition()const
 {
 	//ÉèÅ[ÉãÉhç¿ïWÇéÊìæ
 	XMFLOAT3 worldPos;
@@ -184,7 +184,7 @@ void FallAndRiseSphere::Draw()
 	Object3d::Draw();
 }
 
-void FallAndRiseSphere::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void FallAndRiseSphere::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (isRide_)return;
 
@@ -194,7 +194,7 @@ void FallAndRiseSphere::OnCollision([[maybe_unused]] const CollisionInfo& info, 
 		{
 			if (!isReturn_)startPos_ = position_;
 			isRide_ = true;
-			
+
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
 

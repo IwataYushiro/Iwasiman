@@ -80,7 +80,7 @@ public:
 	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
-	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
+	void OnCollision(const CollisionInfo& info,const unsigned short attribute,const unsigned short subAttribute)override;
 
 	//ベジェ曲線(最初点、中間点1、中間点2、最終点、時間の進み具合)
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);

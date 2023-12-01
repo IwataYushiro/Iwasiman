@@ -434,7 +434,7 @@ void Enemy1::UpdateLeave() {
 }
 
 //ワールド座標を取得
-XMFLOAT3 Enemy1::GetWorldPosition() {
+const XMFLOAT3 Enemy1::GetWorldPosition() const{
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -446,7 +446,8 @@ XMFLOAT3 Enemy1::GetWorldPosition() {
 
 	return worldPos;
 }
-void Enemy1::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Enemy1::OnCollision([[maybe_unused]] const CollisionInfo& info,
+	const unsigned short attribute,const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;
 	const int hitLife = deathLife_ + 1;

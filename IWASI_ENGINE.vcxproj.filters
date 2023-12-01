@@ -232,7 +232,7 @@
     <Filter Include="Source File\Application\MyGame\Goal">
       <UniqueIdentifier>{f2d6c081-925c-4006-bbf0-4356b46fb50d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header File\Engine\3D\FBX\Light">
+    <Filter Include="Header File\Engine\3D\Light">
       <UniqueIdentifier>{c78cf77f-eb2d-4f42-873a-024885ce302b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -498,7 +498,7 @@
       <Filter>Header File\Engine\3D\Object</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Light\DirectionalLight.h">
-      <Filter>Header File\Engine\3D\FBX\Light</Filter>
+      <Filter>Header File\Engine\3D\Light</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\2D\PostEffect\PostEffect.h">
       <Filter>Header File\Engine\2D\PostEffect</Filter>
@@ -507,10 +507,10 @@
       <Filter>Header File\Engine\json</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Light\LightGroup.h">
-      <Filter>Header File\Engine\3D\FBX\Light</Filter>
+      <Filter>Header File\Engine\3D\Light</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Light\PointLight.h">
-      <Filter>Header File\Engine\3D\FBX\Light</Filter>
+      <Filter>Header File\Engine\3D\Light</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Collider\BaseCollider.h">
       <Filter>Header File\Engine\3D\Collider</Filter>

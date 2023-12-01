@@ -54,7 +54,7 @@ public:
 	void Trans();
 
 	//ワールド座標を取得
-	XMFLOAT3 GetWorldPosition();
+	const XMFLOAT3 GetWorldPosition()const;
 
 	//描画
 	void Draw();
@@ -64,7 +64,7 @@ public:
 	void DrawSprite();
 
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
-	void OnCollision(const CollisionInfo& info, unsigned short attribute,unsigned short subAttribute)override;
+	void OnCollision(const CollisionInfo& info, const unsigned short attribute,const unsigned short subAttribute)override;
 
 private:
 	//コリジョンマネージャー

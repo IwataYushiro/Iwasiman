@@ -65,7 +65,7 @@ public://メンバ関数
 	void Update();
 
 	//描画(コマンドリスト、ルートパラメータインデックス)
-	void Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex);
+	void Draw(ID3D12GraphicsCommandList* cmdList, const UINT rootParameterIndex);
 
 	//定数バッファ転送
 	void TransferConstBuffer();

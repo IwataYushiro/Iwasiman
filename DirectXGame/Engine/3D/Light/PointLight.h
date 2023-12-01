@@ -62,7 +62,7 @@ public://アクセッサ置き場
 	//ライト距離の減衰係数ゲット
 	inline const XMFLOAT3& GetLightAtten() { return lightAtten_; }
 	//点光源のライトセット
-	inline void SetActive(bool active) { this->active_ = active; }
+	inline void SetActive(const bool active) { this->active_ = active; }
 	//点光源のライトゲット
 	inline bool IsActive() { return active_; }
 };

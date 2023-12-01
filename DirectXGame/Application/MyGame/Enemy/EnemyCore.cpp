@@ -332,7 +332,7 @@ const XMFLOAT3 EnemyCore::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const 
 
 
 //ワールド座標を取得
-XMFLOAT3 EnemyCore::GetWorldPosition() {
+const XMFLOAT3 EnemyCore::GetWorldPosition()const {
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -344,7 +344,7 @@ XMFLOAT3 EnemyCore::GetWorldPosition() {
 
 	return worldPos;
 }
-void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;
 

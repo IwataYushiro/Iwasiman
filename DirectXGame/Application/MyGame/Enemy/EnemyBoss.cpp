@@ -359,7 +359,7 @@ const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const 
 
 
 //ワールド座標を取得
-XMFLOAT3 EnemyBoss::GetWorldPosition() {
+const XMFLOAT3 EnemyBoss::GetWorldPosition() const{
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -371,7 +371,7 @@ XMFLOAT3 EnemyBoss::GetWorldPosition() {
 
 	return worldPos;
 }
-void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;
 	const int hitLife = deathLife_ + 1;

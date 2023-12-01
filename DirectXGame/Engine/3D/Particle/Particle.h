@@ -113,8 +113,8 @@ public://メンバ関数
 
 	/*パーティクルの追加(寿命、初期座標、速度、重力加速度
 	、開始時スケール、終了時スケール, 開始色,終了色)*/
-	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
-		float start_scale, float end_scale, XMFLOAT4 start_color, XMFLOAT4 end_color);
+	void Add(const int life, const XMFLOAT3& position, const XMFLOAT3& velocity, const XMFLOAT3& accel,
+		const float start_scale, const float end_scale, const XMFLOAT4& start_color, const XMFLOAT4& end_color);
 
 private://メンバ変数
 	// デバイス

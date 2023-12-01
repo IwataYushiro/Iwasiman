@@ -72,7 +72,7 @@ public://メンバ関数
 	//更新
 	void Update();
 	//描画(コマンドリスト、ルートパラメータインデックス)
-	void Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParameterIndex);
+	void Draw(ID3D12GraphicsCommandList* cmdList, const UINT rootParameterIndex);
 
 	//定数バッファ転送
 	void TransferConstBuffer();
@@ -82,21 +82,21 @@ public://メンバ関数
 	//環境光のライト色をセット(カラー)
 	void SetAmbientColor(const XMFLOAT3& color);
 	//平行光源の有効フラグのセット(何番ライト、起動フラグ)
-	void SetDirLightActive(int index, bool active);
+	void SetDirLightActive(const int index, const bool active);
 	//平行光源のライト方向のセット(何番ライト、方向)
-	void SetDirLightDir(int index, const XMVECTOR& lightdir);
+	void SetDirLightDir(const int index, const XMVECTOR& lightdir);
 	//平行光源のライト色のセット(何番ライト、カラー)
-	void SetDirLightColor(int index, const XMFLOAT3& lightcolor);
+	void SetDirLightColor(const int index, const XMFLOAT3& lightcolor);
 
 	//点光源
 	//ライト座標セット(何番ライト、座標)
-	void SetPointLightPos(int index,const XMFLOAT3& lightPos);
+	void SetPointLightPos(const int index,const XMFLOAT3& lightPos);
 	//ライトの色セット(何番ライト、カラー)
-	void SetPointLightColor(int index, const XMFLOAT3& lightColor);
+	void SetPointLightColor(const int index, const XMFLOAT3& lightColor);
 	//ライト距離の減衰係数セット(何番ライト、減衰係数)
-	void SetPointLightAtten(int index, const XMFLOAT3& lightAtten);
+	void SetPointLightAtten(const int index, const XMFLOAT3& lightAtten);
 	//点光源のライトセット(何番ライト、起動フラグ)
-	void SetPointLightActive(int index, bool active);
+	void SetPointLightActive(const int index, const bool active);
 };
 
 
