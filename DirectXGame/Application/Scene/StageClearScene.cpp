@@ -23,7 +23,7 @@ Audio* StageClearScene::audio_ = Audio::GetInstance();
 SceneManager* StageClearScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* StageClearScene::imguiManager_ = ImGuiManager::GetInstance();
 
-StageClearScene::StageClearScene(int stagenum) :stageNum_(stagenum) {}
+StageClearScene::StageClearScene(const int stagenum) :stageNum_(stagenum) {}
 
 void StageClearScene::Initialize()
 {
@@ -499,7 +499,7 @@ void StageClearScene::Draw()
 	spriteCursor_->Draw();
 }
 
-void StageClearScene::FadeOut(DirectX::XMFLOAT3 rgb)
+void StageClearScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 {
 	if (!isFadeOut_)
 	{

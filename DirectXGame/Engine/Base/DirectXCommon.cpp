@@ -21,7 +21,7 @@ DirectXCommon* DirectXCommon::GetInstance()
 	return &instance;
 }
 
-void DirectXCommon::Initialize(WinApp* winApp)
+void DirectXCommon::Initialize(const WinApp* winApp)
 {
 	//NULLチェック
 	assert(winApp);

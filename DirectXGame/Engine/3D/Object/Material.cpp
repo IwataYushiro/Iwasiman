@@ -30,8 +30,8 @@ void Material::StaticInitialize(ID3D12Device* device)
 	Material::device_ = device;
 }
 
-void Material::LoadTexture(const std::string& directoryPath, D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle,
-	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+void Material::LoadTexture(const std::string& directoryPath, const D3D12_CPU_DESCRIPTOR_HANDLE& cpuHandle,
+	const D3D12_GPU_DESCRIPTOR_HANDLE& gpuHandle)
 {
 	HRESULT result = S_FALSE;
 

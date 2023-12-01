@@ -17,7 +17,7 @@ using namespace DirectX;
 //静的メンバ変数の実体
 CollisionManager* PlayerBullet::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<PlayerBullet> PlayerBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model)
+std::unique_ptr<PlayerBullet> PlayerBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model)
 {
 	//インスタンス生成
 	std::unique_ptr<PlayerBullet> ins = std::make_unique<PlayerBullet>();
@@ -96,7 +96,7 @@ void PlayerBullet::Draw() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void PlayerBullet::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
+void PlayerBullet::OnCollision([[maybe_unused]] const CollisionInfo& info,const unsigned short attribute,const unsigned short subAttribute) {
 
 	if (attribute == COLLISION_ATTR_LANDSHAPE)isDead_ = true;
 	else if (attribute == COLLISION_ATTR_ENEMYS) 
@@ -107,7 +107,7 @@ void PlayerBullet::OnCollision([[maybe_unused]] const CollisionInfo& info, unsig
 	
 }
 //ワールド座標を取得
-XMFLOAT3 PlayerBullet::GetWorldPosition() {
+const XMFLOAT3 PlayerBullet::GetWorldPosition() const{
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;

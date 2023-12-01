@@ -43,7 +43,7 @@ class GamePlayScene :public BaseScene
 {
 public://メンバ関数
 	//コンストラクタ(ステージ情報)
-	GamePlayScene(int stagenum);
+	GamePlayScene(const int stagenum);
 
 	//初期化
 	void Initialize()override;
@@ -67,9 +67,9 @@ public://メンバ関数
 	void UpdateTutorial();
 	
 	//フェードアウト(色)
-	void FadeOut(DirectX::XMFLOAT3 rgb);
+	void FadeOut(const DirectX::XMFLOAT3& rgb);
 	//フェードイン(色)
-	void FadeIn(DirectX::XMFLOAT3 rgb);
+	void FadeIn(const DirectX::XMFLOAT3& rgb);
 	//描画
 	void Draw() override;
 	//終了
@@ -83,9 +83,9 @@ public://メンバ関数
 
 public:
 	//自機弾追加(自機の弾)
-	void AddPlayerBullet(std::unique_ptr<PlayerBullet> playerBullet);
+	void AddPlayerBullet(const std::unique_ptr<PlayerBullet> playerBullet);
 	//敵弾追加(敵の弾)
-	void AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet);
+	void AddEnemyBullet(const std::unique_ptr<EnemyBullet> enemyBullet);
 
 private://静的メンバ変数
 
@@ -469,13 +469,13 @@ private:
 	num=0 スタンバイ
 	num=1 イージング中
 	*/
-	void SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
-		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);
+	void SettingTutorialEase(const int num, Sprite* s1, Sprite* s2,
+		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6)const;
 
 	//チュートリアルスプライトの更新
 	void UpdateTutorialSprite();
 
 	//チュートリアル用のスプライト描画(スプライト1～6枚)
-	void DrawTutorialSprite(Sprite* s1, Sprite* s2,
-		Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6);
+	void DrawTutorialSprite(const Sprite* s1, const Sprite* s2,
+		const Sprite* s3, const Sprite* s4, const Sprite* s5, const Sprite* s6)const;
 };

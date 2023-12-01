@@ -30,7 +30,7 @@ class StageClearScene :public BaseScene
 {
 public://メンバ関数
 	//コンストラクタ(ステージ番号)
-	StageClearScene(int stagenum);
+	StageClearScene(const int stagenum);
 	//初期化
 	void Initialize() override;
 	//更新
@@ -46,7 +46,7 @@ public://メンバ関数
 	//描画
 	void Draw() override;
 	//フェードアウト
-	void FadeOut(DirectX::XMFLOAT3 rgb);
+	void FadeOut(const DirectX::XMFLOAT3& rgb);
 	//終了
 	void Finalize() override;
 

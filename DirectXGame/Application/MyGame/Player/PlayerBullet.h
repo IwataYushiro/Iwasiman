@@ -26,7 +26,7 @@ private:
 public:
 	//生成(初期座標、速度、使用モデル)
 	static std::unique_ptr<PlayerBullet> Create
-	(const XMFLOAT3& position, const XMFLOAT3& velocity, Model* model = nullptr);
+	(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model = nullptr);
 	//初期化(初期座標、速度)
 	bool Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity);
 	//リセット処理
@@ -39,10 +39,10 @@ public:
 	void Draw();
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
+	void OnCollision(const CollisionInfo& info,const unsigned short attribute,const unsigned short subAttribute)override;
 
 	//ワールド座標を取得
-	XMFLOAT3 GetWorldPosition();
+	const XMFLOAT3 GetWorldPosition()const;
 
 private:
 	//コリジョンマネージャー

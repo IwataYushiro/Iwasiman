@@ -25,7 +25,8 @@ EnemyBoss::~EnemyBoss() {
 	
 }
 
-std::unique_ptr<EnemyBoss> EnemyBoss::Create(Model* model, Model* bullet, Player* player, GamePlayScene* gamescene)
+std::unique_ptr<EnemyBoss> EnemyBoss::Create(const Model* model, const Model* bullet,
+	const Player* player, const GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyBoss> ins = std::make_unique<EnemyBoss>();
@@ -104,7 +105,7 @@ void EnemyBoss::Parameter() {
 void EnemyBoss::Reset() { }
 
 //更新
-void EnemyBoss::Update(bool isStart) {
+void EnemyBoss::Update(const bool isStart) {
 
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
@@ -358,7 +359,7 @@ const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const 
 
 
 //ワールド座標を取得
-XMFLOAT3 EnemyBoss::GetWorldPosition() {
+const XMFLOAT3 EnemyBoss::GetWorldPosition() const{
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -370,7 +371,7 @@ XMFLOAT3 EnemyBoss::GetWorldPosition() {
 
 	return worldPos;
 }
-void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;
 	const int hitLife = deathLife_ + 1;

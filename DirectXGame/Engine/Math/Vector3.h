@@ -18,7 +18,7 @@ public:
 public:
 	//コンストラクタ
 	Vector3();								//零ベクトルとして生成
-	Vector3(float x, float y, float z);		//x成分、y成分、z成分を指定して生成
+	Vector3(const float x, const float y, const float z);		//x成分、y成分、z成分を指定して生成
 
 	//メンバ関数
 	float length() const;					//ノルム(長さ)を求める
@@ -56,4 +56,4 @@ const Vector3 lerp(const Vector3& start, const Vector3& end, const float t);
 const Vector3 Bezier2(const Vector3& p0, const Vector3& p1, const Vector3& p2, const float t);
 const Vector3 Bezier3(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const float t);
 //制御点の集合(Vectorコンテナ)、補間する区間の添字、時間経過率
-Vector3 splinePosition(const std::vector<Vector3>& points, size_t startIndex, float t);
+Vector3 splinePosition(const std::vector<Vector3>& points, const size_t startIndex, const float t);

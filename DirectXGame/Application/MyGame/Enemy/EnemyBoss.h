@@ -29,8 +29,8 @@ public:
 	//デストラクタ
 	~EnemyBoss();
 	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン)
-	static std::unique_ptr<EnemyBoss> Create(Model* model = nullptr, Model* bullet = nullptr,
-		Player* player = nullptr, GamePlayScene* gamescene = nullptr);
+	static std::unique_ptr<EnemyBoss> Create(const Model* model = nullptr,const Model* bullet = nullptr,
+		const Player* player = nullptr, const GamePlayScene* gamescene = nullptr);
 	
 	//初期化
 	bool Initialize()override;
@@ -41,13 +41,13 @@ public:
 	//パラメータ
 	void Parameter();
 	//更新
-	void Update(bool isStart = false)override;
+	void Update(const bool isStart = false)override;
 	//転送　
 	void Trans();
 	//弾発射
 	void Fire();
 	//ワールド座標を取得
-	XMFLOAT3 GetWorldPosition();
+	const XMFLOAT3 GetWorldPosition()const;
 	//描画
 	void Draw()override;
 	//パーティクル描画
@@ -66,15 +66,15 @@ public:
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
 	//衝突を検出したら呼び出されるコールバック関数
-	void OnCollision(const CollisionInfo& info, unsigned short attribute,
-		unsigned short subAttribute)override;
+	void OnCollision(const CollisionInfo& info, const unsigned short attribute,
+		const unsigned short subAttribute)override;
 	
 private:
 	//コリジョンマネージャー
 	static CollisionManager* colManager_;
 	
 	//モデル	
-	Model* modelBullet_ = nullptr;
+	const Model* modelBullet_ = nullptr;
 
 	//行動フェーズ
 	enum class Phase {
@@ -129,9 +129,9 @@ public:
 	//死んだかどうか
 	bool IsDead() const override { return isDead_; }
 	//プレイヤーセット
-	void SetPlayer(Player* player) { player_ = player; }
+	void SetPlayer(const Player* player) { player_ = player; }
 	//ゲームシーンセット
-	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+	void SetGameScene(const GamePlayScene* gameScene) { gameScene_ = const_cast<GamePlayScene*>(gameScene); }
 	//ボスが死んだかどうか
 	bool BossDead()const override{ return bossDead_; }
 };

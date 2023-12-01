@@ -15,7 +15,7 @@ SceneManager* SceneManager::GetInstance()
 	return &instance;
 }
 
-void SceneManager::ChangeScene(const std::string& sceneName, int stagenum)
+void SceneManager::ChangeScene(const std::string& sceneName, const int stagenum)
 {
 	assert(sceneFactory_);
 	assert(nextScene_ == nullptr);

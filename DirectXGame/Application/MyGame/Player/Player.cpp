@@ -24,7 +24,7 @@ Player::~Player() {
 
 }
 
-std::unique_ptr<Player> Player::Create(Model* model, Model* bullet, GamePlayScene* gamescene)
+std::unique_ptr<Player> Player::Create(const Model* model, const Model* bullet, const GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Player> ins = std::make_unique<Player>();
@@ -133,7 +133,7 @@ void Player::Reset() {
 	nowCount_ = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
 }
-void Player::Update(bool isBack, bool isAttack, bool isStart) {
+void Player::Update(const bool isBack, const bool isAttack, const bool isStart) {
 
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
@@ -201,7 +201,7 @@ void Player::Move() {
 	//スピード
 	const float moveSpeed = 0.5f;//通常時
 	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
-	
+
 	//パーティクル
 	const ParticleManager::Preset smoke =
 	{
@@ -225,7 +225,7 @@ void Player::Move() {
 	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
 	{
 		if (input_->PushKey(DIK_A)) {
-			if (isRight_) 
+			if (isRight_)
 			{
 				easeRotateRightY_.Standby(true);
 				rot.y = easeRotateRightY_.end;
@@ -242,7 +242,7 @@ void Player::Move() {
 		else if (input_->PushKey(DIK_D)) {
 			if (!isRight_)
 			{
-				easeRotateRightY_.Standby(false);	
+				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
 			isRight_ = true;
@@ -288,7 +288,7 @@ void Player::Move() {
 			if (isShake_)hitMove_.x += moveSpeed;
 		}
 	}
-	
+
 
 	Object3d::SetPosition(move);
 	Object3d::SetRotation(rot);
@@ -298,6 +298,18 @@ void Player::Move() {
 
 void Player::FallAndJump()
 {
+	const float jumpPowerUp = 3.0f;
+	const float jumpPowerDefault = 2.0f;
+	if (isGetJumpItem_)
+	{
+		if (onGround_)jumpVYFist_ = jumpPowerUp;
+		jumpPowerUpcount_++;
+	}
+	else
+	{
+		if (onGround_)jumpVYFist_ = jumpPowerDefault;
+	}
+
 	if (!onGround_)
 	{
 		//下向き加速度
@@ -317,6 +329,14 @@ void Player::FallAndJump()
 
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
+	}
+	
+
+	if (jumpPowerUpcount_ >= JUMPITEM_MAX_TIME)
+	{
+		const float countReset = 0.0f;
+		jumpPowerUpcount_ = countReset;
+		isGetJumpItem_ = false;
 	}
 
 }
@@ -388,7 +408,7 @@ void Player::JumpBack()
 
 }
 
-void Player::Landing(unsigned short attribute)
+void Player::Landing(const unsigned short attribute)
 {
 	//球コライダーの取得
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
@@ -568,7 +588,7 @@ void Player::Trans() {
 }
 
 //ワールド座標を取得
-XMFLOAT3 Player::GetWorldPosition() {
+const XMFLOAT3 Player::GetWorldPosition() const {
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -582,7 +602,8 @@ XMFLOAT3 Player::GetWorldPosition() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute) {
+void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, 
+	const unsigned short attribute, const unsigned short subAttribute) {
 
 	//ダメージ管理の構造体
 	struct DamageType
@@ -669,6 +690,22 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned sh
 		isGoal_ = true;
 		isAlive_ = false;
 	}
+	else if (attribute == COLLISION_ATTR_ITEM)
+	{
+		
+		if (subAttribute == SUBCOLLISION_ATTR_ITEM_JUMP)
+		{
+			if (isGetJumpItem_)return; //多重ヒット防止
+			isGetJumpItem_ = true;
+		}
+		else if (subAttribute == SUBCOLLISION_ATTR_ITEM_HEAL)
+		{
+			const int heal = 1;
+			life_ += heal;
+			
+		}
+		
+	}
 }
 
 const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
@@ -687,7 +724,7 @@ const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMF
 	return ans;
 }
 
-void Player::UpdateAlive(bool isBack, bool isAttack)
+void Player::UpdateAlive(const bool isBack, const bool isAttack)
 {
 	if (isDead_)return;
 	//移動処理

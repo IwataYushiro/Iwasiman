@@ -39,19 +39,21 @@ private:
 public:
 	//最大無敵時間
 	const int MUTEKI_COUNT = 60;
+	//ジャンプ強化最大効果時間
+	const float JUMPITEM_MAX_TIME = 200.0f;
 public:
 	//デストラクタ
 	~Player();
 	//生成(使用モデル、使用弾モデル、ゲームプレイシーン)
-	static std::unique_ptr<Player> Create(Model* model = nullptr, Model* bullet = nullptr,
-		GamePlayScene* gamescene = nullptr);
+	static std::unique_ptr<Player> Create(const Model* model = nullptr, const Model* bullet = nullptr,
+		const GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
 	//リセット処理
 	void Reset();
 
 	//更新(手前と背面ジャンプの有効化、攻撃処理の有効化、開始時演出だと全操作無効)
-	void Update(bool isBack = true, bool isAttack = true, bool isStart = false);
+	void Update(const bool isBack = true, const bool isAttack = true, const bool isStart = false);
 	//プレイヤーの移動処理
 	void Move();
 
@@ -60,7 +62,7 @@ public:
 	//奥へ移動
 	void JumpBack();
 	//着地(属性指定)
-	void Landing(unsigned short attribute);
+	void Landing(const unsigned short attribute);
 	//プレイヤーの攻撃処理
 	void Attack();
 
@@ -68,7 +70,7 @@ public:
 	void Trans();
 
 	//ワールド座標を取得
-	XMFLOAT3 GetWorldPosition();
+	const XMFLOAT3 GetWorldPosition()const ;
 
 	//描画
 	void Draw();
@@ -78,7 +80,7 @@ public:
 	void DrawParticle();
 
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
-	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
+	void OnCollision(const CollisionInfo& info,const unsigned short attribute,const unsigned short subAttribute)override;
 
 	//ベジェ曲線(最初点、中間点1、中間点2、最終点、時間の進み具合)
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
@@ -123,7 +125,7 @@ private:
 	const XMFLOAT4 hitColor_ = { 0.5f,0.0f,0.0f,0.0f };	//赤く光る
 
 	//モデル
-	Model* modelBullet_ = nullptr;
+	const Model* modelBullet_ = nullptr;
 
 	//インプット
 	Input* input_ = nullptr;
@@ -181,7 +183,7 @@ private:
 	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
 
 	//ゲームシーン
-	GamePlayScene* gameScene_ = nullptr;
+	GamePlayScene* gameScene_;
 	//シェイク機能
 	bool isShake_ = false;
 	//現在視点
@@ -236,7 +238,15 @@ private:
 
 	//素材そのままの色
 	const XMFLOAT3 asIsColor_ = { 1.0f,1.0f,1.0f };
-
+	
+	//アイテム関係
+	//回復アイテムゲット
+	bool isGetHealItem_ = false;
+	//ジャンプアイテムゲット
+	bool isGetJumpItem_ = false;
+	//ジャンプアイテム効果時間
+	float jumpPowerUpcount_;
+	
 
 public: //アクセッサ、インライン関数
 	//死んだかどうか
@@ -246,20 +256,18 @@ public: //アクセッサ、インライン関数
 	//立ってるかどうか
 	bool OnGround()const { return onGround_; }
 	//立ち判定のセット
-	void SetOnGround(bool og) { this->onGround_ = og; }
-
-	//ジャンプ力セット
-	void SetJumpVYFist(float jumpFist) { this->jumpVYFist_ = jumpFist; }
+	void SetOnGround(const bool og) { this->onGround_ = og; }
 	//ライフセット
-	void SetLife(int life) { this->life_ = life; }
+	void SetLife(const int life) { this->life_ = life; }
 	//ライフゲット
 	const int& GetLife()const { return life_; }
-	//ゲームシーン
-	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+	//ゲームシーンセット
+	void SetGameScene(const GamePlayScene* gameScene) { gameScene_ = const_cast<GamePlayScene*>(gameScene); }
+
 
 private://カプセル化メンバ関数
 	//生存時
-	void UpdateAlive(bool isBack = true, bool isAttack = true);
+	void UpdateAlive(const bool isBack = true, const bool isAttack = true);
 	//破壊時
 	void UpdateBreak();
 	//ゴール時

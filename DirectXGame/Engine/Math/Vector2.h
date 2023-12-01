@@ -16,7 +16,7 @@ public:
 public:
 	//コンストラクタ
 	Vector2();								//零ベクトルとして生成
-	Vector2(float x, float y);				//x成分、y成分を指定して生成
+	Vector2(const float x, const float y);				//x成分、y成分を指定して生成
 
 	//メンバ関数
 	float length() const;					//ノルム(長さ)を求める

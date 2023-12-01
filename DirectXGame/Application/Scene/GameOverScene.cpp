@@ -25,7 +25,7 @@ Audio* GameOverScene::audio_ = Audio::GetInstance();
 SceneManager* GameOverScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* GameOverScene::imguiManager_ = ImGuiManager::GetInstance();
 
-GameOverScene::GameOverScene(int stagenum) :stageNum_(stagenum) {}
+GameOverScene::GameOverScene(const int stagenum) :stageNum_(stagenum) {}
 
 void GameOverScene::Initialize()
 {
@@ -615,7 +615,7 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 
 }
 
-void GameOverScene::FadeOut(DirectX::XMFLOAT3 rgb)
+void GameOverScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 {
 	if (!isFadeOut_)
 	{

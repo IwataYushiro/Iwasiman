@@ -10,7 +10,7 @@ using namespace DirectX;
 
 */
 
-void Sprite::Initialize(SpriteCommon* spCommon, uint32_t textureIndex)
+void Sprite::Initialize(SpriteCommon* spCommon, const uint32_t textureIndex)
 {
 	HRESULT result;
 	assert(spCommon);
@@ -173,7 +173,7 @@ void Sprite::Update()
 	
 
 }
-void Sprite::Draw()
+void Sprite::Draw()const
 {
 	//”ñ•\Ž¦
 	if (isInvisible_)

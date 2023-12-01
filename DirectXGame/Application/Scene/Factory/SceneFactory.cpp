@@ -13,7 +13,7 @@
 
 */
 
-std::unique_ptr<BaseScene> SceneFactory::CreateScene(const std::string& sceneName, int stagenum)
+std::unique_ptr<BaseScene> SceneFactory::CreateScene(const std::string& sceneName, const int stagenum)const
 {
 	//Ÿ‚ÌƒV[ƒ“‚ğ¶¬
 	std::unique_ptr<BaseScene> newScene = nullptr;

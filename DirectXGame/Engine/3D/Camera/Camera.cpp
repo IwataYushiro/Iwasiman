@@ -50,7 +50,7 @@ void Camera::Reset()
 	matViewProjection_ = matView_ * matProjection_;
 }
 
-XMFLOAT3 Camera::ShakeEye(XMFLOAT3 eye, int count, XMFLOAT3 min, XMFLOAT3 max)
+XMFLOAT3 Camera::ShakeEye(const XMFLOAT3& eye, const int count, const XMFLOAT3& min, const XMFLOAT3& max)
 {
 	const XMFLOAT3 nowEye = eye;
 	//ƒvƒ‰ƒ“A
@@ -81,7 +81,7 @@ XMFLOAT3 Camera::ShakeEye(XMFLOAT3 eye, int count, XMFLOAT3 min, XMFLOAT3 max)
 	return nowEye;
 }
 
-XMFLOAT3 Camera::ShakeTarget(XMFLOAT3 target, int count, XMFLOAT3 min, XMFLOAT3 max)
+XMFLOAT3 Camera::ShakeTarget(const XMFLOAT3& target, const int count, const XMFLOAT3& min, const XMFLOAT3& max)
 {
 	const XMFLOAT3 nowTarget = target;
 	//ƒvƒ‰ƒ“A
@@ -268,7 +268,7 @@ void Camera::CameraMoveVectorTarget(const XMFLOAT3& move)
 	SetTarget(target_moved);
 }
 
-void Camera::DebugCamera(bool eyeTargetMix)
+void Camera::DebugCamera(const bool eyeTargetMix)
 {
 	Input* input_ = Input::GetInstance();
 	const int VECTOR3COUNT = 3;

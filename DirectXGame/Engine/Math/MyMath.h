@@ -19,8 +19,8 @@ namespace MyMath {
 	const float PI = 3.141592654f;
 
 	//ランダム生成
-	int RandomMTInt(int min, int max);			//int版
-	float RandomMTFloat(float min, float max);	//float版
+	int RandomMTInt(const int min, const int max);			//int版
+	float RandomMTFloat(const float min, const float max);	//float版
 	//// 零ベクトルを返す
 	//const XMFLOAT3 MySetVector3Zero();
 	//// 2ベクトルが一致しているか調べる

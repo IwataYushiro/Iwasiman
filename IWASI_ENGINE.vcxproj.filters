@@ -93,9 +93,6 @@
     <Filter Include="Header File\Engine\3D\FBX">
       <UniqueIdentifier>{b3793c53-287b-4b1f-9ba7-f3bc11c9caa6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header File\Engine\3D\Light">
-      <UniqueIdentifier>{c78cf77f-eb2d-4f42-873a-024885ce302b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header File\Engine\Base">
       <UniqueIdentifier>{dd9b7173-9ee8-4a2a-854f-1dd5177dbc4b}</UniqueIdentifier>
     </Filter>
@@ -234,6 +231,9 @@
     </Filter>
     <Filter Include="Source File\Application\MyGame\Goal">
       <UniqueIdentifier>{f2d6c081-925c-4006-bbf0-4356b46fb50d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Engine\3D\Light">
+      <UniqueIdentifier>{c78cf77f-eb2d-4f42-873a-024885ce302b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

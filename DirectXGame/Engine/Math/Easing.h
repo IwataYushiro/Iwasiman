@@ -18,7 +18,7 @@ public:
 	//コンストラクタ
 	Easing();
 	//開始地点、終了地点、持続時間指定版コンストラクタ
-	Easing(float start, float end, float time);
+	Easing(const float start, const float end, const float time);
 
 	float num_X;//イージングした値を返す用
 
@@ -91,6 +91,6 @@ private:
 
 public:
 	//イージングセット
-	void SetEasing(float s, float e, float t);
+	void SetEasing(const float s, const float e, const float t);
 };
 

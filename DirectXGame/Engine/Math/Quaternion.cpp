@@ -14,11 +14,11 @@ Quaternion::Quaternion()
 {
 }
 
-Quaternion::Quaternion(Vector3 v, float w) :x(v.x), y(v.y), z(v.z), w(w)
+Quaternion::Quaternion(const Vector3& v, const float w) :x(v.x), y(v.y), z(v.z), w(w)
 {
 }
 
-Quaternion::Quaternion(float x, float y, float z, float w) :x(x), y(y), z(z), w(w)
+Quaternion::Quaternion(const float x, const float y, const float z, const float w) :x(x), y(y), z(z), w(w)
 {
 }
 float Quaternion::dotV(const Vector3& v1, const Vector3& v2)

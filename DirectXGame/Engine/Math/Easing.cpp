@@ -37,7 +37,7 @@ Easing::Easing()
 	isReverse_ = false;
 }
 
-Easing::Easing(float start, float end, float time)
+Easing::Easing(const float start, const float end, const float time)
 {
 	startCount_ = chrono::steady_clock::now();	//ŠJnŠÔ
 	nowCount_ = chrono::steady_clock::now();		//Œ»İŠÔ
@@ -790,7 +790,7 @@ float Easing::bounceCalculation(float x)
 	return v;
 }
 
-void Easing::SetEasing(float s, float e, float t)
+void Easing::SetEasing(const float s, const float e, const float t)
 {
 
 	this->start = s;

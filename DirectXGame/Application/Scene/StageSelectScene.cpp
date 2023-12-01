@@ -26,7 +26,7 @@ Audio* StageSelectScene::audio_ = Audio::GetInstance();
 SceneManager* StageSelectScene::sceneManager_ = SceneManager::GetInstance();
 ImGuiManager* StageSelectScene::imguiManager_ = ImGuiManager::GetInstance();
 
-StageSelectScene::StageSelectScene(int count) :menuCount_(count)
+StageSelectScene::StageSelectScene(const int count) :menuCount_(count)
 {
 }
 
@@ -452,7 +452,7 @@ void StageSelectScene::Finalize()
 	audio_->Finalize();
 }
 
-void StageSelectScene::FadeOut(DirectX::XMFLOAT3 rgb)
+void StageSelectScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 {
 	if (!isFadeOut_)
 	{

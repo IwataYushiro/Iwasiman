@@ -18,7 +18,7 @@ private://エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 
 public://メンバ関数(オフセット、半径)
-	SphereCollider(XMVECTOR offset, float radius) :
+	SphereCollider(const XMVECTOR& offset, const float radius) :
 		offset_(offset), radius_(radius)
 	{
 		//球形状をセット
@@ -34,7 +34,7 @@ public://メンバ関数(オフセット、半径)
 	//半径ゲット
 	inline float GetRadius(){return radius_;}
 	//半径セット
-	inline void SetRadius(float rad) { this->radius_ = rad; }
+	inline void SetRadius(const float rad) { this->radius_ = rad; }
 
 private://メンバ変数
 	

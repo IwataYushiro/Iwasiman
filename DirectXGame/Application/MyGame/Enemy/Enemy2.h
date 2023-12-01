@@ -29,13 +29,13 @@ public:
 	//デストラクタ
 	~Enemy2();
 	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、パラメータレベル)
-	static std::unique_ptr<Enemy2> Create(Model* model = nullptr, Model* bullet = nullptr,
-		Player* player = nullptr, GamePlayScene* gamescene = nullptr, int level = 1);
+	static std::unique_ptr<Enemy2> Create(const Model* model = nullptr,const Model* bullet = nullptr,
+		const Player* player = nullptr, const GamePlayScene* gamescene = nullptr, int level = 1);
 
 	//初期化
-	bool Initialize(int level);
+	bool Initialize(const int level);
 	//サブ属性初期化
-	void InitSubATTR(int level);
+	void InitSubATTR(const int level);
 	//サブ属性別速度初期化
 	void InitSpeed();
 	//サブ属性別ライフ初期化
@@ -47,7 +47,7 @@ public:
 	//パラメータ
 	void Parameter();
 	//更新
-	void Update(bool isStart = false)override;
+	void Update(const bool isStart = false)override;
 	//転送　
 	void Trans();
 	//弾発射
@@ -55,7 +55,7 @@ public:
 	//着地処理
 	void Landing();
 	//ワールド座標を取得
-	XMFLOAT3 GetWorldPosition();
+	const XMFLOAT3 GetWorldPosition()const;
 	//描画
 	void Draw()override;
 	//パーティクル描画
@@ -70,15 +70,15 @@ public:
 	void UpdateLeave();
 
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
-	void OnCollision(const CollisionInfo& info, unsigned short attribute,
-		unsigned short subAttribute)override;
+	void OnCollision(const CollisionInfo& info, const unsigned short attribute,
+		const unsigned short subAttribute)override;
 
 private:
 	//コリジョンマネージャー
 	static CollisionManager* colManager_;
 
 	//モデル	
-	Model* modelBullet_ = nullptr;
+	const Model* modelBullet_ = nullptr;
 
 	//行動フェーズ
 	enum class Phase {
@@ -126,7 +126,7 @@ private:
 public:
 
 	//プレイヤーセット
-	void SetPlayer(Player* player) { player_ = player; }
+	void SetPlayer(const Player* player) { player_ = player; }
 	//ゲームシーンセット
-	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+	void SetGameScene(const GamePlayScene* gameScene) { gameScene_ = const_cast<GamePlayScene*>(gameScene); }
 };

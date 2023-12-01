@@ -25,7 +25,7 @@ Item::~Item()
 {
 }
 
-std::unique_ptr<Item> Item::Create(Model* model, Player* player, unsigned short subAttribute)
+std::unique_ptr<Item> Item::Create(const Model* model, const Player* player, const unsigned short subAttribute)
 {
 	//インスタンス生成
 	std::unique_ptr<Item> ins = std::make_unique<Item>();
@@ -80,7 +80,14 @@ void Item::Update()
 {
 	pm_->SetCamera(camera_);
 	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP) UpdateJumpPowerup();
-
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_HEAL)
+	{
+		if (isGetHeal_)
+		{
+			collider_->SetSubAttribute(SUBCOLLISION_ATTR_ITEM_GET_ONCE);
+			isGetHeal_ = false;
+		}
+	}
 	const float rotSpeedY = 2.0f;
 	rotation_.y += rotSpeedY;
 	Trans();
@@ -93,19 +100,16 @@ void Item::Update()
 
 void Item::UpdateJumpPowerup()
 {
-	const float jumpPowerUp = 3.0f;
-	const float jumpPowerReset = 2.0f;
+	
 	const XMFLOAT3 asIsColor = { 1.0f,1.0f,1.0f };//素材そのままの色
 	if (isGetJump_)
 	{
 		ease_.ease_out_cubic();
-		if (player_->OnGround())player_->SetJumpVYFist(jumpPowerUp);
 		spriteItemJumpBar_->SetColor({ asIsColor.x, asIsColor.y,asIsColor.z, ease_.num_X });
 		count_++;
 	}
 	else
 	{
-		if (player_->OnGround())player_->SetJumpVYFist(jumpPowerReset);
 		spriteItemJumpBar_->SetColor({ asIsColor.x, asIsColor.y, asIsColor.z,ease_.start });
 	}
 
@@ -143,7 +147,7 @@ void Item::Trans()
 	Object3d::SetWorld(world);
 }
 
-XMFLOAT3 Item::GetWorldPosition()
+const XMFLOAT3 Item::GetWorldPosition()const
 {
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -171,7 +175,7 @@ void Item::DrawSprite()
 	if (isGetJump_)spriteItemJumpBar_->Draw();
 }
 
-void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)
+void Item::OnCollision([[maybe_unused]] const CollisionInfo& info,const unsigned short attribute,const unsigned short subAttribute)
 {
 	if (isGet_)return;//多重ヒットを防止
 	//プリセット
@@ -201,8 +205,7 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info, unsigned shor
 			}
 			else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_HEAL)
 			{
-				const int healLife = player_->GetLife() + 1;
-				player_->SetLife(healLife);
+				isGetHeal_ = true;
 			}
 
 			isGet_ = true;

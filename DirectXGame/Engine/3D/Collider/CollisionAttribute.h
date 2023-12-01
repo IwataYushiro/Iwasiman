@@ -24,7 +24,7 @@ const unsigned short SUBCOLLISION_ATTR_BULLET = (0b1 << 15) + 2;						//弾
 const unsigned short SUBCOLLISION_ATTR_ITEM_JUMP = (0b1 << 15) + 11;					//ジャンプアイテム
 const unsigned short SUBCOLLISION_ATTR_ITEM_HEAL = (0b1 << 15) + 12;					//回復アイテム
 const unsigned short SUBCOLLISION_ATTR_ITEM_ATTACK = (0b1 << 15) + 13;					//攻撃力強化アイテム
-
+const unsigned short SUBCOLLISION_ATTR_ITEM_GET_ONCE = (0b1 << 15) + 99;				//取得済みアイテム(効果は1度きり)
 
 //仕掛けの種類
 const unsigned short SUBCOLLISION_ATTR_GIMMICK_SPIKE = (0b1 << 15) + 100;				//トゲ

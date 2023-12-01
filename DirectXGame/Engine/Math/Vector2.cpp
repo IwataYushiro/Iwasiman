@@ -16,7 +16,7 @@ Vector2::Vector2()
 	y = vector0.y;
 }
 
-Vector2::Vector2(float x, float y)
+Vector2::Vector2(const float x, const float y)
 	:x(x),y(y)
 {
 }

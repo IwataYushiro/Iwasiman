@@ -27,7 +27,8 @@ private:
 public:
 
 	//生成(使用モデル、プレイヤー、サブ属性)
-	static std::unique_ptr<FallAndRiseSphere> Create(Model* model = nullptr, Player* player = nullptr, unsigned short subAttribute = 0b1000000000000001);
+	static std::unique_ptr<FallAndRiseSphere> Create(const Model* model = nullptr, const Player* player = nullptr,
+		const unsigned short subAttribute = 0b1000000000000001);
 	//初期化
 	bool Initialize()override;
 	//更新
@@ -45,13 +46,13 @@ public:
 	void Trans();
 
 	//ワールド座標を取得
-	XMFLOAT3 GetWorldPosition();
+	const XMFLOAT3 GetWorldPosition()const ;
 
 	//描画
 	void Draw()override;
 
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
-	void OnCollision(const CollisionInfo& info, unsigned short attribute, unsigned short subAttribute)override;
+	void OnCollision(const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)override;
 
 private:
 	static CollisionManager* colManager_;
@@ -64,7 +65,7 @@ private:
 	const float radius_ = 8.0f;
 
 	//プレイヤー
-	Player* player_ = nullptr;
+	const Player* player_ = nullptr;
 
 	//乗るとtrue
 	bool isRide_ = false;
@@ -78,5 +79,5 @@ private:
 public: //アクセッサ、インライン関数
 	
 	//プレイヤーセット
-	void SetPlayer(Player* player) { player_ = player; }
+	void SetPlayer(const Player* player) { player_ = player; }
 };

@@ -616,27 +616,31 @@ void GamePlayScene::UpdateTutorial()
 {
 	if (stageNum_ == SL_StageTutorial_Area1)
 	{
+		for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].ease_out_expo();
 		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
 			nullptr, nullptr, spriteTutorialInfo1_.get());
 	}
 	else if (stageNum_ == SL_StageTutorial_Area2)
 	{
+		for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].ease_out_expo();
 		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
 			spriteTutorialHTPMoveBack_.get(), nullptr, spriteTutorialInfo2_.get());
 	}
 	else if (stageNum_ == SL_StageTutorial_Area3)
 	{
+		for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].ease_out_expo();
 		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
 			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo3_.get());
 	}
 	else if (stageNum_ == SL_StageTutorial_Final)
 	{
+		for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].ease_out_expo();
 		SettingTutorialEase(GPSSTEN_Active, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
 			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo4_.get());
 	}
 }
 
-void GamePlayScene::FadeOut(DirectX::XMFLOAT3 rgb)
+void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 {
 
 	if (isPause_)//ポーズ時の場合
@@ -670,7 +674,7 @@ void GamePlayScene::FadeOut(DirectX::XMFLOAT3 rgb)
 	}
 }
 
-void GamePlayScene::FadeIn(DirectX::XMFLOAT3 rgb)
+void GamePlayScene::FadeIn(const DirectX::XMFLOAT3& rgb)
 {
 
 	if (isPause_)//ポーズ時の場合にしか使わない
@@ -1157,8 +1161,8 @@ void GamePlayScene::LoadModel()
 
 }
 
-void GamePlayScene::SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
-	Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6)
+void GamePlayScene::SettingTutorialEase(const int num, Sprite* s1, Sprite* s2,
+	Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6)const
 {
 	switch (num)
 	{
@@ -1171,7 +1175,7 @@ void GamePlayScene::SettingTutorialEase(int num, Sprite* s1, Sprite* s2,
 		if (s6 != nullptr)s6->SetPosition({ easeInfoTutorial_[TIEN_Info].start,tutorialInfoPosY_[TIEN_Info] });
 		break;
 	case GPSSTEN_Active:
-		for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].ease_out_expo();
+		
 		if (s1 != nullptr)s1->SetPosition({ easeInfoTutorial_[TIEN_Move].num_X,tutorialInfoPosY_[TIEN_Move] });
 		if (s2 != nullptr)s2->SetPosition({ easeInfoTutorial_[TIEN_Dash].num_X,tutorialInfoPosY_[TIEN_Dash] });
 		if (s3 != nullptr)s3->SetPosition({ easeInfoTutorial_[TIEN_Jump].num_X,tutorialInfoPosY_[TIEN_Jump] });
@@ -1241,7 +1245,8 @@ void GamePlayScene::UpdateTutorialSprite()
 	spriteTutorialHTPAttack_->Update();
 }
 
-void GamePlayScene::DrawTutorialSprite(Sprite* s1, Sprite* s2, Sprite* s3, Sprite* s4, Sprite* s5, Sprite* s6)
+void GamePlayScene::DrawTutorialSprite(const Sprite* s1, const Sprite* s2,
+		const Sprite* s3, const Sprite* s4, const Sprite* s5, const Sprite* s6)const
 {
 	if (s1 != nullptr)s1->Draw();
 	if (s2 != nullptr)s2->Draw();

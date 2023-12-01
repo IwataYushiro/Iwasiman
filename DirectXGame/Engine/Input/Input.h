@@ -73,19 +73,19 @@ public:
 	//void GenerateJoyStick();
 
 	//キーが押されているか(プレス)(キー(DIK_SPACEとか))
-	bool PushKey(BYTE keyNumber);
+	bool PushKey(const BYTE keyNumber);
 	//キーが押されているか(トリガー)(キー(DIK_SPACEとか))
-	bool TriggerKey(BYTE keyNumber);
+	bool TriggerKey(const BYTE keyNumber);
 	//キーが押されているか(リリース)(キー(DIK_SPACEとか))
-	bool ReleaseKey(BYTE keyNumber);
+	bool ReleaseKey(const BYTE keyNumber);
 	
 	
 	//マウスが押されているか(プレス)(マウス番号(0 = 左　1 = 右　2 = 中央))
-	bool PressMouse(int32_t mouseNumber);
+	bool PressMouse(const int32_t mouseNumber);
 	//マウスが押されているか(トリガー)(マウス番号(0 = 左　1 = 右　2 = 中央))
-	bool TriggerMouse(int32_t mouseNumber);
+	bool TriggerMouse(const int32_t mouseNumber);
 	//マウスが押されているか(リリース)(マウス番号(0 = 左　1 = 右　2 = 中央))
-	bool ReleaseMouse(int32_t mouseNumber);
+	bool ReleaseMouse(const int32_t mouseNumber);
 	
 	
 private://メンバ変数

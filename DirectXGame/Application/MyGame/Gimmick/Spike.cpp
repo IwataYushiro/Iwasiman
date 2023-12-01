@@ -18,7 +18,7 @@ using namespace DirectX;
 //静的メンバ変数の実体
 CollisionManager* Spike::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<Spike> Spike::Create(Model* model, Player* player)
+std::unique_ptr<Spike> Spike::Create(const Model* model, const Player* player)
 {
 	//インスタンス生成
 	std::unique_ptr<Spike> ins = std::make_unique<Spike>();
@@ -80,7 +80,7 @@ void Spike::Trans()
 	Object3d::SetWorld(world);
 }
 
-XMFLOAT3 Spike::GetWorldPosition()
+const XMFLOAT3 Spike::GetWorldPosition()const
 {
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -98,7 +98,7 @@ void Spike::Draw()
 	Object3d::Draw();
 }
 
-void Spike::OnCollision([[maybe_unused]] const CollisionInfo& info, [[maybe_unused]] unsigned short attribute, [[maybe_unused]] unsigned short subAttribute)
+void Spike::OnCollision([[maybe_unused]] const CollisionInfo& info, [[maybe_unused]] const unsigned short attribute, [[maybe_unused]] const unsigned short subAttribute)
 {
 	
 }

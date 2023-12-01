@@ -260,7 +260,7 @@ using namespace DirectX;
 //	return vector;
 //}
 
-float MyMath::RandomMTFloat(float min, float max)
+float MyMath::RandomMTFloat(const float min,const float max)
 {
 	std::random_device seed;
 	std::mt19937_64 engine(seed());
@@ -269,7 +269,7 @@ float MyMath::RandomMTFloat(float min, float max)
 	return dist(engine);
 }
 
-int MyMath::RandomMTInt(int min, int max)
+int MyMath::RandomMTInt(const int min,const int max)
 {
 	std::random_device seed;
 	std::mt19937_64 engine(seed());

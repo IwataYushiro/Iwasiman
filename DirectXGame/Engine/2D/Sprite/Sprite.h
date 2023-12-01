@@ -128,11 +128,11 @@ protected://構造体類に関係あるメンバ変数
 public://メンバ関数
 
 	//初期化(スプライト基盤、テクスチャインデックス)
-	void Initialize(SpriteCommon* spCommon, uint32_t textureIndex = UINT32_MAX);
+	void Initialize(SpriteCommon* spCommon, const uint32_t textureIndex = UINT32_MAX);
 	//更新
 	void Update();
 	//描画
-	void Draw();
+	void Draw()const;
 
 	//定数バッファ
 	//マテリアル
@@ -187,7 +187,7 @@ public://アクセッサ置き場
 	const XMFLOAT2& GetSize()const { return size_; }
 
 	//ポジションセット
-	void SetPosition(const XMFLOAT2& position) { position_ = position; }
+	void SetPosition(const XMFLOAT2& position){ position_ = position; }
 	//ポジションXセット
 	void SetPositionX(const float position) { position_.x = position; }
 	//ポジションYセット

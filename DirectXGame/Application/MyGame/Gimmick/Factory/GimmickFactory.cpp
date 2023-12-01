@@ -14,7 +14,7 @@
 
 */
 
-std::unique_ptr<BaseGimmick> GimmickFactory::CreateGimmick(const std::string& gimmickName, Model* model, Player* player)
+std::unique_ptr<BaseGimmick> GimmickFactory::CreateGimmick(const std::string& gimmickName, const Model* model, const Player* player)
 {
 	//ƒ[ƒJƒ‹•Ï”
 	const bool findSuccess = 0;//‡‚Á‚Ä‚é‚Æ‚«
