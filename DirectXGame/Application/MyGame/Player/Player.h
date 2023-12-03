@@ -160,7 +160,7 @@ private:
 	XMFLOAT3 end_;										//最終点
 
 	//半径
-	const float radius_ = 2.0f;
+	const float radius_ = 1.0f;
 
 	//死亡演出移行フラグ
 	bool isBreak_ = false;

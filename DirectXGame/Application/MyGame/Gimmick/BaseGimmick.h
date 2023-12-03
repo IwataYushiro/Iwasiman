@@ -21,8 +21,8 @@ public:
 	virtual ~BaseGimmick() = default;
 
 	//‰Šú‰»
-	virtual bool Initialize() = 0;
-	
+	virtual bool Initialize() { return Object3d::Initialize(); }
+	//virtual bool Initialize([[maybe_unused]] Model* model) { return Object3d::Initialize(); }
 	//XV
 	virtual void Update() = 0; //{ Object3d::Update(); }
 	//•`‰æ

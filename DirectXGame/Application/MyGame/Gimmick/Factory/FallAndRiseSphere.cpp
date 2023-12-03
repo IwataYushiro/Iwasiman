@@ -1,6 +1,6 @@
 #include "FallAndRiseSphere.h"
 #include "Player.h"
-#include "SphereCollider.h"
+#include "MeshCollider.h"
 #include <cassert>
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
@@ -26,7 +26,7 @@ std::unique_ptr<FallAndRiseSphere> FallAndRiseSphere::Create(Model* model, const
 	if (ins == nullptr) return nullptr;
 
 	//初期化
-	if (!ins->Initialize())
+	if (!ins->Initialize(model))
 	{
 		ins.release();
 		assert(0);
@@ -34,18 +34,18 @@ std::unique_ptr<FallAndRiseSphere> FallAndRiseSphere::Create(Model* model, const
 	//モデルのセット
 	if (model) ins->SetModel(model);
 	if (player)ins->SetPlayer(player);
-	if (subAttribute)ins->collider_->SetSubAttribute(subAttribute);
-
+	if(subAttribute)ins->collider_->SetSubAttribute(subAttribute);
 
 	return ins;
 }
 
-bool FallAndRiseSphere::Initialize()
+bool FallAndRiseSphere::Initialize(Model* model)
 {
 	if (!Object3d::Initialize()) return false;
 
 	//コライダー追加
-	SetCollider(new SphereCollider(XMVECTOR(), radius_));
+	SetCollider(new MeshCollider());
+	dynamic_cast<MeshCollider*>(collider_)->ConstructTriangles(model);
 	collider_->SetAttribute(COLLISION_ATTR_LANDSHAPE);
 
 
@@ -63,6 +63,7 @@ void FallAndRiseSphere::Update()
 	Trans();
 	camera_->Update();
 	Object3d::Update();
+
 }
 
 void FallAndRiseSphere::UpdateFallSphere()

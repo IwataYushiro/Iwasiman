@@ -64,7 +64,7 @@ void GamePlayScene::Initialize()
 	//レベルデータ読み込み
 	if (stageNum_ == SL_Stage1_Area1)LoadLVData("test");
 	else if (stageNum_ == SL_Stage1_Area2)LoadLVData("stage2");
-	else if (stageNum_ == SL_Stage1_Area3)LoadLVData("stage3_2");
+	else if (stageNum_ == SL_Stage1_Area3)LoadLVData("stage3_3");
 	else if (stageNum_ == SL_Stage1_AreaBoss)LoadLVData("stageboss1");
 
 	else if (stageNum_ == SL_StageTutorial_Area1)LoadLVData("tutorial");
@@ -287,12 +287,6 @@ void GamePlayScene::UpdateIsPlayGame()
 		}
 		//ImGui	
 		imguiManager_->Begin();
-		float move[3] = { player->GetPosition().x,player->GetPosition().y ,player->GetPosition().z };
-		ImGui::Begin("move");
-		ImGui::SetWindowPos(ImVec2(700, 200));
-		ImGui::SetWindowSize(ImVec2(400,100));
-		ImGui::InputFloat3("pos", move);
-		ImGui::End();
 		imguiManager_->End();
 	}
 	//弾更新

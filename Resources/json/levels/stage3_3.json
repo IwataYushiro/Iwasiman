@@ -45,11 +45,34 @@
         },
         {
             "type": "MESH",
+            "name": "Skydome",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    3.184230089187622,
+                    8.763559341430664,
+                    3.6212449073791504
+                ]
+            },
+            "file_name": "skydome",
+            "objecttype": "SKYDOME"
+        },
+        {
+            "type": "MESH",
             "name": "Plane.001",
             "transform": {
                 "translation": [
-                    60.0,
-                    -27.12677764892578,
+                    28.582530975341797,
+                    -30.039493560791016,
                     -10.0
                 ],
                 "rotation": [
@@ -58,8 +81,8 @@
                     0.0
                 ],
                 "scaling": [
-                    0.11592867225408554,
-                    0.20318908989429474,
+                    0.39553937315940857,
+                    0.17647932469844818,
                     1.0
                 ]
             },
@@ -84,8 +107,8 @@
             "transform": {
                 "translation": [
                     0.0,
-                    30.0,
-                    30.0
+                    50.0,
+                    -10.0
                 ],
                 "rotation": [
                     0.0,
@@ -153,7 +176,7 @@
             "name": "Enemy1.001",
             "transform": {
                 "translation": [
-                    0.0,
+                    60.0,
                     37.5,
                     0.0
                 ],
@@ -168,9 +191,9 @@
                     1.0
                 ]
             },
-            "file_name": "enemy1",
-            "objecttype": "ENEMY",
-            "objectpattern": "E2S"
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
         },
         {
             "type": "MESH",
@@ -178,7 +201,7 @@
             "transform": {
                 "translation": [
                     60.0,
-                    5.0,
+                    0.0,
                     -10.0
                 ],
                 "rotation": [
@@ -198,12 +221,36 @@
         },
         {
             "type": "MESH",
+            "name": "fallsphere.002",
+            "transform": {
+                "translation": [
+                    60.0,
+                    25.0,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "FALLSPHERERETURN"
+        },
+        {
+            "type": "MESH",
             "name": "Plane.002",
             "transform": {
                 "translation": [
                     24.120136260986328,
-                    43.094749450683594,
-                    -10.0
+                    48.08348083496094,
+                    -23.46171760559082
                 ],
                 "rotation": [
                     0.0,
@@ -233,15 +280,15 @@
         },
         {
             "type": "MESH",
-            "name": "fallsphere.004",
+            "name": "fallsphere.003",
             "transform": {
                 "translation": [
-                    0.0,
-                    5.0,
+                    60.0,
+                    50.0,
                     -10.0
                 ],
                 "rotation": [
-                    -179.99998474121094,
+                    0.0,
                     -0.0,
                     0.0
                 ],
@@ -253,137 +300,7 @@
             },
             "file_name": "boxud",
             "objecttype": "MOVEGROUND",
-            "objectpattern": "RISESPHERE"
-        },
-        {
-            "type": "MESH",
-            "name": "Plane.003",
-            "transform": {
-                "translation": [
-                    0.0,
-                    -27.21516990661621,
-                    -10.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    0.14892984926700592,
-                    0.2047167420387268,
-                    1.0
-                ]
-            },
-            "file_name": "ground",
-            "collider": {
-                "type": "BOX",
-                "center": [
-                    10.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    200.0,
-                    200.0,
-                    2.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Enemy1.002",
-            "transform": {
-                "translation": [
-                    60.0,
-                    37.5,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    -90.00000762939453
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "enemy1",
-            "objecttype": "ENEMY",
-            "objectpattern": "E2G"
-        },
-        {
-            "type": "MESH",
-            "name": "spike",
-            "transform": {
-                "translation": [
-                    0.0,
-                    -5.0,
-                    -10.0
-                ],
-                "rotation": [
-                    90.00000762939453,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "spikeball",
-            "objecttype": "GIMMICK",
-            "objectpattern": "SPIKE"
-        },
-        {
-            "type": "MESH",
-            "name": "spike1",
-            "transform": {
-                "translation": [
-                    0.0,
-                    -15.0,
-                    -10.0
-                ],
-                "rotation": [
-                    90.00000762939453,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "spikeball",
-            "objecttype": "GIMMICK",
-            "objectpattern": "SPIKE"
-        },
-        {
-            "type": "MESH",
-            "name": "skydome",
-            "transform": {
-                "translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "rotation": [
-                    90.00000762939453,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    7.0,
-                    7.0,
-                    7.0
-                ]
-            },
-            "file_name": "skydomet",
-            "objecttype": "SKYDOME"
+            "objectpattern": "FALLSPHERERETURN"
         }
     ]
 }

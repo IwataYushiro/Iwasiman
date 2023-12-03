@@ -30,7 +30,7 @@ public:
 	static std::unique_ptr<FallAndRiseSphere> Create(Model* model = nullptr, const Player* player = nullptr,
 		const unsigned short subAttribute = 0b1000000000000001);
 	//初期化
-	bool Initialize()override;
+	bool Initialize(Model* model);
 	//更新
 	void Update()override;
 	//更新(おちっぱ)
