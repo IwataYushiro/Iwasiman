@@ -854,7 +854,7 @@ void Player::UpdateBreak()
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 		//‘å”š”­
-		pmFire_->SetBlendMode(ParticleManager::BP_ALPHA);
+		pmFire_->SetBlendMode(ParticleManager::BP_ADD);
 		pmFire_->ActiveY(fire.particle, fire.startPos, fire.pos, fire.vel,
 			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
