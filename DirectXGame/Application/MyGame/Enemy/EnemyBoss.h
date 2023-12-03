@@ -30,7 +30,7 @@ public:
 	~EnemyBoss();
 	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン)
 	static std::unique_ptr<EnemyBoss> Create(const Model* model = nullptr,const Model* bullet = nullptr,
-		const Player* player = nullptr, const GamePlayScene* gamescene = nullptr);
+		const Player* player = nullptr,GamePlayScene* gamescene = nullptr);
 	
 	//初期化
 	bool Initialize()override;
@@ -131,7 +131,7 @@ public:
 	//プレイヤーセット
 	void SetPlayer(const Player* player) { player_ = player; }
 	//ゲームシーンセット
-	void SetGameScene(const GamePlayScene* gameScene) { gameScene_ = const_cast<GamePlayScene*>(gameScene); }
+	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 	//ボスが死んだかどうか
 	bool BossDead()const override{ return bossDead_; }
 };

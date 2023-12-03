@@ -68,7 +68,7 @@ public://メンバ関数
 	SoundData SoundLoadWave(const char* filename);
 
 	//音声再生(Xaudio2、サウンドデータ、true＝ループ再生)
-	void SoundPlayWave(const IXAudio2* xAudio2, const SoundData& soundData, const bool loop);
+	void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, const bool loop);
 
 	//各種音声データの開放(サウンドデータ)
 	void SoundUnLoad(SoundData* soundData);

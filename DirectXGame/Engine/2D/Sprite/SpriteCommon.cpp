@@ -31,7 +31,7 @@ void SpriteCommon::Initialize(const DirectXCommon* dxCommon)
 {
 	HRESULT result;
 	assert(dxCommon);
-	this->dxCommon_ = const_cast<DirectXCommon*>(dxCommon);
+	this->dxCommon_ = dxCommon;
 
 	//頂点シェーダ読み込み
 	result = D3DCompileFromFile(

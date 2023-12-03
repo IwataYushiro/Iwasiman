@@ -133,9 +133,9 @@ private: // メンバ変数
 	const int32_t lifeTime_ = 60;
 public://アクセッサ置き場
 	//パーティクルモデルセット
-	void SetParticleModel(const Particle* pmodel) { this->particle_ = const_cast<Particle*>(pmodel); }
+	void SetParticleModel(Particle* pmodel) { this->particle_ = pmodel; }
 	//カメラセット
-	void SetCamera(const Camera* camera){ camera_ = const_cast<Camera*>(camera); }const
+	void SetCamera(Camera* camera){ camera_ = camera; }
 	//ブレンドセット
 	void SetBlendMode(const size_t blendmode) { this->blendMode_ = blendmode; dirty_ = true; }
 };

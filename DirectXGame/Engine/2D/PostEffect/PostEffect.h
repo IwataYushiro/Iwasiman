@@ -138,7 +138,7 @@ private:
     ConstBufferDataTransform* constMapTransformPost_ = nullptr;
 
     //スプライト基盤
-    SpriteCommon* spCommon_ = nullptr;
+    const SpriteCommon* spCommon_ = nullptr;
     //頂点バッファ
     ComPtr<ID3D12Resource> vertBuff_;
     //頂点バッファビュー

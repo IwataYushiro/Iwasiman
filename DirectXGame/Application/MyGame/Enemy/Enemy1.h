@@ -29,7 +29,7 @@ public:
 
 	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、パラメータレベル)
 	static std::unique_ptr<Enemy1> Create(const Model* model = nullptr, const Model* bullet = nullptr,
-		const Player* player = nullptr,const GamePlayScene* gamescene = nullptr, int level = 1);
+		const Player* player = nullptr,GamePlayScene* gamescene = nullptr, int level = 1);
 
 	//初期化
 	bool Initialize(const int level);
@@ -116,5 +116,5 @@ public:
 	//プレイヤーセット
 	void SetPlayer(const Player* player) { player_ = player; }
 	//ゲームプレイシーンセット
-	void SetGameScene(const GamePlayScene* gameScene) { gameScene_ =const_cast<GamePlayScene*>(gameScene); }
+	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 };

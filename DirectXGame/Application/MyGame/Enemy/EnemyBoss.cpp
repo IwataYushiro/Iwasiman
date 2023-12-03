@@ -26,7 +26,7 @@ EnemyBoss::~EnemyBoss() {
 }
 
 std::unique_ptr<EnemyBoss> EnemyBoss::Create(const Model* model, const Model* bullet,
-	const Player* player, const GamePlayScene* gamescene)
+	const Player* player, GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyBoss> ins = std::make_unique<EnemyBoss>();

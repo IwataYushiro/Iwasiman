@@ -24,7 +24,7 @@ Player::~Player() {
 
 }
 
-std::unique_ptr<Player> Player::Create(const Model* model, const Model* bullet, const GamePlayScene* gamescene)
+std::unique_ptr<Player> Player::Create(const Model* model, const Model* bullet, GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Player> ins = std::make_unique<Player>();

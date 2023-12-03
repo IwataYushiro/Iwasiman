@@ -29,7 +29,7 @@ public:
 	~EnemyCore();
 	////生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、パラメータレベル)
 	static std::unique_ptr<EnemyCore> Create(const Model* model = nullptr, const Model* bullet = nullptr,
-		const Player* player = nullptr,const GamePlayScene* gamescene = nullptr, unsigned short stage = 1);
+		const Player* player = nullptr,GamePlayScene* gamescene = nullptr, unsigned short stage = 1);
 
 	
 	//初期化
@@ -133,6 +133,6 @@ public:
 	//プレイヤーセット
 	void SetPlayer(const Player* player) { player_ = player; }
 	//ゲームシーンセット
-	void SetGameScene(const GamePlayScene* gameScene) { gameScene_ = const_cast<GamePlayScene*>(gameScene); }
+	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 
 };

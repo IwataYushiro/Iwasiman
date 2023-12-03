@@ -22,9 +22,9 @@ public:
 	virtual ~BaseCollider() = default;
 
 	//オブジェクトセット
-	inline void SetObject(const Object3d* object) { this->object3d_ = const_cast<Object3d*>(object); }
+	inline void SetObject(Object3d* object) { this->object3d_ = object; }
 	//オブジェクトゲット
-	inline const Object3d* GetObject3d() const{ return object3d_; }
+	inline Object3d* GetObject3d() { return object3d_; }
 
 	//更新
 	virtual void Update() = 0;

@@ -46,7 +46,7 @@ public:
 	~Player();
 	//生成(使用モデル、使用弾モデル、ゲームプレイシーン)
 	static std::unique_ptr<Player> Create(const Model* model = nullptr, const Model* bullet = nullptr,
-		const GamePlayScene* gamescene = nullptr);
+		GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
 	//リセット処理
@@ -262,7 +262,7 @@ public: //アクセッサ、インライン関数
 	//ライフゲット
 	const int& GetLife()const { return life_; }
 	//ゲームシーンセット
-	void SetGameScene(const GamePlayScene* gameScene) { gameScene_ = const_cast<GamePlayScene*>(gameScene); }
+	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 
 
 private://カプセル化メンバ関数

@@ -53,7 +53,7 @@ public://メンバ関数
 private://メンバ変数
 
 	//DirectX基盤
-	DirectXCommon* dxCommon_ = nullptr;
+	const DirectXCommon* dxCommon_ = nullptr;
 
 	//デフォルトテクスチャ格納ディレクトリ
 	static std::string kDefaultTextureDirectoryPath_;
@@ -90,7 +90,7 @@ private://メンバ変数
 public://アクセッサ
 
 	//DirectX基盤ゲット
-	DirectXCommon* GetDxCommon() { return dxCommon_; }
+	const DirectXCommon* GetDxCommon() const { return dxCommon_; }
 	
 	//SRVヒープゲット
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVHandle() { return srvHandle_; }
