@@ -287,6 +287,12 @@ void GamePlayScene::UpdateIsPlayGame()
 		}
 		//ImGui	
 		imguiManager_->Begin();
+		float move[3] = { player->GetPosition().x,player->GetPosition().y ,player->GetPosition().z };
+		ImGui::Begin("move");
+		ImGui::SetWindowPos(ImVec2(700, 200));
+		ImGui::SetWindowSize(ImVec2(400,100));
+		ImGui::InputFloat3("pos", move);
+		ImGui::End();
 		imguiManager_->End();
 	}
 	//íeçXêV
@@ -936,6 +942,35 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			//ÉäÉXÉgÇ…ìoò^
 			gimmicks_.push_back(std::move(newGimmick));
 		}
+		//ìÆÇ≠è∞
+		else if (objectData.objectType.find("MOVEGROUND") == LDTOF_TRUE)
+		{
+			//ìGèâä˙âª
+			std::unique_ptr<BaseGimmick> newGimmick;
+			std::unique_ptr<Player>& player = players_.front();
+
+			newGimmick = gimmickFactory_->CreateMoveGround(objectData.objectPattern, model, player.get());
+
+			// ç¿ïW
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.trans);
+			newGimmick->SetPosition(pos);
+
+			// âÒì]äp
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rot);
+			newGimmick->SetRotation(rot);
+
+			// ç¿ïW
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scale);
+			newGimmick->SetScale(scale);
+
+			newGimmick->SetCamera(camera_.get());
+			newGimmick->Update();
+			//ÉäÉXÉgÇ…ìoò^
+			gimmicks_.push_back(std::move(newGimmick));
+		}
 		//ÉSÅ[Éã
 		else if (objectData.objectType.find("GOAL") == LDTOF_TRUE)
 		{
@@ -1135,6 +1170,7 @@ void GamePlayScene::LoadModel()
 	modelItemJump_ = Model::LoadFromOBJ("itemjump");
 	modelItemHeal_ = Model::LoadFromOBJ("itemheal");
 	modelSpike_ = Model::LoadFromOBJ("spikeball");
+	modelBoxUpDown_ = Model::LoadFromOBJ("boxud");
 	modelStageT_ = Model::LoadFromOBJ("skydomet");
 	modelStage1_ = Model::LoadFromOBJ("skydome");
 	modelStage2_ = Model::LoadFromOBJ("skydome2");
@@ -1152,6 +1188,7 @@ void GamePlayScene::LoadModel()
 	models_.insert(std::make_pair("Itemjump", modelItemJump_.get()));
 	models_.insert(std::make_pair("itemheal", modelItemHeal_.get()));
 	models_.insert(std::make_pair("spikeball", modelSpike_.get()));
+	models_.insert(std::make_pair("boxud", modelBoxUpDown_.get()));
 	models_.insert(std::make_pair("skydomet", modelStageT_.get()));
 	models_.insert(std::make_pair("skydome", modelStage1_.get()));
 	models_.insert(std::make_pair("skydome2", modelStage2_.get()));

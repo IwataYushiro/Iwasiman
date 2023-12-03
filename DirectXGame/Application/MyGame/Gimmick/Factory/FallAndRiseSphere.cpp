@@ -18,7 +18,7 @@ using namespace DirectX;
 //静的メンバ変数の実体
 CollisionManager* FallAndRiseSphere::colManager_ = CollisionManager::GetInstance();
 
-std::unique_ptr<FallAndRiseSphere> FallAndRiseSphere::Create(const Model* model, const Player* player, const unsigned short subAttribute)
+std::unique_ptr<FallAndRiseSphere> FallAndRiseSphere::Create(Model* model, const Player* player, const unsigned short subAttribute)
 {
 	//インスタンス生成
 	std::unique_ptr<FallAndRiseSphere> ins = std::make_unique<FallAndRiseSphere>();

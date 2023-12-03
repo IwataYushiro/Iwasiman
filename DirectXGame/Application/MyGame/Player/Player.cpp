@@ -431,7 +431,7 @@ void Player::Landing(const unsigned short attribute)
 			float cos = XMVector3Dot(rejectDir, up).m128_f32[XYZ_X];
 
 			//地面判定のしきい値角度
-			const float threshold = cosf(XMConvertToRadians(30.0f));
+			const float threshold = cosf(XMConvertToRadians(60.0f));
 			//角度差によって天井又は地面と判定される場合を除いて
 			if (-threshold < cos && cos < threshold)
 			{

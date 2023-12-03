@@ -387,6 +387,7 @@ private:
 	std::unique_ptr<AbstractGimmickFactory> gimmickFactory_;					//ギミックの工場
 	std::list<std::unique_ptr<BaseGimmick>> gimmicks_;							//ギミックリスト
 	std::unique_ptr<Model> modelSpike_ = nullptr;								//トゲのモデル
+	std::unique_ptr<Model> modelBoxUpDown_ = nullptr;								//上下する床のモデル
 
 	//ゴール
 	std::list<std::unique_ptr<Goal>> goals_;					//ゴールリスト

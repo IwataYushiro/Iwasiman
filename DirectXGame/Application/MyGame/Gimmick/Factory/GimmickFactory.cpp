@@ -23,8 +23,16 @@ std::unique_ptr<BaseGimmick> GimmickFactory::CreateGimmick(const std::string& gi
 	{
 		return Spike::Create(model, player);
 	}
+
+	return nullptr;
+}
+
+std::unique_ptr<BaseGimmick> GimmickFactory::CreateMoveGround(const std::string& gimmickName, Model* model, const Player* player)
+{
+	//ƒ[ƒJƒ‹•Ï”
+	const bool findSuccess = 0;//‡‚Á‚Ä‚é‚Æ‚«
 	//—‚¿‚é‹…
-	else if (gimmickName.find("FALLSPHERE") == findSuccess)
+	if (gimmickName.find("FALLSPHERE") == findSuccess)
 	{
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE);
 	}
