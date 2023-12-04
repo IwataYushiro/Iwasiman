@@ -157,6 +157,26 @@ private://メンバ変数
 		presetEaseMenuPosX_[SSMEN_SelectSpace],				//スペースで選択
 		presetEaseMenuPosX_[SSMEN_Quit]						//戻る
 	};
+	//メニュー画面出現イージングのプリセット
+	const Easing presetEaseMenuEndPosX_[SSMEN_Num] =
+	{
+		{ 0.0f, -1300.0f,1.0f},					//メニュー
+		{ 100.0f,-1300.0f, 1.1f},				//チュートリアル
+		{ 100.0f,-1300.0f, 1.2f},				//ステージ1
+		{ 100.0f,-1300.0f, 1.3f},				//ステージ2
+		{ 425.0f,-1300.0f, 1.4f},				//スペースで選択
+		{ 900.0f,-1300.0f, 1.5f}				//戻る
+	};
+	//メニュー画面出現イージング
+	Easing easeMenuEndPosX_[SSMEN_Num] =
+	{
+		presetEaseMenuEndPosX_[SSMEN_Menu],					//メニュー
+		presetEaseMenuEndPosX_[SSMEN_Tutorial],				//チュートリアル
+		presetEaseMenuEndPosX_[SSMEN_Stage1_Sky],				//ステージ1
+		presetEaseMenuEndPosX_[SSMEN_Stage2_Space],			//ステージ2
+		presetEaseMenuEndPosX_[SSMEN_SelectSpace],				//スペースで選択
+		presetEaseMenuEndPosX_[SSMEN_Quit]						//戻る
+	};
 	//カーソルX値のイージングプリセット
 	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
 	//カーソルX値のイージング

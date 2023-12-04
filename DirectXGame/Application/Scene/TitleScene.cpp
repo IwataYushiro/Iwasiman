@@ -253,18 +253,18 @@ void TitleScene::Update()
 
 void TitleScene::UpdateIsStartGame()
 {
-	for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < TMEN_Num; i++)easeMenuEndPosX_[i].ease_in_out_quint();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].ease_in_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].ease_in_out_expo();
 	easeStartStagePosX_.ease_out_expo();
 	easeStartStagePosY_.ease_out_expo();
 	easeCursorPosX_.ease_out_expo();
 
-	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
+	spriteMenu_->SetPosition({ easeMenuEndPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeStartStagePosX_.num_X,easeStartStagePosY_.num_X });
-	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
-	spriteMenuDone_->SetPosition({ easeMenuPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
-	spriteBack_->SetPosition({ easeMenuPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
+	spriteMenuStageSelect_->SetPosition({ easeMenuEndPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
+	spriteMenuDone_->SetPosition({ easeMenuEndPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
+	spriteBack_->SetPosition({ easeMenuEndPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 
 	//カメラもセット
@@ -298,17 +298,17 @@ void TitleScene::UpdateIsStartGame()
 
 void TitleScene::UpdateIsStageSelect()
 {
-	for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < TMEN_Num; i++)easeMenuEndPosX_[i].ease_in_out_quint();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].ease_in_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].ease_in_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easePlayerMove_[i].ease_in_out_expo();
 	easeCursorPosX_.ease_out_expo();
 
-	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
-	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial]});
-	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
-	spriteMenuDone_->SetPosition({ easeMenuPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
-	spriteBack_->SetPosition({ easeMenuPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
+	spriteMenu_->SetPosition({ easeMenuEndPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
+	spriteMenuTutorial_->SetPosition({ easeMenuEndPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial]});
+	spriteMenuStageSelect_->SetPosition({ easeMenuEndPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
+	spriteMenuDone_->SetPosition({ easeMenuEndPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
+	spriteBack_->SetPosition({ easeMenuEndPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 
 	//カメラもセット
@@ -319,7 +319,7 @@ void TitleScene::UpdateIsStageSelect()
 	{
 		player->SetPosition({ easePlayerMove_[XYZ_X].num_X,easePlayerMove_[XYZ_Y].num_X,easePlayerMove_[XYZ_Z].num_X });
 
-		if (spriteMenu_->GetPosition().x == easeMenuPosX_[TMEN_Menu].start)
+		if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)
 		{
 			FadeOut(black_);//黒くする
 			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
@@ -437,7 +437,7 @@ void TitleScene::UpdateIsMenu()
 		{
 			if (menuCount_ == TSMI_Tutorial)
 			{
-				for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+				for (int i = 0; i < TMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].Standby(false);
 				easeStartStagePosX_.Standby(false);
@@ -447,7 +447,7 @@ void TitleScene::UpdateIsMenu()
 			}
 			else if (menuCount_ == TSMI_StageSelect)
 			{
-				for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].Standby(true);
+				for (int i = 0; i < TMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easePlayerMove_[i].Standby(false);

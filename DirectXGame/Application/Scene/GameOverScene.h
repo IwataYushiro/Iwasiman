@@ -171,6 +171,25 @@ private://メンバ変数
 		presetEaseMenuPosX_[GOMEN_Title],				//タイトルへ
 		presetEaseMenuPosX_[GOMEN_SelectSpace],			//スペースで選択
 	};
+
+	//メニュー終了用のイージングのプリセット
+	const Easing presetEaseMenuEndPosX_[GOMEN_Num]
+	{
+		{ 230.0f,-1300.0f, 1.0f},		//メニュー
+		{ 100.0f,-1300.0f, 1.1f},		//コンティニューへ
+		{ 100.0f,-1300.0f, 1.2f},		//ステージセレクトへ
+		{ 100.0f,-1300.0f, 1.3f},		//タイトルへ
+		{ 425.0f,-1300.0f, 1.4f}		//スペースで選択
+	};
+	//メニュー終了用のイージング
+	Easing easeMenuEndPosX_[GOMEN_Num]
+	{
+		presetEaseMenuEndPosX_[GOMEN_Menu],				//メニュー
+		presetEaseMenuEndPosX_[GOMEN_Continue],			//コンティニューへ
+		presetEaseMenuEndPosX_[GOMEN_StageSelect],		//ステージセレクトへ
+		presetEaseMenuEndPosX_[GOMEN_Title],			//タイトルへ
+		presetEaseMenuEndPosX_[GOMEN_SelectSpace],		//スペースで選択
+	};
 	//カーソルX値のイージングプリセット
 	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
 	//カーソルX値のイージング
