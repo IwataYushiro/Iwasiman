@@ -102,6 +102,7 @@ void PlayerBullet::OnCollision([[maybe_unused]] const CollisionInfo& info,const 
 	else if (attribute == COLLISION_ATTR_ENEMYS) 
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_ISDEAD)return;
 		else isDead_ = true;
 	}
 	

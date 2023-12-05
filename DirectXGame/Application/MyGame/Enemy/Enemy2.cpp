@@ -63,10 +63,12 @@ bool Enemy2::Initialize(const int level) {
 	//パーティクル
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmSmoke_ = ParticleManager::Create();
+	pmSmoke_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 	pmSmoke_->SetParticleModel(particleSmoke_.get());
 
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
+	pmFire_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 	pmFire_->SetParticleModel(particleFire_.get());
 
 	return true;

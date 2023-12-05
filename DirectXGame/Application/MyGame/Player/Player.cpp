@@ -628,7 +628,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		{ 0.0f,0.001f,0.0f },
 		30,
 		{ 3.0f, 0.0f },
-		{ 1.0f,1.0f,1.0f,1.0f },
+		{ 1.0f,0.4f,1.0f,1.0f },
 		{ 0.0f,0.0f,0.0f,1.0f }
 	};
 
