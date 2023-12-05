@@ -279,7 +279,7 @@ void Player::Move() {
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
-			model_ = modelBullet_;//const“¯Žm‚Ìƒ‚ƒfƒ‹‚È‚ç·‚µ‘Ö‚¦‚ç‚ê‚½
+			//model_ = modelBullet_;//const“¯Žm‚Ìƒ‚ƒfƒ‹‚È‚ç·‚µ‘Ö‚¦‚ç‚ê‚½
 			isRight_ = true;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
 				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
