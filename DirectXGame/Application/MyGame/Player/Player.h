@@ -87,7 +87,13 @@ public:
 
 	//弾リストを取得
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
+public:
+	////引数に渡す構造体
+	//struct PlayerModelList
+	//{
+	//	Model* playerModel = nullptr;
 
+	//};
 private:
 	//コリジョンマネージャー
 	static CollisionManager* colManager_;
@@ -126,7 +132,7 @@ private:
 
 	//モデル
 	const Model* modelBullet_ = nullptr;
-
+	
 	//インプット
 	Input* input_ = nullptr;
 

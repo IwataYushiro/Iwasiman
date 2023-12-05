@@ -275,9 +275,11 @@ void Player::Move() {
 		else if (input_->PushKey(DIK_D)) {
 			if (!isRight_)
 			{
+				
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
+			model_ = modelBullet_;
 			isRight_ = true;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
 				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
