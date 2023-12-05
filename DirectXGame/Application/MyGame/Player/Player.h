@@ -41,12 +41,19 @@ public:
 	const int MUTEKI_COUNT = 60;
 	//ジャンプ強化最大効果時間
 	const float JUMPITEM_MAX_TIME = 200.0f;
+
+	//引数に渡す構造体
+	struct PlayerModelList
+	{
+		Model* playerModel = nullptr;
+		Model* playerBullet = nullptr;
+	};
+
 public:
 	//デストラクタ
 	~Player();
-	//生成(使用モデル、使用弾モデル、ゲームプレイシーン)
-	static std::unique_ptr<Player> Create(const Model* model = nullptr, const Model* bullet = nullptr,
-		GamePlayScene* gamescene = nullptr);
+	//生成(使用モデル、ゲームプレイシーン)
+	static std::unique_ptr<Player> Create(const PlayerModelList* model = nullptr,GamePlayScene* gamescene = nullptr);
 	//初期化
 	bool Initialize() override;
 	//リセット処理
@@ -87,13 +94,7 @@ public:
 
 	//弾リストを取得
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
-public:
-	////引数に渡す構造体
-	//struct PlayerModelList
-	//{
-	//	Model* playerModel = nullptr;
 
-	//};
 private:
 	//コリジョンマネージャー
 	static CollisionManager* colManager_;

@@ -372,6 +372,7 @@ private:
 	//モデル
 	//自機
 	std::list<std::unique_ptr<Player>> players_;						//自機リスト
+	Player::PlayerModelList modelPlayerList_;							//自機モデル構造体
 	std::unique_ptr<Model> modelPlayer_ = nullptr;						//自機モデル
 	std::unique_ptr<Model> modelPlayerBullet_ = nullptr;				//自機弾モデル
 

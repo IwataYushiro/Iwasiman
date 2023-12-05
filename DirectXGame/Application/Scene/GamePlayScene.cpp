@@ -850,7 +850,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			const float maxTime = 4.0f;
 
 			//ê∂ê¨
-			newplayer = Player::Create(model, modelPlayerBullet_.get(), this);
+			newplayer = Player::Create(&modelPlayerList_, this);
 			// ç¿ïW
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -1190,6 +1190,8 @@ void GamePlayScene::LoadModel()
 	models_.insert(std::make_pair("sphere2", modelSphere_.get()));
 	models_.insert(std::make_pair("ground2", modelBox_.get()));
 
+	modelPlayerList_.playerModel = modelPlayer_.get();
+	modelPlayerList_.playerBullet = modelPlayerBullet_.get();
 }
 
 void GamePlayScene::SettingTutorialEase(const int num, Sprite* s1, Sprite* s2,

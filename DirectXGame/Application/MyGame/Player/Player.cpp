@@ -24,7 +24,7 @@ Player::~Player() {
 
 }
 
-std::unique_ptr<Player> Player::Create(const Model* model, const Model* bullet, GamePlayScene* gamescene)
+std::unique_ptr<Player> Player::Create(const PlayerModelList* model,GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Player> ins = std::make_unique<Player>();
@@ -37,8 +37,8 @@ std::unique_ptr<Player> Player::Create(const Model* model, const Model* bullet, 
 		assert(0);
 	}
 	//モデルのセット
-	if (model) ins->SetModel(model);
-	if (bullet) ins->modelBullet_ = bullet;
+	if (model->playerModel) ins->SetModel(model->playerModel);
+	if (model->playerBullet) ins->modelBullet_ = model->playerBullet;
 	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
 }
@@ -279,7 +279,7 @@ void Player::Move() {
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
-			model_ = modelBullet_;
+			model_ = modelBullet_;//const同士のモデルなら差し替えられた
 			isRight_ = true;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
 				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
