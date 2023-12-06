@@ -47,6 +47,7 @@ public:
 	{
 		Model* playerModel = nullptr;
 		Model* playerBullet = nullptr;
+		Model* playerHit = nullptr;
 	};
 
 public:
@@ -132,8 +133,9 @@ private:
 	const XMFLOAT4 hitColor_ = { 0.5f,0.0f,0.0f,0.0f };	//赤く光る
 
 	//モデル
+	const Model* modelPlayer_ = nullptr;
 	const Model* modelBullet_ = nullptr;
-	
+	const Model* modelHit_ = nullptr;
 	//インプット
 	Input* input_ = nullptr;
 
@@ -225,7 +227,7 @@ private:
 	const Easing presetEaseChangeScaleStageClear_[XYZ_Num] =
 	{
 		{1.0f,0.0f,1.5f},			//X
-		{1.0f,4.0f,1.5f},			//Y
+		{1.0f,2.0f,1.5f},			//Y
 		{1.0f,0.0f,1.5f}			//Z
 	};
 	//ステージクリア時のプレイヤーのスケールを変更

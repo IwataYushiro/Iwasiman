@@ -1154,7 +1154,7 @@ void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
 void GamePlayScene::LoadModel()
 {
 	// ÉÇÉfÉãì«Ç›çûÇ›
-	modelPlayer_ = Model::LoadFromOBJ("player");
+	modelPlayer_ = Model::LoadFromOBJ("player2");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
 	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");
@@ -1172,7 +1172,7 @@ void GamePlayScene::LoadModel()
 	modelSphere_ = Model::LoadFromOBJ("sphere2");
 	modelBox_ = Model::LoadFromOBJ("ground2");
 
-	models_.insert(std::make_pair("player", modelPlayer_.get()));
+	models_.insert(std::make_pair("player2", modelPlayer_.get()));
 	models_.insert(std::make_pair("playerbullet", modelPlayerBullet_.get()));
 	models_.insert(std::make_pair("enemy1", modelEnemy1_.get()));
 	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_.get()));
@@ -1192,6 +1192,7 @@ void GamePlayScene::LoadModel()
 
 	modelPlayerList_.playerModel = modelPlayer_.get();
 	modelPlayerList_.playerBullet = modelPlayerBullet_.get();
+	modelPlayerList_.playerHit = modelEnemy1_.get();//âº
 }
 
 void GamePlayScene::SettingTutorialEase(const int num, Sprite* s1, Sprite* s2,

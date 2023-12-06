@@ -47,7 +47,7 @@ private:
 	//コリジョンマネージャー
 	static CollisionManager* colManager_;
 	//半径
-	const float radius_ = 5.0f;
+	const float radius_ = 1.0f;
 
 	//プレイヤー
 	const Player* player_ = nullptr;

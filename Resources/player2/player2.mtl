@@ -1,7 +1,7 @@
-# Blender 3.5.0 MTL File: 'None'
+# Blender 3.5.0 MTL File: 'player2.blend'
 # www.blender.org
 
-newmtl マテリアル.001
+newmtl Material
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -9,4 +9,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd C:/k021g1138/GE3/覚書/iwasimanresourse/boxud2/boxud.png
+map_Kd tex.png

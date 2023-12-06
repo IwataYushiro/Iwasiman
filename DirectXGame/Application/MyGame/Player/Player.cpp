@@ -37,9 +37,13 @@ std::unique_ptr<Player> Player::Create(const PlayerModelList* model,GamePlayScen
 		assert(0);
 	}
 	//モデルのセット
-	if (model->playerModel) ins->SetModel(model->playerModel);
+	if (model->playerModel)ins->modelPlayer_ = model->playerModel;
 	if (model->playerBullet) ins->modelBullet_ = model->playerBullet;
+	if (model->playerHit)ins->modelHit_ = model->playerHit;
 	if (gamescene)ins->SetGameScene(gamescene);
+
+	//最初のモデル
+	ins->SetModel(model->playerModel);
 	return ins;
 }
 
@@ -657,6 +661,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		if (onGround_) { isShake_ = true; }
 		else isHit_ = true;
 		*/
+		//model_ = modelHit_;
 		isHit_ = true;
 	}
 
@@ -679,6 +684,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 			if (onGround_) { isShake_ = true; }
 			else isHit_ = true;
 			*/
+			//model_ = modelHit_;
 			isHit_ = true;
 		}
 
@@ -772,6 +778,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 	}
 	if (isShake_)
 	{
+		
 		const int32_t shakeCount = 1;
 		//視点シェイク
 		XMFLOAT3 Eye = nowEye_ + hitMove_;
@@ -802,6 +809,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 			isShake_ = false;
 		}
 		else isHit_ = false;
+		//model_ = modelPlayer_;
 		mutekiCount_ = 0;
 		hitMove_ = resetHitMove_;
 	}
@@ -850,7 +858,7 @@ void Player::UpdateBreak()
 			{ 15.0f ,15.0f,15.0f },
 			{ 3.3f,3.3f,3.3f },
 			{ 0.0f,0.001f,0.0f },
-			6,
+			5,
 			{ 7.0f, 0.0f },
 			{ MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
@@ -868,7 +876,7 @@ void Player::UpdateBreak()
 			{ 25.0f ,10.0f,15.0f },
 			{ MyMath::RandomMTFloat(0.0f,0.1f),MyMath::RandomMTFloat(0.5f,3.0f),0.3f },
 			{ 0.0f,0.001f,0.0f },
-			5,
+			4,
 			{ 4.0f, 0.0f },
 			{ MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.95f,1.0f),1.0f },
 			{ 1.0f,1.0f,1.0f,0.0f }
@@ -933,7 +941,6 @@ void Player::UpdateBreak()
 		}
 	}
 
-	//if (input_->TriggerKey(DIK_M))isDead_ = true;
 }
 
 void Player::UpdateGoal()
