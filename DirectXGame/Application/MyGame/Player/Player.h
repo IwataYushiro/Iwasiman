@@ -48,6 +48,7 @@ public:
 		Model* playerModel = nullptr;
 		Model* playerBullet = nullptr;
 		Model* playerHit = nullptr;
+		Model* playerMove = nullptr;
 	};
 
 public:
@@ -136,6 +137,7 @@ private:
 	const Model* modelPlayer_ = nullptr;
 	const Model* modelBullet_ = nullptr;
 	const Model* modelHit_ = nullptr;
+	const Model* modelMove_ = nullptr;
 	//インプット
 	Input* input_ = nullptr;
 

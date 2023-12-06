@@ -375,7 +375,7 @@ private:
 	Player::PlayerModelList modelPlayerList_;							//自機モデル構造体
 	std::unique_ptr<Model> modelPlayer_ = nullptr;						//自機モデル
 	std::unique_ptr<Model> modelPlayerBullet_ = nullptr;				//自機弾モデル
-
+	std::unique_ptr<Model> modelPlayerDash_ = nullptr;					//自機ダッシュモデル
 	//敵
 	std::unique_ptr<AbstractEnemyFactory> enemyFactory_;					//敵の工場
 	std::list<std::unique_ptr<BaseEnemy>> enemys_;							//敵リスト

@@ -40,6 +40,7 @@ std::unique_ptr<Player> Player::Create(const PlayerModelList* model,GamePlayScen
 	if (model->playerModel)ins->modelPlayer_ = model->playerModel;
 	if (model->playerBullet) ins->modelBullet_ = model->playerBullet;
 	if (model->playerHit)ins->modelHit_ = model->playerHit;
+	if (model->playerMove)ins->modelMove_ = model->playerMove;
 	if (gamescene)ins->SetGameScene(gamescene);
 
 	//Å‰‚Ìƒ‚ƒfƒ‹
@@ -249,6 +250,7 @@ void Player::Move() {
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
+			model_ = modelMove_;
 			isRight_ = true;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
@@ -283,7 +285,7 @@ void Player::Move() {
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
-			//model_ = modelBullet_;//const“¯Žm‚Ìƒ‚ƒfƒ‹‚È‚ç·‚µ‘Ö‚¦‚ç‚ê‚½
+			model_ = modelMove_;
 			isRight_ = true;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
 				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
