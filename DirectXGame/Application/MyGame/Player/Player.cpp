@@ -560,8 +560,11 @@ void Player::Attack() {
 		XMFLOAT3 pos = Object3d::GetPosition();
 
 		//íeÇê∂ê¨Çµèâä˙âª
+		const XMFLOAT3 bulletPositionOffsetRight = { position_.x+0.8f,position_.y + 3.0f,position_.z };
+		const XMFLOAT3 bulletPositionOffsetLeft = { position_.x - 0.8f,position_.y + 3.0f,position_.z };
 		std::unique_ptr<PlayerBullet> newBullet;
-		newBullet = PlayerBullet::Create(position_, velocity, modelBullet_);
+		if(isRight_)newBullet = PlayerBullet::Create(bulletPositionOffsetRight, velocity, modelBullet_);
+		else newBullet = PlayerBullet::Create(bulletPositionOffsetLeft, velocity, modelBullet_);
 		newBullet->SetCamera(camera_);
 		newBullet->Update();
 
