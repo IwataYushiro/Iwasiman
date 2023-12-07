@@ -1154,9 +1154,11 @@ void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
 void GamePlayScene::LoadModel()
 {
 	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("playerattack");
+	modelPlayer_ = Model::LoadFromOBJ("playeridle");
 	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");
 	modelPlayerDash_ = Model::LoadFromOBJ("playerdash");
+	modelPlayerJump_ = Model::LoadFromOBJ("playerjump");
+	modelPlayerAttack_ = Model::LoadFromOBJ("playerattack");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
 	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
@@ -1173,9 +1175,11 @@ void GamePlayScene::LoadModel()
 	modelSphere_ = Model::LoadFromOBJ("sphere2");
 	modelBox_ = Model::LoadFromOBJ("ground2");
 
-	models_.insert(std::make_pair("playerattack", modelPlayer_.get()));
+	models_.insert(std::make_pair("playeridle", modelPlayer_.get()));
 	models_.insert(std::make_pair("playerbullet", modelPlayerBullet_.get()));
 	models_.insert(std::make_pair("playerdash", modelPlayerDash_.get()));
+	models_.insert(std::make_pair("playerjump", modelPlayerJump_.get()));
+	models_.insert(std::make_pair("playerattack", modelPlayerAttack_.get()));
 	models_.insert(std::make_pair("enemy1", modelEnemy1_.get()));
 	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_.get()));
 	models_.insert(std::make_pair("boss1", modelBoss1_.get()));
@@ -1196,6 +1200,8 @@ void GamePlayScene::LoadModel()
 	modelPlayerList_.playerBullet = modelPlayerBullet_.get();
 	modelPlayerList_.playerHit = modelEnemy1_.get();//仮
 	modelPlayerList_.playerMove = modelPlayerDash_.get();//ダッシュ
+	modelPlayerList_.playerJump = modelPlayerJump_.get();//ジャンプ
+	modelPlayerList_.playerAttack = modelPlayerAttack_.get();//攻撃
 }
 
 void GamePlayScene::SettingTutorialEase(const int num, Sprite* s1, Sprite* s2,

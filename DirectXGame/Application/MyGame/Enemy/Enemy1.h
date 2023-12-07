@@ -95,7 +95,7 @@ private:
 	//ƒAƒ“ƒOƒ‹
 	XMFLOAT3 angle_;
 	//”¼Œa
-	const float radius_ = 3.0f;
+	const float radius_ = 4.0f;
 	
 	//’n–Ê‚Éæ‚Á‚Ä‚é‚©
 	bool onGround_ = true;

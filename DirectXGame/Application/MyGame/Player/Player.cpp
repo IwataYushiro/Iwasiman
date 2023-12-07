@@ -41,6 +41,8 @@ std::unique_ptr<Player> Player::Create(const PlayerModelList* model,GamePlayScen
 	if (model->playerBullet) ins->modelBullet_ = model->playerBullet;
 	if (model->playerHit)ins->modelHit_ = model->playerHit;
 	if (model->playerMove)ins->modelMove_ = model->playerMove;
+	if (model->playerJump)ins->modelJump_ = model->playerJump;
+	if (model->playerJump)ins->modelAttack_ = model->playerAttack;
 	if (gamescene)ins->SetGameScene(gamescene);
 
 	//最初のモデル
@@ -235,6 +237,7 @@ void Player::Move() {
 				easeRotateRightY_.Standby(true);
 				rot.y = easeRotateRightY_.end;
 			}
+			if(onGround_)model_ = modelMove_;
 			isRight_ = false;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
@@ -250,7 +253,7 @@ void Player::Move() {
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
-			model_ = modelMove_;
+			if (onGround_)model_ = modelMove_;
 			isRight_ = true;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
@@ -269,6 +272,7 @@ void Player::Move() {
 				easeRotateRightY_.Standby(true);
 				rot.y = easeRotateRightY_.end;
 			}
+			if (onGround_)model_ = modelMove_;
 			isRight_ = false;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
@@ -285,7 +289,7 @@ void Player::Move() {
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
-			model_ = modelMove_;
+			if (onGround_)model_ = modelMove_;
 			isRight_ = true;
 			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
 				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
@@ -320,6 +324,7 @@ void Player::FallAndJump()
 
 	if (!onGround_)
 	{
+		model_ = modelJump_;
 		//下向き加速度
 		const float fallAcc = -0.1f;
 		const float fallVYMin = -2.0f;
@@ -334,7 +339,6 @@ void Player::FallAndJump()
 	else if (input_->TriggerKey(DIK_SPACE))
 	{
 		onGround_ = false;
-
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
 	}
@@ -521,6 +525,7 @@ void Player::Landing(const unsigned short attribute)
 		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * radiusMulNum))
 		{
+			model_ = modelPlayer_;
 			//着地
 			onGround_ = true;
 			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * radiusMulNum);
@@ -537,6 +542,8 @@ void Player::Landing(const unsigned short attribute)
 void Player::Attack() {
 
 	if (input_->TriggerKey(DIK_L)) {
+		//地面にいるとき,通常の立ち絵のとき限定でモデル変える
+		if (model_ == modelPlayer_ && onGround_) model_ = modelAttack_;
 		//弾の速度
 		const float bulletSpeed = 1.0f;
 		XMFLOAT3 velocity;

@@ -100,7 +100,7 @@ private:
 	//アングル
 	XMFLOAT3 angle_;
 	//半径
-	const float radius_ = 2.0f;
+	const float radius_ = 4.0f;
 	//撤退スピード
 	XMFLOAT3 backSpeed_;
 	//地面に乗ってるか
