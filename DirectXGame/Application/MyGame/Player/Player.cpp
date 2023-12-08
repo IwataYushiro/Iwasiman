@@ -210,10 +210,12 @@ void Player::Move() {
 	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
 
 	//パーティクル
+	const XMFLOAT3 startPosRight = { position_.x - 1.0f,position_.y + 1.0f ,position_.z };
+	const XMFLOAT3 startPosLeft = { position_.x + 1.0f,position_.y + 1.0f ,position_.z };
 	const ParticleManager::Preset smoke =
 	{
 		particleSmoke_.get(),
-		position_,
+		position_,//使わない
 		{ 0.0f ,3.0f,0.0f },
 		{ 3.0f,0.3f,0.3f },
 		{ 0.0f,0.001f,0.0f },
@@ -239,7 +241,7 @@ void Player::Move() {
 			}
 			if(onGround_)model_ = modelMove_;
 			isRight_ = false;
-			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+			pmSmoke_->ActiveX(smoke.particle, startPosLeft, smoke.pos, smoke.vel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 			move.x -= moveSpeed * dashSpeed;
 			cmove.x -= moveSpeed * dashSpeed;
@@ -255,7 +257,7 @@ void Player::Move() {
 			}
 			if (onGround_)model_ = modelMove_;
 			isRight_ = true;
-			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
+			pmSmoke_->ActiveX(smoke.particle, startPosRight, smoke.pos, reverseParticleVel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 			move.x += moveSpeed * dashSpeed;
 			cmove.x += moveSpeed * dashSpeed;
@@ -274,7 +276,7 @@ void Player::Move() {
 			}
 			if (onGround_)model_ = modelMove_;
 			isRight_ = false;
-			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+			pmSmoke_->ActiveX(smoke.particle, startPosLeft, smoke.pos, smoke.vel,
 				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
 			move.x -= moveSpeed;
 			cmove.x -= moveSpeed;
@@ -285,13 +287,13 @@ void Player::Move() {
 		else if (input_->PushKey(DIK_D)) {
 			if (!isRight_)
 			{
-				
+
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
 			}
 			if (onGround_)model_ = modelMove_;
 			isRight_ = true;
-			pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, reverseParticleVel,
+			pmSmoke_->ActiveX(smoke.particle, startPosRight, smoke.pos, reverseParticleVel,
 				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
 			move.x += moveSpeed;
 			cmove.x += moveSpeed;
