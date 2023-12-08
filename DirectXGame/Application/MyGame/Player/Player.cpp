@@ -42,11 +42,11 @@ std::unique_ptr<Player> Player::Create(const PlayerModelList* model,GamePlayScen
 	if (model->playerHit)ins->modelHit_ = model->playerHit;
 	if (model->playerMove)ins->modelMove_ = model->playerMove;
 	if (model->playerJump)ins->modelJump_ = model->playerJump;
-	if (model->playerJump)ins->modelAttack_ = model->playerAttack;
+	if (model->playerAttack)ins->modelAttack_ = model->playerAttack;
 	if (gamescene)ins->SetGameScene(gamescene);
 
 	//Å‰‚Ìƒ‚ƒfƒ‹
-	ins->SetModel(model->playerModel);
+	ins->SetModel(model->playerMove);
 	return ins;
 }
 
@@ -774,6 +774,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].Standby(false);
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].Standby(false);
 
+		model_ = modelHit_;
 		isBreak_ = true;
 		isAlive_ = false;
 	}

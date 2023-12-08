@@ -378,6 +378,7 @@ private:
 	std::unique_ptr<Model> modelPlayerDash_ = nullptr;					//自機ダッシュモデル
 	std::unique_ptr<Model> modelPlayerJump_ = nullptr;					//自機ジャンプモデル
 	std::unique_ptr<Model> modelPlayerAttack_ = nullptr;				//自機攻撃モデル
+	std::unique_ptr<Model> modelPlayerHit_ = nullptr;					//自機死亡モデル
 	//敵
 	std::unique_ptr<AbstractEnemyFactory> enemyFactory_;					//敵の工場
 	std::list<std::unique_ptr<BaseEnemy>> enemys_;							//敵リスト

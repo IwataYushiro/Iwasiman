@@ -1159,6 +1159,7 @@ void GamePlayScene::LoadModel()
 	modelPlayerDash_ = Model::LoadFromOBJ("playerdash");
 	modelPlayerJump_ = Model::LoadFromOBJ("playerjump");
 	modelPlayerAttack_ = Model::LoadFromOBJ("playerattack");
+	modelPlayerHit_ = Model::LoadFromOBJ("playerhit");
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");
 	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");
 	modelBoss1_ = Model::LoadFromOBJ("boss1");
@@ -1180,6 +1181,7 @@ void GamePlayScene::LoadModel()
 	models_.insert(std::make_pair("playerdash", modelPlayerDash_.get()));
 	models_.insert(std::make_pair("playerjump", modelPlayerJump_.get()));
 	models_.insert(std::make_pair("playerattack", modelPlayerAttack_.get()));
+	models_.insert(std::make_pair("playerhit", modelPlayerHit_.get()));
 	models_.insert(std::make_pair("enemy1", modelEnemy1_.get()));
 	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_.get()));
 	models_.insert(std::make_pair("boss1", modelBoss1_.get()));
@@ -1198,7 +1200,7 @@ void GamePlayScene::LoadModel()
 
 	modelPlayerList_.playerModel = modelPlayer_.get();
 	modelPlayerList_.playerBullet = modelPlayerBullet_.get();
-	modelPlayerList_.playerHit = modelEnemy1_.get();//仮
+	modelPlayerList_.playerHit = modelPlayerHit_.get();//ヒット
 	modelPlayerList_.playerMove = modelPlayerDash_.get();//ダッシュ
 	modelPlayerList_.playerJump = modelPlayerJump_.get();//ジャンプ
 	modelPlayerList_.playerAttack = modelPlayerAttack_.get();//攻撃
