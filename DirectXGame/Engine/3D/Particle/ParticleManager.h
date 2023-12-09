@@ -42,18 +42,19 @@ public: // サブクラス
 		XMMATRIX mat;	// ３Ｄ変換行列
 		XMMATRIX matBillboard;	//ビルボード行列
 	};
-	//プリセット
+	/*プリセット(使用パーティクル、初期座標、座標、速度、重力分布、
+	一気に出す量、{開始スケール、終了スケール},開始カラー、終了カラー)*/
 	struct Preset
 	{
-		Particle* particle;
-		XMFLOAT3 startPos;
-		XMFLOAT3 pos;
-		XMFLOAT3 vel;
-		XMFLOAT3 acc;
-		int num;
-		XMFLOAT2 scale;
-		XMFLOAT4 startColor;
-		XMFLOAT4 endColor;
+		Particle* particle;		//使用パーティクル
+		XMFLOAT3 startPos;		//初期座標
+		XMFLOAT3 pos;			//座標
+		XMFLOAT3 vel;			//速度
+		XMFLOAT3 acc;			//重力分布
+		int num;				//一気に出す量
+		XMFLOAT2 scale;			//開始、終了スケール
+		XMFLOAT4 startColor;	//開始カラー
+		XMFLOAT4 endColor;		//終了カラー
 	};
 private: // 定数
 	static const int DIVISION = 50;					// 分割数

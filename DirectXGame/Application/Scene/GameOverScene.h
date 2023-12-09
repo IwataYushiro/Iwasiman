@@ -115,6 +115,7 @@ private://メンバ変数
 
 	//モデル
 	std::unique_ptr<Model> modelPlayer_ = nullptr;				//自機モデル
+	std::unique_ptr<Model> modelPlayerContinue_ = nullptr;		//自機モデル（コンティニュー）
 	std::unique_ptr<Model> modelGoal_ = nullptr;				//ゴールモデル
 	std::unique_ptr<Model> modelStageTutorial_ = nullptr;		//チュートリアルステージモデル(天球)
 	std::unique_ptr<Model> modelStage1_ = nullptr;				//ステージ1モデル(天球)
@@ -342,7 +343,10 @@ private://メンバ変数
 	std::unique_ptr<LightGroup> lightGroup_ = nullptr;
 	//パーティクル
 	std::unique_ptr<Particle> particle1_ = nullptr;
+	std::unique_ptr<Particle> particleFall_ = nullptr;
 	//パーティクルマネージャー
 	std::unique_ptr<ParticleManager> pm1_ = nullptr;
 
+private:
+	void EaseRotateSetUp(const DirectX::XMFLOAT3& rotation, Easing& easing, const int32_t num);
 };

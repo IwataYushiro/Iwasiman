@@ -103,6 +103,8 @@ void GameOverScene::Initialize()
 	pm1_->SetParticleModel(particle1_.get());
 	pm1_->SetCamera(camera_.get());
 
+	particleFall_ = Particle::LoadFromParticleTexture("wind.png");
+	
 	easeFadeInOut_.Standby(false);
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(false);
 	easeCursorPosX_.Standby(false);
@@ -122,15 +124,16 @@ void GameOverScene::Update()
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
+		const XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//オフセット
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
 			particle1_.get(),
-			player->GetPosition(),
+			{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
 			{ 0.0f ,2.0f,0.0f },
-			{ 0.3f,3.0f,0.3f },
+			{ -3.0f,0.3f,0.3f },
 			{ 0.0f,0.001f,0.0f },
-			3,
+			2,
 			{ 1.0f, 0.0f },
 			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
@@ -138,21 +141,18 @@ void GameOverScene::Update()
 
 		if (!completeRotate_)
 		{
-			if (!isQuitStageSelect_)
-			{
-				pm1_->ActiveY(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-			}
 			//プレイヤー回転用
 			DirectX::XMFLOAT3 rotPlayer = player->GetRotation();
-
+			
 			const float rotSpeed = -0.3f;
+			const float resetRot = 360.0f;
 			rotPlayer.y += rotSpeed;
+			if (rotPlayer.y >= resetRot) rotPlayer.y = 0.0f;//360度を超えたらリセット
 			player->SetRotation(rotPlayer);
 		}
 		else
 		{
-			pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, { -smoke.vel.y,smoke.vel.x,smoke.vel.z },
+			pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 		}
 		player->Update();
@@ -234,7 +234,7 @@ void GameOverScene::UpdateIsGameOver()
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 	easeFadeInOut_.ease_in_out_quint();
 	easeCursorPosX_.ease_in_out_quint();
-
+	
 	//座標,カラーセット
 	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
 	spriteContinue_->SetPosition({ easeMenuPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue] });
@@ -243,6 +243,35 @@ void GameOverScene::UpdateIsGameOver()
 	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
 	spriteFadeInOut_->SetColor({ deepRed_.x,deepRed_.y, deepRed_.z, easeFadeInOut_.num_X });//透明度だけ変える
 
+	for (std::unique_ptr<Object3d>& player : objPlayers_)
+	{
+		//風プリセット
+		const ParticleManager::Preset wind =
+		{
+			particleFall_.get(),
+			player->GetPosition(),
+			{ 20.0f ,-100.0f,5.0f },
+			{ 0.0f,3.0f,0.0f },
+			{ 0.0f,0.001f,0.0f },
+			5,
+			{ 1.0f, 0.0f },
+			{1.0f,1.0f,1.0,1.0f },
+			{ 0.0f,0.0f,0.0f,1.0f }
+		};
+
+
+		pm1_->ActiveY(wind.particle, wind.startPos, wind.pos, wind.vel,
+			wind.acc, wind.num, wind.scale, wind.startColor, wind.endColor);
+
+
+		//常時プレイヤーの回転をイージングにセットする
+		for (int32_t i = 0; i < XYZ_Num; i++)
+		{
+			EaseRotateSetUp(player->GetRotation(), easePlayerRotateContinue_[i], i);
+			EaseRotateSetUp(player->GetRotation(), easePlayerRotateQuitStageSelect_[i], i);
+		}
+	}
+	//メニュー
 	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
 	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
 
@@ -273,12 +302,6 @@ void GameOverScene::UpdateIsGameOver()
 		{
 			if (menuCount_ == GOSMI_Continue)
 			{
-				for (std::unique_ptr<Object3d>& player : objPlayers_)
-				{
-					easePlayerRotateContinue_[XYZ_Y].SetEasing(player->GetRotation().y,
-						easePlayerRotateContinue_[XYZ_Y].end,
-						easePlayerRotateContinue_[XYZ_Y].maxtime);
-				}
 				for (int i = 0; i < GOMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeContinue_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetContinue_[i].Standby(false);
@@ -293,12 +316,6 @@ void GameOverScene::UpdateIsGameOver()
 			}
 			else if (menuCount_ == GOSMI_StageSelect)
 			{
-				for (std::unique_ptr<Object3d>& player : objPlayers_)
-				{
-					easePlayerRotateQuitStageSelect_[XYZ_Y].SetEasing(player->GetRotation().y,
-						easePlayerRotateQuitStageSelect_[XYZ_Y].end,
-						easePlayerRotateQuitStageSelect_[XYZ_Y].maxtime);
-				}
 				for (int i = 0; i < GOMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].Standby(false);
@@ -325,6 +342,7 @@ void GameOverScene::UpdateIsGameOver()
 
 void GameOverScene::UpdateIsContinue()
 {
+	
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuEndPosX_[i].ease_in_out_quint();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeContinue_[i].ease_in_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetContinue_[i].ease_in_out_expo();
@@ -344,6 +362,7 @@ void GameOverScene::UpdateIsContinue()
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
+		
 		//回転
 		if (!completeRotate_)
 		{
@@ -354,6 +373,7 @@ void GameOverScene::UpdateIsContinue()
 			//回転が終わったら
 			if (player->GetRotation().x == easePlayerRotateContinue_[0].end)
 			{
+				player->SetModel(modelPlayerContinue_.get());
 				for (int i = 0; i < XYZ_Num; i++)easePlayerMoveContinue_[i].Standby(false);
 				completeRotate_ = true;
 			}
@@ -396,6 +416,7 @@ void GameOverScene::UpdateIsQuitStageSelect()
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
+		
 		//回転
 		if (!completeRotate_)
 		{
@@ -404,6 +425,7 @@ void GameOverScene::UpdateIsQuitStageSelect()
 			//回転が終わったら
 			if (player->GetRotation().x == easePlayerRotateQuitStageSelect_[XYZ_X].end)
 			{
+				player->SetModel(modelPlayerContinue_.get());
 				for (int i = 0; i < XYZ_Num; i++)easePlayerMoveQuitStageSelect_[i].Standby(false);
 				completeRotate_ = true;
 			}
@@ -511,13 +533,15 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 	levelData_ = LevelLoader::LoadFile(stagePath);
 
 	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("player", true);
+	modelPlayer_ = Model::LoadFromOBJ("playerhit");
+	modelPlayerContinue_ = Model::LoadFromOBJ("playerdash");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
 	modelStage1_ = Model::LoadFromOBJ("skydome");
 	modelStage2_ = Model::LoadFromOBJ("skydome2");
 
-	models_.insert(std::make_pair("player", modelPlayer_.get()));
+	models_.insert(std::make_pair("playerhit", modelPlayer_.get()));
+	models_.insert(std::make_pair("playerdash", modelPlayerContinue_.get()));
 	models_.insert(std::make_pair("sphere", modelGoal_.get()));
 	models_.insert(std::make_pair("skydomet", modelStageTutorial_.get()));
 	models_.insert(std::make_pair("skydome", modelStage1_.get()));
@@ -663,4 +687,13 @@ void GameOverScene::UpdateChangeColor()
 	{
 		isColorReverse_ = false;
 	}
+}
+
+void GameOverScene::EaseRotateSetUp(const DirectX::XMFLOAT3& rotation, Easing& easing, const int32_t num)
+{
+	XMFLOAT3 rot = rotation;
+
+	if (num == XYZ_X)easing.SetEasing(rot.x, easing.end, easing.maxtime);
+	if (num == XYZ_Y)easing.SetEasing(rot.y, easing.end, easing.maxtime);
+	if (num == XYZ_Z)easing.SetEasing(rot.z, easing.end, easing.maxtime);
 }
