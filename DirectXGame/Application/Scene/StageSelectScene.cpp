@@ -138,18 +138,19 @@ void StageSelectScene::Update()
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
-		//煙プリセット
+		const XMFLOAT2 dashOffset = { -1.0f,1.0f };//オフセット
+		//パーティクル
 		const ParticleManager::Preset smoke =
 		{
 			particle1_.get(),
-			player->GetPosition(),
-			{ 0.0f ,2.0f,0.0f },
+			{player->GetPosition().x + dashOffset.x,player->GetPosition().y + dashOffset.y,player->GetPosition().z},
+			{ 0.0f ,3.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
 			{ 0.0f,0.001f,0.0f },
-			3,
+			2,
 			{ 1.0f, 0.0f },
 			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
-			{ 0.0f,0.0f,0.0f,1.0f }
+			{0.0f,0.0f,0.0f,1.0f}
 		};
 
 		pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
@@ -476,11 +477,11 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 	levelData_ = LevelLoader::LoadFile(stagePath);
 
 	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("player", true);
+	modelPlayer_ = Model::LoadFromOBJ("playerdash", true);
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 	modelGround_ = Model::LoadFromOBJ("ground");
 
-	models_.insert(std::make_pair("player", modelPlayer_.get()));
+	models_.insert(std::make_pair("playerdash", modelPlayer_.get()));
 	models_.insert(std::make_pair("sphere", modelGoal_.get()));
 	models_.insert(std::make_pair("ground", modelGround_.get()));
 

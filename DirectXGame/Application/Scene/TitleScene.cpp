@@ -547,14 +547,14 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 	levelData_ = LevelLoader::LoadFile(stagePath);
 
 	// ÉÇÉfÉãì«Ç›çûÇ›
-	modelPlayer_ = Model::LoadFromOBJ("player", true);
+	modelPlayer_ = Model::LoadFromOBJ("playerdash", true);
 	modelSkydome_ = Model::LoadFromOBJ("skydomet");
 	modelSkydomeStage1_ = Model::LoadFromOBJ("skydome");
 	modelSkydomeStage2_ = Model::LoadFromOBJ("skydome2");
 	modelGround_ = Model::LoadFromOBJ("ground");
 	modelGoal_ = Model::LoadFromOBJ("sphere");
 
-	models_.insert(std::make_pair("player", modelPlayer_.get()));
+	models_.insert(std::make_pair("playerdash", modelPlayer_.get()));
 	models_.insert(std::make_pair("skydomet", modelSkydome_.get()));
 	models_.insert(std::make_pair("skydome", modelSkydomeStage1_.get()));
 	models_.insert(std::make_pair("skydome2", modelSkydomeStage2_.get()));

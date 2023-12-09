@@ -210,13 +210,13 @@ void Player::Move() {
 	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
 
 	//パーティクル
-	const XMFLOAT3 startPosRight = { position_.x - 1.0f,position_.y + 1.0f ,position_.z };
-	const XMFLOAT3 startPosLeft = { position_.x + 1.0f,position_.y + 1.0f ,position_.z };
+	const XMFLOAT3 startPosRight = { position_.x - 2.0f,position_.y + 1.0f ,position_.z };
+	const XMFLOAT3 startPosLeft = { position_.x + 2.0f,position_.y + 1.0f ,position_.z };
 	const ParticleManager::Preset smoke =
 	{
 		particleSmoke_.get(),
 		position_,//使わない
-		{ 0.0f ,3.0f,0.0f },
+		{ 0.0f ,2.0f,0.0f },
 		{ 3.0f,0.3f,0.3f },
 		{ 0.0f,0.001f,0.0f },
 		2,

@@ -211,13 +211,15 @@ void GamePlayScene::UpdateIsStartGame()
 	camera_->SetEye({ easeEyeGameStart_[XYZ_X].num_X, easeEyeGameStart_[XYZ_Y].num_X, easeEyeGameStart_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
 
+
 	for (std::unique_ptr<Player>& player : players_)
 	{
+		const XMFLOAT2 dashOffset = { -1.0f,1.0f };//オフセット
 		//パーティクル
 		const ParticleManager::Preset smoke =
 		{
 			particle1_.get(),
-			player->GetPosition(),
+			{player->GetPosition().x+dashOffset.x,player->GetPosition().y+dashOffset.y,player->GetPosition().z},
 			{ 0.0f ,3.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
 			{ 0.0f,0.001f,0.0f },
