@@ -189,15 +189,16 @@ void TitleScene::Update()
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
+		const DirectX::XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//オフセット
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
 			particle2_.get(),
-			player->GetPosition(),
+			{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
 			{ 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
 			{ 0.0f,0.001f,0.0f },
-			3,
+			2,
 			{ 1.0f, 0.0f },
 			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }

@@ -214,13 +214,13 @@ void GamePlayScene::UpdateIsStartGame()
 
 	for (std::unique_ptr<Player>& player : players_)
 	{
-		const XMFLOAT2 dashOffset = { -1.0f,1.0f };//オフセット
+		const XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//オフセット
 		//パーティクル
 		const ParticleManager::Preset smoke =
 		{
 			particle1_.get(),
-			{player->GetPosition().x+dashOffset.x,player->GetPosition().y+dashOffset.y,player->GetPosition().z},
-			{ 0.0f ,3.0f,0.0f },
+			{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
+			{ 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
 			{ 0.0f,0.001f,0.0f },
 			2,
@@ -228,6 +228,7 @@ void GamePlayScene::UpdateIsStartGame()
 			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{0.0f,0.0f,0.0f,1.0f}
 		};
+
 		pm_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
