@@ -49,7 +49,7 @@
             "transform": {
                 "translation": [
                     60.0,
-                    -27.12677764892578,
+                    -20.0,
                     -10.0
                 ],
                 "rotation": [
@@ -84,7 +84,7 @@
             "transform": {
                 "translation": [
                     0.0,
-                    30.0,
+                    25.0,
                     30.0
                 ],
                 "rotation": [
@@ -121,32 +121,8 @@
                     1.0
                 ]
             },
-            "file_name": "player",
+            "file_name": "playerdash",
             "objecttype": "PLAYER"
-        },
-        {
-            "type": "MESH",
-            "name": "boss1",
-            "transform": {
-                "translation": [
-                    -150.0,
-                    30.0,
-                    10.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    3.0,
-                    3.0,
-                    3.0
-                ]
-            },
-            "file_name": "boss1",
-            "objecttype": "ENEMY",
-            "objectpattern": "BOSS1"
         },
         {
             "type": "MESH",
@@ -178,7 +154,7 @@
             "transform": {
                 "translation": [
                     60.0,
-                    5.0,
+                    9.0,
                     -10.0
                 ],
                 "rotation": [
@@ -237,11 +213,11 @@
             "transform": {
                 "translation": [
                     0.0,
-                    5.0,
+                    9.0,
                     -10.0
                 ],
                 "rotation": [
-                    -179.99998474121094,
+                    179.99998474121094,
                     -0.0,
                     0.0
                 ],
@@ -261,7 +237,7 @@
             "transform": {
                 "translation": [
                     0.0,
-                    -27.21516990661621,
+                    -20.0,
                     -10.0
                 ],
                 "rotation": [
