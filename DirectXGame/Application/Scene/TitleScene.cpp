@@ -103,6 +103,12 @@ void TitleScene::Initialize()
 	spriteCursor_->Initialize(spCommon_, TSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[TMEN_Tutorial] });
 
+	spCommon_->LoadTexture(TSTI_StageNameTex, "texture/stagename/1-1.png");
+	spriteStageName_->Initialize(spCommon_, TSTI_StageNameTex);
+	spriteStageName_->SetPosition(stageNamePos_);
+	spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
+	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	particle2_ = Particle::LoadFromParticleTexture("particle8.png");
@@ -186,6 +192,7 @@ void TitleScene::Update()
 	spriteStageInfoNow_->Update();
 	spriteCursor_->Update();
 	spriteTitleBack_->Update();
+	spriteStageName_->Update();
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
@@ -484,7 +491,11 @@ void TitleScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
-		if (isStartGame_)spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+		if (isStartGame_)
+		{
+			spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+			spriteStageName_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+		}
 	}
 }
 
@@ -532,7 +543,7 @@ void TitleScene::Draw()
 	spriteLoad_->Draw();
 	spriteStageInfoNow_->Draw();
 	spriteCursor_->Draw();
-	
+	spriteStageName_->Draw();
 }
 
 void TitleScene::Finalize()

@@ -219,7 +219,7 @@ void Item::LoadSprite()
 	//ƒAƒCƒeƒ€ŠÖŒW
 	spCommon_->LoadTexture(GPSITI_ItemJumpBar, "itemtex/itemjumpbar.png");
 	spriteItemJumpBar_->Initialize(spCommon_, GPSITI_ItemJumpBar);
-	const XMFLOAT2 jumpBarPos = { 0.0f,100.0f };
+	const XMFLOAT2 jumpBarPos = {800.0f,65.0f };
 	spriteItemJumpBar_->SetPosition(jumpBarPos);
 
 	spriteItemJumpBar_->Update();

@@ -12,7 +12,7 @@
 */
 class Sprite
 {
-public: // メンバ関数
+private: // メンバ関数
 	//エイリアステンプレートとかで色々省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	using XMFLOAT2 = DirectX::XMFLOAT2;
@@ -49,8 +49,6 @@ public://構造体類
 		XMFLOAT3 pos;		//xyz座標
 		XMFLOAT2 uv;		//uv座標
 	};
-
-	
 
 protected://構造体類に関係あるメンバ変数
 	//定数バッファのGPUリソースのポインタ

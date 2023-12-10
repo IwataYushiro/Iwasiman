@@ -83,6 +83,7 @@ private://メンバ変数
 		TSTI_StageInfoNowTex = 9,
 		TSTI_CursorTex = 10,
 		TSTI_TitleBackTex = 11,
+		TSTI_StageNameTex=12,
 	};
 
 	//スプライト基盤
@@ -106,6 +107,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 	std::unique_ptr<Sprite> spriteTitleBack_ = std::make_unique<Sprite>();			//タイトル画面スプライト(タイトルの後ろ)
+	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();			//ステージ名スプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;

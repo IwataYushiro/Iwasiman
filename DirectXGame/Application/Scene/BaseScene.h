@@ -30,10 +30,14 @@ protected://継承メンバ変数
 	const DirectX::XMFLOAT2 stageInfoNowPos_ = { 300.0f,100.0f };
 	//ローディング中のポジション
 	const DirectX::XMFLOAT2 loadPos_ = { 350.0f,600.0f };
+	//ステージ名のポジション
+	const DirectX::XMFLOAT2 stageNamePos_ = { 630.0f,500.0f };
 	//色サンプル
 	const DirectX::XMFLOAT3 white_ = { 1.0f,1.0f,1.0f };	//白
 	const DirectX::XMFLOAT3 black_ = { 0.0f,0.0f,0.0f };	//黒
 	const DirectX::XMFLOAT3 deepRed_ = { 0.2f,0.0f,0.0f };	//濃い赤
+	//アンカーポイントのプリセット
+	const DirectX::XMFLOAT2 ANCHOR_POINT_CENTRAL = { 0.5f,0.5f };//中央
 
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)

@@ -146,6 +146,7 @@ void GamePlayScene::Update()
 	spriteStageInfoNow_->Update();
 	spriteCursor_->Update();
 	spriteHowToPlayList_->Update();
+	spriteStageName_->Update();
 
 	//チュートリアル関係
 	UpdateTutorial();
@@ -209,7 +210,8 @@ void GamePlayScene::UpdateIsStartGame()
 	//フェードインアウト
 	spriteFadeInOut_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.num_X });
 	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.num_X });
-	
+	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+
 	//カメラもセット
 	camera_->SetEye({ easeEyeGameStart_[XYZ_X].num_X, easeEyeGameStart_[XYZ_Y].num_X, easeEyeGameStart_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
@@ -811,6 +813,7 @@ for (std::unique_ptr<Item>& item : items_){item->DrawSprite();}
 		spriteFadeInOut_->Draw();
 		spriteLoad_->Draw();
 		spriteStageInfoNow_->Draw();
+		spriteStageName_->Draw();
 		//レディーゴー
 		spriteReady_->Draw();
 		spriteGo_->Draw();
@@ -1311,6 +1314,24 @@ void GamePlayScene::DrawTutorialSprite(const Sprite* s1, const Sprite* s2,
 	if (s6 != nullptr)s6->Draw();
 }
 
+void GamePlayScene::LoadStageNameSprite()
+{
+	if (stageNum_== SL_StageTutorial_Area1)spCommon_->LoadTexture(GPSTI_StageNameTex, "texture/stagename/1-1.png");
+	else if (stageNum_ == SL_StageTutorial_Area2)spCommon_->LoadTexture(GPSTI_StageNameTex, "texture/stagename/1-2.png");
+	else if (stageNum_ == SL_StageTutorial_Area3)spCommon_->LoadTexture(GPSTI_StageNameTex, "texture/stagename/1-3.png");
+	else if (stageNum_ == SL_StageTutorial_Final)spCommon_->LoadTexture(GPSTI_StageNameTex, "texture/stagename/1-4.png");
+	else if (stageNum_ == SL_Stage1_Area1)spCommon_->LoadTexture(GPSTI_StageNameTex, "texture/stagename/2-1.png");
+	else if (stageNum_ == SL_Stage1_Area2)spCommon_->LoadTexture(GPSTI_StageNameTex, "texture/stagename/2-2.png");
+	else if (stageNum_ == SL_Stage1_Area3)spCommon_->LoadTexture(GPSTI_StageNameTex, "texture/stagename/2-3.png");
+	else if (stageNum_ == SL_Stage1_AreaBoss)spCommon_->LoadTexture(GPSTI_StageNameTex, "texture/stagename/2-4.png");
+
+	spriteStageName_->Initialize(spCommon_, GPSTI_StageNameTex);
+	spriteStageName_->SetPosition(stageNamePos_);
+	spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
+	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+	spriteStageName_->Update();
+}
+
 void GamePlayScene::LoadSprite()
 {
 	//スプライト
@@ -1388,6 +1409,8 @@ void GamePlayScene::LoadSprite()
 	const XMFLOAT2 howToPlayListPosition = { 30.0f,70.0f };
 	spriteHowToPlayList_->SetPosition(howToPlayListPosition);
 	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
+
+	LoadStageNameSprite();
 
 	spCommon_->LoadTexture(GPSTTI_TutorialInfo1Tex, "texture/info/tinfo1.png");//1
 	spriteTutorialInfo1_->Initialize(spCommon_, GPSTTI_TutorialInfo1Tex);

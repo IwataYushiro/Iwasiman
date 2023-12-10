@@ -123,6 +123,7 @@ private:
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 	std::unique_ptr<Sprite> spriteHowToPlayList_ = std::make_unique<Sprite>();		//遊び方説明リストスプライト
+	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();			//ステージ名スプライト
 
 	std::unique_ptr<Sprite> spriteTutorialHTPMove_ = std::make_unique<Sprite>();		//チュートリアルの移動方法スプライト
 	std::unique_ptr<Sprite> spriteTutorialHTPDash_ = std::make_unique<Sprite>();		//チュートリアルのダッシュ方法スプライト
@@ -496,4 +497,7 @@ private:
 	//チュートリアル用のスプライト描画(スプライト1～6枚)
 	void DrawTutorialSprite(const Sprite* s1, const Sprite* s2,
 		const Sprite* s3, const Sprite* s4, const Sprite* s5, const Sprite* s6)const;
+
+	//ステージ名のスプライトをロード
+	void LoadStageNameSprite();
 };
