@@ -93,7 +93,7 @@ void GamePlayScene::Initialize()
 	for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].Standby(false);
 	for (int i = 0; i < XYZ_Num; i++)easePlayerPositionGameStart_[i].Standby(false);
 	easeReadyPosition_[XXY_X1].Standby(false);
-
+	for (int i = 0; i < XY_Num; i++)easeTutorialListScale_[i].Standby(false);
 }
 
 void GamePlayScene::Update()
@@ -145,6 +145,7 @@ void GamePlayScene::Update()
 	spriteLoad_->Update();
 	spriteStageInfoNow_->Update();
 	spriteCursor_->Update();
+	spriteHowToPlayList_->Update();
 
 	//チュートリアル関係
 	UpdateTutorial();
@@ -166,6 +167,8 @@ void GamePlayScene::UpdateIsStartGame()
 	easeTargetGameStart_[XYZ_Y].ease_in_out_quint();
 	easeTargetGameStart_[XYZ_Z].ease_in_sine();
 
+	for (int i = 0; i < XY_Num; i++)easeTutorialListScale_[i].ease_in_out_bounce();
+	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].num_X,easeTutorialListScale_[XY_Y].num_X });
 
 	if (isEndReady_)
 	{for (int i = 0; i < XYW_Num; i++)easeGoSizeAndAlpha_[i].ease_out_cubic();
@@ -798,6 +801,10 @@ for (std::unique_ptr<Item>& item : items_){item->DrawSprite();}
 				DrawTutorialSprite(spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
 					spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo4_.get());
 			}
+			else
+			{
+				spriteHowToPlayList_->Draw();
+			}
 		}
 }
 		//フェードインアウトとロードと現ステージ
@@ -1376,6 +1383,11 @@ void GamePlayScene::LoadSprite()
 	spriteCursor_->Initialize(spCommon_, GPSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,pausePosY_[PMEN_Resume] });
 
+	spCommon_->LoadTexture(GPSTI_HowToPlayListTex, "texture/info/howtoplaylist.png");
+	spriteHowToPlayList_->Initialize(spCommon_, GPSTI_HowToPlayListTex);
+	const XMFLOAT2 howToPlayListPosition = { 30.0f,70.0f };
+	spriteHowToPlayList_->SetPosition(howToPlayListPosition);
+	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
 
 	spCommon_->LoadTexture(GPSTTI_TutorialInfo1Tex, "texture/info/tinfo1.png");//1
 	spriteTutorialInfo1_->Initialize(spCommon_, GPSTTI_TutorialInfo1Tex);

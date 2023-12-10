@@ -122,7 +122,7 @@ private:
 	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
-
+	std::unique_ptr<Sprite> spriteHowToPlayList_ = std::make_unique<Sprite>();		//遊び方説明リストスプライト
 
 	std::unique_ptr<Sprite> spriteTutorialHTPMove_ = std::make_unique<Sprite>();		//チュートリアルの移動方法スプライト
 	std::unique_ptr<Sprite> spriteTutorialHTPDash_ = std::make_unique<Sprite>();		//チュートリアルのダッシュ方法スプライト
@@ -176,6 +176,19 @@ private:
 		presetEaseInfoTutorial_[TIEN_MoveBack],	//手前、奥側移動方法
 		presetEaseInfoTutorial_[TIEN_Attack],	//攻撃方法
 		presetEaseInfoTutorial_[TIEN_Info]		//ゲーム説明文字
+	};
+
+	//チュートリアルリストのスケールイージングのプリセット
+	const Easing presetEaseTutorialListScale_[XY_Num] =
+	{
+		{0.0f,252.0f,2.0f},		//X
+		{0.0f,196.0f,2.0f}		//Y
+	};
+	//チュートリアルリストのスケールイージング
+	Easing easeTutorialListScale_[XY_Num] =
+	{
+		presetEaseTutorialListScale_[XY_X],		//X
+		presetEaseTutorialListScale_[XY_Y] 		//Y
 	};
 
 	//ポーズメニュー用の列挙体
