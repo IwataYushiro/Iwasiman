@@ -797,13 +797,13 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		const int32_t shakeCount = 1;
 		//視点シェイク
 		XMFLOAT3 Eye = nowEye_ + hitMove_;
-		const XMFLOAT3 hitEye = { 1.0f,1.0f,1.0f };
+		const XMFLOAT3 hitEye = { 0.5f,0.5f,0.5f };
 		camera_->ShakeEye(Eye, shakeCount, { Eye.x - hitEye.x,Eye.y - hitEye.y,Eye.z - hitEye.z },
 			{ Eye.x + hitEye.x,Eye.y + hitEye.y,Eye.z + hitEye.z });
 
 		//注視点シェイク
 		XMFLOAT3 Target = nowTarget_ + hitMove_;
-		const XMFLOAT3 hitTarget = { 1.0f,1.0f,1.0f };
+		const XMFLOAT3 hitTarget = { 0.5f,0.5f,0.5f };
 		camera_->ShakeTarget(Target, shakeCount, { Target.x - hitTarget.x,Target.y - hitTarget.y,Target.z - hitTarget.z },
 			{ Target.x + hitTarget.x,Target.y + hitTarget.y,Target.z + hitTarget.z });
 		camera_->Update();
