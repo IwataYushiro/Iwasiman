@@ -103,6 +103,13 @@ void StageSelectScene::Initialize()
 	spriteCursor_->Initialize(spCommon_, SSSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[SSMEN_Tutorial] });
 
+	spCommon_->LoadTexture(SSSTI_StageNameTex, "texture/stagename/1-1.png");//ここはあくまで置くだけ
+	spriteStageName_->Initialize(spCommon_, SSSTI_StageNameTex);
+	spriteStageName_->SetPosition(stageNamePos_);
+	spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
+	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
+	//モデル
 	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
 	modelStage1_ = Model::LoadFromOBJ("skydome");
 	modelStage2_ = Model::LoadFromOBJ("skydome2");
@@ -110,7 +117,7 @@ void StageSelectScene::Initialize()
 	objStage_ = Object3d::Create();
 	objStage_->SetModel(modelStageTutorial_.get());
 	objStage_->SetCamera(camera_.get());
-	const XMFLOAT3 stageScale = { 7.0f,7.0f,7.0f };
+	const XMFLOAT3 stageScale = { 7.0f,7.0f,7.0f };//ステージ天球の大きさ
 	objStage_->SetScale(stageScale);
 
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
@@ -176,6 +183,7 @@ void StageSelectScene::Update()
 	spriteLoad_->Update();
 	spriteStageInfoNow_->Update();
 	spriteCursor_->Update();
+	spriteStageName_->Update();
 
 	pm1_->Update();
 
@@ -276,6 +284,33 @@ void StageSelectScene::UpdateIsStageSelect()
 			for (int i = 0; i < XYZ_Num; i++)easeStartStagePosY_[i].Standby(false);
 			easeCursorPosX_.Standby(true);
 
+			//ここでステージ名のスプライトをロードする
+			if (menuCount_ == SSSMI_StageTutorial_Tutorial)
+			{
+				spCommon_->LoadTexture(SSSTI_StageNameTex, "texture/stagename/1-1.png");
+				spriteStageName_->Initialize(spCommon_, SSSTI_StageNameTex);
+				spriteStageName_->SetPosition(stageNamePos_);
+				spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
+				spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+			}
+			else if (menuCount_ == SSSMI_Stage1_SkyStage)
+			{
+				spCommon_->LoadTexture(SSSTI_StageNameTex, "texture/stagename/2-1.png");
+				spriteStageName_->Initialize(spCommon_, SSSTI_StageNameTex);
+				spriteStageName_->SetPosition(stageNamePos_);
+				spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
+				spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
+			}
+			else if (menuCount_ == SSSMI_Stage2_SpaceStage)
+			{
+				spCommon_->LoadTexture(SSSTI_StageNameTex, "texture/stagename/2-1.png");
+				spriteStageName_->Initialize(spCommon_, SSSTI_StageNameTex);
+				spriteStageName_->SetPosition(stageNamePos_);
+				spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
+				spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+			}
+
 			isDone_ = true;
 			isStageSelect_ = false;
 		}
@@ -368,7 +403,7 @@ void StageSelectScene::UpdateIsGameStart()
 	{
 		if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);//チュートリアルステージ
 		else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);//ステージ1
-		else if (menuCount_ == SSSMI_Stage2_SpaceStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area3);//ステージ2はまだ未完成
+		else if (menuCount_ == SSSMI_Stage2_SpaceStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);//ステージ2はまだ未完成
 
 	}
 }
@@ -445,6 +480,7 @@ void StageSelectScene::Draw()
 	spriteLoad_->Draw();
 	spriteStageInfoNow_->Draw();
 	spriteCursor_->Draw();
+	spriteStageName_->Draw();
 }
 
 void StageSelectScene::Finalize()
@@ -466,8 +502,11 @@ void StageSelectScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
-		if (isStart_)spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });
-
+		if (isStart_)
+		{
+			spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+			spriteStageName_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+		}
 	}
 }
 

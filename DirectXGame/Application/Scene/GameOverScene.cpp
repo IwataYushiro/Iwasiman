@@ -97,6 +97,8 @@ void GameOverScene::Initialize()
 	spriteCursor_->Initialize(spCommon_, GOSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[GOMEN_Continue] });
 
+	LoadStageNameSprite();
+
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
 	pm1_ = ParticleManager::Create();
@@ -181,6 +183,7 @@ void GameOverScene::Update()
 	spriteLoad_->Update();
 	spriteStageInfoNow_->Update();
 	spriteCursor_->Update();
+	spriteStageName_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
@@ -518,6 +521,7 @@ void GameOverScene::Draw()
 	spriteLoad_->Draw();
 	spriteStageInfoNow_->Draw();
 	spriteCursor_->Draw();
+	spriteStageName_->Draw();
 }
 
 void GameOverScene::Finalize()
@@ -652,8 +656,11 @@ void GameOverScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
-		if (isContinue_)spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });
-
+		if (isContinue_)
+		{
+			spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+			spriteStageName_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+		}
 	}
 }
 
@@ -696,4 +703,22 @@ void GameOverScene::EaseRotateSetUp(const DirectX::XMFLOAT3& rotation, Easing& e
 	if (num == XYZ_X)easing.SetEasing(rot.x, easing.end, easing.maxtime);
 	if (num == XYZ_Y)easing.SetEasing(rot.y, easing.end, easing.maxtime);
 	if (num == XYZ_Z)easing.SetEasing(rot.z, easing.end, easing.maxtime);
+}
+
+void GameOverScene::LoadStageNameSprite()
+{
+	if (stageNum_ == SL_StageTutorial_Area1)spCommon_->LoadTexture(GOSTI_StageNameTex, "texture/stagename/1-1.png");
+	else if (stageNum_ == SL_StageTutorial_Area2)spCommon_->LoadTexture(GOSTI_StageNameTex, "texture/stagename/1-2.png");
+	else if (stageNum_ == SL_StageTutorial_Area3)spCommon_->LoadTexture(GOSTI_StageNameTex, "texture/stagename/1-3.png");
+	else if (stageNum_ == SL_StageTutorial_Final)spCommon_->LoadTexture(GOSTI_StageNameTex, "texture/stagename/1-4.png");
+	else if (stageNum_ == SL_Stage1_Area1)spCommon_->LoadTexture(GOSTI_StageNameTex, "texture/stagename/2-1.png");
+	else if (stageNum_ == SL_Stage1_Area2)spCommon_->LoadTexture(GOSTI_StageNameTex, "texture/stagename/2-2.png");
+	else if (stageNum_ == SL_Stage1_Area3)spCommon_->LoadTexture(GOSTI_StageNameTex, "texture/stagename/2-3.png");
+	else if (stageNum_ == SL_Stage1_AreaBoss)spCommon_->LoadTexture(GOSTI_StageNameTex, "texture/stagename/2-4.png");
+
+	spriteStageName_->Initialize(spCommon_, GOSTI_StageNameTex);
+	spriteStageName_->SetPosition(stageNamePos_);
+	spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
+	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+	spriteStageName_->Update();
 }

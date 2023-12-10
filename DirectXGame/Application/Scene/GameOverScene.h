@@ -83,6 +83,7 @@ private://メンバ変数
 		GOSTI_LoadingTex = 6,
 		GOSTI_StageInfoNowTex = 7,
 		GOSTI_CursorTex = 8,
+		GOSTI_StageNameTex = 9,
 	};
 
 	//ゲームオーバー用メニューインデックス
@@ -109,6 +110,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
+	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();			//ステージ名スプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
@@ -348,5 +350,9 @@ private://メンバ変数
 	std::unique_ptr<ParticleManager> pm1_ = nullptr;
 
 private:
+	//回転イージングのセット
 	void EaseRotateSetUp(const DirectX::XMFLOAT3& rotation, Easing& easing, const int32_t num);
+
+	//ステージ名のスプライトをロード
+	void LoadStageNameSprite();
 };

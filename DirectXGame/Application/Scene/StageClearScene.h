@@ -80,6 +80,7 @@ private://メンバ変数
 		SCSTI_LoadingTex = 6,
 		SCSTI_StageInfoNowTex = 7,
 		SCSTI_CursorTex = 8,
+		SCSTI_StageNameTex = 9,
 	};
 	//ステージクリア用メニューインデックス
 	enum StageClearSceneMenuIndex
@@ -107,7 +108,8 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteFadeInOut_ =std::make_unique<Sprite>();		//フェードインアウトのスプライト
 	std::unique_ptr<Sprite> spriteLoad_ =std::make_unique<Sprite>();			//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ =std::make_unique<Sprite>();	//現在ステージスプライト
-	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
+	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();			//カーソルスプライト
+	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();		//ステージ名スプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;			
@@ -257,8 +259,9 @@ private://メンバ変数
 	//開始時のポジション
 	DirectX::XMFLOAT3 startPos_;
 
-public:
+private:
 	//色が変わる処理
 	void UpdateChangeColor();
-
+	//ステージ名のスプライトをロード
+	void LoadStageNameSprite();
 };

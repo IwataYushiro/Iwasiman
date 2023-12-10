@@ -96,6 +96,8 @@ void StageClearScene::Initialize()
 	spriteCursor_->Initialize(spCommon_, SCSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[SCMEN_NextStage] });
 
+	LoadStageNameSprite();
+
 	//パーティクル
 	particleClear_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmClear_ = ParticleManager::Create();
@@ -196,6 +198,7 @@ void StageClearScene::Update()
 	spriteLoad_->Update();
 	spriteStageInfoNow_->Update();
 	spriteCursor_->Update();
+	spriteStageName_->Update();
 
 	camera_->Update();
 	lightGroup_->Update();
@@ -498,6 +501,7 @@ void StageClearScene::Draw()
 	spriteLoad_->Draw();
 	spriteStageInfoNow_->Draw();
 	spriteCursor_->Draw();
+	spriteStageName_->Draw();
 }
 
 void StageClearScene::FadeOut(const DirectX::XMFLOAT3& rgb)
@@ -513,7 +517,11 @@ void StageClearScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
-		if (isNextStage_)spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });
+		if (isNextStage_)
+		{
+			spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+			spriteStageName_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
+		}
 	}
 }
 
@@ -692,4 +700,20 @@ void StageClearScene::UpdateChangeColor()
 	{
 		isColorReverse_ = false;
 	}
+}
+
+void StageClearScene::LoadStageNameSprite()
+{
+	if (stageNum_ == SL_StageTutorial_Area1)spCommon_->LoadTexture(SCSTI_StageNameTex, "texture/stagename/1-2.png");
+	else if (stageNum_ == SL_StageTutorial_Area2)spCommon_->LoadTexture(SCSTI_StageNameTex, "texture/stagename/1-3.png");
+	else if (stageNum_ == SL_StageTutorial_Area3)spCommon_->LoadTexture(SCSTI_StageNameTex, "texture/stagename/1-4.png");
+	else if (stageNum_ == SL_Stage1_Area1)spCommon_->LoadTexture(SCSTI_StageNameTex, "texture/stagename/2-2.png");
+	else if (stageNum_ == SL_Stage1_Area2)spCommon_->LoadTexture(SCSTI_StageNameTex, "texture/stagename/2-3.png");
+	else if (stageNum_ == SL_Stage1_Area3)spCommon_->LoadTexture(SCSTI_StageNameTex, "texture/stagename/2-4.png");
+
+	spriteStageName_->Initialize(spCommon_, SCSTI_StageNameTex);
+	spriteStageName_->SetPosition(stageNamePos_);
+	spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
+	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+	spriteStageName_->Update();
 }
