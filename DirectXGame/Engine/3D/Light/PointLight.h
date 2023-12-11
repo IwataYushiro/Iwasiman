@@ -18,9 +18,6 @@ private: // エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-public://定数
-	static const int DirLightNum = 3;
-
 public://サブクラス
 	//定数バッファ用データ構造体
 	struct ConstBufferData

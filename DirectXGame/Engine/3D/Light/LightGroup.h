@@ -3,6 +3,7 @@
 #include <memory>
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 /*
 
@@ -27,7 +28,8 @@ public://定数
 	static const int DirLightNum = 3;
 	//点光源の数
 	static const int PointLightNum = 3;
-
+	//スポットライトの数
+	static const int32_t SpotLightNum = 3;
 public://サブクラス
 	//定数バッファ用データ構造体
 	struct ConstBufferData
@@ -39,6 +41,8 @@ public://サブクラス
 		DirectionalLight::ConstBufferData dirLights[DirLightNum];
 		//点光源用
 		PointLight::ConstBufferData pointLights[PointLightNum];
+		//スポットライト用
+		SpotLight::ConstBufferData spotLights[SpotLightNum];
 	};
 
 private://静的メンバ変数
@@ -65,6 +69,9 @@ private://メンバ変数
 
 	//点光源の配列
 	PointLight pointLights_[PointLightNum];
+
+	//スポットライトの配列
+	SpotLight spotLights_[SpotLightNum];
 
 public://メンバ関数
 	//初期化
@@ -97,6 +104,20 @@ public://メンバ関数
 	void SetPointLightAtten(const int index, const XMFLOAT3& lightAtten);
 	//点光源のライトセット(何番ライト、起動フラグ)
 	void SetPointLightActive(const int index, const bool active);
+
+	//スポットライト
+	//ライト方向セット(何番ライト、方向)
+	void SetSpotLightDir(const int index, const XMVECTOR& lightDir);
+	//ライト座標セット(何番ライト、座標)
+	void SetSpotLightPos(const int index, const XMFLOAT3& lightPos);
+	//ライトの色セット(何番ライト、カラー)
+	void SetSpotLightColor(const int index, const XMFLOAT3& lightColor);
+	//ライト距離の減衰係数セット(何番ライト、減衰係数)
+	void SetSpotLightAtten(const int index, const XMFLOAT3& lightAtten);
+	//ライト減衰角度セット(何番ライト、減衰角度)
+	void SetSpotLightFactorAngleCos(const int index, const XMFLOAT2& lightFactorAngleCos);
+	//点光源のライトセット(何番ライト、起動フラグ)
+	void SetSpotLightActive(const int index, const bool active);
 };
 
 

@@ -143,6 +143,26 @@ void LightGroup::TransferConstBuffer()
 				constMap->pointLights[i].active = LAN_False;
 			}
 		}
+		//スポットライト
+		for (int i = 0; i < SpotLightNum; i++)
+		{
+			//lightが有効なら設定を転送
+			if (spotLights_[i].IsActive())
+			{
+				constMap->spotLights[i].active = LAN_True;
+				constMap->spotLights[i].lightv = spotLights_[i].GetLightDir();
+				constMap->spotLights[i].lightPos = spotLights_[i].GetLightPos();
+				constMap->spotLights[i].lightColor = spotLights_[i].GetLightColor();
+				constMap->spotLights[i].lightatten = spotLights_[i].GetLightAtten();
+				constMap->spotLights[i].lightfactoranglecos =
+					spotLights_[i].GetLightFactorAngleCos();
+			}
+			//無効なら転送しない
+			else
+			{
+				constMap->spotLights[i].active = LAN_False;
+			}
+		}
 		constBuff_->Unmap(0, nullptr);
 	}
 }
@@ -258,4 +278,50 @@ void LightGroup::SetPointLightActive(const int index,const bool active)
 {
 	assert(0 <= index && index < PointLightNum);
 	pointLights_[index].SetActive(active);
+}
+
+void LightGroup::SetSpotLightDir(const int index, const XMVECTOR& lightDir)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights_[index].SetLightDir(lightDir);
+	dirty_ = true;
+}
+
+void LightGroup::SetSpotLightPos(const int index, const XMFLOAT3& lightPos)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights_[index].SetLightPos(lightPos);
+	dirty_ = true;
+}
+
+void LightGroup::SetSpotLightColor(const int index, const XMFLOAT3& lightColor)
+{
+	assert(0 <= index && index < SpotLightNum);
+	
+	spotLights_[index].SetLightColor(lightColor);
+	dirty_ = true;
+}
+
+void LightGroup::SetSpotLightAtten(const int index, const XMFLOAT3& lightAtten)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights_[index].SetLightAtten(lightAtten);
+	dirty_ = true;
+}
+
+void LightGroup::SetSpotLightFactorAngleCos(const int index, const XMFLOAT2& lightFactorAngleCos)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights_[index].SetLightFactorAngleCos(lightFactorAngleCos);
+	dirty_ = true;
+}
+
+void LightGroup::SetSpotLightActive(const int index, const bool active)
+{
+	assert(0 <= index && index < SpotLightNum);
+	spotLights_[index].SetActive(active);
 }
