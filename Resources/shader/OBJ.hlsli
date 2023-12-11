@@ -20,14 +20,26 @@ struct DirLight
     float3 lightcolor; //ライトの色(RGB)
     uint active;
 };
-
+//点光源
 static const int POINTLIGHT_NUM = 3;
 
 struct PointLight
 {
-    float3 lightpos;
-    float3 lightcolor;
-    float3 lightatten;
+    float3 lightpos;        //ライト座標
+    float3 lightcolor;      //ライトカラー(RGB)
+    float3 lightatten;      //ライト距離減衰係数
+    uint active;
+};
+
+//スポットライト
+static const int SPOTLIGHT_NUM = 3;
+struct SpotLight
+{
+    float3 lightv;                  //ライトの光線方向の逆ベクトル
+    float3 lightpos;                //ライト座標
+    float3 lightcolor;              //ライトの色(RGB)
+    float3 lightatten;              //ライト距離減衰係数
+    float2 lightfactoranglecos;     //ライト減衰角度のcos
     uint active;
 };
 
@@ -36,6 +48,7 @@ cbuffer cbuff2 : register(b2)
     float3 ambientColor;
     DirLight dirLights[DIR_LIGHT_NUM];
     PointLight pointLights[POINTLIGHT_NUM];
+    SpotLight spotLights[SPOTLIGHT_NUM];
 };
 
 // 頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
