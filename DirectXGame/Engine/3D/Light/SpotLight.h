@@ -16,9 +16,6 @@ private://エイリアステンプレート
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
-public:
-	SpotLight();
-	~SpotLight();
 
 public://サブクラス
 	//定数バッファ用データ構造体
