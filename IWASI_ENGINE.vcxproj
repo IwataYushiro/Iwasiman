@@ -274,6 +274,7 @@
     <ClInclude Include="DirectXGame\Engine\3D\FBX\FbxLoader.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ModelFbx.h" />
     <ClInclude Include="DirectXGame\Engine\3D\FBX\ObjectFbx.h" />
+    <ClInclude Include="DirectXGame\Engine\3D\Light\CircleShadow.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Light\DirectionalLight.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Light\LightGroup.h" />
     <ClInclude Include="DirectXGame\Engine\3D\Light\PointLight.h" />

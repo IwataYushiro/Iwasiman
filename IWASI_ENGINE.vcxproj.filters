@@ -620,6 +620,9 @@
     <ClInclude Include="DirectXGame\Engine\3D\Light\SpotLight.h">
       <Filter>Header File\Engine\3D\Light</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXGame\Engine\3D\Light\CircleShadow.h">
+      <Filter>Header File\Engine\3D\Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\FBX\FBX.hlsli">
