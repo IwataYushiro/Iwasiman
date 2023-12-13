@@ -410,7 +410,7 @@ void Model::LoadFromOBJInternal(const std::string& modelName,const bool smoothin
 						//エッジ平滑化データの追加
 						if (smoothing)
 						{
-							mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - 1);
+							mesh->AddSmoothData(indexPosition, (unsigned short)mesh->GetVertexCount() - indexOffset);
 						}
 					}
 					else

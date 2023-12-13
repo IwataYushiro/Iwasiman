@@ -36,7 +36,7 @@ private://メンバ変数
 	const XMVECTOR presetDir_ = { 1.0f,0.0f,0.0f,0.0f };//プリセット
 	XMVECTOR dir_ = presetDir_;
 	//キャスターとライトの距離
-	const float presetDistanceCasterLight_ = 100.0f;//プリセット
+	const float presetDistanceCasterLight_ = 300.0f;//プリセット
 	float distanceCasterLight_ = presetDistanceCasterLight_;
 	//キャスター座標(ワールド座標系)
 	const XMFLOAT3 presetCasterPos_ = { 0.0f,0.0f,0.0f };//プリセット

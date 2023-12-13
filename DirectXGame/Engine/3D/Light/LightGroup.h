@@ -4,6 +4,7 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "CircleShadow.h"
 
 /*
 
@@ -25,11 +26,22 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public://定数
-	static const int DirLightNum = 3;
+	enum LightNum
+	{
+		LN_0,	//0番ライト
+		LN_1,	//1番ライト
+		LN_2,	//2番ライト
+		LN_NUM,	//配列用
+	};
+	//ライト数
+	static const int32_t DirLightNum = 3;
 	//点光源の数
-	static const int PointLightNum = 3;
+	static const int32_t PointLightNum = 3;
 	//スポットライトの数
 	static const int32_t SpotLightNum = 3;
+	//丸影の数
+	static const int32_t CircleShadowNum = 1;
+
 public://サブクラス
 	//定数バッファ用データ構造体
 	struct ConstBufferData
@@ -43,6 +55,8 @@ public://サブクラス
 		PointLight::ConstBufferData pointLights[PointLightNum];
 		//スポットライト用
 		SpotLight::ConstBufferData spotLights[SpotLightNum];
+		//丸影用
+		CircleShadow::ConstBufferData circleShadows[CircleShadowNum];
 	};
 
 private://静的メンバ変数
@@ -72,6 +86,9 @@ private://メンバ変数
 
 	//スポットライトの配列
 	SpotLight spotLights_[SpotLightNum];
+
+	//丸影の配列
+	CircleShadow circleShadows_[CircleShadowNum];
 
 public://メンバ関数
 	//初期化
@@ -116,8 +133,20 @@ public://メンバ関数
 	void SetSpotLightAtten(const int index, const XMFLOAT3& lightAtten);
 	//ライト減衰角度セット(何番ライト、減衰角度)
 	void SetSpotLightFactorAngleCos(const int index, const XMFLOAT2& lightFactorAngleCos);
-	//点光源のライトセット(何番ライト、起動フラグ)
+	//スポットライトのライトセット(何番ライト、起動フラグ)
 	void SetSpotLightActive(const int index, const bool active);
+
+	//丸影
+	//丸影の方向セット(何番シャドウ、方向)
+	void SetCircleShadowDir(const int index, const XMVECTOR& lightDir);
+	//丸影のキャスター座標セット(何番シャドウ、座標)
+	void SetCircleShadowCasterPos(const int index, const XMFLOAT3& casterPos);
+	//丸影のキャスターとライトの距離セット(何番シャドウ、距離)
+	void SetCircleShadowDistanceCasterLight(const int index, const float distanceCasterLight);
+	//丸影の減衰係数セット(何番シャドウ、減衰係数)
+	void SetCircleShadowAtten(const int index, const XMFLOAT3& lightAtten);
+	//丸影の減衰角度セット(何番シャドウ、減衰角度)
+	void SetCircleShadowFactorAngleCos(const int index, const XMFLOAT2& lightFactorAngleCos);
+	//丸影セット(何番シャドウ、起動フラグ)
+	void SetCircleShadowActive(const int index, const bool active);
 };
-
-

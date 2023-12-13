@@ -202,7 +202,6 @@
     <ClCompile Include="DirectXGame\Engine\3D\FBX\FbxLoader.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ModelFbx.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\FBX\ObjectFbx.cpp" />
-    <ClCompile Include="DirectXGame\Engine\3D\Light\DirectionalLight.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Light\LightGroup.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Material.cpp" />
     <ClCompile Include="DirectXGame\Engine\3D\Object\Mesh.cpp" />

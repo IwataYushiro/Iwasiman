@@ -31,17 +31,6 @@ public://サブクラス
 		unsigned int active;
 	};
 
-public://静的メンバ関数
-	//静的初期化(デバイス)
-	static void StaticInitialize(ID3D12Device* device);
-
-	//インスタンス生成
-	static DirectionalLight* Create();
-
-private://静的メンバ変数
-	//デバイス
-	static ID3D12Device* device_;
-
 private://メンバ変数
 	//ライト光線方向(単位ベクトル)
 	const XMVECTOR presetLightDir_ = { 1.0f,0.0f,0.0f,0.0f };//プリセット
@@ -49,8 +38,6 @@ private://メンバ変数
 	//ライトカラー
 	const XMFLOAT3 presetLightColor_ = { 1.0f,1.0f,1.0f };//プリセット
 	XMFLOAT3 lightColor_ = presetLightColor_;
-	//ダーティフラグ
-	bool dirty_ = false;
 	//有効フラグ
 	bool active_ = false;
 	//定数バッファ
@@ -58,25 +45,14 @@ private://メンバ変数
 	
 
 public://メンバ関数
-	//初期化
-	void Initialize();
-
-	//更新
-	void Update();
-
-	//描画(コマンドリスト、ルートパラメータインデックス)
-	void Draw(ID3D12GraphicsCommandList* cmdList, const UINT rootParameterIndex);
-
-	//定数バッファ転送
-	void TransferConstBuffer();
 
 	//ライト方向セット
-	void SetLightDir(const XMVECTOR& lightdir);
+	void SetLightDir(const XMVECTOR& lightdir) { this->lightDir_ = DirectX::XMVector3Normalize(lightdir); }
 	//ライト方向ゲット
 	const XMVECTOR& GetLightDir() { return lightDir_; }
 
 	//ライトカラーのセット
-	void SetLightColor(const XMFLOAT3& lightcolor);
+	void SetLightColor(const XMFLOAT3& lightcolor) {this->lightColor_ = lightcolor;}
 	//ライトカラーのゲット
 	const XMFLOAT3& GetLightColor() { return lightColor_; }
 

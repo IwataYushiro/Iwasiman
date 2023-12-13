@@ -324,9 +324,6 @@
     <ClCompile Include="DirectXGame\Engine\3D\Object\Material.cpp">
       <Filter>Source File\Engine\3D\Object</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Engine\3D\Light\DirectionalLight.cpp">
-      <Filter>Source File\Engine\3D\Light</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXGame\Engine\2D\PostEffect\PostEffect.cpp">
       <Filter>Source File\Engine\2D\PostEffect</Filter>
     </ClCompile>

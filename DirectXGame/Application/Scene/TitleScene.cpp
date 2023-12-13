@@ -50,6 +50,8 @@ void TitleScene::Initialize()
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_.get());
+	lightGroup_->SetCircleShadowActive(LightGroup::LN_0, true);
+
 
 	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title3.png");
 	spriteTitle_->Initialize(spCommon_, TSTI_TitleTex);
@@ -213,6 +215,20 @@ void TitleScene::Update()
 		//パーティクル
 		pm2_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+		//丸影
+		const DirectX::XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };
+		const DirectX::XMFLOAT3 casterpos =
+		{
+			player->GetPosition().x - 0.5f,
+			player->GetPosition().y,
+			player->GetPosition().z
+		};
+		const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };
+		const DirectX::XMFLOAT2 factorAngle = { 0.0f,0.5f };
+		lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
+		lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterpos);
+		lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);
+		lightGroup_->SetCircleShadowFactorAngleCos(LightGroup::LN_0,factorAngle);
 
 		player->Update();
 	}
@@ -278,7 +294,7 @@ void TitleScene::UpdateIsStartGame()
 	//カメラもセット
 	camera_->SetEye({ easeEyeGameStart_[XYZ_X].num_X, easeEyeGameStart_[XYZ_Y].num_X, easeEyeGameStart_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
-
+	
 	for (std::unique_ptr<Object3d>& goal : objGoals_)
 	{
 

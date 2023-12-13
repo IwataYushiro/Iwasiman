@@ -163,6 +163,25 @@ void LightGroup::TransferConstBuffer()
 				constMap->spotLights[i].active = LAN_False;
 			}
 		}
+		//ŠÛ‰e
+		for (int i = 0; i < CircleShadowNum; i++)
+		{
+			//light‚ª—LŒø‚È‚çÝ’è‚ð“]‘—
+			if (circleShadows_[i].IsActive())
+			{
+				constMap->circleShadows[i].active = LAN_True;
+				constMap->circleShadows[i].dir = circleShadows_[i].GetDir();
+				constMap->circleShadows[i].casterPos = circleShadows_[i].GetCasterPos();
+				constMap->circleShadows[i].distanceCasterLight = circleShadows_[i].GetDistanceCasterLight();
+				constMap->circleShadows[i].atten = circleShadows_[i].GetAtten();
+				constMap->circleShadows[i].factorAngleCos = circleShadows_[i].GetFactorAngleCos();
+			}
+			//–³Œø‚È‚ç“]‘—‚µ‚È‚¢
+			else
+			{
+				constMap->circleShadows[i].active = LAN_False;
+			}
+		}
 		constBuff_->Unmap(0, nullptr);
 	}
 }
@@ -323,5 +342,53 @@ void LightGroup::SetSpotLightFactorAngleCos(const int index, const XMFLOAT2& lig
 void LightGroup::SetSpotLightActive(const int index, const bool active)
 {
 	assert(0 <= index && index < SpotLightNum);
+
 	spotLights_[index].SetActive(active);
+}
+
+void LightGroup::SetCircleShadowDir(const int index, const XMVECTOR& lightDir)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows_[index].SetDir(lightDir);
+	dirty_ = true;
+}
+
+void LightGroup::SetCircleShadowCasterPos(const int index, const XMFLOAT3& casterPos)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows_[index].SetCasterPos(casterPos);
+	dirty_ = true;
+}
+
+void LightGroup::SetCircleShadowDistanceCasterLight(const int index, const float distanceCasterLight)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows_[index].SetDistanceCasterLight(distanceCasterLight);
+	dirty_ = true;
+}
+
+void LightGroup::SetCircleShadowAtten(const int index, const XMFLOAT3& lightAtten)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows_[index].SetAtten(lightAtten);
+	dirty_ = true;
+}
+
+void LightGroup::SetCircleShadowFactorAngleCos(const int index, const XMFLOAT2& lightFactorAngleCos)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows_[index].SetFactorAngleCos(lightFactorAngleCos);
+	dirty_ = true;
+}
+
+void LightGroup::SetCircleShadowActive(const int index, const bool active)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows_[index].SetActive(active);
 }
