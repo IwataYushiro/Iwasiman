@@ -5,7 +5,7 @@
 #include "CollisionManager.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	Goal.cpp
@@ -13,10 +13,6 @@ using namespace DirectX;
 *	ゴール
 
 */
-
-//静的メンバ変数の実体
-CollisionManager* Goal::colManager_ = CollisionManager::GetInstance();
-
 std::unique_ptr<Goal> Goal::Create(const Model* model)
 {
 	//インスタンス生成

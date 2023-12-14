@@ -6,10 +6,6 @@
 #include <list>
 #include <memory>
 
-//前方宣言
-//コリジョンマネージャー
-class CollisionManager;
-
 /*
 
 *	Goal.h
@@ -17,7 +13,7 @@ class CollisionManager;
 *	ゴール
 
 */
-class Goal :public Object3d
+class Goal :public IwasiEngine::Object3d
 {
 private:
 	// DirectX::を省略
@@ -25,7 +21,10 @@ private:
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
-
+	//IwasiEngine::を省略
+	using Model = IwasiEngine::Model;
+	using Camera = IwasiEngine::Camera;
+	using CollisionInfo = IwasiEngine::CollisionInfo;
 public:
 	
 	//生成(使用モデル)
@@ -50,8 +49,6 @@ public:
 	void OnCollision(const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)override;
 
 private:
-	//コリジョンマネージャー
-	static CollisionManager* colManager_;
 	//ゴールしたか
 	bool isGoal_ = false;
 	//半径

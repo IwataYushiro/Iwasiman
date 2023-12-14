@@ -6,7 +6,7 @@
 #include "CollisionManager.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	FallAndRiseSphere.cpp
@@ -15,8 +15,6 @@ using namespace DirectX;
 
 */
 
-//Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-CollisionManager* FallAndRiseSphere::colManager_ = CollisionManager::GetInstance();
 
 std::unique_ptr<FallAndRiseSphere> FallAndRiseSphere::Create(Model* model, const Player* player, const unsigned short subAttribute)
 {

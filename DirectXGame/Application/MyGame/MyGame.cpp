@@ -2,6 +2,7 @@
 #include "SceneFactory.h"
 
 using namespace DirectX;
+using namespace IwasiEngine;
 
 /*
 

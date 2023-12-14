@@ -5,7 +5,7 @@
 
 #include "CollisionAttribute.h"
 
-
+using namespace IwasiEngine;
 /*
 
 *	GimmickFactory.cpp

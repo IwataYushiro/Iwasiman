@@ -15,12 +15,6 @@
 
 */
 class Enemy2 :public BaseEnemy {
-private:
-	// DirectX::‚ğÈ—ª
-	using XMFLOAT2 = DirectX::XMFLOAT2;
-	using XMFLOAT3 = DirectX::XMFLOAT3;
-	using XMFLOAT4 = DirectX::XMFLOAT4;
-	using XMMATRIX = DirectX::XMMATRIX;
 public:
 	//’n–Ê‚Éæ‚Á‚Ä‚éŠÔ
 	const int MAX_GROUND = 60;

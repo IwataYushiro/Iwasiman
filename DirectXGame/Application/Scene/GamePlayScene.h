@@ -7,6 +7,7 @@
 #include "Object3d.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
+#include "TouchableObject.h"
 
 #include "Goal.h"
 #include "Player.h"
@@ -43,6 +44,7 @@ class GamePlayScene :public BaseScene
 {
 private://エイリアス
 	using CollisionManager = IwasiEngine::CollisionManager;
+	using TouchableObject = IwasiEngine::TouchableObject;
 
 public://メンバ関数
 	//コンストラクタ(ステージ情報)

@@ -23,7 +23,7 @@ class CollisionManager;
 *	アイテム管理
 
 */
-class Item :public Object3d
+class Item :public IwasiEngine::Object3d
 {
 private:
 	// DirectX::を省略
@@ -31,6 +31,16 @@ private:
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+	//IwasiEngine::を省略
+	using Sprite = IwasiEngine::Sprite;
+	using SpriteCommon = IwasiEngine::SpriteCommon;
+	using Model = IwasiEngine::Model;
+	using Camera = IwasiEngine::Camera;
+	using Easing = IwasiEngine::Easing;
+	using Particle = IwasiEngine::Particle;
+	using ParticleManager = IwasiEngine::ParticleManager;
+	using CollisionInfo = IwasiEngine::CollisionInfo;
+	using Vector2 = IwasiEngine::Vector2;
 
 public://定数
 	//最大効果時間
@@ -67,8 +77,6 @@ public:
 	void OnCollision(const CollisionInfo& info, const unsigned short attribute,const unsigned short subAttribute)override;
 
 private:
-	//コリジョンマネージャー
-	static CollisionManager* colManager_;
 	//取得時
 	bool isGet_ = false;
 	//ジャンプアイテムを取得したか

@@ -8,6 +8,7 @@
 #include "MyMath.h"
 
 using namespace DirectX;
+using namespace IwasiEngine;
 using namespace MyMath;
 
 /*
@@ -17,9 +18,6 @@ using namespace MyMath;
 *	アイテム管理
 
 */
-
-//静的メンバ変数の実体
-CollisionManager* Item::colManager_ = CollisionManager::GetInstance();
 
 Item::~Item()
 {

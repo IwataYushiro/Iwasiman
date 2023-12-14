@@ -14,6 +14,9 @@
 */
 class AbstractGimmickFactory
 {
+protected:
+	using Model = IwasiEngine::Model;
+
 public:
 	//仮想デストラクタ
 	virtual ~AbstractGimmickFactory() = default;

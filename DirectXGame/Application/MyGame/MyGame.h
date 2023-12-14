@@ -11,8 +11,10 @@
 *	ƒQ[ƒ€‘S‘Ì
 
 */
-class MyGame :public Framework
+class MyGame :public IwasiEngine::Framework
 {
+private:
+	using PostEffect = IwasiEngine::PostEffect;
 public:
 
 	//‰Šú‰»

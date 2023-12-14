@@ -6,6 +6,7 @@
 #include "EnemyBoss.h"
 #include "EnemyCore.h"
 
+using namespace IwasiEngine;
 /*
 
 *	EnemyFactory.cpp

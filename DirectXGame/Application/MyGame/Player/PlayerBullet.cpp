@@ -2,10 +2,9 @@
 #include <cassert>
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
-#include "CollisionManager.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	PlayerBullet.cpp
@@ -13,9 +12,6 @@ using namespace DirectX;
 *	©‹@‚Ì’e
 
 */
-
-//Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-CollisionManager* PlayerBullet::colManager_ = CollisionManager::GetInstance();
 
 std::unique_ptr<PlayerBullet> PlayerBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model)
 {

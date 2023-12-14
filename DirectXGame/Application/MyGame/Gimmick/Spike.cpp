@@ -6,7 +6,7 @@
 #include "CollisionManager.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	Spike.cpp
@@ -14,9 +14,6 @@ using namespace DirectX;
 *	“–‚½‚é‚Æ’É‚¢ƒgƒQ
 
 */
-
-//Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-CollisionManager* Spike::colManager_ = CollisionManager::GetInstance();
 
 std::unique_ptr<Spike> Spike::Create(const Model* model, const Player* player)
 {

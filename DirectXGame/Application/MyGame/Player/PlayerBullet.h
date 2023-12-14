@@ -3,10 +3,6 @@
 #include "Model.h"
 #include <DirectXMath.h>
 
-//前方宣言
-//コリジョンマネージャー
-class CollisionManager;
-
 /*
 
 *	PlayerBullet.h
@@ -14,7 +10,7 @@ class CollisionManager;
 *	自機の弾
 
 */
-class PlayerBullet:public Object3d
+class PlayerBullet:public IwasiEngine::Object3d
 {
 private:
 	// DirectX::を省略
@@ -22,6 +18,10 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
+	//IwasiEngine::を省略
+	using Model = IwasiEngine::Model;
+	using Camera = IwasiEngine::Camera;
+	using CollisionInfo = IwasiEngine::CollisionInfo;
 
 public:
 	//生成(初期座標、速度、使用モデル)
@@ -45,8 +45,6 @@ public:
 	const XMFLOAT3 GetWorldPosition()const;
 
 private:
-	//コリジョンマネージャー
-	static CollisionManager* colManager_;
 
 	//速度
 	XMFLOAT3 velocity_;

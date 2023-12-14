@@ -2,13 +2,13 @@
 #include <cassert>
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
-#include "CollisionManager.h"
 #include "Player.h"
 #include "GamePlayScene.h"
 
 #include "MyMath.h"
 
 using namespace DirectX;
+using namespace IwasiEngine;
 
 /*
 
@@ -19,7 +19,7 @@ using namespace DirectX;
 */
 
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
+IwasiEngine::CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
 
 Enemy1::~Enemy1() {
 	

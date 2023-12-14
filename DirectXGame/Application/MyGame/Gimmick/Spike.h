@@ -2,8 +2,6 @@
 
 #include "BaseGimmick.h"
 
-#include "Camera.h"
-#include "Model.h"
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
@@ -17,13 +15,6 @@
 */
 class Spike :public BaseGimmick
 {
-private:
-	// DirectX::を省略
-	using XMFLOAT2 = DirectX::XMFLOAT2;
-	using XMFLOAT3 = DirectX::XMFLOAT3;
-	using XMFLOAT4 = DirectX::XMFLOAT4;
-	using XMMATRIX = DirectX::XMMATRIX;
-
 public:
 	//生成(使用モデル、プレイヤー)
 	static std::unique_ptr<Spike> Create(const Model* model = nullptr, const Player* player = nullptr);
@@ -44,8 +35,7 @@ public:
 	void OnCollision(const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)override;
 
 private:
-	//コリジョンマネージャー
-	static CollisionManager* colManager_;
+	
 	//半径
 	const float radius_ = 1.0f;
 

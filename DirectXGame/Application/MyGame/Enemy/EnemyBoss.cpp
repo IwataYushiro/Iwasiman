@@ -9,7 +9,7 @@
 #include "MyMath.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	EnemyBoss.cpp
@@ -17,9 +17,6 @@ using namespace DirectX;
 *	左右に動くボス敵
 
 */
-
-//静的メンバ変数の実体
-CollisionManager* EnemyBoss::colManager_ = CollisionManager::GetInstance();
 
 EnemyBoss::~EnemyBoss() {
 	

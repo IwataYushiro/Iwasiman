@@ -17,13 +17,6 @@
 */
 class FallAndRiseSphere :public BaseGimmick
 {
-private:
-	// DirectX::を省略
-	using XMFLOAT2 = DirectX::XMFLOAT2;
-	using XMFLOAT3 = DirectX::XMFLOAT3;
-	using XMFLOAT4 = DirectX::XMFLOAT4;
-	using XMMATRIX = DirectX::XMMATRIX;
-
 public:
 
 	//生成(使用モデル、プレイヤー、サブ属性)
@@ -55,7 +48,6 @@ public:
 	void OnCollision(const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)override;
 
 private:
-	static CollisionManager* colManager_;
 	//ポジション
 	XMFLOAT3 pos_;
 	//スケール

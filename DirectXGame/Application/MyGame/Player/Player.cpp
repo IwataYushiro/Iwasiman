@@ -2,7 +2,6 @@
 #include <cassert>
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
-#include "CollisionManager.h"
 #include "GamePlayScene.h"
 #include "EnumList.h"
 #include "MyMath.h"
@@ -18,7 +17,7 @@ using namespace IwasiEngine;
 */
 
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-IwasiEngine::CollisionManager* Player::colManager_ = IwasiEngine::CollisionManager::GetInstance();
+IwasiEngine::CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
 

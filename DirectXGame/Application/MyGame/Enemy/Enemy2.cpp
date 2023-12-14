@@ -10,7 +10,7 @@
 #include "Vector2.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	Enemy2.cpp
@@ -20,7 +20,7 @@ using namespace DirectX;
 */
 
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
+IwasiEngine::CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
 
 Enemy2::~Enemy2() {
 	

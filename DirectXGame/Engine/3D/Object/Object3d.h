@@ -108,7 +108,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		virtual void Draw();
 
 		//衝突時のコールバック(コリジョン情報、メイン属性、サブ属性)
-		virtual void OnCollision([[maybe_unused]] const CollisionInfo& info,
+		virtual void OnCollision([[maybe_unused]] const IwasiEngine::CollisionInfo& info,
 			[[maybe_unused]] const unsigned short attribute, [[maybe_unused]] const unsigned short subAttribute) {}
 
 	private://プリセット

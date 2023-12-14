@@ -16,13 +16,6 @@
 
 */
 class Enemy1 :public BaseEnemy {
-private:
-	// DirectX::を省略
-	using XMFLOAT2 = DirectX::XMFLOAT2;
-	using XMFLOAT3 = DirectX::XMFLOAT3;
-	using XMFLOAT4 = DirectX::XMFLOAT4;
-	using XMMATRIX = DirectX::XMMATRIX;
-
 public:
 	//デストラクタ
 	~Enemy1();

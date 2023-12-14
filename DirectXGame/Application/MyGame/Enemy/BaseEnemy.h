@@ -1,14 +1,15 @@
 #pragma once
 #include "Object3d.h"
+#include "Easing.h"
 #include "EnemyBullet.h"
+#include "ParticleManager.h"
+#include "CollisionManager.h"
 #include "XYZ.h"
 #include <DirectXMath.h>
 
 //前方宣言
 //自機クラス
 class Player;
-//コリジョンマネージャー
-class CollisionManager;
 //ゲームプレイシーン
 class GamePlayScene;
 
@@ -19,10 +20,22 @@ class GamePlayScene;
 *	敵基盤クラス
 
 */
-class BaseEnemy :public Object3d
+class BaseEnemy :public IwasiEngine::Object3d
 {
-private:
+protected:
+	// DirectX::を省略
+	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMMATRIX = DirectX::XMMATRIX;
+	//IwasiEngine::を省略
+	using Model = IwasiEngine::Model;
+	using Camera = IwasiEngine::Camera;
+	using Easing = IwasiEngine::Easing;
+	using Particle = IwasiEngine::Particle;
+	using ParticleManager = IwasiEngine::ParticleManager;
+	using CollisionManager = IwasiEngine::CollisionManager;
+	using CollisionInfo = IwasiEngine::CollisionInfo;
 public:
 	//デストラクタ
 	virtual ~BaseEnemy() = default;
@@ -40,8 +53,6 @@ public:
 	virtual void DrawParticle() = 0;
 
 protected:
-	//コリジョンマネージャー
-	static CollisionManager* colManager_;
 
 	//自機
 	const Player* player_ = nullptr;

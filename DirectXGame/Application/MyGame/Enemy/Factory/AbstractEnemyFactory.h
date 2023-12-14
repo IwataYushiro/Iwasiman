@@ -15,6 +15,8 @@
 */
 class AbstractEnemyFactory
 {
+protected:
+	using Model = IwasiEngine::Model;
 public:
 	//仮想デストラクタ
 	virtual ~AbstractEnemyFactory() = default;

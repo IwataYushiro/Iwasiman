@@ -8,15 +8,14 @@
 #include "ParticleManager.h"
 #include "Easing.h"
 #include "XYZ.h"
-
+#include "CollisionManager.h"
 #include <DirectXMath.h>
 #include <list>
 #include <memory>
 #include <chrono>
 
 //前方宣言
-//コリジョンマネージャー
-class CollisionManager;
+
 //ゲームプレイシーン
 class GamePlayScene;
 
@@ -27,7 +26,7 @@ class GamePlayScene;
 *	自機
 
 */
-class Player :public Object3d
+class Player :public IwasiEngine::Object3d
 {
 private:
 	// DirectX::を省略
@@ -36,16 +35,17 @@ private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 	//IwasiEngine::を省略
+	using WinApp = IwasiEngine::WinApp;
 	using Input = IwasiEngine::Input;
 	using Sprite = IwasiEngine::Sprite;
 	using SpriteCommon = IwasiEngine::SpriteCommon;
-	using Object3d = IwasiEngine::Object3d;
 	using Model = IwasiEngine::Model;
 	using Camera = IwasiEngine::Camera;
 	using Easing = IwasiEngine::Easing;
 	using Particle = IwasiEngine::Particle;
 	using ParticleManager = IwasiEngine::ParticleManager;
-
+	using CollisionManager = IwasiEngine::CollisionManager;
+	using CollisionInfo = IwasiEngine::CollisionInfo;
 public:
 	//最大無敵時間
 	const int MUTEKI_COUNT = 60;
@@ -111,7 +111,7 @@ public:
 
 private:
 	//コリジョンマネージャー
-	static IwasiEngine::CollisionManager* colManager_;
+	static CollisionManager* colManager_;
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	//右を向いてるか
