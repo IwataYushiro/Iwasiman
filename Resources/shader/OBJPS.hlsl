@@ -117,7 +117,7 @@ float4 Phong(VSOutput input)
             //距離減衰係数
             float atten = saturate(1.0f / (circleShadows[i].atten.x + circleShadows[i].atten.y * d + circleShadows[i].atten.z * d * d));
             //距離がマイナスなら0にする
-            atten *= step(0, d);
+            atten *= step(0.0f, d);
             //仮想ライトの座標
             float3 lightpos = circleShadows[i].casterPos + circleShadows[i].dir * circleShadows[i].distanceCasterLight;
             //オブジェクト表面からライトへのベクトル(単位ベクトル)

@@ -215,20 +215,9 @@ void TitleScene::Update()
 		//パーティクル
 		pm2_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+
 		//丸影
-		const DirectX::XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };
-		const DirectX::XMFLOAT3 casterpos =
-		{
-			player->GetPosition().x - 0.5f,
-			player->GetPosition().y,
-			player->GetPosition().z
-		};
-		const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };
-		const DirectX::XMFLOAT2 factorAngle = { 0.2f,0.5f };
-		lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
-		lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterpos);
-		lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);
-		lightGroup_->SetCircleShadowFactorAngleCos(LightGroup::LN_0,factorAngle);
+		SetUpCircleShadow(player->GetPosition());
 
 		player->Update();
 	}
@@ -739,4 +728,22 @@ void TitleScene::UpdateChangeColor()
 		isColorReverse_ = false;
 	}
 
+}
+
+void TitleScene::SetUpCircleShadow(const DirectX::XMFLOAT3& pos)
+{
+	const DirectX::XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };
+	const DirectX::XMFLOAT3 casterPosOffset = { -0.5f,0.0f,0.0f };
+	const DirectX::XMFLOAT3 casterPos =
+	{
+		pos.x + casterPosOffset.x,
+		pos.y + casterPosOffset.y,
+		pos.z + casterPosOffset.z
+	};
+	const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };
+	const DirectX::XMFLOAT2 factorAngle = { 0.2f,0.5f };
+	lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
+	lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterPos);
+	lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);
+	lightGroup_->SetCircleShadowFactorAngleCos(LightGroup::LN_0, factorAngle);
 }

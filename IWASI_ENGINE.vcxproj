@@ -223,7 +223,6 @@
     <ClCompile Include="DirectXGame\Engine\Math\Vector2.cpp" />
     <ClCompile Include="DirectXGame\Engine\Math\Vector3.cpp" />
     <ClCompile Include="DirectXGame\main.cpp" />
-    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\BaseEnemy.h" />

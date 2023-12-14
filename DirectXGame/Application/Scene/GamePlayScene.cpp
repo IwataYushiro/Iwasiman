@@ -77,6 +77,7 @@ void GamePlayScene::Initialize()
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_.get());
+	lightGroup_->SetCircleShadowActive(LightGroup::LN_0, true);
 
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
@@ -109,6 +110,11 @@ void GamePlayScene::Update()
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
 
+	for (std::unique_ptr<Player>& player : players_)
+	{
+		//丸影は常時表示
+		SetUpCircleShadow(player->GetPosition());
+	}
 	//天球は常時ぐるぐる
 	for (std::unique_ptr<Object3d>& skydome : skydomes_)
 	{
@@ -151,7 +157,10 @@ void GamePlayScene::Update()
 	UpdateTutorial();
 	UpdateTutorialSprite();
 
-	
+	//カメラ
+	camera_->Update();
+	lightGroup_->Update();
+	pm_->Update();
 
 }
 
@@ -263,10 +272,7 @@ void GamePlayScene::UpdateIsStartGame()
 	for (std::unique_ptr<Item>& item : items_)item->Update();
 
 	for (std::unique_ptr<Object3d>& object : objects_) object->Update();
-	//カメラ
-	camera_->Update();
-	lightGroup_->Update();
-	pm_->Update();
+
 }
 
 void GamePlayScene::UpdateIsPlayGame()
@@ -335,10 +341,7 @@ void GamePlayScene::UpdateIsPlayGame()
 	//camera_->DebugCamera();
 	//imguiManager_->End();
 
-	//カメラ
-	camera_->Update();
-	lightGroup_->Update();
-	pm_->Update();
+	
 	for (std::unique_ptr<Player>& player : players_)if (!player->IsBreak())colManager_->CheckAllCollisions();
 	//Pause機能
 	if (input_->TriggerKey(DIK_Q))
@@ -1329,6 +1332,24 @@ void GamePlayScene::LoadStageNameSprite()
 	spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
 	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 	spriteStageName_->Update();
+}
+
+void GamePlayScene::SetUpCircleShadow(const DirectX::XMFLOAT3& pos)
+{
+	const XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };
+	const XMFLOAT3 casterPosOffset = { -0.5f,0.0f,0.0f };
+	const XMFLOAT3 casterPos =
+	{
+		pos.x + casterPosOffset.x,
+		pos.y + casterPosOffset.y,
+		pos.z + casterPosOffset.z
+	};
+	const XMFLOAT3 atten = { 0.5f,0.6f,0.0f };
+	const XMFLOAT2 factorAngle = { 0.2f,0.5f };
+	lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
+	lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterPos);
+	lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);
+	lightGroup_->SetCircleShadowFactorAngleCos(LightGroup::LN_0, factorAngle);
 }
 
 void GamePlayScene::LoadSprite()

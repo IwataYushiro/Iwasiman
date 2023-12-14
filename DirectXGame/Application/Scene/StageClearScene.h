@@ -254,4 +254,6 @@ private:
 	void UpdateChangeColor();
 	//ステージ名のスプライトをロード
 	void LoadStageNameSprite();
+	//丸影セット
+	void SetUpCircleShadow(const DirectX::XMFLOAT3& pos);
 };
