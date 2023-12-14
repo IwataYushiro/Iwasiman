@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cassert>
 
+using namespace IwasiEngine;
 /*
 
 *	LevelLoaderJson.cpp

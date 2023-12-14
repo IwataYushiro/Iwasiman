@@ -3,53 +3,56 @@
 #include <vector>
 #include <DirectXMath.h>
 
-/*
-
-*	LevelLoaderJson.h
-
-*	jsonファイルによるレベルデータ構造体
-
-*/
-struct LevelData
+namespace IwasiEngine//IwasiEngineのネームスペース
 {
-	//オブジェクト情報
-	struct ObjectData
+	/*
+
+	*	LevelLoaderJson.h
+
+	*	jsonファイルによるレベルデータ構造体
+
+	*/
+	struct LevelData
 	{
-		//平行移動
-		DirectX::XMVECTOR trans;
-		//回転角
-		DirectX::XMVECTOR rot;
-		//スケール
-		DirectX::XMVECTOR scale;
+		//オブジェクト情報
+		struct ObjectData
+		{
+			//平行移動
+			DirectX::XMVECTOR trans;
+			//回転角
+			DirectX::XMVECTOR rot;
+			//スケール
+			DirectX::XMVECTOR scale;
 
-		//コライダー
-		//中心点
-		DirectX::XMVECTOR centerCollider;
-		//サイズ
-		DirectX::XMVECTOR sizeCollider;
-		
-		//ファイル名
-		std::string fileName;
-		//オブジェクトタイプ
-		std::string objectType;
-		//オブジェクトパターン
-		std::string objectPattern;
+			//コライダー
+			//中心点
+			DirectX::XMVECTOR centerCollider;
+			//サイズ
+			DirectX::XMVECTOR sizeCollider;
+
+			//ファイル名
+			std::string fileName;
+			//オブジェクトタイプ
+			std::string objectType;
+			//オブジェクトパターン
+			std::string objectPattern;
+		};
+		//オブジェクト配列
+		std::vector<ObjectData> objects;
 	};
-	//オブジェクト配列
-	std::vector<ObjectData> objects;
-};
 
-//Jsonレベルローダー
-class LevelLoader
-{
-public:
-	//デフォルトの読み込みディレクトリ
-	static const std::string DEFAULT_BASE_DIRECTORY;
-	//ファイル拡張子(json)
-	static const std::string EXTENSION;
+	//Jsonレベルローダー
+	class LevelLoader
+	{
+	public:
+		//デフォルトの読み込みディレクトリ
+		static const std::string DEFAULT_BASE_DIRECTORY;
+		//ファイル拡張子(json)
+		static const std::string EXTENSION;
 
-public:
-	// レベルデータファイルの読み込み
-	static LevelData* LoadFile(const std::string& fileName);
+	public:
+		// レベルデータファイルの読み込み
+		static LevelData* LoadFile(const std::string& fileName);
 
-};
+	};
+}

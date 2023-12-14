@@ -1,7 +1,7 @@
 #include "TouchableObject.h"
 #include "MeshCollider.h"
 
-
+using namespace IwasiEngine;
 /*
 
 *	TouchableObject.cpp

@@ -6,7 +6,7 @@
 #pragma comment(lib,"dxgi.lib")
 
 using namespace Microsoft::WRL;
-
+using namespace IwasiEngine;
 /*
 
 *	DirectXCommon.cpp

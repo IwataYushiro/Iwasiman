@@ -4,6 +4,8 @@
 #include "ObjectFbx.h"
 #include "ParticleManager.h"
 
+using namespace IwasiEngine;
+
 /*
 
 *	Framework.cpp

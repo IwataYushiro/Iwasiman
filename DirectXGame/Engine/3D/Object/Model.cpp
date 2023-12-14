@@ -5,7 +5,7 @@
 
 using namespace DirectX;
 using namespace std;
-
+using namespace IwasiEngine;
 /*
 
 *	Model.cpp

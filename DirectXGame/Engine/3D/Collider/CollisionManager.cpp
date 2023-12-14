@@ -4,7 +4,7 @@
 #include "MeshCollider.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	CollisionManager.cpp

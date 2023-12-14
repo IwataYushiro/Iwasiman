@@ -1,6 +1,5 @@
 #include "TitleScene.h"
 #include "FbxLoader.h"
-#include "LevelLoaderJson.h"
 
 #include "MyMath.h"
 
@@ -8,6 +7,7 @@
 #include <sstream>
 #include <iomanip>
 
+using namespace IwasiEngine;
 /*
 
 *	TitleScene.cpp
@@ -224,7 +224,7 @@ void TitleScene::Update()
 			player->GetPosition().z
 		};
 		const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };
-		const DirectX::XMFLOAT2 factorAngle = { 0.0f,0.5f };
+		const DirectX::XMFLOAT2 factorAngle = { 0.2f,0.5f };
 		lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
 		lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterpos);
 		lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);

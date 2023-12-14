@@ -1,5 +1,16 @@
 #pragma once
 #include <DirectXMath.h>
+#include "Audio.h"
+#include "Easing.h"
+#include "LightGroup.h"
+#include "DirectXCommon.h"
+#include "ImGuiManager.h"
+#include "Object3d.h"
+#include "ObjectFbx.h"
+#include "LevelLoaderJson.h"
+#include "Sprite.h"
+#include "ParticleManager.h"
+
 //前方宣言
 //シーンマネージャー
 class SceneManager;
@@ -13,6 +24,22 @@ class SceneManager;
 */
 class BaseScene
 {
+protected://エイリアス
+	using DirectXCommon = IwasiEngine::DirectXCommon;
+	using Input = IwasiEngine::Input;
+	using Audio = IwasiEngine::Audio;
+	using ImGuiManager = IwasiEngine::ImGuiManager;
+	using Sprite = IwasiEngine::Sprite;
+	using SpriteCommon = IwasiEngine::SpriteCommon;
+	using Model = IwasiEngine::Model;
+	using Object3d = IwasiEngine::Object3d;
+	using Camera = IwasiEngine::Camera;
+	using Easing = IwasiEngine::Easing;
+	using LevelData = IwasiEngine::LevelData;
+	using LightGroup = IwasiEngine::LightGroup;
+	using Particle = IwasiEngine::Particle;
+	using ParticleManager = IwasiEngine::ParticleManager;
+
 public://メンバ関数
 	virtual~BaseScene() = default;
 

@@ -6,7 +6,7 @@
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
-
+using namespace IwasiEngine;
 /*
 
 *	ParticleManager.cpp

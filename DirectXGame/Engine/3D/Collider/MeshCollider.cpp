@@ -3,7 +3,7 @@
 #include "XYZ.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	MeshCollider.cpp

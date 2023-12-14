@@ -1,12 +1,12 @@
 #include "StageClearScene.h"
 #include "FbxLoader.h"
-#include "LevelLoaderJson.h"
 #include "MyMath.h"
 
 #include <cassert>
 #include <sstream>
 #include <iomanip>
 
+using namespace IwasiEngine;
 using namespace MyMath;
 /*
 

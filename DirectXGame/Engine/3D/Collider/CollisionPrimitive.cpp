@@ -1,7 +1,7 @@
 #include "CollisionPrimitive.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	CollisionPrimitive.cpp

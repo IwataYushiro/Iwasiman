@@ -1,6 +1,7 @@
 #include "Vector3.h"
 #include <cmath>		//sqat
 
+using namespace IwasiEngine;
 /*
 
 *	Vector3.cpp

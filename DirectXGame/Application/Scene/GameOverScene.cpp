@@ -1,6 +1,5 @@
 #include "GameOverScene.h"
 #include "FbxLoader.h"
-#include "LevelLoaderJson.h"
 #include "TouchableObject.h"
 #include "MyMath.h"
 
@@ -9,6 +8,7 @@
 #include <iomanip>
 
 using namespace DirectX;
+using namespace IwasiEngine;
 
 /*
 

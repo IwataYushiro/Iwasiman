@@ -2,7 +2,7 @@
 #include "XYZ.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	Collision.cpp

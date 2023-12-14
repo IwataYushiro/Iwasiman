@@ -1,6 +1,7 @@
 #include "ImGuiManager.h"
 #include <cassert>
 
+using namespace IwasiEngine;
 /*
 
 *	ImGuiManager.cpp

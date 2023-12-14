@@ -9,125 +9,128 @@
 #include <Windows.h>
 #include <wrl.h>
 
-/*
-
-*	ObgextFbx.h
-
-*	FBXオブジェクト
-
-*/
-class ObjectFbx
+namespace IwasiEngine//IwasiEngineのネームスペース
 {
-protected://エイリアス
-	//Microsoft::WRL::を省略
-	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
-	// DirectX::を省略
-	using XMFLOAT2 = DirectX::XMFLOAT2;
-	using XMFLOAT3 = DirectX::XMFLOAT3;
-	using XMFLOAT4 = DirectX::XMFLOAT4;
-	using XMMATRIX = DirectX::XMMATRIX;
+	/*
 
-public://定数
-	//ボーンの最大数
-	static const int MAX_BONES = 32;
+	*	ObgextFbx.h
 
-	//ルートパラメータインデックス
-	enum RootParameterIndex
+	*	FBXオブジェクト
+
+	*/
+	class ObjectFbx
 	{
-		RPI_ConstBuffTransform = 0,
-		RPI_TexBuffSRV = 1,
-		RPI_ConstBuffSkin = 2,
-		RPI_Num = 3,
+	protected://エイリアス
+		//Microsoft::WRL::を省略
+		template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
+		// DirectX::を省略
+		using XMFLOAT2 = DirectX::XMFLOAT2;
+		using XMFLOAT3 = DirectX::XMFLOAT3;
+		using XMFLOAT4 = DirectX::XMFLOAT4;
+		using XMMATRIX = DirectX::XMMATRIX;
+
+	public://定数
+		//ボーンの最大数
+		static const int MAX_BONES = 32;
+
+		//ルートパラメータインデックス
+		enum RootParameterIndex
+		{
+			RPI_ConstBuffTransform = 0,
+			RPI_TexBuffSRV = 1,
+			RPI_ConstBuffSkin = 2,
+			RPI_Num = 3,
+		};
+
+	public://サブクラス
+
+		//定数バッファ構造体(座標変換行列)
+		struct ConstBufferDataTransform
+		{
+			XMMATRIX viewProj;		//ビュプロ行列
+			XMMATRIX world;			//ワールド行列
+			XMFLOAT3 cameraPos;		//カメラ座標
+		};
+		//スキニング情報
+		struct ConstBufferDataSkin
+		{
+			XMMATRIX bones[MAX_BONES];
+		};
+
+
+	public://静的メンバ関数
+		//静的初期化(デバイス)
+		static void StaticInitialize(ID3D12Device* device);
+		// 描画前処理(コマンドリスト)
+		static void PreDraw(ID3D12GraphicsCommandList* cmdList);
+		// 描画後処理
+		static void PostDraw();
+		// 3Dオブジェクト生成
+		static ObjectFbx* Create();
+
+		//セッター
+		static void SetDevice(ID3D12Device* device) { ObjectFbx::device_ = device; }
+
+	private:
+		//グラフィックスパイプライン生成
+		static void CreateGraphicsPipeline();
+
+	private://静的メンバ変数
+		//デバイス
+		static ID3D12Device* device_;
+
+		// コマンドリスト
+		static ID3D12GraphicsCommandList* cmdList_;
+		//ルートシグネチャ
+		static ComPtr<ID3D12RootSignature> rootSignature_;
+		//パイプラインステートオブジェクト
+		static ComPtr<ID3D12PipelineState> pipelineState_;
+
+	public://メンバ関数
+
+		//初期化
+		bool Initialize();
+		//更新
+		void Update();
+		//描画
+		void Draw();
+		//アニメーション開始
+		void PlayAnimation();
+
+	protected://メンバ変数
+		//ローカルスケール
+		XMFLOAT3 scale_ = { 1.0f,1.0f,1.0f };
+		// ローカル回転角
+		XMFLOAT3 rotation_ = { 0.0f,0.0f,0.0f };
+		// ローカル座標
+		XMFLOAT3 position_ = { 0.0f,0.0f,0.0f };
+		// ローカルワールド行列
+		XMMATRIX matWorld_ = {};
+		// モデル
+		ModelFbx* modelF_ = nullptr;
+		//定数バッファ
+		ComPtr<ID3D12Resource> constBufferTransform_;
+		//スキン
+		ComPtr<ID3D12Resource> constBufferSkin_;
+
+		//1フレームの時間
+		FbxTime frameTime_;
+		// アニメーション開始時間
+		FbxTime startTime_;
+		// アニメーション終了時間
+		FbxTime endTime_;
+		//アニメーション現在時間
+		FbxTime currentTime_;
+		//アニメーション再生中フラグ
+		bool isPlayAnimation_ = false;
+
+		//カメラ
+		Camera* camera_ = nullptr;
+	public://アクセッサ置き場
+		//FBXモデルセット
+		void SetModelFBX(ModelFbx* modelF) { this->modelF_ = modelF; }
+		//カメラセット
+		void SetCamera(Camera* camera) { this->camera_ = camera; }
+
 	};
-
-public://サブクラス
-	
-	//定数バッファ構造体(座標変換行列)
-	struct ConstBufferDataTransform
-	{
-		XMMATRIX viewProj;		//ビュプロ行列
-		XMMATRIX world;			//ワールド行列
-		XMFLOAT3 cameraPos;		//カメラ座標
-	};
-	//スキニング情報
-	struct ConstBufferDataSkin
-	{
-		XMMATRIX bones[MAX_BONES];
-	};
-
-
-public://静的メンバ関数
-	//静的初期化(デバイス)
-	static void StaticInitialize(ID3D12Device* device);
-	// 描画前処理(コマンドリスト)
-	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
-	// 描画後処理
-	static void PostDraw();
-	// 3Dオブジェクト生成
-	static ObjectFbx* Create();
-
-	//セッター
-	static void SetDevice(ID3D12Device* device) { ObjectFbx::device_ = device; }
-	
-private:
-	//グラフィックスパイプライン生成
-	static void CreateGraphicsPipeline();
-
-private://静的メンバ変数
-	//デバイス
-	static ID3D12Device* device_;
-	
-	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList_;
-	//ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootSignature_;
-	//パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelineState_;
-
-public://メンバ関数
-
-	//初期化
-	bool Initialize();
-	//更新
-	void Update();
-	//描画
-	void Draw();
-	//アニメーション開始
-	void PlayAnimation();
-
-protected://メンバ変数
-	//ローカルスケール
-	XMFLOAT3 scale_ = { 1.0f,1.0f,1.0f };
-	// ローカル回転角
-	XMFLOAT3 rotation_ = { 0.0f,0.0f,0.0f };
-	// ローカル座標
-	XMFLOAT3 position_ = { 0.0f,0.0f,0.0f };
-	// ローカルワールド行列
-	XMMATRIX matWorld_ = {};
-	// モデル
-	ModelFbx* modelF_ = nullptr;
-	//定数バッファ
-	ComPtr<ID3D12Resource> constBufferTransform_;
-	//スキン
-	ComPtr<ID3D12Resource> constBufferSkin_;
-
-	//1フレームの時間
-	FbxTime frameTime_;
-	// アニメーション開始時間
-	FbxTime startTime_;
-	// アニメーション終了時間
-	FbxTime endTime_;
-	//アニメーション現在時間
-	FbxTime currentTime_;
-	//アニメーション再生中フラグ
-	bool isPlayAnimation_ = false;
-	
-	//カメラ
-	Camera* camera_ = nullptr;
-public://アクセッサ置き場
-	//FBXモデルセット
-	void SetModelFBX(ModelFbx* modelF) { this->modelF_ = modelF; }
-	//カメラセット
-	void SetCamera(Camera* camera) { this->camera_ = camera; }
-
-};
+}

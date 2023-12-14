@@ -1,7 +1,7 @@
 #include "Sprite.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	Sprite.cpp

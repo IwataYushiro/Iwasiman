@@ -1,6 +1,7 @@
 #include "Vector2.h"
 #include <cmath>		//sqat
 
+using namespace IwasiEngine;
 /*
 
 *	Vector2.cpp

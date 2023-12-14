@@ -1,14 +1,4 @@
 #pragma once
-#include "Audio.h"
-#include "Easing.h"
-#include "LightGroup.h"
-#include "DirectXCommon.h"
-#include "ImGuiManager.h"
-#include "Object3d.h"
-#include "ObjectFbx.h"
-
-#include "ParticleManager.h"
-#include "Sprite.h"
 #include "EnumList.h"
 #include "XYZ.h"
 

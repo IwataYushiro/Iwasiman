@@ -2,7 +2,7 @@
 #include <random>
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	MyMath.cpp

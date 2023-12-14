@@ -13,7 +13,7 @@
 using namespace std;
 using namespace DirectX;
 using namespace Microsoft::WRL;
-
+using namespace IwasiEngine;
 /*
 
 *	Object3d.cpp

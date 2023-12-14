@@ -6,6 +6,7 @@
 #include "ImGuiManager.h"
 #include "Object3d.h"
 #include "ObjectFbx.h"
+#include "LevelLoaderJson.h"
 
 #include "ParticleManager.h"
 #include "Sprite.h"

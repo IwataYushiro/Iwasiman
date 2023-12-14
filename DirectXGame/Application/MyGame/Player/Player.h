@@ -35,6 +35,16 @@ private:
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+	//IwasiEngine::を省略
+	using Input = IwasiEngine::Input;
+	using Sprite = IwasiEngine::Sprite;
+	using SpriteCommon = IwasiEngine::SpriteCommon;
+	using Object3d = IwasiEngine::Object3d;
+	using Model = IwasiEngine::Model;
+	using Camera = IwasiEngine::Camera;
+	using Easing = IwasiEngine::Easing;
+	using Particle = IwasiEngine::Particle;
+	using ParticleManager = IwasiEngine::ParticleManager;
 
 public:
 	//最大無敵時間
@@ -101,7 +111,7 @@ public:
 
 private:
 	//コリジョンマネージャー
-	static CollisionManager* colManager_;
+	static IwasiEngine::CollisionManager* colManager_;
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	//右を向いてるか

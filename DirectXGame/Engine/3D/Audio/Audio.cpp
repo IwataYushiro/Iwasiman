@@ -3,7 +3,7 @@
 #include <string.h>
 
 #pragma comment(lib,"xaudio2.lib")
-
+using namespace IwasiEngine;
 /*
 
 *	Audio.cpp

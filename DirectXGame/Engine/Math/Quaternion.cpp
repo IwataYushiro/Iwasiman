@@ -1,7 +1,7 @@
 #include "Quaternion.h"
 #include "Vector2.h"
 #include <cmath>
-
+using namespace IwasiEngine;
 /*
 
 *	Quaternion.cpp

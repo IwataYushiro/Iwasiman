@@ -1,5 +1,6 @@
 #include "ModelFbx.h"
 
+using namespace IwasiEngine;
 /*
 
 *	ModelFbx.cpp

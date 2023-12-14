@@ -8,7 +8,7 @@
 #include "MyMath.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	Player.cpp
@@ -18,7 +18,7 @@ using namespace DirectX;
 */
 
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
+IwasiEngine::CollisionManager* Player::colManager_ = IwasiEngine::CollisionManager::GetInstance();
 
 Player::~Player() {
 

@@ -6,7 +6,7 @@
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	ObgextFbx.cpp

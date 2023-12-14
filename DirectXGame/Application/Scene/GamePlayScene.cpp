@@ -13,7 +13,7 @@
 #include <iomanip>
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	GamyPlayScene.cpp

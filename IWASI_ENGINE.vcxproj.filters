@@ -402,6 +402,9 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Player\PlayerBullet.cpp">
       <Filter>Source File\Application\MyGame\Player</Filter>
     </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h">

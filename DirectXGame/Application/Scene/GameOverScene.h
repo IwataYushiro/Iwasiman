@@ -1,14 +1,5 @@
 #pragma once
-#include "Audio.h"
-#include "Easing.h"
-#include "LightGroup.h"
-#include "DirectXCommon.h"
-#include "ImGuiManager.h"
-#include "Object3d.h"
-#include "ObjectFbx.h"
 
-#include "ParticleManager.h"
-#include "Sprite.h"
 #include "XYZ.h"
 #include "EnumList.h"
 
@@ -30,6 +21,7 @@ struct LevelData;
 */
 class GameOverScene :public BaseScene
 {
+
 public://メンバ関数
 	//コンストラクタ(ステージ情報)
 	GameOverScene(const int stagenum);
@@ -154,7 +146,7 @@ private://メンバ変数
 		GOMEN_Num = 5,				//配列用
 	};
 	//メニューポジション
-	const std::array<float,GOMEN_Num> menuPosY_= { 50.0f,150.0f,300.0f,450.0f,600.0f };
+	const std::array<float, GOMEN_Num> menuPosY_ = { 50.0f,150.0f,300.0f,450.0f,600.0f };
 
 	//メニュー表示用のイージングのプリセット
 	const Easing presetEaseMenuPosX_[GOMEN_Num]

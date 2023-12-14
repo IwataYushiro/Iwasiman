@@ -1,7 +1,7 @@
 #include "SphereCollider.h"
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	SphereCollider.cpp

@@ -8,6 +8,7 @@
 
 #pragma comment(lib,"winmm.lib")
 
+using namespace IwasiEngine;
 /*
 
 *	WinApp.cpp

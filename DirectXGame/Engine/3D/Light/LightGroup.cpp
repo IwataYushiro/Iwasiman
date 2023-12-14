@@ -2,7 +2,7 @@
 #include <cassert>
 
 using namespace DirectX;
-
+using namespace IwasiEngine;
 /*
 
 *	LightGroup.cpp

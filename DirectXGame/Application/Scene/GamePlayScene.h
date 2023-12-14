@@ -41,6 +41,9 @@ class TouchableObject;
 */
 class GamePlayScene :public BaseScene
 {
+private://エイリアス
+	using CollisionManager = IwasiEngine::CollisionManager;
+
 public://メンバ関数
 	//コンストラクタ(ステージ情報)
 	GamePlayScene(const int stagenum);
