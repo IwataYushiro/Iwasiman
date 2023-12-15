@@ -92,7 +92,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 	private:// 静的メンバ関数
 
 		// グラフィックパイプライン生成
-		void InitializeGraphicsPipeline(size_t blendmode = BP_ADD);
+		void InitializeGraphicsPipeline(const size_t blendmode = BP_ADD);
 
 	public: // メンバ関数
 		//初期化

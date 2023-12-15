@@ -14,6 +14,7 @@ using namespace IwasiEngine;
 
 Audio* Audio::GetInstance()
 {
+	//インスタンス取得
 	static Audio instance;
 	return &instance;
 }

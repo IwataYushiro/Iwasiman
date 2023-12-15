@@ -370,6 +370,7 @@ void Object3d::Draw()
 
 void Object3d::SetCollider(BaseCollider* collider)
 {
+	//コライダーのセット
 	collider->SetObject(this);
 	this->collider_ = collider;
 	//コリジョンマネージャーに登録

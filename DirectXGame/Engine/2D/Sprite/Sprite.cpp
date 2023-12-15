@@ -15,7 +15,7 @@ void Sprite::Initialize(SpriteCommon* spCommon, const uint32_t textureIndex)
 	HRESULT result;
 	assert(spCommon);
 	this->spCommon_ = spCommon;
-	
+	//テクスチャインデックスが指定されている場合
 	if (textureIndex != UINT32_MAX)
 	{
 		textureIndex_ = textureIndex;
@@ -108,12 +108,13 @@ void Sprite::Update()
 		const float top = 0.0f;
 		const float bottom = 1.0f;
 	};
-	AnchorPointPreset anchorPointPreset;
+	AnchorPointPreset anchorPointPreset;//アンカーポイントのプリセット
 
-	float left = (anchorPointPreset.left - anchorPoint_.x) * size_.x;
-	float right = (anchorPointPreset.right - anchorPoint_.x) * size_.x;
-	float top = (anchorPointPreset.top - anchorPoint_.y) * size_.y;
-	float bottom = (anchorPointPreset.bottom - anchorPoint_.y) * size_.y;
+	float left = (anchorPointPreset.left - anchorPoint_.x) * size_.x;		//左
+	float right = (anchorPointPreset.right - anchorPoint_.x) * size_.x;		//右	
+	float top = (anchorPointPreset.top - anchorPoint_.y) * size_.y;			//上
+	float bottom = (anchorPointPreset.bottom - anchorPoint_.y) * size_.y;	//下
+
 	//左右反転
 	if (isFlipX_)
 	{
@@ -133,19 +134,19 @@ void Sprite::Update()
 	vertices_[RB].pos = { right,bottom,0.0f };
 	vertices_[RT].pos = { right,top,0.0f };
 
-	ComPtr<ID3D12Resource> texBuff = spCommon_->GetTextureBuffer(textureIndex_);
+	ComPtr<ID3D12Resource> texBuff = spCommon_->GetTextureBuffer(textureIndex_);//テクスチャバッファ取得
 	//指定番号の画像が読み込み済みなら
 	if (texBuff)
 	{
 		//テクスチャ情報取得
 		D3D12_RESOURCE_DESC texResDesc = texBuff->GetDesc();
 
-		float tex_left = textureLeftTop_.x / texResDesc.Width;
-		float tex_right = (textureLeftTop_.x + textureSize_.x) / texResDesc.Width;
-		float tex_top = textureLeftTop_.y / texResDesc.Height;
-		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / texResDesc.Height;
+		float tex_left = textureLeftTop_.x / texResDesc.Width;								//左
+		float tex_right = (textureLeftTop_.x + textureSize_.x) / texResDesc.Width;			//右
+		float tex_top = textureLeftTop_.y / texResDesc.Height;								//上
+		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / texResDesc.Height;		//下
 		//頂点のUVに反映する
-		vertices_[LB].uv = { tex_left,tex_bottom, };		//左下
+		vertices_[LB].uv = { tex_left,tex_bottom, };	//左下
 		vertices_[LT].uv = { tex_left,tex_top, };		//左上
 		vertices_[RB].uv = { tex_right,tex_bottom, };	//右下
 		vertices_[RT].uv = { tex_right,tex_top, };		//右上

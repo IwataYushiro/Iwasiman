@@ -106,6 +106,7 @@ void WinApp::Finalize()
 
 WinApp* WinApp::GetInstance()
 {
+	//インスタンス取得
 	static WinApp instance;
 	return &instance;
 }

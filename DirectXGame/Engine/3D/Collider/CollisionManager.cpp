@@ -15,6 +15,7 @@ using namespace IwasiEngine;
 
 CollisionManager* CollisionManager::GetInstance()
 {
+	//インスタンス取得
 	static CollisionManager instance;
 	return &instance;
 }
@@ -80,7 +81,7 @@ void CollisionManager::CheckAllCollisions()
 
 bool CollisionManager::RayCast(const Ray& ray, RaycastHit* hitInfo, const float maxDistance)
 {
-	return RayCast(ray,0xffff,hitInfo,maxDistance);
+	return RayCast(ray,0xffff,hitInfo,maxDistance);//属性無し版
 }
 
 bool CollisionManager::RayCast(const Ray& ray, const unsigned short attribute, RaycastHit* hitInfo, const float maxDistance)
@@ -151,7 +152,7 @@ void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback
 {
 	assert(callback);
 
-	std::forward_list<BaseCollider*>::iterator it;
+	std::forward_list<BaseCollider*>::iterator it;//走査用イテレータ
 
 	//全コライダーと総当たりチェック
 	it = colliders_.begin();

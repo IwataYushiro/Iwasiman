@@ -112,7 +112,7 @@ void PostEffect::CreateConstBuffer()
 	//変換行列
 	CreateConstBufferTransformPost();
 	constMapTransformPost_->mat = XMMatrixIdentity();
-	
+	//マッピング解除
 	constBuffMaterialPost_->Unmap(0, nullptr);
 	constBuffTransformPost_->Unmap(0, nullptr);
 }
@@ -175,8 +175,8 @@ void PostEffect::CreateTexture()
 		resDescPreset_.arraysize, resDescPreset_.mipLevels, resDescPreset_.sampleCount,
 		resDescPreset_.sampleQuality, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 
-	CD3DX12_HEAP_PROPERTIES CHP = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
-	CD3DX12_CLEAR_VALUE CCV = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, clearColor_);
+	CD3DX12_HEAP_PROPERTIES CHP = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);	//ヒーププロパティ
+	CD3DX12_CLEAR_VALUE CCV = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, clearColor_);						//クリアバリュー
 
 	//テクスチャバッファ生成
 	for (int i = 0; i < TBC_Num; i++)
@@ -482,6 +482,7 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 
 	//デスクリプタレンジの設定
 	const UINT descriptorNum = 1;
+	//デスクリプタレンジの数
 	enum DescriptoeRangeNum
 	{
 		DRN_SRV0 = 0,
@@ -596,7 +597,7 @@ void PostEffect::Draw([[maybe_unused]] ID3D12GraphicsCommandList* cmdList)
 
 void PostEffect::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
-	const int CRBNum = 2;
+	const int CRBNum = 2;//リソースバリアの数
 	for (int i = 0; i < CRBNum; i++)
 	{
 		CD3DX12_RESOURCE_BARRIER CRB = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_[i].Get(),
@@ -607,7 +608,7 @@ void PostEffect::PreDraw(ID3D12GraphicsCommandList* cmdList)
 		cmdList->ResourceBarrier(barrierNum,&CRB);
 	}
 	//RTV用デスクリプタヒープのハンドルを取得
-	const int RTVNum = 2;
+	const int RTVNum = 2;//レンダーターゲットビューの数
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHs[RTVNum];
 	for (int i = 0; i < RTVNum; i++)
 	{
@@ -644,7 +645,7 @@ void PostEffect::PreDraw(ID3D12GraphicsCommandList* cmdList)
 
 void PostEffect::PostDraw(ID3D12GraphicsCommandList* cmdList)
 {
-	const int CRBNum = 2;
+	const int CRBNum = 2;//リソースバリアの数
 	for (int i = 0; i < CRBNum; i++)
 	{
 		CD3DX12_RESOURCE_BARRIER CRB = CD3DX12_RESOURCE_BARRIER::Transition(texBuff_[i].Get(),

@@ -17,6 +17,7 @@ using namespace IwasiEngine;
 
 DirectXCommon* DirectXCommon::GetInstance()
 {
+	//インスタンス取得
 	static DirectXCommon instance;
 	return &instance;
 }

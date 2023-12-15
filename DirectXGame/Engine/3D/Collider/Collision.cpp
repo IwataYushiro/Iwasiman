@@ -18,7 +18,7 @@ bool Collision::ChackSphere2Sphere(const Sphere& sphere1, const Sphere& sphere2,
 	float dist = XMVector3LengthSq(sphere1.center - sphere2.center).m128_f32[0];
 	//”»’è‘ÎÛ‚Ì”¼Œa
 	float radius12 = sphere1.radius + sphere2.radius;
-
+	//æZ
 	radius12 *= radius12;
 
 	if (dist <= radius12)

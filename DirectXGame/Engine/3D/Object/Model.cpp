@@ -23,12 +23,13 @@ const std::string Model::BASE_DIRECTORY = "Resources/";
 
 Model::~Model()
 {
+	//メッシュをクリア
 	for (auto m : meshes_)
 	{
 		delete m;
 	}
 	meshes_.clear();
-
+	//マテリアルもクリア
 	for (auto m: materials_)
 	{
 		delete m.second;
@@ -38,7 +39,7 @@ Model::~Model()
 
 void Model::StaticInitialize(ID3D12Device* device)
 {
-	Model::device_ = device;
+	Model::device_ = device;//デバイスを渡す
 	//メッシュ初期化
 	Mesh::StaticInitialize(device_);
 }
@@ -174,7 +175,7 @@ void Model::LoadMaterial(const std::string& directoryPath, const std::string& fi
 	}
 	//ファイルを閉じる
 	file.close();
-
+	//マテリアルがあるなら登録する
 	if (material)
 	{
 		AddMaterial(material);
@@ -185,6 +186,7 @@ void Model::LoadTextures()
 {
 	int texIndex = 0;
 	string directoryPath = BASE_DIRECTORY + name_ + "/";
+	//マテリアルを走査
 	for (auto& m : materials_)
 	{
 		Material* material = m.second;
@@ -219,7 +221,7 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList) const {
 	}
 	for (auto& mesh : meshes_)
 	{
-		mesh->Draw(cmdList);
+		mesh->Draw(cmdList);//メッシュの描画
 	}
 	
 }
@@ -238,7 +240,7 @@ void Model::LoadFromOBJInternal(const std::string& modelName,const bool smoothin
 	{
 		assert(0);
 	}
-	name_ = modelName;
+	name_ = modelName;//モデル名
 	//メッシュ生成
 	Mesh* mesh = new Mesh();
 	int indexCountTex = 0;

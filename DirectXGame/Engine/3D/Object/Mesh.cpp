@@ -20,18 +20,20 @@ ID3D12Device* Mesh::device_ = nullptr;
 
 void Mesh::StaticInitialize(ID3D12Device* device)
 {
-	Mesh::device_ = device;
+	Mesh::device_ = device;//仮引数からデバイスを受け取る
 	//マテリアル初期化
 	Material::StaticInitialize(device);
 }
 
 void Mesh::AddSmoothData(unsigned short indexPosition, unsigned short indexVertex)
 {
+	//エッジ平滑化データ追加
 	smoothData_[indexPosition].emplace_back(indexVertex);
 }
 
 void Mesh::CalculateSmoothedVertexNormals()
 {
+	//平滑化された頂点法線の追加
 	auto itr = smoothData_.begin();
 	for (; itr != smoothData_.end(); ++itr)
 	{

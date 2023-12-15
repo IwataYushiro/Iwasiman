@@ -18,6 +18,7 @@ const std::string FbxLoader::defaultTextureFileName_ = "white1x1.png";
 
 FbxLoader* FbxLoader::GetInstance()
 {
+	//インスタンス取得
 	static FbxLoader instance;
 	return &instance;
 }
@@ -286,7 +287,7 @@ void FbxLoader::ParseMeshFaces(ModelFbx* modelF, FbxMesh* fbxMesh)
 
 void FbxLoader::ParseMaterial(ModelFbx* modelF, FbxNode* fbxNode)
 {
-	const int materialCount = fbxNode->GetMaterialCount();
+	const int materialCount = fbxNode->GetMaterialCount();//マテリアル数
 	if (materialCount > 0)
 	{
 		//先頭のマテリアルを取得

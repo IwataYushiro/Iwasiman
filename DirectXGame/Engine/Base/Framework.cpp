@@ -16,6 +16,7 @@ using namespace IwasiEngine;
 
 void Framework::Initialize()
 {
+	//インスタンス取得
 	//WinApp
 	winApp_ = WinApp::GetInstance();
 	//DXCommon
@@ -43,9 +44,12 @@ void Framework::Initialize()
 	imguiManager_->Initialize(winApp_, dxCommon_);
 	//FBX
 	FbxLoader::GetInstance()->Initialize(dxCommon_->GetDevice());
-
+	//静的初期化
+	//3Dオブジェクト(.obj)
 	Object3d::StaticInitialize(dxCommon_->GetDevice());
+	//3Dオブジェクト(.fbx)
 	ObjectFbx::StaticInitialize(dxCommon_->GetDevice());
+	//パーティクルマネージャー
 	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
 	//ライト
 	LightGroup::StaticInitialize(dxCommon_->GetDevice());
@@ -66,6 +70,7 @@ void Framework::Update()
 	//入力の更新
 	input_->Update();
 
+	//シーン更新
 	sceneManager_->Update();
 
 
@@ -73,7 +78,7 @@ void Framework::Update()
 
 void Framework::Finalize()
 {
-	//scene
+	//シーン
 	sceneManager_->Finalize();
 	//FBX
 	FbxLoader::GetInstance()->Finalize();
@@ -92,6 +97,7 @@ void Framework::Run()
 	//ゲームループ
 	while (true)
 	{
+		//更新
 		Update();
 
 		//終了リクエストが来たらループを抜ける

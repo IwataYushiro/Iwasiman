@@ -12,6 +12,7 @@ using namespace IwasiEngine;
 
 void Triangle::ComputeNormal()
 {
+	//法線計算用の値
 	XMVECTOR p0_p1 = p1 - p0;
 	XMVECTOR p0_p2 = p2 - p0;
 

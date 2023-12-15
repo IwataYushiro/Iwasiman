@@ -12,6 +12,7 @@ using namespace IwasiEngine;
 
 ImGuiManager* ImGuiManager::GetInstance()
 {
+	//インスタンス取得
 	static ImGuiManager instance;
 	return &instance;
 }
@@ -79,6 +80,7 @@ void ImGuiManager::End()
 	ImGui::Render();
 }
 void ImGuiManager::ImGuiStyleShowSample() {
+	//スタイル変更のサンプル
 	const int32_t maxBuff = 50;
 	static char buf[maxBuff] = {};
 	const float defaultFloatNum = 0.0f;
@@ -86,7 +88,7 @@ void ImGuiManager::ImGuiStyleShowSample() {
 
 	const int32_t defaultIntTextNum = 184;
 	ImGui::Text("Hello, world %d", defaultIntTextNum);
-
+	//スタイルは3種類
 	if (ImGui::Button("Style Classic")) { ImGui::StyleColorsClassic(); }
 	if (ImGui::Button("Style Light")) { ImGui::StyleColorsLight(); }
 	if (ImGui::Button("Style Dack")) { ImGui::StyleColorsDark(); }
@@ -100,11 +102,12 @@ void ImGuiManager::ImGuiStyleShowSample() {
 	};
 
 	const float minMax[MMN_Num] = { 0.0f,1.0f };
-	ImGui::SliderFloat("float", &f, minMax[MMN_Min], minMax[MMN_Max]);
+	ImGui::SliderFloat("float", &f, minMax[MMN_Min], minMax[MMN_Max]);//スライダー
 }
 
 void ImGuiManager::ImGuiMyFirstToolColor()
 {
+	//公式サイトのMyFirstToolのサンプル
 	// Create a window called "My First Tool", with a menu bar.
 	enum ColorPatternIndex
 	{

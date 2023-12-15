@@ -19,6 +19,7 @@ ID3D12Device* Material::device_ = nullptr;
 
 Material* Material::Create()
 {
+	//生成と初期化
 	Material* mat = new Material;
 
 	mat->Initialize();
@@ -28,7 +29,7 @@ Material* Material::Create()
 
 void Material::StaticInitialize(ID3D12Device* device)
 {
-	Material::device_ = device;
+	Material::device_ = device;//デバイスを受け取る
 }
 
 void Material::LoadTexture(const std::string& directoryPath, const D3D12_CPU_DESCRIPTOR_HANDLE& cpuHandle,
@@ -111,7 +112,7 @@ void Material::LoadTexture(const std::string& directoryPath, const D3D12_CPU_DES
 		assert(SUCCEEDED(result));
 	}
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // SRV設定構造体
 	D3D12_RESOURCE_DESC resDesc = texBuff_->GetDesc();
 
 	srvDesc.Format = resDesc.Format;

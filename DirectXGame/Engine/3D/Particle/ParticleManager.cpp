@@ -67,7 +67,7 @@ std::unique_ptr<ParticleManager> ParticleManager::Create()
 	return ins;
 }
 
-void ParticleManager::InitializeGraphicsPipeline(size_t blendmode)
+void ParticleManager::InitializeGraphicsPipeline(const size_t blendmode)
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -296,15 +296,18 @@ void ParticleManager::Update()
 {
 
 	HRESULT result;
-
+	
 	if (dirty_)
 	{
+		//ダーティフラグがtrueな場合再初期化
 		InitializeGraphicsPipeline(blendMode_);
 		dirty_ = false;
 	}
+	//更新
 	particle_->Update();
-	XMMATRIX matView = camera_->GetMatViewProjection();
-	XMMATRIX matBillboard = camera_->GetMatBillboard();
+
+	XMMATRIX matView = camera_->GetMatViewProjection();//ビュー行列
+	XMMATRIX matBillboard = camera_->GetMatBillboard();//ビルボード行列
 
 	// 定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;

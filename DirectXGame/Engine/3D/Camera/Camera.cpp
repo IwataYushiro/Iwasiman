@@ -22,7 +22,7 @@ Camera::Camera()
 
 	// 透視投影による射影行列の生成
 	UpdateProjectionMatrix();
-
+	//合成
 	matViewProjection_ = matView_ * matProjection_;
 
 }
@@ -46,12 +46,13 @@ void Camera::Reset()
 
 	// 透視投影による射影行列の生成
 	UpdateProjectionMatrix();
-
+	//合成
 	matViewProjection_ = matView_ * matProjection_;
 }
 
 XMFLOAT3 Camera::ShakeEye(const XMFLOAT3& eye, const int count, const XMFLOAT3& min, const XMFLOAT3& max)
 {
+	//シェイク前の値(固定)
 	const XMFLOAT3 nowEye = eye;
 	//プランA
 	// 視点座標
@@ -75,14 +76,16 @@ XMFLOAT3 Camera::ShakeEye(const XMFLOAT3& eye, const int count, const XMFLOAT3& 
 	// 透視投影による射影行列の生成
 	UpdateProjectionMatrix();
 
+	//合成
 	matViewProjection_ = matView_ * matProjection_;
 
-
+	//最終的には固定したシェイク前の値を返す
 	return nowEye;
 }
 
 XMFLOAT3 Camera::ShakeTarget(const XMFLOAT3& target, const int count, const XMFLOAT3& min, const XMFLOAT3& max)
 {
+	//シェイク前の値
 	const XMFLOAT3 nowTarget = target;
 	//プランA
 	// 視点座標
@@ -105,8 +108,10 @@ XMFLOAT3 Camera::ShakeTarget(const XMFLOAT3& target, const int count, const XMFL
 	// 透視投影による射影行列の生成
 	UpdateProjectionMatrix();
 
+	//合成
 	matViewProjection_ = matView_ * matProjection_;
 
+	//最終的には固定されたシェイク前の値を返す
 	return nowTarget;
 }
 
@@ -118,6 +123,7 @@ void Camera::Update()
 	// 透視投影による射影行列の生成
 	UpdateProjectionMatrix();
 
+	//合成
 	matViewProjection_ = matView_ * matProjection_;
 }
 
@@ -215,6 +221,7 @@ void Camera::UpdateViewMatrix()
 }
 void Camera::UpdateProjectionMatrix()
 {
+	//プロジェクション行列のプリセット
 	struct ProjectionPreset
 	{
 		const float degree = 45.0f;
@@ -224,6 +231,8 @@ void Camera::UpdateProjectionMatrix()
 		const float farZ = 1000.0f;
 	};
 	ProjectionPreset projectionPreset;
+
+	//透視投影行列
 	matProjection_ = XMMatrixPerspectiveFovLH(
 		projectionPreset.fovAngleY, projectionPreset.aspectRatio,
 		projectionPreset.nearZ, projectionPreset.farZ
@@ -231,6 +240,7 @@ void Camera::UpdateProjectionMatrix()
 }
 void Camera::CameraMoveVector(const XMFLOAT3& move)
 {
+	//視点と注視点を同時に動かす
 	XMFLOAT3 eye_moved = eye_;
 	XMFLOAT3 target_moved = target_;
 
@@ -248,6 +258,7 @@ void Camera::CameraMoveVector(const XMFLOAT3& move)
 
 void Camera::CameraMoveVectorEye(const XMFLOAT3& move)
 {
+	//視点だけを動かす
 	XMFLOAT3 eye_moved = eye_;
 
 	eye_moved.x += move.x;
@@ -259,6 +270,7 @@ void Camera::CameraMoveVectorEye(const XMFLOAT3& move)
 
 void Camera::CameraMoveVectorTarget(const XMFLOAT3& move)
 {
+	//注視点だけを動かす
 	XMFLOAT3 target_moved = target_;
 
 	target_moved.x += move.x;
@@ -270,6 +282,7 @@ void Camera::CameraMoveVectorTarget(const XMFLOAT3& move)
 
 void Camera::DebugCamera(const bool eyeTargetMix)
 {
+	//入力情報を取得
 	Input* input_ = Input::GetInstance();
 	const int VECTOR3COUNT = 3;
 
@@ -279,19 +292,19 @@ void Camera::DebugCamera(const bool eyeTargetMix)
 	//スピード
 	struct CameraSpeed
 	{
-		const XMFLOAT3 eyeXPlus = { 1.0f,0.0f,0.0f };
-		const XMFLOAT3 eyeYPlus = { 0.0f,1.0f,0.0f };
-		const XMFLOAT3 eyeZPlus = { 0.0f,0.0f,1.0f };
-		const XMFLOAT3 eyeXMinus = { -1.0f,0.0f,0.0f };
-		const XMFLOAT3 eyeYMinus = { 0.0f,-1.0f,0.0f };
-		const XMFLOAT3 eyeZMinus = { 0.0f,0.0f,-1.0f };
+		const XMFLOAT3 eyeXPlus = { 1.0f,0.0f,0.0f };					//視点X+
+		const XMFLOAT3 eyeYPlus = { 0.0f,1.0f,0.0f };					//視点Y+
+		const XMFLOAT3 eyeZPlus = { 0.0f,0.0f,1.0f };					//視点Z+
+		const XMFLOAT3 eyeXMinus = { -1.0f,0.0f,0.0f };					//視点X-
+		const XMFLOAT3 eyeYMinus = { 0.0f,-1.0f,0.0f };					//視点Y-
+		const XMFLOAT3 eyeZMinus = { 0.0f,0.0f,-1.0f };					//視点Z-
 
-		const XMFLOAT3 targetXPlus = { 1.0f,0.0f,0.00001f };
-		const XMFLOAT3 targetYPlus = { 0.0f,1.0f,0.00001f };
-		const XMFLOAT3 targetZPlus = { 0.0f,0.0f,1.00001f };
-		const XMFLOAT3 targetXMinus = { -1.0f,0.0f,-0.00001f };
-		const XMFLOAT3 targetYMinus = { 0.0f,-1.0f,-0.00001f };
-		const XMFLOAT3 targetZMinus = { 0.0f,0.0f,-1.00001f };
+		const XMFLOAT3 targetXPlus = { 1.0f,0.0f,0.00001f };			//注視点X+
+		const XMFLOAT3 targetYPlus = { 0.0f,1.0f,0.00001f };			//注視点Y+
+		const XMFLOAT3 targetZPlus = { 0.0f,0.0f,1.00001f };			//注視点Z+
+		const XMFLOAT3 targetXMinus = { -1.0f,0.0f,-0.00001f };			//注視点X-
+		const XMFLOAT3 targetYMinus = { 0.0f,-1.0f,-0.00001f };			//注視点Y-
+		const XMFLOAT3 targetZMinus = { 0.0f,0.0f,-1.00001f };			//注視点Z-
 	};
 	CameraSpeed speed;
 
@@ -310,7 +323,7 @@ void Camera::DebugCamera(const bool eyeTargetMix)
 	};
 	ImguiWindowSize iSize;
 	
-	if (!eyeTargetMix)
+	if (!eyeTargetMix)//視点等注視点を別々に動かす場合
 	{
 		//視点
 		if (input_->PushKey(DIK_W))CameraMoveVectorEye(speed.eyeYPlus);
@@ -340,9 +353,8 @@ void Camera::DebugCamera(const bool eyeTargetMix)
 		ImGui::End();
 		//imguiManager_->End();
 	}
-	else
+	else//視点と注視点を同時に動かす場合
 	{
-		//視点
 		if (input_->PushKey(DIK_W))
 		{
 			CameraMoveVectorEye(speed.eyeYPlus);

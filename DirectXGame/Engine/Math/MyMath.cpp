@@ -262,6 +262,7 @@ using namespace IwasiEngine;
 
 float MyMath::RandomMTFloat(const float min,const float max)
 {
+	//ƒ‰ƒ“ƒ_ƒ€¶¬(float)
 	std::random_device seed;
 	std::mt19937_64 engine(seed());
 	std::uniform_real_distribution<float> dist(min, max);
@@ -271,9 +272,10 @@ float MyMath::RandomMTFloat(const float min,const float max)
 
 int MyMath::RandomMTInt(const int min,const int max)
 {
+	//ƒ‰ƒ“ƒ_ƒ€¶¬(int)
 	std::random_device seed;
 	std::mt19937_64 engine(seed());
 	std::uniform_real_distribution<> dist(min, max);
 
-	return (int)dist(engine);
+	return static_cast<int>(dist(engine));
 }

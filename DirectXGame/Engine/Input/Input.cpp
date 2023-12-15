@@ -15,6 +15,7 @@ using namespace IwasiEngine;
 
 Input* Input::GetInstance()
 {
+	//インスタンス取得
 	static Input instance;
 	return &instance;
 }
