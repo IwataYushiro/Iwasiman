@@ -318,7 +318,7 @@ void StageSelectScene::UpdateIsStageSelect()
 		}
 		if (easeMenuPosX_[SSMEN_Quit].num_X == easeMenuPosX_[SSMEN_Quit].end)
 		{
-			if (input_->TriggerKey(DIK_Q))
+			if (input_->TriggerKey(DIK_ESCAPE))
 			{
 				for (int i = 0; i < XYZ_Num; i++)easePlayerQuitMove_[i].Standby(false);
 				for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(true);

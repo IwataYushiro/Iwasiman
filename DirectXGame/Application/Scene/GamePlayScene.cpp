@@ -344,7 +344,7 @@ void GamePlayScene::UpdateIsPlayGame()
 	
 	for (std::unique_ptr<Player>& player : players_)if (!player->IsBreak())colManager_->CheckAllCollisions();
 	//Pause機能
-	if (input_->TriggerKey(DIK_Q))
+	if (input_->TriggerKey(DIK_ESCAPE))
 	{
 		for (std::unique_ptr<Player>& player : players_)if (player->IsBreak())return;
 		//ここでイージングの準備

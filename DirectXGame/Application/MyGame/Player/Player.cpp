@@ -869,10 +869,10 @@ void Player::UpdateBreak()
 		{
 			particleFire_.get(),
 			{position_.x,position_.y - 5.0f,position_.z},
-			{ 15.0f ,15.0f,15.0f },
+			{ 10.0f ,10.0f,10.0f },
 			{ 3.3f,3.3f,3.3f },
 			{ 0.0f,0.001f,0.0f },
-			5,
+			4,
 			{ 7.0f, 0.0f },
 			{ MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
@@ -890,7 +890,7 @@ void Player::UpdateBreak()
 			{ 25.0f ,10.0f,15.0f },
 			{ MyMath::RandomMTFloat(0.0f,0.1f),MyMath::RandomMTFloat(0.5f,3.0f),0.3f },
 			{ 0.0f,0.001f,0.0f },
-			4,
+			3,
 			{ 4.0f, 0.0f },
 			{ MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.95f,1.0f),1.0f },
 			{ 1.0f,1.0f,1.0f,0.0f }

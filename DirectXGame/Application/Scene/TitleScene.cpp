@@ -469,7 +469,7 @@ void TitleScene::UpdateIsMenu()
 
 			}
 		}
-		if (input_->TriggerKey(DIK_Q))
+		if (input_->TriggerKey(DIK_ESCAPE))
 		{
 			for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].Standby(true);
 			for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].Standby(true);
