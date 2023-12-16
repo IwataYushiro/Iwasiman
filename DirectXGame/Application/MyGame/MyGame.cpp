@@ -14,9 +14,10 @@ using namespace IwasiEngine;
 
 void MyGame::Initialize()
 {
+	//フレームワーク初期化
 	Framework::Initialize();
 	
-	
+	//シーンファクトリー
 	sceneFactory_ = std::make_unique<SceneFactory>();
 	sceneManager_->SetSceneFactory(sceneFactory_.get());
 	sceneManager_->ChangeScene("TITLE");
@@ -34,22 +35,24 @@ void MyGame::Update()
 
 void MyGame::Draw()
 {
-	PostDraw();
+	PostDraw();//ポストエフェクト描画
 }
 
 void MyGame::Finalize()
 {
-	Framework::Finalize();
+	Framework::Finalize();//終了処理
 }
 
 void MyGame::PostInitialize()
 {
+	//ポストエフェクト初期化
 	pe_ = std::make_unique<PostEffect>();
 	pe_->Initialize(sprCommon_);
 }
 
 void MyGame::PostDraw()
 {
+	//ポストエフェクトの前にシーンを描画
 	pe_->PreDraw(dxCommon_->GetCommandList());
 	sceneManager_->Draw();
 	pe_->PostDraw(dxCommon_->GetCommandList());
@@ -57,7 +60,7 @@ void MyGame::PostDraw()
 	//描画前処理
 	dxCommon_->PreDraw();
 
-	//ポストエフェクトの描画
+	//その後にポストエフェクトの描画
 	pe_->Draw(dxCommon_->GetCommandList());
 
 	//ImGuiの表示

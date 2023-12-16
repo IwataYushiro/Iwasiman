@@ -666,6 +666,7 @@ void StageClearScene::LoadLVData(const std::string& stagePath)
 
 			//カメラセット
 			newObject->SetCamera(camera_.get());
+
 			// 配列に登録
 			objSkydomes_.push_back(std::move(newObject));
 		}
@@ -693,6 +694,7 @@ void StageClearScene::LoadLVData(const std::string& stagePath)
 
 			//カメラセット
 			newObject->SetCamera(camera_.get());
+
 			// 配列に登録
 			objGoals_.push_back(std::move(newObject));
 		}

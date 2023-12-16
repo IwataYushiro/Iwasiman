@@ -410,7 +410,7 @@ private:
 	std::unique_ptr<AbstractGimmickFactory> gimmickFactory_;					//ギミックの工場
 	std::list<std::unique_ptr<BaseGimmick>> gimmicks_;							//ギミックリスト
 	std::unique_ptr<Model> modelSpike_ = nullptr;								//トゲのモデル
-	std::unique_ptr<Model> modelBoxUpDown_ = nullptr;								//上下する床のモデル
+	std::unique_ptr<Model> modelBoxUpDown_ = nullptr;							//上下する床のモデル
 
 	//ゴール
 	std::list<std::unique_ptr<Goal>> goals_;					//ゴールリスト
@@ -426,7 +426,7 @@ private:
 
 	//床
 	std::unique_ptr<Model> modelGround_ = nullptr;				//床のモデル
-	std::unique_ptr<Model> modelSphere_ = nullptr;					//球モデル
+	std::unique_ptr<Model> modelSphere_ = nullptr;				//球モデル
 	std::unique_ptr<Model> modelBox_ = nullptr;					//AABB床モデル
 
 	//jsonレベルデータ

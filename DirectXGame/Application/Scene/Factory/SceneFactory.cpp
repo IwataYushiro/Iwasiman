@@ -18,25 +18,25 @@ std::unique_ptr<BaseScene> SceneFactory::CreateScene(const std::string& sceneNam
 	//次のシーンを生成
 	std::unique_ptr<BaseScene> newScene = nullptr;
 
-	if (sceneName == "TITLE")
+	if (sceneName == "TITLE")				//タイトルシーン
 	{
-		newScene = std::make_unique<TitleScene>(stagenum);
+		newScene = std::make_unique<TitleScene>(stagenum);				
 	}
-	else if (sceneName == "GAMEPLAY")
+	else if (sceneName == "GAMEPLAY")		//ゲームプレイシーン
 	{
-		newScene = std::make_unique<GamePlayScene>(stagenum);
+		newScene = std::make_unique<GamePlayScene>(stagenum);			
 	}
-	else if (sceneName == "STAGECLEAR")
+	else if (sceneName == "STAGECLEAR")		//ステージクリアシーン
 	{
-		newScene = std::make_unique<StageClearScene>(stagenum);
+		newScene = std::make_unique<StageClearScene>(stagenum);			
 	}
-	else if (sceneName == "STAGESELECT")
+	else if (sceneName == "STAGESELECT")	//ステージセレクトシーン
 	{
-		newScene = std::make_unique<StageSelectScene>(stagenum);
+		newScene = std::make_unique<StageSelectScene>(stagenum);		
 	}
-	else if (sceneName == "GAMEOVER")
+	else if (sceneName == "GAMEOVER")		//ゲームオーバーシーン
 	{
-		newScene = std::make_unique<GameOverScene>(stagenum);
+		newScene = std::make_unique<GameOverScene>(stagenum);			
 	}
 	return newScene;
 }

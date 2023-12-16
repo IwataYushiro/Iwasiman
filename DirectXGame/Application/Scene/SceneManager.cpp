@@ -11,6 +11,7 @@
 
 SceneManager* SceneManager::GetInstance()
 {
+	//インスタンス取得
 	static SceneManager instance;
 	return &instance;
 }
@@ -53,10 +54,10 @@ void SceneManager::Update()
 
 void SceneManager::Draw()
 {
-	scene_->Draw();
+	scene_->Draw();//シーン描画
 }
 
 void SceneManager::Finalize()
 {
-	scene_->Finalize();
+	scene_->Finalize();//終了処理
 }
