@@ -56,17 +56,18 @@ bool Player::Initialize() {
 	//シングルトンインスタンス
 	spCommon_ = SpriteCommon::GetInstance();
 	input_ = Input::GetInstance();
+	//初期値セット
+	const int32_t startLife = 10;	//開始時ライフ
+	life_ = startLife;				//→ライフを代入
+	isDead_ = false;				//死亡フラグ
+	isHit_ = false;					//命中フラグ
+	mutekiCount_ = 0;				//無敵時間
 
-	const int32_t startLife = 10;
-	life_ = startLife;
-	isDead_ = false;
-	isHit_ = false;
-	mutekiCount_ = 0;
-
+	//右を向いているか
 	isRight_ = true;
 	//ジャンプしたか
 	onGround_ = true;
-
+	//ジャンプ力
 	const float startJumpVYFist = 2.0f;
 	jumpVYFist_ = startJumpVYFist;
 
@@ -81,17 +82,18 @@ bool Player::Initialize() {
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
 
 	//スプライト
+	//ライフバー
 	spCommon_->LoadTexture(GPSPTI_PlayerLifeBarTex, "texture/plife2.png");
 	spriteLifeBar_->Initialize(spCommon_, GPSPTI_PlayerLifeBarTex);
 	spriteLifeBar_->SetPosition(lifeBarPos_);
 	spriteLifeBar_->SetColor(green_);//基本は緑
 	spriteLifeBar_->Update();
-
+	//被弾演出
 	spCommon_->LoadTexture(GPSPTI_PlayerHitEffectTex, "texture/fade2.png");
 	spriteHit_->Initialize(spCommon_, GPSPTI_PlayerHitEffectTex);
 	spriteHit_->SetColor(hitColor_);//色は赤いが基本は透明
 	spriteHit_->Update();
-
+	//爆発用スプライト
 	spCommon_->LoadTexture(GPSPTI_PlayerExplosionTex, "texture/explosion2.png");
 	spriteExplosion_->Initialize(spCommon_, GPSPTI_PlayerExplosionTex);
 	spriteExplosion_->SetAnchorPoint(explosionAnchorPoint_);
@@ -101,10 +103,11 @@ bool Player::Initialize() {
 	spriteExplosion_->Update();
 
 	//パーティクル
+	//煙
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmSmoke_ = ParticleManager::Create();
 	pmSmoke_->SetParticleModel(particleSmoke_.get());
-
+	//爆発用の炎
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetParticleModel(particleFire_.get());
@@ -114,17 +117,18 @@ bool Player::Initialize() {
 	SetCollider(new SphereCollider(colliderOffset, radius_));
 	collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
-
+	//イージングスタンバイ
 	easelifeBarSize_.Standby(false);
 	return true;
 }
 
 void Player::Reset() {
+	//値リセット
+	const int32_t resetLife = 10;	//初期値ライフにリセット
+	life_ = resetLife;				//それを代入
+	isDead_ = false;				//死亡フラグ
 
-	const int32_t resetLife = 10;
-	life_ = resetLife;
-	isDead_ = false;
-
+	//右を向いているか
 	isRight_ = true;
 	//ジャンプしたか
 	onGround_ = true;
@@ -141,55 +145,59 @@ void Player::Reset() {
 }
 void Player::Update(const bool isBack, const bool isAttack, const bool isStart) {
 
+	//パーティクルマネージャーにカメラをセット
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
-	if (!isStart)
+
+	if (!isStart)//スタート演出時は何もしない
 	{
 		if (isAlive_)UpdateAlive(isBack, isAttack);
 		else if (isBreak_)UpdateBreak();
 		else if (isGoal_)UpdateGoal();
 	}
-
-	camera_->Update();
-	UpdateWorldMatrix();
-	pmFire_->Update();
-	pmSmoke_->Update();
-
-	collider_->Update();
+	//更新
+	camera_->Update();		//カメラ
+	UpdateWorldMatrix();	//行列
+	pmFire_->Update();		//パーティクルマネージャー(炎)
+	pmSmoke_->Update();		//パーティクルマネージャー(煙)
+	collider_->Update();	//コライダー
+	
 	//着地処理
 	Landing(COLLISION_ATTR_LANDSHAPE);
-
+	
+	//ライフバーのイージング
 	easelifeBarSize_.ease_in_cubic();
-	lifeBarDamageSize_.x = easelifeBarSize_.num_X;
-
+	lifeBarDamageSize_.x = easelifeBarSize_.num_X;//サイズをセット
 	spriteLifeBar_->SetTextureSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
 	spriteLifeBar_->SetSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
+	//ライフがこの値にまで下がったらピンチだと知らせる
 	const int dangerLifeZone = 3;
-
+	//ピンチ時はライフバーを赤くし、それ以外は緑に
 	if (life_ <= dangerLifeZone) { spriteLifeBar_->SetColor(red_); }
 	else { spriteLifeBar_->SetColor(green_); }
-
+	//スプライト更新
 	spriteLifeBar_->Update();
 	spriteHit_->Update();
 	spriteExplosion_->Update();
 }
 
-void Player::Draw() { if (!isExplosion_)Object3d::Draw(); }
+void Player::Draw() { if (!isExplosion_)Object3d::Draw(); }//描画
 
 void Player::DrawSprite()
 {
-	if (!isBreak_)
+	if (!isBreak_)//生きてたら
 	{
 		if (isAlive_)spriteLifeBar_->Draw();
 		spriteHit_->Draw();
 	}
-	else
+	else//やられたら
 	{
 		spriteExplosion_->Draw();
 	}
 }
 
 void Player::DrawParticle() {
+	//各パーティクル描画
 	pmSmoke_->Draw();
 	pmFire_->Draw();
 
@@ -197,9 +205,9 @@ void Player::DrawParticle() {
 
 //移動処理
 void Player::Move() {
-
+	//振り向くためのイージング
 	easeRotateRightY_.ease_out_cubic();
-
+	//値のゲッター
 	XMFLOAT3 move = Object3d::GetPosition();
 	XMFLOAT3 rot = Object3d::GetRotation();
 	XMFLOAT3 cmove = camera_->GetEye();
@@ -211,7 +219,7 @@ void Player::Move() {
 	//パーティクル
 	const XMFLOAT3 startPosRight = { position_.x - 2.0f,position_.y + 1.0f ,position_.z };
 	const XMFLOAT3 startPosLeft = { position_.x + 2.0f,position_.y + 1.0f ,position_.z };
-	const ParticleManager::Preset smoke =
+	const ParticleManager::Preset smoke =	//煙プリセット
 	{
 		particleSmoke_.get(),
 		position_,//使わない
@@ -265,7 +273,7 @@ void Player::Move() {
 			if (isShake_)hitMove_.x += moveSpeed * dashSpeed;
 		}
 	}
-	else
+	else//通常移動
 	{
 		if (input_->PushKey(DIK_A)) {
 			if (isRight_)
@@ -302,7 +310,7 @@ void Player::Move() {
 		}
 	}
 
-
+	//値の更新
 	Object3d::SetPosition(move);
 	Object3d::SetRotation(rot);
 	camera_->SetEye(cmove);
@@ -311,8 +319,9 @@ void Player::Move() {
 
 void Player::FallAndJump()
 {
-	const float jumpPowerUp = 3.0f;
-	const float jumpPowerDefault = 2.0f;
+	//ジャンプ力強化アイテムを取っているかいないかでジャンプ力が変わる
+	const float jumpPowerUp = 3.0f;			//強化時
+	const float jumpPowerDefault = 2.0f;	//通常時
 	if (isGetJumpItem_)
 	{
 		if (onGround_)jumpVYFist_ = jumpPowerUp;
@@ -323,8 +332,9 @@ void Player::FallAndJump()
 		if (onGround_)jumpVYFist_ = jumpPowerDefault;
 	}
 
-	if (!onGround_)
+	if (!onGround_)//ジャンプ中
 	{
+		//モデルを変更
 		model_ = modelJump_;
 		//下向き加速度
 		const float fallAcc = -0.1f;
@@ -337,14 +347,14 @@ void Player::FallAndJump()
 		position_.z += fallVec_.z;
 	}
 	//ジャンプ操作
-	else if (input_->TriggerKey(DIK_SPACE))
+	else if (input_->TriggerKey(DIK_SPACE))//地面に着いているときにスペースキーでジャンプ
 	{
 		onGround_ = false;
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
 	}
 	
-
+	//強化アイテムを取得しているとき一定の時間がたったらジャンプ力がリセットされる
 	if (jumpPowerUpcount_ >= JUMPITEM_MAX_TIME)
 	{
 		const float countReset = 0.0f;
@@ -371,11 +381,11 @@ void Player::JumpBack()
 	point2_ = point2Bezier3Pos;
 	end_ = endBezier3Pos;
 
-	if (onGround_)
+	if (onGround_)//地面に着いていたら
 	{
 		if (!isJumpBack_)
 		{
-			if (input_->TriggerKey(DIK_W))
+			if (input_->TriggerKey(DIK_W))//奥側へジャンプ
 			{
 				if (isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
@@ -383,7 +393,7 @@ void Player::JumpBack()
 				isBack_ = true;
 				isJumpBack_ = true;
 			}
-			if (input_->TriggerKey(DIK_S))
+			if (input_->TriggerKey(DIK_S))//手前側へジャンプ
 			{
 				if (!isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
@@ -393,7 +403,7 @@ void Player::JumpBack()
 			}
 		}
 	}
-	if (isJumpBack_)
+	if (isJumpBack_)//奥側、手前側ジャンプ中
 	{
 
 		//現在時間を取得する
@@ -407,12 +417,12 @@ void Player::JumpBack()
 		const float timeRateMax = 1.0f;
 		timeRate_ = min(elapsed / maxTime_, timeRateMax);
 
-		if (isBack_)
+		if (isBack_)//奥側へ行く場合
 		{
 			position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 			if (position_.z >= end_.z)isJumpBack_ = false;
 		}
-		else
+		else//手前側へ行く場合
 		{
 			position_ = Bezier3(end_, point2_, point1_, start_, timeRate_);
 			if (position_.z <= start_.z)isJumpBack_ = false;
@@ -427,10 +437,11 @@ void Player::Landing(const unsigned short attribute)
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
 	assert(sphereCollider);
 
-	//専用クエリーコールバッククラス定義
+	//自機専用クエリーコールバッククラス定義
 	class PlayerQueryCallback : public QueryCallback
 	{
 	public:
+		//コンストラクタ
 		PlayerQueryCallback(Sphere* sphere) :sphere_(sphere) {};
 
 		//衝突時のコールバック関数
@@ -457,6 +468,7 @@ void Player::Landing(const unsigned short attribute)
 		}
 
 	public:
+		//球
 		Sphere* sphere_ = nullptr;
 		//排斥による移動量
 		XMVECTOR move = {};
@@ -473,19 +485,19 @@ void Player::Landing(const unsigned short attribute)
 	position_.x += callback.move.m128_f32[XYZ_X];
 	position_.y += callback.move.m128_f32[XYZ_Y];
 	//position_.z += callback.move.m128_f32[2];
-
+	
+	//視点と注視点をゲット
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
-
+	//X分だけ動かす
 	eyepos.x += callback.move.m128_f32[XYZ_X];
-
 	tarpos.x += callback.move.m128_f32[XYZ_X];
 
-	//コライダー更新
-	UpdateWorldMatrix();
-	camera_->SetEye(eyepos);
-	camera_->SetTarget(tarpos);
-	collider_->Update();
+	//更新
+	UpdateWorldMatrix();			//行列更新
+	camera_->SetEye(eyepos);		//視点セット
+	camera_->SetTarget(tarpos);		//注視点セット
+	collider_->Update();			//コライダー更新
 
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
@@ -526,6 +538,7 @@ void Player::Landing(const unsigned short attribute)
 		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * radiusMulNum))
 		{
+			//着地時にモデルを着地モデルに
 			model_ = modelPlayer_;
 			//着地
 			onGround_ = true;
@@ -535,7 +548,7 @@ void Player::Landing(const unsigned short attribute)
 		}
 	}
 
-	//行列更新等
+	//オブジェクト更新
 	Object3d::Update();
 }
 
@@ -543,7 +556,7 @@ void Player::Landing(const unsigned short attribute)
 void Player::Attack() {
 
 	if (input_->TriggerKey(DIK_L)) {
-		//地面にいるとき,通常の立ち絵のとき限定でモデル変える
+		//地面にいるとき,通常の立ち絵のとき限定でモデルを変える
 		if (model_ == modelPlayer_ && onGround_) model_ = modelAttack_;
 		//弾の速度
 		const float bulletSpeed = 1.0f;
@@ -551,12 +564,11 @@ void Player::Attack() {
 		//向きによってスピードが変わる
 		const XMFLOAT3 velLeft = { -bulletSpeed, 0.0f, 0.0f };
 		const XMFLOAT3 velRight = { bulletSpeed, 0.0f, 0.0f };
-
+		//向いている方向を同期
 		if (isRight_)velocity = velRight;
 		else velocity = velLeft;
 		//行列に速度値を渡す
 		const XMFLOAT4 velosityMoveMatrix = { velocity.x,velocity.y,velocity.z,0.0f };
-
 		XMMATRIX matVec = XMMatrixIdentity();
 		matVec.r[XYZW_X].m128_f32[XYZW_X] = velosityMoveMatrix.x;
 		matVec.r[XYZW_X].m128_f32[XYZW_Y] = velosityMoveMatrix.y;
@@ -585,7 +597,7 @@ void Player::Attack() {
 
 void Player::Trans() {
 
-	XMMATRIX world;
+	XMMATRIX world;//ワールド座標
 	//行列更新
 	world = XMMatrixIdentity();
 	XMMATRIX matWorld = XMMatrixIdentity();
@@ -651,10 +663,12 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		{ 0.0f,0.0f,0.0f,1.0f }
 	};
 
-	if (attribute == COLLISION_ATTR_ENEMYS)
+	if (attribute == COLLISION_ATTR_ENEMYS)//敵の場合
 	{
+		//ヒット時(無敵時間時)は効かない
 		if (isShake_)return;
 		if (isHit_)return;
+		//ダメージ計算
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ -= damege.enemyNone;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)life_ -= damege.enemyPower;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)life_ -= damege.enemyGuard;
@@ -663,64 +677,58 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_ISDEAD)return;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_ -= damege.enemyBullet;
 
+		//ヒット演出
 		pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-
 		pmSmoke_->Update();
-		/*
-		nowEye_ = camera_->GetEye();
-		nowTarget_ = camera_->GetTarget();
-		easeHit_.Standby(false);
-		if (onGround_) { isShake_ = true; }
-		else isHit_ = true;
-		*/
+		
 		//model_ = modelHit_;
 		isHit_ = true;
 	}
 
-	else if (attribute == COLLISION_ATTR_GIMMICK)
+	else if (attribute == COLLISION_ATTR_GIMMICK)//ギミックの場合
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)
+		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)//トゲ
 		{
+			//ヒット時(無敵時間時)は効かない
 			if (isShake_)return;
 			if (isHit_)return;
+			//ダメージ計算
 			life_ -= damege.GimmickSpike;
+
+			//ヒット演出
 			pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-
 			pmSmoke_->Update();
 
-			/*
-			nowEye_ = camera_->GetEye();
-			nowTarget_ = camera_->GetTarget();
-			easeHit_.Standby(false);
-			if (onGround_) { isShake_ = true; }
-			else isHit_ = true;
-			*/
 			//model_ = modelHit_;
 			isHit_ = true;
 		}
 
 	}
-	else if (attribute == COLLISION_ATTR_GOAL)
+	else if (attribute == COLLISION_ATTR_GOAL)//ゴールの場合
 	{
+		//多重ヒットを防止
 		if (isGoal_)return;
+		//自機のスケールをイージングで変更
 		scale_ = { easeChangeScaleStageClear_[XYZ_X].start,easeChangeScaleStageClear_[XYZ_Y].start ,easeChangeScaleStageClear_[XYZ_Z].start };
 		for (int i = 0; i < XYZ_Num; i++)easeChangeScaleStageClear_[i].Standby(false);
+		//動かせないようにする
 		stopPos_ = position_;
 		isGoal_ = true;
 		isAlive_ = false;
 	}
-	else if (attribute == COLLISION_ATTR_ITEM)
+	else if (attribute == COLLISION_ATTR_ITEM)//アイテムの場合
 	{
 		
-		if (subAttribute == SUBCOLLISION_ATTR_ITEM_JUMP)
+		if (subAttribute == SUBCOLLISION_ATTR_ITEM_JUMP)//ジャンプ強化アイテム
 		{
 			if (isGetJumpItem_)return; //多重ヒット防止
 			isGetJumpItem_ = true;
 		}
-		else if (subAttribute == SUBCOLLISION_ATTR_ITEM_HEAL)
+		else if (subAttribute == SUBCOLLISION_ATTR_ITEM_HEAL)//ライフ回復アイテム
 		{
+			//回復する
 			const int heal = 1;
 			life_ += heal;
 			
@@ -750,13 +758,16 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 	if (isDead_)return;
 	//移動処理
 	Move();
-	//攻撃処理
+	//ジャンプ処理
 	FallAndJump();
+	//手前。奥側ジャンプ処理
 	if (isBack)JumpBack();
+	//攻撃処理
 	if (isAttack)Attack();
 
-	if (life_ <= 0)
+	if (life_ <= 0)//ライフが0になったら死ぬ
 	{
+		//現在視点と注視点を記録
 		nowEye_ = camera_->GetEye();
 		nowTarget_ = camera_->GetTarget();
 
@@ -771,18 +782,19 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		easeDeadCameraTarget_[XYZ_X].SetEasing(nowTarget_.x, nowTarget_.x + easeOffset_.x, easeTime);
 		easeDeadCameraTarget_[XYZ_Y].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, easeTime);
 		easeDeadCameraTarget_[XYZ_Z].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, easeTime);
-
+		//イージングスタンバイ
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].Standby(false);
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].Standby(false);
-
+		//モデルを切り替えて死亡演出へ
 		model_ = modelHit_;
 		isBreak_ = true;
 		isAlive_ = false;
 	}
+	//一定の位置まで落ちても死ぬ
 	const float deadPosY = -60.0;
 	if (position_.y <= deadPosY)isDead_ = true;
 
-	if (isHit_)
+	if (isHit_)//敵の攻撃が当たったら
 	{
 		nowEye_ = camera_->GetEye();
 		nowTarget_ = camera_->GetTarget();
@@ -792,7 +804,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 	}
 	if (isShake_)
 	{
-		
+		//当たったらシェイクさせる
 		const int32_t shakeCount = 1;
 		//視点シェイク
 		XMFLOAT3 Eye = nowEye_ + hitMove_;
@@ -810,10 +822,10 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		//+してイージング
 		easeHit_.ease_in_out_cubic();
 		spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
-
+		//無敵時間カウントを進める
 		mutekiCount_++;
 	}
-
+	//無敵時間カウントが一定の時間にまで達したらシェイク終了
 	if (mutekiCount_ == MUTEKI_COUNT)
 	{
 		if (isShake_)
@@ -859,11 +871,11 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 
 void Player::UpdateBreak()
 {
-	if (isExplosion_)
+	if (isExplosion_)//スプライト爆発し終わった時
 	{
+		//イージングで徐々に爆発スプライトを薄くしていき最終的には透明にする
 		easeExplosionSizeAndAlpha_[XYW_W].ease_out_sine();
-		spriteExplosion_->SetColor({ asIsColor_.x,asIsColor_.y,asIsColor_.z,
-			easeExplosionSizeAndAlpha_[XYW_W].num_X });
+		spriteExplosion_->SetColor({ asIsColor_.x,asIsColor_.y,asIsColor_.z,easeExplosionSizeAndAlpha_[XYW_W].num_X });
 		//炎プリセット
 		const ParticleManager::Preset fire =
 		{
@@ -903,17 +915,22 @@ void Player::UpdateBreak()
 
 		//カメラ速度
 		XMFLOAT3 cameraSppedEyeTarget;
-		const XMFLOAT2 shakeEyeTargetMinMax = { -0.1f,0.1f };
+		const XMFLOAT2 shakeEyeTargetMinMax = { -0.1f,0.1f };//視点、注視点のXY座標はシェイクさせる
+		//シェイクの値はランダム
 		cameraSppedEyeTarget.x = MyMath::RandomMTFloat(shakeEyeTargetMinMax.x, shakeEyeTargetMinMax.y);
 		cameraSppedEyeTarget.y = MyMath::RandomMTFloat(shakeEyeTargetMinMax.x, shakeEyeTargetMinMax.y);
-		const float speedChangePosZ = -30.0f;
-		const XMFLOAT2 cameraSpeedZ = { 2.5f,1.0f };//奥側と手前側
+
+		const float speedChangePosZ = -30.0f;//手前側、奥側に分ける基準の値(これより大きかったら奥側)
+		const XMFLOAT2 cameraSpeedZ = { 2.5f,1.0f };//奥側と手前側の視点、注視点のZ軸移動の速度
+		//奥側と手前側でズームアウト速度を変える
+		//奥側
 		if (position_.z >= speedChangePosZ) cameraSppedEyeTarget.z = cameraSpeedZ.x;
+		//手前側
 		else cameraSppedEyeTarget.z = cameraSpeedZ.y;
 
+		//徐々にカメラはズームアウト
 		XMFLOAT3 cameraEye = camera_->GetEye();
 		XMFLOAT3 cameraTarget = camera_->GetTarget();
-
 		cameraEye.x -= cameraSppedEyeTarget.x;
 		cameraEye.y -= cameraSppedEyeTarget.y;
 		cameraEye.z -= cameraSppedEyeTarget.z;
@@ -923,16 +940,16 @@ void Player::UpdateBreak()
 
 		camera_->SetEye(cameraEye);
 		camera_->SetTarget(cameraTarget);
-
+		//Z視点が一定の位置に達したらゲームオーバー
 		if (camera_->GetEye().z <= -cameraEyeChangeGameover_) isDead_ = true;
 	}
-	else if (isCameraEnd_)
+	else if (isCameraEnd_)//カメラ移動終わったとき
 	{
 		//爆発
 		for (int i = 0; i < XY_Num; i++)easeExplosionSizeAndAlpha_[i].ease_out_expo();
-
+		//スプライトで爆発を表現
 		spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[XYW_X].num_X,easeExplosionSizeAndAlpha_[XYW_Y].num_X });
-
+		//サイズがイージング終了サイズまで達したらパーティクルの爆発、煙の出番
 		if (spriteExplosion_->GetSize().x == easeExplosionSizeAndAlpha_[XYW_X].end)
 		{
 			easeExplosionSizeAndAlpha_[XYW_W].Standby(false);//カラーだけ
@@ -940,7 +957,7 @@ void Player::UpdateBreak()
 			isCameraEnd_ = false;
 		}
 	}
-	else
+	else//ライフが0になった瞬間
 	{
 		//カメラ移動
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].ease_out_cubic();
@@ -948,6 +965,7 @@ void Player::UpdateBreak()
 
 		camera_->SetEye({ easeDeadCameraEye_[XYZ_X].num_X,easeDeadCameraEye_[XYZ_Y].num_X, easeDeadCameraEye_[XYZ_Z].num_X });
 		camera_->SetTarget({ easeDeadCameraTarget_[XYZ_X].num_X,easeDeadCameraTarget_[XYZ_Y].num_X, easeDeadCameraTarget_[XYZ_Z].num_X });
+		//カメラのイージングが終わったら爆発
 		if (camera_->GetEye().z == easeDeadCameraEye_[XYZ_Z].end)
 		{
 			for (int i = 0; i < XY_Num; i++)easeExplosionSizeAndAlpha_[i].Standby(false);//サイズだけ

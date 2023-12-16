@@ -57,7 +57,7 @@ void PlayerBullet::Update() {
 	pos.x += velocity_.x;
 	pos.y += velocity_.y;
 	pos.z += velocity_.z;
-
+	//座標のセット
 	Object3d::SetPosition(pos);
 	//行列更新
 	XMMATRIX world;
@@ -77,8 +77,9 @@ void PlayerBullet::Update() {
 	matWorld = matScale * matRot * matTrans;
 
 	Object3d::SetWorld(matWorld);
-	camera_->Update();
-	Object3d::Update();
+	//更新
+	camera_->Update();	//カメラ
+	Object3d::Update();	//3Dオブジェクト
 	//時間経過で死亡
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
@@ -93,13 +94,13 @@ void PlayerBullet::Draw() {
 
 //衝突を検出したら呼び出されるコールバック関数
 void PlayerBullet::OnCollision([[maybe_unused]] const CollisionInfo& info,const unsigned short attribute,const unsigned short subAttribute) {
-
-	if (attribute == COLLISION_ATTR_LANDSHAPE)isDead_ = true;
-	else if (attribute == COLLISION_ATTR_ENEMYS) 
+	
+	if (attribute == COLLISION_ATTR_LANDSHAPE)isDead_ = true;//地形の場合ぶつかったら消滅
+	else if (attribute == COLLISION_ATTR_ENEMYS) //敵の場合
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
-		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_ISDEAD)return;
-		else isDead_ = true;
+		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;			//敵の弾だと何も起こらない
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_ISDEAD)return;	//敵が死んでいる扱い何も起こらない
+		else isDead_ = true;	//それ以外は消滅
 	}
 	
 }

@@ -137,7 +137,7 @@ void TitleScene::Initialize()
 	pm2_->SetParticleModel(particle2_.get());
 	pm2_->SetCamera(camera_.get());
 
-
+	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
 }
 
@@ -422,6 +422,7 @@ void TitleScene::UpdateIsMenu()
 	DirectX::XMFLOAT4 otherMenuColor;
 	const DirectX::XMFLOAT4 isLightBackGroundOtherMenuColor = { 0.0f,0.0f,0.0f,0.7f };//明るい背景
 	const DirectX::XMFLOAT4 isDarkBackGroundOtherMenuColor = { 1.0f,1.0f,1.0f,0.7f };//暗い背景
+	
 	//ステージ位置(背景)によって色を変える
 	if (stageNum_ == SL_Default)otherMenuColor = isLightBackGroundOtherMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)otherMenuColor = isLightBackGroundOtherMenuColor;
