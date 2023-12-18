@@ -36,12 +36,13 @@ std::unique_ptr<Player> Player::Create(const PlayerModelList* model,GamePlayScen
 		assert(0);
 	}
 	//モデルのセット
-	if (model->playerModel)ins->modelPlayer_ = model->playerModel;
-	if (model->playerBullet) ins->modelBullet_ = model->playerBullet;
-	if (model->playerHit)ins->modelHit_ = model->playerHit;
-	if (model->playerMove)ins->modelMove_ = model->playerMove;
-	if (model->playerJump)ins->modelJump_ = model->playerJump;
-	if (model->playerAttack)ins->modelAttack_ = model->playerAttack;
+	if (model->playerModel)ins->modelPlayer_ = model->playerModel;		//通常立ち姿
+	if (model->playerBullet) ins->modelBullet_ = model->playerBullet;	//弾
+	if (model->playerHit)ins->modelHit_ = model->playerHit;				//ヒット時
+	if (model->playerMove)ins->modelMove_ = model->playerMove;			//移動時
+	if (model->playerJump)ins->modelJump_ = model->playerJump;			//ジャンプ時
+	if (model->playerAttack)ins->modelAttack_ = model->playerAttack;	//攻撃時
+	//ゲームシーンのセット
 	if (gamescene)ins->SetGameScene(gamescene);
 
 	//最初のモデル
@@ -115,6 +116,7 @@ bool Player::Initialize() {
 	//コライダー追加
 	const XMVECTOR colliderOffset = { 0.0f,0.0f,0.0f,0.0f };
 	SetCollider(new SphereCollider(colliderOffset, radius_));
+	//自機本体
 	collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	//イージングスタンバイ
@@ -151,9 +153,9 @@ void Player::Update(const bool isBack, const bool isAttack, const bool isStart) 
 
 	if (!isStart)//スタート演出時は何もしない
 	{
-		if (isAlive_)UpdateAlive(isBack, isAttack);
-		else if (isBreak_)UpdateBreak();
-		else if (isGoal_)UpdateGoal();
+		if (isAlive_)UpdateAlive(isBack, isAttack);		//生存時
+		else if (isBreak_)UpdateBreak();				//撃破時
+		else if (isGoal_)UpdateGoal();					//ゴール時
 	}
 	//更新
 	camera_->Update();		//カメラ
@@ -413,17 +415,19 @@ void Player::JumpBack()
 
 		const float micro = 1'000'000.0f;
 		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / micro;//マイクロ秒を秒に単位変換
-
+		//0~1
 		const float timeRateMax = 1.0f;
 		timeRate_ = min(elapsed / maxTime_, timeRateMax);
 
 		if (isBack_)//奥側へ行く場合
 		{
+			//ベジェ曲線で飛んでいく
 			position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 			if (position_.z >= end_.z)isJumpBack_ = false;
 		}
 		else//手前側へ行く場合
 		{
+			//ベジェ曲線で飛んでいく
 			position_ = Bezier3(end_, point2_, point1_, start_, timeRate_);
 			if (position_.z <= start_.z)isJumpBack_ = false;
 		}

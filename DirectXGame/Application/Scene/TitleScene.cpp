@@ -633,7 +633,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// 座標
+			// スケーリング
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
@@ -661,7 +661,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// 座標
+			// スケーリング
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
@@ -688,7 +688,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// 座標
+			// スケーリング
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
@@ -715,7 +715,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// 座標
+			// スケーリング
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);

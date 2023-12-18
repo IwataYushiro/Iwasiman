@@ -32,27 +32,33 @@ std::unique_ptr<Goal> Goal::Create(const Model* model)
 
 bool Goal::Initialize()
 {
+	//初期化
 	if (!Object3d::Initialize()) return false;
+	//ゴールしたか
 	isGoal_ = false;
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
+	//ゴール本体
 	collider_->SetAttribute(COLLISION_ATTR_GOAL);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	return true;
 	
 }
 
-void Goal::Reset() { isGoal_ = false; }
+void Goal::Reset() { isGoal_ = false;/*ゴールしたかだけ*/ }
 
 void Goal::Update()
 {
+	//ワールド座標を転送
 	Trans();
-	camera_->Update();
-	Object3d::Update();
+	//更新
+	camera_->Update();	//カメラ
+	Object3d::Update();	//3Dオブジェクト
 }
 
 void Goal::Trans()
 {
+	//ワールド座標
 	XMMATRIX world;
 	//行列更新
 	world = XMMatrixIdentity();
@@ -88,16 +94,14 @@ const XMFLOAT3 Goal::GetWorldPosition()const
 
 void Goal::Draw()
 {
-	Object3d::Draw();
+	Object3d::Draw();//モデルの描画
 }
 
 void Goal::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
-	if (attribute == COLLISION_ATTR_PLAYERS)
+	if (attribute == COLLISION_ATTR_PLAYERS)//自機の場合
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_NONE) isGoal_ = true;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+		if (subAttribute == SUBCOLLISION_ATTR_NONE) isGoal_ = true;	//自機本体が触れたらゴール
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;	//自機の弾じゃ何も起こらない
 	}
-		
-	
 }

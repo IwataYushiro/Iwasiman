@@ -36,9 +36,11 @@ std::unique_ptr<EnemyBoss> EnemyBoss::Create(const Model* model, const Model* bu
 		assert(0);
 	}
 	//モデルのセット
-	if (model) ins->SetModel(model);
-	if (bullet) ins->modelBullet_ = bullet;
+	if (model) ins->SetModel(model);		//本体
+	if (bullet) ins->modelBullet_ = bullet;	//弾
+	//自機のセット
 	if (player)ins->SetPlayer(player);
+	//ゲームシーンのセット
 	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
 }
@@ -54,17 +56,20 @@ bool EnemyBoss::Initialize() {
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), this->radius_));
+	//敵本体
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
-
+	//各種パラメータ設定
 	Parameter();
 
 	//パーティクル
+	//煙
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmSmoke_ = ParticleManager::Create();
 	pmSmoke_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 	pmSmoke_->SetParticleModel(particleSmoke_.get());
 
+	//炎
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetBlendMode(ParticleManager::BP_SUBTRACT);
@@ -78,60 +83,64 @@ void EnemyBoss::Parameter() {
 
 	//初期フェーズ
 	phase_ = Phase::ApproachStage1;
-
+	//ライフ初期値
 	const int32_t startLife = 2;
 	life_ = startLife;
-
+	//反転したか
 	isReverse_ = false;
+	//弾初期値
 	enum MinMax
 	{
-		MM_min = 0,
-		MM_max=1,
-		MM_num=2,
+		MM_min = 0,		//最小値
+		MM_max = 1,		//最大値
+		MM_num = 2,		//配列用
 	};
+	//敵弾の発射間隔はランダム
 	const std::array<int, MM_num>randomMinMax = { 40,75 };
 	fireInterval_ = MyMath::RandomMTInt(randomMinMax[MM_min], randomMinMax[MM_max]);
-
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
-
+	//死亡フラグ
 	isDead_ = false;
 	bossDead_ = false;
 
 }
 
 //リセット
-void EnemyBoss::Reset() { }
+void EnemyBoss::Reset() { Parameter(); }//各種パラメータだけ
 
 //更新
 void EnemyBoss::Update(const bool isStart) {
 
+	//パーティクルマネージャーにカメラをセット
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
 	if (!isStart)
 	{
 		//座標を移動させる
 		switch (phase_) {
-		case EnemyBoss::Phase::ApproachStage1:
+		case EnemyBoss::Phase::ApproachStage1:	//登場時
 
 			UpdateApproach();
 			break;
 
-		case EnemyBoss::Phase::AttackStage1:
+		case EnemyBoss::Phase::AttackStage1:	//行動時
 
 			UpdateAttack();
 
 			break;
 
-		case EnemyBoss::Phase::Leave:
+		case EnemyBoss::Phase::Leave:			//撃破時
 			UpdateLeave();
 			break;
 		}
 	}
-	//行列更新
+	//座標を転送
 	Trans();
-	camera_->Update();
-	Object3d::Update();
+	//更新
+	camera_->Update();		//カメラ
+	Object3d::Update();		//3Dオブジェクト
+	collider_->Update();	//コライダー
 	//パーティクル更新
 	pmFire_->Update();
 	pmSmoke_->Update();
@@ -140,6 +149,7 @@ void EnemyBoss::Update(const bool isStart) {
 //転送
 void EnemyBoss::Trans() {
 
+	//ワールド座標
 	XMMATRIX world;
 	//行列更新
 	world = XMMatrixIdentity();
@@ -212,6 +222,7 @@ void EnemyBoss::Draw() {
 
 void EnemyBoss::DrawParticle()
 {
+	//各パーティクル描画
 	pmSmoke_->Draw();
 	pmFire_->Draw();
 }
@@ -222,7 +233,7 @@ void EnemyBoss::DrawParticle()
 void EnemyBoss::UpdateApproach() {
 	//速度
 	XMFLOAT3 velocity;
-
+	//登場速度
 	const XMFLOAT3 approachSpeed = { 0.0f,0.0f,-0.5f };
 	//移動
 	velocity = approachSpeed;
@@ -272,14 +283,17 @@ void EnemyBoss::UpdateAttack() {
 
 	const float micro = 1'000'000.0f;//マイクロ秒
 	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / micro;//マイクロ秒を秒に単位変換
-
+	
+	//0~1
 	const float timeRateMax = 1.0f;
 	timeRate_ = min(elapsed / maxTime_, timeRateMax);
 
-	if (isReverse_) {
+	if (isReverse_)	//反転中
+	{
 		position_ = Bezier3(end_, point2_, point1_, start_, timeRate_);
 	}
-	else {
+	else			//通常時
+	{
 		position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 	}
 
@@ -321,7 +335,7 @@ void EnemyBoss::UpdateAttack() {
 		const int32_t maxInterval_ = fireInterval_ * 2;
 		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
-	//死んだら
+	//死んだら死亡演出
 	if (life_ <= deathLife_) {
 		phase_ = Phase::Leave;
 	}
@@ -331,8 +345,10 @@ void EnemyBoss::UpdateAttack() {
 //離脱
 void EnemyBoss::UpdateLeave() {
 
+	//サブ属性を死亡した扱いにする(死亡演出のため)
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
+	//一定の値までカウントが進んだら死亡する
 	deathTimer_++;
-
 	if (deathTimer_ >= DEATH_TIME)
 	{
 		isDead_ = true;
@@ -372,8 +388,10 @@ const XMFLOAT3 EnemyBoss::GetWorldPosition() const{
 }
 void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
-	if (phase_ == Phase::Leave)return;
-	const int hitLife = deathLife_ + 1;
+	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない
+	
+	//現在ライフによる判定処理の基準となるライフ
+	const int hitLife = 1;
 	//煙プリセット
 	const ParticleManager::Preset smoke =
 	{
@@ -401,30 +419,31 @@ void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 		{ 0.0f,0.0f,0.0f,1.0f }
 	};
 
-	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
-	else if (attribute == COLLISION_ATTR_PLAYERS)
+	if (attribute == COLLISION_ATTR_LANDSHAPE)return;	// 地形の場合何も起こらない
+	else if (attribute == COLLISION_ATTR_PLAYERS)		// 自機の場合
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
+		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;	   //自機本体に触れても何も起こらない
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)	   //自機の弾の場合
 		{
-			if (life_ > hitLife)
+			if (life_ > hitLife)//ライフが1より大きい場合
 			{
-
+				//パーティクルでヒット演出
 				pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 				pmSmoke_->Update();
-				life_--;
+				
 			}
-			else
+			else//1以下の場合
 			{
-
+				//パーティクルでヒット演出
 				pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
 					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
 				pmFire_->Update();
-				life_--;
 			}
+			//ライフが減る
+			life_--;
 		}
 
 	}

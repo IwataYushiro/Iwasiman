@@ -19,7 +19,7 @@ std::unique_ptr<BaseGimmick> GimmickFactory::CreateGimmick(const std::string& gi
 	//ローカル変数
 	const bool findSuccess = 0;//合ってるとき
 	//トゲ
-	if (gimmickName.find("SPIKE") == findSuccess)
+	if (gimmickName.find("SPIKE") == findSuccess)						//トゲ
 	{
 		return Spike::Create(model, player);
 	}
@@ -32,17 +32,17 @@ std::unique_ptr<BaseGimmick> GimmickFactory::CreateMoveGround(const std::string&
 	//ローカル変数
 	const bool findSuccess = 0;//合ってるとき
 	//落ちる球
-	if (gimmickName.find("FALLSPHERE") == findSuccess)
+	if (gimmickName.find("FALLSPHERE") == findSuccess)					//落ちる床
 	{
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE);
 	}
 	//落ちて戻ってくる球
-	else if (gimmickName.find("FALLSPHERERETURN") == findSuccess)
+	else if (gimmickName.find("FALLSPHERERETURN") == findSuccess)		//落ちて戻る床
 	{
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN);
 	}
 	//昇る球
-	else if (gimmickName.find("RISESPHERE") == findSuccess)
+	else if (gimmickName.find("RISESPHERE") == findSuccess)				//昇る床
 	{
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_UPSPHERE);
 	}

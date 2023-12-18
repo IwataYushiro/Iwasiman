@@ -40,9 +40,11 @@ std::unique_ptr<Enemy2> Enemy2::Create(const Model* model, const Model* bullet,
 		assert(0);
 	}
 	//モデルのセット
-	if (model) ins->SetModel(model);
-	if (bullet) ins->modelBullet_ = bullet;
+	if (model) ins->SetModel(model);		//本体
+	if (bullet) ins->modelBullet_ = bullet;	//弾
+	//自機のセット
 	if (player)ins->SetPlayer(player);
+	//ゲームシーンのセット
 	if (gamescene)ins->SetGameScene(gamescene);
 	return ins;
 }
@@ -54,18 +56,20 @@ bool Enemy2::Initialize(const int level) {
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), this->radius_));
+	//敵本体
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
-
+	//ここでサブ属性を初期化
 	InitSubATTR(level);
-
+	//各種パラメータ設定
 	Parameter();
 
 	//パーティクル
+	//煙
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmSmoke_ = ParticleManager::Create();
 	pmSmoke_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 	pmSmoke_->SetParticleModel(particleSmoke_.get());
-
+	//炎
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetBlendMode(ParticleManager::BP_SUBTRACT);
@@ -76,11 +80,11 @@ bool Enemy2::Initialize(const int level) {
 
 void Enemy2::InitSubATTR(const int level)
 {
-	if (level == ET_Normal)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
-	else if (level == ET_Power)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);
-	else if (level == ET_Guard)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);
-	else if (level == ET_Speed)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);
-	else if (level == ET_Death)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);
+	if (level == ET_Normal)collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);				//通常属性
+	else if (level == ET_Power)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_POWER);	//攻撃属性
+	else if (level == ET_Guard)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_GUARD);	//防御属性
+	else if (level == ET_Speed)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_SPEED);	//速度属性
+	else if (level == ET_Death)collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_DEATH);	//危険属性
 }
 
 void Enemy2::InitSpeed()
@@ -88,46 +92,46 @@ void Enemy2::InitSpeed()
 	//速度
 	struct SpeedType
 	{
-		const XMFLOAT3 none = { 0.0f,-1.0f,0.0f };
-		const XMFLOAT3 power = { 0.0f,-0.5f,0.0f };
-		const XMFLOAT3 guard = { 0.0f,-1.0f,0.0f };
-		const XMFLOAT3 speed = { 0.0f,-2.0f,0.0f };
-		const XMFLOAT3 death = { 0.0f,-0.5f,0.0f };
+		const XMFLOAT3 none = { 0.0f,-1.0f,0.0f };		  //通常属性
+		const XMFLOAT3 power = { 0.0f,-0.5f,0.0f };		  //攻撃属性
+		const XMFLOAT3 guard = { 0.0f,-1.0f,0.0f };		  //防御属性
+		const XMFLOAT3 speed = { 0.0f,-2.0f,0.0f };		  //速度属性
+		const XMFLOAT3 death = { 0.0f,-0.5f,0.0f };		  //危険属性
 	};
 	SpeedType speedType;
 	//戻る速度
 	struct BackSpeedType
 	{
-		const XMFLOAT3 none = { 0.0f,0.5f,0.0f };
-		const XMFLOAT3 power = { 0.0f,0.25f,0.0f };
-		const XMFLOAT3 guard = { 0.0f,0.5f,0.0f };
-		const XMFLOAT3 speed = { 0.0f,1.0f,0.0f };
-		const XMFLOAT3 death = { 0.0f,0.25f,0.0f };
+		const XMFLOAT3 none = { 0.0f,0.5f,0.0f };  		  //通常属性
+		const XMFLOAT3 power = { 0.0f,0.25f,0.0f };		  //攻撃属性
+		const XMFLOAT3 guard = { 0.0f,0.5f,0.0f }; 		  //防御属性
+		const XMFLOAT3 speed = { 0.0f,1.0f,0.0f }; 		  //速度属性
+		const XMFLOAT3 death = { 0.0f,0.25f,0.0f };		  //危険属性
 	};
 	BackSpeedType backSpeedType;
 	//移動
 	//移動
-	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE)
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE)					//通常属性
 	{
 		speed_ = speedType.none;
 		backSpeed_ = backSpeedType.none;
 	}
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER)
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER)		//攻撃属性
 	{
 		speed_ = speedType.power;
 		backSpeed_ = backSpeedType.power;
 	}
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD)
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD)		//防御属性
 	{
 		speed_ = speedType.guard;
 		backSpeed_ = backSpeedType.guard;
 	}
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED)
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED)		//速度属性
 	{
 		speed_ = speedType.speed;
 		backSpeed_ = backSpeedType.speed;
 	}
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH)
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH)		//危険属性
 	{
 		speed_ = speedType.death;
 		backSpeed_ = backSpeedType.death;
@@ -139,35 +143,38 @@ void Enemy2::InitLife()
 {
 	struct LifeType
 	{
-		const int32_t none = 3;
-		const int32_t power = 3;
-		const int32_t guard = 5;
-		const int32_t speed = 2;
-		const int32_t death = 2;
+		const int32_t none = 3;		//通常属性
+		const int32_t power = 3;	//攻撃属性
+		const int32_t guard = 5;	//防御属性
+		const int32_t speed = 2;	//速度属性
+		const int32_t death = 2;	//危険属性
 	};
 	LifeType lifeType;
 	//ライフ
-	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = lifeType.none;
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) life_ = lifeType.power;
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) life_ = lifeType.guard;
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) life_ = lifeType.speed;
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) life_ = lifeType.death;
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE) life_ = lifeType.none;				   //通常属性
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_POWER) life_ = lifeType.power;	   //攻撃属性
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_GUARD) life_ = lifeType.guard;	   //防御属性
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_SPEED) life_ = lifeType.speed;	   //速度属性
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_DEATH) life_ = lifeType.death;	   //危険属性
 }
 
 //パラメータ
 void Enemy2::Parameter() {
 
+	//反転したか
 	isReverse_ = false;
 	//ジャンプしたか
 	onGround_ = false;
 	//初期フェーズ
 	phase_ = Phase::Approach;
+	//弾初期値
 	enum MinMax
 	{
 		MM_min = 0,
 		MM_max=1,
 		MM_num=2,
 	};
+	//敵弾の発射間隔はランダム
 	const std::array<int, MM_num>randomMinMax = { 75,100 };
 	fireInterval_ = MyMath::RandomMTInt(randomMinMax[MM_min], randomMinMax[MM_max]);
 	//発射タイマー初期化
@@ -177,36 +184,38 @@ void Enemy2::Parameter() {
 	InitSpeed();
 	//ライフ
 	InitLife();
-
+	//死亡フラグ
 	isDead_ = false;
 
 
 }
 
 //リセット
-void Enemy2::Reset() { Parameter(); }
+void Enemy2::Reset() { Parameter(); }//各種パラメータだけ
 
 //更新
 void Enemy2::Update(const bool isStart) {
 
+	//パーティクルマネージャーにカメラをセット
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
-	if (!isStart)
+
+	if (!isStart)//スタート演出時は何もしない
 	{
 		//座標を移動させる
 		switch (phase_) {
-		case Enemy2::Phase::Approach:
+		case Enemy2::Phase::Approach:	//下降時
 
 			UpdateApproach();
 			break;
-		case Enemy2::Phase::Back:
+		case Enemy2::Phase::Back:		//上昇時
 			UpdateBack();
 			break;
-		case Enemy2::Phase::Leave:
+		case Enemy2::Phase::Leave:		//撃破時
 			UpdateLeave();
 			break;
 		}
-		if (phase_ != Phase::Leave)
+		if (phase_ != Phase::Leave)		//撃破時以外は弾を発射する
 		{
 			//発射タイマーカウントダウン
 			fireTimer_--;
@@ -227,12 +236,14 @@ void Enemy2::Update(const bool isStart) {
 		}
 	}
 
-	//行列更新
+	//座標を転送
 	Trans();
-	camera_->Update();
-	Object3d::Update();
-	collider_->Update();
+	//更新
+	camera_->Update();		//カメラ
+	Object3d::Update();		//3Dオブジェクト
+	collider_->Update();	//コライダー
 
+	//着地処理
 	Landing();
 	//パーティクル更新
 	pmFire_->Update();
@@ -242,6 +253,7 @@ void Enemy2::Update(const bool isStart) {
 //転送
 void Enemy2::Trans() {
 
+	//ワールド座標
 	XMMATRIX world;
 	//行列更新
 	world = XMMatrixIdentity();
@@ -316,6 +328,7 @@ void Enemy2::Landing()
 	class EnemyQueryCallback : public QueryCallback
 	{
 	public:
+		//コンストラクタ
 		EnemyQueryCallback(Sphere* sphere) :sphere_(sphere) {};
 
 		//衝突時のコールバック関数
@@ -342,6 +355,7 @@ void Enemy2::Landing()
 		}
 
 	public:
+		//球
 		Sphere* sphere_ = nullptr;
 		//排斥による移動量
 		XMVECTOR move = {};
@@ -359,18 +373,18 @@ void Enemy2::Landing()
 	position_.y += callback.move.m128_f32[XYZ_Y];
 	//position_.z += callback.move.m128_f32[2];
 
+	//視点と注視点をゲット
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
-
+	//X分だけ動かす
 	eyepos.x += callback.move.m128_f32[XYZ_X];
-
 	tarpos.x += callback.move.m128_f32[XYZ_X];
 
-	//コライダー更新
-	UpdateWorldMatrix();
-	camera_->SetEye(eyepos);
-	camera_->SetTarget(tarpos);
-	collider_->Update();
+	//更新
+	UpdateWorldMatrix();			//行列更新
+	camera_->SetEye(eyepos);		//視点セット
+	camera_->SetTarget(tarpos);		//注視点セット
+	collider_->Update();			//コライダー
 
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
@@ -384,7 +398,7 @@ void Enemy2::Landing()
 	//接地状態
 	if (onGround_)
 	{
-		//接地を維持
+		//後退する
 		if (count_ == MAX_GROUND)
 		{
 			const int8_t resetCount = 0;
@@ -399,12 +413,13 @@ void Enemy2::Landing()
 	//落下状態
 	else
 	{
+		//接地
 		if (colManager_->RayCast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit,
 			sphereCollider->GetRadius() * radiusMulNum))
 		{
 			onGround_ = true;
 		}
-
+		//一定値に達したらまた落ちるように
 		if (position_.y >= backUpPosY)
 		{
 			phase_ = Phase::Approach;
@@ -425,13 +440,14 @@ void Enemy2::Draw() {
 
 void Enemy2::DrawParticle()
 {
+	//各パーティクル描画
 	pmSmoke_->Draw();
 	pmFire_->Draw();
 }
 
 
 //状態変化用の更新関数
-//接近
+//下降
 void Enemy2::UpdateApproach() {
 
 	//移動
@@ -441,7 +457,7 @@ void Enemy2::UpdateApproach() {
 		position_.y += speed_.y;
 		position_.z += speed_.z;
 	}
-
+	//一定の位置まで達したら上へ
 	if (position_.y <= backFallPosY)
 	{
 
@@ -449,18 +465,25 @@ void Enemy2::UpdateApproach() {
 	}
 }
 
+//上昇
 void Enemy2::UpdateBack()
 {
+	//移動
 	position_.x += backSpeed_.x;
 	position_.y += backSpeed_.y;
 	position_.z += backSpeed_.z;
 
+	//一定の位置まで達したら下へ
 	if (position_.y >= backUpPosY) phase_ = Phase::Approach;
 }
 
 //離脱
 void Enemy2::UpdateLeave() {
+
+	//サブ属性を死亡した扱いにする(死亡演出のため)
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
+
+	//一定の値までカウントが進んだら死亡する
 	deathTimer_++;
 	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
 }
@@ -480,8 +503,10 @@ const XMFLOAT3 Enemy2::GetWorldPosition() const{
 }
 void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
-	if (phase_ == Phase::Leave)return;
-	const int hitLife = deathLife_ + 1;
+	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない
+
+	//現在ライフによる判定処理の基準となるライフ
+	const int hitLife = 1;
 	//煙プリセット
 	const ParticleManager::Preset smoke =
 	{
@@ -509,28 +534,30 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 		{ 0.0f,0.0f,0.0f,1.0f }
 	};
 
-	if (attribute == COLLISION_ATTR_LANDSHAPE)return;
-	else if (attribute == COLLISION_ATTR_PLAYERS)
+	if (attribute == COLLISION_ATTR_LANDSHAPE)return;	  //地形の場合何も起こらない
+	else if (attribute == COLLISION_ATTR_PLAYERS)		  //自機の場合
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)
+		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;		 //自機本体に触れても何も起こらない
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)		 //自機の弾の場合
 		{
-			if (life_ > hitLife)
+			if (life_ > hitLife)//ライフが1より大きい場合
 			{
+				//パーティクルでヒット演出
 				pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 				pmSmoke_->Update();
-				life_--;
 			}
-			else
+			else//1以下の場合
 			{
+				//パーティクルでヒット演出
 				pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
 					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
 				pmFire_->Update();
-				life_--;
 			}
+			//ライフが減る
+			life_--;
 		}
 	}
 

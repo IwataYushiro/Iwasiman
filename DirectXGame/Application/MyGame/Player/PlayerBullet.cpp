@@ -42,6 +42,7 @@ bool PlayerBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity
 	//コライダー追加
 	const XMVECTOR colliderOffset = { 0.0f,radius_,0.0f,0.0f };
 	SetCollider(new SphereCollider(colliderOffset, radius_));
+	//自機の弾
 	collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
 
@@ -99,8 +100,8 @@ void PlayerBullet::OnCollision([[maybe_unused]] const CollisionInfo& info,const 
 	else if (attribute == COLLISION_ATTR_ENEMYS) //敵の場合
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;			//敵の弾だと何も起こらない
-		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_ISDEAD)return;	//敵が死んでいる扱い何も起こらない
-		else isDead_ = true;	//それ以外は消滅
+		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_ISDEAD)return;	//敵が死んでいる扱いでも何も起こらない
+		else isDead_ = true;											//敵本体は消滅
 	}
 	
 }

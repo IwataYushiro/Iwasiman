@@ -38,8 +38,9 @@ std::unique_ptr<Item> Item::Create(const Model* model, const Player* player, con
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	//自機のセット
 	if (player)ins->SetPlayer(player);
-	if (subAttribute)ins->collider_->SetSubAttribute(subAttribute);
+	if (subAttribute)ins->collider_->SetSubAttribute(subAttribute);//どのアイテムかは引数で決める
 
 	return ins;
 }
@@ -53,6 +54,7 @@ bool Item::Initialize()
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
+	//アイテム
 	collider_->SetAttribute(COLLISION_ATTR_ITEM);
 
 	//取得したか
@@ -139,6 +141,7 @@ void Item::UpdateJumpPowerup()
 
 void Item::Trans()
 {
+	//ワールド座標
 	XMMATRIX world;
 	//行列更新
 	world = XMMatrixIdentity();
@@ -204,7 +207,7 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info,const unsigned
 		{0.0f,0.0f,0.0f,1.0f }
 	};
 
-	if (attribute == COLLISION_ATTR_PLAYERS)//自機
+	if (attribute == COLLISION_ATTR_PLAYERS)//自機の場合
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)//自機本体が触れたら効果発動
 		{

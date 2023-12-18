@@ -30,16 +30,19 @@ std::unique_ptr<Spike> Spike::Create(const Model* model, const Player* player)
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	//自機のセット
 	if (player)ins->SetPlayer(player);
 	return ins;
 }
 
 bool Spike::Initialize()
 {
+	//初期化
 	if (!Object3d::Initialize()) return false;
 
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
+	//トゲのギミック
 	collider_->SetAttribute(COLLISION_ATTR_GIMMICK);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_GIMMICK_SPIKE);
 
@@ -50,13 +53,16 @@ bool Spike::Initialize()
 
 void Spike::Update()
 {
+	//座標を転送
 	Trans();
-	camera_->Update();
-	Object3d::Update();
+	//更新
+	camera_->Update();	//カメラ
+	Object3d::Update();	//3Dオブジェクト
 }
 
 void Spike::Trans()
 {
+	//ワールド座標
 	XMMATRIX world;
 	//行列更新
 	world = XMMatrixIdentity();
@@ -92,7 +98,7 @@ const XMFLOAT3 Spike::GetWorldPosition()const
 
 void Spike::Draw()
 {
-	Object3d::Draw();
+	Object3d::Draw();//トゲを描画
 }
 
 void Spike::OnCollision([[maybe_unused]] const CollisionInfo& info, [[maybe_unused]] const unsigned short attribute, [[maybe_unused]] const unsigned short subAttribute)

@@ -43,6 +43,7 @@ bool EnemyBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity)
 	//コライダー追加
 	const XMVECTOR colliderOffset = { 0.0f,this->radius_,0.0f,0.0f };
 	SetCollider(new SphereCollider(colliderOffset, this->radius_));
+	//敵の弾
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
 
@@ -59,7 +60,7 @@ void EnemyBullet::Update() {
 	pos.x += velocity_.x;
 	pos.y += velocity_.y;
 	pos.z += velocity_.z;
-
+	//座標のセット
 	Object3d::SetPosition(pos);
 
 	//行列更新
@@ -80,28 +81,29 @@ void EnemyBullet::Update() {
 	matWorld = matScale * matRot * matTrans;
 
 	Object3d::SetWorld(matWorld);
-	camera_->Update();
-	Object3d::Update();
+	//更新
+	camera_->Update();	//カメラ
+	Object3d::Update();	//3Dオブジェクト
+	
 	//時間経過で死亡
-	const int deathTime = 0;
-	if (--deathTimer_ <= deathTime) {
+	if (--deathTimer_ <= 0) {
 		isDead_ = true;
 	}
 }
 
 //描画
 void EnemyBullet::Draw() {
-	//モデル描画
+	//モデルの描画
 	Object3d::Draw();
 }
 
 //衝突を検出したら呼び出されるコールバック関数
 void EnemyBullet::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute) {
 	
-	if (attribute == COLLISION_ATTR_PLAYERS)
+	if (attribute == COLLISION_ATTR_PLAYERS)//自機の場合
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_NONE)isDead_ = true;
-		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;
+		if (subAttribute == SUBCOLLISION_ATTR_NONE)isDead_ = true;	//自機本体に当たったら消滅
+		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;	//自機の弾だと何も起こらない
 	}
 }
 
