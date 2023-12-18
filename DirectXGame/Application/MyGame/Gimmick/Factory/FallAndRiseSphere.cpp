@@ -155,7 +155,6 @@ void FallAndRiseSphere::UpdateRiseSphereReturn()
 	{
 		//Œ³‚ÌˆÊ’u‚Ü‚Å–ß‚é‚æ‚¤‚É‚·‚é
 		if (!player_->OnGround())position_.y -= speed;
-
 		if (position_.y <= startPos_.y)
 		{
 			position_ = startPos_;
