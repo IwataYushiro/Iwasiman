@@ -273,6 +273,7 @@ void Enemy1::Landing()
 	class EnemyQueryCallback : public QueryCallback
 	{
 	public:
+		//コンストラクタ
 		EnemyQueryCallback(Sphere* sphere) :sphere_(sphere) {};
 
 		//衝突時のコールバック関数
@@ -299,6 +300,7 @@ void Enemy1::Landing()
 		}
 
 	public:
+		//球
 		Sphere* sphere_ = nullptr;
 		//排斥による移動量
 		XMVECTOR move = {};

@@ -66,8 +66,11 @@ private:
 
 	//開始地点
 	XMFLOAT3 startPos_ = {};
-
+	//最初の値をセットするためのフラグ(切り替えは一回キリ)
+	bool isSetStartPositionOnce_ = false;
+	//リセットポジション
 	const float resetPosY_ = 50.0f;
+
 public: //アクセッサ、インライン関数
 	
 	//プレイヤーセット

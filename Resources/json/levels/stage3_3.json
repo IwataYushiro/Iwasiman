@@ -205,7 +205,7 @@
                     -10.0
                 ],
                 "rotation": [
-                    0.0,
+                    -180.0,
                     -0.0,
                     0.0
                 ],
@@ -217,7 +217,7 @@
             },
             "file_name": "boxud",
             "objecttype": "MOVEGROUND",
-            "objectpattern": "FALLSPHERE"
+            "objectpattern": "RSPHERERETURN"
         },
         {
             "type": "MESH",
@@ -241,7 +241,7 @@
             },
             "file_name": "boxud",
             "objecttype": "MOVEGROUND",
-            "objectpattern": "FALLSPHERERETURN"
+            "objectpattern": "FSPHERERETURN"
         },
         {
             "type": "MESH",
@@ -300,7 +300,7 @@
             },
             "file_name": "boxud",
             "objecttype": "MOVEGROUND",
-            "objectpattern": "FALLSPHERERETURN"
+            "objectpattern": "FSPHERERETURN"
         }
     ]
 }

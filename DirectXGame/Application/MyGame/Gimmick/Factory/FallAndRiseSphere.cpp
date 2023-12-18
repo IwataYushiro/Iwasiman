@@ -56,11 +56,19 @@ bool FallAndRiseSphere::Initialize(Model* model)
 
 void FallAndRiseSphere::Update()
 {
+	//更新時初期化
+	if (!isSetStartPositionOnce_)
+	{
+		//最初の座標をセットする
+		startPos_ = position_;
+		isSetStartPositionOnce_ = true;
+	}
+
 	//属性によって効果を変える
 	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();				//落ちる床の場合
 	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphereReturn();	//落ちて戻る床の場合
 	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE)UpdateRiseSphere();					//昇る床の場合
-
+	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE_RETURN)UpdateRiseSphereReturn();	//昇って戻る球の場合
 	//座標転送
 	Trans();
 	//更新
@@ -96,8 +104,8 @@ void FallAndRiseSphere::UpdateFallSphereReturn()
 		if (player_->OnGround())position_.y -= speed;
 		else//地面から離れた場合戻るように
 		{
-			isRide_ = false;
 			isReturn_ = true;
+			isRide_ = false;
 		}
 	}
 	else if (isReturn_)//離れた場合
@@ -110,7 +118,7 @@ void FallAndRiseSphere::UpdateFallSphereReturn()
 			isReturn_ = false;
 		}
 	}
-
+	
 }
 
 void FallAndRiseSphere::UpdateRiseSphere()
@@ -133,21 +141,21 @@ void FallAndRiseSphere::UpdateRiseSphere()
 void FallAndRiseSphere::UpdateRiseSphereReturn()
 {
 	const float speed = 0.1f;//速度
-
 	if (isRide_)//乗ってる場合
 	{
 		//昇り続ける
-		if (player_->OnGround())position_.y += speed;
-		else//地面から離れた場合戻るように
+		position_.y += speed;
+		if (!player_->OnGround())//地面から離れた場合戻るように
 		{
-			isRide_ = false;
 			isReturn_ = true;
+			isRide_ = false;
 		}
 	}
 	else if (isReturn_)//離れた場合
 	{
 		//元の位置まで戻るようにする
-		position_.y -= speed;
+		if (!player_->OnGround())position_.y -= speed;
+
 		if (position_.y <= startPos_.y)
 		{
 			position_ = startPos_;
@@ -205,10 +213,8 @@ void FallAndRiseSphere::OnCollision([[maybe_unused]] const CollisionInfo& info, 
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)//自機本体の場合
 		{
-			//元々のポジションをセットし足場に乗った扱いにする
-			if (!isReturn_)startPos_ = position_;
+			//足場に乗った扱いにする
 			isRide_ = true;
-
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)return;//弾が当たっても特に何も起こらない
 

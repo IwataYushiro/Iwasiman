@@ -37,7 +37,7 @@ std::unique_ptr<BaseGimmick> GimmickFactory::CreateMoveGround(const std::string&
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE);
 	}
 	//—‚¿‚Ä–ß‚Á‚Ä‚­‚é‹…
-	else if (gimmickName.find("FALLSPHERERETURN") == findSuccess)		//—‚¿‚Ä–ß‚é°
+	else if (gimmickName.find("FSPHERERETURN") == findSuccess)		//—‚¿‚Ä–ß‚é°
 	{
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN);
 	}
@@ -45,6 +45,11 @@ std::unique_ptr<BaseGimmick> GimmickFactory::CreateMoveGround(const std::string&
 	else if (gimmickName.find("RISESPHERE") == findSuccess)				//¸‚é°
 	{
 		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_UPSPHERE);
+	}
+	//¸‚Á‚Ä‹…
+	else if (gimmickName.find("RSPHERERETURN") == findSuccess)				//¸‚é°
+	{
+		return FallAndRiseSphere::Create(model, player, SUBCOLLISION_ATTR_GIMMICK_UPSPHERE_RETURN);
 	}
 
 	return nullptr;
