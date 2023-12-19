@@ -118,6 +118,7 @@ void GameOverScene::Initialize()
 	pmFire_->SetCamera(camera_.get());
 
 	pmSmoke_ = ParticleManager::Create();
+	pmSmoke_->SetBlendMode(ParticleManager::BP_ALPHA);
 	pmSmoke_->SetParticleModel(particleSmoke_.get());
 	pmSmoke_->SetCamera(camera_.get());
 	
@@ -143,7 +144,7 @@ void GameOverScene::Update()
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		const XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//オフセット
-		//煙プリセット
+		//炎プリセット
 		const ParticleManager::Preset fire =
 		{
 			particleFire_.get(),
@@ -157,18 +158,7 @@ void GameOverScene::Update()
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 
-		if (!completeRotate_)//イージングによる回転が終わる前
-		{
-			//プレイヤー回転用
-			DirectX::XMFLOAT3 rotPlayer = player->GetRotation();
-			//回転しながら落下っぽく
-			const float rotSpeed = -0.3f;
-			const float resetRot = 360.0f;
-			rotPlayer.z += rotSpeed;
-			if (rotPlayer.z >= resetRot) rotPlayer.y = 0.0f;//360度を超えたらリセット
-			player->SetRotation(rotPlayer);
-		}
-		else//イージングによる回転が終わったら
+		if (completeRotate_)//イージングによる回転が終わったら
 		{
 			//ダッシュエフェクトに切り替え
 			pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
@@ -273,41 +263,8 @@ void GameOverScene::UpdateIsGameOver()
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
-		const DirectX::XMFLOAT2 dashOffsetXY = { 0.0f,0.0f };//ポジションオフセット
-		
-		//煙プリセット
-		const ParticleManager::Preset smoke =
-		{
-			particleSmoke_.get(),
-			{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
-			{ 0.0f ,2.0f,0.0f },
-			{ 0.3f,2.3f,0.3f },
-			{ 0.0f,0.001f,0.0f },
-			2,
-			{ 0.0f, 5.0f },
-			{0.5f,0.5f,0.5f,1.0f },
-			{ 0.0f,0.0f,0.0f,0.0f }
-		};
-		//風プリセット
-		const ParticleManager::Preset wind =
-		{
-			particleFall_.get(),
-			player->GetPosition(),
-			{ 200.0f ,-100.0f,5.0f },
-			{ 0.0f,3.0f,0.0f },
-			{ 0.0f,0.001f,0.0f },
-			8,
-			{ 1.0f, 0.0f },
-			{1.0f,1.0f,1.0,1.0f },
-			{ 0.0f,0.0f,0.0f,1.0f }
-		};
-		//パーティクル
-		pmSmoke_->ActiveY(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-		//パーティクル
-		pmFire_->ActiveY(wind.particle, wind.startPos, wind.pos, wind.vel,
-			wind.acc, wind.num, wind.scale, wind.startColor, wind.endColor);
-
+		//落ちてるときのパーティクル
+		FallParticle(player);
 
 		//常時プレイヤーの回転をイージングにセットする
 		for (int32_t i = 0; i < XYZ_Num; i++)
@@ -528,6 +485,8 @@ void GameOverScene::UpdateIsQuitTitle()
 
 		move.y += speed.y;
 		player->SetPosition(move);
+		//落ちてるときのパーティクル
+		FallParticle(player);
 		//メニューのイージングが終わったら遷移演出
 		if (spriteGameOver_->GetPosition().x == easeMenuEndPosX_[GOMEN_Menu].end)
 		{
@@ -769,6 +728,44 @@ void GameOverScene::EaseRotateSetUp(const DirectX::XMFLOAT3& rotation, Easing& e
 	if (num == XYZ_X)easing.SetEasing(rot.x, easing.end, easing.maxtime);
 	if (num == XYZ_Y)easing.SetEasing(rot.y, easing.end, easing.maxtime);
 	if (num == XYZ_Z)easing.SetEasing(rot.z, easing.end, easing.maxtime);
+}
+
+void GameOverScene::FallParticle(const std::unique_ptr<Object3d>& player)
+{
+	const DirectX::XMFLOAT2 dashOffsetXY = { -2.0f,-1.0f };//ポジションオフセット
+	//煙プリセット
+	const ParticleManager::Preset smoke =
+	{
+		particleSmoke_.get(),
+		{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
+		{ 3.0f ,4.0f,0.0f },
+		{ 0.15f,2.3f,0.2f },
+		{ 0.0f,0.001f,0.0f },
+		2,
+		{ 1.0f, 5.0f },
+		{0.5f,0.5f,0.5f,1.0f },
+		{ 0.0f,0.0f,0.0f,0.0f }
+	};
+	//風プリセット
+	const ParticleManager::Preset wind =
+	{
+		particleFall_.get(),
+		player->GetPosition(),
+		{ 200.0f ,-100.0f,5.0f },
+		{ 0.0f,3.0f,0.0f },
+		{ 0.0f,0.001f,0.0f },
+		8,
+		{ 1.0f, 0.0f },
+		{1.0f,1.0f,1.0,1.0f },
+		{ 0.0f,0.0f,0.0f,1.0f }
+	};
+	//パーティクル
+	pmSmoke_->ActiveY(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+		smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+	//パーティクル
+	pmFire_->ActiveY(wind.particle, wind.startPos, wind.pos, wind.vel,
+		wind.acc, wind.num, wind.scale, wind.startColor, wind.endColor);
+
 }
 
 void GameOverScene::LoadStageNameSprite()

@@ -344,6 +344,8 @@ private://メンバ変数
 	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
 
 private:
+	//落ちてるときのパーティクル(プレイヤー)
+	void FallParticle(const std::unique_ptr<Object3d>& player);
 	//回転イージングのセット
 	void EaseRotateSetUp(const DirectX::XMFLOAT3& rotation, Easing& easing, const int32_t num);
 
