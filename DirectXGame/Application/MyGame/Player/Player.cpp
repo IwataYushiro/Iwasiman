@@ -104,11 +104,12 @@ bool Player::Initialize() {
 	spriteExplosion_->Update();
 
 	//パーティクル
-	//煙
-	particleSmoke_ = Particle::LoadFromParticleTexture("particle8.png");
+	//爆発時の煙
+	particleSmoke_ = Particle::LoadFromParticleTexture("particle9.png");
 	pmSmoke_ = ParticleManager::Create();
 	pmSmoke_->SetParticleModel(particleSmoke_.get());
-	//爆発用の炎
+	pmSmoke_->SetBlendMode(ParticleManager::BP_SUBTRACT);
+	//ダッシュ、爆発用の炎
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetParticleModel(particleFire_.get());
@@ -202,7 +203,6 @@ void Player::DrawParticle() {
 	//各パーティクル描画
 	pmSmoke_->Draw();
 	pmFire_->Draw();
-
 }
 
 //移動処理
@@ -221,9 +221,9 @@ void Player::Move() {
 	//パーティクル
 	const XMFLOAT3 startPosRight = { position_.x - 2.0f,position_.y + 1.0f ,position_.z };
 	const XMFLOAT3 startPosLeft = { position_.x + 2.0f,position_.y + 1.0f ,position_.z };
-	const ParticleManager::Preset smoke =	//煙プリセット
+	const ParticleManager::Preset fire =	//煙プリセット
 	{
-		particleSmoke_.get(),
+		particleFire_.get(),
 		position_,//使わない
 		{ 0.0f ,2.0f,0.0f },
 		{ 3.0f,0.3f,0.3f },
@@ -233,7 +233,7 @@ void Player::Move() {
 		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 		{0.0f,0.0f,0.0f,1.0f}
 	};
-	const XMFLOAT3 reverseParticleVel = { -smoke.vel.x,-smoke.vel.y, -smoke.vel.z };
+	const XMFLOAT3 reverseParticleVel = { -fire.vel.x,-fire.vel.y, -fire.vel.z };
 	const int32_t walkParticleNum = 1;
 	const XMFLOAT4 walkStartColor = { MyMath::RandomMTFloat(0.9f,1.0f),0.6f,0.6f,1.0f };
 	//キーボード入力による移動処理
@@ -250,8 +250,8 @@ void Player::Move() {
 			}
 			if(onGround_)model_ = modelMove_;
 			isRight_ = false;
-			pmSmoke_->ActiveX(smoke.particle, startPosLeft, smoke.pos, smoke.vel,
-				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+			pmFire_->ActiveX(fire.particle, startPosLeft, fire.pos, fire.vel,
+				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 			move.x -= moveSpeed * dashSpeed;
 			cmove.x -= moveSpeed * dashSpeed;
 			tmove.x -= moveSpeed * dashSpeed;
@@ -266,8 +266,8 @@ void Player::Move() {
 			}
 			if (onGround_)model_ = modelMove_;
 			isRight_ = true;
-			pmSmoke_->ActiveX(smoke.particle, startPosRight, smoke.pos, reverseParticleVel,
-				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+			pmFire_->ActiveX(fire.particle, startPosRight, fire.pos, reverseParticleVel,
+				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 			move.x += moveSpeed * dashSpeed;
 			cmove.x += moveSpeed * dashSpeed;
 			tmove.x += moveSpeed * dashSpeed;
@@ -285,8 +285,8 @@ void Player::Move() {
 			}
 			if (onGround_)model_ = modelMove_;
 			isRight_ = false;
-			pmSmoke_->ActiveX(smoke.particle, startPosLeft, smoke.pos, smoke.vel,
-				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
+			pmFire_->ActiveX(fire.particle, startPosLeft, fire.pos, fire.vel,
+				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor);
 			move.x -= moveSpeed;
 			cmove.x -= moveSpeed;
 			tmove.x -= moveSpeed;
@@ -302,8 +302,8 @@ void Player::Move() {
 			}
 			if (onGround_)model_ = modelMove_;
 			isRight_ = true;
-			pmSmoke_->ActiveX(smoke.particle, startPosRight, smoke.pos, reverseParticleVel,
-				smoke.acc, walkParticleNum, smoke.scale, walkStartColor, smoke.endColor);
+			pmFire_->ActiveX(fire.particle, startPosRight, fire.pos, reverseParticleVel,
+				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor);
 			move.x += moveSpeed;
 			cmove.x += moveSpeed;
 			tmove.x += moveSpeed;
@@ -654,9 +654,9 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 	DamageType damege;
 
 	//煙プリセット
-	const ParticleManager::Preset smoke =
+	const ParticleManager::Preset fire =
 	{
-		particleSmoke_.get(),
+		particleFire_.get(),
 		position_,
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },
@@ -682,9 +682,9 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_ -= damege.enemyBullet;
 
 		//ヒット演出
-		pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-		pmSmoke_->Update();
+		pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
+			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+		pmFire_->Update();
 		
 		//model_ = modelHit_;
 		isHit_ = true;
@@ -701,9 +701,9 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 			life_ -= damege.GimmickSpike;
 
 			//ヒット演出
-			pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-			pmSmoke_->Update();
+			pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
+				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+			pmFire_->Update();
 
 			//model_ = modelHit_;
 			isHit_ = true;
@@ -894,7 +894,6 @@ void Player::UpdateBreak()
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 		//大爆発
-		pmFire_->SetBlendMode(ParticleManager::BP_ADD);
 		pmFire_->ActiveY(fire.particle, fire.startPos, fire.pos, fire.vel,
 			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
@@ -904,16 +903,15 @@ void Player::UpdateBreak()
 			particleSmoke_.get(),
 			{position_.x,position_.y + 5.0f,position_.z},
 			{ 25.0f ,10.0f,15.0f },
-			{ MyMath::RandomMTFloat(0.0f,0.1f),MyMath::RandomMTFloat(0.5f,3.0f),0.3f },
+			{ MyMath::RandomMTFloat(0.0f,0.3f),MyMath::RandomMTFloat(0.5f,3.0f),0.3f },
 			{ 0.0f,0.001f,0.0f },
-			3,
-			{ 4.0f, 0.0f },
-			{ MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.8f,1.0f),MyMath::RandomMTFloat(0.95f,1.0f),1.0f },
-			{ 1.0f,1.0f,1.0f,0.0f }
+			5,
+			{ 0.0f,3.0f },
+			{1.0f,1.0f,1.0f,1.0f },
+			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 
 		//煙も舞う
-		pmSmoke_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 		pmSmoke_->ActiveY(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
@@ -925,7 +923,7 @@ void Player::UpdateBreak()
 		cameraSppedEyeTarget.y = MyMath::RandomMTFloat(shakeEyeTargetMinMax.x, shakeEyeTargetMinMax.y);
 
 		const float speedChangePosZ = -30.0f;//手前側、奥側に分ける基準の値(これより大きかったら奥側)
-		const XMFLOAT2 cameraSpeedZ = { 2.5f,1.0f };//奥側と手前側の視点、注視点のZ軸移動の速度
+		const XMFLOAT2 cameraSpeedZ = { 1.0f,0.5f };//奥側と手前側の視点、注視点のZ軸移動の速度
 		//奥側と手前側でズームアウト速度を変える
 		//奥側
 		if (position_.z >= speedChangePosZ) cameraSppedEyeTarget.z = cameraSpeedZ.x;

@@ -336,10 +336,12 @@ private://メンバ変数
 	//ライト
 	std::unique_ptr<LightGroup> lightGroup_ = nullptr;
 	//パーティクル
-	std::unique_ptr<Particle> particle1_ = nullptr;
+	std::unique_ptr<Particle> particleFire_ = nullptr;
 	std::unique_ptr<Particle> particleFall_ = nullptr;
+	std::unique_ptr<Particle> particleSmoke_ = nullptr;
 	//パーティクルマネージャー
-	std::unique_ptr<ParticleManager> pm1_ = nullptr;
+	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
+	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
 
 private:
 	//回転イージングのセット

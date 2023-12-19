@@ -125,15 +125,16 @@ void TitleScene::Initialize()
 
 	//パーティクル
 	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
-	particle2_ = Particle::LoadFromParticleTexture("particle8.png");
+	particle2_ = Particle::LoadFromParticleTexture("particle9.png");
 	//ブースト用
 	pm1_ = ParticleManager::Create();
-	pm1_->SetBlendMode(ParticleManager::BP_ADD);//
+	pm1_->SetBlendMode(ParticleManager::BP_ADD);
 	pm1_->SetParticleModel(particle1_.get());
 	pm1_->SetCamera(camera_.get());
 	//ゴールオブジェクト用
 	pm2_ = ParticleManager::Create();
-	pm2_->SetBlendMode(ParticleManager::BP_ADD);
+	pm2_->SetBlendMode(ParticleManager::BP_ALPHA);
+	//pm2_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 	pm2_->SetParticleModel(particle2_.get());
 	pm2_->SetCamera(camera_.get());
 
@@ -212,6 +213,7 @@ void TitleScene::Update()
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		const DirectX::XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//ポジションオフセット
+		
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
@@ -228,7 +230,7 @@ void TitleScene::Update()
 		//パーティクル
 		pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-
+		
 		//丸影
 		SetUpCircleShadow(player->GetPosition());
 		//更新

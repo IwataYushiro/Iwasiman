@@ -109,12 +109,17 @@ void GameOverScene::Initialize()
 	LoadStageNameSprite();
 
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
-	pm1_ = ParticleManager::Create();
-	pm1_->SetParticleModel(particle1_.get());
-	pm1_->SetCamera(camera_.get());
-
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");//炎
 	particleFall_ = Particle::LoadFromParticleTexture("wind.png");//落下演出のパーティクル
+	particleSmoke_ = Particle::LoadFromParticleTexture("particle9.png");//煙
+
+	pmFire_ = ParticleManager::Create();
+	pmFire_->SetParticleModel(particleFall_.get());
+	pmFire_->SetCamera(camera_.get());
+
+	pmSmoke_ = ParticleManager::Create();
+	pmSmoke_->SetParticleModel(particleSmoke_.get());
+	pmSmoke_->SetCamera(camera_.get());
 	
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
@@ -139,9 +144,9 @@ void GameOverScene::Update()
 	{
 		const XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//オフセット
 		//煙プリセット
-		const ParticleManager::Preset smoke =
+		const ParticleManager::Preset fire =
 		{
-			particle1_.get(),
+			particleFire_.get(),
 			{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
 			{ 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
@@ -159,15 +164,15 @@ void GameOverScene::Update()
 			//回転しながら落下っぽく
 			const float rotSpeed = -0.3f;
 			const float resetRot = 360.0f;
-			rotPlayer.y += rotSpeed;
-			if (rotPlayer.y >= resetRot) rotPlayer.y = 0.0f;//360度を超えたらリセット
+			rotPlayer.z += rotSpeed;
+			if (rotPlayer.z >= resetRot) rotPlayer.y = 0.0f;//360度を超えたらリセット
 			player->SetRotation(rotPlayer);
 		}
 		else//イージングによる回転が終わったら
 		{
 			//ダッシュエフェクトに切り替え
-			pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-				smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+			pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
+				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 		}
 		//更新
 		player->Update();
@@ -202,7 +207,9 @@ void GameOverScene::Update()
 	//更新
 	camera_->Update();			//カメラ
 	lightGroup_->Update();		//ライト
-	pm1_->Update();				//パーティクルマネージャー
+	//パーティクルマネージャー更新
+	pmFire_->Update();			//炎			
+	pmSmoke_->Update();			//煙
 
 	//ImGui
 	imguiManager_->Begin();
@@ -266,22 +273,39 @@ void GameOverScene::UpdateIsGameOver()
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
+		const DirectX::XMFLOAT2 dashOffsetXY = { 0.0f,0.0f };//ポジションオフセット
+		
+		//煙プリセット
+		const ParticleManager::Preset smoke =
+		{
+			particleSmoke_.get(),
+			{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
+			{ 0.0f ,2.0f,0.0f },
+			{ 0.3f,2.3f,0.3f },
+			{ 0.0f,0.001f,0.0f },
+			2,
+			{ 0.0f, 5.0f },
+			{0.5f,0.5f,0.5f,1.0f },
+			{ 0.0f,0.0f,0.0f,0.0f }
+		};
 		//風プリセット
 		const ParticleManager::Preset wind =
 		{
 			particleFall_.get(),
 			player->GetPosition(),
-			{ 20.0f ,-100.0f,5.0f },
+			{ 200.0f ,-100.0f,5.0f },
 			{ 0.0f,3.0f,0.0f },
 			{ 0.0f,0.001f,0.0f },
-			5,
+			8,
 			{ 1.0f, 0.0f },
 			{1.0f,1.0f,1.0,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
-
 		//パーティクル
-		pm1_->ActiveY(wind.particle, wind.startPos, wind.pos, wind.vel,
+		pmSmoke_->ActiveY(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+		//パーティクル
+		pmFire_->ActiveY(wind.particle, wind.startPos, wind.pos, wind.vel,
 			wind.acc, wind.num, wind.scale, wind.startColor, wind.endColor);
 
 
@@ -538,7 +562,9 @@ void GameOverScene::Draw()
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
-	pm1_->Draw();//パーティクル(煙)
+	pmSmoke_->Draw(); //パーティクル(煙)
+	pmFire_->Draw();  //パーティクル(炎)
+
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
