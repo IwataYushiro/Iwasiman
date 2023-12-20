@@ -75,7 +75,7 @@ void StageSelectScene::Initialize()
 	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].start,easeStartStagePosY_[SSSMI_Stage1_SkyStage].start });
 
 	//ステージ2スプライト
-	spCommon_->LoadTexture(SSSTI_Menustage2Tex, "texture/stagespace.png");
+	spCommon_->LoadTexture(SSSTI_Menustage2Tex, "texture/stageboss.png");
 	spriteStage2_->Initialize(spCommon_, SSSTI_Menustage2Tex);
 	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].start,easeStartStagePosY_[SSSMI_Stage2_SpaceStage].start });
 
@@ -323,7 +323,13 @@ void StageSelectScene::UpdateIsStageSelect()
 			}
 			else if (menuCount_ == SSSMI_Stage2_SpaceStage)//宇宙ステージを選択時
 			{
-				spCommon_->LoadTexture(SSSTI_StageNameTex, "texture/stagename/2-1.png");
+				//現在ステージスプライト
+				spCommon_->LoadTexture(SSSTI_StageInfoNowTex, "texture/stagef.png");
+				spriteStageInfoNow_->Initialize(spCommon_, SSSTI_StageInfoNowTex);
+				spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
+				spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+				
+				spCommon_->LoadTexture(SSSTI_StageNameTex, "texture/stagename/2-4.png");
 				spriteStageName_->Initialize(spCommon_, SSSTI_StageNameTex);
 				spriteStageName_->SetPosition(stageNamePos_);
 				spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
