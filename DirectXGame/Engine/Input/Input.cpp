@@ -25,10 +25,10 @@ Input::~Input()
 	//入力情報の取得を終了
 	if (keyboard_)keyboard_->Unacquire();
 	if (mouse_)mouse_->Unacquire();
-	/*if (isJoyStick_)
+	if (isJoyStick_)
 	{
-		if (joyStick_)joyStick->Unacquire();
-	}*/
+		if (joyStick_)joyStick_->Unacquire();
+	}
 }
 
 //初期化
@@ -49,7 +49,7 @@ void Input::Initialize()
 	//マウスデバイス
 	GenerateMouse();
 	//コントローラーデバイス
-	//GenerateJoyStick();
+	GenerateJoyStick();
 }
 
 //更新
@@ -81,17 +81,17 @@ void Input::Update()
 	mousePos_.x = static_cast<float>(mouseScreenPos.x);
 	mousePos_.y = static_cast<float>(mouseScreenPos.y);
 
-	//if (isJoyStick)
-	//{
-	//	joyStick->Acquire();
-	//	joyStick->Poll();
-	//	//全コントローラーの入力状態を取得する
-	//	joyStick->GetDeviceState(sizeof(joyState), &joyState);
-	//	if (joyState.rgdwPOV[0] != 0xFFFFFFFF)
-	//	{
-	//		OutputDebugStringA("ok");
-	//	}
-	//}
+	if (isJoyStick_)
+	{
+		joyStick_->Acquire();
+		joyStick_->Poll();
+		//全コントローラーの入力状態を取得する
+		joyStick_->GetDeviceState(sizeof(joyState_), &joyState_);
+		if (joyState_.rgdwPOV[0] != 0xFFFFFFFF)
+		{
+			OutputDebugStringA("ok");
+		}
+	}
 }
 
 void Input::GenerateKeyBoard()
@@ -129,18 +129,18 @@ void Input::GenerateMouse()
 }
 
 
-//
-//void Input::GenerateJoyStick()
-//{
-//	HRESULT result;
-//	
-//	//ジョイスティック列挙
-//	result = directInput->EnumDevices(DI8DEVTYPE_GAMEPAD,
-//		EnumJoyStickProc,this, DIEDFL_ATTACHEDONLY);
-//	if (joyStick) isJoyStick = true;
-//
-//}
-//
+
+void Input::GenerateJoyStick()
+{
+	HRESULT result;
+	
+	//ジョイスティック列挙
+	result = directInput_->EnumDevices(DI8DEVTYPE_GAMEPAD,
+		EnumJoyStickProc,this, DIEDFL_ATTACHEDONLY);
+	if (joyStick_) isJoyStick_ = true;
+
+}
+
 
 //キーが押されているか
 bool Input::PushKey(const BYTE keyNumber) {
@@ -213,18 +213,17 @@ bool Input::ReleaseMouse(const int32_t mouseNumber)
 	return false;
 }
 
-/*
-BOOL Input::EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef) noexcept
+BOOL Input::EnumJoyStickProc([[maybe_unused]]const DIDEVICEINSTANCE* lpddi, VOID* pvRef) noexcept
 {
 	HRESULT result;
 	
 	Input* input = (Input*)pvRef;
 	//デバイス生成
-	result = input->GetDirectInput()->CreateDevice(GUID_Joystick, &input->joyStick, NULL);
+	result = input->GetDirectInput()->CreateDevice(GUID_Joystick, &input->joyStick_, NULL);
 	assert(SUCCEEDED(result));
 
 	//入力データ形式のセット
-	result = input->joyStick->SetDataFormat(&c_dfDIJoystick2); //標準形式(拡張8ボタン)
+	result = input->joyStick_->SetDataFormat(&c_dfDIJoystick2); //標準形式(拡張8ボタン)
 	assert(SUCCEEDED(result));
 
 	//軸モード
@@ -236,7 +235,7 @@ BOOL Input::EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef) noexcep
 	diprop.diph.dwHow = DIPH_DEVICE;
 	diprop.diph.dwObj = 0;
 	diprop.dwData = DIPROPAXISMODE_ABS;
-	input->joyStick->SetProperty(DIPROP_AXISMODE, &diprop.diph);
+	input->joyStick_->SetProperty(DIPROP_AXISMODE, &diprop.diph);
 
 	//入力範囲のセット
 	DIPROPRANGE diprg;
@@ -248,25 +247,25 @@ BOOL Input::EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef) noexcep
 
 	//X軸
 	diprg.diph.dwObj = DIJOFS_X;
-	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	input->joyStick_->SetProperty(DIPROP_RANGE, &diprg.diph);
 	//Y軸
 	diprg.diph.dwObj = DIJOFS_Y;
-	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	input->joyStick_->SetProperty(DIPROP_RANGE, &diprg.diph);
 	//Z軸
 	diprg.diph.dwObj = DIJOFS_Z;
-	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	input->joyStick_->SetProperty(DIPROP_RANGE, &diprg.diph);
 	//RX軸
 	diprg.diph.dwObj = DIJOFS_RX;
-	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	input->joyStick_->SetProperty(DIPROP_RANGE, &diprg.diph);
 	//RY軸
 	diprg.diph.dwObj = DIJOFS_RY;
-	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	input->joyStick_->SetProperty(DIPROP_RANGE, &diprg.diph);
 	//RZ軸
 	diprg.diph.dwObj = DIJOFS_RZ;
-	input->joyStick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	input->joyStick_->SetProperty(DIPROP_RANGE, &diprg.diph);
 
 	//排他制御レベルのセット
-	result = input->joyStick->SetCooperativeLevel(
+	result = input->joyStick_->SetCooperativeLevel(
 		WinApp::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
@@ -275,4 +274,3 @@ BOOL Input::EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef) noexcep
 
 	return DIENUM_STOP;
 }
-*/

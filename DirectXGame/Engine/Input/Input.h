@@ -72,7 +72,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		void GenerateMouse();
 
 		//ジョイスティック生成
-		//void GenerateJoyStick();
+		void GenerateJoyStick();
 
 		//キーが押されているか(プレス)(キー(DIK_SPACEとか))
 		bool PushKey(const BYTE keyNumber);
@@ -92,7 +92,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 	private://メンバ変数
 		//コントローラーデバイス生成
-		//static BOOL CALLBACK EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef)noexcept;
+		static BOOL CALLBACK EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef)noexcept;
 
 		//DirectInputの初期化
 		ComPtr<IDirectInput8> directInput_ = nullptr;
