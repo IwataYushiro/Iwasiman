@@ -50,13 +50,6 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 			jsRT,			//Rトリガー
 		}JSButton;
 
-		//ジョイスティックパラメータ
-		struct PadParam
-		{
-			ComPtr<IDirectInputDevice8> joyStick;//ジョイスティック
-			int find;//見つかったか
-		};
-
 	public://シングルトンインスタンス
 		static Input* GetInstance();
 	public:
@@ -90,12 +83,15 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		bool ReleaseMouse(const int32_t mouseNumber);
 
 
-	private://メンバ変数
+	private://メンバ関数
 		//コントローラーデバイス生成
-		static BOOL CALLBACK EnumJoyStickProc(const DIDEVICEINSTANCE* lpddi, VOID* pvRef)noexcept;
+		static BOOL CALLBACK EnumJoyStickProc(const LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef);
+		//ジョイスティック(ゲームパッド)制御
+		void StartJoyStickControl();
 
+	private://メンバ変数
 		//DirectInputの初期化
-		ComPtr<IDirectInput8> directInput_ = nullptr;
+		static ComPtr<IDirectInput8> directInput_;
 		//キーボード
 		ComPtr <IDirectInputDevice8> keyboard_ = nullptr;
 		//キーのバッファ
