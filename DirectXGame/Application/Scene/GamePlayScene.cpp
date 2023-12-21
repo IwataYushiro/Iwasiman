@@ -755,6 +755,7 @@ void GamePlayScene::Draw()
 	pm_->Draw();
 	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();		//自機のパーティクル
 	for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->DrawParticle();	//敵のパーティクル
+	for (std::unique_ptr<Goal>& goal : goals_) goal->DrawParticle();			//ゴールのパーティクル
 	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();				//アイテムのパーティクル
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();

@@ -1,11 +1,13 @@
 #include "Goal.h"
 #include "SphereCollider.h"
+#include "MyMath.h"
 #include <cassert>
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
 
 using namespace DirectX;
 using namespace IwasiEngine;
+using namespace MyMath;
 /*
 
 *	Goal.cpp
@@ -41,6 +43,12 @@ bool Goal::Initialize()
 	//ゴール本体
 	collider_->SetAttribute(COLLISION_ATTR_GOAL);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+	
+	//パーティクル
+	particle_ = Particle::LoadFromParticleTexture("particle1.png");
+	pm_ = ParticleManager::Create();
+	pm_->SetParticleModel(particle_.get());
+
 	return true;
 	
 }
@@ -49,10 +57,33 @@ void Goal::Reset() { isGoal_ = false;/*ゴールしたかだけ*/ }
 
 void Goal::Update()
 {
+	//パーティクルマネージャーにカメラをセット
+	pm_->SetCamera(camera_);
+	//パーティクルプリセット
+	const ParticleManager::Preset goalEffect =
+	{
+		particle_.get(),
+		position_,
+		{ radius_*2.0f ,radius_ * 2.0f,radius_ * 2.0f },
+		{ 0.1f,4.0f,0.1f },
+		{ 0.0f,0.001f,0.0f },
+		1,
+		{3.0f, 0.0f },
+		{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
+		{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f}
+	};
+	//ゲットできたことを知らせるパーティクル
+	pm_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
+		goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
+
+	//ゴールは常時回っている
+	const float rotSpeedY = 1.0f;
+	rotation_.y += rotSpeedY;
 	//ワールド座標を転送
 	Trans();
 	//更新
 	camera_->Update();	//カメラ
+	pm_->Update();		//パーティクル
 	Object3d::Update();	//3Dオブジェクト
 }
 
@@ -95,6 +126,11 @@ const XMFLOAT3 Goal::GetWorldPosition()const
 void Goal::Draw()
 {
 	Object3d::Draw();//モデルの描画
+}
+
+void Goal::DrawParticle()
+{
+	pm_->Draw();//パーティクル描画
 }
 
 void Goal::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)

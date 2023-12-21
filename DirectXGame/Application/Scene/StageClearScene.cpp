@@ -260,7 +260,7 @@ void StageClearScene::UpdateIsNextStage()
 			3,
 			{ RandomMTFloat(4.0f,6.0f), 0.0f },
 			{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
-			{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f }
+			{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f}
 		};
 		//パーティクル
 		pmClear_->ActiveX(clear.particle, clear.startPos, clear.pos, clear.vel,
