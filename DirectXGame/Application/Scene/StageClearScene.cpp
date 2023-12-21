@@ -115,10 +115,10 @@ void StageClearScene::Initialize()
 	pmClear_->SetParticleModel(particleClear_.get());
 	pmClear_->SetCamera(camera_.get());
 	//自機の移動演出用
-	particleSmoke_ = Particle::LoadFromParticleTexture("particle8.png");
-	pmSmoke_ = ParticleManager::Create();
-	pmSmoke_->SetParticleModel(particleSmoke_.get());
-	pmSmoke_->SetCamera(camera_.get());
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
+	pmFire_ = ParticleManager::Create();
+	pmFire_->SetParticleModel(particleFire_.get());
+	pmFire_->SetCamera(camera_.get());
 
 	//各ステージの最終面は次のステージへ行く表記が無い
 	if (stageNum_ == SL_Stage1_AreaBoss)
@@ -154,9 +154,9 @@ void StageClearScene::Update()
 	{
 		const XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//オフセット
 		//煙プリセット
-		const ParticleManager::Preset smoke =
+		const ParticleManager::Preset fire =
 		{
-			particleSmoke_.get(),
+			particleFire_.get(),
 			{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
 			{ 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
@@ -167,8 +167,8 @@ void StageClearScene::Update()
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 		//パーティクル
-		pmSmoke_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+		pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
+			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 		
 		//丸影
 		SetUpCircleShadow(player->GetPosition());
@@ -221,7 +221,7 @@ void StageClearScene::Update()
 	camera_->Update();		   //カメラ
 	lightGroup_->Update();	   //ライト
 	pmClear_->Update();		   //クリア時のパーティクル
-	pmSmoke_->Update();		   //煙のパーティクル
+	pmFire_->Update();		   //煙のパーティクル
 	//ImGui
 	imguiManager_->Begin();
 	imguiManager_->End();
@@ -278,6 +278,30 @@ void StageClearScene::UpdateIsNextStage()
 		//進む
 		move.x += speed.x;
 		goal->SetPosition(move);
+
+		//パーティクルプリセット
+		const ParticleManager::Preset goalEffect =
+		{
+			particleClear_.get(),
+			goal->GetPosition(),
+			{ 20.0f,20.0f,20.0f } ,
+			{ 0.1f,4.0f,0.1f },
+			{ 0.0f,0.001f,0.0f },
+			1,
+			{3.0f, 0.0f },
+			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f},
+			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f}
+		};
+		//ゴールの位置を知らせるパーティクル
+		pmClear_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
+			goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
+
+		//ゴールは常時回っている
+		DirectX::XMFLOAT3 rot = goal->GetRotation();
+		const float rotSpeedY = 1.0f;
+		rot.y += rotSpeedY;
+		goal->SetRotation(rot);
+
 		//ゴールオブジェクトの位置が一定の位置に到着したら遷移演出
 		if (goal->GetPosition().x <= gameStartPos_)
 		{
@@ -510,7 +534,7 @@ void StageClearScene::Draw()
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 	pmClear_->Draw();	//クリアエフェクト
-	pmSmoke_->Draw();	//煙エフェクト
+	pmFire_->Draw();	//煙エフェクト
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 

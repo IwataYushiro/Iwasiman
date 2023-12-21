@@ -336,12 +336,14 @@ private://メンバ変数
 	//ライト
 	std::unique_ptr<LightGroup> lightGroup_ = nullptr;
 	//パーティクル
-	std::unique_ptr<Particle> particleFire_ = nullptr;
-	std::unique_ptr<Particle> particleFall_ = nullptr;
-	std::unique_ptr<Particle> particleSmoke_ = nullptr;
+	std::unique_ptr<Particle> particleFire_ = nullptr;		//炎
+	std::unique_ptr<Particle> particleFall_ = nullptr;		//落下風のパーティクル
+	std::unique_ptr<Particle> particleSmoke_ = nullptr;		//煙
+	std::unique_ptr<Particle> particleGoal_ = nullptr;		//ゴール演出
 	//パーティクルマネージャー
-	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
-	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
+	std::unique_ptr<ParticleManager> pmFire_ = nullptr;		//炎(落下風のパーティクルにも使用)
+	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;	//煙
+	std::unique_ptr<ParticleManager> pmGoal_ = nullptr;		//ゴール演出
 
 private:
 	//落ちてるときのパーティクル(プレイヤー)

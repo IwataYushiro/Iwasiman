@@ -15,14 +15,14 @@ using namespace MyMath;
 *	ゴール
 
 */
-std::unique_ptr<Goal> Goal::Create(const Model* model)
+std::unique_ptr<Goal> Goal::Create(const Model* model, const bool isLandShape)
 {
 	//インスタンス生成
 	std::unique_ptr<Goal> ins = std::make_unique<Goal>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
-	if (!ins->Initialize())
+	if (!ins->Initialize(isLandShape))
 	{
 		ins.release();
 		assert(0);
@@ -32,7 +32,7 @@ std::unique_ptr<Goal> Goal::Create(const Model* model)
 	return ins;
 }
 
-bool Goal::Initialize()
+bool Goal::Initialize(const bool isLandShape)
 {
 	//初期化
 	if (!Object3d::Initialize()) return false;
@@ -41,7 +41,9 @@ bool Goal::Initialize()
 	//コライダー追加
 	SetCollider(new SphereCollider(XMVECTOR(), radius_));
 	//ゴール本体
-	collider_->SetAttribute(COLLISION_ATTR_GOAL);
+	//地形化フラグがオンなら地形に
+	if(isLandShape)collider_->SetAttribute(COLLISION_ATTR_LANDSHAPE);
+	else collider_->SetAttribute(COLLISION_ATTR_GOAL);//オフならゴール扱い
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	
 	//パーティクル
@@ -72,7 +74,7 @@ void Goal::Update()
 		{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
 		{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f}
 	};
-	//ゲットできたことを知らせるパーティクル
+	//ゴールの位置を知らせるパーティクル
 	pm_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
 		goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
 

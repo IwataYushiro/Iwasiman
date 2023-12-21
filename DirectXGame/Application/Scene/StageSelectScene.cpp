@@ -133,10 +133,18 @@ void StageSelectScene::Initialize()
 	objStage_->SetScale(stageScale);
 
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
-	pm1_ = ParticleManager::Create();
-	pm1_->SetParticleModel(particle1_.get());
-	pm1_->SetCamera(camera_.get());
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
+	particleGoal_ = Particle::LoadFromParticleTexture("particle1.png");
+
+	//ブースト用
+	pmFire_ = ParticleManager::Create();
+	pmFire_->SetParticleModel(particleFire_.get());
+	pmFire_->SetCamera(camera_.get());
+	//ゴールオブジェクト用
+	pmGoal_ = ParticleManager::Create();
+	pmGoal_->SetParticleModel(particleGoal_.get());
+	pmGoal_->SetCamera(camera_.get());
+
 
 	//イージングスタンバイ
 	for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(false);
@@ -159,10 +167,10 @@ void StageSelectScene::Update()
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		const XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//オフセット
-		//煙プリセット
-		const ParticleManager::Preset smoke =
+		//炎プリセット
+		const ParticleManager::Preset fire =
 		{
-			particle1_.get(),
+			particleFire_.get(),
 			{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
 			{ 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
@@ -173,17 +181,43 @@ void StageSelectScene::Update()
 			{0.0f,0.0f,0.0f,1.0f}
 		};
 		//パーティクル
-		pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+		pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
+			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 		//丸影
 		SetUpCircleShadow(player->GetPosition());
 		//更新
 		player->Update();
 	}
 	for (std::unique_ptr<Object3d>& ground : objGrounds_)ground->Update();	//地面は更新だけ
-	for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Update();		//ゴールも更新だけ
+	for (std::unique_ptr<Object3d>& goal : objGoals_)
+	{
+		//パーティクルプリセット
+		const ParticleManager::Preset goalEffect =
+		{
+			particleGoal_.get(),
+			goal->GetPosition(),
+			{ 20.0f,20.0f,20.0f } ,
+			{ 0.1f,4.0f,0.1f },
+			{ 0.0f,0.001f,0.0f },
+			1,
+			{3.0f, 0.0f },
+			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f},
+			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f}
+		};
+		//ゴールの位置を知らせるパーティクル
+		pmGoal_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
+			goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
 
-	//天球は常時回転
+		//ゴールは常時回っている
+		DirectX::XMFLOAT3 rot = goal->GetRotation();
+		const float rotSpeedY = 1.0f;
+		rot.y += rotSpeedY;
+		goal->SetRotation(rot);
+		//更新
+		goal->Update();
+	}
+
+	//天球も常時回転
 	const float rotSpeed = 0.5f;
 	rot_.y += rotSpeed;
 	objStage_->SetRotation(rot_);
@@ -202,10 +236,11 @@ void StageSelectScene::Update()
 	spriteStageName_->Update();			//ステージ名スプライト
 
 	//更新
-	camera_->Update();				  //カメラ
-	lightGroup_->Update();			  //ライト
-	objStage_->Update();			  //背景オブジェクト
-	pm1_->Update();					  //パーティクルマネージャー(ジェット)
+	camera_->Update();					//カメラ
+	lightGroup_->Update();				//ライト
+	objStage_->Update();				//背景オブジェクト
+	pmFire_->Update();					//パーティクルマネージャー(ジェット)
+	pmGoal_->Update();					//パーティクルマネージャー(ゴールオブジェクト)
 
 	imguiManager_->Begin();
 #ifdef _DEBUG
@@ -491,7 +526,8 @@ void StageSelectScene::Draw()
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
-	pm1_->Draw();
+	pmFire_->Draw();
+	pmGoal_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 

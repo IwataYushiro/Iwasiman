@@ -124,19 +124,17 @@ void TitleScene::Initialize()
 	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
 	//パーティクル
-	particle1_ = Particle::LoadFromParticleTexture("particle8.png");
-	particle2_ = Particle::LoadFromParticleTexture("particle9.png");
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
+	particleGoal_ = Particle::LoadFromParticleTexture("particle1.png");
 	//ブースト用
-	pm1_ = ParticleManager::Create();
-	pm1_->SetBlendMode(ParticleManager::BP_ADD);
-	pm1_->SetParticleModel(particle1_.get());
-	pm1_->SetCamera(camera_.get());
+	pmFire_ = ParticleManager::Create();
+	pmFire_->SetBlendMode(ParticleManager::BP_ADD);
+	pmFire_->SetParticleModel(particleFire_.get());
+	pmFire_->SetCamera(camera_.get());
 	//ゴールオブジェクト用
-	pm2_ = ParticleManager::Create();
-	pm2_->SetBlendMode(ParticleManager::BP_ALPHA);
-	//pm2_->SetBlendMode(ParticleManager::BP_SUBTRACT);
-	pm2_->SetParticleModel(particle2_.get());
-	pm2_->SetCamera(camera_.get());
+	pmGoal_ = ParticleManager::Create();
+	pmGoal_->SetParticleModel(particleGoal_.get());
+	pmGoal_->SetCamera(camera_.get());
 
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
@@ -217,7 +215,7 @@ void TitleScene::Update()
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
-			particle1_.get(),
+			particleFire_.get(),
 			{player->GetPosition().x + dashOffsetXY.x,player->GetPosition().y + dashOffsetXY.y,player->GetPosition().z},
 			{ 0.0f ,2.0f,0.0f },
 			{ -3.0f,0.3f,0.3f },
@@ -228,7 +226,7 @@ void TitleScene::Update()
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 		//パーティクル
-		pm1_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
+		pmFire_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
 			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 		
 		//丸影
@@ -266,8 +264,8 @@ void TitleScene::Update()
 	//更新
 	camera_->Update();		//カメラ
 	lightGroup_->Update();	//ライト
-	pm1_->Update();			//パーティクルマネージャー(ジェット)
-	pm2_->Update();			//パーティクルマネージャー(ゴールオブジェクト)
+	pmFire_->Update();			//パーティクルマネージャー(ジェット)
+	pmGoal_->Update();			//パーティクルマネージャー(ゴールオブジェクト)
 	
 	//objF->Update();
 	
@@ -312,6 +310,29 @@ void TitleScene::UpdateIsStartGame()
 		//進む
 		move.x += speed.x;
 		goal->SetPosition(move);
+
+		//パーティクルプリセット
+		const ParticleManager::Preset goalEffect =
+		{
+			particleGoal_.get(),
+			goal->GetPosition(),
+			{ 20.0f,20.0f,20.0f } ,
+			{ 0.1f,4.0f,0.1f },
+			{ 0.0f,0.001f,0.0f },
+			1,
+			{3.0f, 0.0f },
+			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f},
+			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f}
+		};
+		//ゴールの位置を知らせるパーティクル
+		pmGoal_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
+			goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
+
+		//ゴールは常時回っている
+		DirectX::XMFLOAT3 rot = goal->GetRotation();
+		const float rotSpeedY = 1.0f;
+		rot.y += rotSpeedY;
+		goal->SetRotation(rot);
 		//ゴールオブジェクトの位置が一定の位置に到着したら遷移演出
 		if (goal->GetPosition().x <= gameStartPos_)
 		{
@@ -558,8 +579,8 @@ void TitleScene::Draw()
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
-	pm1_->Draw();
-	pm2_->Draw();
+	pmFire_->Draw();
+	pmGoal_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 

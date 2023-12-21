@@ -30,10 +30,10 @@ private:
 	using ParticleManager = IwasiEngine::ParticleManager;
 public:
 	
-	//生成(使用モデル)
-	static std::unique_ptr<Goal> Create(const Model* model = nullptr);
-	//初期化
-	bool Initialize()override;
+	//生成(使用モデル、地形化フラグ)
+	static std::unique_ptr<Goal> Create(const Model* model = nullptr, const bool isLandShape = false);
+	//初期化(地形化フラグ)
+	bool Initialize(const bool isLandShape = false);
 	//リセット
 	void Reset();
 	//更新
