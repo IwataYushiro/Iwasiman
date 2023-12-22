@@ -606,7 +606,6 @@ void TitleScene::Finalize()
 {
 	//‰¹º
 	audio_->Finalize();
-	
 }
 
 void TitleScene::LoadLVData(const std::string& stagePath)
