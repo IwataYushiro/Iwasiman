@@ -201,8 +201,8 @@
             "transform": {
                 "translation": [
                     0.0,
-                    -50.0,
-                    10.0
+                    -80.0,
+                    -1.0
                 ],
                 "rotation": [
                     0.0,
@@ -210,14 +210,14 @@
                     0.0
                 ],
                 "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                    4.5,
+                    4.5,
+                    4.5
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "core1",
             "objecttype": "ENEMY",
-            "objectpattern": "E2G"
+            "objectpattern": "ENEMYCHASE"
         }
     ]
 }

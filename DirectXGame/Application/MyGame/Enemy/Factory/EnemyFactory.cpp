@@ -2,7 +2,7 @@
 #include "CollisionAttribute.h"
 #include "Enemy1.h"
 #include "Enemy2.h"
-
+#include "EnemyChase.h"
 #include "EnemyBoss.h"
 #include "EnemyCore.h"
 
@@ -81,7 +81,10 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 		//ドッスン風雑魚(攻撃力ほぼ即死　他弱め)
 		return Enemy2::Create(model, bullet, player, gamescene, ET_Death);
 	}
-
+	else if (enemyName.find("ENEMYCHASE") == findSuccess)
+	{
+		return EnemyChase::Create(model, player, gamescene);
+	}
 	else if (enemyName.find("BOSS1") == findSuccess)
 	{
 		//ベジェ曲線で動くボス

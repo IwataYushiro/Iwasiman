@@ -647,7 +647,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		const int32_t enemyPower = 4;
 		const int32_t enemyGuard = 1;
 		const int32_t enemySpeed = 1;
-		const int32_t enemyDeath = 6;
+		const int enemyDeath = 15;
 		const int32_t enemyBullet = 1;
 		const int32_t GimmickSpike = 3;
 	};
