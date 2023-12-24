@@ -54,7 +54,7 @@ bool EnemyChase::Initialize()
 	//各種パラメータ設定
 	Parameter();
 	//炎
-	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
+	particleFire_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 	pmFire_->SetParticleModel(particleFire_.get());
@@ -90,8 +90,8 @@ void EnemyChase::Update(const bool isStart)
 		//速度
 		XMFLOAT3 velocity;
 
-		const XMFLOAT3 velDefault = { 0.3f, 0.0f, 0.0f };//通常時スピード
-		const XMFLOAT3 velReverse = { -0.3f, 0.0f, 0.0f };//反転時スピード
+		const XMFLOAT3 velDefault = { 0.5f, 0.0f, 0.0f };//通常時スピード
+		const XMFLOAT3 velReverse = { -0.5f, 0.0f, 0.0f };//反転時スピード
 
 		//移動
 		if (!isReverse_)velocity = velDefault;
@@ -181,12 +181,12 @@ void EnemyChase::UpdateParticleSkin()
 		particleFire_.get(),
 		position_,
 		{radius_*2.0f,radius_ * 2.0f,radius_ * 2.0f},
-		{ -3.0f,0.1f,0.1f },
+		{ -3.0f,0.2f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		6,
+		10,
 		{MyMath::RandomMTFloat(3.0f,10.0f), 0.0f },
-		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
-		{ 0.0f,0.0f,0.0f,1.0f }
+		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.1f,0.2f),0.0f,1.0f },
+		{ 1.0f,MyMath::RandomMTFloat(0.2f,0.5f),MyMath::RandomMTFloat(0.2f,0.5f),1.0f }
 
 	};
 	//マイナス座標用

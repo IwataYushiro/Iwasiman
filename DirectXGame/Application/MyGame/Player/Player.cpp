@@ -643,13 +643,13 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 	//ダメージ管理の構造体
 	struct DamageType
 	{
-		const int32_t enemyNone = 2;
-		const int32_t enemyPower = 4;
-		const int32_t enemyGuard = 1;
-		const int32_t enemySpeed = 1;
-		const int enemyDeath = 15;
-		const int32_t enemyBullet = 1;
-		const int32_t GimmickSpike = 3;
+		const uint32_t enemyNone = 2;
+		const uint32_t enemyPower = 4;
+		const uint32_t enemyGuard = 1;
+		const uint32_t enemySpeed = 1;
+		const uint32_t enemyDeath = 15;
+		const uint32_t enemyBullet = 1;
+		const uint32_t GimmickSpike = 3;
 	};
 	DamageType damege;
 
