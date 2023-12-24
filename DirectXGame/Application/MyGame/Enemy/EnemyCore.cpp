@@ -22,7 +22,7 @@ EnemyCore::~EnemyCore() {
 }
 
 std::unique_ptr<EnemyCore> EnemyCore::Create(const Model* model, const Model* bullet,
-	const Player* player,GamePlayScene* gamescene, [[maybe_unused]] unsigned short stage)
+	const Player* player,GamePlayScene* gamescene, [[maybe_unused]] unsigned short level)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyCore> ins = std::make_unique<EnemyCore>();

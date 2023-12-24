@@ -109,19 +109,24 @@ void GameOverScene::Initialize()
 	LoadStageNameSprite();
 
 	//パーティクル
-	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");//炎
-	particleFall_ = Particle::LoadFromParticleTexture("wind.png");//落下演出のパーティクル
-	particleSmoke_ = Particle::LoadFromParticleTexture("particle9.png");//煙
-
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");		//炎
+	particleFall_ = Particle::LoadFromParticleTexture("wind.png");			//落下演出のパーティクル
+	particleSmoke_ = Particle::LoadFromParticleTexture("particle9.png");	//煙
+	particleGoal_ = Particle::LoadFromParticleTexture("particle1.png");		//ゴール用
+	//ジェット用
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetParticleModel(particleFall_.get());
 	pmFire_->SetCamera(camera_.get());
-
+	//煙用
 	pmSmoke_ = ParticleManager::Create();
 	pmSmoke_->SetBlendMode(ParticleManager::BP_ALPHA);
 	pmSmoke_->SetParticleModel(particleSmoke_.get());
 	pmSmoke_->SetCamera(camera_.get());
-	
+	//ゴールオブジェクト用
+	pmGoal_ = ParticleManager::Create();
+	pmGoal_->SetParticleModel(particleGoal_.get());
+	pmGoal_->SetCamera(camera_.get());
+
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(false);
@@ -200,7 +205,7 @@ void GameOverScene::Update()
 	//パーティクルマネージャー更新
 	pmFire_->Update();			//炎			
 	pmSmoke_->Update();			//煙
-
+	pmGoal_->Update();
 	//ImGui
 	imguiManager_->Begin();
 #ifdef _DEBUG
@@ -404,6 +409,31 @@ void GameOverScene::UpdateIsContinue()
 
 		}
 	}
+	for (std::unique_ptr<Object3d>& goal : objGoals_)
+	{
+		//パーティクルプリセット
+		const ParticleManager::Preset goalEffect =
+		{
+			particleGoal_.get(),
+			goal->GetPosition(),
+			{ 20.0f,20.0f,20.0f } ,
+			{ 0.1f,4.0f,0.1f },
+			{ 0.0f,0.001f,0.0f },
+			1,
+			{3.0f, 0.0f },
+			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f},
+			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f}
+		};
+		//ゴールの位置を知らせるパーティクル
+		pmGoal_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
+			goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
+
+		//ゴールは常時回っている
+		DirectX::XMFLOAT3 rot = goal->GetRotation();
+		const float rotSpeedY = 1.0f;
+		rot.y += rotSpeedY;
+		goal->SetRotation(rot);
+	}
 }
 
 void GameOverScene::UpdateIsQuitStageSelect()
@@ -521,9 +551,9 @@ void GameOverScene::Draw()
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
-	pmSmoke_->Draw(); //パーティクル(煙)
-	pmFire_->Draw();  //パーティクル(炎)
-
+	pmSmoke_->Draw();	//パーティクル(煙)
+	pmFire_->Draw();	//パーティクル(炎)
+	pmGoal_->Draw();	//パーティクル(ゴール)
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 
@@ -732,7 +762,7 @@ void GameOverScene::EaseRotateSetUp(const DirectX::XMFLOAT3& rotation, Easing& e
 
 void GameOverScene::FallParticle(const std::unique_ptr<Object3d>& player)
 {
-	const DirectX::XMFLOAT2 dashOffsetXY = { -2.0f,-1.0f };//ポジションオフセット
+	const DirectX::XMFLOAT2 dashOffsetXY = { -2.0f,-1.5f };//ポジションオフセット
 	//煙プリセット
 	const ParticleManager::Preset smoke =
 	{

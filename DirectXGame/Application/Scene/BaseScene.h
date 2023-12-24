@@ -62,7 +62,7 @@ protected://継承メンバ変数
 	//色サンプル
 	const DirectX::XMFLOAT3 white_ = { 1.0f,1.0f,1.0f };	//白
 	const DirectX::XMFLOAT3 black_ = { 0.0f,0.0f,0.0f };	//黒
-	const DirectX::XMFLOAT3 deepRed_ = { 0.2f,0.0f,0.0f };	//濃い赤
+	const DirectX::XMFLOAT3 deepRed_ = { 0.5f,0.2f,0.2f };	//濃い赤
 	//アンカーポイントのプリセット
 	const DirectX::XMFLOAT2 ANCHOR_POINT_CENTRAL = { 0.5f,0.5f };//中央
 

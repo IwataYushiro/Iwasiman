@@ -79,7 +79,15 @@ protected:
 		ET_Speed = 4,	//‘¬“xŒ^
 		ET_Death = 5,	//ŠëŒ¯Œ^
 	};
-	
+	//“GƒŒƒxƒ‹
+	enum EnemyLevel
+	{
+		EL_Level0=0,
+		EL_Level1 = 1,
+		EL_Level2 = 2,
+		EL_Level3 = 3,
+		EL_Level4 = 4,
+	};
 	//”­ŽË
 	const int endFireTime_ = 0;
 	//ƒ‰ƒCƒt0ˆÈ‰º‚ÅŽ€–S

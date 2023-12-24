@@ -402,6 +402,9 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Player\PlayerBullet.cpp">
       <Filter>Source File\Application\MyGame\Player</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyDanger.cpp">
+      <Filter>Source File\Application\MyGame\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXGame\Application\MyGame\MyGame.h">
@@ -619,6 +622,9 @@
     </ClInclude>
     <ClInclude Include="DirectXGame\Engine\3D\Light\CircleShadow.h">
       <Filter>Header File\Engine\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXGame\Application\MyGame\Enemy\EnemyDanger.h">
+      <Filter>Header File\Application\MyGame\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -755,6 +755,7 @@ void GamePlayScene::Draw()
 	pm_->Draw();
 	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();		//自機のパーティクル
 	for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->DrawParticle();	//敵のパーティクル
+	for (std::unique_ptr<Goal>& goal : goals_) goal->DrawParticle();			//ゴールのパーティクル
 	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();				//アイテムのパーティクル
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
@@ -1229,27 +1230,28 @@ void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
 void GamePlayScene::LoadModel()
 {
 	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("playeridle");			  //自機モデル
-	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");	  //自機弾モデル
-	modelPlayerDash_ = Model::LoadFromOBJ("playerdash");		  //自機ダッシュモデル
-	modelPlayerJump_ = Model::LoadFromOBJ("playerjump");		  //自機ジャンプモデル
-	modelPlayerAttack_ = Model::LoadFromOBJ("playerattack");	  //自機攻撃モデル
-	modelPlayerHit_ = Model::LoadFromOBJ("playerhit");			  //自機死亡モデル
-	modelEnemy1_ = Model::LoadFromOBJ("enemy1");				  //敵モデル
-	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");		  //敵弾モデル
-	modelBoss1_ = Model::LoadFromOBJ("boss1");					  //ステージ1のボスモデル
-	modelBossCore1_ = Model::LoadFromOBJ("core1");				  //ステージ1のボスの周りにあるコアのモデル
-	modelGoal_ = Model::LoadFromOBJ("sphere");					  //ゴールモデル
-	modelItemJump_ = Model::LoadFromOBJ("itemjump");			  //ジャンプ力強化アイテムモデル
-	modelItemHeal_ = Model::LoadFromOBJ("itemheal");			  //ライフ回復アイテムモデル
-	modelSpike_ = Model::LoadFromOBJ("spikeball");				  //トゲのモデル
-	modelBoxUpDown_ = Model::LoadFromOBJ("boxud");				  //上下する床のモデル
-	modelStageT_ = Model::LoadFromOBJ("skydomet");				  //チュートリアルステージモデル(天球)
-	modelStage1_ = Model::LoadFromOBJ("skydome");				  //ステージ1モデル(天球)
-	modelStage2_ = Model::LoadFromOBJ("skydome2");				  //ステージ2モデル(天球)
-	modelGround_ = Model::LoadFromOBJ("ground");				  //床のモデル
-	modelSphere_ = Model::LoadFromOBJ("sphere2");				  //球モデル
-	modelBox_ = Model::LoadFromOBJ("ground2");					  //AABB床モデル
+	modelPlayer_ = Model::LoadFromOBJ("playeridle");				//自機モデル
+	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");		//自機弾モデル
+	modelPlayerDash_ = Model::LoadFromOBJ("playerdash");			//自機ダッシュモデル
+	modelPlayerJump_ = Model::LoadFromOBJ("playerjump");			//自機ジャンプモデル
+	modelPlayerAttack_ = Model::LoadFromOBJ("playerattack");		//自機攻撃モデル
+	modelPlayerHit_ = Model::LoadFromOBJ("playerhit");				//自機死亡モデル
+	modelEnemy1_ = Model::LoadFromOBJ("enemy1");					//敵モデル
+	modelEnemyDanger_ = Model::LoadFromOBJ("enemydanger");			//危険な敵モデル
+	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");			//敵弾モデル
+	modelBoss1_ = Model::LoadFromOBJ("boss1");						//ステージ1のボスモデル
+	modelBossCore1_ = Model::LoadFromOBJ("core1");					//ステージ1のボスの周りにあるコアのモデル
+	modelGoal_ = Model::LoadFromOBJ("sphere");						//ゴールモデル
+	modelItemJump_ = Model::LoadFromOBJ("itemjump");				//ジャンプ力強化アイテムモデル
+	modelItemHeal_ = Model::LoadFromOBJ("itemheal");				//ライフ回復アイテムモデル
+	modelSpike_ = Model::LoadFromOBJ("spikeball");					//トゲのモデル
+	modelBoxUpDown_ = Model::LoadFromOBJ("boxud");					//上下する床のモデル
+	modelStageT_ = Model::LoadFromOBJ("skydomet");					//チュートリアルステージモデル(天球)
+	modelStage1_ = Model::LoadFromOBJ("skydome");					//ステージ1モデル(天球)
+	modelStage2_ = Model::LoadFromOBJ("skydome2");					//ステージ2モデル(天球)
+	modelGround_ = Model::LoadFromOBJ("ground");					//床のモデル
+	modelSphere_ = Model::LoadFromOBJ("sphere2");					//球モデル
+	modelBox_ = Model::LoadFromOBJ("ground2");						//AABB床モデル
 
 	//マップに登録する
 	models_.insert(std::make_pair("playeridle", modelPlayer_.get()));
@@ -1259,6 +1261,7 @@ void GamePlayScene::LoadModel()
 	models_.insert(std::make_pair("playerattack", modelPlayerAttack_.get()));
 	models_.insert(std::make_pair("playerhit", modelPlayerHit_.get()));
 	models_.insert(std::make_pair("enemy1", modelEnemy1_.get()));
+	models_.insert(std::make_pair("enemydanger", modelEnemyDanger_.get()));
 	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_.get()));
 	models_.insert(std::make_pair("boss1", modelBoss1_.get()));
 	models_.insert(std::make_pair("core1", modelBossCore1_.get()));
@@ -1274,12 +1277,12 @@ void GamePlayScene::LoadModel()
 	models_.insert(std::make_pair("sphere2", modelSphere_.get()));
 	models_.insert(std::make_pair("ground2", modelBox_.get()));
 
-	modelPlayerList_.playerModel = modelPlayer_.get();
-	modelPlayerList_.playerBullet = modelPlayerBullet_.get();
-	modelPlayerList_.playerHit = modelPlayerHit_.get();//ヒット
-	modelPlayerList_.playerMove = modelPlayerDash_.get();//ダッシュ
-	modelPlayerList_.playerJump = modelPlayerJump_.get();//ジャンプ
-	modelPlayerList_.playerAttack = modelPlayerAttack_.get();//攻撃
+	modelPlayerList_.playerModel = modelPlayer_.get();				//基本態勢
+	modelPlayerList_.playerBullet = modelPlayerBullet_.get();		//弾
+	modelPlayerList_.playerHit = modelPlayerHit_.get();				//ヒット
+	modelPlayerList_.playerMove = modelPlayerDash_.get();			//ダッシュ
+	modelPlayerList_.playerJump = modelPlayerJump_.get();			//ジャンプ
+	modelPlayerList_.playerAttack = modelPlayerAttack_.get();		//攻撃
 }
 
 void GamePlayScene::SettingTutorialEase(const int num, Sprite* s1, Sprite* s2,

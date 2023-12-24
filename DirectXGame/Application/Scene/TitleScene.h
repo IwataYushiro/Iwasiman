@@ -313,11 +313,11 @@ private://メンバ変数
 	//ライト
 	std::unique_ptr<LightGroup> lightGroup_ = nullptr;
 	//パーティクル
-	std::unique_ptr<Particle> particle1_ = nullptr;
-	std::unique_ptr<Particle> particle2_ = nullptr;
+	std::unique_ptr<Particle> particleFire_ = nullptr;//炎
+	std::unique_ptr<Particle> particleGoal_ = nullptr;//ゴール
 	//パーティクルマネージャー
-	std::unique_ptr<ParticleManager> pm1_ = nullptr;
-	std::unique_ptr<ParticleManager> pm2_ = nullptr;
+	std::unique_ptr<ParticleManager> pmFire_ = nullptr;//炎
+	std::unique_ptr<ParticleManager> pmGoal_ = nullptr;//ゴール
 
 	//開始時のポジション
 	DirectX::XMFLOAT3 startPos_;
