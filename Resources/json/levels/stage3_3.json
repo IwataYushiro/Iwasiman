@@ -107,7 +107,7 @@
             "transform": {
                 "translation": [
                     0.0,
-                    50.0,
+                    55.0,
                     10.0
                 ],
                 "rotation": [
@@ -205,30 +205,6 @@
                     -10.0
                 ],
                 "rotation": [
-                    179.99998474121094,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "file_name": "boxud",
-            "objecttype": "MOVEGROUND",
-            "objectpattern": "RSPHERERETURN"
-        },
-        {
-            "type": "MESH",
-            "name": "fallsphere.002",
-            "transform": {
-                "translation": [
-                    60.0,
-                    25.0,
-                    -10.0
-                ],
-                "rotation": [
                     0.0,
                     -0.0,
                     0.0
@@ -245,11 +221,11 @@
         },
         {
             "type": "MESH",
-            "name": "fallsphere.003",
+            "name": "fallsphere.002",
             "transform": {
                 "translation": [
-                    60.00090408325195,
-                    49.870357513427734,
+                    60.0,
+                    25.0,
                     -10.0
                 ],
                 "rotation": [
@@ -266,6 +242,126 @@
             "file_name": "boxud",
             "objecttype": "MOVEGROUND",
             "objectpattern": "RSPHERERETURN"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.003",
+            "transform": {
+                "translation": [
+                    60.00090408325195,
+                    55.0,
+                    -10.0
+                ],
+                "rotation": [
+                    179.99998474121094,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "RSPHERERETURN"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.002",
+            "transform": {
+                "translation": [
+                    60.0,
+                    -100.0,
+                    -1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    4.5,
+                    4.5,
+                    4.5
+                ]
+            },
+            "file_name": "enemydanger",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMYDANGER"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.003",
+            "transform": {
+                "translation": [
+                    60.0,
+                    41.71705627441406,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.004",
+            "transform": {
+                "translation": [
+                    60.0,
+                    45.712100982666016,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.005",
+            "transform": {
+                "translation": [
+                    60.0,
+                    41.57984161376953,
+                    4.206563949584961
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
         }
     ]
 }

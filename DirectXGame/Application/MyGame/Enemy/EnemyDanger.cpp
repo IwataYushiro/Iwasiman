@@ -90,8 +90,8 @@ void EnemyDanger::Update(const bool isStart)
 		//速度
 		XMFLOAT3 velocity;
 
-		const XMFLOAT3 velDefault = { 0.6f, 0.0f, 0.0f };//通常時スピード
-		const XMFLOAT3 velReverse = { -0.6f, 0.0f, 0.0f };//反転時スピード
+		const XMFLOAT3 velDefault = { 0.55f, 0.0f, 0.0f };//通常時スピード
+		const XMFLOAT3 velReverse = { -0.55f, 0.0f, 0.0f };//反転時スピード
 
 		//移動
 		if (!isReverse_)velocity = velDefault;
