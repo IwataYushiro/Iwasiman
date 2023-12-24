@@ -215,9 +215,9 @@
                     4.5
                 ]
             },
-            "file_name": "enemychase",
+            "file_name": "enemydanger",
             "objecttype": "ENEMY",
-            "objectpattern": "ENEMYCHASE"
+            "objectpattern": "ENEMYDANGER"
         }
     ]
 }

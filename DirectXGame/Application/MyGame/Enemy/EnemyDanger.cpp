@@ -1,4 +1,4 @@
-#include "EnemyChase.h"
+#include "EnemyDanger.h"
 #include <cassert>
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
@@ -11,19 +11,19 @@ using namespace DirectX;
 using namespace IwasiEngine;
 /*
 
-*	EnemyCore.cpp
+*	EnemyDanger.cpp
 
-*	追いかけてくる敵
+*	危険な敵
 */
 
-EnemyChase::~EnemyChase()
+EnemyDanger::~EnemyDanger()
 {
 }
 
-std::unique_ptr<EnemyChase> EnemyChase::Create(const Model* model,
+std::unique_ptr<EnemyDanger> EnemyDanger::Create(const Model* model,
 	const Player* player, GamePlayScene* gamescene, [[maybe_unused]] unsigned short level)
 {
-	std::unique_ptr<EnemyChase> ins = std::make_unique<EnemyChase>();
+	std::unique_ptr<EnemyDanger> ins = std::make_unique<EnemyDanger>();
 	if (ins == nullptr) return nullptr;
 
 	//初期化
@@ -41,7 +41,7 @@ std::unique_ptr<EnemyChase> EnemyChase::Create(const Model* model,
 	return ins;
 }
 
-bool EnemyChase::Initialize()
+bool EnemyDanger::Initialize()
 {
 	//初期化
 	if (!Object3d::Initialize()) return false;
@@ -61,12 +61,12 @@ bool EnemyChase::Initialize()
 	return true;
 }
 
-void EnemyChase::Reset()
+void EnemyDanger::Reset()
 {
 	Parameter();//各種パラメータだけ
 }
 
-void EnemyChase::Parameter()
+void EnemyDanger::Parameter()
 {
 	//ライフ初期値
 	const int32_t startLife = 5;
@@ -78,7 +78,7 @@ void EnemyChase::Parameter()
 
 }
 
-void EnemyChase::Update(const bool isStart)
+void EnemyDanger::Update(const bool isStart)
 {
 	//パーティクルマネージャーにカメラをセット
 	pmFire_->SetCamera(camera_);
@@ -122,7 +122,7 @@ void EnemyChase::Update(const bool isStart)
 	pmFire_->Update();		//パーティクル
 }
 
-void EnemyChase::Trans()
+void EnemyDanger::Trans()
 {
 	//ワールド座標
 	XMMATRIX world;
@@ -145,7 +145,7 @@ void EnemyChase::Trans()
 	Object3d::SetWorld(world);
 }
 
-const XMFLOAT3 EnemyChase::GetWorldPosition() const
+const XMFLOAT3 EnemyDanger::GetWorldPosition() const
 {
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -158,22 +158,22 @@ const XMFLOAT3 EnemyChase::GetWorldPosition() const
 	return worldPos;
 }
 
-void EnemyChase::Draw()
+void EnemyDanger::Draw()
 {
 	//モデルの描画
 	Object3d::Draw();
 }
 
-void EnemyChase::DrawParticle()
+void EnemyDanger::DrawParticle()
 {
 	pmFire_->Draw();
 }
 
-void EnemyChase::OnCollision([[maybe_unused]] const CollisionInfo& info, [[maybe_unused]] const unsigned short attribute, [[maybe_unused]] const unsigned short subAttribute)
+void EnemyDanger::OnCollision([[maybe_unused]] const CollisionInfo& info, [[maybe_unused]] const unsigned short attribute, [[maybe_unused]] const unsigned short subAttribute)
 {
 }
 
-void EnemyChase::UpdateParticleSkin()
+void EnemyDanger::UpdateParticleSkin()
 {
 	//炎プリセット
 	const ParticleManager::Preset fire =

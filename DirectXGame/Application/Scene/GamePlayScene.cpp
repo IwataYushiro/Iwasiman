@@ -1237,7 +1237,7 @@ void GamePlayScene::LoadModel()
 	modelPlayerAttack_ = Model::LoadFromOBJ("playerattack");		//自機攻撃モデル
 	modelPlayerHit_ = Model::LoadFromOBJ("playerhit");				//自機死亡モデル
 	modelEnemy1_ = Model::LoadFromOBJ("enemy1");					//敵モデル
-	modelEnemyChase_ = Model::LoadFromOBJ("enemychase");			//敵モデル
+	modelEnemyDanger_ = Model::LoadFromOBJ("enemydanger");			//危険な敵モデル
 	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");			//敵弾モデル
 	modelBoss1_ = Model::LoadFromOBJ("boss1");						//ステージ1のボスモデル
 	modelBossCore1_ = Model::LoadFromOBJ("core1");					//ステージ1のボスの周りにあるコアのモデル
@@ -1261,7 +1261,7 @@ void GamePlayScene::LoadModel()
 	models_.insert(std::make_pair("playerattack", modelPlayerAttack_.get()));
 	models_.insert(std::make_pair("playerhit", modelPlayerHit_.get()));
 	models_.insert(std::make_pair("enemy1", modelEnemy1_.get()));
-	models_.insert(std::make_pair("enemychase", modelEnemyChase_.get()));
+	models_.insert(std::make_pair("enemydanger", modelEnemyDanger_.get()));
 	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_.get()));
 	models_.insert(std::make_pair("boss1", modelBoss1_.get()));
 	models_.insert(std::make_pair("core1", modelBossCore1_.get()));

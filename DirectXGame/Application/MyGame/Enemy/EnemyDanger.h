@@ -9,17 +9,17 @@
 
 /*
 
-*	EnemyChase.h
+*	EnemyDanger.h
 
-*	追う敵のコア
+*	危険な敵
 
 */
-class EnemyChase :public BaseEnemy {
+class EnemyDanger :public BaseEnemy {
 public:
 	//デストラクタ
-	~EnemyChase();
+	~EnemyDanger();
 	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、パラメータレベル)
-	static std::unique_ptr<EnemyChase> Create(const Model* model = nullptr,const Player* player = nullptr,
+	static std::unique_ptr<EnemyDanger> Create(const Model* model = nullptr,const Player* player = nullptr,
 		GamePlayScene* gamescene = nullptr, unsigned short level = EL_Level0);
 
 	//初期化
@@ -49,7 +49,7 @@ public:
 private:
 
 	//半径
-	const float radius_ = 15.0f;
+	const float radius_ = 10.0f;
 	//ボス死亡
 	bool bossDead_ = false;
 
