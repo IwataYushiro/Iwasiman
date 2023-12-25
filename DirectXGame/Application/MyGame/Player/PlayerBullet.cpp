@@ -1,10 +1,12 @@
 #include "PlayerBullet.h"
 #include <cassert>
+#include "MyMath.h"
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
 
 using namespace DirectX;
 using namespace IwasiEngine;
+using namespace MyMath;
 /*
 
 *	PlayerBullet.cpp
@@ -45,6 +47,10 @@ bool PlayerBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity
 	//自機の弾
 	collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
+	//弾を撃つときの炎
+	particleFire_ = Particle::LoadFromParticleTexture("particle2.png");
+	pmFire_ = ParticleManager::Create();
+	pmFire_->SetParticleModel(particleFire_.get());
 
 	return true;
 }
@@ -52,12 +58,17 @@ bool PlayerBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity
 void PlayerBullet::Reset() { isDead_ = true; }
 //更新
 void PlayerBullet::Update() {
+
+	//パーティクルマネージャーにカメラをセット
+	pmFire_->SetCamera(camera_);
 	//座標を移動させる
 	XMFLOAT3 pos = Object3d::GetPosition();
 
 	pos.x += velocity_.x;
 	pos.y += velocity_.y;
 	pos.z += velocity_.z;
+
+	UpdateParticle();
 	//座標のセット
 	Object3d::SetPosition(pos);
 	//行列更新
@@ -81,6 +92,7 @@ void PlayerBullet::Update() {
 	//更新
 	camera_->Update();	//カメラ
 	Object3d::Update();	//3Dオブジェクト
+	pmFire_->Update();
 	//時間経過で死亡
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
@@ -91,6 +103,11 @@ void PlayerBullet::Update() {
 void PlayerBullet::Draw() {
 	//モデルの描画
 	Object3d::Draw();
+}
+
+void PlayerBullet::DrawParticle()
+{
+	pmFire_->Draw();
 }
 
 //衝突を検出したら呼び出されるコールバック関数
@@ -117,4 +134,24 @@ const XMFLOAT3 PlayerBullet::GetWorldPosition() const{
 	worldPos.z = Object3d::GetPosition().z;
 
 	return worldPos;
+}
+
+void PlayerBullet::UpdateParticle()
+{
+	//パーティクル
+	const ParticleManager::Preset fire =	//炎プリセット
+	{
+		particleFire_.get(),
+		position_,//使わない
+		{ 0.0f ,2.0f,0.0f },
+		velocity_,//弾の速度と同じ
+		{ 0.0f,0.001f,0.0f },
+		3,
+		{ 1.0f, 0.0f },
+		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
+		{0.0f,0.0f,0.0f,1.0f}
+	};
+	
+	pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
+		fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 }

@@ -221,7 +221,7 @@ void Player::Move() {
 	//パーティクル
 	const XMFLOAT3 startPosRight = { position_.x - 2.0f,position_.y + 1.0f ,position_.z };
 	const XMFLOAT3 startPosLeft = { position_.x + 2.0f,position_.y + 1.0f ,position_.z };
-	const ParticleManager::Preset fire =	//煙プリセット
+	const ParticleManager::Preset fire =	//炎プリセット
 	{
 		particleFire_.get(),
 		position_,//使わない
