@@ -28,7 +28,8 @@ private:
 public:
 	//生成(初期座標、速度、使用モデル)
 	static std::unique_ptr<PlayerBullet> Create
-	(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model = nullptr);
+	(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model = nullptr,
+		Particle* particle = nullptr, ParticleManager* pm = nullptr);
 	//初期化(初期座標、速度)
 	bool Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity);
 	//リセット処理
@@ -62,10 +63,11 @@ private://メンバ変数
 	//半径
 	float radius_ = 4.0f;
 
+	//自機からもらう
 	//パーティクル
-	std::unique_ptr<Particle> particleFire_ = nullptr;
+	Particle* particleFire_ = nullptr;
 	//パーティクルマネージャー
-	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
+	ParticleManager* pmFire_ = nullptr;
 
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }

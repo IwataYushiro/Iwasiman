@@ -113,6 +113,10 @@ bool Player::Initialize() {
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetParticleModel(particleFire_.get());
+	//弾を撃つときの炎
+	particleBullet_ = Particle::LoadFromParticleTexture("particle2.png");
+	pmBullet_ = ParticleManager::Create();
+	pmBullet_->SetParticleModel(particleBullet_.get());
 
 	//コライダー追加
 	const XMVECTOR colliderOffset = { 0.0f,0.0f,0.0f,0.0f };
@@ -151,6 +155,7 @@ void Player::Update(const bool isBack, const bool isAttack, const bool isStart) 
 	//パーティクルマネージャーにカメラをセット
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
+	pmBullet_->SetCamera(camera_);
 
 	if (!isStart)//スタート演出時は何もしない
 	{
@@ -587,8 +592,8 @@ void Player::Attack() {
 		const XMFLOAT3 bulletPositionOffsetRight = { position_.x+0.8f,position_.y + 3.0f,position_.z };
 		const XMFLOAT3 bulletPositionOffsetLeft = { position_.x - 0.8f,position_.y + 3.0f,position_.z };
 		std::unique_ptr<PlayerBullet> newBullet;
-		if(isRight_)newBullet = PlayerBullet::Create(bulletPositionOffsetRight, velocity, modelBullet_);
-		else newBullet = PlayerBullet::Create(bulletPositionOffsetLeft, velocity, modelBullet_);
+		if(isRight_)newBullet = PlayerBullet::Create(bulletPositionOffsetRight, velocity, modelBullet_,particleBullet_.get(), pmBullet_.get());
+		else newBullet = PlayerBullet::Create(bulletPositionOffsetLeft, velocity, modelBullet_, particleBullet_.get(), pmBullet_.get());
 		newBullet->SetCamera(camera_);
 		newBullet->Update();
 

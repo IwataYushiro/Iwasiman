@@ -15,7 +15,8 @@ using namespace MyMath;
 
 */
 
-std::unique_ptr<PlayerBullet> PlayerBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model)
+std::unique_ptr<PlayerBullet> PlayerBullet::Create(const XMFLOAT3& position, const XMFLOAT3& velocity,
+	const Model* model, Particle* particle, ParticleManager* pm)
 {
 	//インスタンス生成
 	std::unique_ptr<PlayerBullet> ins = std::make_unique<PlayerBullet>();
@@ -29,6 +30,9 @@ std::unique_ptr<PlayerBullet> PlayerBullet::Create(const XMFLOAT3& position, con
 	}
 	//モデルのセット
 	if (model) ins->SetModel(model);
+	//弾を撃つときの炎
+	if (particle)ins->particleFire_ = particle;
+	if (pm)ins->pmFire_ = pm;
 	return ins;
 }
 
@@ -47,10 +51,6 @@ bool PlayerBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity
 	//自機の弾
 	collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
-	//弾を撃つときの炎
-	particleFire_ = Particle::LoadFromParticleTexture("particle2.png");
-	pmFire_ = ParticleManager::Create();
-	pmFire_->SetParticleModel(particleFire_.get());
 
 	return true;
 }
@@ -68,7 +68,7 @@ void PlayerBullet::Update() {
 	pos.y += velocity_.y;
 	pos.z += velocity_.z;
 
-	UpdateParticle();
+	
 	//座標のセット
 	Object3d::SetPosition(pos);
 	//行列更新
@@ -89,6 +89,8 @@ void PlayerBullet::Update() {
 	matWorld = matScale * matRot * matTrans;
 
 	Object3d::SetWorld(matWorld);
+	
+	UpdateParticle();//パーティクル更新
 	//更新
 	camera_->Update();	//カメラ
 	Object3d::Update();	//3Dオブジェクト
@@ -141,10 +143,10 @@ void PlayerBullet::UpdateParticle()
 	//パーティクル
 	const ParticleManager::Preset fire =	//炎プリセット
 	{
-		particleFire_.get(),
-		position_,//使わない
+		particleFire_,
+		position_,
 		{ 0.0f ,2.0f,0.0f },
-		velocity_,//弾の速度と同じ
+		{-velocity_.x,velocity_.y,velocity_.z},//弾の速度と同じ
 		{ 0.0f,0.001f,0.0f },
 		3,
 		{ 1.0f, 0.0f },

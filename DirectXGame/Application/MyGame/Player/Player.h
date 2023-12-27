@@ -203,10 +203,11 @@ private:
 	//パーティクル
 	std::unique_ptr<Particle> particleFire_ = nullptr;
 	std::unique_ptr<Particle> particleSmoke_ = nullptr;
+	std::unique_ptr<Particle> particleBullet_ = nullptr;
 	//パーティクルマネージャー
 	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
 	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
-
+	std::unique_ptr<ParticleManager> pmBullet_ = nullptr;
 	//ゲームシーン
 	GamePlayScene* gameScene_;
 	//シェイク機能
