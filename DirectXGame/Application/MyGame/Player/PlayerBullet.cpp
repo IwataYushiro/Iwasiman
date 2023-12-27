@@ -145,12 +145,12 @@ void PlayerBullet::UpdateParticle()
 	{
 		particleFire_,
 		position_,
-		{ 0.0f ,2.0f,0.0f },
+		{ 0.05f ,2.0f,0.05f },
 		{-velocity_.x,velocity_.y,velocity_.z},//’e‚Ì‘¬“x‚Æ“¯‚¶
 		{ 0.0f,0.001f,0.0f },
 		3,
-		{ 1.0f, 0.0f },
-		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
+		{ 2.0f, 0.0f },
+		{0.0f,MyMath::RandomMTFloat(0.0f,0.2f),MyMath::RandomMTFloat(0.9f,1.0f),1.0f },
 		{0.0f,0.0f,0.0f,1.0f}
 	};
 	
