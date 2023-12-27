@@ -92,7 +92,7 @@ void PlayerBullet::Update() {
 	//更新
 	camera_->Update();	//カメラ
 	Object3d::Update();	//3Dオブジェクト
-	pmFire_->Update();
+	pmFire_->Update();	//パーティクル
 	//時間経過で死亡
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;
