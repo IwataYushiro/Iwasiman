@@ -95,7 +95,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		};
 
 	private://定数
-		static const int VERTEX_COUNT = 2048;		// 頂点数
+		static const uint32_t VERTEX_COUNT = 2048;		// 頂点数
 
 	public://メンバ関数
 

@@ -38,9 +38,6 @@ public:
 	//描画
 	void Draw();
 
-	//パーティクル描画
-	void DrawParticle();
-
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
 	void OnCollision(const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)override;
 
@@ -60,17 +57,8 @@ private:
 	//半径
 	float radius_ = 4.0f;
 
-	//パーティクル
-	std::unique_ptr<Particle> particleFire_ = nullptr;
-	//パーティクルマネージャー
-	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
-
 public: //アクセッサ、インライン関数
 	//死んだかどうか
 	bool IsDead() const { return isDead_; }
-
-private://カプセル化メンバ関数
-	//パーティクル更新
-	void UpdateParticle();
 
 };

@@ -18,8 +18,6 @@ using namespace IwasiEngine;
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>
-const float ParticleManager::RADIUS = 5.0f;				// 底面の半径
-const float ParticleManager::PRIZM_HEIGHT = 8.0f;			// 柱の高さ
 ID3D12Device* ParticleManager::device_ = nullptr;
 ID3D12GraphicsCommandList* ParticleManager::cmdList_ = nullptr;
 
