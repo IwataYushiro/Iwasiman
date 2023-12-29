@@ -61,7 +61,7 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum_ == SL_Stage1_Area1)LoadLVData("test");
+	if (stageNum_ == SL_Stage1_Area1)LoadLVData("tstage01");
 	else if (stageNum_ == SL_Stage1_Area2)LoadLVData("stage2");
 	else if (stageNum_ == SL_Stage1_Area3)LoadLVData("stage3_3");
 	else if (stageNum_ == SL_Stage1_AreaBoss)LoadLVData("stageboss1");
