@@ -58,7 +58,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		// Y軸回りビルボード行列
 		XMMATRIX matBillboardY_ = {};
 		// 視点座標
-		const XMFLOAT3& presetEye_ = { -10.0f, 0.0f, -100.0f };//プリセット
+		const XMFLOAT3& presetEye_ = { -10.0f, 1.0f, -100.0f };//プリセット
 		XMFLOAT3 eye_ = { presetEye_.x,presetEye_.y,presetEye_.z };
 		// 注視点座標
 		const XMFLOAT3& presetTarget_ = { -10.0f,0.0f,0.0f };//プリセット
@@ -86,12 +86,14 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		const XMFLOAT3& GetEye()const { return eye_; }
 		//視点セット
 		void SetEye(const XMFLOAT3& eye);
-
+		//初期視点ゲット
+		const XMFLOAT3& GetStartEye()const { return presetEye_; }
 		//注視点ゲット
 		const XMFLOAT3& GetTarget()const { return target_; }
 		//注視点セット
 		void SetTarget(const XMFLOAT3& target);
-
+		//初期注視点ゲット
+		const XMFLOAT3& GetStartTarget()const { return presetTarget_; }
 		//上方向ベクトルゲット
 		const XMFLOAT3& GetUp()const { return up_; }
 		//上方向ベクトルセット
