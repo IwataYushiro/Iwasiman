@@ -40,6 +40,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 	const unsigned short SUBCOLLISION_ATTR_ENEMY_GUARD = (0b1 << 15) + 201;					//防御型
 	const unsigned short SUBCOLLISION_ATTR_ENEMY_SPEED = (0b1 << 15) + 202;					//スピード型
 	const unsigned short SUBCOLLISION_ATTR_ENEMY_DEATH = (0b1 << 15) + 203;					//当たるとほぼ死亡
+	const unsigned short SUBCOLLISION_ATTR_ENEMY_NOTSTAGEBOSS = (0b1 << 15) + 203;			//ボス敵だけどステージに出るとき
 
 	const unsigned short SUBCOLLISION_ATTR_ENEMY_ISDEAD = (0b1 << 15) + 299;				//既に死んだ
 

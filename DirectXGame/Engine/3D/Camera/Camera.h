@@ -58,10 +58,10 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		// Y軸回りビルボード行列
 		XMMATRIX matBillboardY_ = {};
 		// 視点座標
-		const XMFLOAT3& presetEye_ = { -10.0f, 1.0f, -100.0f };//プリセット
+		const XMFLOAT3& presetEye_ = { -20.0f, 1.0f, -100.0f };//プリセット
 		XMFLOAT3 eye_ = { presetEye_.x,presetEye_.y,presetEye_.z };
 		// 注視点座標
-		const XMFLOAT3& presetTarget_ = { -10.0f,0.0f,0.0f };//プリセット
+		const XMFLOAT3& presetTarget_ = { -20.0f,0.0f,0.0f };//プリセット
 		XMFLOAT3 target_ = { presetTarget_.x,presetTarget_.y,presetTarget_.z };
 		// 上方向ベクトル
 		const XMFLOAT3& presetUp_ = { 0.0f,1.0f,0.0f };//プリセット

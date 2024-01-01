@@ -219,10 +219,7 @@ void Player::Move() {
 	XMFLOAT3 rot = Object3d::GetRotation();
 	XMFLOAT3 cmove = camera_->GetEye();
 	XMFLOAT3 tmove = camera_->GetTarget();
-	//スピード
-	const float moveSpeed = 0.5f;//通常時
-	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
-
+	
 	//パーティクル
 	const XMFLOAT3 startPosRight = { position_.x - 2.0f,position_.y + 1.0f ,position_.z };
 	const XMFLOAT3 startPosLeft = { position_.x + 2.0f,position_.y + 1.0f ,position_.z };

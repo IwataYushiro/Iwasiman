@@ -58,54 +58,20 @@
                     0.0
                 ],
                 "scaling": [
-                    3.184230089187622,
-                    8.763559341430664,
-                    3.6212449073791504
+                    7.0,
+                    7.0,
+                    7.0
                 ]
             },
-            "file_name": "skydome"
-        },
-        {
-            "type": "MESH",
-            "name": "Plane",
-            "transform": {
-                "translation": [
-                    -14.207741737365723,
-                    128.3446044921875,
-                    -10.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0989434719085693,
-                    0.8443718552589417,
-                    1.0
-                ]
-            },
-            "file_name": "ground",
-            "collider": {
-                "type": "BOX",
-                "center": [
-                    10.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    200.0,
-                    200.0,
-                    2.0
-                ]
-            }
+            "file_name": "skydome",
+            "objecttype": "SKYDOME"
         },
         {
             "type": "MESH",
             "name": "Plane.001",
             "transform": {
                 "translation": [
-                    -12.523651123046875,
+                    22.601001739501953,
                     -1.9930801391601562,
                     -10.0
                 ],
@@ -115,8 +81,8 @@
                     0.0
                 ],
                 "scaling": [
-                    1.0832507610321045,
-                    0.3855021595954895,
+                    0.646443247795105,
+                    0.5058566331863403,
                     1.0
                 ]
             },
@@ -137,33 +103,11 @@
         },
         {
             "type": "MESH",
-            "name": "Cube",
-            "transform": {
-                "translation": [
-                    60.0,
-                    100.29376220703125,
-                    0.005191326141357422
-                ],
-                "rotation": [
-                    180.0,
-                    -0.0,
-                    -0.0
-                ],
-                "scaling": [
-                    -23.2076358795166,
-                    -21.08832359313965,
-                    -21.12452507019043
-                ]
-            },
-            "file_name": "sphere2"
-        },
-        {
-            "type": "MESH",
             "name": "Goal",
             "transform": {
                 "translation": [
-                    0.0,
-                    150.0,
+                    60.0,
+                    250.0,
                     0.0
                 ],
                 "rotation": [
@@ -186,8 +130,8 @@
             "transform": {
                 "translation": [
                     60.0,
-                    -20.0,
-                    -8.0
+                    -30.0,
+                    -9.0
                 ],
                 "rotation": [
                     0.0,
@@ -200,80 +144,8 @@
                     1.0
                 ]
             },
-            "file_name": "player",
+            "file_name": "playerdash",
             "objecttype": "PLAYER"
-        },
-        {
-            "type": "MESH",
-            "name": "ItemJump",
-            "transform": {
-                "translation": [
-                    60.0,
-                    10.0,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "itemjump",
-            "objecttype": "ITEM",
-            "objectpattern": "JUMP"
-        },
-        {
-            "type": "MESH",
-            "name": "ItemHeal",
-            "transform": {
-                "translation": [
-                    60.0,
-                    20.0,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "itemheal",
-            "objecttype": "ITEM",
-            "objectpattern": "HEAL"
-        },
-        {
-            "type": "MESH",
-            "name": "ItemHeal.001",
-            "transform": {
-                "translation": [
-                    0.0,
-                    69.08389282226562,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "itemheal",
-            "objecttype": "ITEM",
-            "objectpattern": "HEAL"
         },
         {
             "type": "MESH",
@@ -297,40 +169,16 @@
             },
             "file_name": "boss1",
             "objecttype": "ENEMY",
-            "objectpattern": "BOSS1"
-        },
-        {
-            "type": "MESH",
-            "name": "Enemy1.001",
-            "transform": {
-                "translation": [
-                    60.0,
-                    71.55979919433594,
-                    -8.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    -90.00000762939453
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "enemy1",
-            "objecttype": "ENEMY",
-            "objectpattern": "ENEMY1"
+            "objectpattern": "NOTBOSS1"
         },
         {
             "type": "MESH",
             "name": "Enemy1.002",
             "transform": {
                 "translation": [
-                    60.0,
-                    101.38885498046875,
-                    28.986793518066406
+                    0.0,
+                    1.930887222290039,
+                    20.0
                 ],
                 "rotation": [
                     0.0,
@@ -345,16 +193,16 @@
             },
             "file_name": "enemy1",
             "objecttype": "ENEMY",
-            "objectpattern": "ENEMY1"
+            "objectpattern": "E2P"
         },
         {
             "type": "MESH",
             "name": "Enemy1.003",
             "transform": {
                 "translation": [
-                    0.0,
-                    16.344200134277344,
-                    -8.0
+                    60.0,
+                    36.664031982421875,
+                    -0.1446971893310547
                 ],
                 "rotation": [
                     0.0,
@@ -369,7 +217,256 @@
             },
             "file_name": "enemy1",
             "objecttype": "ENEMY",
-            "objectpattern": "ENEMY1"
+            "objectpattern": "E1G"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.004",
+            "transform": {
+                "translation": [
+                    60.0,
+                    12.908402442932129,
+                    -0.1446971893310547
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "E2G"
+        },
+        {
+            "type": "MESH",
+            "name": "Plane.002",
+            "transform": {
+                "translation": [
+                    -1.138418197631836,
+                    107.66455078125,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    0.3861621022224426,
+                    0.44446370005607605,
+                    1.0
+                ]
+            },
+            "file_name": "ground",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    200.0,
+                    200.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.001",
+            "transform": {
+                "translation": [
+                    0.0,
+                    85.7455825805664,
+                    20.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "E2G"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.005",
+            "transform": {
+                "translation": [
+                    0.0,
+                    132.25547790527344,
+                    20.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "E2S"
+        },
+        {
+            "type": "MESH",
+            "name": "Plane.003",
+            "transform": {
+                "translation": [
+                    22.601001739501953,
+                    190.0,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    0.646443247795105,
+                    0.19667905569076538,
+                    1.0
+                ]
+            },
+            "file_name": "ground",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    200.0,
+                    200.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Plane.004",
+            "transform": {
+                "translation": [
+                    67.47869873046875,
+                    250.0,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    0.24002668261528015,
+                    0.19667905569076538,
+                    1.0
+                ]
+            },
+            "file_name": "ground",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    200.0,
+                    200.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "ICO球",
+            "transform": {
+                "translation": [
+                    60.0,
+                    175.0,
+                    -9.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "ICO球.001",
+            "transform": {
+                "translation": [
+                    60.0,
+                    185.0,
+                    -9.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "ICO球.002",
+            "transform": {
+                "translation": [
+                    60.0,
+                    180.0,
+                    -9.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
         }
     ]
 }

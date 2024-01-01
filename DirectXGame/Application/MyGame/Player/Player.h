@@ -194,6 +194,9 @@ private:
 	bool isAlive_ = true;
 	//死亡フラグ
 	bool isDead_ = false;
+	//スピード
+	const float moveSpeed = 0.5f;//通常時
+	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
 
 	//ライフ
 	int life_;
@@ -286,10 +289,12 @@ public: //アクセッサ、インライン関数
 	//ライフセット
 	void SetLife(const int life) { this->life_ = life; }
 	//ライフゲット
-	const int& GetLife()const { return life_; }
+	const int GetLife()const { return life_; }
 	//ゲームシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
-
+	//スピードゲット
+	const float GetSpeedMove()const { return moveSpeed; }				//通常移動スピード
+	const float GetSpeedDash()const { return moveSpeed * dashSpeed; }	//ダッシュ移動スピード
 
 private://カプセル化メンバ関数
 	//生存時
