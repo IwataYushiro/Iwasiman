@@ -128,8 +128,8 @@ public:
 	//ボスが死んだかどうか
 	bool BossDead()const override{ return bossDead_; }
 private:
-	//ベジェ曲線の動きを共通化(カメラアイ連動用。連動しない場合は引数は0で固定)
-	void UpdateBezierMove(const float cameraEyeMove = 0.0f);
+	//ベジェ曲線の動きを共通化(デフォルト引数はボスステージの場合)
+	void UpdateBezierMove(const bool notStageBoss = false);
 	//X座標をプレイヤーの動きに連動させるための関数(通常ステージ限定)
-	void UpdateSynchronizePlayerMove(bool notStageBoss);
+	void UpdateSynchronizePlayerMove(const bool notStageBoss);
 };
