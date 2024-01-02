@@ -19,11 +19,11 @@ using namespace IwasiEngine;
 */
 
 EnemyBoss::~EnemyBoss() {
-	
+
 }
 
 std::unique_ptr<EnemyBoss> EnemyBoss::Create(const Model* model, const Model* bullet,
-	const Player* player, GamePlayScene* gamescene)
+	const Player* player, GamePlayScene* gamescene, const bool isNotBossStage)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyBoss> ins = std::make_unique<EnemyBoss>();
@@ -42,6 +42,9 @@ std::unique_ptr<EnemyBoss> EnemyBoss::Create(const Model* model, const Model* bu
 	if (player)ins->SetPlayer(player);
 	//ゲームシーンのセット
 	if (gamescene)ins->SetGameScene(gamescene);
+	//ボスステージじゃない場合カメラの動きと連動させる
+	if (isNotBossStage)ins->collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_NOTSTAGEBOSS);
+	else ins->collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
 	return ins;
 }
 
@@ -49,7 +52,10 @@ std::unique_ptr<EnemyBoss> EnemyBoss::Create(const Model* model, const Model* bu
 bool EnemyBoss::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
+	//入力情報を取得
+	input_ = Input::GetInstance();
 
+	//ベジェ曲線情報
 	startCount_ = std::chrono::steady_clock::now();	//開始時間
 	nowCount_ = std::chrono::steady_clock::now();		//現在時間
 	elapsedCount_;	//経過時間 経過時間=現在時間-開始時間
@@ -58,7 +64,7 @@ bool EnemyBoss::Initialize() {
 	SetCollider(new SphereCollider(XMVECTOR(), this->radius_));
 	//敵本体
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
-	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
+
 	//各種パラメータ設定
 	Parameter();
 
@@ -231,15 +237,14 @@ void EnemyBoss::DrawParticle()
 //状態変化用の更新関数
 //接近
 void EnemyBoss::UpdateApproach() {
-	//速度
-	XMFLOAT3 velocity;
-	//登場速度
-	const XMFLOAT3 approachSpeed = { 0.0f,0.0f,-0.5f };
-	//移動
-	velocity = approachSpeed;
-	position_.x += velocity.x;
-	position_.y += velocity.y;
-	position_.z += velocity.z;
+
+
+	//通常ステージの場合自機とシンクロ
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_NOTSTAGEBOSS)
+	{
+		UpdateSynchronizePlayerMove(true);
+	}
+	else UpdateSynchronizePlayerMove(false);//ボスステージの場合シンクロしない
 
 	//発射タイマーカウントダウン
 	fireTimer_--;
@@ -259,7 +264,7 @@ void EnemyBoss::UpdateApproach() {
 
 		//ベジェ曲線の値
 		const XMFLOAT3 startBezier3Pos = { position_.x ,10.0f,moveAttackPhasePosZ };
-		const XMFLOAT3 point1Bezier3Pos = { -10.0f ,-20.0f,moveAttackPhasePosZ };
+		const XMFLOAT3 point1Bezier3Pos = { -10.0f,-20.0f,moveAttackPhasePosZ };
 		const XMFLOAT3 point2Bezier3Pos = { 10.0f ,40.0f,moveAttackPhasePosZ };
 		const XMFLOAT3 endBezier3Pos = { 30.0f ,10.0f,moveAttackPhasePosZ };
 
@@ -275,54 +280,13 @@ void EnemyBoss::UpdateApproach() {
 //攻撃
 void EnemyBoss::UpdateAttack() {
 
-	//時間
-	//現在時間を取得する
-	nowCount_ = std::chrono::steady_clock::now();
-	//前回記録からの経過時間を取得する
-	elapsedCount_ = std::chrono::duration_cast<std::chrono::microseconds>(nowCount_ - startCount_);
-
-	const float micro = 1'000'000.0f;//マイクロ秒
-	float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / micro;//マイクロ秒を秒に単位変換
+	//通常ステージの場合自機とシンクロ
+	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_NOTSTAGEBOSS)
+	{
+		UpdateBezierMove(true);
+	}
+	else UpdateBezierMove(false);//ボスステージの場合シンクロしない
 	
-	//0~1
-	const float timeRateMax = 1.0f;
-	timeRate_ = min(elapsed / maxTime_, timeRateMax);
-
-	if (isReverse_)	//反転中
-	{
-		position_ = Bezier3(end_, point2_, point1_, start_, timeRate_);
-	}
-	else			//通常時
-	{
-		position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
-	}
-
-	//ベジェ曲線の値
-	const XMFLOAT3 startBezier3Pos = { -30.0f ,10.0f,100.0f };
-	const XMFLOAT3 point1Bezier3Pos = { -10.0f ,-20.0f,100.0f };
-	const XMFLOAT3 point2Bezier3Pos = { 10.0f ,40.0f,100.0f };
-	const XMFLOAT3 endBezier3Pos = { 30.0f ,10.0f,100.0f };
-	//指定の位置に到達したら反転
-	if (position_.x >= end_.x) {
-		//制御点
-		start_ = startBezier3Pos;
-		point1_ = point1Bezier3Pos;
-		point2_ = point2Bezier3Pos;
-		end_ = endBezier3Pos;
-
-		isReverse_ = true;
-		startCount_ = std::chrono::steady_clock::now();
-	}
-	if (position_.x <= start_.x) {
-		//制御点
-		start_ = startBezier3Pos;
-		point1_ = point1Bezier3Pos;
-		point2_ = point2Bezier3Pos;
-		end_ = endBezier3Pos;
-
-		isReverse_ = false;
-		startCount_ = std::chrono::steady_clock::now();
-	}
 
 	//発射タイマーカウントダウン
 	fireTimer_--;
@@ -360,7 +324,7 @@ const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const 
 {
 	//三点ベジェ曲線の式
 	//B(t) = (1-t)^3 * P0 + 3(1-t)^2 * t * P1 + 3(1-t)*t^2 * P2 + t^3 * P3 0<=t<=1
-	
+
 	XMFLOAT3 ans;
 	ans.x = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.x + 3.0f * (1.0f - t) * (1.0f - t) * t *
 		p1.x + 3.0f * (1.0f - t) * t * t * p2.x + t * t * t * p3.x;
@@ -368,13 +332,13 @@ const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const 
 		p1.y + 3.0f * (1.0f - t) * t * t * p2.y + t * t * t * p3.y;
 	ans.z = (1.0f - t) * (1.0f - t) * (1.0f - t) * p0.z + 3.0f * (1.0f - t) * (1.0f - t) * t *
 		p1.z + 3.0f * (1.0f - t) * t * t * p2.z + t * t * t * p3.z;
-	
+
 	return ans;
 }
 
 
 //ワールド座標を取得
-const XMFLOAT3 EnemyBoss::GetWorldPosition() const{
+const XMFLOAT3 EnemyBoss::GetWorldPosition() const {
 
 	//ワールド座標を取得
 	XMFLOAT3 worldPos;
@@ -389,7 +353,7 @@ const XMFLOAT3 EnemyBoss::GetWorldPosition() const{
 void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない
-	
+
 	//現在ライフによる判定処理の基準となるライフ
 	const int hitLife = 1;
 	//煙プリセット
@@ -432,7 +396,7 @@ void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 				pmSmoke_->Update();
-				
+
 			}
 			else//1以下の場合
 			{
@@ -448,4 +412,128 @@ void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 
 	}
 
+}
+
+void EnemyBoss::UpdateBezierMove(const bool notStageBoss)
+{
+	if (notStageBoss)//通常ステージの場合は上下移動
+	{
+		//ダッシュ
+		if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
+		{
+			//左はA、右はD
+			if (input_->PushKey(DIK_A))position_.x -= player_->GetSpeedDash();
+			else if (input_->PushKey(DIK_D))position_.x += player_->GetSpeedDash();
+		}
+		else//通常移動
+		{
+			//左はA、右はD
+			if (input_->PushKey(DIK_A))position_.x -= player_->GetSpeedMove();
+			else if (input_->PushKey(DIK_D))position_.x += player_->GetSpeedMove();
+		}
+
+		//速度
+		XMFLOAT3 velocity;
+		//登場速度
+		const XMFLOAT3 approachSpeed = { 0.0f,0.5f,0.0f };
+		//移動
+		velocity = approachSpeed;
+		position_.x += velocity.x;
+		if(isReverse_)position_.y -= velocity.y;
+		else position_.y += velocity.y;
+		position_.z += velocity.z;
+		//この位置に達したら反転(上下)
+		const XMFLOAT2 reverseUpDownPosY = { 30.0f,0.0f };
+		//指定の位置に到達したら反転
+		if (position_.y >= reverseUpDownPosY.x) isReverse_ = true;	//上から下へ
+		if (position_.y <= reverseUpDownPosY.y) isReverse_ = false;	//下から上へ
+	}
+	else//ベジェ曲線はボス戦用に
+	{
+		//ベジェ曲線の値
+		const XMFLOAT3 startBezier3Pos = { -30.0f,10.0f,100.0f };
+		const XMFLOAT3 point1Bezier3Pos = { -10.0f,-20.0f,100.0f };
+		const XMFLOAT3 point2Bezier3Pos = { 10.0f,40.0f,100.0f };
+		const XMFLOAT3 endBezier3Pos = { 30.0f,10.0f,100.0f };
+		//時間
+		//現在時間を取得する
+		nowCount_ = std::chrono::steady_clock::now();
+		//前回記録からの経過時間を取得する
+		elapsedCount_ = std::chrono::duration_cast<std::chrono::microseconds>(nowCount_ - startCount_);
+
+		const float micro = 1'000'000.0f;//マイクロ秒
+		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / micro;//マイクロ秒を秒に単位変換
+
+		//0~1
+		const float timeRateMax = 1.0f;
+		timeRate_ = min(elapsed / maxTime_, timeRateMax);
+
+		if (isReverse_)	//反転中
+		{
+			position_ = Bezier3(end_, point2_, point1_, start_, timeRate_);
+		}
+		else			//通常時
+		{
+			position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
+		}
+
+		//指定の位置に到達したら反転
+		if (position_.x >= end_.x) {
+			//制御点
+			start_ = startBezier3Pos;
+			point1_ = point1Bezier3Pos;
+			point2_ = point2Bezier3Pos;
+			end_ = endBezier3Pos;
+
+			isReverse_ = true;
+			startCount_ = std::chrono::steady_clock::now();
+		}
+		if (position_.x <= start_.x) {
+			//制御点
+			start_ = startBezier3Pos;
+			point1_ = point1Bezier3Pos;
+			point2_ = point2Bezier3Pos;
+			end_ = endBezier3Pos;
+
+			isReverse_ = false;
+			startCount_ = std::chrono::steady_clock::now();
+		}
+	}
+}
+
+void EnemyBoss::UpdateSynchronizePlayerMove(const bool notStageBoss)
+{
+	//速度
+	XMFLOAT3 velocity;
+
+	//登場速度
+	const XMFLOAT3 approachSpeed = { 0.0f,0.0f,-0.5f };
+	//移動
+	velocity = approachSpeed;
+	if (notStageBoss)//通常ステージの場合
+	{
+		//ダッシュ
+		if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
+		{
+			//左はA、右はD
+			if (input_->PushKey(DIK_A))velocity.x -= player_->GetSpeedDash();
+			else if (input_->PushKey(DIK_D))velocity.x += player_->GetSpeedDash();
+		}
+		else//通常移動
+		{
+			//左はA、右はD
+			if (input_->PushKey(DIK_A))velocity.x -= player_->GetSpeedMove();
+			else if (input_->PushKey(DIK_D))velocity.x += player_->GetSpeedMove();
+		}
+		position_.x += velocity.x;
+		position_.y += velocity.y;
+		position_.z += velocity.z;
+	}
+	else//ボスステージの場合シンクロしない
+	{
+		//移動
+		position_.x += velocity.x;
+		position_.y += velocity.y;
+		position_.z += velocity.z;
+	}
 }

@@ -84,8 +84,8 @@
             "transform": {
                 "translation": [
                     0.0,
-                    25.0,
-                    30.0
+                    160.0,
+                    20.0
                 ],
                 "rotation": [
                     0.0,
@@ -348,7 +348,7 @@
                     0.0
                 ],
                 "rotation": [
-                    90.00000762939453,
+                    0.0,
                     -0.0,
                     0.0
                 ],
@@ -360,6 +360,150 @@
             },
             "file_name": "skydomet",
             "objecttype": "SKYDOME"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.002",
+            "transform": {
+                "translation": [
+                    60.0,
+                    80.0,
+                    -10.0
+                ],
+                "rotation": [
+                    179.99998474121094,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "RISESPHERE"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.003",
+            "transform": {
+                "translation": [
+                    0.0,
+                    80.0,
+                    -10.0
+                ],
+                "rotation": [
+                    179.99998474121094,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "RISESPHERE"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.005",
+            "transform": {
+                "translation": [
+                    60.0,
+                    160.0,
+                    -10.0
+                ],
+                "rotation": [
+                    179.99998474121094,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "RISESPHERE"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.006",
+            "transform": {
+                "translation": [
+                    0.0,
+                    80.0,
+                    -10.0
+                ],
+                "rotation": [
+                    179.99998474121094,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "RISESPHERE"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.007",
+            "transform": {
+                "translation": [
+                    0.0,
+                    105.0,
+                    -10.0
+                ],
+                "rotation": [
+                    179.99998474121094,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "RISESPHERE"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.008",
+            "transform": {
+                "translation": [
+                    60.0,
+                    130.0,
+                    -10.0
+                ],
+                "rotation": [
+                    179.99998474121094,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "RISESPHERE"
         }
     ]
 }

@@ -61,14 +61,14 @@ void GamePlayScene::Initialize()
 	//モデル読み込み
 	LoadModel();
 	//レベルデータ読み込み
-	if (stageNum_ == SL_Stage1_Area1)LoadLVData("test");
+	if (stageNum_ == SL_Stage1_Area1)LoadLVData("stage1");
 	else if (stageNum_ == SL_Stage1_Area2)LoadLVData("stage2");
 	else if (stageNum_ == SL_Stage1_Area3)LoadLVData("stage3_3");
 	else if (stageNum_ == SL_Stage1_AreaBoss)LoadLVData("stageboss1");
 
 	else if (stageNum_ == SL_StageTutorial_Area1)LoadLVData("tutorial");
 	else if (stageNum_ == SL_StageTutorial_Area2)LoadLVData("tutorial2");
-	else if (stageNum_ == SL_StageTutorial_Area3)LoadLVData("tutorial3");
+	else if (stageNum_ == SL_StageTutorial_Area3)LoadLVData("tutorial3_2");
 	else if (stageNum_ == SL_StageTutorial_Final)LoadLVData("tutorialf");
 
 	//スプライト
@@ -753,10 +753,11 @@ void GamePlayScene::Draw()
 
 	//エフェクト描画
 	pm_->Draw();
-	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();		//自機のパーティクル
-	for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->DrawParticle();	//敵のパーティクル
-	for (std::unique_ptr<Goal>& goal : goals_) goal->DrawParticle();			//ゴールのパーティクル
-	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();				//アイテムのパーティクル
+	for (std::unique_ptr<Player>& player : players_)player->DrawParticle();						//自機のパーティクル
+	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->DrawParticle();		//自機の弾のパーティクル
+	for (std::unique_ptr<BaseEnemy>& enemy : enemys_) enemy->DrawParticle();					//敵のパーティクル
+	for (std::unique_ptr<Goal>& goal : goals_) goal->DrawParticle();							//ゴールのパーティクル
+	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();								//アイテムのパーティクル
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
 

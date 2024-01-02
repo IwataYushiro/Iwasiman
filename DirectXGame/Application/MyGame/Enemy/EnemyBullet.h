@@ -1,6 +1,7 @@
 #pragma once
 #include "Model.h"
 #include "Object3d.h"
+#include "ParticleManager.h"
 #include <DirectXMath.h>
 
 /*
@@ -21,6 +22,8 @@ private:
 	using Model = IwasiEngine::Model;
 	using Camera = IwasiEngine::Camera;
 	using CollisionInfo = IwasiEngine::CollisionInfo;
+	using Particle = IwasiEngine::Particle;
+	using ParticleManager = IwasiEngine::ParticleManager;
 
 public:
 	//生成(初期座標、速度、使用モデル)
@@ -57,4 +60,5 @@ private:
 public: //アクセッサ、インライン関数
 	//死んだかどうか
 	bool IsDead() const { return isDead_; }
+
 };

@@ -1,11 +1,13 @@
 #include "EnemyBullet.h"
 #include <cassert>
+#include "MyMath.h"
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
 
 using namespace DirectX;
 using namespace IwasiEngine;
+using namespace MyMath;
 
 /*
 
@@ -46,7 +48,7 @@ bool EnemyBullet::Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity)
 	//敵の弾
 	collider_->SetAttribute(COLLISION_ATTR_ENEMYS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_BULLET);
-
+	
 	return true;
 }
 
@@ -54,12 +56,14 @@ void EnemyBullet::Reset() { isDead_ = true; }
 
 //更新
 void EnemyBullet::Update() {
+
 	//座標を移動させる
 	XMFLOAT3 pos = Object3d::GetPosition();
 
 	pos.x += velocity_.x;
 	pos.y += velocity_.y;
 	pos.z += velocity_.z;
+
 	//座標のセット
 	Object3d::SetPosition(pos);
 

@@ -58,13 +58,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 			XMFLOAT4 startColor;	//開始カラー
 			XMFLOAT4 endColor;		//終了カラー
 		};
-	private: // 定数
-		static const int DIVISION = 50;					// 分割数
-		static const float RADIUS;				// 底面の半径
-		static const float PRIZM_HEIGHT;			// 柱の高さ
-		static const int PLANE_COUNT = DIVISION * 2 + DIVISION * 2;		// 面の数
-		static const int VERTEX_COUNT = 1024;		// 頂点数
-
+		
 	public: // 静的メンバ関数
 
 		// 静的初期化(デバイス)

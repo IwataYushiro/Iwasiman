@@ -194,6 +194,9 @@ private:
 	bool isAlive_ = true;
 	//死亡フラグ
 	bool isDead_ = false;
+	//スピード
+	const float moveSpeed = 0.5f;//通常時
+	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
 
 	//ライフ
 	int life_;
@@ -203,10 +206,11 @@ private:
 	//パーティクル
 	std::unique_ptr<Particle> particleFire_ = nullptr;
 	std::unique_ptr<Particle> particleSmoke_ = nullptr;
+	std::unique_ptr<Particle> particleBullet_ = nullptr;
 	//パーティクルマネージャー
 	std::unique_ptr<ParticleManager> pmSmoke_ = nullptr;
 	std::unique_ptr<ParticleManager> pmFire_ = nullptr;
-
+	std::unique_ptr<ParticleManager> pmBullet_ = nullptr;
 	//ゲームシーン
 	GamePlayScene* gameScene_;
 	//シェイク機能
@@ -285,10 +289,12 @@ public: //アクセッサ、インライン関数
 	//ライフセット
 	void SetLife(const int life) { this->life_ = life; }
 	//ライフゲット
-	const int& GetLife()const { return life_; }
+	const int GetLife()const { return life_; }
 	//ゲームシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
-
+	//スピードゲット
+	const float GetSpeedMove()const { return moveSpeed; }				//通常移動スピード
+	const float GetSpeedDash()const { return moveSpeed * dashSpeed; }	//ダッシュ移動スピード
 
 private://カプセル化メンバ関数
 	//生存時

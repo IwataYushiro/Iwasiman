@@ -1,6 +1,7 @@
 #pragma once
 #include "Object3d.h"
 #include "Model.h"
+#include "ParticleManager.h"
 #include <DirectXMath.h>
 
 /*
@@ -22,11 +23,13 @@ private:
 	using Model = IwasiEngine::Model;
 	using Camera = IwasiEngine::Camera;
 	using CollisionInfo = IwasiEngine::CollisionInfo;
-
+	using Particle = IwasiEngine::Particle;
+	using ParticleManager = IwasiEngine::ParticleManager;
 public:
 	//生成(初期座標、速度、使用モデル)
 	static std::unique_ptr<PlayerBullet> Create
-	(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model = nullptr);
+	(const XMFLOAT3& position, const XMFLOAT3& velocity, const Model* model = nullptr,
+		Particle* particle = nullptr, ParticleManager* pm = nullptr);
 	//初期化(初期座標、速度)
 	bool Initialize(const XMFLOAT3& position, const XMFLOAT3& velocity);
 	//リセット処理
@@ -38,13 +41,16 @@ public:
 	//描画
 	void Draw();
 
+	//パーティクル描画
+	void DrawParticle();
+	
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info,const unsigned short attribute,const unsigned short subAttribute)override;
 
 	//ワールド座標を取得
 	const XMFLOAT3 GetWorldPosition()const;
 
-private:
+private://メンバ変数
 
 	//速度
 	XMFLOAT3 velocity_;
@@ -57,6 +63,17 @@ private:
 	//半径
 	float radius_ = 4.0f;
 
+	//自機からもらう
+	//パーティクル
+	Particle* particleFire_ = nullptr;
+	//パーティクルマネージャー
+	ParticleManager* pmFire_ = nullptr;
+
 public: //アクセッサ、インライン関数
 	bool IsDead() const { return isDead_; }
+
+private://カプセル化メンバ関数
+	//パーティクル更新
+	void UpdateParticle();
+
 };

@@ -4,6 +4,7 @@
 #include "EnemyBullet.h"
 #include "Model.h"
 #include "ParticleManager.h"
+#include "Input.h"
 
 #include <chrono>
 #include <DirectXMath.h>
@@ -21,9 +22,9 @@ class EnemyBoss :public BaseEnemy {
 public:
 	//デストラクタ
 	~EnemyBoss();
-	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン)
-	static std::unique_ptr<EnemyBoss> Create(const Model* model = nullptr,const Model* bullet = nullptr,
-		const Player* player = nullptr,GamePlayScene* gamescene = nullptr);
+	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン,ボスステージかどうか)
+	static std::unique_ptr<EnemyBoss> Create(const Model* model = nullptr, const Model* bullet = nullptr,
+		const Player* player = nullptr, GamePlayScene* gamescene = nullptr, const bool isNotBossStage = false);
 	
 	//初期化
 	bool Initialize()override;
@@ -114,6 +115,8 @@ private:
 
 	//反転フラグ
 	bool isReverse_ = false;
+	//入力
+	IwasiEngine::Input* input_ = nullptr;
 
 public:
 	//死んだかどうか
@@ -124,4 +127,9 @@ public:
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 	//ボスが死んだかどうか
 	bool BossDead()const override{ return bossDead_; }
+private:
+	//ベジェ曲線の動きを共通化(デフォルト引数はボスステージの場合)
+	void UpdateBezierMove(const bool notStageBoss = false);
+	//X座標をプレイヤーの動きに連動させるための関数(通常ステージ限定)
+	void UpdateSynchronizePlayerMove(const bool notStageBoss);
 };
