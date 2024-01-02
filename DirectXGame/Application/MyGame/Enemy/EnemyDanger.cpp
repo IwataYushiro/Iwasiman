@@ -113,7 +113,7 @@ void EnemyDanger::Update(const bool isStart)
 			isReverse_ = false;
 		}
 		//í‰ñ“]
-		const float rot = 0.5f;
+		const float rot = 5.0f;
 		rotation_.y += rot;
 	}
 	//À•W‚ğ“]‘—

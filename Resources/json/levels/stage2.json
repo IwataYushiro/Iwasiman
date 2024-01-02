@@ -265,7 +265,7 @@
             },
             "file_name": "boss1",
             "objecttype": "ENEMY",
-            "objectpattern": "BOSS1"
+            "objectpattern": "NOTBOSS1"
         },
         {
             "type": "MESH",
