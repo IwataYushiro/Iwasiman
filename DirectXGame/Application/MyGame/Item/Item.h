@@ -59,10 +59,6 @@ public:
 	void Update()override;
 	//更新(ジャンプ強化アイテム)
 	void UpdateJumpPowerup();
-
-	//転送
-	void Trans();
-
 	//描画
 	void Draw();
 	//パーティクル描画

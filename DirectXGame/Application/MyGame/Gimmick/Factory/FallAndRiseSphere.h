@@ -35,9 +35,6 @@ public:
 	//–ß‚é
 	void UpdateRiseSphereReturn();
 
-	//“]‘—
-	void Trans();
-
 	//•`‰æ
 	void Draw()override;
 

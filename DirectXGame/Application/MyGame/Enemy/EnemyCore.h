@@ -35,8 +35,6 @@ public:
 	void Parameter();
 	//XV
 	void Update(const bool isStart = false)override;
-	//“]‘—@
-	void Trans();
 	//’e”­Ë
 	void Fire();
 	//•`‰æ

@@ -60,28 +60,6 @@ void Spike::Update()
 	Object3d::Update();	//3Dオブジェクト
 }
 
-void Spike::Trans()
-{
-	//ワールド座標
-	XMMATRIX world;
-	//行列更新
-	world = XMMatrixIdentity();
-	XMMATRIX matWorld = XMMatrixIdentity();
-
-	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
-
-	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
-		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
-
-	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
-		Object3d::GetPosition().y, Object3d::GetPosition().z);
-
-	//合成
-	matWorld = matScale * matRot * matTrans;
-
-	world = matWorld;
-	Object3d::SetWorld(world);
-}
 void Spike::Draw()
 {
 	Object3d::Draw();//トゲを描画

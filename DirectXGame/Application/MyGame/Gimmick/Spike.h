@@ -22,9 +22,6 @@ public:
 	bool Initialize()override;
 	//XV
 	void Update()override;
-	//“]‘—
-	void Trans();
-
 	//•`‰æ
 	void Draw()override;
 

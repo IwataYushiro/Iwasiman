@@ -67,24 +67,8 @@ void EnemyBullet::Update() {
 	//座標のセット
 	Object3d::SetPosition(pos);
 
-	//行列更新
-	XMMATRIX world;
-
-	world = XMMatrixIdentity();
-	XMMATRIX matWorld = XMMatrixIdentity();
-
-	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
-
-	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
-		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
-
-	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
-		Object3d::GetPosition().y, Object3d::GetPosition().z);
-
-	//合成
-	matWorld = matScale * matRot * matTrans;
-
-	Object3d::SetWorld(matWorld);
+	//行列転送
+	Trans();
 	//更新
 	camera_->Update();	//カメラ
 	Object3d::Update();	//3Dオブジェクト

@@ -32,8 +32,6 @@ public:
 	void Parameter();
 	//更新
 	void Update(const bool isStart = false)override;
-	//転送　
-	void Trans();
 	//描画
 	void Draw()override;
 	//パーティクル描画

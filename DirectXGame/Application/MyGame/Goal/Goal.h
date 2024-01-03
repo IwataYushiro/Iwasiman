@@ -38,10 +38,6 @@ public:
 	void Reset();
 	//更新
 	void Update()override;
-
-	//転送
-	void Trans();
-
 	//描画
 	void Draw();
 	//パーティクル描画

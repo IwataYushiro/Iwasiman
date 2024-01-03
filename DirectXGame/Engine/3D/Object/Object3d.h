@@ -207,6 +207,29 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 			return worldPos;
 		}
+		//転送
+		void Trans()
+		{
+			//ワールド座標
+			XMMATRIX world;
+			//行列更新
+			world = DirectX::XMMatrixIdentity();
+			XMMATRIX matWorld = DirectX::XMMatrixIdentity();
+
+			XMMATRIX matScale = DirectX::XMMatrixScaling(scale_.x, scale_.y, scale_.z);
+
+			XMMATRIX matRot = DirectX::XMMatrixRotationZ(rotation_.z)
+				* DirectX::XMMatrixRotationX(rotation_.x)
+				* DirectX::XMMatrixRotationY(rotation_.y);
+
+			XMMATRIX matTrans = DirectX::XMMatrixTranslation(position_.x,position_.y, position_.z);
+
+			//合成
+			matWorld = matScale * matRot * matTrans;
+			
+			//ローカル変数に転送
+			matWorld_ = matWorld;
+		}
 	};
 
 }
