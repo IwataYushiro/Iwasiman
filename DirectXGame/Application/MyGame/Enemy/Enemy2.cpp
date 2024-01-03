@@ -236,7 +236,7 @@ void Enemy2::Update(const bool isStart) {
 		}
 	}
 
-	//座標を転送
+	//座標の転送
 	Trans();
 	//更新
 	camera_->Update();		//カメラ
