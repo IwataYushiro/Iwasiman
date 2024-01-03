@@ -613,6 +613,8 @@ void GamePlayScene::UpdateIsStageClear()
 
 void GamePlayScene::UpdateIsGameOver()
 {
+	//ボスを撃破している場合は呼び出されない
+	for (std::unique_ptr<BaseEnemy>& enemy : enemys_)if (enemy->BossDead()) return;
 	FadeOut(deepRed_);//赤くする
 	//完全に赤くなったらゲームオーバーへ遷移
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
