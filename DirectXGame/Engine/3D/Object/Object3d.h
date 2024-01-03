@@ -194,6 +194,19 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		//モデルゲット
 		const Model* GetModel() const { return model_; }
 
+		//ワールド座標の取得
+		const XMFLOAT3 GetWorldPosition() const {
+
+			//ワールド座標を取得
+			XMFLOAT3 worldPos;
+
+			//ワールド行列の平行移動成分を取得
+			worldPos.x = position_.x;
+			worldPos.y = position_.y;
+			worldPos.z = position_.z;
+
+			return worldPos;
+		}
 	};
 
 }

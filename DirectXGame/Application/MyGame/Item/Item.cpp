@@ -162,19 +162,6 @@ void Item::Trans()
 	Object3d::SetWorld(world);
 }
 
-const XMFLOAT3 Item::GetWorldPosition()const
-{
-	//ワールド座標を取得
-	XMFLOAT3 worldPos;
-
-	//ワールド行列の平行移動成分を取得
-	worldPos.x = Object3d::GetPosition().x;
-	worldPos.y = Object3d::GetPosition().y;
-	worldPos.z = Object3d::GetPosition().z;
-
-	return worldPos;
-}
-
 void Item::Draw()
 {
 	if (!isGet_)Object3d::Draw();//ゲットしたら消える

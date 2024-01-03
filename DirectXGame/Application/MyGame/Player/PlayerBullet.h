@@ -47,9 +47,6 @@ public:
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(const CollisionInfo& info,const unsigned short attribute,const unsigned short subAttribute)override;
 
-	//ワールド座標を取得
-	const XMFLOAT3 GetWorldPosition()const;
-
 private://メンバ変数
 
 	//速度

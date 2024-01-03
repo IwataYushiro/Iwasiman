@@ -124,19 +124,6 @@ void PlayerBullet::OnCollision([[maybe_unused]] const CollisionInfo& info,const 
 	}
 	
 }
-//ワールド座標を取得
-const XMFLOAT3 PlayerBullet::GetWorldPosition() const{
-
-	//ワールド座標を取得
-	XMFLOAT3 worldPos;
-
-	//ワールド行列の平行移動成分を取得
-	worldPos.x = Object3d::GetPosition().x;
-	worldPos.y = Object3d::GetPosition().y;
-	worldPos.z = Object3d::GetPosition().z;
-
-	return worldPos;
-}
 
 void PlayerBullet::UpdateParticle()
 {

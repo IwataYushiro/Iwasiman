@@ -38,9 +38,6 @@ public:
 	//“]‘—
 	void Trans();
 
-	//ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
-	const XMFLOAT3 GetWorldPosition()const ;
-
 	//•`‰æ
 	void Draw()override;
 

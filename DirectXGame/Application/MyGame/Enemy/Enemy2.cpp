@@ -488,19 +488,6 @@ void Enemy2::UpdateLeave() {
 	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
 }
 
-//ワールド座標を取得
-const XMFLOAT3 Enemy2::GetWorldPosition() const{
-
-	//ワールド座標を取得
-	XMFLOAT3 worldPos;
-
-	//ワールド行列の平行移動成分を取得
-	worldPos.x = Object3d::GetPosition().x;
-	worldPos.y = Object3d::GetPosition().y;
-	worldPos.z = Object3d::GetPosition().z;
-
-	return worldPos;
-}
 void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない

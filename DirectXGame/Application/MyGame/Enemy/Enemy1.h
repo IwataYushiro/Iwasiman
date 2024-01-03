@@ -46,8 +46,7 @@ public:
 	void Fire();
 	//着地処理
 	void Landing();
-	//ワールド座標を取得
-	const XMFLOAT3 GetWorldPosition() const;
+	
 	//描画
 	void Draw()override;
 	//パーティクル描画

@@ -82,20 +82,6 @@ void Spike::Trans()
 	world = matWorld;
 	Object3d::SetWorld(world);
 }
-
-const XMFLOAT3 Spike::GetWorldPosition()const
-{
-	//ワールド座標を取得
-	XMFLOAT3 worldPos;
-
-	//ワールド行列の平行移動成分を取得
-	worldPos.x = Object3d::GetPosition().x;
-	worldPos.y = Object3d::GetPosition().y;
-	worldPos.z = Object3d::GetPosition().z;
-
-	return worldPos;
-}
-
 void Spike::Draw()
 {
 	Object3d::Draw();//トゲを描画

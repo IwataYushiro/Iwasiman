@@ -112,19 +112,6 @@ void Goal::Trans()
 	Object3d::SetWorld(world);
 }
 
-const XMFLOAT3 Goal::GetWorldPosition()const
-{
-	//ワールド座標を取得
-	XMFLOAT3 worldPos;
-
-	//ワールド行列の平行移動成分を取得
-	worldPos.x = Object3d::GetPosition().x;
-	worldPos.y = Object3d::GetPosition().y;
-	worldPos.z = Object3d::GetPosition().z;
-
-	return worldPos;
-}
-
 void Goal::Draw()
 {
 	Object3d::Draw();//モデルの描画

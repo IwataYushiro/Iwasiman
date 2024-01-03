@@ -40,8 +40,6 @@ public:
 	void Trans();
 	//弾発射
 	void Fire();
-	//ワールド座標を取得
-	const XMFLOAT3 GetWorldPosition()const;
 	//描画
 	void Draw()override;
 	//パーティクル描画

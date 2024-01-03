@@ -336,20 +336,6 @@ const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const 
 	return ans;
 }
 
-
-//ワールド座標を取得
-const XMFLOAT3 EnemyBoss::GetWorldPosition() const {
-
-	//ワールド座標を取得
-	XMFLOAT3 worldPos;
-
-	//ワールド行列の平行移動成分を取得
-	worldPos.x = Object3d::GetPosition().x;
-	worldPos.y = Object3d::GetPosition().y;
-	worldPos.z = Object3d::GetPosition().z;
-
-	return worldPos;
-}
 void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない
