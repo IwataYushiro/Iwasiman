@@ -102,13 +102,13 @@ void EnemyDanger::Update(const bool isStart)
 		position_.z += velocity.z;
 
 		//X²‚ªw’è‚ÌˆÊ’u‚É“’B‚µ‚½‚ç”½“]
-		const float reversePosX = 100.0f;
+		const float reversePosX = 200.0f;
 
-		if (position_.x >= reversePosX) {
+		if (position_.x >= startPos_.x+reversePosX) {
 			//¨‚©‚ç©
 			isReverse_ = true;
 		}
-		if (position_.x <= -reversePosX) {
+		if (position_.x <= startPos_.x) {
 			//©‚©‚ç¨
 			isReverse_ = false;
 		}

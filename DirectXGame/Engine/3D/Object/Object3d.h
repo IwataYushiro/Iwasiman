@@ -195,37 +195,9 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		const Model* GetModel() const { return model_; }
 
 		//ワールド座標の取得
-		const XMFLOAT3 GetWorldPosition() const {
-
-			//ワールド座標を取得
-			XMFLOAT3 worldPos;
-
-			//ワールド行列の平行移動成分を取得
-			worldPos.x = position_.x;
-			worldPos.y = position_.y;
-			worldPos.z = position_.z;
-
-			return worldPos;
-		}
+		const XMFLOAT3 GetWorldPosition() const;
 		//座標の転送
-		void Trans()
-		{
-			//行列更新
-			//ワールド行列
-			matWorld_ = DirectX::XMMatrixIdentity();
-			//スケール
-			XMMATRIX matScale = DirectX::XMMatrixScaling(scale_.x, scale_.y, scale_.z);
-			//回転
-			XMMATRIX matRot = DirectX::XMMatrixRotationZ(rotation_.z)
-				* DirectX::XMMatrixRotationX(rotation_.x)
-				* DirectX::XMMatrixRotationY(rotation_.y);
-			//座標
-			XMMATRIX matTrans = DirectX::XMMatrixTranslation(position_.x,position_.y, position_.z);
-
-			//合成してローカル変数に転送
-			matWorld_ = matScale * matRot * matTrans;
-			
-		}
+		void Trans();
 	};
 
 }

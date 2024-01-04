@@ -945,7 +945,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newenemy->SetPosition(pos);
-
+			newenemy->SetStartPos(pos);//初期座標のセット
 			// 回転角
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);

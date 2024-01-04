@@ -116,7 +116,7 @@ void Item::UpdateJumpPowerup()
 	if (isGetJump_)//取得したら
 	{
 		//イージングで少しずつ透明にする
-		ease_.ease_out_cubic();
+		ease_.ease_in_out_cubic();
 		spriteItemJumpBar_->SetColor({ asIsColor.x, asIsColor.y,asIsColor.z, ease_.num_X });
 		//効果時間を進める
 		count_++;

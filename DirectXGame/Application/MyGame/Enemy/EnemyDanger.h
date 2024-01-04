@@ -55,8 +55,7 @@ private:
 
 	//反転フラグ
 	bool isReverse_ = false;
-	//現在位置取得
-	XMFLOAT3 nowPos_ = {};
+	
 	//パーティクル
 	std::unique_ptr<Particle> particleFire_ = nullptr;
 	//パーティクルマネージャー
