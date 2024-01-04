@@ -394,8 +394,8 @@ void Enemy2::Landing()
 		{
 			onGround_ = true;
 		}
-		//一定値に達したらまた落ちるように
-		if (position_.y >= backUpPosY)
+		//初期位置に達したらまた落ちるように
+		if (position_.y >= startPos_.y)
 		{
 			phase_ = Phase::Approach;
 		}
@@ -448,8 +448,8 @@ void Enemy2::UpdateBack()
 	position_.y += backSpeed_.y;
 	position_.z += backSpeed_.z;
 
-	//一定の位置まで達したら下へ
-	if (position_.y >= backUpPosY) phase_ = Phase::Approach;
+	//初期位置まで達したら下へ
+	if (position_.y >= startPos_.y) phase_ = Phase::Approach;
 }
 
 //離脱
