@@ -213,7 +213,7 @@ private://メンバ変数
 	//カーソルX値のイージング
 	Easing easeCursorPosX_ = presetEaseCursorPosX_;
 	//選んだステージを真ん中に移動させるイージングのプリセット
-	const Easing presetEaseStartStagePosX_ = { 0.0f, 350.0f, 1.5f };//チュートリアルへ
+	const Easing presetEaseStartStagePosX_ = { 0.0f, 300.0f, 1.5f };//チュートリアルへ
 	//選んだステージを真ん中に移動させるイージング
 	Easing easeStartStagePosX_ = presetEaseStartStagePosX_;//チュートリアルへ
 

@@ -65,7 +65,7 @@ void StageSelectScene::Initialize()
 	spriteMenu_->SetPosition({ easeMenuPosX_[SSMEN_Menu].start,menuPosY_[SSMEN_Menu] });
 
 	//チュートリアルステージスプライト
-	spCommon_->LoadTexture(SSSTI_MenuTutorialTex, "texture/titlemenut.png");
+	spCommon_->LoadTexture(SSSTI_MenuTutorialTex, "texture/stagetraining.png");
 	spriteTutorial_->Initialize(spCommon_, SSSTI_MenuTutorialTex);
 	spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].start,easeStartStagePosY_[SSSMI_StageTutorial_Tutorial].start });
 

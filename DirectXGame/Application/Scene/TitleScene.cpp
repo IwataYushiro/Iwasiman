@@ -74,7 +74,7 @@ void TitleScene::Initialize()
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].start,menuPosY_[TMEN_Menu] });
 
 	//チュートリアル表示スプライト
-	spCommon_->LoadTexture(TSTI_MenuTutorialTex, "texture/titlemenut.png");
+	spCommon_->LoadTexture(TSTI_MenuTutorialTex, "texture/titlemenug.png");
 	spriteMenuTutorial_->Initialize(spCommon_, TSTI_MenuTutorialTex);
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].start,easeStartStagePosY_.start });
 
