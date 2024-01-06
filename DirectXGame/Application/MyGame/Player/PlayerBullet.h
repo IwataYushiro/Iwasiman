@@ -52,9 +52,9 @@ private://ƒƒ“ƒo•Ï”
 	//‘¬“x
 	XMFLOAT3 velocity_;
 	//õ–½<frm>
-	static const int32_t lifeTime_ = 60 * 2;
+	const float lifeTime_ = 60.0f;
 	//€–SŠÔ
-	int32_t deathTimer_ = lifeTime_;
+	float deathTimer_ = lifeTime_;
 	//€–Sƒtƒ‰ƒO
 	bool isDead_ = false;
 	//”¼Œa

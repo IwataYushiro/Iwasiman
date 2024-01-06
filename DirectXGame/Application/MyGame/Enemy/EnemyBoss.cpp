@@ -228,8 +228,8 @@ void EnemyBoss::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		const int32_t minInterval_ = fireInterval_;
-		const int32_t maxInterval_ = fireInterval_ * 2;
+		const int32_t minInterval_ = fireInterval_ / 2;
+		const int32_t maxInterval_ = fireInterval_;
 		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
 	//ここまで来たら攻撃フェーズへ
@@ -270,8 +270,8 @@ void EnemyBoss::UpdateAttack() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		const int32_t minInterval_ = fireInterval_;
-		const int32_t maxInterval_ = fireInterval_ * 2;
+		const int32_t minInterval_ = fireInterval_/2;
+		const int32_t maxInterval_ = fireInterval_;
 		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
 	//死んだら死亡演出
