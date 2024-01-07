@@ -22,7 +22,7 @@ EnemyCore::~EnemyCore() {
 }
 
 std::unique_ptr<EnemyCore> EnemyCore::Create(const Model* model, const Model* bullet,
-	const Player* player,GamePlayScene* gamescene, [[maybe_unused]] unsigned short level)
+	const Player* player, GamePlayScene* gamescene, [[maybe_unused]] unsigned short level)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyCore> ins = std::make_unique<EnemyCore>();
@@ -78,7 +78,7 @@ bool EnemyCore::Initialize() {
 
 //パラメータ
 void EnemyCore::Parameter() {
-	
+
 	//フェーズ初期化
 	phase_ = Phase::CoreStage1;
 	//ライフ初期値
@@ -96,7 +96,7 @@ void EnemyCore::Parameter() {
 	//敵弾の発射間隔はランダム
 	const std::array<int, MM_num>randomMinMax = { 50,100 };
 	fireInterval_ = MyMath::RandomMTInt(randomMinMax[MM_min], randomMinMax[MM_max]);	//発射タイマー初期化
-	
+
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 	//死亡フラグ
@@ -191,7 +191,7 @@ void EnemyCore::Fire() {
 void EnemyCore::Draw() {
 
 	//モデルの描画
-	if (phase_!=Phase::Leave)Object3d::Draw();
+	if (phase_ != Phase::Leave)Object3d::Draw();
 }
 
 void EnemyCore::DrawParticle()
@@ -206,12 +206,15 @@ void EnemyCore::UpdateCore()
 	//速度
 	float cameraMove = camera_->GetEye().x;
 
+	//速度計算用
+	const float calcVelocity = hit_ * 0.2f;
+
 	//速度
 	XMFLOAT3 velocity;
 
-	const XMFLOAT3 velDefault = { 0.3f, 0.0f, 0.0f };//通常時スピード
-	const XMFLOAT3 velReverse = { -0.3f, 0.0f, 0.0f };//反転時スピード
-	
+	const XMFLOAT3 velDefault = { 0.3f + calcVelocity, 0.0f, 0.0f };//通常時スピード
+	const XMFLOAT3 velReverse = { -0.3f - calcVelocity, 0.0f, 0.0f };//反転時スピード
+
 	//移動
 	if (!isReverse_)velocity = velDefault;
 	else velocity = velReverse;
@@ -364,7 +367,7 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 				pmSmoke_->Update();
-				
+
 			}
 			else//ライフが0の場合
 			{
@@ -373,10 +376,12 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
 				pmFire_->Update();
-				
+
 			}
 			//ライフが減る
 			life_--;
+			//当たったカウント
+			hit_++;
 		}
 	}
 	else if (attribute == COLLISION_ATTR_ENEMYS)
