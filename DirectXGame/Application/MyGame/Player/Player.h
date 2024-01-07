@@ -86,13 +86,6 @@ public:
 	void Landing(const unsigned short attribute);
 	//プレイヤーの攻撃処理
 	void Attack();
-
-	//転送
-	void Trans();
-
-	//ワールド座標を取得
-	const XMFLOAT3 GetWorldPosition()const ;
-
 	//描画
 	void Draw();
 	//スプライト描画

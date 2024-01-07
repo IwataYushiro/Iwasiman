@@ -22,7 +22,7 @@ EnemyCore::~EnemyCore() {
 }
 
 std::unique_ptr<EnemyCore> EnemyCore::Create(const Model* model, const Model* bullet,
-	const Player* player,GamePlayScene* gamescene, [[maybe_unused]] unsigned short level)
+	const Player* player, GamePlayScene* gamescene, [[maybe_unused]] unsigned short level)
 {
 	//インスタンス生成
 	std::unique_ptr<EnemyCore> ins = std::make_unique<EnemyCore>();
@@ -78,7 +78,7 @@ bool EnemyCore::Initialize() {
 
 //パラメータ
 void EnemyCore::Parameter() {
-	
+
 	//フェーズ初期化
 	phase_ = Phase::CoreStage1;
 	//ライフ初期値
@@ -96,7 +96,7 @@ void EnemyCore::Parameter() {
 	//敵弾の発射間隔はランダム
 	const std::array<int, MM_num>randomMinMax = { 50,100 };
 	fireInterval_ = MyMath::RandomMTInt(randomMinMax[MM_min], randomMinMax[MM_max]);	//発射タイマー初期化
-	
+
 	//発射タイマー初期化
 	fireTimer_ = fireInterval_;
 	//死亡フラグ
@@ -143,30 +143,6 @@ void EnemyCore::Update(const bool isStart) {
 	pmSmoke_->Update();
 }
 
-//転送
-void EnemyCore::Trans() {
-
-	//ワールド座標
-	XMMATRIX world;
-	//行列更新
-	world = XMMatrixIdentity();
-	XMMATRIX matWorld = XMMatrixIdentity();
-
-	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
-
-	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
-		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
-
-	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
-		Object3d::GetPosition().y, Object3d::GetPosition().z);
-
-	//合成
-	matWorld = matScale * matRot * matTrans;
-
-	world = matWorld;
-	Object3d::SetWorld(world);
-
-}
 //弾発射
 void EnemyCore::Fire() {
 	assert(player_);
@@ -215,7 +191,7 @@ void EnemyCore::Fire() {
 void EnemyCore::Draw() {
 
 	//モデルの描画
-	if (phase_!=Phase::Leave)Object3d::Draw();
+	if (phase_ != Phase::Leave)Object3d::Draw();
 }
 
 void EnemyCore::DrawParticle()
@@ -230,12 +206,15 @@ void EnemyCore::UpdateCore()
 	//速度
 	float cameraMove = camera_->GetEye().x;
 
+	//速度計算用
+	const float calcVelocity = hit_ * 0.2f;
+
 	//速度
 	XMFLOAT3 velocity;
 
-	const XMFLOAT3 velDefault = { 0.3f, 0.0f, 0.0f };//通常時スピード
-	const XMFLOAT3 velReverse = { -0.3f, 0.0f, 0.0f };//反転時スピード
-	
+	const XMFLOAT3 velDefault = { 0.3f + calcVelocity, 0.0f, 0.0f };//通常時スピード
+	const XMFLOAT3 velReverse = { -0.3f - calcVelocity, 0.0f, 0.0f };//反転時スピード
+
 	//移動
 	if (!isReverse_)velocity = velDefault;
 	else velocity = velReverse;
@@ -344,20 +323,6 @@ const XMFLOAT3 EnemyCore::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const 
 	return ans;
 }
 
-
-//ワールド座標を取得
-const XMFLOAT3 EnemyCore::GetWorldPosition()const {
-
-	//ワールド座標を取得
-	XMFLOAT3 worldPos;
-
-	//ワールド行列の平行移動成分を取得
-	worldPos.x = Object3d::GetPosition().x;
-	worldPos.y = Object3d::GetPosition().y;
-	worldPos.z = Object3d::GetPosition().z;
-
-	return worldPos;
-}
 void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;
@@ -402,7 +367,7 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
 
 				pmSmoke_->Update();
-				
+
 			}
 			else//ライフが0の場合
 			{
@@ -411,10 +376,12 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 
 				pmFire_->Update();
-				
+
 			}
 			//ライフが減る
 			life_--;
+			//当たったカウント
+			hit_++;
 		}
 	}
 	else if (attribute == COLLISION_ATTR_ENEMYS)

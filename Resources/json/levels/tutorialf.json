@@ -84,8 +84,8 @@
             "transform": {
                 "translation": [
                     0.0,
-                    160.0,
-                    20.0
+                    210.0,
+                    0.0
                 ],
                 "rotation": [
                     0.0,
@@ -131,7 +131,7 @@
                 "translation": [
                     0.0,
                     37.5,
-                    0.0
+                    15.0
                 ],
                 "rotation": [
                     0.0,
@@ -154,11 +154,11 @@
             "transform": {
                 "translation": [
                     60.0,
-                    9.0,
+                    11.75792407989502,
                     -10.0
                 ],
                 "rotation": [
-                    0.0,
+                    179.99998474121094,
                     -0.0,
                     0.0
                 ],
@@ -170,14 +170,14 @@
             },
             "file_name": "boxud",
             "objecttype": "MOVEGROUND",
-            "objectpattern": "FALLSPHERE"
+            "objectpattern": "RISESPHERE"
         },
         {
             "type": "MESH",
             "name": "Plane.002",
             "transform": {
                 "translation": [
-                    24.120136260986328,
+                    -0.5288143157958984,
                     43.094749450683594,
                     -10.0
                 ],
@@ -187,7 +187,7 @@
                     0.0
                 ],
                 "scaling": [
-                    0.46511682868003845,
+                    0.19460362195968628,
                     0.25552359223365784,
                     1.0
                 ]
@@ -206,30 +206,6 @@
                     2.0
                 ]
             }
-        },
-        {
-            "type": "MESH",
-            "name": "fallsphere.004",
-            "transform": {
-                "translation": [
-                    0.0,
-                    9.0,
-                    -10.0
-                ],
-                "rotation": [
-                    179.99998474121094,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "file_name": "boxud",
-            "objecttype": "MOVEGROUND",
-            "objectpattern": "RISESPHERE"
         },
         {
             "type": "MESH",
@@ -271,9 +247,9 @@
             "name": "Enemy1.002",
             "transform": {
                 "translation": [
+                    0.0,
                     60.0,
-                    37.5,
-                    0.0
+                    25.0
                 ],
                 "rotation": [
                     0.0,
@@ -288,16 +264,16 @@
             },
             "file_name": "enemy1",
             "objecttype": "ENEMY",
-            "objectpattern": "E2G"
+            "objectpattern": "E2P"
         },
         {
             "type": "MESH",
             "name": "spike",
             "transform": {
                 "translation": [
-                    0.0,
+                    60.0,
                     -5.0,
-                    -10.0
+                    -8.0
                 ],
                 "rotation": [
                     90.00000762939453,
@@ -319,9 +295,9 @@
             "name": "spike1",
             "transform": {
                 "translation": [
-                    0.0,
-                    -15.0,
-                    -10.0
+                    60.0,
+                    56.5,
+                    -6.0
                 ],
                 "rotation": [
                     90.00000762939453,
@@ -414,7 +390,7 @@
             "name": "fallsphere.005",
             "transform": {
                 "translation": [
-                    60.0,
+                    0.0,
                     160.0,
                     -10.0
                 ],
@@ -431,7 +407,7 @@
             },
             "file_name": "boxud",
             "objecttype": "MOVEGROUND",
-            "objectpattern": "RISESPHERE"
+            "objectpattern": "RSPHERERETURN"
         },
         {
             "type": "MESH",
@@ -462,7 +438,7 @@
             "name": "fallsphere.007",
             "transform": {
                 "translation": [
-                    0.0,
+                    60.0,
                     105.0,
                     -10.0
                 ],
@@ -487,6 +463,257 @@
             "transform": {
                 "translation": [
                     60.0,
+                    130.0,
+                    -10.0
+                ],
+                "rotation": [
+                    179.99998474121094,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "RISESPHERE"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.003",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -10.0,
+                    20.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy1",
+            "objecttype": "ENEMY",
+            "objectpattern": "E2G"
+        },
+        {
+            "type": "MESH",
+            "name": "Plane.004",
+            "transform": {
+                "translation": [
+                    57.215232849121094,
+                    54.6435546875,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    0.19460362195968628,
+                    0.12202362716197968,
+                    1.0
+                ]
+            },
+            "file_name": "ground",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    200.0,
+                    200.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.004",
+            "transform": {
+                "translation": [
+                    60.0,
+                    30.718650817871094,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "boxud",
+            "objecttype": "MOVEGROUND",
+            "objectpattern": "FSPHERERETURN"
+        },
+        {
+            "type": "MESH",
+            "name": "spike1.001",
+            "transform": {
+                "translation": [
+                    60.0,
+                    -15.0,
+                    -8.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "spike1.002",
+            "transform": {
+                "translation": [
+                    60.0,
+                    52.0,
+                    -8.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "spike1.003",
+            "transform": {
+                "translation": [
+                    60.0,
+                    58.0,
+                    -8.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "spike1.004",
+            "transform": {
+                "translation": [
+                    60.0,
+                    55.0,
+                    -8.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "spike1.005",
+            "transform": {
+                "translation": [
+                    60.0,
+                    55.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "spike1.006",
+            "transform": {
+                "translation": [
+                    60.0,
+                    53.5,
+                    -6.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "spikeball",
+            "objecttype": "GIMMICK",
+            "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "fallsphere.009",
+            "transform": {
+                "translation": [
+                    0.0,
                     130.0,
                     -10.0
                 ],

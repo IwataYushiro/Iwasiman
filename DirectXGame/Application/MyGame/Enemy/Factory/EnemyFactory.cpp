@@ -83,11 +83,12 @@ std::unique_ptr<BaseEnemy> EnemyFactory::CreateEnemy(const std::string& enemyNam
 	}
 	else if (enemyName.find("ENEMYDANGER") == findSuccess)
 	{
+		//当たったら死ぬ横移動の敵
 		return EnemyDanger::Create(model, player, gamescene);
 	}
 	else if (enemyName.find("NOTBOSS1") == findSuccess)
 	{
-		//ベジェ曲線で動くボス(通常ステージ登場版)
+		//上下に動くボス(通常ステージ登場版)
 		return EnemyBoss::Create(model, bullet, player, gamescene,true);
 	}
 	else if (enemyName.find("BOSS1") == findSuccess)

@@ -169,31 +169,7 @@
             },
             "file_name": "enemy1",
             "objecttype": "ENEMY",
-            "objectpattern": "ENEMY2"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.001",
-            "transform": {
-                "translation": [
-                    0.0,
-                    60.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    -90.00000762939453
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "enemy1",
-            "objecttype": "ENEMY",
-            "objectpattern": "E2S"
+            "objectpattern": "ENEMY1"
         },
         {
             "type": "MESH",
@@ -237,7 +213,7 @@
                 "translation": [
                     0.0,
                     100.0,
-                    0.0
+                    20.0
                 ],
                 "rotation": [
                     0.0,
@@ -366,7 +342,7 @@
                 "translation": [
                     60.0,
                     225.0,
-                    0.0
+                    10.0
                 ],
                 "rotation": [
                     0.0,
@@ -414,55 +390,7 @@
                 "translation": [
                     0.0,
                     200.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    -90.00000762939453
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "enemy1",
-            "objecttype": "ENEMY",
-            "objectpattern": "E2S"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.006",
-            "transform": {
-                "translation": [
-                    60.0,
-                    175.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    -90.00000762939453
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "enemy1",
-            "objecttype": "ENEMY",
-            "objectpattern": "ENEMY1"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.007",
-            "transform": {
-                "translation": [
-                    0.0,
-                    225.0,
-                    0.0
+                    40.0
                 ],
                 "rotation": [
                     0.0,
@@ -486,7 +414,7 @@
                 "translation": [
                     60.0,
                     320.0,
-                    0.0
+                    20.0
                 ],
                 "rotation": [
                     0.0,

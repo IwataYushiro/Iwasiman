@@ -59,13 +59,6 @@ public:
 	void Update()override;
 	//更新(ジャンプ強化アイテム)
 	void UpdateJumpPowerup();
-
-	//転送
-	void Trans();
-
-	//ワールド座標を取得
-	const XMFLOAT3 GetWorldPosition()const;
-
 	//描画
 	void Draw();
 	//パーティクル描画

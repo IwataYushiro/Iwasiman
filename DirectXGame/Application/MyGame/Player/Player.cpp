@@ -601,43 +601,6 @@ void Player::Attack() {
 	}
 }
 
-void Player::Trans() {
-
-	XMMATRIX world;//ワールド座標
-	//行列更新
-	world = XMMatrixIdentity();
-	XMMATRIX matWorld = XMMatrixIdentity();
-
-	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
-
-	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
-		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
-
-	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
-		Object3d::GetPosition().y, Object3d::GetPosition().z);
-
-	//合成
-	matWorld = matScale * matRot * matTrans;
-
-	world = matWorld;
-	Object3d::SetWorld(world);
-
-}
-
-//ワールド座標を取得
-const XMFLOAT3 Player::GetWorldPosition() const {
-
-	//ワールド座標を取得
-	XMFLOAT3 worldPos;
-
-	//ワールド行列の平行移動成分を取得
-	worldPos.x = Object3d::GetPosition().x;
-	worldPos.y = Object3d::GetPosition().y;
-	worldPos.z = Object3d::GetPosition().z;
-
-	return worldPos;
-}
-
 //衝突を検出したら呼び出されるコールバック関数
 void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, 
 	const unsigned short attribute, const unsigned short subAttribute) {

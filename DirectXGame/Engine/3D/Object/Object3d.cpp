@@ -379,3 +379,35 @@ void Object3d::SetCollider(BaseCollider* collider)
 	UpdateWorldMatrix();
 	collider->Update();
 }
+
+const XMFLOAT3 Object3d::GetWorldPosition() const
+{
+
+	//ワールド座標を取得
+	XMFLOAT3 worldPos;
+
+	//ワールド行列の平行移動成分を取得
+	worldPos.x = position_.x;
+	worldPos.y = position_.y;
+	worldPos.z = position_.z;
+
+	return worldPos;
+}
+
+void Object3d::Trans()
+{
+	//行列更新
+	//ワールド行列
+	matWorld_ = XMMatrixIdentity();
+	//スケール
+	XMMATRIX matScale = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
+	//回転
+	XMMATRIX matRot = XMMatrixRotationZ(rotation_.z)
+		* XMMatrixRotationX(rotation_.x)
+		* XMMatrixRotationY(rotation_.y);
+	//座標
+	XMMATRIX matTrans = XMMatrixTranslation(position_.x, position_.y, position_.z);
+
+	//合成してローカル変数に転送
+	matWorld_ = matScale * matRot * matTrans;
+}

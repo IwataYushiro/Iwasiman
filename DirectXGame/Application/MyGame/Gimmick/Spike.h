@@ -22,12 +22,6 @@ public:
 	bool Initialize()override;
 	//更新
 	void Update()override;
-	//転送
-	void Trans();
-
-	//ワールド座標を取得
-	const XMFLOAT3 GetWorldPosition()const;
-
 	//描画
 	void Draw()override;
 

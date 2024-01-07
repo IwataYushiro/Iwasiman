@@ -41,17 +41,14 @@ public:
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
 	void OnCollision(const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)override;
 
-	//ワールド座標を取得
-	const XMFLOAT3 GetWorldPosition()const;
-
 private:
 	//速度
 	XMFLOAT3 velocity_;
 
 	//寿命
-	static const int32_t lifeTime_ = 60 * 2;
+	const float lifeTime_ = 60.0f * 2.0f;
 	//死亡時間
-	int32_t deathTimer_ = lifeTime_;
+	float deathTimer_ = lifeTime_;
 	//死亡フラグ
 	bool isDead_ = false;
 	//半径

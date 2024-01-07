@@ -32,11 +32,6 @@ public:
 	void Parameter();
 	//更新
 	void Update(const bool isStart = false)override;
-	//転送　
-	void Trans();
-	
-	//ワールド座標を取得
-	const XMFLOAT3 GetWorldPosition()const;
 	//描画
 	void Draw()override;
 	//パーティクル描画
@@ -60,8 +55,7 @@ private:
 
 	//反転フラグ
 	bool isReverse_ = false;
-	//現在位置取得
-	XMFLOAT3 nowPos_ = {};
+	
 	//パーティクル
 	std::unique_ptr<Particle> particleFire_ = nullptr;
 	//パーティクルマネージャー

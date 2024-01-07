@@ -151,31 +151,6 @@ void EnemyBoss::Update(const bool isStart) {
 	pmFire_->Update();
 	pmSmoke_->Update();
 }
-
-//転送
-void EnemyBoss::Trans() {
-
-	//ワールド座標
-	XMMATRIX world;
-	//行列更新
-	world = XMMatrixIdentity();
-	XMMATRIX matWorld = XMMatrixIdentity();
-
-	XMMATRIX matScale = XMMatrixScaling(Object3d::GetScale().x, Object3d::GetScale().y, Object3d::GetScale().z);
-
-	XMMATRIX matRot = XMMatrixRotationZ(Object3d::GetRotation().z)
-		* XMMatrixRotationX(Object3d::GetRotation().x) * XMMatrixRotationY(Object3d::GetRotation().y);
-
-	XMMATRIX matTrans = XMMatrixTranslation(Object3d::GetPosition().x,
-		Object3d::GetPosition().y, Object3d::GetPosition().z);
-
-	//合成
-	matWorld = matScale * matRot * matTrans;
-
-	world = matWorld;
-	Object3d::SetWorld(world);
-
-}
 //弾発射
 void EnemyBoss::Fire() {
 	assert(player_);
@@ -253,8 +228,8 @@ void EnemyBoss::UpdateApproach() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		const int32_t minInterval_ = fireInterval_;
-		const int32_t maxInterval_ = fireInterval_ * 2;
+		const int32_t minInterval_ = fireInterval_ / 2;
+		const int32_t maxInterval_ = fireInterval_;
 		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
 	//ここまで来たら攻撃フェーズへ
@@ -295,8 +270,8 @@ void EnemyBoss::UpdateAttack() {
 		//弾発射
 		Fire();
 		//発射タイマー初期化
-		const int32_t minInterval_ = fireInterval_;
-		const int32_t maxInterval_ = fireInterval_ * 2;
+		const int32_t minInterval_ = fireInterval_/2;
+		const int32_t maxInterval_ = fireInterval_;
 		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
 	}
 	//死んだら死亡演出
@@ -336,20 +311,6 @@ const XMFLOAT3 EnemyBoss::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const 
 	return ans;
 }
 
-
-//ワールド座標を取得
-const XMFLOAT3 EnemyBoss::GetWorldPosition() const {
-
-	//ワールド座標を取得
-	XMFLOAT3 worldPos;
-
-	//ワールド行列の平行移動成分を取得
-	worldPos.x = Object3d::GetPosition().x;
-	worldPos.y = Object3d::GetPosition().y;
-	worldPos.z = Object3d::GetPosition().z;
-
-	return worldPos;
-}
 void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない

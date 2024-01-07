@@ -613,6 +613,8 @@ void GamePlayScene::UpdateIsStageClear()
 
 void GamePlayScene::UpdateIsGameOver()
 {
+	//ボスを撃破している場合は呼び出されない
+	for (std::unique_ptr<BaseEnemy>& enemy : enemys_)if (enemy->BossDead()) return;
 	FadeOut(deepRed_);//赤くする
 	//完全に赤くなったらゲームオーバーへ遷移
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
@@ -943,7 +945,7 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newenemy->SetPosition(pos);
-
+			newenemy->SetStartPos(pos);//初期座標のセット
 			// 回転角
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);

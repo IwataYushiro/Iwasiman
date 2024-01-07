@@ -66,7 +66,8 @@ protected:
 	int life_;
 	//速度
 	XMFLOAT3 speed_;
-
+	//初期座標
+	XMFLOAT3 startPos_;
 	//ボスの死亡フラグ
 	bool bossDead_;
 
@@ -105,5 +106,7 @@ public://アクセッサ
 	virtual bool IsDead() const { return isDead_; }
 	//ボスが死んだかどうか
 	virtual bool BossDead()const { return bossDead_; }
+	//初期座標のセット
+	virtual void SetStartPos(const XMFLOAT3& startpos) { startPos_ = startpos; }
 };
 

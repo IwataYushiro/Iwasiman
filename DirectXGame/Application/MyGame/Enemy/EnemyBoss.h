@@ -36,12 +36,8 @@ public:
 	void Parameter();
 	//更新
 	void Update(const bool isStart = false)override;
-	//転送　
-	void Trans();
 	//弾発射
 	void Fire();
-	//ワールド座標を取得
-	const XMFLOAT3 GetWorldPosition()const;
 	//描画
 	void Draw()override;
 	//パーティクル描画
