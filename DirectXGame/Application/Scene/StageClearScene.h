@@ -117,9 +117,6 @@ private://メンバ変数
 	std::vector<std::unique_ptr<Object3d>> objGrounds_;			//床配列
 	std::vector<std::unique_ptr<Object3d>> objGoals_;			//ゴール配列
 
-	//マッピングモデル
-	std::map<std::string, Model*> models_;
-
 	//フラグ類
 	bool isFinalStage_ = false;					//最終面の場合
 	bool isNextStage_ = false;					//次のステージへ行く場合

@@ -126,9 +126,7 @@ private://メンバ変数
 	std::vector<std::unique_ptr<Object3d>> objGrounds_;					//床オブジェクト配列
 	std::vector<std::unique_ptr<Object3d>> objGoals_;					//ゴールオブジェクト配列
 
-	//マッピングモデル
-	std::map<std::string, Model*> models_;
-
+	
 	//フラグ類
 	bool isMenu_ = false;				//タイトルメニュー画面にいるとき
 	bool isBack_ = false;				//タイトルメニューからタイトルに戻るとき

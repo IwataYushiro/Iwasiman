@@ -11,6 +11,8 @@
 #include "Sprite.h"
 #include "ParticleManager.h"
 
+#include <map>
+#include <memory>
 //前方宣言
 //シーンマネージャー
 class SceneManager;
@@ -66,10 +68,23 @@ protected://継承メンバ変数
 	//アンカーポイントのプリセット
 	const DirectX::XMFLOAT2 ANCHOR_POINT_CENTRAL = { 0.5f,0.5f };//中央
 
+	//マッピングモデル
+	std::map<std::string, Model*> models_;
+
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)
 	SceneManager* sceneManager_ = nullptr;
 
 public://アクセッサ置き場
 	virtual void SetSceneManager(SceneManager* sceneManager) { this->sceneManager_ = sceneManager; }
+
+protected://継承メンバ関数
+	//モデル読み込みとマッピングの共通化
+	void ModelMapping(std::unique_ptr<Model>& model, const std::string& modelName, bool smoothing = false)
+	{
+		//モデルを読み込む
+		model = Model::LoadFromOBJ(modelName,smoothing);				//自機モデル
+		//マップに登録
+		models_.insert(std::make_pair(modelName, model.get()));
+	}
 };

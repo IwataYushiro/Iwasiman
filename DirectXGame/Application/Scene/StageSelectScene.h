@@ -108,9 +108,7 @@ private://メンバ変数
 	std::unique_ptr<Model> modelStageTutorial_ = nullptr;		//チュートリアルステージモデル(天球)
 	std::unique_ptr<Model> modelStage1_ = nullptr;				//ステージ1モデル(天球)
 	std::unique_ptr<Model> modelStage2_ = nullptr;				//ステージ2モデル(天球)
-	//マッピングモデル
-	std::map<std::string, Model*> models_;
-
+	
 	//オブジェクト回転用
 	DirectX::XMFLOAT3 rot_;
 

@@ -1232,56 +1232,32 @@ void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
 
 void GamePlayScene::LoadModel()
 {
-	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("playeridle");				//自機モデル
-	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");		//自機弾モデル
-	modelPlayerDash_ = Model::LoadFromOBJ("playerdash");			//自機ダッシュモデル
-	modelPlayerJump_ = Model::LoadFromOBJ("playerjump");			//自機ジャンプモデル
-	modelPlayerAttack_ = Model::LoadFromOBJ("playerattack");		//自機攻撃モデル
-	modelPlayerHit_ = Model::LoadFromOBJ("playerhit");				//自機死亡モデル
-	modelEnemy1_ = Model::LoadFromOBJ("enemy1");					//通常敵モデル
-	modelEnemy2_ = Model::LoadFromOBJ("enemy2");					//ドッスン風敵モデル
-	modelEnemyDanger_ = Model::LoadFromOBJ("enemydanger");			//危険な敵モデル
-	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");			//敵弾モデル
-	modelBoss1_ = Model::LoadFromOBJ("boss1");						//ステージ1のボスモデル
-	modelBossCore1_ = Model::LoadFromOBJ("core1");					//ステージ1のボスの周りにあるコアのモデル
-	modelGoal_ = Model::LoadFromOBJ("sphere");						//ゴールモデル
-	modelItemJump_ = Model::LoadFromOBJ("itemjump");				//ジャンプ力強化アイテムモデル
-	modelItemHeal_ = Model::LoadFromOBJ("itemheal");				//ライフ回復アイテムモデル
-	modelSpike_ = Model::LoadFromOBJ("spikeball");					//トゲのモデル
-	modelBoxUpDown_ = Model::LoadFromOBJ("boxud");					//上下する床のモデル
-	modelStageT_ = Model::LoadFromOBJ("skydomet");					//チュートリアルステージモデル(天球)
-	modelStage1_ = Model::LoadFromOBJ("skydome");					//ステージ1モデル(天球)
-	modelStage2_ = Model::LoadFromOBJ("skydome2");					//ステージ2モデル(天球)
-	modelGround_ = Model::LoadFromOBJ("ground");					//床のモデル
-	modelSphere_ = Model::LoadFromOBJ("sphere2");					//球モデル
-	modelBox_ = Model::LoadFromOBJ("ground2");						//AABB床モデル
-
-	//マップに登録する
-	models_.insert(std::make_pair("playeridle", modelPlayer_.get()));
-	models_.insert(std::make_pair("playerbullet", modelPlayerBullet_.get()));
-	models_.insert(std::make_pair("playerdash", modelPlayerDash_.get()));
-	models_.insert(std::make_pair("playerjump", modelPlayerJump_.get()));
-	models_.insert(std::make_pair("playerattack", modelPlayerAttack_.get()));
-	models_.insert(std::make_pair("playerhit", modelPlayerHit_.get()));
-	models_.insert(std::make_pair("enemy1", modelEnemy1_.get()));
-	models_.insert(std::make_pair("enemy2", modelEnemy2_.get()));
-	models_.insert(std::make_pair("enemydanger", modelEnemyDanger_.get()));
-	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_.get()));
-	models_.insert(std::make_pair("boss1", modelBoss1_.get()));
-	models_.insert(std::make_pair("core1", modelBossCore1_.get()));
-	models_.insert(std::make_pair("sphere", modelGoal_.get()));
-	models_.insert(std::make_pair("Itemjump", modelItemJump_.get()));
-	models_.insert(std::make_pair("itemheal", modelItemHeal_.get()));
-	models_.insert(std::make_pair("spikeball", modelSpike_.get()));
-	models_.insert(std::make_pair("boxud", modelBoxUpDown_.get()));
-	models_.insert(std::make_pair("skydomet", modelStageT_.get()));
-	models_.insert(std::make_pair("skydome", modelStage1_.get()));
-	models_.insert(std::make_pair("skydome2", modelStage2_.get()));
-	models_.insert(std::make_pair("ground", modelGround_.get()));
-	models_.insert(std::make_pair("sphere2", modelSphere_.get()));
-	models_.insert(std::make_pair("ground2", modelBox_.get()));
-
+	//モデル読み込んでマップに登録する
+	ModelMapping(modelPlayer_, "playeridle");					//自機モデル
+	ModelMapping(modelPlayerBullet_, "playerbullet");			//自機弾モデル
+	ModelMapping(modelPlayerDash_, "playerdash");				//自機ダッシュモデル
+	ModelMapping(modelPlayerJump_, "playerjump");				//自機ジャンプモデル
+	ModelMapping(modelPlayerAttack_, "playerattack");			//自機攻撃モデル
+	ModelMapping(modelPlayerHit_, "playerhit");					//自機死亡モデル
+	ModelMapping(modelEnemy1_, "enemy1");						//通常敵モデル
+	ModelMapping(modelEnemy2_, "enemy2");						//ドッスン風敵モデル
+	ModelMapping(modelEnemyDanger_, "enemydanger");				//危険な敵モデル
+	ModelMapping(modelEnemyBullet_, "enemybullet");				//敵弾モデル
+	ModelMapping(modelBoss1_, "boss1");							//ステージ1のボスモデル
+	ModelMapping(modelBossCore1_, "core1");						//ステージ1のボスの周りにあるコアのモデル
+	ModelMapping(modelGoal_, "sphere");							//ゴールモデル
+	ModelMapping(modelItemJump_, "itemjump");					//ジャンプ力強化アイテムモデル
+	ModelMapping(modelItemHeal_, "itemheal");					//ライフ回復アイテムモデル
+	ModelMapping(modelSpike_, "spikeball");						//トゲのモデル
+	ModelMapping(modelBoxUpDown_, "boxud");						//上下する床のモデル
+	ModelMapping(modelStageT_, "skydomet");						//チュートリアルステージモデル(天球)
+	ModelMapping(modelStage1_, "skydome");						//ステージ1モデル(天球)
+	ModelMapping(modelStage2_, "skydome2");						//ステージ2モデル(天球)
+	ModelMapping(modelGround_, "ground");						//床のモデル
+	ModelMapping(modelSphere_, "sphere2");						//球モデル
+	ModelMapping(modelBox_, "ground2");							//AABB床モデル
+	
+	//自機に使うモデル
 	modelPlayerList_.playerModel = modelPlayer_.get();				//基本態勢
 	modelPlayerList_.playerBullet = modelPlayerBullet_.get();		//弾
 	modelPlayerList_.playerHit = modelPlayerHit_.get();				//ヒット

@@ -122,9 +122,11 @@ void StageSelectScene::Initialize()
 	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
 	//背景モデル
-	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");
-	modelStage1_ = Model::LoadFromOBJ("skydome");
-	modelStage2_ = Model::LoadFromOBJ("skydome2");
+	// モデルを読み込んで登録
+	ModelMapping(modelStageTutorial_, "skydomet");			//チュートリアルステージモデル(天球)
+	ModelMapping(modelStage1_, "skydome");					//ステージ1モデル(天球)
+	ModelMapping(modelStage2_, "skydome2");					//ステージ2モデル(天球)
+	
 
 	objStage_ = Object3d::Create();
 	objStage_->SetModel(modelStageTutorial_.get());
@@ -581,16 +583,11 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 {
 	// レベルデータの読み込み
 	levelData_ = LevelLoader::LoadFile(stagePath);
-
-	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("playerdash", true);		//自機モデル
-	modelGoal_ = Model::LoadFromOBJ("sphere");					//ゴールモデル
-	modelGround_ = Model::LoadFromOBJ("ground");				//床モデル
-
-	//マップに登録する
-	models_.insert(std::make_pair("playerdash", modelPlayer_.get()));
-	models_.insert(std::make_pair("sphere", modelGoal_.get()));
-	models_.insert(std::make_pair("ground", modelGround_.get()));
+	
+	// モデルを読み込んで登録
+	ModelMapping(modelPlayer_, "playerdash", true);		//自機モデル
+	ModelMapping(modelGround_, "ground");				//床モデル
+	ModelMapping(modelGoal_, "sphere");					//ゴールモデル
 
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData_->objects) {

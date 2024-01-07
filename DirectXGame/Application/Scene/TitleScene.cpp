@@ -613,22 +613,14 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 	// レベルデータの読み込み
 	levelData_ = LevelLoader::LoadFile(stagePath);
 
-	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("playerdash", true);	  //自機モデル
-	modelSkydome_ = Model::LoadFromOBJ("skydomet");			  //チュートリアルステージモデル(天球)
-	modelSkydomeStage1_ = Model::LoadFromOBJ("skydome");	  //ステージ1モデル(天球)
-	modelSkydomeStage2_ = Model::LoadFromOBJ("skydome2");	  //ステージ2モデル(天球)
-	modelGround_ = Model::LoadFromOBJ("ground");			  //床モデル
-	modelGoal_ = Model::LoadFromOBJ("sphere");				  //ゴールモデル
+	// モデルを読み込んで登録
+	ModelMapping(modelPlayer_, "playerdash", true);		//自機モデル
+	ModelMapping(modelSkydome_, "skydomet");			//チュートリアルステージモデル(天球)
+	ModelMapping(modelSkydomeStage1_, "skydome");		//ステージ1モデル(天球)
+	ModelMapping(modelSkydomeStage2_, "skydome2");		//ステージ2モデル(天球)
+	ModelMapping(modelGround_, "ground");				//床モデル
+	ModelMapping(modelGoal_, "sphere");					//ゴールモデル
 	
-	//マップに登録する
-	models_.insert(std::make_pair("playerdash", modelPlayer_.get()));
-	models_.insert(std::make_pair("skydomet", modelSkydome_.get()));
-	models_.insert(std::make_pair("skydome", modelSkydomeStage1_.get()));
-	models_.insert(std::make_pair("skydome2", modelSkydomeStage2_.get()));
-	models_.insert(std::make_pair("ground", modelGround_.get()));
-	models_.insert(std::make_pair("sphere", modelGoal_.get()));
-
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索

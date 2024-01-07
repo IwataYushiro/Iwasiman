@@ -122,8 +122,6 @@ private://メンバ変数
 	//オブジェクト回転用
 	DirectX::XMFLOAT3 rot_;
 
-	//マッピングモデル
-	std::map<std::string, Model*> models_;
 	//オブジェクト配列
 	std::vector<std::unique_ptr<Object3d>> objects_;
 

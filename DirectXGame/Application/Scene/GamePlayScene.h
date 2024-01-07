@@ -23,7 +23,7 @@
 #include "XYZ.h"
 
 #include <vector>
-#include <map>
+
 #include <sstream>
 #include <string>
 
@@ -434,8 +434,6 @@ private:
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
 
-	//マッピングモデル
-	std::map<std::string, Model*> models_;
 	//オブジェクト配列
 	std::vector<std::unique_ptr<Object3d>> objects_;
 	//天球配列

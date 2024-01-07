@@ -584,21 +584,14 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 	// レベルデータの読み込み
 	levelData_ = LevelLoader::LoadFile(stagePath);
 
-	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("playerhit");				 //自機モデル
-	modelPlayerContinue_ = Model::LoadFromOBJ("playerdash");	 //自機モデル（コンティニュー）
-	modelGoal_ = Model::LoadFromOBJ("sphere");					 //ゴールモデル
-	modelStageTutorial_ = Model::LoadFromOBJ("skydomet");		 //チュートリアルステージモデル(天球)
-	modelStage1_ = Model::LoadFromOBJ("skydome");				 //ステージ1モデル(天球)
-	modelStage2_ = Model::LoadFromOBJ("skydome2");				 //ステージ2モデル(天球)
-	//マップに登録する
-	models_.insert(std::make_pair("playerhit", modelPlayer_.get()));
-	models_.insert(std::make_pair("playerdash", modelPlayerContinue_.get()));
-	models_.insert(std::make_pair("sphere", modelGoal_.get()));
-	models_.insert(std::make_pair("skydomet", modelStageTutorial_.get()));
-	models_.insert(std::make_pair("skydome", modelStage1_.get()));
-	models_.insert(std::make_pair("skydome2", modelStage2_.get()));
-
+	// モデルを読み込んで登録
+	ModelMapping(modelPlayer_, "playerhit");			  //自機モデル
+	ModelMapping(modelPlayerContinue_, "playerdash");	  //自機モデル（コンティニュー）
+	ModelMapping(modelGoal_, "sphere");					  //ゴールモデル
+	ModelMapping(modelStageTutorial_, "skydomet");		  //チュートリアルステージモデル(天球)
+	ModelMapping(modelStage1_, "skydome");				  //ステージ1モデル(天球)
+	ModelMapping(modelStage2_, "skydome2");				  //ステージ2モデル(天球)
+	
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索
