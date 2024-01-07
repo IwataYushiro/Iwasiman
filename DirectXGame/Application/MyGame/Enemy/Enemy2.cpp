@@ -232,6 +232,7 @@ void Enemy2::Update(const bool isStart) {
 
 		//死んだら
 		if (life_ <= deathLife_) {
+			life_ = deathLife_;
 			phase_ = Phase::Leave;
 		}
 	}
@@ -365,7 +366,7 @@ void Enemy2::Landing()
 	Ray ray;
 	const XMVECTOR rayDir = { 0.0f,-1.0f,0.0f,0.0f };
 	ray.start = sphereCollider->center;
-	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	ray.start.m128_f32[XYZ_Y] += sphereCollider->GetRadius();
 	ray.dir = rayDir;
 	RaycastHit raycastHit;
 	//半径　X　2.0f(radiusMulNum)
@@ -407,8 +408,9 @@ void Enemy2::Landing()
 //描画
 void Enemy2::Draw() {
 
+	if (phase_ == Phase::Leave)return;
 	//モデルの描画
-	if (phase_ != Phase::Leave)Object3d::Draw();
+	Object3d::Draw();
 
 
 }
@@ -466,7 +468,7 @@ void Enemy2::UpdateLeave() {
 void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない
-
+	
 	//現在ライフによる判定処理の基準となるライフ
 	const int hitLife = 1;
 	//煙プリセット

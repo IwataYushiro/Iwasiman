@@ -401,7 +401,8 @@ private:
 	//敵
 	std::unique_ptr<AbstractEnemyFactory> enemyFactory_;					//敵の工場
 	std::list<std::unique_ptr<BaseEnemy>> enemys_;							//敵リスト
-	std::unique_ptr<Model> modelEnemy1_ = nullptr;							//敵モデル
+	std::unique_ptr<Model> modelEnemy1_ = nullptr;							//通常敵モデル
+	std::unique_ptr<Model> modelEnemy2_ = nullptr;							//ドッスン風敵モデル
 	std::unique_ptr<Model> modelEnemyDanger_ = nullptr;						//危険な敵モデル
 	std::unique_ptr<Model> modelEnemyBullet_ = nullptr;						//敵弾モデル
 	std::unique_ptr<Model> modelBoss1_ = nullptr;							//ステージ1のボスモデル
