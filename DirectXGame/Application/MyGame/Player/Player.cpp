@@ -692,7 +692,12 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		
 		if (subAttribute == SUBCOLLISION_ATTR_ITEM_JUMP)//ジャンプ強化アイテム
 		{
-			if (isGetJumpItem_)return; //多重ヒット防止
+			if (isGetJumpItem_)
+			{
+				jumpPowerUpcount_ = 0;//時間をリセット
+				return; //多重ヒット防止
+			}
+				
 			isGetJumpItem_ = true;
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ITEM_HEAL)//ライフ回復アイテム
