@@ -167,8 +167,7 @@ void StageClearScene::Update()
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 		//パーティクル
-		pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
-			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+		pmFire_->ActiveX(fire);
 		
 		//丸影
 		SetUpCircleShadow(player->GetPosition());
@@ -263,8 +262,7 @@ void StageClearScene::UpdateIsNextStage()
 			{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f}
 		};
 		//パーティクル
-		pmClear_->ActiveX(clear.particle, clear.startPos, clear.pos, clear.vel,
-			clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
+		pmClear_->ActiveX(clear);
 
 	}
 
@@ -293,8 +291,7 @@ void StageClearScene::UpdateIsNextStage()
 			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f}
 		};
 		//ゴールの位置を知らせるパーティクル
-		pmClear_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
-			goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
+		pmClear_->ActiveY(goalEffect);
 
 		//ゴールは常時回っている
 		DirectX::XMFLOAT3 rot = goal->GetRotation();

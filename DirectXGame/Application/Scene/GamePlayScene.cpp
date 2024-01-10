@@ -249,8 +249,7 @@ void GamePlayScene::UpdateIsStartGame()
 			{0.0f,0.0f,0.0f,1.0f}
 		};
 		//パーティクル
-		pm_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+		pm_->ActiveX(smoke);
 		
 		//座標セット
 		player->SetPosition

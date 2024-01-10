@@ -166,8 +166,7 @@ void GameOverScene::Update()
 		if (completeRotate_)//イージングによる回転が終わったら
 		{
 			//ダッシュエフェクトに切り替え
-			pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
-				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+			pmFire_->ActiveX(fire);
 		}
 		//更新
 		player->Update();
@@ -425,8 +424,7 @@ void GameOverScene::UpdateIsContinue()
 			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f}
 		};
 		//ゴールの位置を知らせるパーティクル
-		pmGoal_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
-			goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
+		pmGoal_->ActiveY(goalEffect);
 
 		//ゴールは常時回っている
 		DirectX::XMFLOAT3 rot = goal->GetRotation();
@@ -782,12 +780,10 @@ void GameOverScene::FallParticle(const std::unique_ptr<Object3d>& player)
 		{1.0f,1.0f,1.0,1.0f },
 		{ 0.0f,0.0f,0.0f,1.0f }
 	};
-	//パーティクル
-	pmSmoke_->ActiveY(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-		smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-	//パーティクル
-	pmFire_->ActiveY(wind.particle, wind.startPos, wind.pos, wind.vel,
-		wind.acc, wind.num, wind.scale, wind.startColor, wind.endColor);
+	//煙パーティクル
+	pmSmoke_->ActiveY(smoke);
+	//風っぽいパーティクル
+	pmFire_->ActiveY(wind);
 
 }
 
