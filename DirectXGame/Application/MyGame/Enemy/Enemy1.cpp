@@ -310,7 +310,7 @@ void Enemy1::Landing()
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;	
 	ray.start = sphereCollider->center;
-	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	ray.start.m128_f32[XYZ_Y] += sphereCollider->GetRadius();
 	const XMVECTOR rayDir = { 0.0f,-1.0f,0.0f,0.0f };
 	ray.dir = rayDir;
 	//レイキャスト

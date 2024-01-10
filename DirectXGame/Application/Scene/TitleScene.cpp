@@ -226,8 +226,7 @@ void TitleScene::Update()
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 		//パーティクル
-		pmFire_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+		pmFire_->ActiveX(smoke);
 		
 		//丸影
 		SetUpCircleShadow(player->GetPosition());
@@ -325,8 +324,7 @@ void TitleScene::UpdateIsStartGame()
 			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f}
 		};
 		//ゴールの位置を知らせるパーティクル
-		pmGoal_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
-			goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
+		pmGoal_->ActiveY(goalEffect);
 
 		//ゴールは常時回っている
 		DirectX::XMFLOAT3 rot = goal->GetRotation();

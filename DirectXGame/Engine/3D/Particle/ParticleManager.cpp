@@ -347,9 +347,9 @@ void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3
 		const XMFLOAT3 md_pos = setpos;
 		const XMFLOAT3 md_move = setmove;
 		XMFLOAT3 pos{};
-		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + setmove.x;
-		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + setmove.y;
-		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + setmove.z;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + md_move.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + md_move.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + md_move.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
@@ -365,6 +365,35 @@ void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3
 		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
+void ParticleManager::Active(const Preset& preset)
+{
+	//パーティクルセット
+	particle_ = preset.particle;
+
+	for (int i = 0; i < preset.num; i++)
+	{
+		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
+		const XMFLOAT3 md_pos = preset.pos;
+		const XMFLOAT3 md_move =preset.startPos;
+		XMFLOAT3 pos{};
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + md_move.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + md_move.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + md_move.z;
+		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
+		const XMFLOAT3 md_vel = preset.vel;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / calculationPosVelOffset_;
+		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / calculationPosVelOffset_;
+		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / calculationPosVelOffset_;
+		//重力に見立ててYのみ{0.001f,0}でランダムに分布
+		XMFLOAT3 acc{};
+		const XMFLOAT3 md_acc = preset.acc;
+		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
+
+		//追加
+		particle_->Add(lifeTime_, pos, vel, acc, preset.scale.x, preset.scale.y, preset.startColor, preset.endColor);
+	}
+}
 void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
 	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
@@ -374,10 +403,11 @@ void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
+		const XMFLOAT3 md_move = setmove;
 		XMFLOAT3 pos{};
-		pos.x = ((float)rand() / RAND_MAX * md_pos.x / calculationPosVelOffset_) + setmove.x;
-		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + setmove.y;
-		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + setmove.z;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x / calculationPosVelOffset_) + md_move.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + md_move.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + md_move.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
@@ -394,6 +424,36 @@ void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 	}
 }
 
+void ParticleManager::ActiveX(const Preset& preset)
+{
+	//パーティクルセット
+	particle_ = preset.particle;
+
+	for (int i = 0; i < preset.num; i++)
+	{
+		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
+		const XMFLOAT3 md_pos = preset.pos;
+		const XMFLOAT3 md_move = preset.startPos;
+		XMFLOAT3 pos{};
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x / calculationPosVelOffset_) + md_move.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + md_move.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + md_move.z;
+		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
+		const XMFLOAT3 md_vel = preset.vel;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * md_vel.x / calculationPosVelOffset_;
+		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / calculationPosVelOffset_;
+		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / calculationPosVelOffset_;
+		//重力に見立ててYのみ{0.001f,0}でランダムに分布
+		XMFLOAT3 acc{};
+		const XMFLOAT3 md_acc = preset.acc;
+		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
+
+		//追加
+		particle_->Add(lifeTime_, pos, vel, acc, preset.scale.x, preset.scale.y, preset.startColor, preset.endColor);
+	}
+}
+
 void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
 	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
@@ -403,10 +463,11 @@ void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
+		const XMFLOAT3 md_move = setmove;
 		XMFLOAT3 pos{};
-		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + setmove.x;
-		pos.y = ((float)rand() / RAND_MAX * md_pos.y / calculationPosVelOffset_) + setmove.y;
-		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + setmove.z;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + md_move.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y / calculationPosVelOffset_) + md_move.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + md_move.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
@@ -423,6 +484,36 @@ void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 	}
 }
 
+void ParticleManager::ActiveY(const Preset& preset)
+{
+	//パーティクルセット
+	particle_ = preset.particle;
+
+	for (int i = 0; i < preset.num; i++)
+	{
+		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
+		const XMFLOAT3 md_pos = preset.pos;
+		const XMFLOAT3 md_move = preset.startPos;
+		XMFLOAT3 pos{};
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x  - md_pos.x / calculationPosVelOffset_) + md_move.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y / calculationPosVelOffset_) + md_move.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z - md_pos.z / calculationPosVelOffset_) + md_move.z;
+		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
+		const XMFLOAT3 md_vel = preset.vel;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / calculationPosVelOffset_;
+		vel.y = (float)rand() / RAND_MAX * md_vel.y / calculationPosVelOffset_;
+		vel.z = (float)rand() / RAND_MAX * md_vel.z - md_vel.z / calculationPosVelOffset_;
+		//重力に見立ててYのみ{0.001f,0}でランダムに分布
+		XMFLOAT3 acc{};
+		const XMFLOAT3 md_acc = preset.acc;
+		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
+
+		//追加
+		particle_->Add(lifeTime_, pos, vel, acc, preset.scale.x, preset.scale.y, preset.startColor, preset.endColor);
+	}
+}
+
 void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
 	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
 {
@@ -432,10 +523,11 @@ void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 	{
 		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
 		const XMFLOAT3 md_pos = setpos;
+		const XMFLOAT3 md_move = setmove;
 		XMFLOAT3 pos{};
-		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + setmove.x;
-		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + setmove.y;
-		pos.z = ((float)rand() / RAND_MAX * md_pos.z / calculationPosVelOffset_) + setmove.z;
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + md_move.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + md_move.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z / calculationPosVelOffset_) + md_move.z;
 		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
 		const XMFLOAT3 md_vel = setvel;
 		XMFLOAT3 vel{};
@@ -449,5 +541,35 @@ void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 
 		//追加
 		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+	}
+}
+
+void ParticleManager::ActiveZ(const Preset& preset)
+{
+	//パーティクルセット
+	particle_ = preset.particle;
+
+	for (int i = 0; i < preset.num; i++)
+	{
+		//X,Y,Z全て{-20.0f,20.0f}でランダムに分布
+		const XMFLOAT3 md_pos = preset.pos;
+		const XMFLOAT3 md_move = preset.startPos;
+		XMFLOAT3 pos{};
+		pos.x = ((float)rand() / RAND_MAX * md_pos.x - md_pos.x / calculationPosVelOffset_) + md_move.x;
+		pos.y = ((float)rand() / RAND_MAX * md_pos.y - md_pos.y / calculationPosVelOffset_) + md_move.y;
+		pos.z = ((float)rand() / RAND_MAX * md_pos.z / calculationPosVelOffset_) + md_move.z;
+		//X,Y,Z全て{0.1f,0.1f}でランダムに分布
+		const XMFLOAT3 md_vel = preset.vel;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * md_vel.x - md_vel.x / calculationPosVelOffset_;
+		vel.y = (float)rand() / RAND_MAX * md_vel.y - md_vel.y / calculationPosVelOffset_;
+		vel.z = (float)rand() / RAND_MAX * md_vel.z / calculationPosVelOffset_;
+		//重力に見立ててYのみ{0.001f,0}でランダムに分布
+		XMFLOAT3 acc{};
+		const XMFLOAT3 md_acc = preset.acc;
+		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
+
+		//追加
+		particle_->Add(lifeTime_, pos, vel, acc, preset.scale.x, preset.scale.y, preset.startColor, preset.endColor);
 	}
 }
