@@ -363,8 +363,7 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 			if (life_ > deathLife_)//ライフが0じゃない場合
 			{
 				//パーティクルでヒット演出
-				pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+				pmSmoke_->ActiveZ(smoke);
 
 				pmSmoke_->Update();
 
@@ -372,8 +371,7 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 			else//ライフが0の場合
 			{
 				//パーティクルでヒット演出
-				pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
-					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+				pmFire_->ActiveZ(fire);
 
 				pmFire_->Update();
 
@@ -388,8 +386,7 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
-				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+			pmFire_->ActiveZ(fire);
 
 			pmFire_->Update();
 

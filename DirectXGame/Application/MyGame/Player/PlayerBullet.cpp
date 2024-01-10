@@ -125,6 +125,5 @@ void PlayerBullet::UpdateParticle()
 		{0.0f,0.0f,0.0f,1.0f}
 	};
 	
-	pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
-		fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+	pmFire_->ActiveX(fire);
 }

@@ -75,8 +75,7 @@ void Goal::Update()
 		{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f}
 	};
 	//ゴールの位置を知らせるパーティクル
-	pm_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
-		goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
+	pm_->ActiveY(goalEffect);
 
 	//ゴールは常時回っている
 	const float rotSpeedY = 1.0f;

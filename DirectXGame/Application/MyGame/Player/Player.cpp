@@ -244,6 +244,7 @@ void Player::Move() {
 	//ダッシュ
 	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
 	{
+		//左にダッシュ移動
 		if (input_->PushKey(DIK_A)) {
 			if (isRight_)
 			{
@@ -260,6 +261,7 @@ void Player::Move() {
 			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x -= moveSpeed * dashSpeed;
 		}
+		//右にダッシュ移動
 		else if (input_->PushKey(DIK_D)) {
 			if (!isRight_)
 			{
@@ -279,6 +281,7 @@ void Player::Move() {
 	}
 	else//通常移動
 	{
+		//左に通常移動
 		if (input_->PushKey(DIK_A)) {
 			if (isRight_)
 			{
@@ -295,6 +298,7 @@ void Player::Move() {
 			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x -= moveSpeed;
 		}
+		//右に通常移動
 		else if (input_->PushKey(DIK_D)) {
 			if (!isRight_)
 			{
@@ -647,8 +651,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_ -= damege.enemyBullet;
 
 		//ヒット演出
-		pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
-			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+		pmFire_->ActiveZ(fire);
 		pmFire_->Update();
 		
 		//model_ = modelHit_;
@@ -864,8 +867,7 @@ void Player::UpdateBreak()
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 		//大爆発
-		pmFire_->ActiveY(fire.particle, fire.startPos, fire.pos, fire.vel,
-			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+		pmFire_->ActiveY(fire);
 
 		//煙プリセット
 		const ParticleManager::Preset smoke =
@@ -882,8 +884,7 @@ void Player::UpdateBreak()
 		};
 
 		//煙も舞う
-		pmSmoke_->ActiveY(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+		pmSmoke_->ActiveY(smoke);
 
 		//カメラ速度
 		XMFLOAT3 cameraSppedEyeTarget;

@@ -176,8 +176,7 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info,const unsigned
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)//自機本体が触れたら効果発動
 		{
 			//ゲットできたことを知らせるパーティクル
-			pm_->ActiveY(itemGet.particle, itemGet.startPos, itemGet.pos, itemGet.vel,
-				itemGet.acc, itemGet.num, itemGet.scale, itemGet.startColor, itemGet.endColor);
+			pm_->ActiveY(itemGet);
 			//アイテムごとに効果は違う
 			if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ITEM_JUMP)//ジャンプ力強化アイテムの場合
 			{

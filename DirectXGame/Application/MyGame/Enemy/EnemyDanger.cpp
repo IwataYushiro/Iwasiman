@@ -172,8 +172,7 @@ void EnemyDanger::UpdateParticleSkin()
 	//体を覆う炎エフェクト
 	if (!isReverse_)//通常時
 	{
-		pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
-			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+		pmFire_->ActiveX(fire);
 	}
 	else//反転時
 	{
