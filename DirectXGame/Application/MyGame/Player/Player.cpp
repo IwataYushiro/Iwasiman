@@ -553,6 +553,25 @@ void Player::Landing(const unsigned short attribute)
 			//着地
 			onGround_ = true;
 			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * radiusMulNum);
+			
+			/*
+			//着地プリセット
+			const ParticleManager::Preset fire =
+			{
+				particleFire_.get(),
+				position_,
+				{ radius_ ,-radius_,radius_ },
+				{ 0.2f,0.1f,0.2f },
+				{ 0.0f,0.001f,0.0f },
+				MyMath::RandomMTInt(5,9),
+				{ 1.0f, 0.0f },
+				{ 1.0f,0.4f,1.0f,1.0f },
+				{ 0.0f,0.0f,0.0f,0.0f }
+			};
+			//着地したら土煙っぽいのを出す
+			pmFire_->ActiveY(fire);
+			*/
+
 			//行列更新
 			Object3d::Update();
 		}
