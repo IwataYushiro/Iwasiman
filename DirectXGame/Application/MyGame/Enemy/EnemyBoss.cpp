@@ -17,6 +17,13 @@ using namespace IwasiEngine;
 *	左右に動くボス敵
 
 */
+//メンバ関数ポインタテーブルの実体
+void (EnemyBoss::* EnemyBoss::updateTable_[])() =
+{
+	&EnemyBoss::UpdateApproach,
+	&EnemyBoss::UpdateAttack,
+	&EnemyBoss::UpdateLeave
+};
 
 EnemyBoss::~EnemyBoss() {
 
@@ -124,22 +131,7 @@ void EnemyBoss::Update(const bool isStart) {
 	if (!isStart)
 	{
 		//座標を移動させる
-		switch (phase_) {
-		case EnemyBoss::Phase::ApproachStage1:	//登場時
-
-			UpdateApproach();
-			break;
-
-		case EnemyBoss::Phase::AttackStage1:	//行動時
-
-			UpdateAttack();
-
-			break;
-
-		case EnemyBoss::Phase::Leave:			//撃破時
-			UpdateLeave();
-			break;
-		}
+		(this->*updateTable_[static_cast<size_t>(phase_)])();
 	}
 	//座標を転送
 	Trans();

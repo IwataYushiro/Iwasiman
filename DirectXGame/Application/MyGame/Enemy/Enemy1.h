@@ -50,12 +50,6 @@ public:
 	//パーティクル描画
 	void DrawParticle()override;
 
-	//状態変化用の更新関数
-	//接近
-	void UpdateApproach();
-	//離脱
-	void UpdateLeave();
-
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
 	void OnCollision(const CollisionInfo& info, const unsigned short attribute,
 		const unsigned short subAttribute)override;
@@ -107,4 +101,14 @@ public:
 	void SetPlayer(const Player* player) { player_ = player; }
 	//ゲームプレイシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+
+public://状態変化用の更新
+	//状態変化用の更新関数
+	//接近
+	void UpdateApproach();
+	//離脱
+	void UpdateLeave();
+private:
+	//メンバ関数ポインタのテーブル
+	static void (Enemy1::* updateTable_[])();
 };

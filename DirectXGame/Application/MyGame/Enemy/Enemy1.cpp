@@ -20,6 +20,12 @@ using namespace IwasiEngine;
 
 //静的メンバ変数の実体
 IwasiEngine::CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
+//メンバ関数ポインタテーブルの実体
+void (Enemy1::* Enemy1::updateTable_[])() =
+{
+	&Enemy1::UpdateApproach,
+	&Enemy1::UpdateLeave
+};
 
 Enemy1::~Enemy1() {
 	
@@ -172,14 +178,7 @@ void Enemy1::Update(const bool isStart) {
 	if (!isStart)//スタート演出時は何もしない
 	{
 		//座標を移動させる
-		switch (phase_) {
-		case Enemy1::Phase::Approach:	//行動時
-			UpdateApproach();
-			break;
-		case Enemy1::Phase::Leave:		//撃破時
-			UpdateLeave();
-			break;
-		}
+		(this->*updateTable_[static_cast<size_t>(phase_)])();
 	}
 	//座標を転送
 	Trans();

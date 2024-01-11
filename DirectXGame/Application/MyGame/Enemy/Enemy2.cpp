@@ -21,6 +21,13 @@ using namespace IwasiEngine;
 
 //静的メンバ変数の実体
 IwasiEngine::CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
+//メンバ関数ポインタテーブルの実体
+void (Enemy2::* Enemy2::updateTable_[])() =
+{
+	&Enemy2::UpdateApproach,
+	&Enemy2::UpdateBack,
+	&Enemy2::UpdateLeave
+};
 
 Enemy2::~Enemy2() {
 	
@@ -203,33 +210,7 @@ void Enemy2::Update(const bool isStart) {
 	if (!isStart)//スタート演出時は何もしない
 	{
 		//座標を移動させる
-		switch (phase_) {
-		case Enemy2::Phase::Approach:	//下降時
-
-			UpdateApproach();
-			break;
-		case Enemy2::Phase::Back:		//上昇時
-			UpdateBack();
-			break;
-		case Enemy2::Phase::Leave:		//撃破時
-			UpdateLeave();
-			break;
-		}
-		if (phase_ != Phase::Leave)		//撃破時以外は弾を発射する
-		{
-			//発射タイマーカウントダウン
-			fireTimer_--;
-			//指定時間に達した
-			if (fireTimer_ <= endFireTime_) {
-				//弾発射
-				Fire();
-				//発射タイマー初期化
-				const int32_t minInterval = fireInterval_ / 2;
-				const int32_t maxInterval = fireInterval_;
-				fireTimer_ = MyMath::RandomMTInt(minInterval, maxInterval);
-			}
-		}
-
+		(this->*updateTable_[static_cast<size_t>(phase_)])();
 		//死んだら
 		if (life_ <= deathLife_) {
 			life_ = deathLife_;
@@ -250,6 +231,21 @@ void Enemy2::Update(const bool isStart) {
 	pmFire_->Update();
 	pmSmoke_->Update();
 }
+void Enemy2::Attack()
+{
+	//発射タイマーカウントダウン
+	fireTimer_--;
+	//指定時間に達した
+	if (fireTimer_ <= endFireTime_) {
+		//弾発射
+		Fire();
+		//発射タイマー初期化
+		const int32_t minInterval = fireInterval_ / 2;
+		const int32_t maxInterval = fireInterval_;
+		fireTimer_ = MyMath::RandomMTInt(minInterval, maxInterval);
+	}
+}
+
 //弾発射
 void Enemy2::Fire() {
 	assert(player_);
@@ -434,12 +430,11 @@ void Enemy2::UpdateApproach() {
 		position_.y += speed_.y;
 		position_.z += speed_.z;
 	}
+	//攻撃処理
+	Attack();
 	//一定の位置まで達したら上へ
-	if (position_.y <= backFallPosY)
-	{
-
-		phase_ = Phase::Back;
-	}
+	if (position_.y <= backFallPosY)phase_ = Phase::Back;
+	
 }
 
 //上昇
@@ -449,7 +444,8 @@ void Enemy2::UpdateBack()
 	position_.x += backSpeed_.x;
 	position_.y += backSpeed_.y;
 	position_.z += backSpeed_.z;
-
+	//攻撃処理
+	Attack();
 	//初期位置まで達したら下へ
 	if (position_.y >= startPos_.y) phase_ = Phase::Approach;
 }

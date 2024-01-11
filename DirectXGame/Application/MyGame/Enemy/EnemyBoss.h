@@ -43,15 +43,6 @@ public:
 	//パーティクル描画
 	void DrawParticle()override;
 
-	//状態変化用の更新関数
-	//接近
-	void UpdateApproach();
-	//攻撃
-	void UpdateAttack();
-
-	//離脱
-	void UpdateLeave();
-
 	//ベジェ曲線(最初点、中間点1、中間点2、最終点、時間の進み具合)
 	const XMFLOAT3 Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t);
 
@@ -128,4 +119,17 @@ private:
 	void UpdateBezierMove(const bool notStageBoss = false);
 	//X座標をプレイヤーの動きに連動させるための関数(通常ステージ限定)
 	void UpdateSynchronizePlayerMove(const bool notStageBoss);
+
+public://状態変化用の更新
+	//状態変化用の更新関数
+	//接近
+	void UpdateApproach();
+	//攻撃
+	void UpdateAttack();
+	//離脱
+	void UpdateLeave();
+	
+private:
+	//メンバ関数ポインタのテーブル
+	static void (EnemyBoss::* updateTable_[])();
 };

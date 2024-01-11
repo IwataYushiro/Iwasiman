@@ -124,19 +124,6 @@ void EnemyCore::Update(const bool isStart) {
 	if (!isStart)
 	{
 		//À•W‚ğˆÚ“®‚³‚¹‚é
-		//switch (phase_) {
-		//case EnemyCore::Phase::CoreStage1:	//s“®
-		//	UpdateCore();
-		//	break;
-
-		//case EnemyCore::Phase::CoreBreak:	//Œ‚”j‰‰o
-		//	UpdateBreakCore();
-
-		//	break;
-		//case EnemyCore::Phase::Leave:		//Œ‚”j
-		//	UpdateLeave();
-		//	break;
-		//}
 		(this->*updateTable_[static_cast<size_t>(phase_)])();
 
 	}
