@@ -58,12 +58,13 @@
                     0.0
                 ],
                 "scaling": [
-                    3.184230089187622,
-                    8.763559341430664,
-                    3.6212449073791504
+                    7.0,
+                    7.0,
+                    7.0
                 ]
             },
-            "file_name": "skydome"
+            "file_name": "skydome",
+            "objecttype": "SKYDOME"
         },
         {
             "type": "MESH",

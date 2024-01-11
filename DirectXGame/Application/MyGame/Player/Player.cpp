@@ -108,7 +108,7 @@ bool Player::Initialize() {
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle9.png");
 	pmSmoke_ = ParticleManager::Create();
 	pmSmoke_->SetParticleModel(particleSmoke_.get());
-	pmSmoke_->SetBlendMode(ParticleManager::BP_SUBTRACT);
+	pmSmoke_->SetBlendMode(ParticleManager::BP_ALPHA);
 	//ダッシュ、爆発用の炎
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
@@ -888,18 +888,19 @@ void Player::UpdateBreak()
 		//大爆発
 		pmFire_->ActiveY(fire);
 
+		const DirectX::XMFLOAT2 smokeOffsetXY = { -2.0f,-1.5f };//煙初期座標オフセット
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
 			particleSmoke_.get(),
-			{position_.x,position_.y + 5.0f,position_.z},
-			{ 25.0f ,10.0f,15.0f },
-			{ MyMath::RandomMTFloat(0.0f,0.3f),MyMath::RandomMTFloat(0.5f,3.0f),0.3f },
+			{position_.x + smokeOffsetXY.x,position_.y + smokeOffsetXY.y,position_.z},
+			{ 3.0f ,4.0f,0.0f },
+			{ 0.5f,2.3f,0.0f },
 			{ 0.0f,0.001f,0.0f },
-			5,
-			{ 0.0f,3.0f },
-			{1.0f,1.0f,1.0f,1.0f },
-			{ 0.0f,0.0f,0.0f,1.0f }
+			2,
+			{ 1.0f, 5.0f },
+			{0.5f,0.5f,0.5f,1.0f },
+			{ 0.0f,0.0f,0.0f,0.0f }
 		};
 
 		//煙も舞う
