@@ -23,7 +23,7 @@ Player::~Player() {
 
 }
 
-std::unique_ptr<Player> Player::Create(const PlayerModelList* model,GamePlayScene* gamescene)
+std::unique_ptr<Player> Player::Create(const PlayerModelList* model, GamePlayScene* gamescene)
 {
 	//インスタンス生成
 	std::unique_ptr<Player> ins = std::make_unique<Player>();
@@ -169,10 +169,10 @@ void Player::Update(const bool isBack, const bool isAttack, const bool isStart) 
 	pmFire_->Update();		//パーティクルマネージャー(炎)
 	pmSmoke_->Update();		//パーティクルマネージャー(煙)
 	collider_->Update();	//コライダー
-	
+
 	//着地処理
 	Landing(COLLISION_ATTR_LANDSHAPE);
-	
+
 	//ライフバーのイージング
 	easelifeBarSize_.ease_in_cubic();
 	lifeBarDamageSize_.x = easelifeBarSize_.num_X;//サイズをセット
@@ -219,7 +219,7 @@ void Player::Move() {
 	XMFLOAT3 rot = Object3d::GetRotation();
 	XMFLOAT3 cmove = camera_->GetEye();
 	XMFLOAT3 tmove = camera_->GetTarget();
-	
+
 	//パーティクル
 	const XMFLOAT3 startPosRight = { position_.x - 2.0f,position_.y + 1.0f ,position_.z };
 	const XMFLOAT3 startPosLeft = { position_.x + 2.0f,position_.y + 1.0f ,position_.z };
@@ -251,7 +251,7 @@ void Player::Move() {
 				easeRotateRightY_.Standby(true);
 				rot.y = easeRotateRightY_.end;
 			}
-			if(onGround_)model_ = modelMove_;
+			if (onGround_)model_ = modelMove_;
 			isRight_ = false;
 			pmFire_->ActiveX(fire.particle, startPosLeft, fire.pos, fire.vel,
 				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
@@ -361,7 +361,7 @@ void Player::FallAndJump()
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
 	}
-	
+
 	//強化アイテムを取得しているとき一定の時間がたったらジャンプ力がリセットされる
 	if (jumpPowerUpcount_ >= JUMPITEM_MAX_TIME)
 	{
@@ -495,7 +495,7 @@ void Player::Landing(const unsigned short attribute)
 	position_.x += callback.move.m128_f32[XYZ_X];
 	position_.y += callback.move.m128_f32[XYZ_Y];
 	//position_.z += callback.move.m128_f32[2];
-	
+
 	//視点と注視点をゲット
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
@@ -553,24 +553,23 @@ void Player::Landing(const unsigned short attribute)
 			//着地
 			onGround_ = true;
 			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * radiusMulNum);
-			
-			/*
+
+
 			//着地プリセット
-			const ParticleManager::Preset fire =
+			const ParticleManager::Preset smoke =
 			{
-				particleFire_.get(),
+				particleSmoke_.get(),
 				position_,
-				{ radius_ ,-radius_,radius_ },
-				{ 0.2f,0.1f,0.2f },
+				{ radius_ ,-radius_ * 2.0f,radius_ },
+				{ 0.2f,0.05f,0.2f },
 				{ 0.0f,0.001f,0.0f },
-				MyMath::RandomMTInt(5,9),
+				MyMath::RandomMTInt(15,20),
 				{ 1.0f, 0.0f },
-				{ 1.0f,0.4f,1.0f,1.0f },
+				{ 1.0f,1.0f,1.0f,0.5f },
 				{ 0.0f,0.0f,0.0f,0.0f }
 			};
 			//着地したら土煙っぽいのを出す
-			pmFire_->ActiveY(fire);
-			*/
+			pmSmoke_->ActiveY(smoke);
 
 			//行列更新
 			Object3d::Update();
@@ -609,10 +608,10 @@ void Player::Attack() {
 		XMFLOAT3 pos = Object3d::GetPosition();
 
 		//弾を生成し初期化
-		const XMFLOAT3 bulletPositionOffsetRight = { position_.x+0.8f,position_.y + 3.0f,position_.z };
+		const XMFLOAT3 bulletPositionOffsetRight = { position_.x + 0.8f,position_.y + 3.0f,position_.z };
 		const XMFLOAT3 bulletPositionOffsetLeft = { position_.x - 0.8f,position_.y + 3.0f,position_.z };
 		std::unique_ptr<PlayerBullet> newBullet;
-		if(isRight_)newBullet = PlayerBullet::Create(bulletPositionOffsetRight, velocity, modelBullet_,particleBullet_.get(), pmBullet_.get());
+		if (isRight_)newBullet = PlayerBullet::Create(bulletPositionOffsetRight, velocity, modelBullet_, particleBullet_.get(), pmBullet_.get());
 		else newBullet = PlayerBullet::Create(bulletPositionOffsetLeft, velocity, modelBullet_, particleBullet_.get(), pmBullet_.get());
 		newBullet->SetCamera(camera_);
 		newBullet->Update();
@@ -625,7 +624,7 @@ void Player::Attack() {
 }
 
 //衝突を検出したら呼び出されるコールバック関数
-void Player::OnCollision([[maybe_unused]] const CollisionInfo& info, 
+void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 	const unsigned short attribute, const unsigned short subAttribute) {
 
 	//ダメージ管理の構造体
@@ -672,7 +671,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		//ヒット演出
 		pmFire_->ActiveZ(fire);
 		pmFire_->Update();
-		
+
 		//model_ = modelHit_;
 		isHit_ = true;
 	}
@@ -711,7 +710,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 	}
 	else if (attribute == COLLISION_ATTR_ITEM)//アイテムの場合
 	{
-		
+
 		if (subAttribute == SUBCOLLISION_ATTR_ITEM_JUMP)//ジャンプ強化アイテム
 		{
 			if (isGetJumpItem_)
@@ -719,7 +718,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 				jumpPowerUpcount_ = 0;//時間をリセット
 				return; //多重ヒット防止
 			}
-				
+
 			isGetJumpItem_ = true;
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ITEM_HEAL)//ライフ回復アイテム
@@ -727,9 +726,9 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 			//回復する
 			const int heal = 1;
 			life_ += heal;
-			
+
 		}
-		
+
 	}
 }
 
