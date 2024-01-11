@@ -231,9 +231,9 @@ void EnemyBoss::UpdateApproach() {
 
 		//ベジェ曲線の値
 		const XMFLOAT3 startBezier3Pos = { position_.x ,10.0f,moveAttackPhasePosZ };
-		const XMFLOAT3 point1Bezier3Pos = { -10.0f,-20.0f,moveAttackPhasePosZ };
-		const XMFLOAT3 point2Bezier3Pos = { 10.0f ,40.0f,moveAttackPhasePosZ };
-		const XMFLOAT3 endBezier3Pos = { 30.0f ,10.0f,moveAttackPhasePosZ };
+		const XMFLOAT3 point1Bezier3Pos = { -5.0f,-20.0f,moveAttackPhasePosZ };
+		const XMFLOAT3 point2Bezier3Pos = { 5.0f ,40.0f,moveAttackPhasePosZ };
+		const XMFLOAT3 endBezier3Pos = { 15.0f ,10.0f,moveAttackPhasePosZ };
 
 		//制御点
 		start_ = startBezier3Pos;
@@ -402,10 +402,10 @@ void EnemyBoss::UpdateBezierMove(const bool notStageBoss)
 	else//ベジェ曲線はボス戦用に
 	{
 		//ベジェ曲線の値
-		const XMFLOAT3 startBezier3Pos = { -30.0f,10.0f,100.0f };
-		const XMFLOAT3 point1Bezier3Pos = { -10.0f,-20.0f,100.0f };
-		const XMFLOAT3 point2Bezier3Pos = { 10.0f,40.0f,100.0f };
-		const XMFLOAT3 endBezier3Pos = { 30.0f,10.0f,100.0f };
+		const XMFLOAT3 startBezier3Pos = { -15.0f,10.0f,100.0f };
+		const XMFLOAT3 point1Bezier3Pos = { -5.0f,-20.0f,100.0f };
+		const XMFLOAT3 point2Bezier3Pos = { 5.0f,40.0f,100.0f };
+		const XMFLOAT3 endBezier3Pos = { 15.0f,10.0f,100.0f };
 		//時間
 		//現在時間を取得する
 		nowCount_ = std::chrono::steady_clock::now();

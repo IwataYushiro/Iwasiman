@@ -251,9 +251,9 @@ void EnemyCore::UpdateCore()
 
 		//ベジェ曲線の値
 		const XMFLOAT3 startBezier3Pos = nowPos_;
-		const XMFLOAT3 point1Bezier3Pos = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
-		const XMFLOAT3 point2Bezier3Pos = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
-		const XMFLOAT3 endBezier3Pos = { MyMath::RandomMTFloat(-15.0f,15.0f),10.0f,100.0f };
+		const XMFLOAT3 point1Bezier3Pos = { MyMath::RandomMTFloat(-50.0f,50.0f) + cameraMove,40.0f,70.0f };
+		const XMFLOAT3 point2Bezier3Pos = { MyMath::RandomMTFloat(-50.0f,50.0f) + cameraMove,25.0f,85.0f };
+		const XMFLOAT3 endBezier3Pos = { MyMath::RandomMTFloat(-10.0f,10.0f),10.0f,100.0f };
 		//制御点
 		start_ = startBezier3Pos;
 		point1_ = point1Bezier3Pos;
