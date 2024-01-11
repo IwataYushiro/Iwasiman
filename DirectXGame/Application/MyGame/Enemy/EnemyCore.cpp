@@ -16,6 +16,13 @@ using namespace IwasiEngine;
 *	ボス敵のコア
 
 */
+//メンバ関数ポインタテーブルの実体
+void (EnemyCore::* EnemyCore::updateTable_[])() =
+{
+	&EnemyCore::UpdateCore,
+	&EnemyCore::UpdateBreakCore,
+	&EnemyCore::UpdateLeave
+};
 
 EnemyCore::~EnemyCore() {
 
@@ -117,19 +124,21 @@ void EnemyCore::Update(const bool isStart) {
 	if (!isStart)
 	{
 		//座標を移動させる
-		switch (phase_) {
-		case EnemyCore::Phase::CoreStage1:	//行動時
-			UpdateCore();
-			break;
+		//switch (phase_) {
+		//case EnemyCore::Phase::CoreStage1:	//行動時
+		//	UpdateCore();
+		//	break;
 
-		case EnemyCore::Phase::CoreBreak:	//撃破演出時
-			UpdateBreakCore();
+		//case EnemyCore::Phase::CoreBreak:	//撃破演出時
+		//	UpdateBreakCore();
 
-			break;
-		case EnemyCore::Phase::Leave:		//撃破時
-			UpdateLeave();
-			break;
-		}
+		//	break;
+		//case EnemyCore::Phase::Leave:		//撃破時
+		//	UpdateLeave();
+		//	break;
+		//}
+		(this->*updateTable_[static_cast<size_t>(phase_)])();
+
 	}
 	//座標を転送
 	Trans();
