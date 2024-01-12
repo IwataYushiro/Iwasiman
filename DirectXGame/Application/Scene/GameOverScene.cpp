@@ -278,8 +278,8 @@ void GameOverScene::UpdateIsGameOver()
 		}
 	}
 	//メニュー操作
-	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
-	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
+	if (input_->TriggerKey(DIK_W))menuCount_--;
+	if (input_->TriggerKey(DIK_S))menuCount_++;
 	
 	//色を変える(選択しているメニューは強調)
 	if (menuCount_ == GOSMI_Continue)//コンティニュー選択時

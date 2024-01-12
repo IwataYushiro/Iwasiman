@@ -275,8 +275,8 @@ void StageSelectScene::UpdateIsStageSelect()
 	camera_->SetTarget({ easeTargetStageSelect_[XYZ_X].num_X, easeTargetStageSelect_[XYZ_Y].num_X, easeTargetStageSelect_[XYZ_Z].num_X });
 
 	//メニュー選択
-	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
-	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
+	if (input_->TriggerKey(DIK_W))menuCount_--;
+	if (input_->TriggerKey(DIK_S))menuCount_++;
 
 	//選択中のメニューカラー
 	const DirectX::XMFLOAT4 selectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };

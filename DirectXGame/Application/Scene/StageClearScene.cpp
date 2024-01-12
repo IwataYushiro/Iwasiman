@@ -417,8 +417,8 @@ void StageClearScene::UpdateIsMenu()
 	spriteFadeInOut_->SetColor({ white_.x,white_.y, white_.z, easeFadeInOut_.num_X });//透明度だけ変える
 
 	//メニュー操作
-	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
-	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
+	if (input_->TriggerKey(DIK_W))menuCount_--;
+	if (input_->TriggerKey(DIK_S))menuCount_++;
 
 	//色を変える(選択しているメニューは強調)
 	if (menuCount_ == SCSMI_NextStage)//次のステージを選択時

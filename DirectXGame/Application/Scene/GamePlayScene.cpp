@@ -400,8 +400,8 @@ void GamePlayScene::UpdateIsPause()
 	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].num_X,howToPlayPosY_[HTPEN_Quit] });
 
 	//メニュー操作
-	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
-	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
+	if (input_->TriggerKey(DIK_W))menuCount_--;
+	if (input_->TriggerKey(DIK_S))menuCount_++;
 
 	//色を変える(選択しているメニューは強調)
 	if (menuCount_ == GPSPMI_Resume)//ゲーム再開を選択時
