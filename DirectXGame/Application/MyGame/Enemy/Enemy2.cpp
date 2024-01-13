@@ -30,11 +30,11 @@ void (Enemy2::* Enemy2::updateTable_[])() =
 };
 
 Enemy2::~Enemy2() {
-	
+
 }
 
-std::unique_ptr<Enemy2> Enemy2::Create(const Model* model, const Model* bullet, 
-	const Player* player,GamePlayScene* gamescene, int level)
+std::unique_ptr<Enemy2> Enemy2::Create(const Model* model, const Model* bullet,
+	const Player* player, GamePlayScene* gamescene, int level)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy2> ins = std::make_unique<Enemy2>();
@@ -178,8 +178,8 @@ void Enemy2::Parameter() {
 	enum MinMax
 	{
 		MM_min = 0,
-		MM_max=1,
-		MM_num=2,
+		MM_max = 1,
+		MM_num = 2,
 	};
 	//敵弾の発射間隔はランダム
 	const std::array<int, MM_num>randomMinMax = { 75,100 };
@@ -211,11 +211,8 @@ void Enemy2::Update(const bool isStart) {
 	{
 		//座標を移動させる
 		(this->*updateTable_[static_cast<size_t>(phase_)])();
-		//死んだら
-		if (life_ <= deathLife_) {
-			life_ = deathLife_;
-			phase_ = Phase::Leave;
-		}
+		//死亡処理(Leaveが死亡演出)
+		if (phase_ != Phase::Leave)Dead();
 	}
 
 	//座標の転送
@@ -288,6 +285,21 @@ void Enemy2::Fire() {
 	//弾を登録
 	gameScene_->AddEnemyBullet(std::move(newBullet));
 
+}
+
+void Enemy2::Dead()
+{
+	//ライフが0になったら
+	if (life_ <= deathLife_) {
+
+		life_ = deathLife_;//ライフをゼロに
+
+		//最新の情報にセットして死亡演出の準備
+		EaseDeadDirectionRotStart(false);
+
+		//フェーズ切り替え
+		phase_ = Phase::Leave;
+	}
 }
 
 void Enemy2::Landing()
@@ -403,12 +415,8 @@ void Enemy2::Landing()
 
 //描画
 void Enemy2::Draw() {
-
-	if (phase_ == Phase::Leave)return;
 	//モデルの描画
 	Object3d::Draw();
-
-
 }
 
 void Enemy2::DrawParticle()
@@ -434,7 +442,7 @@ void Enemy2::UpdateApproach() {
 	Attack();
 	//一定の位置まで達したら上へ
 	if (position_.y <= backFallPosY)phase_ = Phase::Back;
-	
+
 }
 
 //上昇
@@ -456,6 +464,9 @@ void Enemy2::UpdateLeave() {
 	//サブ属性を死亡した扱いにする(死亡演出のため)
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
 
+	//イージングをし回転軸を転送
+	EaseDeadDirectionRotStart(true);
+
 	//一定の値までカウントが進んだら死亡する
 	deathTimer_++;
 	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
@@ -464,7 +475,7 @@ void Enemy2::UpdateLeave() {
 void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない
-	
+
 	//現在ライフによる判定処理の基準となるライフ
 	const int hitLife = 1;
 	//煙プリセット

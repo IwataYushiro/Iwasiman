@@ -415,8 +415,7 @@ void Enemy1::UpdateApproach() {
 		life_ = deathLife_;//ライフをゼロに
 
 		//最新の情報にセットして死亡演出の準備
-		easeDeadDirectionRot_.SetEasing(rotation_.y, rotation_.y + END_ROTATION_Y, presetEaseDeadDirectionRot_.maxtime);
-		easeDeadDirectionRot_.Standby(false);
+		EaseDeadDirectionRotStart(false);
 		
 		//フェーズ切り替え
 		phase_ = Phase::Leave;
@@ -433,8 +432,7 @@ void Enemy1::UpdateLeave() {
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
 	
 	//イージングをし回転軸を転送
-	easeDeadDirectionRot_.ease_in_out_sine();
-	rotation_.y = easeDeadDirectionRot_.num_X;
+	EaseDeadDirectionRotStart(true);
 
 	//一定の値までカウントが進んだら死亡する
 	deathTimer_++;

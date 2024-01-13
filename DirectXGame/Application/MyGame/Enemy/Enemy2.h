@@ -46,6 +46,8 @@ public:
 	void Attack();
 	//’e”­Ë
 	void Fire();
+	//€–Sˆ—
+	void Dead();
 	//’…’nˆ—
 	void Landing();
 	//•`‰æ
