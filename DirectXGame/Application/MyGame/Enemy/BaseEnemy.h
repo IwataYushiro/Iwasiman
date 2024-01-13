@@ -99,7 +99,11 @@ protected:
 	//死亡時間
 	int32_t deathTimer_ = 0;
 	//タイマーがこの位置に達したら死亡
-	const int32_t DEATH_TIME = 70;
+	const float DEATH_TIME = 70.0f;
+	//死亡処理のイージング(Y回転軸)
+	const float END_ROTATION_Y = 360.0f * 3.0f;//3週回る
+	const Easing presetEaseDeadDirectionRot_ = { 1.0f,0.0f,DEATH_TIME / 60.0f };//イージングのプリセット(セットは前提として)
+	Easing easeDeadDirectionRot_ = { presetEaseDeadDirectionRot_.start, presetEaseDeadDirectionRot_.end, presetEaseDeadDirectionRot_.maxtime };
 
 public://アクセッサ
 	//死んだかどうか
