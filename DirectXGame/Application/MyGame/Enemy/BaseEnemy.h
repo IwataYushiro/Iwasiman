@@ -109,9 +109,9 @@ protected:
 	//イージングのプリセット(セットは前提として)
 	const Easing presetEaseDeadDirectionScale_[XYZ_Num] =
 	{
-		{1.0f,0.0f,DEATH_TIME / 60.0f},		//X
-		{1.0f,0.0f,DEATH_TIME / 60.0f},		//Y
-		{1.0f,0.0f,DEATH_TIME / 60.0f},		//Z
+		{1.0f,0.0f,1.0f},		//X
+		{1.0f,0.0f,1.0f},		//Y
+		{1.0f,0.0f,1.0f},		//Z
 	};
 	//スケールは徐々に小さく
 	Easing easeDeadDirectionScale_[XYZ_Num] =
@@ -135,7 +135,7 @@ protected://共有メンバ関数
 	{
 		if (easeStart == false)//スタンバイ時
 		{
-			//最新の情報にセットして死亡演出の準備
+			//最新の情報をセットして死亡演出の準備
 			easeDeadDirectionRot_.SetEasing(rotation_.y, rotation_.y + END_ROTATION_Y, presetEaseDeadDirectionRot_.maxtime);
 			easeDeadDirectionRot_.Standby(false);
 		}
@@ -146,6 +146,30 @@ protected://共有メンバ関数
 			rotation_.y = easeDeadDirectionRot_.num_X;
 		}
 	}
+	//スケールイージングの共通化(false = スタンバイ、true = アクティブ)
+	void EaseDeadDirectionScaleStart(const bool easeStart)
+	{
+		if (easeStart == false)//スタンバイ時
+		{
+			//最新の情報をセット
+			easeDeadDirectionScale_[XYZ_X].SetEasing(scale_.x, 0.0f, presetEaseDeadDirectionScale_[XYZ_X].maxtime);
+			easeDeadDirectionScale_[XYZ_Y].SetEasing(scale_.y, 0.0f, presetEaseDeadDirectionScale_[XYZ_Y].maxtime);
+			easeDeadDirectionScale_[XYZ_Z].SetEasing(scale_.z, 0.0f, presetEaseDeadDirectionScale_[XYZ_Z].maxtime);
+			//死亡演出の準備
+			for (uint32_t i = 0; i < XYZ_Num; i++)
+			{
+				easeDeadDirectionScale_[i].Standby(false);
+			}
 
+		}
+		else//アクティブ時
+		{
+			//イージングをしスケールを転送
+			for (uint32_t i = 0; i < XYZ_Num; i++)easeDeadDirectionScale_[i].ease_in_out_quint();
+			scale_.x = easeDeadDirectionScale_[XYZ_X].num_X;
+			scale_.y = easeDeadDirectionScale_[XYZ_Y].num_X;
+			scale_.z = easeDeadDirectionScale_[XYZ_Z].num_X;
+		}
+	}
 };
 

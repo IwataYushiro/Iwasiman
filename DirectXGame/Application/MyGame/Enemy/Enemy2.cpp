@@ -294,9 +294,9 @@ void Enemy2::Dead()
 
 		life_ = deathLife_;//ライフをゼロに
 
-		//最新の情報にセットして死亡演出の準備
-		EaseDeadDirectionRotStart(false);
-
+		//最新の情報をセットして死亡演出の準備
+		EaseDeadDirectionRotStart(false);	//回転
+		EaseDeadDirectionScaleStart(false);	//スケール
 		//フェーズ切り替え
 		phase_ = Phase::Leave;
 	}
@@ -464,9 +464,9 @@ void Enemy2::UpdateLeave() {
 	//サブ属性を死亡した扱いにする(死亡演出のため)
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
 
-	//イージングをし回転軸を転送
-	EaseDeadDirectionRotStart(true);
-
+	//イージングをし転送
+	EaseDeadDirectionRotStart(true);	//回転
+	EaseDeadDirectionScaleStart(true);	//スケール
 	//一定の値までカウントが進んだら死亡する
 	deathTimer_++;
 	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
