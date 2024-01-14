@@ -84,7 +84,8 @@ private://メンバ変数
 		TSTI_StageInfoNowTex = 9,
 		TSTI_CursorTex = 10,
 		TSTI_TitleBackTex = 11,
-		TSTI_StageNameTex=12,
+		TSTI_StageNameTex = 12,
+		TSTI_MenuUITex = 13,
 	};
 
 	//スプライト基盤
@@ -109,6 +110,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 	std::unique_ptr<Sprite> spriteTitleBack_ = std::make_unique<Sprite>();			//タイトル画面スプライト(タイトルの後ろ)
 	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();			//ステージ名スプライト
+	std::unique_ptr<Sprite> spriteMenuUI_ = std::make_unique<Sprite>();				//メニュー操作方法スプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
@@ -126,7 +128,7 @@ private://メンバ変数
 	std::vector<std::unique_ptr<Object3d>> objGrounds_;					//床オブジェクト配列
 	std::vector<std::unique_ptr<Object3d>> objGoals_;					//ゴールオブジェクト配列
 
-	
+
 	//フラグ類
 	bool isMenu_ = false;				//タイトルメニュー画面にいるとき
 	bool isBack_ = false;				//タイトルメニューからタイトルに戻るとき
@@ -164,11 +166,12 @@ private://メンバ変数
 		TMEN_Tutorial = 1,			//チュートリアルへ
 		TMEN_StageSelect = 2,		//ステージセレクトへ
 		TMEN_SelectSpace = 3,		//スペースで選択
-		TMEN_Quit = 4,				//戻る
-		TMEN_Num = 5,				//配列用
+		TMEN_UI = 4,				//操作方法
+		TMEN_Quit = 5,				//戻る
+		TMEN_Num = 6,				//配列用
 	};
 	//メニューのY値
-	const std::array<float, TMEN_Num> menuPosY_ = { 50.0f,200.0f,350.0f,600.0f,50.0f };
+	const std::array<float, TMEN_Num> menuPosY_ = { 50.0f,200.0f,350.0f,600.0f,300.0f,50.0f };
 	//タイトルメニューの出現イージングのプリセット
 	const Easing presetEaseMenuPosX_[TMEN_Num] =
 	{
@@ -176,7 +179,8 @@ private://メンバ変数
 		{1300.0f, 100.0f, 1.2f},	//チュートリアルへ
 		{1300.0f, 100.0f, 1.4f},	//ステージセレクトへ
 		{1300.0f, 425.0f, 1.6f},	//スペースで選択
-		{1300.0f, 900.0f, 1.8f}		//戻る
+		{1300.0f, 1100.0f, 1.8f},	//操作方法
+		{1300.0f, 900.0f, 2.0f}		//戻る
 	};
 	//タイトルメニューの出現イージング
 	Easing easeMenuPosX_[TMEN_Num] =
@@ -185,6 +189,7 @@ private://メンバ変数
 		presetEaseMenuPosX_[TMEN_Tutorial],		//チュートリアルへ
 		presetEaseMenuPosX_[TMEN_StageSelect],	//ステージセレクトへ
 		presetEaseMenuPosX_[TMEN_SelectSpace],	//スペースで選択
+		presetEaseMenuPosX_[TMEN_UI],			//操作方法
 		presetEaseMenuPosX_[TMEN_Quit]			//戻る
 	};
 
@@ -195,7 +200,8 @@ private://メンバ変数
 		{ 100.0f, -1300.0f,1.2f},	//チュートリアルへ
 		{ 100.0f, -1300.0f,1.4f},	//ステージセレクトへ
 		{ 425.0f, -1300.0f,1.6f},	//スペースで選択
-		{ 900.0f,-1300.0f, 1.8f}		//戻る
+		{ 1100.0f,-1300.0f, 1.8f},	//操作方法
+		{ 900.0f,-1300.0f, 2.0f}	//戻る
 	};
 	//タイトルメニューの出現イージング
 	Easing easeMenuEndPosX_[TMEN_Num] =
@@ -204,6 +210,7 @@ private://メンバ変数
 		presetEaseMenuEndPosX_[TMEN_Tutorial],		//チュートリアルへ
 		presetEaseMenuEndPosX_[TMEN_StageSelect],	//ステージセレクトへ
 		presetEaseMenuEndPosX_[TMEN_SelectSpace],	//スペースで選択
+		presetEaseMenuEndPosX_[TMEN_UI],			//操作方法
 		presetEaseMenuEndPosX_[TMEN_Quit]			//戻る
 	};
 	//カーソルX値のイージングプリセット
