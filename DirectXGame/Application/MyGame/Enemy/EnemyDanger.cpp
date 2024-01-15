@@ -150,10 +150,10 @@ void EnemyDanger::UpdateParticleSkin()
 		{radius_*2.0f,radius_ * 2.0f,radius_ * 2.0f},
 		{ -3.0f,0.2f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		10,
+		4,
 		{MyMath::RandomMTFloat(3.0f,10.0f), 0.0f },
-		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.1f,0.2f),0.0f,1.0f },
-		{ 1.0f,MyMath::RandomMTFloat(0.2f,0.5f),MyMath::RandomMTFloat(0.2f,0.5f),1.0f }
+		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.3f,0.5f),0.0f,1.0f },
+		{ 1.0f,MyMath::RandomMTFloat(0.2f,0.5f),MyMath::RandomMTFloat(0.0f,0.2f),1.0f }
 
 	};
 	//マイナス座標用

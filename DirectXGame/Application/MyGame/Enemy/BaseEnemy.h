@@ -109,9 +109,9 @@ protected:
 	//イージングのプリセット(セットは前提として)
 	const Easing presetEaseDeadDirectionScale_[XYZ_Num] =
 	{
-		{1.0f,0.0f,1.0f},		//X
-		{1.0f,0.0f,1.0f},		//Y
-		{1.0f,0.0f,1.0f},		//Z
+		{1.0f,0.0f,0.5f},		//X
+		{1.0f,0.0f,0.5f},		//Y
+		{1.0f,0.0f,0.5f},		//Z
 	};
 	//スケールは徐々に小さく
 	Easing easeDeadDirectionScale_[XYZ_Num] =
@@ -169,6 +169,8 @@ protected://共有メンバ関数
 			scale_.x = easeDeadDirectionScale_[XYZ_X].num_X;
 			scale_.y = easeDeadDirectionScale_[XYZ_Y].num_X;
 			scale_.z = easeDeadDirectionScale_[XYZ_Z].num_X;
+			//イージングが終わったら死亡
+			if (easeDeadDirectionScale_[XYZ_X].num_X == easeDeadDirectionScale_[XYZ_X].end)isDead_ = true;
 		}
 	}
 };

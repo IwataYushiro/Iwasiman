@@ -58,7 +58,7 @@ private://メンバ変数
 	//死亡フラグ
 	bool isDead_ = false;
 	//半径
-	float radius_ = 1.0f;
+	float radius_ = 2.0f;
 
 	//自機からもらう
 	//パーティクル

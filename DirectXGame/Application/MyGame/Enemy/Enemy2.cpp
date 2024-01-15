@@ -460,6 +460,9 @@ void Enemy2::UpdateBack()
 
 //離脱
 void Enemy2::UpdateLeave() {
+	
+	//サブ属性を死亡した扱いにする(死亡演出のため)
+	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
 	//イージングをし転送
 	EaseDeadDirectionRotStart(true);	//回転
 	EaseDeadDirectionScaleStart(true);	//スケール
@@ -471,7 +474,7 @@ void Enemy2::UpdateLeave() {
 void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない
-
+	if (life_ <= 0) return;
 	//現在ライフによる判定処理の基準となるライフ
 	const int hitLife = 1;
 	//煙プリセット
@@ -507,6 +510,8 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;		 //自機本体に触れても何も起こらない
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)		 //自機の弾の場合
 		{
+			//死んだらスキップ
+			if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_ISDEAD) return;
 			if (life_ > hitLife)//ライフが1より大きい場合
 			{
 				//パーティクルでヒット演出
@@ -516,9 +521,6 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 			}
 			else//1以下の場合
 			{
-				//サブ属性を死亡した扱いにする(死亡演出のため)
-				collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
-
 				//パーティクルでヒット演出
 				pmFire_->ActiveZ(fire);
 

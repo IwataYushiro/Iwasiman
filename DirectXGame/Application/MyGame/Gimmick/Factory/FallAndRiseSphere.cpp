@@ -56,6 +56,7 @@ bool FallAndRiseSphere::Initialize(Model* model)
 
 void FallAndRiseSphere::Update()
 {
+	
 	//更新時初期化
 	if (!isSetStartPositionOnce_)
 	{
@@ -65,16 +66,21 @@ void FallAndRiseSphere::Update()
 	}
 
 	//属性によって効果を変える
-	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();				//落ちる床の場合
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphereReturn();	//落ちて戻る床の場合
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE)UpdateRiseSphere();					//昇る床の場合
-	else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE_RETURN)UpdateRiseSphereReturn();	//昇って戻る球の場合
+	//もし自機が死んだら動かさないようにする
+	if (!player_->IsBreak())
+	{
+		if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE)UpdateFallSphereReturn();				//落ちる床の場合
+		else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_FALLSPHERE_RETURN)UpdateFallSphereReturn();	//落ちて戻る床の場合
+		else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE)UpdateRiseSphere();					//昇る床の場合
+		else if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_GIMMICK_UPSPHERE_RETURN)UpdateRiseSphereReturn();	//昇って戻る球の場合
+	}
 	//座標転送
 	Trans();
 	//更新
 	camera_->Update();	//カメラ
 	Object3d::Update();	//3Dオブジェクト
 
+	
 }
 
 void FallAndRiseSphere::UpdateFallSphere()
