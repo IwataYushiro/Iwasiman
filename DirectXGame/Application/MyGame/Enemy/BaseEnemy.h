@@ -165,7 +165,7 @@ protected://共有メンバ関数
 		else//アクティブ時
 		{
 			//イージングをしスケールを転送
-			for (uint32_t i = 0; i < XYZ_Num; i++)easeDeadDirectionScale_[i].ease_in_out_quint();
+			for (uint32_t i = 0; i < XYZ_Num; i++)easeDeadDirectionScale_[i].ease_in_back();
 			scale_.x = easeDeadDirectionScale_[XYZ_X].num_X;
 			scale_.y = easeDeadDirectionScale_[XYZ_Y].num_X;
 			scale_.z = easeDeadDirectionScale_[XYZ_Z].num_X;

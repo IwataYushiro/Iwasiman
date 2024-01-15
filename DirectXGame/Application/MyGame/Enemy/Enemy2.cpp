@@ -460,10 +460,6 @@ void Enemy2::UpdateBack()
 
 //離脱
 void Enemy2::UpdateLeave() {
-
-	//サブ属性を死亡した扱いにする(死亡演出のため)
-	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
-
 	//イージングをし転送
 	EaseDeadDirectionRotStart(true);	//回転
 	EaseDeadDirectionScaleStart(true);	//スケール
@@ -486,7 +482,7 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		30,
+		20,
 		{ 3.0f, 0.0f },
 		{ 1.0f,1.0f,1.0f,1.0f },
 		{ 0.0f,0.0f,0.0f,1.0f }
@@ -499,7 +495,7 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		30,
+		40,
 		{ 3.0f, 0.0f },
 		{ 1.0f,1.0f,1.0f,1.0f },
 		{ 0.0f,0.0f,0.0f,1.0f }
@@ -520,6 +516,9 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 			}
 			else//1以下の場合
 			{
+				//サブ属性を死亡した扱いにする(死亡演出のため)
+				collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
+
 				//パーティクルでヒット演出
 				pmFire_->ActiveZ(fire);
 
