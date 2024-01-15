@@ -143,6 +143,7 @@ void GamePlayScene::Update()
 	spritePauseHowToPlay_->Update();
 	spritePauseStageSelect_->Update();
 	spritePauseTitle_->Update();
+	spritePauseUI_->Update();
 	spriteDone_->Update();
 	spriteQuitHowtoPlay_->Update();
 	spriteReady_->Update();
@@ -391,6 +392,7 @@ void GamePlayScene::UpdateIsPause()
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].num_X, pausePosY_[PMEN_Title] });
 	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].num_X, pausePosY_[PMEN_SelectSpace] });
 	spriteTutorialInfoHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_TutorialHowToPlayInfo].num_X, pausePosY_[PMEN_TutorialHowToPlayInfo] });
+	spritePauseUI_->SetPosition({ easePauseMenuPosX_[PMEN_UI].num_X,pausePosY_[PMEN_UI] });
 	//遊び方説明関係
 	spriteTutorialHTPMove_->SetPosition({ easeHowToPlayPosX_[HTPEN_Move].num_X,howToPlayPosY_[HTPEN_Move] });
 	spriteTutorialHTPDash_->SetPosition({ easeHowToPlayPosX_[HTPEN_Dash].num_X,howToPlayPosY_[HTPEN_Dash] });
@@ -557,6 +559,7 @@ void GamePlayScene::UpdateHowToPlay()
 	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[PMEN_StageSelect].num_X, pausePosY_[PMEN_StageSelect] });
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].num_X, pausePosY_[PMEN_Title] });
 	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].num_X, pausePosY_[PMEN_SelectSpace] });
+	spritePauseUI_->SetPosition({ easePauseMenuPosX_[PMEN_UI].num_X,pausePosY_[PMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 
 	//遊び方説明関係のスプライト
@@ -776,6 +779,7 @@ void GamePlayScene::Draw()
 		spritePauseHowToPlay_->Draw();
 		spritePauseStageSelect_->Draw();
 		spritePauseTitle_->Draw();
+		spritePauseUI_->Draw();
 		spriteDone_->Draw();
 		spriteCursor_->Draw();
 		if (stageNum_ >= SL_StageTutorial_Area1)//チュートリアルステージ以外は書かない
@@ -795,6 +799,7 @@ void GamePlayScene::Draw()
 		spritePauseHowToPlay_->Draw();
 		spritePauseStageSelect_->Draw();
 		spritePauseTitle_->Draw();
+		spritePauseUI_->Draw();
 		spriteDone_->Draw();
 		spriteCursor_->Draw();
 
@@ -1434,6 +1439,11 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(GPSTI_PauseTitleTex, "texture/backtitle.png");
 	spritePauseTitle_->Initialize(spCommon_, GPSTI_PauseTitleTex);
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].start,pausePosY_[PMEN_Title] });
+	
+	//メニュー操作スプライト
+	spCommon_->LoadTexture(GPSTI_PauseUITex, "texture/menuui.png");
+	spritePauseUI_->Initialize(spCommon_, GPSTI_PauseUITex);
+	spritePauseUI_->SetPosition({ easePauseMenuPosX_[PMEN_UI].start,pausePosY_[PMEN_UI] });
 
 	//決定表示のスプライト
 	spCommon_->LoadTexture(GPSTI_PauseDoneTex, "texture/space.png");
@@ -1562,6 +1572,7 @@ void GamePlayScene::LoadSprite()
 	spritePauseHowToPlay_->Update();
 	spritePauseStageSelect_->Update();
 	spritePauseTitle_->Update();
+	spritePauseUI_->Update();
 	spriteDone_->Update();
 	spriteQuitHowtoPlay_->Update();
 	spriteReady_->Update();

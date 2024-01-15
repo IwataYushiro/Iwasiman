@@ -104,6 +104,11 @@ void GameOverScene::Initialize()
 	spCommon_->LoadTexture(GOSTI_CursorTex, "texture/cursor.png");
 	spriteCursor_->Initialize(spCommon_, GOSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[GOMEN_Continue] });
+	
+	//メニュー操作スプライト
+	spCommon_->LoadTexture(GOSTI_MenuUITex, "texture/menuui.png");
+	spriteMenuUI_->Initialize(spCommon_, GOSTI_MenuUITex);
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[GOMEN_UI].start,menuPosY_[GOMEN_UI] });
 
 	//ステージ名スプライト
 	LoadStageNameSprite();
@@ -197,6 +202,7 @@ void GameOverScene::Update()
 	spriteStageInfoNow_->Update();				 //現在ステージスプライト
 	spriteCursor_->Update();					 //カーソルスプライト
 	spriteStageName_->Update();					 //ステージ名スプライト
+	spriteMenuUI_->Update();					 //メニュー操作方法スプライト
 
 	//更新
 	camera_->Update();			//カメラ
@@ -263,6 +269,7 @@ void GameOverScene::UpdateIsGameOver()
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[GOMEN_UI].num_X,menuPosY_[GOMEN_UI] });
 	spriteFadeInOut_->SetColor({ deepRed_.x,deepRed_.y, deepRed_.z, easeFadeInOut_.num_X });//透明度だけ変える
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
@@ -365,6 +372,7 @@ void GameOverScene::UpdateIsContinue()
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect]});
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title]});
 	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace]});
+	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[GOMEN_UI].num_X,menuPosY_[GOMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
 	camera_->SetEye({ easeEyeContinue_[XYZ_X].num_X, easeEyeContinue_[XYZ_Y].num_X, easeEyeContinue_[XYZ_Z].num_X });
@@ -447,6 +455,7 @@ void GameOverScene::UpdateIsQuitStageSelect()
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect]});
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title]});
 	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace]});
+	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[GOMEN_UI].num_X,menuPosY_[GOMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
 	camera_->SetEye({ easeEyeQuitStageSelect_[XYZ_X].num_X, easeEyeQuitStageSelect_[XYZ_Y].num_X, easeEyeQuitStageSelect_[XYZ_Z].num_X });
@@ -504,6 +513,7 @@ void GameOverScene::UpdateIsQuitTitle()
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[GOMEN_UI].num_X,menuPosY_[GOMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
@@ -568,6 +578,7 @@ void GameOverScene::Draw()
 	spriteStageInfoNow_->Draw();		 //現在ステージスプライト
 	spriteCursor_->Draw();				 //カーソルスプライト
 	spriteStageName_->Draw();			 //ステージ名スプライト
+	spriteMenuUI_->Draw();				//メニュー操作方法スプライト
 }
 
 void GameOverScene::Finalize()

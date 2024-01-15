@@ -120,6 +120,11 @@ void StageSelectScene::Initialize()
 	spriteStageName_->SetPosition(stageNamePos_);
 	spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
 	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+	
+	//メニュー操作スプライト
+	spCommon_->LoadTexture(SSSTI_MenuUITex, "texture/menuui.png");
+	spriteMenuUI_->Initialize(spCommon_, SSSTI_MenuUITex);
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[SSMEN_UI].start,menuPosY_[SSMEN_UI] });
 
 	//背景モデル
 	// モデルを読み込んで登録
@@ -234,6 +239,7 @@ void StageSelectScene::Update()
 	spriteStageInfoNow_->Update();		//現在ステージスプライト
 	spriteCursor_->Update();			//カーソルスプライト
 	spriteStageName_->Update();			//ステージ名スプライト
+	spriteMenuUI_->Update();			//メニュー操作方法スプライト
 
 	//更新
 	camera_->Update();					//カメラ
@@ -265,6 +271,7 @@ void StageSelectScene::UpdateIsStageSelect()
 	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
 	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].num_X,menuPosY_[SSMEN_Stage2_Space] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[SSMEN_UI].num_X,menuPosY_[SSMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 
 	//カラーセット
@@ -403,6 +410,7 @@ void StageSelectScene::UpdateIsDone()
 	//座標セット
 	spriteMenu_->SetPosition({ easeMenuEndPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
 	spriteDone_->SetPosition({ easeMenuEndPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[SSMEN_UI].num_X,menuPosY_[SSMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuEndPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//ステージごとに座標が違う
@@ -483,6 +491,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
 	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].num_X,menuPosY_[SSMEN_Stage2_Space] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[SSMEN_UI].num_X,menuPosY_[SSMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//メニュー標記のイージングが終わったらフェードアウト
@@ -535,17 +544,19 @@ void StageSelectScene::Draw()
 	spCommon_->PreDraw();
 	//前景スプライト
 	//スプライト描画	
-	spriteMenu_->Draw();				 //メニュー画面スプライト
-	spriteTutorial_->Draw();			 //チュートリアルステージスプライト
-	spriteStage1_->Draw();				 //ステージ1スプライト
-	spriteStage2_->Draw();				 //ステージ2スプライト
-	spriteDone_->Draw();				 //決定表示スプライト
-	spriteBack_->Draw();				 //タイトルに戻るスプライト
-	spriteFadeInOut_->Draw();			 //フェードインアウトスプライト
-	spriteLoad_->Draw();				 //ロードスプライト
-	spriteStageInfoNow_->Draw();		 //現在ステージスプライト
-	spriteCursor_->Draw();				 //カーソルスプライト
-	spriteStageName_->Draw();			 //ステージ名スプライト
+	spriteMenu_->Draw();					//メニュー画面スプライト
+	spriteTutorial_->Draw();				//チュートリアルステージスプライト
+	spriteStage1_->Draw();					//ステージ1スプライト
+	spriteStage2_->Draw();					//ステージ2スプライト
+	spriteDone_->Draw();					//決定表示スプライト
+	spriteBack_->Draw();					//タイトルに戻るスプライト
+	spriteFadeInOut_->Draw();				//フェードインアウトスプライト
+	spriteLoad_->Draw();					//ロードスプライト
+	spriteStageInfoNow_->Draw();			//現在ステージスプライト
+	spriteCursor_->Draw();					//カーソルスプライト
+	spriteStageName_->Draw();				//ステージ名スプライト
+	spriteMenuUI_->Draw();					//メニュー操作方法スプライト
+
 }
 
 void StageSelectScene::Finalize()

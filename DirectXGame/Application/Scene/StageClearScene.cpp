@@ -104,6 +104,11 @@ void StageClearScene::Initialize()
 	spCommon_->LoadTexture(SCSTI_CursorTex, "texture/cursor.png");
 	spriteCursor_->Initialize(spCommon_, SCSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[SCMEN_NextStage] });
+	
+	//メニュー操作スプライト
+	spCommon_->LoadTexture(SCSTI_MenuUITex, "texture/menuui.png");
+	spriteMenuUI_->Initialize(spCommon_, SCSTI_MenuUITex);
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[SCMEN_UI].start,menuPosY_[SCMEN_UI] });
 
 	//ステージ名スプライト
 	LoadStageNameSprite();
@@ -205,16 +210,17 @@ void StageClearScene::Update()
 
 
 	//スプライト更新
-	spriteStageClear_->Update();		   //ステージクリア時のスプライト
-	spriteNextStage_->Update();			   //次のステージ表示のスプライト
-	spriteStageSelect_->Update();		   //ステージセレクト表示のスプライト
-	spriteTitle_->Update();				   //タイトル表示のスプライト
-	spriteDone_->Update();				   //決定表示のスプライト
-	spriteFadeInOut_->Update();			   //フェードインアウトのスプライト
-	spriteLoad_->Update();				   //ロードスプライト
-	spriteStageInfoNow_->Update();		   //現在ステージスプライト
-	spriteCursor_->Update();			   //カーソルスプライト
-	spriteStageName_->Update();			   //ステージ名スプライト
+	spriteStageClear_->Update();			//ステージクリア時のスプライト
+	spriteNextStage_->Update();				//次のステージ表示のスプライト
+	spriteStageSelect_->Update();			//ステージセレクト表示のスプライト
+	spriteTitle_->Update();					//タイトル表示のスプライト
+	spriteDone_->Update();					//決定表示のスプライト
+	spriteFadeInOut_->Update();				//フェードインアウトのスプライト
+	spriteLoad_->Update();					//ロードスプライト
+	spriteStageInfoNow_->Update();			//現在ステージスプライト
+	spriteCursor_->Update();				//カーソルスプライト
+	spriteStageName_->Update();				//ステージ名スプライト
+	spriteMenuUI_->Update();				//メニュー操作方法スプライト
 
 	//更新
 	camera_->Update();		   //カメラ
@@ -241,6 +247,7 @@ void StageClearScene::UpdateIsNextStage()
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuEndPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[SCMEN_UI].num_X,menuPosY_[SCMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
 	camera_->SetEye({ easeEyeStageClear_[XYZ_X].num_X, easeEyeStageClear_[XYZ_Y].num_X, easeEyeStageClear_[XYZ_Z].num_X });
@@ -330,6 +337,7 @@ void StageClearScene::UpdateIsStageSelect()
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuEndPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[SCMEN_UI].num_X,menuPosY_[SCMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
 	camera_->SetEye({ easeEyeStageClear_[XYZ_X].num_X, easeEyeStageClear_[XYZ_Y].num_X, easeEyeStageClear_[XYZ_Z].num_X });
@@ -366,6 +374,7 @@ void StageClearScene::UpdateIsQuitTitle()
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuEndPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[SCMEN_UI].num_X,menuPosY_[SCMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 
 	//メニューのイージングが終わったら遷移演出
@@ -413,6 +422,7 @@ void StageClearScene::UpdateIsMenu()
 	spriteStageSelect_->SetPosition({ easeMenuPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
 	spriteDone_->SetPosition({ easeMenuPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[SCMEN_UI].num_X,menuPosY_[SCMEN_UI] });
 
 	spriteFadeInOut_->SetColor({ white_.x,white_.y, white_.z, easeFadeInOut_.num_X });//透明度だけ変える
 
@@ -538,16 +548,17 @@ void StageClearScene::Draw()
 	//前景スプライト
 	spCommon_->PreDraw();
 	//スプライト描画	
-	spriteStageClear_->Draw();					   //ステージクリア時のスプライト
-	if (!isFinalStage_)spriteNextStage_->Draw();   //次のステージ表示のスプライト(最終面の場合スキップ)
-	spriteStageSelect_->Draw();					   //ステージセレクト表示のスプライト
-	spriteTitle_->Draw();						   //タイトル表示のスプライト
-	spriteDone_->Draw();						   //決定表示のスプライト
-	spriteFadeInOut_->Draw();					   //フェードインアウトのスプライト
-	spriteLoad_->Draw();						   //ロードスプライト
-	spriteStageInfoNow_->Draw();				   //現在ステージスプライト
-	spriteCursor_->Draw();						   //カーソルスプライト
-	spriteStageName_->Draw();					   //ステージ名スプライト
+	spriteStageClear_->Draw();						//ステージクリア時のスプライト
+	if (!isFinalStage_)spriteNextStage_->Draw();	//次のステージ表示のスプライト(最終面の場合スキップ)
+	spriteStageSelect_->Draw();						//ステージセレクト表示のスプライト
+	spriteTitle_->Draw();							//タイトル表示のスプライト
+	spriteDone_->Draw();							//決定表示のスプライト
+	spriteFadeInOut_->Draw();						//フェードインアウトのスプライト
+	spriteLoad_->Draw();							//ロードスプライト
+	spriteStageInfoNow_->Draw();					//現在ステージスプライト
+	spriteCursor_->Draw();							//カーソルスプライト
+	spriteStageName_->Draw();						//ステージ名スプライト
+	spriteMenuUI_->Draw();							//メニュー操作方法スプライト
 }
 
 void StageClearScene::FadeOut(const DirectX::XMFLOAT3& rgb)

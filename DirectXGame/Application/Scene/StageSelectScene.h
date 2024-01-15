@@ -72,6 +72,7 @@ private://メンバ変数
 		SSSTI_StageInfoNowTex = 8,
 		SSSTI_CursorTex = 9,
 		SSSTI_StageNameTex = 10,
+		SSSTI_MenuUITex = 11,
 	};
 
 	//スプライト基盤
@@ -91,6 +92,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();			//ステージ名スプライト
+	std::unique_ptr<Sprite> spriteMenuUI_ = std::make_unique<Sprite>();				//メニュー操作方法スプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;
@@ -120,11 +122,12 @@ private://メンバ変数
 		SSMEN_Stage1_Sky = 2,		//ステージ1
 		SSMEN_Stage2_Space = 3,		//ステージ2
 		SSMEN_SelectSpace = 4,		//スペースで選択
-		SSMEN_Quit = 5,				//戻る
-		SSMEN_Num = 6,				//配列用
+		SSMEN_UI = 5,				//操作方法
+		SSMEN_Quit = 6,				//戻る
+		SSMEN_Num = 7,				//配列用
 	};
 	//メニューポジション
-	const std::array<float, SSMEN_Num> menuPosY_ = { 0.0f,150.0f,300.0f,450.0f,600.0f,50.0f };
+	const std::array<float, SSMEN_Num> menuPosY_ = { 0.0f,150.0f,300.0f,450.0f,600.0f,300.0f,50.0f };
 
 	//イージング類
 	//メニュー画面出現イージングのプリセット
@@ -135,7 +138,8 @@ private://メンバ変数
 		{1300.0f, 100.0f, 1.4f},				//ステージ1
 		{1300.0f, 100.0f, 1.6f},				//ステージ2
 		{1300.0f, 425.0f, 1.8f},				//スペースで選択
-		{1300.0f, 900.0f, 2.0f}					//戻る
+		{1300.0f, 1100.0f, 2.0f},				//操作方法
+		{1300.0f, 900.0f, 2.2f}					//戻る
 	};
 	//メニュー画面出現イージング
 	Easing easeMenuPosX_[SSMEN_Num] =
@@ -145,6 +149,7 @@ private://メンバ変数
 		presetEaseMenuPosX_[SSMEN_Stage1_Sky],				//ステージ1
 		presetEaseMenuPosX_[SSMEN_Stage2_Space],			//ステージ2
 		presetEaseMenuPosX_[SSMEN_SelectSpace],				//スペースで選択
+		presetEaseMenuPosX_[SSMEN_UI],						//操作方法
 		presetEaseMenuPosX_[SSMEN_Quit]						//戻る
 	};
 	//メニュー画面出現イージングのプリセット
@@ -155,17 +160,19 @@ private://メンバ変数
 		{ 100.0f,-1300.0f, 1.2f},				//ステージ1
 		{ 100.0f,-1300.0f, 1.3f},				//ステージ2
 		{ 425.0f,-1300.0f, 1.4f},				//スペースで選択
-		{ 900.0f,-1300.0f, 1.5f}				//戻る
+		{ 1100.0f,-1300.0f, 1.5f},				//操作方法
+		{ 900.0f,-1300.0f, 1.6f}				//戻る
 	};
 	//メニュー画面出現イージング
 	Easing easeMenuEndPosX_[SSMEN_Num] =
 	{
 		presetEaseMenuEndPosX_[SSMEN_Menu],					//メニュー
 		presetEaseMenuEndPosX_[SSMEN_Tutorial],				//チュートリアル
-		presetEaseMenuEndPosX_[SSMEN_Stage1_Sky],				//ステージ1
+		presetEaseMenuEndPosX_[SSMEN_Stage1_Sky],			//ステージ1
 		presetEaseMenuEndPosX_[SSMEN_Stage2_Space],			//ステージ2
-		presetEaseMenuEndPosX_[SSMEN_SelectSpace],				//スペースで選択
-		presetEaseMenuEndPosX_[SSMEN_Quit]						//戻る
+		presetEaseMenuEndPosX_[SSMEN_SelectSpace],			//スペースで選択
+		presetEaseMenuEndPosX_[SSMEN_UI],					//操作方法
+		presetEaseMenuEndPosX_[SSMEN_Quit]					//戻る
 	};
 	//カーソルX値のイージングプリセット
 	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };

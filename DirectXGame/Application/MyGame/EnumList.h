@@ -54,6 +54,7 @@ enum GamePlaySceneTextureIndex
 	GPSTI_CursorTex=13,
 	GPSTI_HowToPlayListTex = 14,
 	GPSTI_StageNameTex = 15,
+	GPSTI_PauseUITex = 16,
 };
 
 //ポーズ用メニューインデックス

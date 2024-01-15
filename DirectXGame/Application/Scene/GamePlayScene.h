@@ -70,7 +70,7 @@ public://メンバ関数
 	void UpdateIsQuitGame();
 	//チュートリアル更新
 	void UpdateTutorial();
-	
+
 	//フェードアウト(色)
 	void FadeOut(const DirectX::XMFLOAT3& rgb);
 	//フェードイン(色)
@@ -129,6 +129,7 @@ private:
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 	std::unique_ptr<Sprite> spriteHowToPlayList_ = std::make_unique<Sprite>();		//遊び方説明リストスプライト
 	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();			//ステージ名スプライト
+	std::unique_ptr<Sprite> spritePauseUI_ = std::make_unique<Sprite>();			//メニュー操作方法スプライト
 
 	std::unique_ptr<Sprite> spriteTutorialHTPMove_ = std::make_unique<Sprite>();		//チュートリアルの移動方法スプライト
 	std::unique_ptr<Sprite> spriteTutorialHTPDash_ = std::make_unique<Sprite>();		//チュートリアルのダッシュ方法スプライト
@@ -158,7 +159,7 @@ private:
 		TIEN_MoveBack = 3,			//手前、奥側移動方法
 		TIEN_Attack = 4,			//攻撃方法
 		TIEN_Info = 5,				//ゲーム説明文字
-		TIEN_Num=6,					//配列用
+		TIEN_Num = 6,					//配列用
 	};
 	//チュートリアル説明のY軸の値
 	const std::array<float, TIEN_Num> tutorialInfoPosY_ = { 70.0f,120.0f,170.0f,220.0f,270.0f,50.0f };
@@ -200,17 +201,18 @@ private:
 	//ポーズメニュー用の列挙体
 	enum PauseMenuEasingNum
 	{
-		PMEN_Menu = 0,								//メニュー
-		PMEN_Resume = 1,							//再開
-		PMEN_HowToPlay = 2,							//遊び方確認
-		PMEN_StageSelect = 3,						//ステージセレクトへ
-		PMEN_Title = 4,								//タイトルへ
-		PMEN_SelectSpace = 5,						//スペースで選択
-		PMEN_TutorialHowToPlayInfo = 6,				//チュートリアル時の遊び方説明について
-		PMEN_Num=7,									//配列用
+		PMEN_Menu = 0,									//メニュー
+		PMEN_Resume = 1,								//再開
+		PMEN_HowToPlay = 2,								//遊び方確認
+		PMEN_StageSelect = 3,							//ステージセレクトへ
+		PMEN_Title = 4,									//タイトルへ
+		PMEN_SelectSpace = 5,							//スペースで選択
+		PMEN_TutorialHowToPlayInfo = 6,					//チュートリアル時の遊び方説明について
+		PMEN_UI = 7,									//操作方法
+		PMEN_Num = 8,									//配列用
 	};
 	//ポーズメニューのY値
-	const std::array<float, PMEN_Num> pausePosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f,240.0f };
+	const std::array<float, PMEN_Num> pausePosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f,240.0f,400.0f };
 
 	//ポーズメニュー画面出現イージングのプリセット
 	const Easing presetEasePauseMenuPosX_[PMEN_Num] =
@@ -221,7 +223,8 @@ private:
 		{1300.0f, 100.0f, 0.8f},			//ステージセレクトへ
 		{1300.0f, 100.0f, 0.9f},			//タイトルへ
 		{1300.0f, 425.0f, 1.0f},			//スペースで選択
-		{1300.0f, 800.0f, 0.75f}			//チュートリアル時の遊び方説明について
+		{1300.0f, 800.0f, 0.75f},			//チュートリアル時の遊び方説明について
+		{1300.0f, 1100.0f, 1.1f},			//操作方法
 	};
 	//ポーズメニュー画面出現イージング
 	Easing easePauseMenuPosX_[PMEN_Num] =
@@ -232,11 +235,12 @@ private:
 		presetEasePauseMenuPosX_[PMEN_StageSelect],						//ステージセレクトへ
 		presetEasePauseMenuPosX_[PMEN_Title],							//タイトルへ
 		presetEasePauseMenuPosX_[PMEN_SelectSpace],						//スペースで選択
-		presetEasePauseMenuPosX_[PMEN_TutorialHowToPlayInfo]			//チュートリアル時の遊び方説明について
+		presetEasePauseMenuPosX_[PMEN_TutorialHowToPlayInfo],			//チュートリアル時の遊び方説明について
+		presetEasePauseMenuPosX_[PMEN_UI]								//操作方法
 	};
 
 	//カーソルX値のイージングプリセット
-	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f};
+	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
 	//カーソルX値のイージング
 	Easing easeCursorPosX_ = presetEaseCursorPosX_;
 
@@ -252,7 +256,7 @@ private:
 		HTPEN_Num = 6,							//配列用							
 	};
 	//遊び方説明のY値
-	const std::array<float, HTPEN_Num> howToPlayPosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f};
+	const std::array<float, HTPEN_Num> howToPlayPosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f };
 
 	//遊び方説明画面出現イージングのプリセット
 	const Easing presetEaseHowToPlayPosX_[HTPEN_Num] =
@@ -276,14 +280,14 @@ private:
 	};
 
 	//入場用の視点カメラワークイージングのプリセット
-	const Easing presetEaseEyeGameStart_[XYZ_Num]=
+	const Easing presetEaseEyeGameStart_[XYZ_Num] =
 	{
 		{-110.0f, -20.0f, 4.0f},				//X
 		{101.0f, 1.0f, 4.0f},					//Y
 		{-210.0f, -100.0f, 3.5f}				//Z
 	};
 	//入場用の視点カメラワークイージング
-	Easing easeEyeGameStart_[XYZ_Num]=
+	Easing easeEyeGameStart_[XYZ_Num] =
 	{
 		presetEaseEyeGameStart_[XYZ_X],				//X
 		presetEaseEyeGameStart_[XYZ_Y],				//Y
@@ -309,11 +313,11 @@ private:
 	//入場用のイージングの表記は少し特殊
 	enum XXY
 	{
-		XXY_X1=0,	//X(パート1)
-		XXY_X2=1,	//X(パート2)
-		XXY_Y=2,	//Y
-		XXY_Num=3	//配列用
-	};			
+		XXY_X1 = 0,	//X(パート1)
+		XXY_X2 = 1,	//X(パート2)
+		XXY_Y = 2,	//Y
+		XXY_Num = 3	//配列用
+	};
 	//入場用のレディー表記のイージングのプリセット
 	const Easing presetEaseReadyPosition_[XXY_Num]
 	{
@@ -357,12 +361,12 @@ private:
 	DirectX::XMFLOAT3 startEasePlayerPosition_;			//プレイヤーポジション
 
 	//フェードインアウトのプリセット(false フェードイン、true フェードアウト)
-	const Easing presetEaseFadeInOut_ = {1.0f, 0.0f, 1.0f};
+	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
 	//フェードインアウト(false フェードイン、true フェードアウト)
 	Easing easeFadeInOut_ = presetEaseFadeInOut_;
-	
+
 	//ポーズ用のフェードインアウトイージングのプリセット
-	const Easing presetEaseFadeInOutPause_ = {0.8f, 0.0f, 1.0f};
+	const Easing presetEaseFadeInOutPause_ = { 0.8f, 0.0f, 1.0f };
 	//ポーズ用のフェードインアウトイージング
 	Easing easeFadeInOutPause_ = presetEaseFadeInOutPause_;
 
@@ -458,8 +462,8 @@ private:
 	DirectX::XMFLOAT3 infoColor_;//xyz=rgb
 
 private:
-	
-	
+
+
 	/*
 	stagenumの値
 	0~10		ステージ1

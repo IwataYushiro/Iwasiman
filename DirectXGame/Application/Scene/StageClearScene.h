@@ -71,6 +71,7 @@ private://メンバ変数
 		SCSTI_StageInfoNowTex = 7,
 		SCSTI_CursorTex = 8,
 		SCSTI_StageNameTex = 9,
+		SCSTI_MenuUITex = 10,
 	};
 	//ステージクリア用メニューインデックス
 	enum StageClearSceneMenuIndex
@@ -100,6 +101,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteStageInfoNow_ =std::make_unique<Sprite>();	//現在ステージスプライト
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();			//カーソルスプライト
 	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();		//ステージ名スプライト
+	std::unique_ptr<Sprite> spriteMenuUI_ = std::make_unique<Sprite>();			//メニュー操作方法スプライト
 
 	//jsonレベルデータ
 	LevelData* levelData_ = nullptr;			
@@ -132,7 +134,8 @@ private://メンバ変数
 		SCMEN_StageSelect = 2,			//ステージセレクトへ
 		SCMEN_Title = 3,				//タイトルへ
 		SCMEN_SelectSpace = 4,			//スペースで選択
-		SCMEN_Num = 5,					//配列用
+		SCMEN_UI = 5,					//操作方法
+		SCMEN_Num = 6,					//配列用
 	};
 	//イージング類
 	//メニュー表示用のイージングのプリセット
@@ -142,7 +145,8 @@ private://メンバ変数
 		{1300.0f, 100.0f, 1.2f},			//次のステージへ
 		{1300.0f, 100.0f, 1.4f},			//ステージセレクトへ
 		{1300.0f, 100.0f, 1.6f},			//タイトルへ
-		{1300.0f, 425.0f, 2.0f}				//スペースで選択
+		{1300.0f, 425.0f, 1.8f},			//スペースで選択
+		{1300.0f, 1100.0f, 2.0f}			//操作方法
 	};
 	//メニュー表示用のイージング
 	Easing easeMenuPosX_[SCMEN_Num]
@@ -152,6 +156,7 @@ private://メンバ変数
 		presetEaseMenuPosX_[SCMEN_StageSelect],			//ステージセレクトへ
 		presetEaseMenuPosX_[SCMEN_Title],				//タイトルへ
 		presetEaseMenuPosX_[SCMEN_SelectSpace],			//スペースで選択
+		presetEaseMenuPosX_[SCMEN_UI]					//操作方法
 	};
 	//メニュー終了用のイージングのプリセット
 	const Easing presetEaseMenuEndPosX_[SCMEN_Num]
@@ -160,7 +165,8 @@ private://メンバ変数
 		{ 100.0f,-1300.0f, 1.2f},				//次のステージへ
 		{ 100.0f,-1300.0f, 1.4f},				//ステージセレクトへ
 		{ 100.0f,-1300.0f, 1.6f},				//タイトルへ
-		{ 425.0f,-1300.0f, 2.0f}				//スペースで選択
+		{ 425.0f,-1300.0f, 1.8f},				//スペースで選択
+		{ 1100.0f,-1300.0f, 2.0f}				//操作方法
 	};
 	//メニュー終了用のイージング
 	Easing easeMenuEndPosX_[SCMEN_Num]
@@ -170,6 +176,7 @@ private://メンバ変数
 		presetEaseMenuEndPosX_[SCMEN_StageSelect],			//ステージセレクトへ
 		presetEaseMenuEndPosX_[SCMEN_Title],				//タイトルへ
 		presetEaseMenuEndPosX_[SCMEN_SelectSpace],			//スペースで選択
+		presetEaseMenuEndPosX_[SCMEN_UI]					//操作方法
 	};
 	//カーソルX値のイージングプリセット
 	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
@@ -177,7 +184,7 @@ private://メンバ変数
 	Easing easeCursorPosX_ = presetEaseCursorPosX_;
 
 	//メニューポジション
-	const std::array<float, SCMEN_Num> menuPosY_ = { 50.0f,150.0f,300.0f,450.0f,550.0f };
+	const std::array<float, SCMEN_Num> menuPosY_ = { 50.0f,150.0f,300.0f,450.0f,550.0f,300.0f };
 
 	//次のステージへ行くときの視点イージングのプリセット
 	const Easing presetEaseEyeStageClear_[XYZ_Num]
