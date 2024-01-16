@@ -70,6 +70,8 @@ protected://継承メンバ変数
 
 	//マッピングモデル
 	std::map<std::string, Model*> models_;
+	//演出スキップ用カウント
+	bool skip_ = false;
 
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)

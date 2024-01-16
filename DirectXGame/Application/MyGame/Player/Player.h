@@ -108,7 +108,7 @@ private:
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	//右を向いてるか
-	bool isRight_ = true;
+	bool isRight_;
 	//振り向く用のイージングのプリセット
 	const Easing presetEaseRotateRightY_ = {-90.0f,90.0f,0.2f};//Y軸限定　左、右
 	//振り向く用のイージング
@@ -184,7 +184,7 @@ private:
 	bool isBreak_ = false;
 
 	//生きてる
-	bool isAlive_ = true;
+	bool isAlive_ = false;
 	//死亡フラグ
 	bool isDead_ = false;
 	//スピード
@@ -286,8 +286,8 @@ public: //アクセッサ、インライン関数
 	//ゲームシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 	//スピードゲット
-	const float GetSpeedMove()const { return moveSpeed; }				//通常移動スピード
-	const float GetSpeedDash()const { return moveSpeed * dashSpeed; }	//ダッシュ移動スピード
+	const float GetSpeedMove()const { return moveSpeed_; }				//通常移動スピード
+	const float GetSpeedDash()const { return moveSpeed_ * dashSpeed_; }	//ダッシュ移動スピード
 
 private://カプセル化メンバ関数
 	//生存時

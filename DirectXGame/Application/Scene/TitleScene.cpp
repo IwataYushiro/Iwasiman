@@ -217,7 +217,7 @@ void TitleScene::Update()
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		const DirectX::XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//ポジションオフセット
-		
+
 		//煙プリセット
 		const ParticleManager::Preset smoke =
 		{
@@ -233,7 +233,7 @@ void TitleScene::Update()
 		};
 		//パーティクル
 		pmFire_->ActiveX(smoke);
-		
+
 		//丸影
 		SetUpCircleShadow(player->GetPosition());
 		//更新
@@ -271,9 +271,9 @@ void TitleScene::Update()
 	lightGroup_->Update();	//ライト
 	pmFire_->Update();			//パーティクルマネージャー(ジェット)
 	pmGoal_->Update();			//パーティクルマネージャー(ゴールオブジェクト)
-	
+
 	//objF->Update();
-	
+
 	//ImGui
 	imguiManager_->Begin();
 #ifdef _DEBUG
@@ -305,7 +305,7 @@ void TitleScene::UpdateIsStartGame()
 	//カメラもセット
 	camera_->SetEye({ easeEyeGameStart_[XYZ_X].num_X, easeEyeGameStart_[XYZ_Y].num_X, easeEyeGameStart_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
-	
+
 	for (std::unique_ptr<Object3d>& goal : objGoals_)
 	{
 		//ここでゴールオブジェクトが動く
@@ -364,7 +364,7 @@ void TitleScene::UpdateIsStageSelect()
 	easeCursorPosX_.ease_out_expo();
 	//座標セット
 	spriteMenu_->SetPosition({ easeMenuEndPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
-	spriteMenuTutorial_->SetPosition({ easeMenuEndPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial]});
+	spriteMenuTutorial_->SetPosition({ easeMenuEndPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial] });
 	spriteMenuStageSelect_->SetPosition({ easeMenuEndPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
 	spriteMenuDone_->SetPosition({ easeMenuEndPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[TMEN_UI].num_X,menuPosY_[TMEN_UI] });
@@ -379,21 +379,26 @@ void TitleScene::UpdateIsStageSelect()
 	{
 		//座標セット
 		player->SetPosition({ easePlayerMove_[XYZ_X].num_X,easePlayerMove_[XYZ_Y].num_X,easePlayerMove_[XYZ_Z].num_X });
-		
-		//メニューのイージングが終わったら遷移演出
-		if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)
+	}
+	//メニューのイージングが終わったら遷移演出
+	if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)
+	{
+		FadeOut(black_);//黒くする
+		//完全に黒くなったら
+		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 		{
-			FadeOut(black_);//黒くする
-			//完全に黒くなったら
-			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
-			{
-				//ステージ選択
-				if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-				else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
-				else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
-			}
+			//ステージ選択
+			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+			else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
 		}
 	}
+	//スペースを押すとスキップするようにした
+	else if (input_->TriggerKey(DIK_SPACE))skip_ = true;
+	//演出スキップ
+	if (skip_)FadeOut(black_);
+	
+
 
 }
 
@@ -406,7 +411,7 @@ void TitleScene::UpdateIsBack()
 	for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].ease_out_expo();
 	easeCursorPosX_.ease_out_expo();
 	//座標セット
-	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title]});
+	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
 	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
 	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].num_X,startTitlePosY_[TS_Done] });
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
@@ -419,7 +424,7 @@ void TitleScene::UpdateIsBack()
 	//カメラもセット
 	camera_->SetEye({ easeEyeMenu_[XYZ_X].num_X, easeEyeMenu_[XYZ_Y].num_X, easeEyeMenu_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetMenu_[XYZ_X].num_X, easeTargetMenu_[XYZ_Y].num_X, easeTargetMenu_[XYZ_Z].num_X });
-	
+
 	//戻る用のスプライトのイージングが終わったら操作を受け付ける
 	if (spriteBack_->GetPosition().x == easeMenuPosX_[TMEN_Quit].start)
 	{
@@ -452,7 +457,7 @@ void TitleScene::UpdateIsMenu()
 	DirectX::XMFLOAT4 otherMenuColor;
 	const DirectX::XMFLOAT4 isLightBackGroundOtherMenuColor = { 0.0f,0.0f,0.0f,0.7f };//明るい背景
 	const DirectX::XMFLOAT4 isDarkBackGroundOtherMenuColor = { 1.0f,1.0f,1.0f,0.7f };//暗い背景
-	
+
 	//ステージ位置(背景)によって色を変える
 	if (stageNum_ == SL_Default)otherMenuColor = isLightBackGroundOtherMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)otherMenuColor = isLightBackGroundOtherMenuColor;
@@ -481,12 +486,12 @@ void TitleScene::UpdateIsMenu()
 	camera_->SetTarget({ easeTargetMenu_[XYZ_X].num_X, easeTargetMenu_[XYZ_Y].num_X, easeTargetMenu_[XYZ_Z].num_X });
 
 	//メニュー選択
-	if (input_->TriggerKey(DIK_W))menuCount_--;	
-	if (input_->TriggerKey(DIK_S))menuCount_++;	
+	if (input_->TriggerKey(DIK_W))menuCount_--;
+	if (input_->TriggerKey(DIK_S))menuCount_++;
 
 	//色を変える(選択しているメニューは強調)
 	if (menuCount_ == TSMI_Tutorial)//チュートリアル遷移を選択時
-	{	
+	{
 		spriteMenuTutorial_->SetColor(selectMenuColor);
 		spriteMenuStageSelect_->SetColor(otherMenuColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[TMEN_Tutorial] });
@@ -629,7 +634,7 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 	ModelMapping(modelSkydomeStage2_, "skydome2");		//ステージ2モデル(天球)
 	ModelMapping(modelGround_, "ground");				//床モデル
 	ModelMapping(modelGoal_, "sphere");					//ゴールモデル
-	
+
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索

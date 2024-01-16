@@ -104,7 +104,7 @@ void GameOverScene::Initialize()
 	spCommon_->LoadTexture(GOSTI_CursorTex, "texture/cursor.png");
 	spriteCursor_->Initialize(spCommon_, GOSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[GOMEN_Continue] });
-	
+
 	//メニュー操作スプライト
 	spCommon_->LoadTexture(GOSTI_MenuUITex, "texture/menuui.png");
 	spriteMenuUI_->Initialize(spCommon_, GOSTI_MenuUITex);
@@ -225,7 +225,7 @@ void GameOverScene::UpdateIsGameOver()
 	DirectX::XMFLOAT4 gameOverColor;
 	const DirectX::XMFLOAT4 isLightBackGroundGameOverColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };//明るい背景
 	const DirectX::XMFLOAT4 isDarkBackGroundGameOverColor = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };//暗い背景
-	
+
 	//ステージ位置(背景)によって色を変える
 	if (stageNum_ == SL_Default)gameOverColor = isLightBackGroundGameOverColor;
 	else if (stageNum_ <= SL_Stage1_StageID)gameOverColor = isLightBackGroundGameOverColor;
@@ -246,13 +246,13 @@ void GameOverScene::UpdateIsGameOver()
 	DirectX::XMFLOAT4 otherMenuColor;
 	const DirectX::XMFLOAT4 isLightBackGroundOtherMenuColor = { 0.0f,0.0f,0.0f,0.7f };//明るい背景
 	const DirectX::XMFLOAT4 isDarkBackGroundOtherMenuColor = { 1.0f,1.0f,1.0f,0.7f };//暗い背景
-	
+
 	//ステージ位置(背景)によって色を変える
 	if (stageNum_ == SL_Default)otherMenuColor = isLightBackGroundOtherMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)otherMenuColor = isLightBackGroundOtherMenuColor;
 	else if (stageNum_ <= SL_Stage2_StageID)otherMenuColor = isDarkBackGroundOtherMenuColor;
 	else otherMenuColor = isLightBackGroundOtherMenuColor;
-	
+
 	//決定指示スプライトのカラー
 	const DirectX::XMFLOAT4 doneColor = { 1.0f,1.0f,1.0f,0.6f + selectColor_.x };
 	//カラー更新
@@ -262,7 +262,7 @@ void GameOverScene::UpdateIsGameOver()
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 	easeFadeInOut_.ease_in_out_quint();
 	easeCursorPosX_.ease_in_out_quint();
-	
+
 	//座標,カラーセット
 	spriteGameOver_->SetPosition({ easeMenuPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
 	spriteContinue_->SetPosition({ easeMenuPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue] });
@@ -287,7 +287,7 @@ void GameOverScene::UpdateIsGameOver()
 	//メニュー操作
 	if (input_->TriggerKey(DIK_W))menuCount_--;
 	if (input_->TriggerKey(DIK_S))menuCount_++;
-	
+
 	//色を変える(選択しているメニューは強調)
 	if (menuCount_ == GOSMI_Continue)//コンティニュー選択時
 	{
@@ -367,11 +367,11 @@ void GameOverScene::UpdateIsContinue()
 	easeContinuePosY_.ease_in_out_expo();
 	easeCursorPosX_.ease_out_expo();
 	//座標セット
-	spriteGameOver_->SetPosition({ easeMenuEndPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu]});
+	spriteGameOver_->SetPosition({ easeMenuEndPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
 	spriteContinue_->SetPosition({ easeContinuePosX_.num_X,easeContinuePosY_.num_X });
-	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect]});
-	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title]});
-	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace]});
+	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
+	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
+	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[GOMEN_UI].num_X,menuPosY_[GOMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
@@ -380,7 +380,7 @@ void GameOverScene::UpdateIsContinue()
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
-		
+
 		//自機の回転
 		if (!completeRotate_)
 		{
@@ -388,7 +388,7 @@ void GameOverScene::UpdateIsContinue()
 			for (int i = 0; i < XYZ_Num; i++)easePlayerRotateContinue_[i].ease_in_expo();
 			player->SetRotation({ easePlayerRotateContinue_[XYZ_X].num_X,easePlayerRotateContinue_[XYZ_Y].num_X,
 				easePlayerRotateContinue_[XYZ_Z].num_X });
-			
+
 			//自機の回転が終わったら
 			if (player->GetRotation().x == easePlayerRotateContinue_[0].end)
 			{
@@ -450,11 +450,11 @@ void GameOverScene::UpdateIsQuitStageSelect()
 	for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].ease_in_out_expo();
 	easeCursorPosX_.ease_out_expo();
 	//座標セット
-	spriteGameOver_->SetPosition({ easeMenuEndPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu]});
-	spriteContinue_->SetPosition({ easeMenuEndPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue]});
-	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect]});
-	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title]});
-	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace]});
+	spriteGameOver_->SetPosition({ easeMenuEndPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
+	spriteContinue_->SetPosition({ easeMenuEndPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue] });
+	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
+	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
+	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[GOMEN_UI].num_X,menuPosY_[GOMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
@@ -463,7 +463,7 @@ void GameOverScene::UpdateIsQuitStageSelect()
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
-		
+
 		//自機の回転
 		if (!completeRotate_)
 		{
@@ -484,22 +484,26 @@ void GameOverScene::UpdateIsQuitStageSelect()
 			for (int i = 0; i < XYZ_Num; i++)easePlayerMoveQuitStageSelect_[i].ease_in_quint();
 			player->SetPosition({ easePlayerMoveQuitStageSelect_[XYZ_X].num_X,easePlayerMoveQuitStageSelect_[XYZ_Y].num_X,easePlayerMoveQuitStageSelect_[XYZ_Z].num_X });
 		}
-		//メニューのイージングが終わったら遷移演出
-		if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)
-		{
-			FadeOut(black_);//黒くする
-			//完全に黒くなったらステージセレクトへ
-			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
-			{
-				//ステージごとにステージセレクトの背景が違う
-				if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-				else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
-				else if (stageNum_ <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 
-			}
+	}
+	//メニューのイージングが終わったら遷移演出
+	if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)
+	{
+		FadeOut(black_);//黒くする
+		//完全に黒くなったらステージセレクトへ
+		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+		{
+			//ステージごとにステージセレクトの背景が違う
+			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+			else if (stageNum_ <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 
 		}
 	}
+	//スペースを押すとスキップするようにした
+	else if (input_->TriggerKey(DIK_SPACE))skip_ = true;
+	//演出スキップ
+	if (skip_)FadeOut(black_);
 }
 
 void GameOverScene::UpdateIsQuitTitle()
@@ -585,7 +589,7 @@ void GameOverScene::Finalize()
 {
 	//音声
 	audio_->Finalize();
-	
+
 }
 
 void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
@@ -600,7 +604,7 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 	ModelMapping(modelStageTutorial_, "skydomet");		  //チュートリアルステージモデル(天球)
 	ModelMapping(modelStage1_, "skydome");				  //ステージ1モデル(天球)
 	ModelMapping(modelStage2_, "skydome2");				  //ステージ2モデル(天球)
-	
+
 	// レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData_->objects) {
 		// ファイル名から登録済みモデルを検索

@@ -63,19 +63,21 @@ bool Player::Initialize() {
 	isDead_ = false;				//死亡フラグ
 	isHit_ = false;					//命中フラグ
 	mutekiCount_ = 0;				//無敵時間
-
+	
 	//右を向いているか
 	isRight_ = true;
 	//ジャンプしたか
 	onGround_ = true;
 	//ジャンプ力
-	const float startJumpVYFist = 0.0f;
+	const float startJumpVYFist = 2.0f;
 	jumpVYFist_ = startJumpVYFist;
 
 	//奥側にいるか
 	isJumpBack_ = false;
 	//奧にいるか
 	isBack_ = false;
+	//初期は右向き
+	isRight_ = true;
 
 	//奥側ジャンプに使うベジェ曲線用の時間
 	startCount_ = std::chrono::steady_clock::now();	//開始時間
@@ -162,6 +164,7 @@ void Player::Update(const bool isBack, const bool isAttack, const bool isStart) 
 		if (isAlive_)UpdateAlive(isBack, isAttack);		//生存時
 		else if (isBreak_)UpdateBreak();				//撃破時
 		else if (isGoal_)UpdateGoal();					//ゴール時
+		isAlive_ = true;								//最初は生きてないがスタート演出時に生存扱いする
 	}
 	//更新
 	camera_->Update();		//カメラ
@@ -250,16 +253,17 @@ void Player::Move() {
 			{
 				easeRotateRightY_.Standby(true);
 				rot.y = easeRotateRightY_.end;
+				isRight_ = false;
 			}
 			if (onGround_)model_ = modelMove_;
-			isRight_ = false;
+			
 			pmFire_->ActiveX(fire.particle, startPosLeft, fire.pos, fire.vel,
 				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
-			move.x -= moveSpeed * dashSpeed;
-			cmove.x -= moveSpeed * dashSpeed;
-			tmove.x -= moveSpeed * dashSpeed;
+			move.x -= moveSpeed_ * dashSpeed_;
+			cmove.x -= moveSpeed_ * dashSpeed_;
+			tmove.x -= moveSpeed_ * dashSpeed_;
 			rot.y = easeRotateRightY_.num_X;
-			if (isShake_)hitMove_.x -= moveSpeed * dashSpeed;
+			if (isShake_)hitMove_.x -= moveSpeed_ * dashSpeed_;
 		}
 		//右にダッシュ移動
 		else if (input_->PushKey(DIK_D)) {
@@ -267,16 +271,17 @@ void Player::Move() {
 			{
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
+				isRight_ = true;
 			}
 			if (onGround_)model_ = modelMove_;
-			isRight_ = true;
+			
 			pmFire_->ActiveX(fire.particle, startPosRight, fire.pos, reverseParticleVel,
 				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
-			move.x += moveSpeed * dashSpeed;
-			cmove.x += moveSpeed * dashSpeed;
-			tmove.x += moveSpeed * dashSpeed;
+			move.x += moveSpeed_ * dashSpeed_;
+			cmove.x += moveSpeed_ * dashSpeed_;
+			tmove.x += moveSpeed_ * dashSpeed_;
 			rot.y = easeRotateRightY_.num_X;
-			if (isShake_)hitMove_.x += moveSpeed * dashSpeed;
+			if (isShake_)hitMove_.x += moveSpeed_ * dashSpeed_;
 		}
 	}
 	else//通常移動
@@ -287,34 +292,35 @@ void Player::Move() {
 			{
 				easeRotateRightY_.Standby(true);
 				rot.y = easeRotateRightY_.end;
+				isRight_ = false;
 			}
 			if (onGround_)model_ = modelMove_;
-			isRight_ = false;
+			
 			pmFire_->ActiveX(fire.particle, startPosLeft, fire.pos, fire.vel,
 				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor);
-			move.x -= moveSpeed;
-			cmove.x -= moveSpeed;
-			tmove.x -= moveSpeed;
+			move.x -= moveSpeed_;
+			cmove.x -= moveSpeed_;
+			tmove.x -= moveSpeed_;
 			rot.y = easeRotateRightY_.num_X;
-			if (isShake_)hitMove_.x -= moveSpeed;
+			if (isShake_)hitMove_.x -= moveSpeed_;
 		}
 		//右に通常移動
 		else if (input_->PushKey(DIK_D)) {
 			if (!isRight_)
 			{
-
 				easeRotateRightY_.Standby(false);
 				rot.y = easeRotateRightY_.start;
+				isRight_ = true;
 			}
 			if (onGround_)model_ = modelMove_;
-			isRight_ = true;
+			
 			pmFire_->ActiveX(fire.particle, startPosRight, fire.pos, reverseParticleVel,
 				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor);
-			move.x += moveSpeed;
-			cmove.x += moveSpeed;
-			tmove.x += moveSpeed;
+			move.x += moveSpeed_;
+			cmove.x += moveSpeed_;
+			tmove.x += moveSpeed_;
 			rot.y = easeRotateRightY_.num_X;
-			if (isShake_)hitMove_.x += moveSpeed;
+			if (isShake_)hitMove_.x += moveSpeed_;
 		}
 	}
 
@@ -328,10 +334,17 @@ void Player::Move() {
 void Player::FallAndJump()
 {
 	//ジャンプ力強化アイテムを取っているかいないかでジャンプ力が変わる
-	const float maxJumpPowerUp = 3.0f;			//強化時
-	const float maxJumpPowerDefault = 2.0f;	//通常時
-	
-	if (isGetJumpItem_)jumpPowerUpcount_++;//強化時はカウントを減らす
+	const float jumpPowerUp = 3.0f;			//強化時
+	const float jumpPowerDefault = 2.0f;	//通常時
+	if (isGetJumpItem_)
+	{
+		if (onGround_)jumpVYFist_ = jumpPowerUp;
+		jumpPowerUpcount_++;
+	}
+	else
+	{
+		if (onGround_)jumpVYFist_ = jumpPowerDefault;
+	}
 
 	if (!onGround_)//ジャンプ中
 	{
@@ -348,24 +361,7 @@ void Player::FallAndJump()
 		position_.z += fallVec_.z;
 	}
 	//ジャンプ操作
-	else if (input_->PushKey(DIK_SPACE))//地面に着いているときにスペースキーでジャンプ
-	{
-		const float jumpPowerUp = 0.03f;			//強化時
-		const float jumpPowerDefault = 0.02f;	//通常時
-		if (isGetJumpItem_)//強化時
-		{
-			if (onGround_)jumpVYFist_ += jumpPowerUp;
-			//上限
-			if (jumpVYFist_ >= maxJumpPowerUp)jumpVYFist_ = maxJumpPowerUp;
-		}
-		else//通常時
-		{
-			if (onGround_)jumpVYFist_ += jumpPowerDefault;
-			//上限
-			if (jumpVYFist_ >= maxJumpPowerDefault)jumpVYFist_ = maxJumpPowerDefault;
-		}
-	}
-	else if (input_->ReleaseKey(DIK_SPACE))
+	else if (input_->TriggerKey(DIK_SPACE))//地面に着いているときにスペースキーでジャンプ
 	{
 		onGround_ = false;
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
@@ -844,8 +840,6 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		mutekiCount_ = 0;
 		hitMove_ = resetHitMove_;
 	}
-	//移動制限
-	Trans();
 
 #ifdef _DEBUG
 	//デバッグ用
