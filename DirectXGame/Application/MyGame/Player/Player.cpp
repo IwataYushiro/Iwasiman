@@ -69,7 +69,7 @@ bool Player::Initialize() {
 	//ジャンプしたか
 	onGround_ = true;
 	//ジャンプ力
-	const float startJumpVYFist = 2.0f;
+	const float startJumpVYFist = 0.0f;
 	jumpVYFist_ = startJumpVYFist;
 
 	//奥側にいるか
@@ -328,17 +328,10 @@ void Player::Move() {
 void Player::FallAndJump()
 {
 	//ジャンプ力強化アイテムを取っているかいないかでジャンプ力が変わる
-	const float jumpPowerUp = 3.0f;			//強化時
-	const float jumpPowerDefault = 2.0f;	//通常時
-	if (isGetJumpItem_)
-	{
-		if (onGround_)jumpVYFist_ = jumpPowerUp;
-		jumpPowerUpcount_++;
-	}
-	else
-	{
-		if (onGround_)jumpVYFist_ = jumpPowerDefault;
-	}
+	const float maxJumpPowerUp = 3.0f;			//強化時
+	const float maxJumpPowerDefault = 2.0f;	//通常時
+	
+	if (isGetJumpItem_)jumpPowerUpcount_++;//強化時はカウントを減らす
 
 	if (!onGround_)//ジャンプ中
 	{
@@ -355,7 +348,24 @@ void Player::FallAndJump()
 		position_.z += fallVec_.z;
 	}
 	//ジャンプ操作
-	else if (input_->TriggerKey(DIK_SPACE))//地面に着いているときにスペースキーでジャンプ
+	else if (input_->PushKey(DIK_SPACE))//地面に着いているときにスペースキーでジャンプ
+	{
+		const float jumpPowerUp = 0.03f;			//強化時
+		const float jumpPowerDefault = 0.02f;	//通常時
+		if (isGetJumpItem_)//強化時
+		{
+			if (onGround_)jumpVYFist_ += jumpPowerUp;
+			//上限
+			if (jumpVYFist_ >= maxJumpPowerUp)jumpVYFist_ = maxJumpPowerUp;
+		}
+		else//通常時
+		{
+			if (onGround_)jumpVYFist_ += jumpPowerDefault;
+			//上限
+			if (jumpVYFist_ >= maxJumpPowerDefault)jumpVYFist_ = maxJumpPowerDefault;
+		}
+	}
+	else if (input_->ReleaseKey(DIK_SPACE))
 	{
 		onGround_ = false;
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };

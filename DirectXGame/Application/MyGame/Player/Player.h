@@ -188,8 +188,8 @@ private:
 	//死亡フラグ
 	bool isDead_ = false;
 	//スピード
-	const float moveSpeed = 0.5f;//通常時
-	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
+	const float moveSpeed_ = 0.5f;//通常時
+	const float dashSpeed_ = 1.5f;//ダッシュ時に掛ける
 
 	//ライフ
 	int life_;
