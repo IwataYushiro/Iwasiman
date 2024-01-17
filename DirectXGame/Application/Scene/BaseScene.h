@@ -53,6 +53,8 @@ public://メンバ関数
 	virtual void Draw() = 0;
 	//終了処理
 	virtual void Finalize() = 0;
+	//フェードインアウト
+	virtual void FadeOut(const DirectX::XMFLOAT3& color) = 0;
 
 protected://継承メンバ変数
 	//現在ステージのポジション
@@ -85,8 +87,16 @@ protected://継承メンバ関数
 	void ModelMapping(std::unique_ptr<Model>& model, const std::string& modelName, bool smoothing = false)
 	{
 		//モデルを読み込む
-		model = Model::LoadFromOBJ(modelName,smoothing);				//自機モデル
+		model = Model::LoadFromOBJ(modelName, smoothing);				//自機モデル
 		//マップに登録
 		models_.insert(std::make_pair(modelName, model.get()));
+	}
+	//スペースを押すと演出をスキップする関数
+	void SkipDirectionOnSpace(const DirectX::XMFLOAT3& color)
+	{
+		//スペースを押すとスキップするようにした
+		if (Input::GetInstance()->TriggerKey(DIK_SPACE))skip_ = true;
+		//演出スキップ
+		if (skip_)FadeOut(color);
 	}
 };

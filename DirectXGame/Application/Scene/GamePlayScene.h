@@ -72,9 +72,9 @@ public://メンバ関数
 	void UpdateTutorial();
 
 	//フェードアウト(色)
-	void FadeOut(const DirectX::XMFLOAT3& rgb);
+	void FadeOut(const DirectX::XMFLOAT3& color)override;
 	//フェードイン(色)
-	void FadeIn(const DirectX::XMFLOAT3& rgb);
+	void FadeIn(const DirectX::XMFLOAT3& color);
 	//描画
 	void Draw() override;
 	//終了

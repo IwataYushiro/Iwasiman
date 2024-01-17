@@ -36,7 +36,7 @@ public://メンバ関数
 	//描画
 	void Draw() override;
 	//フェードアウト
-	void FadeOut(const DirectX::XMFLOAT3& rgb);
+	void FadeOut(const DirectX::XMFLOAT3& color)override;
 	//終了
 	void Finalize() override;
 

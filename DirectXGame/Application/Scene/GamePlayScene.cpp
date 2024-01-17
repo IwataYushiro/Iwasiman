@@ -674,7 +674,7 @@ void GamePlayScene::UpdateTutorial()
 	}
 }
 
-void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& rgb)
+void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& color)
 {
 
 	if (isPause_)//ポーズ時の場合
@@ -689,7 +689,7 @@ void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 		{
 			//ここでフェードインアウト
 			easeFadeInOutPause_.ease_in_out_quint();
-			spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOutPause_.num_X });//透明度だけ変える
+			spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOutPause_.num_X });//透明度だけ変える
 
 		}
 	}
@@ -704,15 +704,15 @@ void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 		else
 		{
 			//ここでフェードインアウト
-			const XMFLOAT3 negapozi = { 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z };
+			const XMFLOAT3 negapozi = { 1.0f - color.x,1.0f - color.y,1.0f - color.z };
 			easeFadeInOut_.ease_in_out_quint();
-			spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
+			spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOut_.num_X });//透明度だけ変える
 			if (isQuit_)spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
 		}
 	}
 }
 
-void GamePlayScene::FadeIn(const DirectX::XMFLOAT3& rgb)
+void GamePlayScene::FadeIn(const DirectX::XMFLOAT3& color)
 {
 
 	if (isPause_)//ポーズ時の場合にしか使わない
@@ -727,7 +727,7 @@ void GamePlayScene::FadeIn(const DirectX::XMFLOAT3& rgb)
 		{
 			//ここでフェードインアウト
 			easeFadeInOutPause_.ease_in_out_quint();
-			spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOutPause_.num_X });//透明度だけ変える
+			spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOutPause_.num_X });//透明度だけ変える
 
 		}
 	}

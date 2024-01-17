@@ -45,7 +45,7 @@ public://メンバ関数(ステージ番号)
 	//状態更新(メニューのとき) 
 	void UpdateIsMenu();
 	//フェードアウト(色)
-	void FadeOut(const DirectX::XMFLOAT3& rgb);
+	void FadeOut(const DirectX::XMFLOAT3& color) override;
 	//描画
 	void Draw() override;
 	//終了

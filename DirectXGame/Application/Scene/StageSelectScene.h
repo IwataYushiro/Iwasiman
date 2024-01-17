@@ -40,7 +40,7 @@ public://メンバ関数
 	//終了
 	void Finalize() override;
 	//フェードアウト
-	void FadeOut(const DirectX::XMFLOAT3& rgb);
+	void FadeOut(const DirectX::XMFLOAT3& color) override;
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
 

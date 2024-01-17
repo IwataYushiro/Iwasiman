@@ -561,7 +561,7 @@ void StageClearScene::Draw()
 	spriteMenuUI_->Draw();							//メニュー操作方法スプライト
 }
 
-void StageClearScene::FadeOut(const DirectX::XMFLOAT3& rgb)
+void StageClearScene::FadeOut(const DirectX::XMFLOAT3& color)
 {
 	if (!isFadeOut_)
 	{
@@ -572,9 +572,9 @@ void StageClearScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 	else
 	{
 		//ここでフェードインアウト
-		const DirectX::XMFLOAT3 negapozi = { 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z };
+		const DirectX::XMFLOAT3 negapozi = { 1.0f - color.x,1.0f - color.y,1.0f - color.z };
 		easeFadeInOut_.ease_in_out_quint();
-		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
+		spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
 		if (isNextStage_)
 		{

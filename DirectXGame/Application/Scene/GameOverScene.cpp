@@ -700,7 +700,7 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 
 }
 
-void GameOverScene::FadeOut(const DirectX::XMFLOAT3& rgb)
+void GameOverScene::FadeOut(const DirectX::XMFLOAT3& color)
 {
 	if (!isFadeOut_)
 	{
@@ -711,9 +711,9 @@ void GameOverScene::FadeOut(const DirectX::XMFLOAT3& rgb)
 	else
 	{
 		//ここでフェードインアウト
-		const XMFLOAT3 negapozi = { 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z };
+		const XMFLOAT3 negapozi = { 1.0f - color.x,1.0f - color.y,1.0f - color.z };
 		easeFadeInOut_.ease_in_out_quint();
-		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
+		spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
 		if (isContinue_)
 		{
