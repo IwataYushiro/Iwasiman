@@ -187,6 +187,8 @@ private:
 	bool isAlive_ = false;
 	//死亡フラグ
 	bool isDead_ = false;
+	//死亡演出スキップフラグ
+	bool isSkipDeadDirection_ = false;
 	//スピード
 	const float moveSpeed_ = 0.5f;//通常時
 	const float dashSpeed_ = 1.5f;//ダッシュ時に掛ける
@@ -288,6 +290,8 @@ public: //アクセッサ、インライン関数
 	//スピードゲット
 	const float GetSpeedMove()const { return moveSpeed_; }				//通常移動スピード
 	const float GetSpeedDash()const { return moveSpeed_ * dashSpeed_; }	//ダッシュ移動スピード
+	//死亡演出スキップフラグゲット
+	const bool IsSkipDeadDirection()const { return isSkipDeadDirection_; }
 
 private://カプセル化メンバ関数
 	//生存時

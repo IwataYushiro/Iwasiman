@@ -297,8 +297,8 @@ void GamePlayScene::UpdateIsPlayGame()
 		//基本状態
 		else player->Update();
 
-		//自機が死んだらゲームオーバー
-		if (player->IsDead())
+		//自機が死んだらゲームオーバー(死亡演出スキップでも同様)
+		if (player->IsDead() || player->IsSkipDeadDirection())
 		{
 			isGameOver_ = true;
 			isGamePlay_ = false;

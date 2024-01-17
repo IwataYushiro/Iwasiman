@@ -970,6 +970,8 @@ void Player::UpdateBreak()
 		}
 	}
 
+	//スキップで死亡演出スキップ
+	if (input_->TriggerKey(DIK_SPACE))isSkipDeadDirection_ = true;
 }
 
 void Player::UpdateGoal()
