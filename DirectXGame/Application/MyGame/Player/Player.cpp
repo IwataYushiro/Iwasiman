@@ -1,4 +1,4 @@
-#include "Player.h"
+ï»¿#include "Player.h"
 #include <cassert>
 #include "SphereCollider.h"
 #include "CollisionAttribute.h"
@@ -12,11 +12,11 @@ using namespace IwasiEngine;
 
 *	Player.cpp
 
-*	©‹@
+*	è‡ªæ©Ÿ
 
 */
 
-//Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
+//é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°ã®å®Ÿä½“
 IwasiEngine::CollisionManager* Player::colManager_ = CollisionManager::GetInstance();
 
 Player::~Player() {
@@ -25,27 +25,27 @@ Player::~Player() {
 
 std::unique_ptr<Player> Player::Create(const PlayerModelList* model, GamePlayScene* gamescene)
 {
-	//ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	//ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	std::unique_ptr<Player> ins = std::make_unique<Player>();
 	if (ins == nullptr) return nullptr;
 
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	if (!ins->Initialize())
 	{
 		ins.release();
 		assert(0);
 	}
-	//ƒ‚ƒfƒ‹‚ÌƒZƒbƒg
-	if (model->playerModel)ins->modelPlayer_ = model->playerModel;		//’Êí—§‚¿p
-	if (model->playerBullet) ins->modelBullet_ = model->playerBullet;	//’e
-	if (model->playerHit)ins->modelHit_ = model->playerHit;				//ƒqƒbƒg
-	if (model->playerMove)ins->modelMove_ = model->playerMove;			//ˆÚ“®
-	if (model->playerJump)ins->modelJump_ = model->playerJump;			//ƒWƒƒƒ“ƒv
-	if (model->playerAttack)ins->modelAttack_ = model->playerAttack;	//UŒ‚
-	//ƒQ[ƒ€ƒV[ƒ“‚ÌƒZƒbƒg
+	//ãƒ¢ãƒ‡ãƒ«ã®ã‚»ãƒƒãƒˆ
+	if (model->playerModel)ins->modelPlayer_ = model->playerModel;		//é€šå¸¸ç«‹ã¡å§¿
+	if (model->playerBullet) ins->modelBullet_ = model->playerBullet;	//å¼¾
+	if (model->playerHit)ins->modelHit_ = model->playerHit;				//ãƒ’ãƒƒãƒˆæ™‚
+	if (model->playerMove)ins->modelMove_ = model->playerMove;			//ç§»å‹•æ™‚
+	if (model->playerJump)ins->modelJump_ = model->playerJump;			//ã‚¸ãƒ£ãƒ³ãƒ—æ™‚
+	if (model->playerAttack)ins->modelAttack_ = model->playerAttack;	//æ”»æ’ƒæ™‚
+	//ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã®ã‚»ãƒƒãƒˆ
 	if (gamescene)ins->SetGameScene(gamescene);
 
-	//Å‰‚Ìƒ‚ƒfƒ‹
+	//æœ€åˆã®ãƒ¢ãƒ‡ãƒ«
 	ins->SetModel(model->playerMove);
 	return ins;
 }
@@ -54,49 +54,49 @@ bool Player::Initialize() {
 
 	if (!Object3d::Initialize()) return false;
 
-	//ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
+	//ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	spCommon_ = SpriteCommon::GetInstance();
 	input_ = Input::GetInstance();
-	//‰Šú’lƒZƒbƒg
-	const int32_t startLife = 10;	//ŠJnƒ‰ƒCƒt
-	life_ = startLife;				//¨ƒ‰ƒCƒt‚ğ‘ã“ü
-	isDead_ = false;				//€–Sƒtƒ‰ƒO
-	isHit_ = false;					//–½’†ƒtƒ‰ƒO
-	mutekiCount_ = 0;				//–³“GŠÔ
+	//åˆæœŸå€¤ã‚»ãƒƒãƒˆ
+	const int32_t startLife = 10;	//é–‹å§‹æ™‚ãƒ©ã‚¤ãƒ•
+	life_ = startLife;				//â†’ãƒ©ã‚¤ãƒ•ã‚’ä»£å…¥
+	isDead_ = false;				//æ­»äº¡ãƒ•ãƒ©ã‚°
+	isHit_ = false;					//å‘½ä¸­ãƒ•ãƒ©ã‚°
+	mutekiCount_ = 0;				//ç„¡æ•µæ™‚é–“
 	
-	//‰E‚ğŒü‚¢‚Ä‚¢‚é‚©
+	//å³ã‚’å‘ã„ã¦ã„ã‚‹ã‹
 	isRight_ = true;
-	//ƒWƒƒƒ“ƒv‚µ‚½‚©
+	//ã‚¸ãƒ£ãƒ³ãƒ—ã—ãŸã‹
 	onGround_ = true;
-	//ƒWƒƒƒ“ƒv—Í
+	//ã‚¸ãƒ£ãƒ³ãƒ—åŠ›
 	const float startJumpVYFist = 2.0f;
 	jumpVYFist_ = startJumpVYFist;
 
-	//‰œ‘¤‚É‚¢‚é‚©
+	//å¥¥å´ã«ã„ã‚‹ã‹
 	isJumpBack_ = false;
-	//šú‚É‚¢‚é‚©
+	//å¥§ã«ã„ã‚‹ã‹
 	isBack_ = false;
-	//‰Šú‚Í‰EŒü‚«
+	//åˆæœŸã¯å³å‘ã
 	isRight_ = true;
 
-	//‰œ‘¤ƒWƒƒƒ“ƒv‚Ég‚¤ƒxƒWƒF‹Èü—p‚ÌŠÔ
-	startCount_ = std::chrono::steady_clock::now();	//ŠJnŠÔ
-	nowCount_ = std::chrono::steady_clock::now();		//Œ»İŠÔ
-	elapsedCount_;	//Œo‰ßŠÔ Œo‰ßŠÔ=Œ»İŠÔ-ŠJnŠÔ
+	//å¥¥å´ã‚¸ãƒ£ãƒ³ãƒ—ã«ä½¿ã†ãƒ™ã‚¸ã‚§æ›²ç·šç”¨ã®æ™‚é–“
+	startCount_ = std::chrono::steady_clock::now();	//é–‹å§‹æ™‚é–“
+	nowCount_ = std::chrono::steady_clock::now();		//ç¾åœ¨æ™‚é–“
+	elapsedCount_;	//çµŒéæ™‚é–“ çµŒéæ™‚é–“=ç¾åœ¨æ™‚é–“-é–‹å§‹æ™‚é–“
 
-	//ƒXƒvƒ‰ƒCƒg
-	//ƒ‰ƒCƒtƒo[
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	//ãƒ©ã‚¤ãƒ•ãƒãƒ¼
 	spCommon_->LoadTexture(GPSPTI_PlayerLifeBarTex, "texture/plife2.png");
 	spriteLifeBar_->Initialize(spCommon_, GPSPTI_PlayerLifeBarTex);
 	spriteLifeBar_->SetPosition(lifeBarPos_);
-	spriteLifeBar_->SetColor(green_);//Šî–{‚Í—Î
+	spriteLifeBar_->SetColor(green_);//åŸºæœ¬ã¯ç·‘
 	spriteLifeBar_->Update();
-	//”í’e‰‰o
+	//è¢«å¼¾æ¼”å‡º
 	spCommon_->LoadTexture(GPSPTI_PlayerHitEffectTex, "texture/fade2.png");
 	spriteHit_->Initialize(spCommon_, GPSPTI_PlayerHitEffectTex);
-	spriteHit_->SetColor(hitColor_);//F‚ÍÔ‚¢‚ªŠî–{‚Í“§–¾
+	spriteHit_->SetColor(hitColor_);//è‰²ã¯èµ¤ã„ãŒåŸºæœ¬ã¯é€æ˜
 	spriteHit_->Update();
-	//”š”­—pƒXƒvƒ‰ƒCƒg
+	//çˆ†ç™ºç”¨ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(GPSPTI_PlayerExplosionTex, "texture/explosion2.png");
 	spriteExplosion_->Initialize(spCommon_, GPSPTI_PlayerExplosionTex);
 	spriteExplosion_->SetAnchorPoint(explosionAnchorPoint_);
@@ -105,132 +105,132 @@ bool Player::Initialize() {
 	spriteExplosion_->SetColor({ asIsColor_.x,asIsColor_.y,asIsColor_.z,easeExplosionSizeAndAlpha_[XYW_W].start });
 	spriteExplosion_->Update();
 
-	//ƒp[ƒeƒBƒNƒ‹
-	//”š”­‚Ì‰Œ
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+	//çˆ†ç™ºæ™‚ã®ç…™
 	particleSmoke_ = Particle::LoadFromParticleTexture("particle9.png");
 	pmSmoke_ = ParticleManager::Create();
 	pmSmoke_->SetParticleModel(particleSmoke_.get());
 	pmSmoke_->SetBlendMode(ParticleManager::BP_ALPHA);
-	//ƒ_ƒbƒVƒ…A”š”­—p‚Ì‰Š
+	//ãƒ€ãƒƒã‚·ãƒ¥ã€çˆ†ç™ºç”¨ã®ç‚
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetParticleModel(particleFire_.get());
-	//’e‚ğŒ‚‚Â‚Æ‚«‚Ì‰Š
+	//å¼¾ã‚’æ’ƒã¤ã¨ãã®ç‚
 	particleBullet_ = Particle::LoadFromParticleTexture("particle2.png");
 	pmBullet_ = ParticleManager::Create();
 	pmBullet_->SetParticleModel(particleBullet_.get());
 
-	//ƒRƒ‰ƒCƒ_[’Ç‰Á
-	const XMVECTOR colliderOffset = { 0.0f,0.0f,0.0f,0.0f };
+	//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼è¿½åŠ 
+	const XMVECTOR colliderOffset = { -radius_,0.0f,0.0f,0.0f };//åˆæœŸå€¤ã¯å³æ–¹å‘
 	SetCollider(new SphereCollider(colliderOffset, radius_));
-	//©‹@–{‘Ì
+	//è‡ªæ©Ÿæœ¬ä½“
 	collider_->SetAttribute(COLLISION_ATTR_PLAYERS);
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_NONE);
-	//ƒC[ƒWƒ“ƒOƒXƒ^ƒ“ƒoƒC
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã‚¹ã‚¿ãƒ³ãƒã‚¤
 	easelifeBarSize_.Standby(false);
 	return true;
 }
 
 void Player::Reset() {
-	//’lƒŠƒZƒbƒg
-	const int32_t resetLife = 10;	//‰Šú’lƒ‰ƒCƒt‚ÉƒŠƒZƒbƒg
-	life_ = resetLife;				//‚»‚ê‚ğ‘ã“ü
-	isDead_ = false;				//€–Sƒtƒ‰ƒO
+	//å€¤ãƒªã‚»ãƒƒãƒˆ
+	const int32_t resetLife = 10;	//åˆæœŸå€¤ãƒ©ã‚¤ãƒ•ã«ãƒªã‚»ãƒƒãƒˆ
+	life_ = resetLife;				//ãã‚Œã‚’ä»£å…¥
+	isDead_ = false;				//æ­»äº¡ãƒ•ãƒ©ã‚°
 
-	//‰E‚ğŒü‚¢‚Ä‚¢‚é‚©
+	//å³ã‚’å‘ã„ã¦ã„ã‚‹ã‹
 	isRight_ = true;
-	//ƒWƒƒƒ“ƒv‚µ‚½‚©
+	//ã‚¸ãƒ£ãƒ³ãƒ—ã—ãŸã‹
 	onGround_ = true;
 
-	//‰œ‘¤‚É‚¢‚é‚©
+	//å¥¥å´ã«ã„ã‚‹ã‹
 	isJumpBack_ = false;
-	//šú‚É‚¢‚é‚©
+	//å¥§ã«ã„ã‚‹ã‹
 	isBack_ = false;
 
-	//‰œ‘¤ƒWƒƒƒ“ƒv‚Ég‚¤ƒxƒWƒF‹Èü—p‚ÌŠÔ
-	startCount_ = std::chrono::steady_clock::now();	//ŠJnŠÔ
-	nowCount_ = std::chrono::steady_clock::now();		//Œ»İŠÔ
-	elapsedCount_;	//Œo‰ßŠÔ Œo‰ßŠÔ=Œ»İŠÔ-ŠJnŠÔ
+	//å¥¥å´ã‚¸ãƒ£ãƒ³ãƒ—ã«ä½¿ã†ãƒ™ã‚¸ã‚§æ›²ç·šç”¨ã®æ™‚é–“
+	startCount_ = std::chrono::steady_clock::now();	//é–‹å§‹æ™‚é–“
+	nowCount_ = std::chrono::steady_clock::now();		//ç¾åœ¨æ™‚é–“
+	elapsedCount_;	//çµŒéæ™‚é–“ çµŒéæ™‚é–“=ç¾åœ¨æ™‚é–“-é–‹å§‹æ™‚é–“
 }
 void Player::Update(const bool isBack, const bool isAttack, const bool isStart) {
 
-	//ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ[‚ÉƒJƒƒ‰‚ğƒZƒbƒg
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã«ã‚«ãƒ¡ãƒ©ã‚’ã‚»ãƒƒãƒˆ
 	pmFire_->SetCamera(camera_);
 	pmSmoke_->SetCamera(camera_);
 	pmBullet_->SetCamera(camera_);
 
-	if (!isStart)//ƒXƒ^[ƒg‰‰o‚Í‰½‚à‚µ‚È‚¢
+	if (!isStart)//ã‚¹ã‚¿ãƒ¼ãƒˆæ¼”å‡ºæ™‚ã¯ä½•ã‚‚ã—ãªã„
 	{
-		if (isAlive_)UpdateAlive(isBack, isAttack);		//¶‘¶
-		else if (isBreak_)UpdateBreak();				//Œ‚”j
-		else if (isGoal_)UpdateGoal();					//ƒS[ƒ‹
+		if (isAlive_)UpdateAlive(isBack, isAttack);		//ç”Ÿå­˜æ™‚
+		else if (isBreak_)UpdateBreak();				//æ’ƒç ´æ™‚
+		else if (isGoal_)UpdateGoal();					//ã‚´ãƒ¼ãƒ«æ™‚
 	}
-	else isAlive_ = true;								//Å‰‚Í¶‚«‚Ä‚È‚¢‚ªƒXƒ^[ƒg‰‰o‚É¶‘¶ˆµ‚¢‚·‚é
+	else isAlive_ = true;								//æœ€åˆã¯ç”Ÿãã¦ãªã„ãŒã‚¹ã‚¿ãƒ¼ãƒˆæ¼”å‡ºæ™‚ã«ç”Ÿå­˜æ‰±ã„ã™ã‚‹
 
-	//XV
-	camera_->Update();		//ƒJƒƒ‰
-	UpdateWorldMatrix();	//s—ñ
-	pmFire_->Update();		//ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ[(‰Š)
-	pmSmoke_->Update();		//ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ[(‰Œ)
-	collider_->Update();	//ƒRƒ‰ƒCƒ_[
+	//æ›´æ–°
+	camera_->Update();		//ã‚«ãƒ¡ãƒ©
+	UpdateWorldMatrix();	//è¡Œåˆ—
+	pmFire_->Update();		//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼(ç‚)
+	pmSmoke_->Update();		//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼(ç…™)
+	collider_->Update();	//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼
 
-	//’…’nˆ—
+	//ç€åœ°å‡¦ç†
 	Landing(COLLISION_ATTR_LANDSHAPE);
 
-	//ƒ‰ƒCƒtƒo[‚ÌƒC[ƒWƒ“ƒO
+	//ãƒ©ã‚¤ãƒ•ãƒãƒ¼ã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	easelifeBarSize_.ease_in_cubic();
-	lifeBarDamageSize_.x = easelifeBarSize_.num_X;//ƒTƒCƒY‚ğƒZƒbƒg
+	lifeBarDamageSize_.x = easelifeBarSize_.num_X;//ã‚µã‚¤ã‚ºã‚’ã‚»ãƒƒãƒˆ
 	spriteLifeBar_->SetTextureSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
 	spriteLifeBar_->SetSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
-	//ƒ‰ƒCƒt‚ª‚±‚Ì’l‚É‚Ü‚Å‰º‚ª‚Á‚½‚çƒsƒ“ƒ`‚¾‚Æ’m‚ç‚¹‚é
+	//ãƒ©ã‚¤ãƒ•ãŒã“ã®å€¤ã«ã¾ã§ä¸‹ãŒã£ãŸã‚‰ãƒ”ãƒ³ãƒã ã¨çŸ¥ã‚‰ã›ã‚‹
 	const int dangerLifeZone = 3;
-	//ƒsƒ“ƒ`‚Íƒ‰ƒCƒtƒo[‚ğÔ‚­‚µA‚»‚êˆÈŠO‚Í—Î‚É
+	//ãƒ”ãƒ³ãƒæ™‚ã¯ãƒ©ã‚¤ãƒ•ãƒãƒ¼ã‚’èµ¤ãã—ã€ãã‚Œä»¥å¤–ã¯ç·‘ã«
 	if (life_ <= dangerLifeZone) { spriteLifeBar_->SetColor(red_); }
 	else { spriteLifeBar_->SetColor(green_); }
-	//ƒXƒvƒ‰ƒCƒgXV
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæ›´æ–°
 	spriteLifeBar_->Update();
 	spriteHit_->Update();
 	spriteExplosion_->Update();
 }
 
-void Player::Draw() { if (!isExplosion_)Object3d::Draw(); }//•`‰æ
+void Player::Draw() { if (!isExplosion_)Object3d::Draw(); }//æç”»
 
 void Player::DrawSprite()
 {
-	if (!isBreak_)//¶‚«‚Ä‚½‚ç
+	if (!isBreak_)//ç”Ÿãã¦ãŸã‚‰
 	{
 		if (isAlive_)spriteLifeBar_->Draw();
 		spriteHit_->Draw();
 	}
-	else//‚â‚ç‚ê‚½‚ç
+	else//ã‚„ã‚‰ã‚ŒãŸã‚‰
 	{
 		spriteExplosion_->Draw();
 	}
 }
 
 void Player::DrawParticle() {
-	//Šeƒp[ƒeƒBƒNƒ‹•`‰æ
+	//å„ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«æç”»
 	pmSmoke_->Draw();
 	pmFire_->Draw();
 }
 
-//ˆÚ“®ˆ—
+//ç§»å‹•å‡¦ç†
 void Player::Move() {
-	//U‚èŒü‚­‚½‚ß‚ÌƒC[ƒWƒ“ƒO
+	//æŒ¯ã‚Šå‘ããŸã‚ã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	easeRotateRightY_.ease_out_cubic();
-	//’l‚ÌƒQƒbƒ^[
+	//å€¤ã®ã‚²ãƒƒã‚¿ãƒ¼
 	XMFLOAT3 move = Object3d::GetPosition();
 	XMFLOAT3 rot = Object3d::GetRotation();
 	XMFLOAT3 cmove = camera_->GetEye();
 	XMFLOAT3 tmove = camera_->GetTarget();
 
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	const XMFLOAT3 startPosRight = { position_.x - 2.0f,position_.y + 1.0f ,position_.z };
 	const XMFLOAT3 startPosLeft = { position_.x + 2.0f,position_.y + 1.0f ,position_.z };
-	const ParticleManager::Preset fire =	//‰ŠƒvƒŠƒZƒbƒg
+	const ParticleManager::Preset fire =	//ç‚ãƒ—ãƒªã‚»ãƒƒãƒˆ
 	{
 		particleFire_.get(),
-		position_,//g‚í‚È‚¢
+		position_,//ä½¿ã‚ãªã„
 		{ 0.0f ,2.0f,0.0f },
 		{ 3.0f,0.3f,0.3f },
 		{ 0.0f,0.001f,0.0f },
@@ -239,16 +239,30 @@ void Player::Move() {
 		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 		{0.0f,0.0f,0.0f,1.0f}
 	};
+	//é€†æ–¹å‘æ™‚ã®é€Ÿåº¦
 	const XMFLOAT3 reverseParticleVel = { -fire.vel.x,-fire.vel.y, -fire.vel.z };
+	//é€šå¸¸ç§»å‹•æ™‚ã«å‡ºã™ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®é‡
 	const int32_t walkParticleNum = 1;
+	//é€šå¸¸ç§»å‹•æ™‚ã«å‡ºã™ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®è‰²åˆã„
 	const XMFLOAT4 walkStartColor = { MyMath::RandomMTFloat(0.9f,1.0f),0.6f,0.6f,1.0f };
-	//ƒL[ƒ{[ƒh“ü—Í‚É‚æ‚éˆÚ“®ˆ—
+
+	//çƒã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®å–å¾—
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
+	assert(sphereCollider);
+	//çƒã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚‚å–å¾—
+	XMVECTOR colliderOffset = sphereCollider->GetOffset();
+ 
+	//å·¦å³ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+	const XMVECTOR limitColliderOffsetRight = { -radius_,0.0f,0.0f,0.0f };		//å³æ–¹å‘
+	const XMVECTOR limitColliderOffsetLeft = { radius_,0.0f,0.0f,0.0f };		//å·¦æ–¹å‘
+
+	//ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰å…¥åŠ›ã«ã‚ˆã‚‹ç§»å‹•å‡¦ç†
 	XMMATRIX matTrans = XMMatrixIdentity();
 
-	//ƒ_ƒbƒVƒ…
+	//ãƒ€ãƒƒã‚·ãƒ¥
 	if (input_->PushKey(DIK_LSHIFT) || input_->PushKey(DIK_RSHIFT))
 	{
-		//¶‚Éƒ_ƒbƒVƒ…ˆÚ“®
+		//å·¦ã«ãƒ€ãƒƒã‚·ãƒ¥ç§»å‹•
 		if (input_->PushKey(DIK_A)) {
 			if (isRight_)
 			{
@@ -256,17 +270,25 @@ void Player::Move() {
 				rot.y = easeRotateRightY_.end;
 				isRight_ = false;
 			}
-			if (onGround_)model_ = modelMove_;
-			
+			if (onGround_)model_ = modelMove_;//åœ°é¢ã«ã¤ã„ã¦ãŸã‚‰ãƒ¢ãƒ‡ãƒ«ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
+			//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’å‡ºã™
 			pmFire_->ActiveX(fire.particle, startPosLeft, fire.pos, fire.vel,
 				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+			//ç§»å‹•
 			move.x -= moveSpeed_ * dashSpeed_;
 			cmove.x -= moveSpeed_ * dashSpeed_;
 			tmove.x -= moveSpeed_ * dashSpeed_;
 			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x -= moveSpeed_ * dashSpeed_;
+			//ã‚ªãƒ•ã‚»ãƒƒãƒˆã¯é€†ã«å‹•ã‹ã™
+			colliderOffset.m128_f32[XYZ_X] += moveSpeed_ * dashSpeed_;
+			//ä¸Šé™
+			if (colliderOffset.m128_f32[XYZ_X] >= limitColliderOffsetLeft.m128_f32[XYZ_X])
+			{
+				colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetLeft.m128_f32[XYZ_X];
+			}
 		}
-		//‰E‚Éƒ_ƒbƒVƒ…ˆÚ“®
+		//å³ã«ãƒ€ãƒƒã‚·ãƒ¥ç§»å‹•
 		else if (input_->PushKey(DIK_D)) {
 			if (!isRight_)
 			{
@@ -274,20 +296,28 @@ void Player::Move() {
 				rot.y = easeRotateRightY_.start;
 				isRight_ = true;
 			}
-			if (onGround_)model_ = modelMove_;
-			
+			if (onGround_)model_ = modelMove_;//åœ°é¢ã«ã¤ã„ã¦ãŸã‚‰ãƒ¢ãƒ‡ãƒ«ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
+			//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’å‡ºã™
 			pmFire_->ActiveX(fire.particle, startPosRight, fire.pos, reverseParticleVel,
 				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+			//ç§»å‹•
 			move.x += moveSpeed_ * dashSpeed_;
 			cmove.x += moveSpeed_ * dashSpeed_;
 			tmove.x += moveSpeed_ * dashSpeed_;
 			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x += moveSpeed_ * dashSpeed_;
+			//ã‚ªãƒ•ã‚»ãƒƒãƒˆã¯é€†ã«å‹•ã‹ã™
+			colliderOffset.m128_f32[XYZ_X] -= moveSpeed_ * dashSpeed_;
+			//ä¸Šé™
+			if (colliderOffset.m128_f32[XYZ_X] <= limitColliderOffsetRight.m128_f32[XYZ_X])
+			{
+				colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetRight.m128_f32[XYZ_X];
+			}
 		}
 	}
-	else//’ÊíˆÚ“®
+	else//é€šå¸¸ç§»å‹•
 	{
-		//¶‚É’ÊíˆÚ“®
+		//å·¦ã«é€šå¸¸ç§»å‹•
 		if (input_->PushKey(DIK_A)) {
 			if (isRight_)
 			{
@@ -295,17 +325,25 @@ void Player::Move() {
 				rot.y = easeRotateRightY_.end;
 				isRight_ = false;
 			}
-			if (onGround_)model_ = modelMove_;
-			
+			if (onGround_)model_ = modelMove_;//åœ°é¢ã«ã¤ã„ã¦ãŸã‚‰ãƒ¢ãƒ‡ãƒ«ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
+			//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’å‡ºã™
 			pmFire_->ActiveX(fire.particle, startPosLeft, fire.pos, fire.vel,
 				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor);
+			//ç§»å‹•
 			move.x -= moveSpeed_;
 			cmove.x -= moveSpeed_;
 			tmove.x -= moveSpeed_;
 			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x -= moveSpeed_;
+			//ã‚ªãƒ•ã‚»ãƒƒãƒˆã¯é€†ã«å‹•ã‹ã™
+			colliderOffset.m128_f32[XYZ_X] += moveSpeed_;
+			//ä¸Šé™
+			if (colliderOffset.m128_f32[XYZ_X] >= limitColliderOffsetLeft.m128_f32[XYZ_X])
+			{
+				colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetLeft.m128_f32[XYZ_X];
+			}
 		}
-		//‰E‚É’ÊíˆÚ“®
+		//å³ã«é€šå¸¸ç§»å‹•
 		else if (input_->PushKey(DIK_D)) {
 			if (!isRight_)
 			{
@@ -313,30 +351,39 @@ void Player::Move() {
 				rot.y = easeRotateRightY_.start;
 				isRight_ = true;
 			}
-			if (onGround_)model_ = modelMove_;
-			
+			if (onGround_)model_ = modelMove_;//åœ°é¢ã«ã¤ã„ã¦ãŸã‚‰ãƒ¢ãƒ‡ãƒ«ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
+			//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’å‡ºã™
 			pmFire_->ActiveX(fire.particle, startPosRight, fire.pos, reverseParticleVel,
 				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor);
+			//ç§»å‹•
 			move.x += moveSpeed_;
 			cmove.x += moveSpeed_;
 			tmove.x += moveSpeed_;
 			rot.y = easeRotateRightY_.num_X;
 			if (isShake_)hitMove_.x += moveSpeed_;
+			//ã‚ªãƒ•ã‚»ãƒƒãƒˆã¯é€†ã«å‹•ã‹ã™
+			colliderOffset.m128_f32[XYZ_X] -= moveSpeed_ * dashSpeed_;
+			//ä¸Šé™
+			if (colliderOffset.m128_f32[XYZ_X] <= limitColliderOffsetRight.m128_f32[XYZ_X])
+			{
+				colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetRight.m128_f32[XYZ_X];
+			}
 		}
 	}
 
-	//’l‚ÌXV
+	//å€¤ã®æ›´æ–°
 	Object3d::SetPosition(move);
 	Object3d::SetRotation(rot);
 	camera_->SetEye(cmove);
 	camera_->SetTarget(tmove);
+	sphereCollider->SetOffset(colliderOffset);
 }
 
 void Player::FallAndJump()
 {
-	//ƒWƒƒƒ“ƒv—Í‹­‰»ƒAƒCƒeƒ€‚ğæ‚Á‚Ä‚¢‚é‚©‚¢‚È‚¢‚©‚ÅƒWƒƒƒ“ƒv—Í‚ª•Ï‚í‚é
-	const float jumpPowerUp = 3.0f;			//‹­‰»
-	const float jumpPowerDefault = 2.0f;	//’Êí
+	//ã‚¸ãƒ£ãƒ³ãƒ—åŠ›å¼·åŒ–ã‚¢ã‚¤ãƒ†ãƒ ã‚’å–ã£ã¦ã„ã‚‹ã‹ã„ãªã„ã‹ã§ã‚¸ãƒ£ãƒ³ãƒ—åŠ›ãŒå¤‰ã‚ã‚‹
+	const float jumpPowerUp = 3.0f;			//å¼·åŒ–æ™‚
+	const float jumpPowerDefault = 2.0f;	//é€šå¸¸æ™‚
 	if (isGetJumpItem_)
 	{
 		if (onGround_)jumpVYFist_ = jumpPowerUp;
@@ -347,29 +394,29 @@ void Player::FallAndJump()
 		if (onGround_)jumpVYFist_ = jumpPowerDefault;
 	}
 
-	if (!onGround_)//ƒWƒƒƒ“ƒv’†
+	if (!onGround_)//ã‚¸ãƒ£ãƒ³ãƒ—ä¸­
 	{
-		//ƒ‚ƒfƒ‹‚ğ•ÏX
+		//ãƒ¢ãƒ‡ãƒ«ã‚’å¤‰æ›´
 		model_ = modelJump_;
-		//‰ºŒü‚«‰Á‘¬“x
+		//ä¸‹å‘ãåŠ é€Ÿåº¦
 		const float fallAcc = -0.1f;
 		const float fallVYMin = -2.0f;
-		//‰Á‘¬
+		//åŠ é€Ÿ
 		fallVec_.y = max(fallVec_.y + fallAcc, fallVYMin);
-		//ˆÚ“®
+		//ç§»å‹•
 		position_.x += fallVec_.x;
 		position_.y += fallVec_.y;
 		position_.z += fallVec_.z;
 	}
-	//ƒWƒƒƒ“ƒv‘€ì
-	else if (input_->TriggerKey(DIK_SPACE))//’n–Ê‚É’…‚¢‚Ä‚¢‚é‚Æ‚«‚ÉƒXƒy[ƒXƒL[‚ÅƒWƒƒƒ“ƒv
+	//ã‚¸ãƒ£ãƒ³ãƒ—æ“ä½œ
+	else if (input_->TriggerKey(DIK_SPACE))//åœ°é¢ã«ç€ã„ã¦ã„ã‚‹ã¨ãã«ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼ã§ã‚¸ãƒ£ãƒ³ãƒ—
 	{
 		onGround_ = false;
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
 	}
 
-	//‹­‰»ƒAƒCƒeƒ€‚ğæ“¾‚µ‚Ä‚¢‚é‚Æ‚«ˆê’è‚ÌŠÔ‚ª‚½‚Á‚½‚çƒWƒƒƒ“ƒv—Í‚ªƒŠƒZƒbƒg‚³‚ê‚é
+	//å¼·åŒ–ã‚¢ã‚¤ãƒ†ãƒ ã‚’å–å¾—ã—ã¦ã„ã‚‹ã¨ãä¸€å®šã®æ™‚é–“ãŒãŸã£ãŸã‚‰ã‚¸ãƒ£ãƒ³ãƒ—åŠ›ãŒãƒªã‚»ãƒƒãƒˆã•ã‚Œã‚‹
 	if (jumpPowerUpcount_ >= JUMPITEM_MAX_TIME)
 	{
 		const float countReset = 0.0f;
@@ -384,23 +431,23 @@ void Player::JumpBack()
 	const float offsetPosY = 1.0f;
 	const float JumpBackPosY = 20.0f;
 
-	//ƒxƒWƒF‹Èü‚Ì’l
+	//ãƒ™ã‚¸ã‚§æ›²ç·šã®å€¤
 	const XMFLOAT3 startBezier3Pos = { position_.x,jumpBackPos_.y - offsetPosY,-60.0f };
 	const XMFLOAT3 point1Bezier3Pos = { position_.x,jumpBackPos_.y + JumpBackPosY,-40.0f };
 	const XMFLOAT3 point2Bezier3Pos = { position_.x,jumpBackPos_.y + JumpBackPosY,-20.0f };
 	const XMFLOAT3 endBezier3Pos = { position_.x,jumpBackPos_.y - offsetPosY,0.0f };
 
-	//§Œä“_
+	//åˆ¶å¾¡ç‚¹
 	start_ = startBezier3Pos;
 	point1_ = point1Bezier3Pos;
 	point2_ = point2Bezier3Pos;
 	end_ = endBezier3Pos;
 
-	if (onGround_)//’n–Ê‚É’…‚¢‚Ä‚¢‚½‚ç
+	if (onGround_)//åœ°é¢ã«ç€ã„ã¦ã„ãŸã‚‰
 	{
 		if (!isJumpBack_)
 		{
-			if (input_->TriggerKey(DIK_W))//‰œ‘¤‚ÖƒWƒƒƒ“ƒv
+			if (input_->TriggerKey(DIK_W))//å¥¥å´ã¸ã‚¸ãƒ£ãƒ³ãƒ—
 			{
 				if (isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
@@ -408,7 +455,7 @@ void Player::JumpBack()
 				isBack_ = true;
 				isJumpBack_ = true;
 			}
-			if (input_->TriggerKey(DIK_S))//è‘O‘¤‚ÖƒWƒƒƒ“ƒv
+			if (input_->TriggerKey(DIK_S))//æ‰‹å‰å´ã¸ã‚¸ãƒ£ãƒ³ãƒ—
 			{
 				if (!isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
@@ -418,29 +465,29 @@ void Player::JumpBack()
 			}
 		}
 	}
-	if (isJumpBack_)//‰œ‘¤Aè‘O‘¤ƒWƒƒƒ“ƒv’†
+	if (isJumpBack_)//å¥¥å´ã€æ‰‹å‰å´ã‚¸ãƒ£ãƒ³ãƒ—ä¸­
 	{
 
-		//Œ»İŠÔ‚ğæ“¾‚·‚é
+		//ç¾åœ¨æ™‚é–“ã‚’å–å¾—ã™ã‚‹
 		nowCount_ = std::chrono::steady_clock::now();
-		//‘O‰ñ‹L˜^‚©‚ç‚ÌŒo‰ßŠÔ‚ğæ“¾‚·‚é
+		//å‰å›è¨˜éŒ²ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’å–å¾—ã™ã‚‹
 		elapsedCount_ = std::chrono::duration_cast<std::chrono::microseconds>(nowCount_ - startCount_);
 
 		const float micro = 1'000'000.0f;
-		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / micro;//ƒ}ƒCƒNƒ•b‚ğ•b‚É’PˆÊ•ÏŠ·
+		float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(elapsedCount_).count() / micro;//ãƒã‚¤ã‚¯ãƒ­ç§’ã‚’ç§’ã«å˜ä½å¤‰æ›
 		//0~1
 		const float timeRateMax = 1.0f;
 		timeRate_ = min(elapsed / maxTime_, timeRateMax);
 
-		if (isBack_)//‰œ‘¤‚Ös‚­ê‡
+		if (isBack_)//å¥¥å´ã¸è¡Œãå ´åˆ
 		{
-			//ƒxƒWƒF‹Èü‚Å”ò‚ñ‚Å‚¢‚­
+			//ãƒ™ã‚¸ã‚§æ›²ç·šã§é£›ã‚“ã§ã„ã
 			position_ = Bezier3(start_, point1_, point2_, end_, timeRate_);
 			if (position_.z >= end_.z)isJumpBack_ = false;
 		}
-		else//è‘O‘¤‚Ös‚­ê‡
+		else//æ‰‹å‰å´ã¸è¡Œãå ´åˆ
 		{
-			//ƒxƒWƒF‹Èü‚Å”ò‚ñ‚Å‚¢‚­
+			//ãƒ™ã‚¸ã‚§æ›²ç·šã§é£›ã‚“ã§ã„ã
 			position_ = Bezier3(end_, point2_, point1_, start_, timeRate_);
 			if (position_.z <= start_.z)isJumpBack_ = false;
 		}
@@ -450,33 +497,33 @@ void Player::JumpBack()
 
 void Player::Landing(const unsigned short attribute)
 {
-	//‹…ƒRƒ‰ƒCƒ_[‚Ìæ“¾
+	//çƒã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®å–å¾—
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
 	assert(sphereCollider);
 
-	//©‹@ê—pƒNƒGƒŠ[ƒR[ƒ‹ƒoƒbƒNƒNƒ‰ƒX’è‹`
+	//è‡ªæ©Ÿå°‚ç”¨ã‚¯ã‚¨ãƒªãƒ¼ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚¯ãƒ©ã‚¹å®šç¾©
 	class PlayerQueryCallback : public QueryCallback
 	{
 	public:
-		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		PlayerQueryCallback(Sphere* sphere) :sphere_(sphere) {};
 
-		//Õ“Ë‚ÌƒR[ƒ‹ƒoƒbƒNŠÖ”
+		//è¡çªæ™‚ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 		bool OnQueryHit(const QueryHit& info)
 		{
-			//ƒ[ƒ‹ƒhã•ûŒü
+			//ãƒ¯ãƒ¼ãƒ«ãƒ‰ä¸Šæ–¹å‘
 			const XMVECTOR up = { 0.0f,1.0f,0.0f,0.0f };
-			//”rË•ûŒü
+			//æ’æ–¥æ–¹å‘
 			XMVECTOR rejectDir = XMVector3Normalize(info.reject);
-			//ã•ûŒü‚Æ”rË•ûŒü‚ÌŠp“x·‚ÌƒRƒTƒCƒ“’l
+			//ä¸Šæ–¹å‘ã¨æ’æ–¥æ–¹å‘ã®è§’åº¦å·®ã®ã‚³ã‚µã‚¤ãƒ³å€¤
 			float cos = XMVector3Dot(rejectDir, up).m128_f32[XYZ_X];
 
-			//’n–Ê”»’è‚Ì‚µ‚«‚¢’lŠp“x
+			//åœ°é¢åˆ¤å®šã®ã—ãã„å€¤è§’åº¦
 			const float threshold = cosf(XMConvertToRadians(30.0f));
-			//Šp“x·‚É‚æ‚Á‚Ä“Vˆä–”‚Í’n–Ê‚Æ”»’è‚³‚ê‚éê‡‚ğœ‚¢‚Ä
+			//è§’åº¦å·®ã«ã‚ˆã£ã¦å¤©äº•åˆã¯åœ°é¢ã¨åˆ¤å®šã•ã‚Œã‚‹å ´åˆã‚’é™¤ã„ã¦
 			if (-threshold < cos && cos < threshold)
 			{
-				//‹…‚ğ”rË(‰Ÿ‚µo‚·)
+				//çƒã‚’æ’æ–¥(æŠ¼ã—å‡ºã™)
 				sphere_->center += info.reject;
 				move += info.reject;
 			}
@@ -485,38 +532,38 @@ void Player::Landing(const unsigned short attribute)
 		}
 
 	public:
-		//‹…
+		//çƒ
 		Sphere* sphere_ = nullptr;
-		//”rË‚É‚æ‚éˆÚ“®—Ê
+		//æ’æ–¥ã«ã‚ˆã‚‹ç§»å‹•é‡
 		XMVECTOR move = {};
 
 	};
 
-	// ‹…ƒNƒGƒŠ[AƒRƒ‰ƒCƒ_[XV
-	//ƒNƒGƒŠ[ƒR[ƒ‹ƒoƒbƒN‚ÌŠÖ”ƒIƒuƒWƒFƒNƒg
+	// çƒã‚¯ã‚¨ãƒªãƒ¼ã€ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼æ›´æ–°
+	//ã‚¯ã‚¨ãƒªãƒ¼ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã®é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	PlayerQueryCallback callback(sphereCollider);
 
-	//‹…‚Æ’nŒ`‚ÌŒğ·‚ğ‘SŒŸõ
+	//çƒã¨åœ°å½¢ã®äº¤å·®ã‚’å…¨æ¤œç´¢
 	colManager_->QuerySphere(*sphereCollider, &callback, attribute);
-	//Œğ·‚É‚æ‚é”rË•ª“®‚©‚·
+	//äº¤å·®ã«ã‚ˆã‚‹æ’æ–¥åˆ†å‹•ã‹ã™
 	position_.x += callback.move.m128_f32[XYZ_X];
 	position_.y += callback.move.m128_f32[XYZ_Y];
 	//position_.z += callback.move.m128_f32[2];
 
-	//‹“_‚Æ’‹“_‚ğƒQƒbƒg
+	//è¦–ç‚¹ã¨æ³¨è¦–ç‚¹ã‚’ã‚²ãƒƒãƒˆ
 	XMFLOAT3 eyepos = camera_->GetEye();
 	XMFLOAT3 tarpos = camera_->GetTarget();
-	//X•ª‚¾‚¯“®‚©‚·
+	//Xåˆ†ã ã‘å‹•ã‹ã™
 	eyepos.x += callback.move.m128_f32[XYZ_X];
 	tarpos.x += callback.move.m128_f32[XYZ_X];
 
-	//XV
-	UpdateWorldMatrix();			//s—ñXV
-	camera_->SetEye(eyepos);		//‹“_ƒZƒbƒg
-	camera_->SetTarget(tarpos);		//’‹“_ƒZƒbƒg
-	collider_->Update();			//ƒRƒ‰ƒCƒ_[XV
+	//æ›´æ–°
+	UpdateWorldMatrix();			//è¡Œåˆ—æ›´æ–°
+	camera_->SetEye(eyepos);		//è¦–ç‚¹ã‚»ãƒƒãƒˆ
+	camera_->SetTarget(tarpos);		//æ³¨è¦–ç‚¹ã‚»ãƒƒãƒˆ
+	collider_->Update();			//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼æ›´æ–°
 
-	//‹…‚Ìã’[‚©‚ç‹…‚Ì‰º’[‚Ü‚Å‚ÌƒŒƒCƒLƒƒƒXƒg—pƒŒƒC‚ğ€”õ
+	//çƒã®ä¸Šç«¯ã‹ã‚‰çƒã®ä¸‹ç«¯ã¾ã§ã®ãƒ¬ã‚¤ã‚­ãƒ£ã‚¹ãƒˆç”¨ãƒ¬ã‚¤ã‚’æº–å‚™
 	Ray ray;
 	ray.start = sphereCollider->center;
 	ray.start.m128_f32[XYZ_Y] += sphereCollider->GetRadius();
@@ -524,45 +571,45 @@ void Player::Landing(const unsigned short attribute)
 	ray.dir = rayDir;
 	RaycastHit raycastHit;
 
-	//”¼Œa@X@2.0f(radiusMulNum)
+	//åŠå¾„ã€€Xã€€2.0f(radiusMulNum)
 	const float radiusMulNum = 2.0f;
-	//—‰ºó‘Ô‚É‚È‚éY’l‚ÌƒXƒs[ƒh
+	//è½ä¸‹çŠ¶æ…‹ã«ãªã‚‹Yå€¤ã®ã‚¹ãƒ”ãƒ¼ãƒ‰
 	const float fallSpeedY = 0.0f;
-	//Ú’nó‘Ô
+	//æ¥åœ°çŠ¶æ…‹
 	if (onGround_)
 	{
-		//ƒXƒ€[ƒY‚Éâ‚ğ‰º‚é‚½‚ß‚Ì‹z’…ˆ—
+		//ã‚¹ãƒ ãƒ¼ã‚ºã«å‚ã‚’ä¸‹ã‚‹ãŸã‚ã®å¸ç€å‡¦ç†
 		const float adsDistance = 0.2f;
-		//Ú’n‚ğˆÛ
+		//æ¥åœ°ã‚’ç¶­æŒ
 		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * radiusMulNum + adsDistance))
 		{
 			onGround_ = true;
 			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * radiusMulNum);
-			//s—ñXV
+			//è¡Œåˆ—æ›´æ–°
 			Object3d::Update();
 		}
-		//’n–Ê‚ª–³‚¢‚Ì‚Å—‰º
+		//åœ°é¢ãŒç„¡ã„ã®ã§è½ä¸‹
 		else
 		{
 			onGround_ = false;
 			fallVec_ = {};
 		}
 	}
-	//—‰ºó‘Ô
+	//è½ä¸‹çŠ¶æ…‹
 	else if (fallVec_.y <= fallSpeedY)
 	{
 		if (colManager_->RayCast(ray, attribute, &raycastHit,
 			sphereCollider->GetRadius() * radiusMulNum))
 		{
-			//’…’n‚Éƒ‚ƒfƒ‹‚ğ’…’nƒ‚ƒfƒ‹‚É
+			//ç€åœ°æ™‚ã«ãƒ¢ãƒ‡ãƒ«ã‚’ç€åœ°ãƒ¢ãƒ‡ãƒ«ã«
 			model_ = modelPlayer_;
-			//’…’n
+			//ç€åœ°
 			onGround_ = true;
 			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * radiusMulNum);
 
 
-			//’…’nƒvƒŠƒZƒbƒg
+			//ç€åœ°ãƒ—ãƒªã‚»ãƒƒãƒˆ
 			const ParticleManager::Preset smoke =
 			{
 				particleSmoke_.get(),
@@ -575,34 +622,34 @@ void Player::Landing(const unsigned short attribute)
 				{ 1.0f,1.0f,1.0f,0.5f },
 				{ 0.0f,0.0f,0.0f,0.0f }
 			};
-			//’…’n‚µ‚½‚ç“y‰Œ‚Á‚Û‚¢‚Ì‚ğo‚·
+			//ç€åœ°ã—ãŸã‚‰åœŸç…™ã£ã½ã„ã®ã‚’å‡ºã™
 			pmSmoke_->ActiveY(smoke);
 
-			//s—ñXV
+			//è¡Œåˆ—æ›´æ–°
 			Object3d::Update();
 		}
 	}
 
-	//ƒIƒuƒWƒFƒNƒgXV
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ›´æ–°
 	Object3d::Update();
 }
 
-//UŒ‚ˆ—
+//æ”»æ’ƒå‡¦ç†
 void Player::Attack() {
 
 	if (input_->TriggerKey(DIK_L)) {
-		//’n–Ê‚É‚¢‚é‚Æ‚«,’Êí‚Ì—§‚¿ŠG‚Ì‚Æ‚«ŒÀ’è‚Åƒ‚ƒfƒ‹‚ğ•Ï‚¦‚é
+		//åœ°é¢ã«ã„ã‚‹ã¨ã,é€šå¸¸ã®ç«‹ã¡çµµã®ã¨ãé™å®šã§ãƒ¢ãƒ‡ãƒ«ã‚’å¤‰ãˆã‚‹
 		if (model_ == modelPlayer_ && onGround_) model_ = modelAttack_;
-		//’e‚Ì‘¬“x
+		//å¼¾ã®é€Ÿåº¦
 		const float bulletSpeed = 1.0f;
 		XMFLOAT3 velocity;
-		//Œü‚«‚É‚æ‚Á‚ÄƒXƒs[ƒh‚ª•Ï‚í‚é
+		//å‘ãã«ã‚ˆã£ã¦ã‚¹ãƒ”ãƒ¼ãƒ‰ãŒå¤‰ã‚ã‚‹
 		const XMFLOAT3 velLeft = { -bulletSpeed, 0.0f, 0.0f };
 		const XMFLOAT3 velRight = { bulletSpeed, 0.0f, 0.0f };
-		//Œü‚¢‚Ä‚¢‚é•ûŒü‚ğ“¯Šú
+		//å‘ã„ã¦ã„ã‚‹æ–¹å‘ã‚’åŒæœŸ
 		if (isRight_)velocity = velRight;
 		else velocity = velLeft;
-		//s—ñ‚É‘¬“x’l‚ğ“n‚·
+		//è¡Œåˆ—ã«é€Ÿåº¦å€¤ã‚’æ¸¡ã™
 		const XMFLOAT4 velosityMoveMatrix = { velocity.x,velocity.y,velocity.z,0.0f };
 		XMMATRIX matVec = XMMatrixIdentity();
 		matVec.r[XYZW_X].m128_f32[XYZW_X] = velosityMoveMatrix.x;
@@ -611,10 +658,10 @@ void Player::Attack() {
 		matVec.r[XYZW_X].m128_f32[XYZW_W] = velosityMoveMatrix.w;
 		matVec *= Object3d::GetWorld();
 
-		//©ƒLƒƒƒ‰‚ÌÀ•W‚ğƒRƒs[
+		//è‡ªã‚­ãƒ£ãƒ©ã®åº§æ¨™ã‚’ã‚³ãƒ”ãƒ¼
 		XMFLOAT3 pos = Object3d::GetPosition();
 
-		//’e‚ğ¶¬‚µ‰Šú‰»
+		//å¼¾ã‚’ç”Ÿæˆã—åˆæœŸåŒ–
 		const XMFLOAT3 bulletPositionOffsetRight = { position_.x + 0.8f,position_.y + 3.0f,position_.z };
 		const XMFLOAT3 bulletPositionOffsetLeft = { position_.x - 0.8f,position_.y + 3.0f,position_.z };
 		std::unique_ptr<PlayerBullet> newBullet;
@@ -623,18 +670,18 @@ void Player::Attack() {
 		newBullet->SetCamera(camera_);
 		newBullet->Update();
 
-		//’e‚ğ“o˜^
+		//å¼¾ã‚’ç™»éŒ²
 		gameScene_->AddPlayerBullet(std::move(newBullet));
-		//‚ ‚éƒƒ‚ƒŠ‚ÌŠ—LŒ ‚ğ‚Âunique_ptr‚Í‚½‚¾ˆê‚Â‚µ‚©‘¶İ‚Å‚«‚È‚¢
-		//‚»‚ÌŠ—LŒ ‚ğŒª“n‚·‚é‚½‚ß‚Ì‹@”\‚ª std::move()
+		//ã‚ã‚‹ãƒ¡ãƒ¢ãƒªã®æ‰€æœ‰æ¨©ã‚’æŒã¤unique_ptrã¯ãŸã ä¸€ã¤ã—ã‹å­˜åœ¨ã§ããªã„
+		//ãã®æ‰€æœ‰æ¨©ã‚’è¬™æ¸¡ã™ã‚‹ãŸã‚ã®æ©Ÿèƒ½ãŒ std::move()
 	}
 }
 
-//Õ“Ë‚ğŒŸo‚µ‚½‚çŒÄ‚Ño‚³‚ê‚éƒR[ƒ‹ƒoƒbƒNŠÖ”
+//è¡çªã‚’æ¤œå‡ºã—ãŸã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 	const unsigned short attribute, const unsigned short subAttribute) {
 
-	//ƒ_ƒ[ƒWŠÇ—‚Ì\‘¢‘Ì
+	//ãƒ€ãƒ¡ãƒ¼ã‚¸ç®¡ç†ã®æ§‹é€ ä½“
 	struct DamageType
 	{
 		const uint32_t enemyNone = 2;
@@ -647,7 +694,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 	};
 	DamageType damege;
 
-	//‰ŒƒvƒŠƒZƒbƒg
+	//ç…™ãƒ—ãƒªã‚»ãƒƒãƒˆ
 	const ParticleManager::Preset fire =
 	{
 		particleFire_.get(),
@@ -661,12 +708,12 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		{ 0.0f,0.0f,0.0f,1.0f }
 	};
 
-	if (attribute == COLLISION_ATTR_ENEMYS)//“G‚Ìê‡
+	if (attribute == COLLISION_ATTR_ENEMYS)//æ•µã®å ´åˆ
 	{
-		//ƒqƒbƒg(–³“GŠÔ)‚ÍŒø‚©‚È‚¢
+		//ãƒ’ãƒƒãƒˆæ™‚(ç„¡æ•µæ™‚é–“æ™‚)ã¯åŠ¹ã‹ãªã„
 		if (isShake_)return;
 		if (isHit_)return;
-		//ƒ_ƒ[ƒWŒvZ
+		//ãƒ€ãƒ¡ãƒ¼ã‚¸è¨ˆç®—
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)life_ -= damege.enemyNone;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_POWER)life_ -= damege.enemyPower;
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_GUARD)life_ -= damege.enemyGuard;
@@ -675,7 +722,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		else if (subAttribute == SUBCOLLISION_ATTR_ENEMY_ISDEAD)return;
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)life_ -= damege.enemyBullet;
 
-		//ƒqƒbƒg‰‰o
+		//ãƒ’ãƒƒãƒˆæ¼”å‡º
 		pmFire_->ActiveZ(fire);
 		pmFire_->Update();
 
@@ -683,17 +730,17 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		isHit_ = true;
 	}
 
-	else if (attribute == COLLISION_ATTR_GIMMICK)//ƒMƒ~ƒbƒN‚Ìê‡
+	else if (attribute == COLLISION_ATTR_GIMMICK)//ã‚®ãƒŸãƒƒã‚¯ã®å ´åˆ
 	{
-		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)//ƒgƒQ
+		if (subAttribute == SUBCOLLISION_ATTR_GIMMICK_SPIKE)//ãƒˆã‚²
 		{
-			//ƒqƒbƒg(–³“GŠÔ)‚ÍŒø‚©‚È‚¢
+			//ãƒ’ãƒƒãƒˆæ™‚(ç„¡æ•µæ™‚é–“æ™‚)ã¯åŠ¹ã‹ãªã„
 			if (isShake_)return;
 			if (isHit_)return;
-			//ƒ_ƒ[ƒWŒvZ
+			//ãƒ€ãƒ¡ãƒ¼ã‚¸è¨ˆç®—
 			life_ -= damege.GimmickSpike;
 
-			//ƒqƒbƒg‰‰o
+			//ãƒ’ãƒƒãƒˆæ¼”å‡º
 			pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
 				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 			pmFire_->Update();
@@ -703,34 +750,34 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		}
 
 	}
-	else if (attribute == COLLISION_ATTR_GOAL)//ƒS[ƒ‹‚Ìê‡
+	else if (attribute == COLLISION_ATTR_GOAL)//ã‚´ãƒ¼ãƒ«ã®å ´åˆ
 	{
-		//‘½dƒqƒbƒg‚ğ–h~
+		//å¤šé‡ãƒ’ãƒƒãƒˆã‚’é˜²æ­¢
 		if (isGoal_)return;
-		//©‹@‚ÌƒXƒP[ƒ‹‚ğƒC[ƒWƒ“ƒO‚Å•ÏX
+		//è‡ªæ©Ÿã®ã‚¹ã‚±ãƒ¼ãƒ«ã‚’ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã§å¤‰æ›´
 		scale_ = { easeChangeScaleStageClear_[XYZ_X].start,easeChangeScaleStageClear_[XYZ_Y].start ,easeChangeScaleStageClear_[XYZ_Z].start };
 		for (int i = 0; i < XYZ_Num; i++)easeChangeScaleStageClear_[i].Standby(false);
-		//“®‚©‚¹‚È‚¢‚æ‚¤‚É‚·‚é
+		//å‹•ã‹ã›ãªã„ã‚ˆã†ã«ã™ã‚‹
 		stopPos_ = position_;
 		isGoal_ = true;
 		isAlive_ = false;
 	}
-	else if (attribute == COLLISION_ATTR_ITEM)//ƒAƒCƒeƒ€‚Ìê‡
+	else if (attribute == COLLISION_ATTR_ITEM)//ã‚¢ã‚¤ãƒ†ãƒ ã®å ´åˆ
 	{
 
-		if (subAttribute == SUBCOLLISION_ATTR_ITEM_JUMP)//ƒWƒƒƒ“ƒv‹­‰»ƒAƒCƒeƒ€
+		if (subAttribute == SUBCOLLISION_ATTR_ITEM_JUMP)//ã‚¸ãƒ£ãƒ³ãƒ—å¼·åŒ–ã‚¢ã‚¤ãƒ†ãƒ 
 		{
 			if (isGetJumpItem_)
 			{
-				jumpPowerUpcount_ = 0;//ŠÔ‚ğƒŠƒZƒbƒg
-				return; //‘½dƒqƒbƒg–h~
+				jumpPowerUpcount_ = 0;//æ™‚é–“ã‚’ãƒªã‚»ãƒƒãƒˆ
+				return; //å¤šé‡ãƒ’ãƒƒãƒˆé˜²æ­¢
 			}
 
 			isGetJumpItem_ = true;
 		}
-		else if (subAttribute == SUBCOLLISION_ATTR_ITEM_HEAL)//ƒ‰ƒCƒt‰ñ•œƒAƒCƒeƒ€
+		else if (subAttribute == SUBCOLLISION_ATTR_ITEM_HEAL)//ãƒ©ã‚¤ãƒ•å›å¾©ã‚¢ã‚¤ãƒ†ãƒ 
 		{
-			//‰ñ•œ‚·‚é
+			//å›å¾©ã™ã‚‹
 			const int heal = 1;
 			life_ += heal;
 
@@ -741,7 +788,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 
 const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT3& p3, const float t)
 {
-	//O“_ƒxƒWƒF‹Èü‚Ì®
+	//ä¸‰ç‚¹ãƒ™ã‚¸ã‚§æ›²ç·šã®å¼
 	//B(t) = (1-t)^3 * P0 + 3(1-t)^2 * t * P1 + 3(1-t)*t^2 * P2 + t^3 * P3 0<=t<=1
 
 	XMFLOAT3 ans;
@@ -758,45 +805,45 @@ const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMF
 void Player::UpdateAlive(const bool isBack, const bool isAttack)
 {
 	if (isDead_)return;
-	//ˆÚ“®ˆ—
+	//ç§»å‹•å‡¦ç†
 	Move();
-	//ƒWƒƒƒ“ƒvˆ—
+	//ã‚¸ãƒ£ãƒ³ãƒ—å‡¦ç†
 	FallAndJump();
-	//è‘OB‰œ‘¤ƒWƒƒƒ“ƒvˆ—
+	//æ‰‹å‰ã€‚å¥¥å´ã‚¸ãƒ£ãƒ³ãƒ—å‡¦ç†
 	if (isBack)JumpBack();
-	//UŒ‚ˆ—
+	//æ”»æ’ƒå‡¦ç†
 	if (isAttack)Attack();
 
-	if (life_ <= 0)//ƒ‰ƒCƒt‚ª0‚É‚È‚Á‚½‚ç€‚Ê
+	if (life_ <= 0)//ãƒ©ã‚¤ãƒ•ãŒ0ã«ãªã£ãŸã‚‰æ­»ã¬
 	{
-		//Œ»İ‹“_‚Æ’‹“_‚ğ‹L˜^
+		//ç¾åœ¨è¦–ç‚¹ã¨æ³¨è¦–ç‚¹ã‚’è¨˜éŒ²
 		nowEye_ = camera_->GetEye();
 		nowTarget_ = camera_->GetTarget();
 
 		const XMFLOAT3 offset = { -10.0f,position_.y,85.0f + position_.z };
-		easeOffset_ = offset;//Å‰‚ÉƒIƒtƒZƒbƒg‚ğ‘«‚³‚È‚¢‚Æ‰EƒJƒƒ‰A1‰ñ‘«‚·‚Æ’†‰›ƒJƒƒ‰A2‰ñ‘«‚µ‚½‚ç¶ƒJƒƒ‰
+		easeOffset_ = offset;//æœ€åˆã«ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¶³ã•ãªã„ã¨å³ã‚«ãƒ¡ãƒ©ã€1å›è¶³ã™ã¨ä¸­å¤®ã‚«ãƒ¡ãƒ©ã€2å›è¶³ã—ãŸã‚‰å·¦ã‚«ãƒ¡ãƒ©
 		const float easeTime = 1.0f;
-		//‰EƒJƒƒ‰‹“_[i]
+		//å³ã‚«ãƒ¡ãƒ©è¦–ç‚¹[i]
 		easeDeadCameraEye_[XYZ_X].SetEasing(nowEye_.x, nowEye_.x + easeOffset_.x, easeTime);
 		easeDeadCameraEye_[XYZ_Y].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, easeTime);
 		easeDeadCameraEye_[XYZ_Z].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, easeTime);
-		//‰EƒJƒƒ‰’‹“_[i]
+		//å³ã‚«ãƒ¡ãƒ©æ³¨è¦–ç‚¹[i]
 		easeDeadCameraTarget_[XYZ_X].SetEasing(nowTarget_.x, nowTarget_.x + easeOffset_.x, easeTime);
 		easeDeadCameraTarget_[XYZ_Y].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, easeTime);
 		easeDeadCameraTarget_[XYZ_Z].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, easeTime);
-		//ƒC[ƒWƒ“ƒOƒXƒ^ƒ“ƒoƒC
+		//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã‚¹ã‚¿ãƒ³ãƒã‚¤
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].Standby(false);
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].Standby(false);
-		//ƒ‚ƒfƒ‹‚ğØ‚è‘Ö‚¦‚Ä€–S‰‰o‚Ö
+		//ãƒ¢ãƒ‡ãƒ«ã‚’åˆ‡ã‚Šæ›¿ãˆã¦æ­»äº¡æ¼”å‡ºã¸
 		model_ = modelHit_;
 		isBreak_ = true;
 		isAlive_ = false;
 	}
-	//ˆê’è‚ÌˆÊ’u‚Ü‚Å—‚¿‚Ä‚à€‚Ê
+	//ä¸€å®šã®ä½ç½®ã¾ã§è½ã¡ã¦ã‚‚æ­»ã¬
 	const float deadPosY = -60.0;
 	if (position_.y <= deadPosY)isDead_ = true;
 
-	if (isHit_)//“G‚ÌUŒ‚‚ª“–‚½‚Á‚½‚ç
+	if (isHit_)//æ•µã®æ”»æ’ƒãŒå½“ãŸã£ãŸã‚‰
 	{
 		nowEye_ = camera_->GetEye();
 		nowTarget_ = camera_->GetTarget();
@@ -806,28 +853,28 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 	}
 	if (isShake_)
 	{
-		//“–‚½‚Á‚½‚çƒVƒFƒCƒN‚³‚¹‚é
+		//å½“ãŸã£ãŸã‚‰ã‚·ã‚§ã‚¤ã‚¯ã•ã›ã‚‹
 		const int32_t shakeCount = 1;
-		//‹“_ƒVƒFƒCƒN
+		//è¦–ç‚¹ã‚·ã‚§ã‚¤ã‚¯
 		XMFLOAT3 Eye = nowEye_ + hitMove_;
 		const XMFLOAT3 hitEye = { 0.5f,0.5f,0.5f };
 		camera_->ShakeEye(Eye, shakeCount, { Eye.x - hitEye.x,Eye.y - hitEye.y,Eye.z - hitEye.z },
 			{ Eye.x + hitEye.x,Eye.y + hitEye.y,Eye.z + hitEye.z });
 
-		//’‹“_ƒVƒFƒCƒN
+		//æ³¨è¦–ç‚¹ã‚·ã‚§ã‚¤ã‚¯
 		XMFLOAT3 Target = nowTarget_ + hitMove_;
 		const XMFLOAT3 hitTarget = { 0.5f,0.5f,0.5f };
 		camera_->ShakeTarget(Target, shakeCount, { Target.x - hitTarget.x,Target.y - hitTarget.y,Target.z - hitTarget.z },
 			{ Target.x + hitTarget.x,Target.y + hitTarget.y,Target.z + hitTarget.z });
 		camera_->Update();
 
-		//+‚µ‚ÄƒC[ƒWƒ“ƒO
+		//+ã—ã¦ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 		easeHit_.ease_in_out_cubic();
 		spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
-		//–³“GŠÔƒJƒEƒ“ƒg‚ği‚ß‚é
+		//ç„¡æ•µæ™‚é–“ã‚«ã‚¦ãƒ³ãƒˆã‚’é€²ã‚ã‚‹
 		mutekiCount_++;
 	}
-	//–³“GŠÔƒJƒEƒ“ƒg‚ªˆê’è‚ÌŠÔ‚É‚Ü‚Å’B‚µ‚½‚çƒVƒFƒCƒNI—¹
+	//ç„¡æ•µæ™‚é–“ã‚«ã‚¦ãƒ³ãƒˆãŒä¸€å®šã®æ™‚é–“ã«ã¾ã§é”ã—ãŸã‚‰ã‚·ã‚§ã‚¤ã‚¯çµ‚äº†
 	if (mutekiCount_ == MUTEKI_COUNT)
 	{
 		if (isShake_)
@@ -843,18 +890,18 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 	}
 
 #ifdef _DEBUG
-	//ƒfƒoƒbƒO—p
+	//ãƒ‡ãƒãƒƒã‚°ç”¨
 	//if (input_->TriggerKey(DIK_M))
 	//{
 	//	nowEye_ = camera_->GetEye();
 	//	nowTarget_ = camera_->GetTarget();
 
-	//	easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };//Å‰‚ÉƒIƒtƒZƒbƒg‚ğ‘«‚³‚È‚¢‚Æ‰EƒJƒƒ‰A1‰ñ‘«‚·‚Æ’†‰›ƒJƒƒ‰A2‰ñ‘«‚µ‚½‚ç¶ƒJƒƒ‰
-	//	//‰EƒJƒƒ‰‹“_[i][0]
+	//	easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };//æœ€åˆã«ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¶³ã•ãªã„ã¨å³ã‚«ãƒ¡ãƒ©ã€1å›è¶³ã™ã¨ä¸­å¤®ã‚«ãƒ¡ãƒ©ã€2å›è¶³ã—ãŸã‚‰å·¦ã‚«ãƒ¡ãƒ©
+	//	//å³ã‚«ãƒ¡ãƒ©è¦–ç‚¹[i][0]
 	//	easeDeadCameraEye_[0][0].SetEasing(nowEye_.x, nowEye_.x + easeOffset_.x, 1.0f);
 	//	easeDeadCameraEye_[1][0].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
 	//	easeDeadCameraEye_[2][0].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, 1.0f);
-	//	//‰EƒJƒƒ‰’‹“_[i][0]
+	//	//å³ã‚«ãƒ¡ãƒ©æ³¨è¦–ç‚¹[i][0]
 	//	easeDeadCameraTarget_[0][0].SetEasing(nowTarget_.x, nowTarget_.x + easeOffset_.x, 1.0f);
 	//	easeDeadCameraTarget_[1][0].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, 1.0f);
 	//	easeDeadCameraTarget_[2][0].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, 1.0f);
@@ -871,12 +918,12 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 
 void Player::UpdateBreak()
 {
-	if (isExplosion_)//ƒXƒvƒ‰ƒCƒg”š”­‚µI‚í‚Á‚½
+	if (isExplosion_)//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆçˆ†ç™ºã—çµ‚ã‚ã£ãŸæ™‚
 	{
-		//ƒC[ƒWƒ“ƒO‚Å™X‚É”š”­ƒXƒvƒ‰ƒCƒg‚ğ”–‚­‚µ‚Ä‚¢‚«ÅI“I‚É‚Í“§–¾‚É‚·‚é
+		//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã§å¾ã€…ã«çˆ†ç™ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’è–„ãã—ã¦ã„ãæœ€çµ‚çš„ã«ã¯é€æ˜ã«ã™ã‚‹
 		easeExplosionSizeAndAlpha_[XYW_W].ease_out_sine();
 		spriteExplosion_->SetColor({ asIsColor_.x,asIsColor_.y,asIsColor_.z,easeExplosionSizeAndAlpha_[XYW_W].num_X });
-		//‰ŠƒvƒŠƒZƒbƒg
+		//ç‚ãƒ—ãƒªã‚»ãƒƒãƒˆ
 		const ParticleManager::Preset fire =
 		{
 			particleFire_.get(),
@@ -889,11 +936,11 @@ void Player::UpdateBreak()
 			{ MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
-		//‘å”š”­
+		//å¤§çˆ†ç™º
 		pmFire_->ActiveY(fire);
 
-		const DirectX::XMFLOAT2 smokeOffsetXY = { -2.0f,-1.5f };//‰Œ‰ŠúÀ•WƒIƒtƒZƒbƒg
-		//‰ŒƒvƒŠƒZƒbƒg
+		const DirectX::XMFLOAT2 smokeOffsetXY = { -2.0f,-1.5f };//ç…™åˆæœŸåº§æ¨™ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+		//ç…™ãƒ—ãƒªã‚»ãƒƒãƒˆ
 		const ParticleManager::Preset smoke =
 		{
 			particleSmoke_.get(),
@@ -907,25 +954,25 @@ void Player::UpdateBreak()
 			{ 0.0f,0.0f,0.0f,0.0f }
 		};
 
-		//‰Œ‚à•‘‚¤
+		//ç…™ã‚‚èˆã†
 		pmSmoke_->ActiveY(smoke);
 
-		//ƒJƒƒ‰‘¬“x
+		//ã‚«ãƒ¡ãƒ©é€Ÿåº¦
 		XMFLOAT3 cameraSppedEyeTarget;
-		const XMFLOAT2 shakeEyeTargetMinMax = { -0.1f,0.1f };//‹“_A’‹“_‚ÌXYÀ•W‚ÍƒVƒFƒCƒN‚³‚¹‚é
-		//ƒVƒFƒCƒN‚Ì’l‚Íƒ‰ƒ“ƒ_ƒ€
+		const XMFLOAT2 shakeEyeTargetMinMax = { -0.1f,0.1f };//è¦–ç‚¹ã€æ³¨è¦–ç‚¹ã®XYåº§æ¨™ã¯ã‚·ã‚§ã‚¤ã‚¯ã•ã›ã‚‹
+		//ã‚·ã‚§ã‚¤ã‚¯ã®å€¤ã¯ãƒ©ãƒ³ãƒ€ãƒ 
 		cameraSppedEyeTarget.x = MyMath::RandomMTFloat(shakeEyeTargetMinMax.x, shakeEyeTargetMinMax.y);
 		cameraSppedEyeTarget.y = MyMath::RandomMTFloat(shakeEyeTargetMinMax.x, shakeEyeTargetMinMax.y);
 
-		const float speedChangePosZ = -30.0f;//è‘O‘¤A‰œ‘¤‚É•ª‚¯‚éŠî€‚Ì’l(‚±‚ê‚æ‚è‘å‚«‚©‚Á‚½‚ç‰œ‘¤)
-		const XMFLOAT2 cameraSpeedZ = { 1.0f,0.5f };//‰œ‘¤‚Æè‘O‘¤‚Ì‹“_A’‹“_‚ÌZ²ˆÚ“®‚Ì‘¬“x
-		//‰œ‘¤‚Æè‘O‘¤‚ÅƒY[ƒ€ƒAƒEƒg‘¬“x‚ğ•Ï‚¦‚é
-		//‰œ‘¤
+		const float speedChangePosZ = -30.0f;//æ‰‹å‰å´ã€å¥¥å´ã«åˆ†ã‘ã‚‹åŸºæº–ã®å€¤(ã“ã‚Œã‚ˆã‚Šå¤§ãã‹ã£ãŸã‚‰å¥¥å´)
+		const XMFLOAT2 cameraSpeedZ = { 1.0f,0.5f };//å¥¥å´ã¨æ‰‹å‰å´ã®è¦–ç‚¹ã€æ³¨è¦–ç‚¹ã®Zè»¸ç§»å‹•ã®é€Ÿåº¦
+		//å¥¥å´ã¨æ‰‹å‰å´ã§ã‚ºãƒ¼ãƒ ã‚¢ã‚¦ãƒˆé€Ÿåº¦ã‚’å¤‰ãˆã‚‹
+		//å¥¥å´
 		if (position_.z >= speedChangePosZ) cameraSppedEyeTarget.z = cameraSpeedZ.x;
-		//è‘O‘¤
+		//æ‰‹å‰å´
 		else cameraSppedEyeTarget.z = cameraSpeedZ.y;
 
-		//™X‚ÉƒJƒƒ‰‚ÍƒY[ƒ€ƒAƒEƒg
+		//å¾ã€…ã«ã‚«ãƒ¡ãƒ©ã¯ã‚ºãƒ¼ãƒ ã‚¢ã‚¦ãƒˆ
 		XMFLOAT3 cameraEye = camera_->GetEye();
 		XMFLOAT3 cameraTarget = camera_->GetTarget();
 		cameraEye.x -= cameraSppedEyeTarget.x;
@@ -937,46 +984,46 @@ void Player::UpdateBreak()
 
 		camera_->SetEye(cameraEye);
 		camera_->SetTarget(cameraTarget);
-		//Z‹“_‚ªˆê’è‚ÌˆÊ’u‚É’B‚µ‚½‚çƒQ[ƒ€ƒI[ƒo[
+		//Zè¦–ç‚¹ãŒä¸€å®šã®ä½ç½®ã«é”ã—ãŸã‚‰ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼
 		if (camera_->GetEye().z <= -cameraEyeChangeGameover_) isDead_ = true;
 	}
-	else if (isCameraEnd_)//ƒJƒƒ‰ˆÚ“®I‚í‚Á‚½‚Æ‚«
+	else if (isCameraEnd_)//ã‚«ãƒ¡ãƒ©ç§»å‹•çµ‚ã‚ã£ãŸã¨ã
 	{
-		//”š”­
+		//çˆ†ç™º
 		for (int i = 0; i < XY_Num; i++)easeExplosionSizeAndAlpha_[i].ease_out_expo();
-		//ƒXƒvƒ‰ƒCƒg‚Å”š”­‚ğ•\Œ»
+		//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã§çˆ†ç™ºã‚’è¡¨ç¾
 		spriteExplosion_->SetSize({ easeExplosionSizeAndAlpha_[XYW_X].num_X,easeExplosionSizeAndAlpha_[XYW_Y].num_X });
-		//ƒTƒCƒY‚ªƒC[ƒWƒ“ƒOI—¹ƒTƒCƒY‚Ü‚Å’B‚µ‚½‚çƒp[ƒeƒBƒNƒ‹‚Ì”š”­A‰Œ‚Ìo”Ô
+		//ã‚µã‚¤ã‚ºãŒã‚¤ãƒ¼ã‚¸ãƒ³ã‚°çµ‚äº†ã‚µã‚¤ã‚ºã¾ã§é”ã—ãŸã‚‰ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®çˆ†ç™ºã€ç…™ã®å‡ºç•ª
 		if (spriteExplosion_->GetSize().x == easeExplosionSizeAndAlpha_[XYW_X].end)
 		{
-			easeExplosionSizeAndAlpha_[XYW_W].Standby(false);//ƒJƒ‰[‚¾‚¯
+			easeExplosionSizeAndAlpha_[XYW_W].Standby(false);//ã‚«ãƒ©ãƒ¼ã ã‘
 			isExplosion_ = true;
 			isCameraEnd_ = false;
 		}
 	}
-	else//ƒ‰ƒCƒt‚ª0‚É‚È‚Á‚½uŠÔ
+	else//ãƒ©ã‚¤ãƒ•ãŒ0ã«ãªã£ãŸç¬é–“
 	{
-		//ƒJƒƒ‰ˆÚ“®
+		//ã‚«ãƒ¡ãƒ©ç§»å‹•
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].ease_out_cubic();
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].ease_out_cubic();
 
 		camera_->SetEye({ easeDeadCameraEye_[XYZ_X].num_X,easeDeadCameraEye_[XYZ_Y].num_X, easeDeadCameraEye_[XYZ_Z].num_X });
 		camera_->SetTarget({ easeDeadCameraTarget_[XYZ_X].num_X,easeDeadCameraTarget_[XYZ_Y].num_X, easeDeadCameraTarget_[XYZ_Z].num_X });
-		//ƒJƒƒ‰‚ÌƒC[ƒWƒ“ƒO‚ªI‚í‚Á‚½‚ç”š”­
+		//ã‚«ãƒ¡ãƒ©ã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãŒçµ‚ã‚ã£ãŸã‚‰çˆ†ç™º
 		if (camera_->GetEye().z == easeDeadCameraEye_[XYZ_Z].end)
 		{
-			for (int i = 0; i < XY_Num; i++)easeExplosionSizeAndAlpha_[i].Standby(false);//ƒTƒCƒY‚¾‚¯
+			for (int i = 0; i < XY_Num; i++)easeExplosionSizeAndAlpha_[i].Standby(false);//ã‚µã‚¤ã‚ºã ã‘
 			isCameraEnd_ = true;
 		}
 	}
 
-	//ƒXƒLƒbƒv‚Å€–S‰‰oƒXƒLƒbƒv
+	//ã‚¹ã‚­ãƒƒãƒ—ã§æ­»äº¡æ¼”å‡ºã‚¹ã‚­ãƒƒãƒ—
 	if (input_->TriggerKey(DIK_SPACE))isSkipDeadDirection_ = true;
 }
 
 void Player::UpdateGoal()
 {
-	//À•W‚ğŒÅ’è‚µ‚ÄƒXƒP[ƒ‹‚ğƒC[ƒWƒ“ƒO
+	//åº§æ¨™ã‚’å›ºå®šã—ã¦ã‚¹ã‚±ãƒ¼ãƒ«ã‚’ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	position_ = stopPos_;
 	for (int i = 0; i < XYZ_Num; i++)easeChangeScaleStageClear_[i].ease_out_cubic();
 	scale_ = { easeChangeScaleStageClear_[XYZ_X].num_X,easeChangeScaleStageClear_[XYZ_Y].num_X ,easeChangeScaleStageClear_[XYZ_Z].num_X };
