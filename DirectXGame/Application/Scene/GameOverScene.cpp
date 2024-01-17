@@ -405,15 +405,14 @@ void GameOverScene::UpdateIsContinue()
 				easePlayerMoveContinue_[XYZ_Z].num_X });
 		}
 
-		if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)
-		{
-			FadeOut(white_);//白くする
-			//完全に白くなったら
-			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
-			{
-				sceneManager_->ChangeScene("GAMEPLAY", stageNum_);
-			}
+		if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)FadeOut(white_);//白くする
+		//スペースを押すとスキップ
+		else SkipDirectionOnSpace(white_);
 
+		//完全に白くなったら
+		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+		{
+			sceneManager_->ChangeScene("GAMEPLAY", stageNum_);
 		}
 	}
 	for (std::unique_ptr<Object3d>& goal : objGoals_)
@@ -487,23 +486,19 @@ void GameOverScene::UpdateIsQuitStageSelect()
 
 	}
 	//メニューのイージングが終わったら遷移演出
-	if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)
+	if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)FadeOut(black_);//黒くする
+	//スペースを押すとスキップ
+	else SkipDirectionOnSpace(black_);
+	
+	//完全に黒くなったらステージセレクトへ
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
-		FadeOut(black_);//黒くする
-		//完全に黒くなったらステージセレクトへ
-		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
-		{
-			//ステージごとにステージセレクトの背景が違う
-			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
-			else if (stageNum_ <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
+		//ステージごとにステージセレクトの背景が違う
+		if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+		else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+		else if (stageNum_ <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 
-		}
 	}
-	//スペースを押すとスキップするようにした
-	else if (input_->TriggerKey(DIK_SPACE))skip_ = true;
-	//演出スキップ
-	if (skip_)FadeOut(black_);
 }
 
 void GameOverScene::UpdateIsQuitTitle()
@@ -530,14 +525,14 @@ void GameOverScene::UpdateIsQuitTitle()
 		//落ちてるときのパーティクル
 		FallParticle(player);
 		//メニューのイージングが終わったら遷移演出
-		if (spriteGameOver_->GetPosition().x == easeMenuEndPosX_[GOMEN_Menu].end)
+		if (spriteGameOver_->GetPosition().x == easeMenuEndPosX_[GOMEN_Menu].end)FadeOut(black_);//黒くする
+		//スペースを押すとスキップ
+		else SkipDirectionOnSpace(black_);
+
+		//完全に黒くなったら
+		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 		{
-			FadeOut(black_);//黒くする
-			//完全に黒くなったら
-			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
-			{
-				sceneManager_->ChangeScene("TITLE", stageNum_);//
-			}
+			sceneManager_->ChangeScene("TITLE", stageNum_);//
 		}
 	}
 }

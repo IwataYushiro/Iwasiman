@@ -447,6 +447,17 @@ void StageSelectScene::UpdateIsDone()
 		isStart_ = true;
 		isDone_ = false;
 	}
+	//スペースを押すとスキップ
+	SkipDirectionOnSpace(white_);
+
+	//完全に白くなったら
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+	{
+		if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);//チュートリアルステージ
+		else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);//ステージ1
+		else if (menuCount_ == SSSMI_Stage2_SpaceStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//ステージ2はまだ未完成
+
+	}
 }
 
 void StageSelectScene::UpdateIsGameStart()
@@ -467,7 +478,9 @@ void StageSelectScene::UpdateIsGameStart()
 	{
 		player->SetPosition({ easePlayerStartMove_[XYZ_X].num_X,easePlayerStartMove_[XYZ_Y].num_X ,easePlayerStartMove_[XYZ_Z].num_X });
 		if (player->GetPosition().x >= gameStartPosX_)FadeOut(white_);//ゲームプレイ遷移時は白くする
+		else SkipDirectionOnSpace(white_);//スペースを押すとスキップ
 	}
+
 	//完全に白くなったら
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -496,6 +509,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//メニュー標記のイージングが終わったらフェードアウト
 	if (spriteMenu_->GetPosition().x == easeMenuPosX_[SSMEN_Menu].start) FadeOut(black_);//黒くする
+	else SkipDirectionOnSpace(black_);//スペースを押すとスキップ
 
 	//プレイヤー座標もセット
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
@@ -510,6 +524,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 		else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("TITLE", SL_Stage1_StageID);
 		else if (menuCount_ == SSSMI_Stage2_SpaceStage)sceneManager_->ChangeScene("TITLE", SL_Stage2_StageID);
 	}
+	
 }
 
 void StageSelectScene::Draw()
@@ -580,7 +595,7 @@ void StageSelectScene::FadeOut(const DirectX::XMFLOAT3& color)
 		easeFadeInOut_.ease_in_out_quint();
 		spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOut_.num_X });//透明度だけ変える
 		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
-		if (isStart_)
+		if (isStart_ || isDone_)
 		{
 			spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
 			spriteStageName_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る

@@ -104,7 +104,7 @@ void StageClearScene::Initialize()
 	spCommon_->LoadTexture(SCSTI_CursorTex, "texture/cursor.png");
 	spriteCursor_->Initialize(spCommon_, SCSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[SCMEN_NextStage] });
-	
+
 	//メニュー操作スプライト
 	spCommon_->LoadTexture(SCSTI_MenuUITex, "texture/menuui.png");
 	spriteMenuUI_->Initialize(spCommon_, SCSTI_MenuUITex);
@@ -173,7 +173,7 @@ void StageClearScene::Update()
 		};
 		//パーティクル
 		pmFire_->ActiveX(fire);
-		
+
 		//丸影
 		SetUpCircleShadow(player->GetPosition());
 		//更新
@@ -307,19 +307,16 @@ void StageClearScene::UpdateIsNextStage()
 		goal->SetRotation(rot);
 
 		//ゴールオブジェクトの位置が一定の位置に到着したら遷移演出
-		if (goal->GetPosition().x <= gameStartPos_)
-		{
-			FadeOut(white_);//ゲームプレイ遷移時は白くする
-			//完全に白くなったら
-			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
-			{
-				if (stageNum_ == SL_Stage1_AreaBoss) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
-				else if (stageNum_ == SL_StageTutorial_Final) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-				else sceneManager_->ChangeScene("GAMEPLAY", ++stageNum_);
-			}
-		};
+		if (goal->GetPosition().x <= gameStartPos_)FadeOut(white_);//ゲームプレイ遷移時は白くする
+		else SkipDirectionOnSpace(white_);//スペースを押すとスキップ
 
-
+	}
+	//完全に白くなったら
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+	{
+		if (stageNum_ == SL_Stage1_AreaBoss) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+		else if (stageNum_ == SL_StageTutorial_Final) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+		else sceneManager_->ChangeScene("GAMEPLAY", ++stageNum_);
 	}
 }
 
@@ -348,18 +345,16 @@ void StageClearScene::UpdateIsStageSelect()
 		//自機の座標をセット
 		player->SetPosition({ easePlayerMoveStageSelect_[XYZ_X].num_X,easePlayerMoveStageSelect_[XYZ_Y].num_X,easePlayerMoveStageSelect_[XYZ_Z].num_X });
 		//メニューのイージングが終わったら遷移演出
-		if (spriteStageClear_->GetPosition().x == easeMenuEndPosX_[SCMEN_Menu].end)
-		{
-			FadeOut(black_);//黒くする
-			//完全に黒くなったら
-			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
-			{
-				//ステージ選択
-				if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-				else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
-				else sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);//ここはチュートリアルに飛ばしてもいい
-			}
-		}
+		if (spriteStageClear_->GetPosition().x == easeMenuEndPosX_[SCMEN_Menu].end)FadeOut(black_);//黒くする
+		else SkipDirectionOnSpace(black_);//スペースを押すとスキップ
+	}
+	//完全に黒くなったら
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
+	{
+		//ステージ選択
+		if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+		else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+		else sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);//ここはチュートリアルに飛ばしてもいい
 	}
 }
 
@@ -379,6 +374,7 @@ void StageClearScene::UpdateIsQuitTitle()
 
 	//メニューのイージングが終わったら遷移演出
 	if (spriteStageClear_->GetPosition().x == easeMenuEndPosX_[SCMEN_Menu].end)FadeOut(black_);//黒くする
+	else SkipDirectionOnSpace(black_);//スペースを押すとスキップ
 	//完全に黒くなったら
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -485,7 +481,7 @@ void StageClearScene::UpdateIsMenu()
 
 		}
 	}
-	
+
 	//クリア演出プリセット
 	const ParticleManager::Preset clear =
 	{
@@ -499,7 +495,7 @@ void StageClearScene::UpdateIsMenu()
 		{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
 		{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f }
 	};
-	
+
 	const DirectX::XMFLOAT3 clearStartPosLeft = { -30.0f,-30.0f,-5.0f };//左側
 	const DirectX::XMFLOAT3 clearStartPosRight = { 30.0f,-30.0f,-5.0f };//右側
 

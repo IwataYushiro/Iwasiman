@@ -164,8 +164,9 @@ void Player::Update(const bool isBack, const bool isAttack, const bool isStart) 
 		if (isAlive_)UpdateAlive(isBack, isAttack);		//生存時
 		else if (isBreak_)UpdateBreak();				//撃破時
 		else if (isGoal_)UpdateGoal();					//ゴール時
-		isAlive_ = true;								//最初は生きてないがスタート演出時に生存扱いする
 	}
+	else isAlive_ = true;								//最初は生きてないがスタート演出時に生存扱いする
+
 	//更新
 	camera_->Update();		//カメラ
 	UpdateWorldMatrix();	//行列

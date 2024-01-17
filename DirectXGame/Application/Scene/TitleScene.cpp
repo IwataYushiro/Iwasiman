@@ -339,19 +339,12 @@ void TitleScene::UpdateIsStartGame()
 		rot.y += rotSpeedY;
 		goal->SetRotation(rot);
 		//ゴールオブジェクトの位置が一定の位置に到着したら遷移演出
-		if (goal->GetPosition().x <= gameStartPos_)
-		{
-			FadeOut(white_);//ゲームプレイ遷移時は白くする
-			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)//完全に白くなったら
-			{
-				//チュートリアルステージへ
-				sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
-			}
-		};
-
+		if (goal->GetPosition().x <= gameStartPos_)FadeOut(white_);//ゲームプレイ遷移時は白くする
+		else SkipDirectionOnSpace(white_);//スペースを押すとスキップ
 
 	}
-
+	//完全に白くなったら
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);//チュートリアルステージへ
 }
 
 void TitleScene::UpdateIsStageSelect()
@@ -374,28 +367,19 @@ void TitleScene::UpdateIsStageSelect()
 	//カメラもセット
 	camera_->SetEye({ easeEyeGameStart_[XYZ_X].num_X, easeEyeGameStart_[XYZ_Y].num_X, easeEyeGameStart_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
-
-	for (std::unique_ptr<Object3d>& player : objPlayers_)
-	{
-		//座標セット
-		player->SetPosition({ easePlayerMove_[XYZ_X].num_X,easePlayerMove_[XYZ_Y].num_X,easePlayerMove_[XYZ_Z].num_X });
-	}
+	//じきの座標セット
+	for (std::unique_ptr<Object3d>& player : objPlayers_) player->SetPosition({ easePlayerMove_[XYZ_X].num_X,easePlayerMove_[XYZ_Y].num_X,easePlayerMove_[XYZ_Z].num_X });
 	//メニューのイージングが終わったら遷移演出
-	if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)
+	if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)FadeOut(black_);//黒くする	
+	else SkipDirectionOnSpace(black_);//スペースを押すとスキップ
+	//完全に黒くなったら
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
-		FadeOut(black_);//黒くする
-		//完全に黒くなったら
-		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
-		{
-			//ステージ選択
-			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
-			else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
-		}
+		//ステージ選択
+		if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+		else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+		else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
 	}
-	//スペースを押すとスキップ
-	else SkipDirectionOnSpace(black_);
-	
 
 
 }
