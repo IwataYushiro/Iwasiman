@@ -54,7 +54,7 @@ public://メンバ関数
 	//終了処理
 	virtual void Finalize() = 0;
 	//フェードインアウト
-	virtual void FadeOut(const DirectX::XMFLOAT3& color) = 0;
+	virtual void FadeIn(const DirectX::XMFLOAT3& color) = 0;
 
 protected://継承メンバ変数
 	//現在ステージのポジション
@@ -97,6 +97,6 @@ protected://継承メンバ関数
 		//スペースを押すとスキップするようにした
 		if (Input::GetInstance()->TriggerKey(DIK_SPACE))skip_ = true;
 		//演出スキップ
-		if (skip_)FadeOut(color);
+		if (skip_)FadeIn(color);
 	}
 };

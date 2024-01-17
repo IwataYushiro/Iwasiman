@@ -339,7 +339,7 @@ void TitleScene::UpdateIsStartGame()
 		rot.y += rotSpeedY;
 		goal->SetRotation(rot);
 		//ゴールオブジェクトの位置が一定の位置に到着したら遷移演出
-		if (goal->GetPosition().x <= gameStartPos_)FadeOut(white_);//ゲームプレイ遷移時は白くする
+		if (goal->GetPosition().x <= gameStartPos_)FadeIn(white_);//ゲームプレイ遷移時は白くする
 		else SkipDirectionOnSpace(white_);//スペースを押すとスキップ
 
 	}
@@ -370,7 +370,7 @@ void TitleScene::UpdateIsStageSelect()
 	//じきの座標セット
 	for (std::unique_ptr<Object3d>& player : objPlayers_) player->SetPosition({ easePlayerMove_[XYZ_X].num_X,easePlayerMove_[XYZ_Y].num_X,easePlayerMove_[XYZ_Z].num_X });
 	//メニューのイージングが終わったら遷移演出
-	if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)FadeOut(black_);//黒くする	
+	if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)FadeIn(black_);//黒くする	
 	else SkipDirectionOnSpace(black_);//スペースを押すとスキップ
 	//完全に黒くなったら
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
@@ -528,13 +528,13 @@ void TitleScene::UpdateIsMenu()
 
 }
 
-void TitleScene::FadeOut(const DirectX::XMFLOAT3& color)
+void TitleScene::FadeIn(const DirectX::XMFLOAT3& color)
 {
-	if (!isFadeOut_)
+	if (!isFadeIn_)
 	{
 		//ここでスタンバイ
 		easeFadeInOut_.Standby(true);
-		isFadeOut_ = true;
+		isFadeIn_ = true;
 	}
 	else
 	{

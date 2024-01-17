@@ -378,7 +378,7 @@ void GamePlayScene::UpdateIsPause()
 	UpdateChangeColor();
 
 	//イージング(ポーズ中に準備してもここがやってくれる)
-	FadeOut(black_);
+	FadeIn(black_);
 	for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].ease_in_out_quint();
 	easeCursorPosX_.ease_in_out_quint();
 
@@ -503,9 +503,9 @@ void GamePlayScene::UpdateIsPause()
 	if (isBack_)
 	{
 		//ポーズを解除するとき画面の明るさを戻す
-		if (menuCount_ == GPSPMI_Resume) FadeIn(black_);
-		else if (menuCount_ == GPSPMI_StageSelect) FadeIn(black_);
-		else if (menuCount_ == GPSPMI_Title) FadeIn(black_);
+		if (menuCount_ == GPSPMI_Resume) FadeOut(black_);
+		else if (menuCount_ == GPSPMI_StageSelect) FadeOut(black_);
+		else if (menuCount_ == GPSPMI_Title) FadeOut(black_);
 
 	}
 	//決定時のスプライトのイージングが終わったらポーズを解除
@@ -604,7 +604,7 @@ void GamePlayScene::UpdateIsStageClear()
 {
 	for (std::unique_ptr<Player>& player : players_)player->Update();
 
-	FadeOut(white_);//白くする
+	FadeIn(white_);//白くする
 	//完全に白くなったらステージクリアへ遷移
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -617,7 +617,7 @@ void GamePlayScene::UpdateIsGameOver()
 {
 	//ボスを撃破している場合は呼び出されない
 	for (std::unique_ptr<BaseEnemy>& enemy : enemys_)if (enemy->BossDead()) return;
-	FadeOut(deepRed_);//赤くする
+	FadeIn(deepRed_);//赤くする
 	//完全に赤くなったらゲームオーバーへ遷移
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -627,7 +627,7 @@ void GamePlayScene::UpdateIsGameOver()
 
 void GamePlayScene::UpdateIsQuitGame()
 {
-	FadeOut(black_);//黒くする
+	FadeIn(black_);//黒くする
 	//完全に黒くなったら各シーンへ
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -674,16 +674,16 @@ void GamePlayScene::UpdateTutorial()
 	}
 }
 
-void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& color)
+void GamePlayScene::FadeIn(const DirectX::XMFLOAT3& color)
 {
 
 	if (isPause_)//ポーズ時の場合
 	{
-		if (!isFadeOutPause_)
+		if (!isFadeInPause_)
 		{
 			//ここでスタンバイ
 			easeFadeInOutPause_.Standby(true);
-			isFadeOutPause_ = true;
+			isFadeInPause_ = true;
 		}
 		else
 		{
@@ -695,11 +695,11 @@ void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& color)
 	}
 	else//シーン遷移時の場合
 	{
-		if (!isFadeOutScene_)
+		if (!isFadeInScene_)
 		{
 			//ここでスタンバイ
 			easeFadeInOut_.Standby(true);
-			isFadeOutScene_ = true;
+			isFadeInScene_ = true;
 		}
 		else
 		{
@@ -712,16 +712,16 @@ void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& color)
 	}
 }
 
-void GamePlayScene::FadeIn(const DirectX::XMFLOAT3& color)
+void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& color)
 {
 
 	if (isPause_)//ポーズ時の場合にしか使わない
 	{
-		if (!isFadeInPause_)
+		if (!isFadeOutPause_)
 		{
 			//ここでスタンバイ
 			easeFadeInOutPause_.Standby(false);
-			isFadeInPause_ = true;
+			isFadeOutPause_ = true;
 		}
 		else
 		{

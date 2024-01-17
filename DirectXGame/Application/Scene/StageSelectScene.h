@@ -40,7 +40,7 @@ public://メンバ関数
 	//終了
 	void Finalize() override;
 	//フェードアウト
-	void FadeOut(const DirectX::XMFLOAT3& color) override;
+	void FadeIn(const DirectX::XMFLOAT3& color) override;
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
 
@@ -346,7 +346,7 @@ private://メンバ変数
 	bool isStart_ = false;			//ゲームスタート時
 	bool isDone_ = false;			//ステージ決定時
 	bool outStageSelect_ = false;	//ステージセレクトから抜ける
-	bool isFadeOut_ = false;		//フェードアウト
+	bool isFadeIn_ = false;			//フェードイン
 
 	//ライト
 	std::unique_ptr<LightGroup> lightGroup_ = nullptr;

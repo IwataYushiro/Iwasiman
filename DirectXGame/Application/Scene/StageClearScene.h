@@ -36,7 +36,7 @@ public://メンバ関数
 	//描画
 	void Draw() override;
 	//フェードアウト
-	void FadeOut(const DirectX::XMFLOAT3& color)override;
+	void FadeIn(const DirectX::XMFLOAT3& color)override;
 	//終了
 	void Finalize() override;
 
@@ -124,7 +124,7 @@ private://メンバ変数
 	bool isNextStage_ = false;					//次のステージへ行く場合
 	bool isStageSelect_ = false;				//ステージセレクトへ行く場合
 	bool isQuitTitle_ = false;					//タイトルに戻る場合
-	bool isFadeOut_ = false;					//フェードインアウト
+	bool isFadeIn_ = false;						//フェードイン
 
 	//メニュー説明用の列挙体
 	enum StageClearMenuEasingNum

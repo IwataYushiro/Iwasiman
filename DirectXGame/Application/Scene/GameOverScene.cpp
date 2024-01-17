@@ -405,7 +405,7 @@ void GameOverScene::UpdateIsContinue()
 				easePlayerMoveContinue_[XYZ_Z].num_X });
 		}
 
-		if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)FadeOut(white_);//白くする
+		if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)FadeIn(white_);//白くする
 		//スペースを押すとスキップ
 		else SkipDirectionOnSpace(white_);
 
@@ -486,7 +486,7 @@ void GameOverScene::UpdateIsQuitStageSelect()
 
 	}
 	//メニューのイージングが終わったら遷移演出
-	if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)FadeOut(black_);//黒くする
+	if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)FadeIn(black_);//黒くする
 	//スペースを押すとスキップ
 	else SkipDirectionOnSpace(black_);
 	
@@ -525,7 +525,7 @@ void GameOverScene::UpdateIsQuitTitle()
 		//落ちてるときのパーティクル
 		FallParticle(player);
 		//メニューのイージングが終わったら遷移演出
-		if (spriteGameOver_->GetPosition().x == easeMenuEndPosX_[GOMEN_Menu].end)FadeOut(black_);//黒くする
+		if (spriteGameOver_->GetPosition().x == easeMenuEndPosX_[GOMEN_Menu].end)FadeIn(black_);//黒くする
 		//スペースを押すとスキップ
 		else SkipDirectionOnSpace(black_);
 
@@ -695,13 +695,13 @@ void GameOverScene::LoadLVData([[maybe_unused]] const std::string& stagePath)
 
 }
 
-void GameOverScene::FadeOut(const DirectX::XMFLOAT3& color)
+void GameOverScene::FadeIn(const DirectX::XMFLOAT3& color)
 {
-	if (!isFadeOut_)
+	if (!isFadeIn_)
 	{
 		//ここでスタンバイ
 		easeFadeInOut_.Standby(true);
-		isFadeOut_ = true;
+		isFadeIn_ = true;
 	}
 	else
 	{

@@ -44,7 +44,7 @@ public://メンバ関数
 	//レベルデータ読み込み(ステージファイルパス)
 	void LoadLVData(const std::string& stagePath);
 	//フェードアウト
-	void FadeOut(const DirectX::XMFLOAT3& color)override;
+	void FadeIn(const DirectX::XMFLOAT3& color)override;
 	//色が変わる処理
 	void UpdateChangeColor();
 private://静的メンバ変数
@@ -133,7 +133,7 @@ private://メンバ変数
 	bool isQuitStageSelect_ = false;			//ステージセレクトに戻る場合
 	bool completeRotate_ = false;				//回り終わった時 
 	bool isQuitTitle_ = false;					//タイトルに戻る場合
-	bool isFadeOut_ = false;					//フェードインアウト
+	bool isFadeIn_ = false;						//フェードイン
 
 	//メニュー説明用の列挙体
 	enum GameOverMenuEasingNum

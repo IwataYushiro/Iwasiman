@@ -45,7 +45,7 @@ public://メンバ関数(ステージ番号)
 	//状態更新(メニューのとき) 
 	void UpdateIsMenu();
 	//フェードアウト(色)
-	void FadeOut(const DirectX::XMFLOAT3& color) override;
+	void FadeIn(const DirectX::XMFLOAT3& color) override;
 	//描画
 	void Draw() override;
 	//終了
@@ -134,7 +134,7 @@ private://メンバ変数
 	bool isBack_ = false;				//タイトルメニューからタイトルに戻るとき
 	bool isStartGame_ = false;			//ゲーム開始するとき
 	bool isStageSelect_ = false;		//ステージセレクトに行くとき
-	bool isFadeOut_ = false;			//フェードアウト
+	bool isFadeIn_ = false;				//フェードイン
 
 	//タイトル→タイトルメニューの列挙体
 	enum TitleStart

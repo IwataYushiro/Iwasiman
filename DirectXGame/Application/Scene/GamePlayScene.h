@@ -72,9 +72,9 @@ public://メンバ関数
 	void UpdateTutorial();
 
 	//フェードアウト(色)
-	void FadeOut(const DirectX::XMFLOAT3& color)override;
+	void FadeIn(const DirectX::XMFLOAT3& color)override;
 	//フェードイン(色)
-	void FadeIn(const DirectX::XMFLOAT3& color);
+	void FadeOut(const DirectX::XMFLOAT3& color);
 	//描画
 	void Draw() override;
 	//終了
@@ -386,12 +386,12 @@ private:
 	bool isGameOver_ = false;
 	//スタート時
 	bool isStart_ = true;
-	//フェードアウト(遷移時)
-	bool isFadeOutScene_ = false;
-	//フェードアウト(ポーズ時)
-	bool isFadeOutPause_ = false;
+	//フェードイン(遷移時)
+	bool isFadeInScene_ = false;
 	//フェードイン(ポーズ時)
 	bool isFadeInPause_ = false;
+	//フェードアウト(ポーズ時)
+	bool isFadeOutPause_ = false;
 	//モデル
 	//自機
 	std::list<std::unique_ptr<Player>> players_;						//自機リスト

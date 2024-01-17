@@ -477,7 +477,7 @@ void StageSelectScene::UpdateIsGameStart()
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 		player->SetPosition({ easePlayerStartMove_[XYZ_X].num_X,easePlayerStartMove_[XYZ_Y].num_X ,easePlayerStartMove_[XYZ_Z].num_X });
-		if (player->GetPosition().x >= gameStartPosX_)FadeOut(white_);//ゲームプレイ遷移時は白くする
+		if (player->GetPosition().x >= gameStartPosX_)FadeIn(white_);//ゲームプレイ遷移時は白くする
 		else SkipDirectionOnSpace(white_);//スペースを押すとスキップ
 	}
 
@@ -508,7 +508,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//メニュー標記のイージングが終わったらフェードアウト
-	if (spriteMenu_->GetPosition().x == easeMenuPosX_[SSMEN_Menu].start) FadeOut(black_);//黒くする
+	if (spriteMenu_->GetPosition().x == easeMenuPosX_[SSMEN_Menu].start) FadeIn(black_);//黒くする
 	else SkipDirectionOnSpace(black_);//スペースを押すとスキップ
 
 	//プレイヤー座標もセット
@@ -580,13 +580,13 @@ void StageSelectScene::Finalize()
 	audio_->Finalize();
 }
 
-void StageSelectScene::FadeOut(const DirectX::XMFLOAT3& color)
+void StageSelectScene::FadeIn(const DirectX::XMFLOAT3& color)
 {
-	if (!isFadeOut_)
+	if (!isFadeIn_)
 	{
 		//ここでスタンバイ
 		easeFadeInOut_.Standby(true);
-		isFadeOut_ = true;
+		isFadeIn_ = true;
 	}
 	else
 	{
