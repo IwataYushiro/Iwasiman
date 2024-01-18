@@ -17,20 +17,17 @@ using namespace IwasiEngine;
 *	ゲームオーバーシーン
 
 */
-
-//静的メンバ変数の実体
-DirectXCommon* GameOverScene::dxCommon_ = DirectXCommon::GetInstance();
-Input* GameOverScene::input_ = Input::GetInstance();
-Audio* GameOverScene::audio_ = Audio::GetInstance();
-SceneManager* GameOverScene::sceneManager_ = SceneManager::GetInstance();
-ImGuiManager* GameOverScene::imguiManager_ = ImGuiManager::GetInstance();
-
 GameOverScene::GameOverScene(const int stagenum) :stageNum_(stagenum) {}
 
 void GameOverScene::Initialize()
 {
 	//インスタンス取得
-	spCommon_ = SpriteCommon::GetInstance();
+	dxCommon_ = DirectXCommon::GetInstance();		//DirectX基盤
+	spCommon_ = SpriteCommon::GetInstance();		//スプライト基盤
+	input_ = Input::GetInstance();					//入力情報
+	audio_ = Audio::GetInstance();					//音声
+	sceneManager_ = SceneManager::GetInstance();	//シーンマネージャー
+	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
 
 	//カメラ初期化
 	camera_ = std::make_unique<Camera>();

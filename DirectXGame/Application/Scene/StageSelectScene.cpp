@@ -18,12 +18,6 @@ using namespace IwasiEngine;
 
 */
 
-//静的メンバ変数の実体
-DirectXCommon* StageSelectScene::dxCommon_ = DirectXCommon::GetInstance();
-Input* StageSelectScene::input_ = Input::GetInstance();
-Audio* StageSelectScene::audio_ = Audio::GetInstance();
-SceneManager* StageSelectScene::sceneManager_ = SceneManager::GetInstance();
-ImGuiManager* StageSelectScene::imguiManager_ = ImGuiManager::GetInstance();
 
 StageSelectScene::StageSelectScene(const int count) :menuCount_(count)
 {
@@ -32,19 +26,17 @@ StageSelectScene::StageSelectScene(const int count) :menuCount_(count)
 void StageSelectScene::Initialize()
 {
 	//インスタンス取得
-	spCommon_ = SpriteCommon::GetInstance();
+	dxCommon_ = DirectXCommon::GetInstance();		//DirectX基盤
+	spCommon_ = SpriteCommon::GetInstance();		//スプライト基盤
+	input_ = Input::GetInstance();					//入力情報
+	audio_ = Audio::GetInstance();					//音声
+	sceneManager_ = SceneManager::GetInstance();	//シーンマネージャー
+	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
 
 	//カメラ初期化
 	camera_ = std::make_unique<Camera>();
 	//オーディオ
 	audio_->Initialize();
-
-	//カメラ
-	//camera_->SetEye({ 0.0f,0.0f,-150.0f });
-	//camera_->SetTarget({ 0.0f,20.0f,0.0f });
-
-	//camera_->SetTarget({ 90.0f,0.0f,0.0f });
-	//camera_->SetEye({ -10.0f,2.0f,0.0f });
 
 	// 視点座標
 	camera_->SetEye({ easeEyeStageSelect_[XYZ_X].start, easeEyeStageSelect_[XYZ_Y].start, easeEyeStageSelect_[XYZ_Z].start });

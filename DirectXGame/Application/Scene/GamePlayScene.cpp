@@ -21,21 +21,20 @@ using namespace IwasiEngine;
 
 */
 
-//静的メンバ変数の実体
-DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
-Input* GamePlayScene::input_ = Input::GetInstance();
-Audio* GamePlayScene::audio_ = Audio::GetInstance();
-SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
-ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
-
 GamePlayScene::GamePlayScene(int stagenum) :stageNum_(stagenum) {}
 
 void GamePlayScene::Initialize()
 {
 	//インスタンス取得
-	spCommon_ = SpriteCommon::GetInstance();
-	colManager_ = CollisionManager::GetInstance();
-	//工業地帯
+	dxCommon_ = DirectXCommon::GetInstance();		//DirectX基盤
+	spCommon_ = SpriteCommon::GetInstance();		//スプライト基盤
+	input_ = Input::GetInstance();					//入力情報
+	audio_ = Audio::GetInstance();					//音声
+	sceneManager_ = SceneManager::GetInstance();	//シーンマネージャー
+	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
+	colManager_ = CollisionManager::GetInstance();	//コリジョンマネージャー
+	
+	//ファクトリー生成
 	enemyFactory_ = std::make_unique<EnemyFactory>();
 	gimmickFactory_ = std::make_unique<GimmickFactory>();
 

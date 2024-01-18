@@ -47,19 +47,19 @@ public://メンバ関数
 	void FadeIn(const DirectX::XMFLOAT3& color)override;
 	//色が変わる処理
 	void UpdateChangeColor();
-private://静的メンバ変数
+private://基盤メンバ変数
 	//DirectX基盤
-	static DirectXCommon* dxCommon_;
-
+	DirectXCommon* dxCommon_ = nullptr;
+	//スプライト基盤
+	SpriteCommon* spCommon_ = nullptr;
 	//インプット
-	static Input* input_;
+	Input* input_ = nullptr;
 	//オーディオ
-	static Audio* audio_;
+	Audio* audio_ = nullptr;
 	//シーンマネージャー
-	static SceneManager* sceneManager_;
+	SceneManager* sceneManager_ = nullptr;
 	//imgui
-	static ImGuiManager* imguiManager_;
-
+	ImGuiManager* imguiManager_ = nullptr;
 
 private://メンバ変数
 
@@ -86,8 +86,6 @@ private://メンバ変数
 		GOSMI_StageSelect = 1,
 		GOSMI_Title = 2,
 	};
-	//スプライト基盤
-	SpriteCommon* spCommon_ = nullptr;
 	//カメラ
 	std::unique_ptr<Camera> camera_ = nullptr;
 

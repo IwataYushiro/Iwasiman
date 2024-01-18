@@ -92,20 +92,19 @@ public:
 	//敵弾追加(敵の弾)
 	void AddEnemyBullet(const std::unique_ptr<EnemyBullet> enemyBullet);
 
-private://静的メンバ変数
-
+private://基盤メンバ変数
 	//DirectX基盤
-	static DirectXCommon* dxCommon_;
+	DirectXCommon* dxCommon_ = nullptr;
 	//スプライト基盤
 	SpriteCommon* spCommon_ = nullptr;
 	//インプット
-	static Input* input_;
+	Input* input_ = nullptr;
 	//オーディオ
-	static Audio* audio_;
+	Audio* audio_ = nullptr;
 	//シーンマネージャー
-	static SceneManager* sceneManager_;
+	SceneManager* sceneManager_ = nullptr;
 	//imgui
-	static ImGuiManager* imguiManager_;
+	ImGuiManager* imguiManager_ = nullptr;
 
 private:
 

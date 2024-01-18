@@ -16,19 +16,17 @@ using namespace MyMath;
 
 */
 
-//静的メンバ変数の実体
-DirectXCommon* StageClearScene::dxCommon_ = DirectXCommon::GetInstance();
-Input* StageClearScene::input_ = Input::GetInstance();
-Audio* StageClearScene::audio_ = Audio::GetInstance();
-SceneManager* StageClearScene::sceneManager_ = SceneManager::GetInstance();
-ImGuiManager* StageClearScene::imguiManager_ = ImGuiManager::GetInstance();
-
 StageClearScene::StageClearScene(const int stagenum) :stageNum_(stagenum) {}
 
 void StageClearScene::Initialize()
 {
 	//インスタンス取得
-	spCommon_ = SpriteCommon::GetInstance();
+	dxCommon_ = DirectXCommon::GetInstance();		//DirectX基盤
+	spCommon_ = SpriteCommon::GetInstance();		//スプライト基盤
+	input_ = Input::GetInstance();					//入力情報
+	audio_ = Audio::GetInstance();					//音声
+	sceneManager_ = SceneManager::GetInstance();	//シーンマネージャー
+	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
 
 	//カメラ
 	camera_ = std::make_unique<Camera>();
