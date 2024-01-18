@@ -80,15 +80,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)External\lib\DirectXTex\include;$(ProjectDir)External\lib\imgui\include;$(ProjectDir)External\lib\fbx_sdk\include;$(ProjectDir)External\include\json</IncludePath>
-    <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\Generated\Outputs\$(Configuration)\</OutDir>
     <LibraryPath>$(ProjectDir)External\lib\fbx_sdk\lib;$(ProjectDir)External\lib\DirectXTex\lib\$(Configuration);$(ProjectDir)External\lib\imgui\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)External\lib\DirectXTex\include;$(ProjectDir)External\lib\imgui\include;$(ProjectDir)External\lib\fbx_sdk\include;$(ProjectDir)External\include\json</IncludePath>
-    <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\Generated\Outputs\$(Configuration)\</OutDir>
     <LibraryPath>$(ProjectDir)External\lib\fbx_sdk\lib;$(ProjectDir)External\lib\DirectXTex\lib\$(Configuration);$(ProjectDir)External\lib\imgui\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

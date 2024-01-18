@@ -35,7 +35,7 @@ private:
 
 private:
 	void PostInitialize();	//ポストエフェクト初期化
-	void PostDraw();		//ポストエフェクト描画
+	void PostEffectDraw();		//ポストエフェクト描画
 		
 };
 

@@ -35,7 +35,7 @@ void MyGame::Update()
 
 void MyGame::Draw()
 {
-	PostDraw();//ポストエフェクト描画
+	PostEffectDraw();//ポストエフェクト描画
 }
 
 void MyGame::Finalize()
@@ -50,7 +50,7 @@ void MyGame::PostInitialize()
 	pe_->Initialize(sprCommon_);
 }
 
-void MyGame::PostDraw()
+void MyGame::PostEffectDraw()
 {
 	//ポストエフェクトの前にシーンを描画
 	pe_->PreDraw(dxCommon_->GetCommandList());
