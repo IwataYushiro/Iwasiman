@@ -1497,10 +1497,13 @@ void GamePlayScene::LoadSprite()
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,pausePosY_[PMEN_Resume] });
 
 	//遊び方説明リストのスプライト
-	spCommon_->LoadTexture(GPSTI_HowToPlayListTex, "texture/info/howtoplaylist.png");
+	spCommon_->LoadTexture(GPSTI_HowToPlayListTex, "texture/info/howtoplaylist2.png");
 	spriteHowToPlayList_->Initialize(spCommon_, GPSTI_HowToPlayListTex);
 	const XMFLOAT2 howToPlayListPosition = { 30.0f,70.0f };
 	spriteHowToPlayList_->SetPosition(howToPlayListPosition);
+	//イージングを初期化
+	easeTutorialListScale_[XY_X].SetEasing(0.0f, spriteHowToPlayList_->GetSize().x, presetEaseTutorialListScale_[XY_X].maxtime);
+	easeTutorialListScale_[XY_Y].SetEasing(0.0f, spriteHowToPlayList_->GetSize().y, presetEaseTutorialListScale_[XY_Y].maxtime);
 	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
 
 	//ステージ名スプライト
@@ -1526,7 +1529,7 @@ void GamePlayScene::LoadSprite()
 	spriteTutorialHTPDash_->Initialize(spCommon_, GPSTTI_HowToPlayDashTex);
 	spCommon_->LoadTexture(GPSTTI_HowToPlayJumpTex, "texture/info/jumpinfo.png");//ジャンプ　1~
 	spriteTutorialHTPJump_->Initialize(spCommon_, GPSTTI_HowToPlayJumpTex);
-	spCommon_->LoadTexture(GPSTTI_HowToPlayBackMoveTex, "texture/info/backmoveinfo.png");//手前、奥側ジャンプ　2~
+	spCommon_->LoadTexture(GPSTTI_HowToPlayBackMoveTex, "texture/info/backmoveinfo2.png");//手前、奥側ジャンプ　2~
 	spriteTutorialHTPMoveBack_->Initialize(spCommon_, GPSTTI_HowToPlayBackMoveTex);
 	spCommon_->LoadTexture(GPSTTI_HowToPlayAttackTex, "texture/info/attackinfo2.png");//攻撃　3~
 	spriteTutorialHTPAttack_->Initialize(spCommon_, GPSTTI_HowToPlayAttackTex);

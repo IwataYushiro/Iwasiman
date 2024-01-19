@@ -187,8 +187,8 @@ private:
 	//チュートリアルリストのスケールイージングのプリセット
 	const Easing presetEaseTutorialListScale_[XY_Num] =
 	{
-		{0.0f,252.0f,2.0f},		//X
-		{0.0f,196.0f,2.0f}		//Y
+		{0.0f,0.0f,2.0f},		//X
+		{0.0f,0.0f,2.0f}		//Y
 	};
 	//チュートリアルリストのスケールイージング
 	Easing easeTutorialListScale_[XY_Num] =

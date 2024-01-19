@@ -63,7 +63,7 @@ bool Player::Initialize() {
 	isDead_ = false;				//死亡フラグ
 	isHit_ = false;					//命中フラグ
 	mutekiCount_ = 0;				//無敵時間
-	
+
 	//右を向いているか
 	isRight_ = true;
 	//ジャンプしたか
@@ -251,7 +251,7 @@ void Player::Move() {
 	assert(sphereCollider);
 	//球コライダーのオフセットも取得
 	XMVECTOR colliderOffset = sphereCollider->GetOffset();
- 
+
 	//左右コライダーオフセット
 	const XMVECTOR limitColliderOffsetRight = { -radius_,0.0f,0.0f,0.0f };		//右方向
 	const XMVECTOR limitColliderOffsetLeft = { radius_,0.0f,0.0f,0.0f };		//左方向
@@ -282,11 +282,6 @@ void Player::Move() {
 			if (isShake_)hitMove_.x -= moveSpeed_ * dashSpeed_;
 			//オフセットは逆に動かす
 			colliderOffset.m128_f32[XYZ_X] += moveSpeed_ * dashSpeed_;
-			//上限
-			if (colliderOffset.m128_f32[XYZ_X] >= limitColliderOffsetLeft.m128_f32[XYZ_X])
-			{
-				colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetLeft.m128_f32[XYZ_X];
-			}
 		}
 		//右にダッシュ移動
 		else if (input_->PushKey(DIK_D)) {
@@ -308,11 +303,6 @@ void Player::Move() {
 			if (isShake_)hitMove_.x += moveSpeed_ * dashSpeed_;
 			//オフセットは逆に動かす
 			colliderOffset.m128_f32[XYZ_X] -= moveSpeed_ * dashSpeed_;
-			//上限
-			if (colliderOffset.m128_f32[XYZ_X] <= limitColliderOffsetRight.m128_f32[XYZ_X])
-			{
-				colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetRight.m128_f32[XYZ_X];
-			}
 		}
 	}
 	else//通常移動
@@ -337,11 +327,7 @@ void Player::Move() {
 			if (isShake_)hitMove_.x -= moveSpeed_;
 			//オフセットは逆に動かす
 			colliderOffset.m128_f32[XYZ_X] += moveSpeed_;
-			//上限
-			if (colliderOffset.m128_f32[XYZ_X] >= limitColliderOffsetLeft.m128_f32[XYZ_X])
-			{
-				colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetLeft.m128_f32[XYZ_X];
-			}
+
 		}
 		//右に通常移動
 		else if (input_->PushKey(DIK_D)) {
@@ -363,12 +349,19 @@ void Player::Move() {
 			if (isShake_)hitMove_.x += moveSpeed_;
 			//オフセットは逆に動かす
 			colliderOffset.m128_f32[XYZ_X] -= moveSpeed_ * dashSpeed_;
-			//上限
-			if (colliderOffset.m128_f32[XYZ_X] <= limitColliderOffsetRight.m128_f32[XYZ_X])
-			{
-				colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetRight.m128_f32[XYZ_X];
-			}
+
 		}
+	}
+
+	//上限(左)
+	if (colliderOffset.m128_f32[XYZ_X] >= limitColliderOffsetLeft.m128_f32[XYZ_X])
+	{
+		colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetLeft.m128_f32[XYZ_X];
+	}
+	//上限(右)
+	else if (colliderOffset.m128_f32[XYZ_X] <= limitColliderOffsetRight.m128_f32[XYZ_X])
+	{
+		colliderOffset.m128_f32[XYZ_X] = limitColliderOffsetRight.m128_f32[XYZ_X];
 	}
 
 	//値の更新
