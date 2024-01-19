@@ -119,7 +119,7 @@ private:
 	SpriteCommon* spCommon_ = nullptr;//基盤
 
 	std::unique_ptr<Sprite> spriteLifeBar_ = std::make_unique<Sprite>();			//ライフバー
-	const XMFLOAT2 lifeBarPos_ = { 800.0f,25.0f };	//ライフバーの座標
+	const XMFLOAT2 lifeBarPos_ = { 50.0f,620.0f };	//ライフバーの座標
 	const XMFLOAT4 green_ = { 0.2f,1.0f,0.2f,1.0f };//緑
 	const XMFLOAT4 red_ = { 1.0f,0.2f,0.2f,1.0f };	//赤
 
