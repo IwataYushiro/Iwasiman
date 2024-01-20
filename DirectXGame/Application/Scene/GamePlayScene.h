@@ -115,7 +115,8 @@ private:
 	std::unique_ptr<Sprite> spritePause_ = std::make_unique<Sprite>();				//ポーズ時のスプライト
 	std::unique_ptr<Sprite> spritePauseInfo_ = std::make_unique<Sprite>();			//どのキーでポーズするのかを書いたスプライト
 	std::unique_ptr<Sprite> spritePauseResume_ = std::make_unique<Sprite>();		//ポーズ時にゲーム再開するかを書いたスプライト
-	std::unique_ptr<Sprite> spritePauseHowToPlay_ = std::make_unique<Sprite>();		//ポーズ時に遊び方を確認するかを書いたスプライト
+	std::unique_ptr<Sprite> spritePauseHint_ = std::make_unique<Sprite>();			//ポーズ時にヒントを確認するかを書いたスプライト
+	std::unique_ptr<Sprite> spriteHintInfo_ = std::make_unique<Sprite>();			//攻略のヒントを書いたスプライト
 	std::unique_ptr<Sprite> spritePauseStageSelect_ = std::make_unique<Sprite>();	//ポーズ時にステージセレクトへ戻るかを書いたスプライト
 	std::unique_ptr<Sprite> spritePauseTitle_ = std::make_unique<Sprite>();			//ポーズ時にタイトルへ戻るかを書いたスプライト
 	std::unique_ptr<Sprite> spriteDone_ = std::make_unique<Sprite>();				//決定表示のスプライト
@@ -140,7 +141,7 @@ private:
 	std::unique_ptr<Sprite> spriteTutorialInfo2_ = std::make_unique<Sprite>();			//チュートリアル説明文字スプライト(チュートリアル2面)
 	std::unique_ptr<Sprite> spriteTutorialInfo3_ = std::make_unique<Sprite>();			//チュートリアル説明文字スプライト(チュートリアル3面)
 	std::unique_ptr<Sprite> spriteTutorialInfo4_ = std::make_unique<Sprite>();			//チュートリアル説明文字スプライト(チュートリアル4面)
-	std::unique_ptr<Sprite> spriteTutorialInfoHowToPlay_ = std::make_unique<Sprite>();	//チュートリアル説明文字スプライト(チュートリアル中の遊び方説明について)
+	
 
 	//チュートリアル用のイージング状態
 	enum GamePlaySceneSettingTutorialEasingNum
@@ -202,11 +203,11 @@ private:
 	{
 		PMEN_Menu = 0,									//メニュー
 		PMEN_Resume = 1,								//再開
-		PMEN_HowToPlay = 2,								//遊び方確認
+		PMEN_Hint = 2,									//ヒント確認
 		PMEN_StageSelect = 3,							//ステージセレクトへ
 		PMEN_Title = 4,									//タイトルへ
 		PMEN_SelectSpace = 5,							//スペースで選択
-		PMEN_TutorialHowToPlayInfo = 6,					//チュートリアル時の遊び方説明について
+		PMEN_HintInfo = 6,								//ヒントの内容
 		PMEN_UI = 7,									//操作方法
 		PMEN_Num = 8,									//配列用
 	};
@@ -218,11 +219,11 @@ private:
 	{
 		{1300.0f, 100.0f, 0.5f},			//メニュー
 		{1300.0f, 100.0f, 0.6f},			//再開
-		{1300.0f, 100.0f, 0.7f},			//遊び方確認
+		{1300.0f, 100.0f, 0.7f},			//ヒント確認
 		{1300.0f, 100.0f, 0.8f},			//ステージセレクトへ
 		{1300.0f, 100.0f, 0.9f},			//タイトルへ
 		{1300.0f, 425.0f, 1.0f},			//スペースで選択
-		{1300.0f, 800.0f, 0.75f},			//チュートリアル時の遊び方説明について
+		{1300.0f, 800.0f, 0.75f},			//ヒントの内容
 		{1300.0f, 1100.0f, 1.1f},			//操作方法
 	};
 	//ポーズメニュー画面出現イージング
@@ -230,11 +231,11 @@ private:
 	{
 		presetEasePauseMenuPosX_[PMEN_Menu],							//メニュー
 		presetEasePauseMenuPosX_[PMEN_Resume],							//再開
-		presetEasePauseMenuPosX_[PMEN_HowToPlay],						//遊び方確認
+		presetEasePauseMenuPosX_[PMEN_Hint],							//ヒント確認
 		presetEasePauseMenuPosX_[PMEN_StageSelect],						//ステージセレクトへ
 		presetEasePauseMenuPosX_[PMEN_Title],							//タイトルへ
 		presetEasePauseMenuPosX_[PMEN_SelectSpace],						//スペースで選択
-		presetEasePauseMenuPosX_[PMEN_TutorialHowToPlayInfo],			//チュートリアル時の遊び方説明について
+		presetEasePauseMenuPosX_[PMEN_HintInfo],						//ヒントの内容
 		presetEasePauseMenuPosX_[PMEN_UI]								//操作方法
 	};
 
@@ -508,6 +509,8 @@ private:
 
 	//ステージ名のスプライトをロード
 	void LoadStageNameSprite();
+	//チュートリアル中のスプライトをロード
+	void LoadTutorialSprite();
 	//丸影セット
 	void SetUpCircleShadow(const DirectX::XMFLOAT3& pos);
 };

@@ -33,7 +33,7 @@ void GamePlayScene::Initialize()
 	sceneManager_ = SceneManager::GetInstance();	//シーンマネージャー
 	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
 	colManager_ = CollisionManager::GetInstance();	//コリジョンマネージャー
-	
+
 	//ファクトリー生成
 	enemyFactory_ = std::make_unique<EnemyFactory>();
 	gimmickFactory_ = std::make_unique<GimmickFactory>();
@@ -139,7 +139,8 @@ void GamePlayScene::Update()
 	spritePause_->Update();
 	spritePauseInfo_->Update();
 	spritePauseResume_->Update();
-	spritePauseHowToPlay_->Update();
+	spritePauseHint_->Update();
+	spriteHintInfo_->Update();
 	spritePauseStageSelect_->Update();
 	spritePauseTitle_->Update();
 	spritePauseUI_->Update();
@@ -250,14 +251,14 @@ void GamePlayScene::UpdateIsStartGame()
 		};
 		//パーティクル
 		pm_->ActiveX(smoke);
-		
+
 		//座標セット
 		player->SetPosition
 		({
 			easePlayerPositionGameStart_[XYZ_X].num_X,
 			easePlayerPositionGameStart_[XYZ_Y].num_X,
 			easePlayerPositionGameStart_[XYZ_Z].num_X
-		});
+			});
 
 		//更新(操作は出来ない)
 		player->Update(false, false, true);
@@ -269,7 +270,7 @@ void GamePlayScene::UpdateIsStartGame()
 			isGamePlay_ = true;
 		}
 	}
-	
+
 	//更新
 	//プレイヤーが死んでないとき
 	for (std::unique_ptr<Player>& player : players_)if (!player->IsBreak())for (std::unique_ptr<BaseEnemy>& enemy : enemys_)enemy->Update(true);					//敵
@@ -386,11 +387,11 @@ void GamePlayScene::UpdateIsPause()
 	//ポーズ関係
 	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].num_X, pausePosY_[PMEN_Menu] });
 	spritePauseResume_->SetPosition({ easePauseMenuPosX_[PMEN_Resume].num_X, pausePosY_[PMEN_Resume] });
-	spritePauseHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_HowToPlay].num_X, pausePosY_[PMEN_HowToPlay] });
+	spritePauseHint_->SetPosition({ easePauseMenuPosX_[PMEN_Hint].num_X, pausePosY_[PMEN_Hint] });
 	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[PMEN_StageSelect].num_X, pausePosY_[PMEN_StageSelect] });
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].num_X, pausePosY_[PMEN_Title] });
 	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].num_X, pausePosY_[PMEN_SelectSpace] });
-	spriteTutorialInfoHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_TutorialHowToPlayInfo].num_X, pausePosY_[PMEN_TutorialHowToPlayInfo] });
+	spriteHintInfo_->SetPosition({ easePauseMenuPosX_[PMEN_HintInfo].num_X, pausePosY_[PMEN_HintInfo] });
 	spritePauseUI_->SetPosition({ easePauseMenuPosX_[PMEN_UI].num_X,pausePosY_[PMEN_UI] });
 	//遊び方説明関係
 	spriteTutorialHTPMove_->SetPosition({ easeHowToPlayPosX_[HTPEN_Move].num_X,howToPlayPosY_[HTPEN_Move] });
@@ -408,23 +409,23 @@ void GamePlayScene::UpdateIsPause()
 	if (menuCount_ == GPSPMI_Resume)//ゲーム再開を選択時
 	{
 		spritePauseResume_->SetColor(selectMenuColor);
-		spritePauseHowToPlay_->SetColor(otherMenuColor);
+		spritePauseHint_->SetColor(otherMenuColor);
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(otherMenuColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_Resume] });
 	}
-	else if (menuCount_ == GPSPMI_HowToPlay)//遊び方説明を選択時
+	else if (menuCount_ == GPSPMI_Hint)//遊び方説明を選択時
 	{
 		spritePauseResume_->SetColor(otherMenuColor);
-		spritePauseHowToPlay_->SetColor(selectMenuColor);
+		spritePauseHint_->SetColor(selectMenuColor);
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(otherMenuColor);
-		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_HowToPlay] });
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_Hint] });
 	}
 	else if (menuCount_ == GPSPMI_StageSelect)//ステージセレクト遷移を選択時
 	{
 		spritePauseResume_->SetColor(otherMenuColor);
-		spritePauseHowToPlay_->SetColor(otherMenuColor);
+		spritePauseHint_->SetColor(otherMenuColor);
 		spritePauseStageSelect_->SetColor(selectMenuColor);
 		spritePauseTitle_->SetColor(otherMenuColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_StageSelect] });
@@ -432,7 +433,7 @@ void GamePlayScene::UpdateIsPause()
 	else if (menuCount_ == GPSPMI_Title)//タイトル遷移を選択時
 	{
 		spritePauseResume_->SetColor(otherMenuColor);
-		spritePauseHowToPlay_->SetColor(otherMenuColor);
+		spritePauseHint_->SetColor(otherMenuColor);
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(selectMenuColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_Title] });
@@ -458,22 +459,22 @@ void GamePlayScene::UpdateIsPause()
 				isBack_ = true;
 
 			}
-			else if (menuCount_ == GPSPMI_HowToPlay)//遊び方説明へ移行
-			{
-				if (stageNum_ < SL_StageTutorial_Area1)//チュートリアルステージだと何も起こらない
-				{
-					//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
-					if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
-					{
-						for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(true);
-						for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].Standby(false);
-						easeCursorPosX_.Standby(true);
-					}
+			//else if (menuCount_ == GPSPMI_Hint)//遊び方説明へ移行
+			//{
+			//	if (stageNum_ < SL_StageTutorial_Area1)//チュートリアルステージだと何も起こらない
+			//	{
+			//		//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
+			//		if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
+			//		{
+			//			for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(true);
+			//			for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].Standby(false);
+			//			easeCursorPosX_.Standby(true);
+			//		}
 
-					isHowToPlay_ = true;
-					isPause_ = false;
-				}
-			}
+			//		isHowToPlay_ = true;
+			//		isPause_ = false;
+			//	}
+			//}
 			else if (menuCount_ == GPSPMI_StageSelect)//ステージセレクトへ戻る
 			{
 				//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
@@ -554,7 +555,7 @@ void GamePlayScene::UpdateHowToPlay()
 	//ポーズ関係のスプライト
 	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].num_X, pausePosY_[PMEN_Menu] });
 	spritePauseResume_->SetPosition({ easePauseMenuPosX_[PMEN_Resume].num_X, pausePosY_[PMEN_Resume] });
-	spritePauseHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_HowToPlay].num_X, pausePosY_[PMEN_HowToPlay] });
+	spritePauseHint_->SetPosition({ easePauseMenuPosX_[PMEN_Hint].num_X, pausePosY_[PMEN_Hint] });
 	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[PMEN_StageSelect].num_X, pausePosY_[PMEN_StageSelect] });
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].num_X, pausePosY_[PMEN_Title] });
 	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].num_X, pausePosY_[PMEN_SelectSpace] });
@@ -568,7 +569,7 @@ void GamePlayScene::UpdateHowToPlay()
 	spriteTutorialHTPMoveBack_->SetPosition({ easeHowToPlayPosX_[HTPEN_MoveBack].num_X,howToPlayPosY_[HTPEN_MoveBack] });
 	spriteTutorialHTPAttack_->SetPosition({ easeHowToPlayPosX_[HTPEN_Attack].num_X,howToPlayPosY_[HTPEN_Attack] });
 	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].num_X,howToPlayPosY_[HTPEN_Quit] });
-	
+
 	//決定時のスプライトのイージングが終わったら操作を受け付ける
 	if (spriteDone_->GetPosition().x == easePauseMenuPosX_[HTPEN_Quit].start)
 	{
@@ -775,16 +776,14 @@ void GamePlayScene::Draw()
 		//ポーズ関係のスプライト
 		spritePause_->Draw();
 		spritePauseResume_->Draw();
-		spritePauseHowToPlay_->Draw();
+		spritePauseHint_->Draw();
+		if (menuCount_ == GPSPMI_Hint)spriteHintInfo_->Draw();//メニューカーソルをヒントに合わせた場合のみ表示
 		spritePauseStageSelect_->Draw();
 		spritePauseTitle_->Draw();
 		spritePauseUI_->Draw();
 		spriteDone_->Draw();
 		spriteCursor_->Draw();
-		if (stageNum_ >= SL_StageTutorial_Area1)//チュートリアルステージ以外は書かない
-		{
-			if (menuCount_ == GPSPMI_HowToPlay)spriteTutorialInfoHowToPlay_->Draw();
-		}
+		
 
 	}
 	else if (isHowToPlay_)//遊び方説明時
@@ -795,7 +794,7 @@ void GamePlayScene::Draw()
 		//ポーズ関係のスプライト(遊び方説明→ポーズへ戻るとき用)
 		spritePause_->Draw();
 		spritePauseResume_->Draw();
-		spritePauseHowToPlay_->Draw();
+		spritePauseHint_->Draw();
 		spritePauseStageSelect_->Draw();
 		spritePauseTitle_->Draw();
 		spritePauseUI_->Draw();
@@ -1259,7 +1258,7 @@ void GamePlayScene::LoadModel()
 	ModelMapping(modelGround_, "ground");						//床のモデル
 	ModelMapping(modelSphere_, "sphere2");						//球モデル
 	ModelMapping(modelBox_, "ground2");							//AABB床モデル
-	
+
 	//自機に使うモデル
 	modelPlayerList_.playerModel = modelPlayer_.get();				//基本態勢
 	modelPlayerList_.playerBullet = modelPlayerBullet_.get();		//弾
@@ -1347,8 +1346,7 @@ void GamePlayScene::UpdateTutorialSprite()
 	spriteTutorialInfo2_->Update();
 	spriteTutorialInfo3_->Update();
 	spriteTutorialInfo4_->Update();
-	spriteTutorialInfoHowToPlay_->Update();
-
+	
 	spriteTutorialHTPMove_->Update();
 	spriteTutorialHTPDash_->Update();
 	spriteTutorialHTPJump_->Update();
@@ -1385,6 +1383,64 @@ void GamePlayScene::LoadStageNameSprite()
 	spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
 	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 	spriteStageName_->Update();
+}
+
+void GamePlayScene::LoadTutorialSprite()
+{
+	//チュートリアル時の説明文字スプライト
+	spCommon_->LoadTexture(GPSTTI_TutorialInfo1Tex, "texture/info/tinfo1.png");//1
+	spriteTutorialInfo1_->Initialize(spCommon_, GPSTTI_TutorialInfo1Tex);
+	spCommon_->LoadTexture(GPSTTI_TutorialInfo2Tex, "texture/info/tinfo2.png");//2
+	spriteTutorialInfo2_->Initialize(spCommon_, GPSTTI_TutorialInfo2Tex);
+	spCommon_->LoadTexture(GPSTTI_TutorialInfo3Tex, "texture/info/tinfo3.png");//3
+	spriteTutorialInfo3_->Initialize(spCommon_, GPSTTI_TutorialInfo3Tex);
+	spCommon_->LoadTexture(GPSTTI_TutorialInfo4Tex, "texture/info/tinfo4.png");//4
+	spriteTutorialInfo4_->Initialize(spCommon_, GPSTTI_TutorialInfo4Tex);
+
+	//チュートリアル時の操作説明
+	spCommon_->LoadTexture(GPSTTI_HowToPlayMoveTex, "texture/info/moveinfo.png");//移動　1~
+	spriteTutorialHTPMove_->Initialize(spCommon_, GPSTTI_HowToPlayMoveTex);
+	spCommon_->LoadTexture(GPSTTI_HowToPlayDashTex, "texture/info/dashinfo.png");//ダッシュ　1~
+	spriteTutorialHTPDash_->Initialize(spCommon_, GPSTTI_HowToPlayDashTex);
+	spCommon_->LoadTexture(GPSTTI_HowToPlayJumpTex, "texture/info/jumpinfo.png");//ジャンプ　1~
+	spriteTutorialHTPJump_->Initialize(spCommon_, GPSTTI_HowToPlayJumpTex);
+	spCommon_->LoadTexture(GPSTTI_HowToPlayBackMoveTex, "texture/info/backmoveinfo2.png");//手前、奥側ジャンプ　2~
+	spriteTutorialHTPMoveBack_->Initialize(spCommon_, GPSTTI_HowToPlayBackMoveTex);
+	spCommon_->LoadTexture(GPSTTI_HowToPlayAttackTex, "texture/info/attackinfo2.png");//攻撃　3~
+	spriteTutorialHTPAttack_->Initialize(spCommon_, GPSTTI_HowToPlayAttackTex);
+
+	//チュートリアルの進んだ面によってチュートリアル情報を変える
+	if (stageNum_ == SL_StageTutorial_Area1)
+	{
+		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			nullptr, nullptr, spriteTutorialInfo1_.get());
+	}
+	else if (stageNum_ == SL_StageTutorial_Area2)
+	{
+		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			spriteTutorialHTPMoveBack_.get(), nullptr, spriteTutorialInfo2_.get());
+	}
+	else if (stageNum_ == SL_StageTutorial_Area3)
+	{
+		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo3_.get());
+	}
+	else if (stageNum_ == SL_StageTutorial_Final)
+	{
+		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
+			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo4_.get());
+	}
+	else//チュートリアルステージ以外の場合
+	{
+		//カラーセット
+		const DirectX::XMFLOAT4 howToPlayColor = { 1.0f,0.15f,0.15f,1.0f };
+		//カラーセット
+		spriteTutorialHTPDash_->SetColor(howToPlayColor);
+		spriteTutorialHTPMove_->SetColor(howToPlayColor);
+		spriteTutorialHTPJump_->SetColor(howToPlayColor);
+		spriteTutorialHTPMoveBack_->SetColor(howToPlayColor);
+		spriteTutorialHTPAttack_->SetColor(howToPlayColor);
+	}
 }
 
 void GamePlayScene::SetUpCircleShadow(const DirectX::XMFLOAT3& pos)
@@ -1426,8 +1482,8 @@ void GamePlayScene::LoadSprite()
 
 	//ポーズ時に遊び方を確認するかを書いたスプライト
 	spCommon_->LoadTexture(GPSTI_PauseHowToPlayTex, "texture/howtoplay2.png");
-	spritePauseHowToPlay_->Initialize(spCommon_, GPSTI_PauseHowToPlayTex);
-	spritePauseHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_HowToPlay].start,pausePosY_[PMEN_HowToPlay] });
+	spritePauseHint_->Initialize(spCommon_, GPSTI_PauseHowToPlayTex);
+	spritePauseHint_->SetPosition({ easePauseMenuPosX_[PMEN_Hint].start,pausePosY_[PMEN_Hint] });
 
 	//ポーズ時にステージセレクトへ戻るかを書いたスプライト
 	spCommon_->LoadTexture(GPSTI_PauseStageSelectTex, "texture/backstageselect.png");
@@ -1438,7 +1494,7 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(GPSTI_PauseTitleTex, "texture/backtitle.png");
 	spritePauseTitle_->Initialize(spCommon_, GPSTI_PauseTitleTex);
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].start,pausePosY_[PMEN_Title] });
-	
+
 	//メニュー操作スプライト
 	spCommon_->LoadTexture(GPSTI_PauseUITex, "texture/menuui.png");
 	spritePauseUI_->Initialize(spCommon_, GPSTI_PauseUITex);
@@ -1506,72 +1562,21 @@ void GamePlayScene::LoadSprite()
 	easeTutorialListScale_[XY_Y].SetEasing(0.0f, spriteHowToPlayList_->GetSize().y, presetEaseTutorialListScale_[XY_Y].maxtime);
 	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
 
+	spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/info/tinfohowtoplay.png");//遊び方説明について
+	spriteHintInfo_->Initialize(spCommon_, GPSTI_HintInfoTex);
+	spriteHintInfo_->SetPosition({ easePauseMenuPosX_[PMEN_HintInfo].start,pausePosY_[PMEN_HintInfo] });
+
 	//ステージ名スプライト
 	LoadStageNameSprite();
 
-	//チュートリアル時の説明文字スプライト
-	spCommon_->LoadTexture(GPSTTI_TutorialInfo1Tex, "texture/info/tinfo1.png");//1
-	spriteTutorialInfo1_->Initialize(spCommon_, GPSTTI_TutorialInfo1Tex);
-	spCommon_->LoadTexture(GPSTTI_TutorialInfo2Tex, "texture/info/tinfo2.png");//2
-	spriteTutorialInfo2_->Initialize(spCommon_, GPSTTI_TutorialInfo2Tex);
-	spCommon_->LoadTexture(GPSTTI_TutorialInfo3Tex, "texture/info/tinfo3.png");//3
-	spriteTutorialInfo3_->Initialize(spCommon_, GPSTTI_TutorialInfo3Tex);
-	spCommon_->LoadTexture(GPSTTI_TutorialInfo4Tex, "texture/info/tinfo4.png");//4
-	spriteTutorialInfo4_->Initialize(spCommon_, GPSTTI_TutorialInfo4Tex);
-	spCommon_->LoadTexture(GPSTTI_TutorialInfoHowToPlayTex, "texture/info/tinfohowtoplay.png");//遊び方説明について
-	spriteTutorialInfoHowToPlay_->Initialize(spCommon_, GPSTTI_TutorialInfoHowToPlayTex);
-	spriteTutorialInfoHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_TutorialHowToPlayInfo].start,pausePosY_[PMEN_TutorialHowToPlayInfo] });
-
-	//チュートリアル時の操作説明
-	spCommon_->LoadTexture(GPSTTI_HowToPlayMoveTex, "texture/info/moveinfo.png");//移動　1~
-	spriteTutorialHTPMove_->Initialize(spCommon_, GPSTTI_HowToPlayMoveTex);
-	spCommon_->LoadTexture(GPSTTI_HowToPlayDashTex, "texture/info/dashinfo.png");//ダッシュ　1~
-	spriteTutorialHTPDash_->Initialize(spCommon_, GPSTTI_HowToPlayDashTex);
-	spCommon_->LoadTexture(GPSTTI_HowToPlayJumpTex, "texture/info/jumpinfo.png");//ジャンプ　1~
-	spriteTutorialHTPJump_->Initialize(spCommon_, GPSTTI_HowToPlayJumpTex);
-	spCommon_->LoadTexture(GPSTTI_HowToPlayBackMoveTex, "texture/info/backmoveinfo2.png");//手前、奥側ジャンプ　2~
-	spriteTutorialHTPMoveBack_->Initialize(spCommon_, GPSTTI_HowToPlayBackMoveTex);
-	spCommon_->LoadTexture(GPSTTI_HowToPlayAttackTex, "texture/info/attackinfo2.png");//攻撃　3~
-	spriteTutorialHTPAttack_->Initialize(spCommon_, GPSTTI_HowToPlayAttackTex);
-
-	//チュートリアルの進んだ面によってチュートリアル情報を変える
-	if (stageNum_ == SL_StageTutorial_Area1)
-	{
-		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
-			nullptr, nullptr, spriteTutorialInfo1_.get());
-	}
-	else if (stageNum_ == SL_StageTutorial_Area2)
-	{
-		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
-			spriteTutorialHTPMoveBack_.get(), nullptr, spriteTutorialInfo2_.get());
-	}
-	else if (stageNum_ == SL_StageTutorial_Area3)
-	{
-		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
-			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo3_.get());
-	}
-	else if (stageNum_ == SL_StageTutorial_Final)
-	{
-		SettingTutorialEase(GPSSTEN_Stundby, spriteTutorialHTPMove_.get(), spriteTutorialHTPDash_.get(), spriteTutorialHTPJump_.get(),
-			spriteTutorialHTPMoveBack_.get(), spriteTutorialHTPAttack_.get(), spriteTutorialInfo4_.get());
-	}
-	else//チュートリアルステージ以外の場合
-	{
-		//カラーセット
-		const DirectX::XMFLOAT4 howToPlayColor = { 1.0f,0.15f,0.15f,1.0f };
-		//カラーセット
-		spriteTutorialHTPDash_->SetColor(howToPlayColor);
-		spriteTutorialHTPMove_->SetColor(howToPlayColor);
-		spriteTutorialHTPJump_->SetColor(howToPlayColor);
-		spriteTutorialHTPMoveBack_->SetColor(howToPlayColor);
-		spriteTutorialHTPAttack_->SetColor(howToPlayColor);
-	}
+	//チュートリアルスプライト
+	LoadTutorialSprite();
 
 	//各スプライトを更新
 	spritePause_->Update();
 	spritePauseInfo_->Update();
 	spritePauseResume_->Update();
-	spritePauseHowToPlay_->Update();
+	spritePauseHint_->Update();
 	spritePauseStageSelect_->Update();
 	spritePauseTitle_->Update();
 	spritePauseUI_->Update();
@@ -1585,13 +1590,12 @@ void GamePlayScene::LoadSprite()
 	spriteTutorialInfo2_->Update();
 	spriteTutorialInfo3_->Update();
 	spriteTutorialInfo4_->Update();
-	spriteTutorialInfoHowToPlay_->Update();
+	spriteHintInfo_->Update();
 
 	spriteTutorialHTPMove_->Update();
 	spriteTutorialHTPDash_->Update();
 	spriteTutorialHTPJump_->Update();
 	spriteTutorialHTPMoveBack_->Update();
 	spriteTutorialHTPAttack_->Update();
-
 
 }

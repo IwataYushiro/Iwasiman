@@ -55,13 +55,14 @@ enum GamePlaySceneTextureIndex
 	GPSTI_HowToPlayListTex = 14,
 	GPSTI_StageNameTex = 15,
 	GPSTI_PauseUITex = 16,
+	GPSTI_HintInfoTex = 17,
 };
 
 //ポーズ用メニューインデックス
 enum GamePlayScenePauseMenuIndex
 {
 	GPSPMI_Resume = 0,
-	GPSPMI_HowToPlay = 1,
+	GPSPMI_Hint = 1,
 	GPSPMI_StageSelect = 2,
 	GPSPMI_Title = 3,
 };
@@ -79,7 +80,6 @@ enum GamePlaySceneTutorialTextureIndex
 	GPSTTI_HowToPlayJumpTex = 1006,
 	GPSTTI_HowToPlayBackMoveTex = 1007,
 	GPSTTI_HowToPlayAttackTex = 1008,
-	GPSTTI_TutorialInfoHowToPlayTex = 1009,
 };
 
 //プレイヤーテクスチャインデックス
