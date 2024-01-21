@@ -1454,14 +1454,14 @@ void GamePlayScene::LoadSprite()
 	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
 	
 	//ヒントの内容はステージごとに違う
-	if (stageNum_ == SL_StageTutorial_Area1)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/1-1.png");
-	else if (stageNum_ == SL_StageTutorial_Area2)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/1-2.png");
-	else if (stageNum_ == SL_StageTutorial_Area3)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/1-3.png");
-	else if (stageNum_ == SL_StageTutorial_Final)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/1-4.png");
-	else if (stageNum_ == SL_Stage1_Area1)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/2-1.png");
-	else if (stageNum_ == SL_Stage1_Area2)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/2-2.png");
-	else if (stageNum_ == SL_Stage1_Area3)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/2-3.png");
-	else if (stageNum_ == SL_Stage1_AreaBoss)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/2-4.png");
+	if (stageNum_ == SL_StageTutorial_Area1)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-1.png");
+	else if (stageNum_ == SL_StageTutorial_Area2)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-2.png");
+	else if (stageNum_ == SL_StageTutorial_Area3)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-3.png");
+	else if (stageNum_ == SL_StageTutorial_Final)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-4.png");
+	else if (stageNum_ == SL_Stage1_Area1)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/2-1.png");
+	else if (stageNum_ == SL_Stage1_Area2)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/2-2.png");
+	else if (stageNum_ == SL_Stage1_Area3)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/2-3.png");
+	else if (stageNum_ == SL_Stage1_AreaBoss)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/2-4.png");
 	spriteHintInfo_->Initialize(spCommon_, GPSTI_HintInfoTex);
 	spriteHintInfo_->SetPosition({ easePauseMenuPosX_[PMEN_HintInfo].start,pausePosY_[PMEN_HintInfo] });
 
