@@ -60,8 +60,6 @@ public://メンバ関数
 	void UpdateIsPlayGame();
 	//状態更新(ポーズ画面時)
 	void UpdateIsPause();
-	//状態更新(遊び方説明時)
-	void UpdateHowToPlay();
 	//状態更新(ステージクリア時)
 	void UpdateIsStageClear();
 	//状態更新(ゲームオーバー時)
@@ -120,7 +118,6 @@ private:
 	std::unique_ptr<Sprite> spritePauseStageSelect_ = std::make_unique<Sprite>();	//ポーズ時にステージセレクトへ戻るかを書いたスプライト
 	std::unique_ptr<Sprite> spritePauseTitle_ = std::make_unique<Sprite>();			//ポーズ時にタイトルへ戻るかを書いたスプライト
 	std::unique_ptr<Sprite> spriteDone_ = std::make_unique<Sprite>();				//決定表示のスプライト
-	std::unique_ptr<Sprite> spriteQuitHowtoPlay_ = std::make_unique<Sprite>();		//遊び方説明時ポーズに戻る案内用のスプライト
 	std::unique_ptr<Sprite> spriteReady_ = std::make_unique<Sprite>();				//Ready表記文字用のスプライト
 	std::unique_ptr<Sprite> spriteGo_ = std::make_unique<Sprite>();					//Go表記文字用のスプライト
 	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトのスプライト
@@ -212,7 +209,7 @@ private:
 		PMEN_Num = 8,									//配列用
 	};
 	//ポーズメニューのY値
-	const std::array<float, PMEN_Num> pausePosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f,240.0f,400.0f };
+	const std::array<float, PMEN_Num> pausePosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f,180.0f,400.0f };
 
 	//ポーズメニュー画面出現イージングのプリセット
 	const Easing presetEasePauseMenuPosX_[PMEN_Num] =
@@ -223,7 +220,7 @@ private:
 		{1300.0f, 100.0f, 0.8f},			//ステージセレクトへ
 		{1300.0f, 100.0f, 0.9f},			//タイトルへ
 		{1300.0f, 425.0f, 1.0f},			//スペースで選択
-		{1300.0f, 800.0f, 0.75f},			//ヒントの内容
+		{1300.0f, 600.0f, 0.75f},			//ヒントの内容
 		{1300.0f, 1100.0f, 1.1f},			//操作方法
 	};
 	//ポーズメニュー画面出現イージング
@@ -243,41 +240,6 @@ private:
 	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
 	//カーソルX値のイージング
 	Easing easeCursorPosX_ = presetEaseCursorPosX_;
-
-	//遊び方説明用の列挙体
-	enum HowToPlayEasingNum
-	{
-		HTPEN_Move = 0,							//移動
-		HTPEN_Dash = 1,							//ダッシュ
-		HTPEN_Jump = 2,							//ジャンプ
-		HTPEN_MoveBack = 3,						//手前、奥側移動
-		HTPEN_Attack = 4,						//攻撃
-		HTPEN_Quit = 5,							//遊び方を抜ける
-		HTPEN_Num = 6,							//配列用							
-	};
-	//遊び方説明のY値
-	const std::array<float, HTPEN_Num> howToPlayPosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f };
-
-	//遊び方説明画面出現イージングのプリセット
-	const Easing presetEaseHowToPlayPosX_[HTPEN_Num] =
-	{
-		{1300.0f, 100.0f, 0.5f},			//移動
-		{1300.0f, 200.0f, 0.6f},			//ダッシュ
-		{1300.0f, 300.0f, 0.7f},			//ジャンプ
-		{1300.0f, 400.0f, 0.8f},			//手前、奥側移動
-		{1300.0f, 500.0f, 0.9f},			//攻撃
-		{1300.0f, 425.0f, 1.0f}				//遊び方を抜ける
-	};
-	//遊び方説明画面出現イージング
-	Easing easeHowToPlayPosX_[HTPEN_Num] =
-	{
-		presetEaseHowToPlayPosX_[HTPEN_Move],			//移動
-		presetEaseHowToPlayPosX_[HTPEN_Dash],			//ダッシュ
-		presetEaseHowToPlayPosX_[HTPEN_Jump],			//ジャンプ
-		presetEaseHowToPlayPosX_[HTPEN_MoveBack],		//手前、奥側移動
-		presetEaseHowToPlayPosX_[HTPEN_Attack],			//攻撃
-		presetEaseHowToPlayPosX_[HTPEN_Quit]			//遊び方を抜ける
-	};
 
 	//入場用の視点カメラワークイージングのプリセット
 	const Easing presetEaseEyeGameStart_[XYZ_Num] =
@@ -372,10 +334,6 @@ private:
 
 	//プレイ中か
 	bool isGamePlay_ = false;
-	//遊び方説明画面時か
-	bool isHowToPlay_ = false;
-	//遊び方説明からポーズへ戻る時か
-	bool isBackPause_ = false;
 	//ゲームプレイシーンから離れるか
 	bool isQuit_ = false;
 	//ポーズしたか

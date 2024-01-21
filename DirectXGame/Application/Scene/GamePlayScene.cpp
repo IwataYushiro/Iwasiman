@@ -130,7 +130,6 @@ void GamePlayScene::Update()
 	if (isStart_)			UpdateIsStartGame();			//ゲーム開始時
 	else if (isGamePlay_)	UpdateIsPlayGame();				//ゲームプレイ時
 	else if (isPause_)		UpdateIsPause();				//ポーズ時
-	else if (isHowToPlay_)	UpdateHowToPlay();				//遊び方説明時
 	else if (isClear_)		UpdateIsStageClear();			//ステージクリア時
 	else if (isGameOver_)	UpdateIsGameOver();				//ゲームオーバー時
 	else					UpdateIsQuitGame();				//終了時
@@ -145,7 +144,6 @@ void GamePlayScene::Update()
 	spritePauseTitle_->Update();
 	spritePauseUI_->Update();
 	spriteDone_->Update();
-	spriteQuitHowtoPlay_->Update();
 	spriteReady_->Update();
 	spriteGo_->Update();
 	spriteFadeInOut_->Update();
@@ -393,13 +391,6 @@ void GamePlayScene::UpdateIsPause()
 	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].num_X, pausePosY_[PMEN_SelectSpace] });
 	spriteHintInfo_->SetPosition({ easePauseMenuPosX_[PMEN_HintInfo].num_X, pausePosY_[PMEN_HintInfo] });
 	spritePauseUI_->SetPosition({ easePauseMenuPosX_[PMEN_UI].num_X,pausePosY_[PMEN_UI] });
-	//遊び方説明関係
-	spriteTutorialHTPMove_->SetPosition({ easeHowToPlayPosX_[HTPEN_Move].num_X,howToPlayPosY_[HTPEN_Move] });
-	spriteTutorialHTPDash_->SetPosition({ easeHowToPlayPosX_[HTPEN_Dash].num_X,howToPlayPosY_[HTPEN_Dash] });
-	spriteTutorialHTPJump_->SetPosition({ easeHowToPlayPosX_[HTPEN_Jump].num_X,howToPlayPosY_[HTPEN_Jump] });
-	spriteTutorialHTPMoveBack_->SetPosition({ easeHowToPlayPosX_[HTPEN_MoveBack].num_X,howToPlayPosY_[HTPEN_MoveBack] });
-	spriteTutorialHTPAttack_->SetPosition({ easeHowToPlayPosX_[HTPEN_Attack].num_X,howToPlayPosY_[HTPEN_Attack] });
-	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].num_X,howToPlayPosY_[HTPEN_Quit] });
 
 	//メニュー操作
 	if (input_->TriggerKey(DIK_W))menuCount_--;
@@ -459,22 +450,6 @@ void GamePlayScene::UpdateIsPause()
 				isBack_ = true;
 
 			}
-			//else if (menuCount_ == GPSPMI_Hint)//遊び方説明へ移行
-			//{
-			//	if (stageNum_ < SL_StageTutorial_Area1)//チュートリアルステージだと何も起こらない
-			//	{
-			//		//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
-			//		if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
-			//		{
-			//			for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(true);
-			//			for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].Standby(false);
-			//			easeCursorPosX_.Standby(true);
-			//		}
-
-			//		isHowToPlay_ = true;
-			//		isPause_ = false;
-			//	}
-			//}
 			else if (menuCount_ == GPSPMI_StageSelect)//ステージセレクトへ戻る
 			{
 				//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
@@ -542,62 +517,6 @@ void GamePlayScene::UpdateIsPause()
 
 	}
 
-}
-
-void GamePlayScene::UpdateHowToPlay()
-{
-	//イージング
-	for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].ease_out_expo();
-	easeCursorPosX_.ease_out_expo();
-
-	//ポジションセット
-	//ポーズ関係のスプライト
-	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].num_X, pausePosY_[PMEN_Menu] });
-	spritePauseResume_->SetPosition({ easePauseMenuPosX_[PMEN_Resume].num_X, pausePosY_[PMEN_Resume] });
-	spritePauseHint_->SetPosition({ easePauseMenuPosX_[PMEN_Hint].num_X, pausePosY_[PMEN_Hint] });
-	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[PMEN_StageSelect].num_X, pausePosY_[PMEN_StageSelect] });
-	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].num_X, pausePosY_[PMEN_Title] });
-	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].num_X, pausePosY_[PMEN_SelectSpace] });
-	spritePauseUI_->SetPosition({ easePauseMenuPosX_[PMEN_UI].num_X,pausePosY_[PMEN_UI] });
-	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
-
-	//遊び方説明関係のスプライト
-	spriteTutorialHTPMove_->SetPosition({ easeHowToPlayPosX_[HTPEN_Move].num_X,howToPlayPosY_[HTPEN_Move] });
-	spriteTutorialHTPDash_->SetPosition({ easeHowToPlayPosX_[HTPEN_Dash].num_X,howToPlayPosY_[HTPEN_Dash] });
-	spriteTutorialHTPJump_->SetPosition({ easeHowToPlayPosX_[HTPEN_Jump].num_X,howToPlayPosY_[HTPEN_Jump] });
-	spriteTutorialHTPMoveBack_->SetPosition({ easeHowToPlayPosX_[HTPEN_MoveBack].num_X,howToPlayPosY_[HTPEN_MoveBack] });
-	spriteTutorialHTPAttack_->SetPosition({ easeHowToPlayPosX_[HTPEN_Attack].num_X,howToPlayPosY_[HTPEN_Attack] });
-	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].num_X,howToPlayPosY_[HTPEN_Quit] });
-
-	//決定時のスプライトのイージングが終わったら操作を受け付ける
-	if (spriteDone_->GetPosition().x == easePauseMenuPosX_[HTPEN_Quit].start)
-	{
-		//到達した後スペースでポーズに戻る
-		if (input_->TriggerKey(DIK_SPACE))
-		{
-			//イージングスタンバイ
-			for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(false);
-			for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].Standby(true);
-			easeCursorPosX_.Standby(false);
-			isBackPause_ = true;
-		}
-
-	}
-	if (isBackPause_)
-	{
-		//イージング
-		for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].ease_in_out_quint();
-		for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].ease_in_out_quint();
-		easeCursorPosX_.ease_in_out_quint();
-		//イージングが終わったらポーズに戻る
-		if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
-		{
-			isPause_ = true;
-			isBackPause_ = false;
-			isHowToPlay_ = false;
-		}
-	}
 }
 
 void GamePlayScene::UpdateIsStageClear()
@@ -785,29 +704,6 @@ void GamePlayScene::Draw()
 		spriteCursor_->Draw();
 		
 
-	}
-	else if (isHowToPlay_)//遊び方説明時
-	{
-		//フェードインアウト
-		spriteFadeInOut_->Draw();
-
-		//ポーズ関係のスプライト(遊び方説明→ポーズへ戻るとき用)
-		spritePause_->Draw();
-		spritePauseResume_->Draw();
-		spritePauseHint_->Draw();
-		spritePauseStageSelect_->Draw();
-		spritePauseTitle_->Draw();
-		spritePauseUI_->Draw();
-		spriteDone_->Draw();
-		spriteCursor_->Draw();
-
-		//操作方法のスプライト
-		spriteTutorialHTPMove_->Draw();
-		spriteTutorialHTPDash_->Draw();
-		spriteTutorialHTPJump_->Draw();
-		spriteTutorialHTPMoveBack_->Draw();
-		spriteTutorialHTPAttack_->Draw();
-		spriteQuitHowtoPlay_->Draw();
 	}
 	else//ゲームプレイ時
 	{
@@ -1480,8 +1376,8 @@ void GamePlayScene::LoadSprite()
 	spritePauseResume_->Initialize(spCommon_, GPSTI_PauseResumeTex);
 	spritePauseResume_->SetPosition({ easePauseMenuPosX_[PMEN_Resume].start,pausePosY_[PMEN_Resume] });
 
-	//ポーズ時に遊び方を確認するかを書いたスプライト
-	spCommon_->LoadTexture(GPSTI_PauseHowToPlayTex, "texture/howtoplay2.png");
+	//ポーズ時にヒントを確認するかを書いたスプライト
+	spCommon_->LoadTexture(GPSTI_PauseHowToPlayTex, "texture/hint.png");
 	spritePauseHint_->Initialize(spCommon_, GPSTI_PauseHowToPlayTex);
 	spritePauseHint_->SetPosition({ easePauseMenuPosX_[PMEN_Hint].start,pausePosY_[PMEN_Hint] });
 
@@ -1504,11 +1400,6 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(GPSTI_PauseDoneTex, "texture/space.png");
 	spriteDone_->Initialize(spCommon_, GPSTI_PauseDoneTex);
 	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].start,pausePosY_[PMEN_SelectSpace] });
-
-	//遊び方説明時ポーズに戻る案内用のスプライト
-	spCommon_->LoadTexture(GPSTI_QuitHowToPlayTex, "texture/space.png");
-	spriteQuitHowtoPlay_->Initialize(spCommon_, GPSTI_QuitHowToPlayTex);
-	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].start,howToPlayPosY_[HTPEN_Quit] });
 
 	//Ready表記文字用のスプライト
 	spCommon_->LoadTexture(GPSTI_ReadyTex, "texture/ready2.png");
@@ -1561,8 +1452,16 @@ void GamePlayScene::LoadSprite()
 	easeTutorialListScale_[XY_X].SetEasing(0.0f, spriteHowToPlayList_->GetSize().x, presetEaseTutorialListScale_[XY_X].maxtime);
 	easeTutorialListScale_[XY_Y].SetEasing(0.0f, spriteHowToPlayList_->GetSize().y, presetEaseTutorialListScale_[XY_Y].maxtime);
 	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
-
-	spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/info/tinfohowtoplay.png");//遊び方説明について
+	
+	//ヒントの内容はステージごとに違う
+	if (stageNum_ == SL_StageTutorial_Area1)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/1-1.png");
+	else if (stageNum_ == SL_StageTutorial_Area2)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/1-2.png");
+	else if (stageNum_ == SL_StageTutorial_Area3)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/1-3.png");
+	else if (stageNum_ == SL_StageTutorial_Final)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/1-4.png");
+	else if (stageNum_ == SL_Stage1_Area1)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/2-1.png");
+	else if (stageNum_ == SL_Stage1_Area2)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/2-2.png");
+	else if (stageNum_ == SL_Stage1_Area3)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/2-3.png");
+	else if (stageNum_ == SL_Stage1_AreaBoss)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagename/2-4.png");
 	spriteHintInfo_->Initialize(spCommon_, GPSTI_HintInfoTex);
 	spriteHintInfo_->SetPosition({ easePauseMenuPosX_[PMEN_HintInfo].start,pausePosY_[PMEN_HintInfo] });
 
@@ -1581,7 +1480,6 @@ void GamePlayScene::LoadSprite()
 	spritePauseTitle_->Update();
 	spritePauseUI_->Update();
 	spriteDone_->Update();
-	spriteQuitHowtoPlay_->Update();
 	spriteReady_->Update();
 	spriteGo_->Update();
 	spriteFadeInOut_->Update();
