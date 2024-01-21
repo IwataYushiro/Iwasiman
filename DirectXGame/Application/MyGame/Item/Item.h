@@ -44,7 +44,7 @@ private:
 
 public://’è”
 	//Å‘åŒø‰ÊŠÔ
-	const float MAX_TIME = 200.0f;
+	const float MAX_TIME = 210.0f;
 public:
 	~Item();
 	
