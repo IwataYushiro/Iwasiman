@@ -112,19 +112,20 @@ void Item::Update()
 void Item::UpdateJumpPowerup()
 {
 	
-	const XMFLOAT3 asIsColor = { 1.0f,1.0f,1.0f };//素材そのままの色
 	if (isGetJump_)//取得したら
 	{
-		//イージングで少しずつ透明にする
-		ease_.ease_in_out_cubic();
-		spriteItemJumpBar_->SetColor({ asIsColor.x, asIsColor.y,asIsColor.z, ease_.num_X });
+		//イージングで少しずつサイズを小さくする
+		ease_.ease_in_out_sine();
+		spriteItemJumpBar_->SetTextureSize({ ease_.num_X, spriteItemJumpBar_->GetSize().y});
+		spriteItemJumpBar_->SetSize({ ease_.num_X, spriteItemJumpBar_->GetSize().y });
 		//効果時間を進める
 		count_++;
 	}
 	else
 	{
 		//アルファ値を戻す
-		spriteItemJumpBar_->SetColor({ asIsColor.x, asIsColor.y, asIsColor.z,ease_.start });
+		spriteItemJumpBar_->SetTextureSize({ ease_.start, spriteItemJumpBar_->GetSize().y });
+		spriteItemJumpBar_->SetSize({ ease_.start, spriteItemJumpBar_->GetSize().y });
 	}
 	//効果時間が一定の時間に達したら強化解除
 	if (count_ >= MAX_TIME)
@@ -205,6 +206,8 @@ void Item::LoadSprite()
 	spriteItemJumpBar_->Initialize(spCommon_, GPSITI_ItemJumpBar);
 	const XMFLOAT2 jumpBarPos = {50.0f,660.0f };
 	spriteItemJumpBar_->SetPosition(jumpBarPos);
+	const Vector2 settingEase_ = {spriteItemJumpBar_->GetSize().x, 0.0f};//イージングのスタート、エンド地点
+	ease_.SetEasing(settingEase_.x, settingEase_.y, timer_);//イージングのセット
 
 	spriteItemJumpBar_->Update();
 }
