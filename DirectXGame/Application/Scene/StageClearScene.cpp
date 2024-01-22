@@ -244,7 +244,6 @@ void StageClearScene::UpdateIsNextStage()
 	spriteNextStage_->SetPosition({ easeMenuEndPosX_[SCMEN_NextStage].num_X,menuPosY_[SCMEN_NextStage] });
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
-	spriteDone_->SetPosition({ easeMenuEndPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[SCMEN_UI].num_X,menuPosY_[SCMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
@@ -331,7 +330,6 @@ void StageClearScene::UpdateIsStageSelect()
 	spriteNextStage_->SetPosition({ easeMenuEndPosX_[SCMEN_NextStage].num_X,menuPosY_[SCMEN_NextStage] });
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
-	spriteDone_->SetPosition({ easeMenuEndPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[SCMEN_UI].num_X,menuPosY_[SCMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
@@ -366,7 +364,6 @@ void StageClearScene::UpdateIsQuitTitle()
 	spriteNextStage_->SetPosition({ easeMenuEndPosX_[SCMEN_NextStage].num_X,menuPosY_[SCMEN_NextStage] });
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[SCMEN_StageSelect].num_X,menuPosY_[SCMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[SCMEN_Title].num_X,menuPosY_[SCMEN_Title] });
-	spriteDone_->SetPosition({ easeMenuEndPosX_[SCMEN_SelectSpace].num_X,menuPosY_[SCMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[SCMEN_UI].num_X,menuPosY_[SCMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 
@@ -451,6 +448,9 @@ void StageClearScene::UpdateIsMenu()
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{
+			//決定表示のスプライトをスキップキー表示に変更
+			spCommon_->LoadTexture(SCSTI_MenuDoneTex, "texture/skip.png");
+
 			//イージングをスタンバイし次の処理へ
 			if (menuCount_ == SCSMI_NextStage)//次のステージへ
 			{

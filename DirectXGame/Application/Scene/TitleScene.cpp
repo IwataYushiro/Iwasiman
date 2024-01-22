@@ -53,17 +53,12 @@ void TitleScene::Initialize()
 	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title3.png");
 	spriteTitle_->Initialize(spCommon_, TSTI_TitleTex);
 	spriteTitle_->SetColor(backTitleColor_);
-	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].start,startTitlePosY_[TS_Title] });
+	spriteTitle_->SetPosition({ easeTitlePosX_.start,startTitlePosY_ });
 
 	//タイトル画面スプライト(タイトルの後ろ)
 	spCommon_->LoadTexture(TSTI_TitleBackTex, "texture/titleback.png");
 	spriteTitleBack_->Initialize(spCommon_, TSTI_TitleBackTex);
-	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].start,startTitlePosY_[TS_Title] });
-
-	//タイトル決定表示スプライト
-	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space3.png");
-	spriteTitleDone_->Initialize(spCommon_, TSTI_TitleDoneTex);
-	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].start,startTitlePosY_[TS_Done] });
+	spriteTitleBack_->SetPosition({ easeTitlePosX_.start,startTitlePosY_ });
 
 	//タイトルメニュー画面スプライト
 	spCommon_->LoadTexture(TSTI_MenuTex, "texture/titlemenu.png");
@@ -179,7 +174,7 @@ void TitleScene::Update()
 		{
 			if (input_->TriggerKey(DIK_SPACE))
 			{
-				for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].Standby(false);
+				easeTitlePosX_.Standby(false);
 				for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].Standby(false);
@@ -192,12 +187,10 @@ void TitleScene::Update()
 	//カラーセット
 	spriteTitle_->SetColor(titleColor);
 	spriteMenu_->SetColor(titleColor);
-	spriteTitleDone_->SetColor(doneColor);
 	spriteMenuDone_->SetColor(doneColor);
 
 	//スプライト更新
 	spriteTitle_->Update();					//タイトル画面スプライト
-	spriteTitleDone_->Update();				//タイトル決定表示スプライト
 	spriteMenu_->Update();					//タイトルメニュー画面スプライト
 	spriteMenuTutorial_->Update();			//チュートリアル表示スプライト
 	spriteMenuStageSelect_->Update();		//ステージセレクト表示スプライト
@@ -294,7 +287,6 @@ void TitleScene::UpdateIsStartGame()
 	spriteMenu_->SetPosition({ easeMenuEndPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeStartStagePosX_.num_X,easeStartStagePosY_.num_X });
 	spriteMenuStageSelect_->SetPosition({ easeMenuEndPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
-	spriteMenuDone_->SetPosition({ easeMenuEndPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[TMEN_UI].num_X,menuPosY_[TMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuEndPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
@@ -356,7 +348,6 @@ void TitleScene::UpdateIsStageSelect()
 	spriteMenu_->SetPosition({ easeMenuEndPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeMenuEndPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial] });
 	spriteMenuStageSelect_->SetPosition({ easeMenuEndPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
-	spriteMenuDone_->SetPosition({ easeMenuEndPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[TMEN_UI].num_X,menuPosY_[TMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuEndPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
@@ -384,15 +375,14 @@ void TitleScene::UpdateIsStageSelect()
 void TitleScene::UpdateIsBack()
 {
 	//イージング
-	for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].ease_out_expo();
+	easeTitlePosX_.ease_out_expo();
 	for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].ease_out_expo();
 	easeCursorPosX_.ease_out_expo();
 	//座標セット
-	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
-	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
-	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].num_X,startTitlePosY_[TS_Done] });
+	spriteTitle_->SetPosition({ easeTitlePosX_.num_X,startTitlePosY_ });
+	spriteTitleBack_->SetPosition({ easeTitlePosX_.num_X,startTitlePosY_ });
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial] });
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
@@ -409,7 +399,7 @@ void TitleScene::UpdateIsBack()
 	{
 		if (input_->TriggerKey(DIK_SPACE))//メニューへ
 		{
-			for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].Standby(false);
+			easeTitlePosX_.Standby(false);
 			for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].Standby(false);
 			for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].Standby(false);
 			for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].Standby(false);
@@ -444,15 +434,14 @@ void TitleScene::UpdateIsMenu()
 	else otherMenuColor = isLightBackGroundOtherMenuColor;
 
 	//イージング
-	for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].ease_out_expo();
+	easeTitlePosX_.ease_out_expo();
 	for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].ease_out_expo();
 	easeCursorPosX_.ease_out_expo();
 	//座標セット
-	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
-	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
-	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].num_X,startTitlePosY_[TS_Done] });
+	spriteTitle_->SetPosition({ easeTitlePosX_.num_X,startTitlePosY_ });
+	spriteTitleBack_->SetPosition({ easeTitlePosX_.num_X,startTitlePosY_ });
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial] });
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
@@ -487,6 +476,9 @@ void TitleScene::UpdateIsMenu()
 	{
 		if (input_->TriggerKey(DIK_SPACE))//決定
 		{
+			//タイトルメニュー決定表示スプライトを演出スキップキーに変更
+			spCommon_->LoadTexture(TSTI_MenuDoneTex, "texture/skip.png");
+
 			if (menuCount_ == TSMI_Tutorial)//チュートリアルを選んだ場合チュートリアルへ遷移
 			{
 				//イージングのスタンバイ
@@ -513,7 +505,7 @@ void TitleScene::UpdateIsMenu()
 		if (input_->TriggerKey(DIK_ESCAPE))//ESCキーでタイトルに戻る
 		{
 			//イージングのスタンバイ
-			for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].Standby(true);
+			easeTitlePosX_.Standby(true);
 			for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].Standby(true);
 			for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].Standby(true);
 			for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].Standby(true);
@@ -581,7 +573,6 @@ void TitleScene::Draw()
 	//スプライト描画
 	spriteTitleBack_->Draw();				//タイトル画面スプライト(タイトルの後ろ)
 	spriteTitle_->Draw();					//タイトル画面スプライト
-	spriteTitleDone_->Draw();				//タイトル決定表示スプライト
 	spriteMenu_->Draw();					//タイトルメニュー画面スプライト
 	spriteMenuTutorial_->Draw();			//チュートリアル表示スプライト
 	spriteMenuStageSelect_->Draw();			//ステージセレクト表示スプライト

@@ -96,7 +96,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteContinue_ = std::make_unique<Sprite>();			//コンティニュー表示スプライト
 	std::unique_ptr<Sprite> spriteStageSelect_ = std::make_unique<Sprite>();		//ステージセレクト表示スプライト
 	std::unique_ptr<Sprite> spriteTitle_ = std::make_unique<Sprite>();				//タイトル表示スプライト
-	std::unique_ptr<Sprite> spriteDone_ = std::make_unique<Sprite>();				//決定スプライト
+	std::unique_ptr<Sprite> spriteDone_ = std::make_unique<Sprite>();				//決定兼スキップキースプライト
 	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトスプライト
 	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ = std::make_unique<Sprite>();		//現在ステージスプライト

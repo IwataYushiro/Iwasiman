@@ -312,6 +312,8 @@ void GameOverScene::UpdateIsGameOver()
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{
+			//決定スプライトからスキップキー表示へ切り替え
+			spCommon_->LoadTexture(GOSTI_MenuDoneTex, "texture/skip.png");
 			//イージングをスタンバイし次の処理へ
 			if (menuCount_ == GOSMI_Continue)//コンティニュー
 			{
@@ -368,7 +370,6 @@ void GameOverScene::UpdateIsContinue()
 	spriteContinue_->SetPosition({ easeContinuePosX_.num_X,easeContinuePosY_.num_X });
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
-	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[GOMEN_UI].num_X,menuPosY_[GOMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
@@ -450,7 +451,6 @@ void GameOverScene::UpdateIsQuitStageSelect()
 	spriteContinue_->SetPosition({ easeMenuEndPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue] });
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
-	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[GOMEN_UI].num_X,menuPosY_[GOMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	//カメラもセット
@@ -508,7 +508,6 @@ void GameOverScene::UpdateIsQuitTitle()
 	spriteContinue_->SetPosition({ easeMenuEndPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue] });
 	spriteStageSelect_->SetPosition({ easeMenuEndPosX_[GOMEN_StageSelect].num_X,menuPosY_[GOMEN_StageSelect] });
 	spriteTitle_->SetPosition({ easeMenuEndPosX_[GOMEN_Title].num_X,menuPosY_[GOMEN_Title] });
-	spriteDone_->SetPosition({ easeMenuEndPosX_[GOMEN_SelectSpace].num_X,menuPosY_[GOMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[GOMEN_UI].num_X,menuPosY_[GOMEN_UI] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 	for (std::unique_ptr<Object3d>& player : objPlayers_)

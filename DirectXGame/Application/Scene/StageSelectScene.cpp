@@ -328,6 +328,8 @@ void StageSelectScene::UpdateIsStageSelect()
 	{
 		if (input_->TriggerKey(DIK_SPACE))
 		{
+			//決定表示スプライトからスキップキー表示スプライトへ
+			spCommon_->LoadTexture(SSSTI_MenuDoneTex, "texture/skip.png");
 			//イージングスタンバイ
 			for (int i = 0; i < SSMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 			for (int i = 0; i < XYZ_Num; i++)easeEyeDoneMenu_[i].Standby(false);
@@ -378,6 +380,8 @@ void StageSelectScene::UpdateIsStageSelect()
 		{
 			if (input_->TriggerKey(DIK_ESCAPE))//タイトルへ戻る
 			{
+				//決定表示スプライトからスキップキー表示スプライトへ
+				spCommon_->LoadTexture(SSSTI_MenuDoneTex, "texture/skip.png");
 				for (int i = 0; i < XYZ_Num; i++)easePlayerQuitMove_[i].Standby(false);
 				for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(true);
 				easeCursorPosX_.Standby(true);
@@ -401,7 +405,6 @@ void StageSelectScene::UpdateIsDone()
 
 	//座標セット
 	spriteMenu_->SetPosition({ easeMenuEndPosX_[SSMEN_Menu].num_X,menuPosY_[SSMEN_Menu] });
-	spriteDone_->SetPosition({ easeMenuEndPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[SSMEN_UI].num_X,menuPosY_[SSMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuEndPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
@@ -495,7 +498,6 @@ void StageSelectScene::UpdateIsQuitTitle()
 	spriteTutorial_->SetPosition({ easeMenuPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
 	spriteStage1_->SetPosition({ easeMenuPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
 	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].num_X,menuPosY_[SSMEN_Stage2_Space] });
-	spriteDone_->SetPosition({ easeMenuPosX_[SSMEN_SelectSpace].num_X,menuPosY_[SSMEN_SelectSpace] });
 	spriteMenuUI_->SetPosition({ easeMenuPosX_[SSMEN_UI].num_X,menuPosY_[SSMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuPosX_[SSMEN_Quit].num_X,menuPosY_[SSMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);

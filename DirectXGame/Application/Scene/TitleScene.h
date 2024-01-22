@@ -74,19 +74,18 @@ private://メンバ変数
 	enum TitleSceneTextureIndex
 	{
 		TSTI_TitleTex = 0,
-		TSTI_TitleDoneTex = 1,
-		TSTI_MenuTex = 2,
-		TSTI_MenuTutorialTex = 3,
-		TSTI_MenuStageSerectTex = 4,
-		TSTI_MenuDoneTex = 5,
-		TSTI_BackTitleTex = 6,
-		TSTI_FadeInOutTex = 7,
-		TSTI_LoadingTex = 8,
-		TSTI_StageInfoNowTex = 9,
-		TSTI_CursorTex = 10,
-		TSTI_TitleBackTex = 11,
-		TSTI_StageNameTex = 12,
-		TSTI_MenuUITex = 13,
+		TSTI_MenuTex = 1,
+		TSTI_MenuTutorialTex = 2,
+		TSTI_MenuStageSerectTex = 3,
+		TSTI_MenuDoneTex = 4,
+		TSTI_BackTitleTex = 5,
+		TSTI_FadeInOutTex = 6,
+		TSTI_LoadingTex = 7,
+		TSTI_StageInfoNowTex = 8,
+		TSTI_CursorTex = 9,
+		TSTI_TitleBackTex = 10,
+		TSTI_StageNameTex = 11,
+		TSTI_MenuUITex = 12,
 	};
 
 	
@@ -98,11 +97,10 @@ private://メンバ変数
 
 	//Sprite
 	std::unique_ptr<Sprite> spriteTitle_ = std::make_unique<Sprite>();				//タイトル画面スプライト
-	std::unique_ptr<Sprite> spriteTitleDone_ = std::make_unique<Sprite>();			//タイトル決定表示スプライト
 	std::unique_ptr<Sprite> spriteMenu_ = std::make_unique<Sprite>();				//タイトルメニュー画面スプライト
 	std::unique_ptr<Sprite> spriteMenuTutorial_ = std::make_unique<Sprite>();		//チュートリアル表示スプライト
 	std::unique_ptr<Sprite> spriteMenuStageSelect_ = std::make_unique<Sprite>();	//ステージセレクト表示スプライト
-	std::unique_ptr<Sprite> spriteMenuDone_ = std::make_unique<Sprite>();			//タイトルメニュー決定表示スプライト
+	std::unique_ptr<Sprite> spriteMenuDone_ = std::make_unique<Sprite>();			//タイトルメニュー決定表示兼スキップキー表示スプライト
 	std::unique_ptr<Sprite> spriteBack_ = std::make_unique<Sprite>();				//タイトルメニュー→タイトル移行のスプライト
 	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトスプライト
 	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
@@ -136,28 +134,15 @@ private://メンバ変数
 	bool isStageSelect_ = false;		//ステージセレクトに行くとき
 	bool isFadeIn_ = false;				//フェードイン
 
-	//タイトル→タイトルメニューの列挙体
-	enum TitleStart
-	{
-		TS_Title = 0,		//タイトル
-		TS_Done = 1,		//決定
-		TS_Num = 2		//配列用
-	};
+	
 	//最初の画面のY値
-	const std::array<float, TS_Num> startTitlePosY_ = { 50.0f,600.0f };
+	const float startTitlePosY_ = 50.0f;
 
 	//タイトル→タイトルメニューのイージングのプリセット
-	const Easing presetEaseTitlePosX_[TS_Num] =
-	{
-		{225.0f, -1300.0f, 1.0f},
-		{425.0f, -1300.0f, 1.0f}
-	};
+	const Easing presetEaseTitlePosX_ ={ 225.0f, -1300.0f, 1.0f };
 	//タイトル→タイトルメニューのイージング
-	Easing easeTitlePosX_[TS_Num] =
-	{
-		presetEaseTitlePosX_[TS_Title],
-		presetEaseTitlePosX_[TS_Done]
-	};
+	Easing easeTitlePosX_ = presetEaseTitlePosX_;
+
 
 	//メニュー説明用の列挙体
 	enum TitleMenuEasingNum
@@ -178,7 +163,7 @@ private://メンバ変数
 		{1300.0f, 0.0f, 1.0f},		//メニュー
 		{1300.0f, 100.0f, 1.2f},	//チュートリアルへ
 		{1300.0f, 100.0f, 1.4f},	//ステージセレクトへ
-		{1300.0f, 425.0f, 1.6f},	//スペースで選択
+		{425.0f, 425.0f, 1.6f},	//スペースで選択
 		{1300.0f, 1100.0f, 1.8f},	//操作方法
 		{1300.0f, 900.0f, 2.0f}		//戻る
 	};
