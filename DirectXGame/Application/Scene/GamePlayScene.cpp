@@ -1363,7 +1363,7 @@ void GamePlayScene::SetUpCircleShadow(const DirectX::XMFLOAT3& pos)
 void GamePlayScene::LoadSprite()
 {
 	//どのキでポーズするのかを書いたスプライト
-	spCommon_->LoadTexture(GPSTI_PauseInfoTex, "texture/pauseinfo.png");
+	spCommon_->LoadTexture(GPSTI_PauseInfoTex, "texture/pauseinfo2.png");
 	spritePauseInfo_->Initialize(spCommon_, GPSTI_PauseInfoTex);
 
 	//ポーズ時のスプライト
