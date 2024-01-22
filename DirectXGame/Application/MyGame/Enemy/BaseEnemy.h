@@ -109,9 +109,9 @@ protected:
 	//イージングのプリセット(セットは前提として)
 	const Easing presetEaseDeadDirectionScale_[XYZ_Num] =
 	{
-		{1.0f,0.0f,0.5f},		//X
-		{1.0f,0.0f,0.5f},		//Y
-		{1.0f,0.0f,0.5f},		//Z
+		{1.0f,0.0f,0.4f},		//X
+		{1.0f,0.0f,0.4f},		//Y
+		{1.0f,0.0f,0.4f},		//Z
 	};
 	//スケールは徐々に小さく
 	Easing easeDeadDirectionScale_[XYZ_Num] =
