@@ -138,10 +138,8 @@ private://メンバ変数
 	//最初の画面のY値
 	const float startTitlePosY_ = 50.0f;
 
-	//タイトル→タイトルメニューのイージングのプリセット
-	const Easing presetEaseTitlePosX_ ={ 225.0f, -1300.0f, 1.0f };
 	//タイトル→タイトルメニューのイージング
-	Easing easeTitlePosX_ = presetEaseTitlePosX_;
+	Easing easeTitlePosX_;
 
 
 	//メニュー説明用の列挙体

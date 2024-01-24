@@ -13,6 +13,8 @@
 
 #include <map>
 #include <memory>
+#include <sstream>
+#include <fstream>
 //前方宣言
 //シーンマネージャー
 class SceneManager;
@@ -75,6 +77,9 @@ protected://継承メンバ変数
 	//演出スキップ用カウント
 	bool skip_ = false;
 
+	//イージングのセットコマンド
+	std::stringstream setEasingCommands_;
+
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)
 	SceneManager* sceneManager_ = nullptr;
@@ -98,5 +103,62 @@ protected://継承メンバ関数
 		if (Input::GetInstance()->TriggerKey(DIK_SPACE))skip_ = true;
 		//演出スキップ
 		if (skip_)FadeIn(color);
+	}
+
+	//イージングデータの読み込み
+	void LoadEasingData(const std::string& fileName,Easing& ease)
+	{
+		//ディレクトリパスとファイル名を連結してフルパスを得る
+		const std::string defaultEasingPath = "Resources/csv/Easing/";
+		std::string fullPath = defaultEasingPath + fileName;
+
+		//ワイド文字列に変換した際の文字列バッファサイズを計算
+		int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
+
+		//ワイド文字列に変換
+		std::vector<wchar_t> wfilePath(filePathBufferSize);
+		MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath.data(), filePathBufferSize);
+
+		//ファイルを開く
+		std::ifstream file;
+		file.open(wfilePath.data());
+		assert(file.is_open());
+
+		//ファイルの内容を文字列ストリームにコピー
+		setEasingCommands_ << file.rdbuf();
+
+		//ファイルを閉じる
+		file.close();
+
+		//1行分の文字列を入れる関数
+		std::string line;
+		//コマンド実行ループ
+		while (getline(setEasingCommands_, line))
+		{
+			//1行分の文字列をストリームに変換して解析しやすくする
+			std::istringstream line_stream(line);
+
+			std::string word;
+			//,区切りで行の戦闘文字列を取得
+			getline(line_stream, word, ',');
+
+			// "//"=コメント
+			if (word.find("//") == 0)continue;//コメント行を飛ばす
+			//イージングのセット
+			if (word.find("SET") == 0)
+			{
+				//x座標
+				getline(line_stream, word, ',');
+				float start = (float)std::atof(word.c_str());
+				//y座標
+				getline(line_stream, word, ',');
+				float end = (float)std::atof(word.c_str());
+				//z座標
+				getline(line_stream, word, ',');
+				float time = (float)std::atof(word.c_str());
+				//イージングセット
+				ease.SetEasing(start, end, time);
+			}
+		}
 	}
 };

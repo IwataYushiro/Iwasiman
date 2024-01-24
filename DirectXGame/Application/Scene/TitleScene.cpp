@@ -47,6 +47,9 @@ void TitleScene::Initialize()
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_.get());
 	lightGroup_->SetCircleShadowActive(LightGroup::LN_0, true);//0番シャドウだけを動かす
+	
+	//イージングのロード
+	LoadEasingData("test.csv", easeTitlePosX_);
 
 	//スプライト
 	//タイトル画面スプライト
@@ -133,6 +136,7 @@ void TitleScene::Initialize()
 	pmGoal_->SetParticleModel(particleGoal_.get());
 	pmGoal_->SetCamera(camera_.get());
 
+	
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
 }
