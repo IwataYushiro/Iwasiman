@@ -133,146 +133,26 @@ private://メンバ変数
 	Easing easeMenuPosX_[SSMEN_Num];
 	//メニュー画面通過イージング
 	Easing easeMenuEndPosX_[SSMEN_Num];
-	//カーソルX値のイージングプリセット
-	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
 	//カーソルX値のイージング
-	Easing easeCursorPosX_ = presetEaseCursorPosX_;
-
+	Easing easeCursorPosX_;
 	//選んだステージを真ん中に移動させるイージング
-	const Easing presetEaseStartStagePosX_[SSSMI_Num] =
-	{
-		{100.0f, 350.0f, 1.5f},				//チュートリアルへ
-		{100.0f, 550.0f, 1.5f},				//ステージ1へ
-		{100.0f, 500.0f, 1.5f}				//ステージ2へ
-	};
-	//選んだステージを真ん中に移動させるイージング
-	Easing easeStartStagePosX_[SSSMI_Num] =
-	{
-		presetEaseStartStagePosX_[SSSMI_StageTutorial_Tutorial],		//チュートリアルへ
-		presetEaseStartStagePosX_[SSSMI_Stage1_SkyStage],				//ステージ1へ
-		presetEaseStartStagePosX_[SSSMI_Stage2_SpaceStage]				//ステージ2へ
-	};
-
-	//選んだステージを上に移動させるイージングのプリセット
-	const Easing presetEaseStartStagePosY_[SSSMI_Num] =
-	{
-		{menuPosY_[SSMEN_Tutorial], 0.0f, 1.5f},				//チュートリアルへ
-		{menuPosY_[SSMEN_Stage1_Sky], 0.0f, 1.5f},				//ステージ1へ
-		{menuPosY_[SSMEN_Stage2_Space], 0.0f, 1.5f}				//ステージ2へ
-	};
+	Easing easeStartStagePosX_[SSSMI_Num];
 	//選んだステージを上に移動させるイージング
-	Easing easeStartStagePosY_[SSSMI_Num] =
-	{
-		presetEaseStartStagePosY_[SSSMI_StageTutorial_Tutorial],		//チュートリアルへ
-		presetEaseStartStagePosY_[SSSMI_Stage1_SkyStage],				//ステージ1へ
-		presetEaseStartStagePosY_[SSSMI_Stage2_SpaceStage]				//ステージ2へ
-	};
-
-	//遷移時すぐに起動するステージセレクト視点カメラワークイージングのプリセット
-	const Easing presetEaseEyeStageSelect_[XYZ_Num] =
-	{
-		{-22.0f, 144.0f, 1.0f},					//X
-		{-1.0f, 45.0f, 1.0f},					//Y
-		{-60.0f, -98.0f, 1.0f}					//Z
-	};
+	Easing easeStartStagePosY_[SSSMI_Num];
 	//遷移時すぐに起動するステージセレクト視点カメラワークイージング
-	Easing easeEyeStageSelect_[XYZ_Num] =
-	{
-		presetEaseEyeStageSelect_[XYZ_X],				//X
-		presetEaseEyeStageSelect_[XYZ_Y],				//Y
-		presetEaseEyeStageSelect_[XYZ_Z]				//Z
-	};
-
-	//遷移時すぐに起動するステージセレクト注視点カメラワークイージングのプリセット
-	const Easing presetEaseTargetStageSelect_[XYZ_Num] =
-	{
-		{50.0f, 132.0f, 1.0f},					//X
-		{-8.0f, 39.0f, 1.0f},					//Y
-		{-57.0f, -52.0f, 1.0f}					//Z
-	};
+	Easing easeEyeStageSelect_[XYZ_Num];
 	//遷移時すぐに起動するステージセレクト注視点カメラワークイージング
-	Easing easeTargetStageSelect_[XYZ_Num] =
-	{
-		presetEaseTargetStageSelect_[XYZ_X],				//X
-		presetEaseTargetStageSelect_[XYZ_Y],				//Y
-		presetEaseTargetStageSelect_[XYZ_Z]					//Z
-	};
-
-	//ステージ決定時の視点カメラワークイージングのプリセット
-	const Easing presetEaseEyeDoneMenu_[XYZ_Num] =
-	{
-		{144.0f, 127.0f, 1.0f},					//X
-		{45.0f, 52.0f, 1.0f},					//Y
-		{-98.0f, -60.0f, 1.0f}					//Z
-	};
+	Easing easeTargetStageSelect_[XYZ_Num];
 	//ステージ決定時の視点カメラワークイージング
-	Easing easeEyeDoneMenu_[XYZ_Num] =
-	{
-		presetEaseEyeDoneMenu_[XYZ_X],					//X
-		presetEaseEyeDoneMenu_[XYZ_Y],					//Y
-		presetEaseEyeDoneMenu_[XYZ_Z]					//Z
-	};
-
-	//ステージ決定時の注視点カメラワークイージングのプリセット
-	const Easing presetEaseTargetDoneMenu_[XYZ_Num] =
-	{
-		{132.0f, 192.0f, 1.0f},					//X
-		{39.0f, 33.0f, 1.0f},					//Y
-		{-52.0f, -60.0f, 1.0f}					//Z
-	};
+	Easing easeEyeDoneMenu_[XYZ_Num];
 	//ステージ決定時の注視点カメラワークイージング
-	Easing easeTargetDoneMenu_[XYZ_Num] =
-	{
-		presetEaseTargetDoneMenu_[XYZ_X],					//X
-		presetEaseTargetDoneMenu_[XYZ_Y],					//Y
-		presetEaseTargetDoneMenu_[XYZ_Z]					//Z
-	};
-
-	//ステージ決定時の視点カメラワークイージングが終わった後の突入視点カメラワークイージングのプリセット
-	const Easing presetEaseEyeGameStart_[XYZ_Num] =
-	{
-		{127.0f, 227.0f, 2.0f},					//X
-		{52.0f, 55.0f, 2.0f},					//Y
-		{-60.0f, -60.0f, 2.0f}					//Z
-	};
+	Easing easeTargetDoneMenu_[XYZ_Num];
 	//ステージ決定時の視点カメラワークイージングが終わった後の突入視点カメラワークイージング
-	Easing easeEyeGameStart_[XYZ_Num] =
-	{
-		presetEaseEyeGameStart_[XYZ_X],					//X
-		presetEaseEyeGameStart_[XYZ_Y],					//Y
-		presetEaseEyeGameStart_[XYZ_Z]					//Z
-	};
-
-	//ステージ決定時の視点カメラワークイージングが終わった後の突入注視点カメラワークイージングのプリセット
-	const Easing presetEaseTargetGameStart_[XYZ_Num] =
-	{
-		{192.0f, 292.0f, 2.0f},					//X
-		{33.0f, 33.0f, 2.0f},					//Y
-		{-60.0f, -60.0f, 2.0f}					//Z
-	};
+	Easing easeEyeGameStart_[XYZ_Num];
 	//ステージ決定時の視点カメラワークイージングが終わった後の突入注視点カメラワークイージング
-	Easing easeTargetGameStart_[XYZ_Num] =
-	{
-		presetEaseTargetGameStart_[XYZ_X],					//X
-		presetEaseTargetGameStart_[XYZ_Y],					//Y
-		presetEaseTargetGameStart_[XYZ_Z]					//Z
-	};
-
-	//ステージ決定時の視点カメラワークイージングが終わった後の自機移動イージングのプリセット
-	const Easing presetEasePlayerStartMove_[XYZ_Num] =
-	{
-		{150.0f, 250.0f, 2.0f},					//X
-		{40.0f, 40.0f, 2.0f},					//Y
-		{-60.0f, -60.0f, 2.0f}					//Z
-	};
+	Easing easeTargetGameStart_[XYZ_Num];
 	//ステージ決定時の視点カメラワークイージングが終わった後の自機移動イージング
-	Easing easePlayerStartMove_[XYZ_Num] =
-	{
-		presetEasePlayerStartMove_[XYZ_X],				//X
-		presetEasePlayerStartMove_[XYZ_Y],				//Y
-		presetEasePlayerStartMove_[XYZ_Z]				//Z
-	};
-
+	Easing easePlayerStartMove_[XYZ_Num];
 	//タイトルに戻るときの自機移動イージングのプリセット
 	const Easing presetEasePlayerQuitMove_[XYZ_Num] =
 	{
@@ -287,11 +167,8 @@ private://メンバ変数
 		presetEasePlayerQuitMove_[XYZ_Y],					//Y
 		presetEasePlayerQuitMove_[XYZ_Z]					//Z
 	};
-
-	//フェードインアウトのプリセット
-	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = presetEaseFadeInOut_;
+	Easing easeFadeInOut_;
 
 	//選択しているメニュー表示
 	int menuCount_ = SSSMI_StageTutorial_Tutorial;
