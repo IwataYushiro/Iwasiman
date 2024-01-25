@@ -155,132 +155,30 @@ private://メンバ変数
 	};
 	//メニューのY値
 	const std::array<float, TMEN_Num> menuPosY_ = { 50.0f,200.0f,350.0f,600.0f,300.0f,50.0f };
-	//タイトルメニューの出現イージングのプリセット
-	const Easing presetEaseMenuPosX_[TMEN_Num] =
-	{
-		{1300.0f, 0.0f, 1.0f},		//メニュー
-		{1300.0f, 100.0f, 1.2f},	//チュートリアルへ
-		{1300.0f, 100.0f, 1.4f},	//ステージセレクトへ
-		{425.0f, 425.0f, 1.6f},	//スペースで選択
-		{1300.0f, 1100.0f, 1.8f},	//操作方法
-		{1300.0f, 900.0f, 2.0f}		//戻る
-	};
+	
 	//タイトルメニューの出現イージング
 	Easing easeMenuPosX_[TMEN_Num];
-
-	//タイトルメニューの出現イージングのプリセット
-	const Easing presetEaseMenuEndPosX_[TMEN_Num] =
-	{
-		{ 0.0f, -1300.0f,1.0f},		//メニュー
-		{ 100.0f, -1300.0f,1.2f},	//チュートリアルへ
-		{ 100.0f, -1300.0f,1.4f},	//ステージセレクトへ
-		{ 425.0f, -1300.0f,1.6f},	//スペースで選択
-		{ 1100.0f,-1300.0f, 1.8f},	//操作方法
-		{ 900.0f,-1300.0f, 2.0f}	//戻る
-	};
-	//タイトルメニューの出現イージング
-	Easing easeMenuEndPosX_[TMEN_Num] =
-	{
-		presetEaseMenuEndPosX_[TMEN_Menu],			//メニュー
-		presetEaseMenuEndPosX_[TMEN_Tutorial],		//チュートリアルへ
-		presetEaseMenuEndPosX_[TMEN_StageSelect],	//ステージセレクトへ
-		presetEaseMenuEndPosX_[TMEN_SelectSpace],	//スペースで選択
-		presetEaseMenuEndPosX_[TMEN_UI],			//操作方法
-		presetEaseMenuEndPosX_[TMEN_Quit]			//戻る
-	};
-	//カーソルX値のイージングプリセット
-	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
+	//タイトルメニューの通過イージング
+	Easing easeMenuEndPosX_[TMEN_Num];
 	//カーソルX値のイージング
-	Easing easeCursorPosX_ = presetEaseCursorPosX_;
-	//選んだステージを真ん中に移動させるイージングのプリセット
-	const Easing presetEaseStartStagePosX_ = { 0.0f, 300.0f, 1.5f };//チュートリアルへ
+	Easing easeCursorPosX_;
 	//選んだステージを真ん中に移動させるイージング
-	Easing easeStartStagePosX_ = presetEaseStartStagePosX_;//チュートリアルへ
-
-
-	//選んだステージを上に移動させるイージングのプリセット
-	const Easing presetEaseStartStagePosY_ = { menuPosY_[TMEN_Tutorial], 0.0f, 1.5f };//チュートリアルへ
+	Easing easeStartStagePosX_;//チュートリアルへ
 	//選んだステージを上に移動させるイージング
-	Easing easeStartStagePosY_ = presetEaseStartStagePosY_;//チュートリアルへ
+	Easing easeStartStagePosY_;//チュートリアルへ
 
-	//タイトル→タイトルメニューの視点カメラワークイージングのプリセット
-	const Easing presetEaseEyeMenu_[XYZ_Num] =
-	{
-		{0.0f, 21.0f, 1.8f},			//X
-		{1.0f, -4.0f, 1.8f},			//Y
-		{-110.0f, -60.0f, 1.8f}			//Z
-	};
 	//タイトル→タイトルメニューの視点カメラワークイージング
-	Easing easeEyeMenu_[XYZ_Num] =
-	{
-		presetEaseEyeMenu_[XYZ_X],		//X
-		presetEaseEyeMenu_[XYZ_Y],		//Y
-		presetEaseEyeMenu_[XYZ_Z]		//Z
-	};
-
-	//タイトル→タイトルメニューの注視点カメラワークイージングのプリセット
-	const Easing presetEaseTargetMenu_[XYZ_Num] =
-	{
-		{0.0f, -100.0f, 1.8f},			//X
-		{0.0f, -10.0f, 1.8f},			//Y
-		{-10.0f, -62.0f, 1.8f}			//Z
-	};
+	Easing easeEyeMenu_[XYZ_Num];
 	//タイトル→タイトルメニューの注視点カメラワークイージング
-	Easing easeTargetMenu_[XYZ_Num] =
-	{
-		presetEaseTargetMenu_[XYZ_X],			//X
-		presetEaseTargetMenu_[XYZ_Y],			//Y
-		presetEaseTargetMenu_[XYZ_Z]			//Z
-	};
-
-	//タイトルメニュー→ゲーム開始の視点カメラワークイージングのプリセット
-	const Easing presetEaseEyeGameStart_[XYZ_Num] =
-	{
-		{21.0f, -22.0f, 1.0f},			//X
-		{-4.0f, -1.0f, 1.0f},			//Y
-		{-60.0f, -60.0f, 1.0f}			//Z
-	};
+	Easing easeTargetMenu_[XYZ_Num];
 	//タイトルメニュー→ゲーム開始の視点カメラワークイージング
-	Easing easeEyeGameStart_[XYZ_Num] =
-	{
-		presetEaseEyeGameStart_[XYZ_X],			//X
-		presetEaseEyeGameStart_[XYZ_Y],			//Y
-		presetEaseEyeGameStart_[XYZ_Z]			//Z
-	};
-
-	//タイトルメニュー→ゲーム開始の注視点カメラワークイージングのプリセット
-	const Easing presetEaseTargetGameStart_[XYZ_Num] =
-	{
-		{-100.0f, 50.0f, 1.0f},			//X
-		{-10.0f, -8.0f, 1.0f},			//Y
-		{-62.0f, -57.0f, 1.0f}			//Z
-	};
+	Easing easeEyeGameStart_[XYZ_Num];
 	//タイトルメニュー→ゲーム開始の注視点カメラワークイージング
-	Easing easeTargetGameStart_[XYZ_Num] =
-	{
-		presetEaseTargetGameStart_[XYZ_X],			//X
-		presetEaseTargetGameStart_[XYZ_Y],			//Y
-		presetEaseTargetGameStart_[XYZ_Z]			//Z
-	};
-
-	//タイトルメニュー→ステージセレクトの自機移動イージングのプリセット
-	const Easing presetEasePlayerMove_[XYZ_Num] =
-	{
-		{0.0f, 150.0f, 2.0f},			//X
-		{-8.0f, 40.0f, 2.0f},			//Y
-		{-60.0f, -60.0f, 2.0f}			//Z
-	};
+	Easing easeTargetGameStart_[XYZ_Num];
 	//タイトルメニュー→ステージセレクトの自機移動イージング
-	Easing easePlayerMove_[XYZ_Num] =
-	{
-		presetEasePlayerMove_[XYZ_X],			//X
-		presetEasePlayerMove_[XYZ_Y],			//Y
-		presetEasePlayerMove_[XYZ_Z]			//Z
-	};
-	//フェードインアウトのプリセット
-	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
+	Easing easePlayerMove_[XYZ_Num];
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = presetEaseFadeInOut_;
+	Easing easeFadeInOut_;
 
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor_;//xyz=rgb
