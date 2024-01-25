@@ -161,39 +161,11 @@ private:
 	//チュートリアル説明のY軸の値
 	const std::array<float, TIEN_Num> tutorialInfoPosY_ = { 70.0f,120.0f,170.0f,220.0f,270.0f,50.0f };
 
-	//チュートリアル表示のイージングのプリセット
-	const Easing presetEaseInfoTutorial_[TIEN_Num] =
-	{
-		{1300.0f, 30.0f, 1.0f},		//移動方法
-		{1300.0f, 30.0f, 1.2f},		//ダッシュ方法
-		{1300.0f, 30.0f, 1.4f},		//ジャンプ方法
-		{1300.0f, 30.0f, 1.6f},		//手前、奥側移動方法
-		{1300.0f, 30.0f, 1.8f},		//攻撃方法
-		{1300.0f, 530.0f, 2.0f}		//ゲーム説明文字
-	};
 	//チュートリアル表示のイージング
-	Easing easeInfoTutorial_[TIEN_Num] =
-	{
-		presetEaseInfoTutorial_[TIEN_Move],		//移動方法
-		presetEaseInfoTutorial_[TIEN_Dash],		//ダッシュ方法
-		presetEaseInfoTutorial_[TIEN_Jump],		//ジャンプ方法
-		presetEaseInfoTutorial_[TIEN_MoveBack],	//手前、奥側移動方法
-		presetEaseInfoTutorial_[TIEN_Attack],	//攻撃方法
-		presetEaseInfoTutorial_[TIEN_Info]		//ゲーム説明文字
-	};
+	Easing easeInfoTutorial_[TIEN_Num];
 
-	//チュートリアルリストのスケールイージングのプリセット
-	const Easing presetEaseTutorialListScale_[XY_Num] =
-	{
-		{0.0f,0.0f,2.0f},		//X
-		{0.0f,0.0f,2.0f}		//Y
-	};
 	//チュートリアルリストのスケールイージング
-	Easing easeTutorialListScale_[XY_Num] =
-	{
-		presetEaseTutorialListScale_[XY_X],		//X
-		presetEaseTutorialListScale_[XY_Y] 		//Y
-	};
+	Easing easeTutorialListScale_[XY_Num];
 
 	//ポーズメニュー用の列挙体
 	enum PauseMenuEasingNum
@@ -211,64 +183,16 @@ private:
 	//ポーズメニューのY値
 	const std::array<float, PMEN_Num> pausePosY_ = { 0.0f,120.0f,240.0f,360.0f,480.0f,600.0f,230.0f,400.0f };
 
-	//ポーズメニュー画面出現イージングのプリセット
-	const Easing presetEasePauseMenuPosX_[PMEN_Num] =
-	{
-		{1300.0f, 100.0f, 0.5f},			//メニュー
-		{1300.0f, 100.0f, 0.6f},			//再開
-		{1300.0f, 100.0f, 0.7f},			//ヒント確認
-		{1300.0f, 100.0f, 0.8f},			//ステージセレクトへ
-		{1300.0f, 100.0f, 0.9f},			//タイトルへ
-		{1300.0f, 425.0f, 1.0f},			//スペースで選択
-		{1300.0f, 550.0f, 0.75f},			//ヒントの内容
-		{1300.0f, 1100.0f, 1.1f},			//操作方法
-	};
 	//ポーズメニュー画面出現イージング
-	Easing easePauseMenuPosX_[PMEN_Num] =
-	{
-		presetEasePauseMenuPosX_[PMEN_Menu],							//メニュー
-		presetEasePauseMenuPosX_[PMEN_Resume],							//再開
-		presetEasePauseMenuPosX_[PMEN_Hint],							//ヒント確認
-		presetEasePauseMenuPosX_[PMEN_StageSelect],						//ステージセレクトへ
-		presetEasePauseMenuPosX_[PMEN_Title],							//タイトルへ
-		presetEasePauseMenuPosX_[PMEN_SelectSpace],						//スペースで選択
-		presetEasePauseMenuPosX_[PMEN_HintInfo],						//ヒントの内容
-		presetEasePauseMenuPosX_[PMEN_UI]								//操作方法
-	};
+	Easing easePauseMenuPosX_[PMEN_Num];
 
-	//カーソルX値のイージングプリセット
-	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
 	//カーソルX値のイージング
-	Easing easeCursorPosX_ = presetEaseCursorPosX_;
+	Easing easeCursorPosX_;
 
-	//入場用の視点カメラワークイージングのプリセット
-	const Easing presetEaseEyeGameStart_[XYZ_Num] =
-	{
-		{-110.0f, -20.0f, 4.0f},				//X
-		{101.0f, 1.0f, 4.0f},					//Y
-		{-210.0f, -100.0f, 3.5f}				//Z
-	};
 	//入場用の視点カメラワークイージング
-	Easing easeEyeGameStart_[XYZ_Num] =
-	{
-		presetEaseEyeGameStart_[XYZ_X],				//X
-		presetEaseEyeGameStart_[XYZ_Y],				//Y
-		presetEaseEyeGameStart_[XYZ_Z]				//Z
-	};
-	//入場用の注視点カメラワークイージングのプリセット
-	const Easing presetEaseTargetGameStart_[XYZ_Num]
-	{
-		{-110.0f, -20.0f, 4.0f},				//X
-		{100.0f, 0.0f, 4.0f},					//Y
-		{-110.0f, 0.0f, 3.5f}					//Z
-	};
+	Easing easeEyeGameStart_[XYZ_Num];
 	//入場用の注視点カメラワークイージング
-	Easing easeTargetGameStart_[XYZ_Num]
-	{
-		presetEaseTargetGameStart_[XYZ_X],				//X
-		presetEaseTargetGameStart_[XYZ_Y],				//Y
-		presetEaseTargetGameStart_[XYZ_Z]				//Z
-	};
+	Easing easeTargetGameStart_[XYZ_Num];
 	//入場用のプレイヤーポジションイージング
 	Easing easePlayerPositionGameStart_[XYZ_Num];
 
@@ -280,40 +204,17 @@ private:
 		XXY_Y = 2,	//Y
 		XXY_Num = 3	//配列用
 	};
-	//入場用のレディー表記のイージングのプリセット
-	const Easing presetEaseReadyPosition_[XXY_Num]
-	{
-		{1300.0f, 375.0f, 1.5f},				//X(パート1)
-		{375.0f,-600.0f,1.5f},					//X(パート2)
-		{300.0f, 300.0f, 3.0f}					//Y
-	};
+	
 	//入場用のレディー表記のイージング
-	Easing easeReadyPosition_[XXY_Num]
-	{
-		presetEaseReadyPosition_[XXY_X1],				//X(パート1)
-		presetEaseReadyPosition_[XXY_X2],				//X(パート2)
-		presetEaseReadyPosition_[XXY_Y]					//Y
-	};
+	Easing easeReadyPosition_[XXY_Num];
 
 	//レディーイージングその2が始まるフラグ
 	bool isStartReadyPart2_ = false;
 	//レディーイージングが終わったかのフラグ
 	bool isEndReady_ = false;
 
-	//入場用のゴー表記のイージングのプリセット
-	const Easing presetEaseGoSizeAndAlpha_[XYW_Num]
-	{
-		{0.0f, 2000.0f, 1.0f},						//Xサイズ
-		{0.0f, 1000.0f, 1.0f},						//Yサイズ
-		{1.0f,0.0f,0.8f}							//アルファ値
-	};
 	//入場用のゴー表記のイージング
-	Easing easeGoSizeAndAlpha_[XYW_Num]
-	{
-		presetEaseGoSizeAndAlpha_[XYW_X],					//Xサイズ
-		presetEaseGoSizeAndAlpha_[XYW_Y],					//Yサイズ
-		presetEaseGoSizeAndAlpha_[XYW_W]					//アルファ値
-	};
+	Easing easeGoSizeAndAlpha_[XYW_Num];
 	//ゴー表記の座標値
 	const std::array<float, XY_Num> goPosition_ = { 640.0f,360.0f };
 
@@ -322,15 +223,11 @@ private:
 	//DirectX::XMFLOAT3 startEaseCameraWorkTarget_;		//注視点
 	DirectX::XMFLOAT3 startEasePlayerPosition_;			//プレイヤーポジション
 
-	//フェードインアウトのプリセット(false フェードイン、true フェードアウト)
-	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = presetEaseFadeInOut_;
+	Easing easeFadeInOut_;
 
-	//ポーズ用のフェードインアウトイージングのプリセット
-	const Easing presetEaseFadeInOutPause_ = { 0.8f, 0.0f, 1.0f };
 	//ポーズ用のフェードインアウトイージング
-	Easing easeFadeInOutPause_ = presetEaseFadeInOutPause_;
+	Easing easeFadeInOutPause_;
 
 	//プレイ中か
 	bool isGamePlay_ = false;

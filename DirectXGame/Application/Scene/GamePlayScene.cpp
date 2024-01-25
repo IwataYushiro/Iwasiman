@@ -41,6 +41,18 @@ void GamePlayScene::Initialize()
 
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
+	//イージングのロード
+	for (int i = 0; i < TIEN_Num; i++)LoadEasingData("gameplay/infotutorial.csv", easeInfoTutorial_[i], i);
+	for (int i = 0; i < XY_Num; i++)LoadEasingData("gameplay/tutoriallistscale.csv", easeTutorialListScale_[i], i);
+	for (int i = 0; i < PMEN_Num; i++)LoadEasingData("gameplay/pausemenuposx.csv", easePauseMenuPosX_[i], i);
+	LoadEasingData("gameplay/cursorposx.csv", easeCursorPosX_);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameplay/eyegamestart.csv", easeEyeGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameplay/targetgamestart.csv", easeTargetGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameplay/playerpositiongamestart.csv", easePlayerPositionGameStart_[i], i);
+	for (int i = 0; i < XXY_Num; i++)LoadEasingData("gameplay/readyposition.csv", easeReadyPosition_[i], i);
+	for (int i = 0; i < XYW_Num; i++)LoadEasingData("gameplay/gosizeandalpha.csv", easeGoSizeAndAlpha_[i], i);
+	LoadEasingData("gameplay/fadeinout.csv", easeFadeInOut_);
+	LoadEasingData("gameplay/fadeinoutpause.csv", easeFadeInOutPause_);
 
 	//カメラ生成
 	camera_ = std::make_unique<Camera>();
@@ -1449,8 +1461,8 @@ void GamePlayScene::LoadSprite()
 	const XMFLOAT2 howToPlayListPosition = { 30.0f,70.0f };
 	spriteHowToPlayList_->SetPosition(howToPlayListPosition);
 	//イージングを初期化
-	easeTutorialListScale_[XY_X].SetEasing(0.0f, spriteHowToPlayList_->GetSize().x, presetEaseTutorialListScale_[XY_X].maxtime);
-	easeTutorialListScale_[XY_Y].SetEasing(0.0f, spriteHowToPlayList_->GetSize().y, presetEaseTutorialListScale_[XY_Y].maxtime);
+	easeTutorialListScale_[XY_X].SetEasing(0.0f, spriteHowToPlayList_->GetSize().x, easeTutorialListScale_[XY_X].maxtime);
+	easeTutorialListScale_[XY_Y].SetEasing(0.0f, spriteHowToPlayList_->GetSize().y, easeTutorialListScale_[XY_Y].maxtime);
 	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
 	
 	//ヒントの内容はステージごとに違う
