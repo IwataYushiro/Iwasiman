@@ -129,50 +129,10 @@ private://メンバ変数
 	const std::array<float, SSMEN_Num> menuPosY_ = { 0.0f,150.0f,300.0f,450.0f,600.0f,300.0f,50.0f };
 
 	//イージング類
-	//メニュー画面出現イージングのプリセット
-	const Easing presetEaseMenuPosX_[SSMEN_Num] =
-	{
-		{1300.0f, 0.0f, 1.0f},					//メニュー
-		{1300.0f, 100.0f, 1.2f},				//チュートリアル
-		{1300.0f, 100.0f, 1.4f},				//ステージ1
-		{1300.0f, 100.0f, 1.6f},				//ステージ2
-		{1300.0f, 425.0f, 1.8f},				//スペースで選択
-		{1300.0f, 1100.0f, 2.0f},				//操作方法
-		{1300.0f, 900.0f, 2.2f}					//戻る
-	};
 	//メニュー画面出現イージング
-	Easing easeMenuPosX_[SSMEN_Num] =
-	{
-		presetEaseMenuPosX_[SSMEN_Menu],					//メニュー
-		presetEaseMenuPosX_[SSMEN_Tutorial],				//チュートリアル
-		presetEaseMenuPosX_[SSMEN_Stage1_Sky],				//ステージ1
-		presetEaseMenuPosX_[SSMEN_Stage2_Space],			//ステージ2
-		presetEaseMenuPosX_[SSMEN_SelectSpace],				//スペースで選択
-		presetEaseMenuPosX_[SSMEN_UI],						//操作方法
-		presetEaseMenuPosX_[SSMEN_Quit]						//戻る
-	};
-	//メニュー画面出現イージングのプリセット
-	const Easing presetEaseMenuEndPosX_[SSMEN_Num] =
-	{
-		{ 0.0f, -1300.0f,1.0f},					//メニュー
-		{ 100.0f,-1300.0f, 1.1f},				//チュートリアル
-		{ 100.0f,-1300.0f, 1.2f},				//ステージ1
-		{ 100.0f,-1300.0f, 1.3f},				//ステージ2
-		{ 425.0f,-1300.0f, 1.4f},				//スペースで選択
-		{ 1100.0f,-1300.0f, 1.5f},				//操作方法
-		{ 900.0f,-1300.0f, 1.6f}				//戻る
-	};
-	//メニュー画面出現イージング
-	Easing easeMenuEndPosX_[SSMEN_Num] =
-	{
-		presetEaseMenuEndPosX_[SSMEN_Menu],					//メニュー
-		presetEaseMenuEndPosX_[SSMEN_Tutorial],				//チュートリアル
-		presetEaseMenuEndPosX_[SSMEN_Stage1_Sky],			//ステージ1
-		presetEaseMenuEndPosX_[SSMEN_Stage2_Space],			//ステージ2
-		presetEaseMenuEndPosX_[SSMEN_SelectSpace],			//スペースで選択
-		presetEaseMenuEndPosX_[SSMEN_UI],					//操作方法
-		presetEaseMenuEndPosX_[SSMEN_Quit]					//戻る
-	};
+	Easing easeMenuPosX_[SSMEN_Num];
+	//メニュー画面通過イージング
+	Easing easeMenuEndPosX_[SSMEN_Num];
 	//カーソルX値のイージングプリセット
 	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
 	//カーソルX値のイージング

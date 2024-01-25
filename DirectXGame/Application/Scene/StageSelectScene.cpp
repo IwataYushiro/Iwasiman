@@ -33,6 +33,10 @@ void StageSelectScene::Initialize()
 	sceneManager_ = SceneManager::GetInstance();	//シーンマネージャー
 	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
 
+	//イージングのロード
+	for (int i = 0; i < SSMEN_Num; i++)LoadEasingData("stageselect/menuposx.csv", easeMenuPosX_[i], i);
+	for (int i = 0; i < SSMEN_Num; i++)LoadEasingData("stageselect/menuendposx.csv", easeMenuEndPosX_[i], i);
+
 	//カメラ初期化
 	camera_ = std::make_unique<Camera>();
 	//オーディオ
