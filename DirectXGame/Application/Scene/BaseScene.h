@@ -83,6 +83,22 @@ protected://継承メンバ変数
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)
 	SceneManager* sceneManager_ = nullptr;
+	//イージングの配列用
+	enum EasingSetNumM
+	{
+		//0～9の10個まで対応
+		ESN_0,
+		ESN_1,
+		ESN_2,
+		ESN_3,
+		ESN_4,
+		ESN_5,
+		ESN_6,
+		ESN_7,
+		ESN_8,
+		ESN_9,
+		ESN_MAX,
+	};
 
 public://アクセッサ置き場
 	virtual void SetSceneManager(SceneManager* sceneManager) { this->sceneManager_ = sceneManager; }
@@ -106,8 +122,12 @@ protected://継承メンバ関数
 	}
 
 	//イージングデータの読み込み
-	void LoadEasingData(const std::string& fileName,Easing& ease)
+	void LoadEasingData(const std::string& fileName, Easing& ease, const uint32_t easeArrayNum = 0)
 	{
+		//ストリームの初期化
+		setEasingCommands_.str("");//バッファのクリア
+		setEasingCommands_.clear(std::stringstream::goodbit);//状態クリア
+
 		//ディレクトリパスとファイル名を連結してフルパスを得る
 		const std::string defaultEasingPath = "Resources/csv/Easing/";
 		std::string fullPath = defaultEasingPath + fileName;
@@ -144,21 +164,35 @@ protected://継承メンバ関数
 
 			// "//"=コメント
 			if (word.find("//") == 0)continue;//コメント行を飛ばす
-			//イージングのセット
-			if (word.find("SET") == 0)
-			{
-				//x座標
-				getline(line_stream, word, ',');
-				float start = (float)std::atof(word.c_str());
-				//y座標
-				getline(line_stream, word, ',');
-				float end = (float)std::atof(word.c_str());
-				//z座標
-				getline(line_stream, word, ',');
-				float time = (float)std::atof(word.c_str());
-				//イージングセット
-				ease.SetEasing(start, end, time);
-			}
+			//最大10種類のイージングに対応
+			SetEasingCommand("SET0", ESN_0, easeArrayNum, ease, line_stream, word);
+			SetEasingCommand("SET1", ESN_1, easeArrayNum, ease, line_stream, word);
+			SetEasingCommand("SET2", ESN_2, easeArrayNum, ease, line_stream, word);
+			SetEasingCommand("SET3", ESN_3, easeArrayNum, ease, line_stream, word);
+			SetEasingCommand("SET4", ESN_4, easeArrayNum, ease, line_stream, word);
+			SetEasingCommand("SET5", ESN_5, easeArrayNum, ease, line_stream, word);
+			SetEasingCommand("SET6", ESN_6, easeArrayNum, ease, line_stream, word);
+			SetEasingCommand("SET7", ESN_7, easeArrayNum, ease, line_stream, word);
+			SetEasingCommand("SET8", ESN_8, easeArrayNum, ease, line_stream, word);
+			SetEasingCommand("SET9", ESN_9, easeArrayNum, ease, line_stream, word);
+		}						 
+	}
+	void SetEasingCommand(const char* findWord, const uint32_t num, const uint32_t easeArrayNum, Easing& ease, std::istream& stream, std::string& word)
+	{
+		//イージングのセット
+		if (word.find(findWord) == 0 && num == easeArrayNum)
+		{
+			//x座標
+			getline(stream, word, ',');
+			float start = (float)std::atof(word.c_str());
+			//y座標
+			getline(stream, word, ',');
+			float end = (float)std::atof(word.c_str());
+			//z座標
+			getline(stream, word, ',');
+			float time = (float)std::atof(word.c_str());
+			//イージングセット
+			ease.SetEasing(start, end, time);
 		}
 	}
 };

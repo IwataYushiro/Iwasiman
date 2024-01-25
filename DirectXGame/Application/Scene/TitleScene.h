@@ -166,15 +166,7 @@ private://メンバ変数
 		{1300.0f, 900.0f, 2.0f}		//戻る
 	};
 	//タイトルメニューの出現イージング
-	Easing easeMenuPosX_[TMEN_Num] =
-	{
-		presetEaseMenuPosX_[TMEN_Menu],			//メニュー
-		presetEaseMenuPosX_[TMEN_Tutorial],		//チュートリアルへ
-		presetEaseMenuPosX_[TMEN_StageSelect],	//ステージセレクトへ
-		presetEaseMenuPosX_[TMEN_SelectSpace],	//スペースで選択
-		presetEaseMenuPosX_[TMEN_UI],			//操作方法
-		presetEaseMenuPosX_[TMEN_Quit]			//戻る
-	};
+	Easing easeMenuPosX_[TMEN_Num];
 
 	//タイトルメニューの出現イージングのプリセット
 	const Easing presetEaseMenuEndPosX_[TMEN_Num] =

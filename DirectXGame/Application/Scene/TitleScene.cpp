@@ -50,6 +50,7 @@ void TitleScene::Initialize()
 	
 	//イージングのロード
 	LoadEasingData("test.csv", easeTitlePosX_);
+	for (int i = 0; i < TMEN_Num; i++)LoadEasingData("test2.csv", easeMenuPosX_[i], i);
 
 	//スプライト
 	//タイトル画面スプライト
