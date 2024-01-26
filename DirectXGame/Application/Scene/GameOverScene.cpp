@@ -29,6 +29,23 @@ void GameOverScene::Initialize()
 	sceneManager_ = SceneManager::GetInstance();	//シーンマネージャー
 	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
 
+	//イージングのロード
+	for (int i = 0; i < GOMEN_Num; i++)LoadEasingData("gameover/menuposx.csv", easeMenuPosX_[i], i);
+	for (int i = 0; i < GOMEN_Num; i++)LoadEasingData("gameover/menuendposx.csv", easeMenuEndPosX_[i], i);
+	LoadEasingData("gameover/cursorposx.csv", easeCursorPosX_);
+	LoadEasingData("gameover/continueposx.csv", easeContinuePosX_);
+	LoadEasingData("gameover/continueposy.csv", easeContinuePosY_);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/eyecontinue.csv", easeEyeContinue_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/targetcontinue.csv", easeTargetContinue_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playerrotatecontinue.csv", easePlayerRotateContinue_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playermovecontinue.csv", easePlayerMoveContinue_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/eyequitstageselect.csv", easeEyeQuitStageSelect_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/targetquitstageselect.csv", easeTargetQuitStageSelect_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playerrotatequitstageselect.csv", easePlayerRotateQuitStageSelect_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playermovequitstageselect.csv", easePlayerMoveQuitStageSelect_[i], i);
+	LoadEasingData("gameover/fadeinout.csv", easeFadeInOut_);
+
+
 	//カメラ初期化
 	camera_ = std::make_unique<Camera>();
 	//オーディオ
@@ -388,7 +405,7 @@ void GameOverScene::UpdateIsContinue()
 				easePlayerRotateContinue_[XYZ_Z].num_X });
 
 			//自機の回転が終わったら
-			if (player->GetRotation().x == easePlayerRotateContinue_[0].end)
+			if (player->GetRotation().x == easePlayerRotateContinue_[XYZ_X].end)
 			{
 				//自機の座標イージングと自機のダッシュモデルをスタンバイ
 				player->SetModel(modelPlayerContinue_.get());
@@ -403,7 +420,7 @@ void GameOverScene::UpdateIsContinue()
 				easePlayerMoveContinue_[XYZ_Z].num_X });
 		}
 
-		if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)FadeIn(white_);//白くする
+		if (spriteTitle_->GetPosition().x == easeMenuEndPosX_[GOMEN_Title].end)FadeIn(white_);//白くする
 		//スペースを押すとスキップ
 		else SkipDirectionOnSpace(white_);
 
@@ -483,7 +500,7 @@ void GameOverScene::UpdateIsQuitStageSelect()
 
 	}
 	//メニューのイージングが終わったら遷移演出
-	if (spriteDone_->GetPosition().x == easeMenuEndPosX_[GOMEN_SelectSpace].end)FadeIn(black_);//黒くする
+	if (spriteTitle_->GetPosition().x == easeMenuEndPosX_[GOMEN_Title].end)FadeIn(black_);//黒くする
 	//スペースを押すとスキップ
 	else SkipDirectionOnSpace(black_);
 	

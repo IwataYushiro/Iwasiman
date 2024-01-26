@@ -147,187 +147,34 @@ private://メンバ変数
 	//メニューポジション
 	const std::array<float, GOMEN_Num> menuPosY_ = { 50.0f,150.0f,300.0f,450.0f,600.0f,300.0f };
 
-	//メニュー表示用のイージングのプリセット
-	const Easing presetEaseMenuPosX_[GOMEN_Num]
-	{
-		{1300.0f, 230.0f, 1.0f},		//メニュー
-		{1300.0f, 100.0f, 1.2f},		//コンティニューへ
-		{1300.0f, 100.0f, 1.4f},		//ステージセレクトへ
-		{1300.0f, 100.0f, 1.6f},		//タイトルへ
-		{1300.0f, 425.0f, 1.8f},		//スペースで選択
-		{1300.0f, 1100.0f, 2.0f}		//操作方法
-	};
 	//メニュー表示用のイージング
-	Easing easeMenuPosX_[GOMEN_Num]
-	{
-		presetEaseMenuPosX_[GOMEN_Menu],				//メニュー
-		presetEaseMenuPosX_[GOMEN_Continue],			//コンティニューへ
-		presetEaseMenuPosX_[GOMEN_StageSelect],			//ステージセレクトへ
-		presetEaseMenuPosX_[GOMEN_Title],				//タイトルへ
-		presetEaseMenuPosX_[GOMEN_SelectSpace],			//スペースで選択
-		presetEaseMenuPosX_[GOMEN_UI]					//操作方法
-	};
-
-	//メニュー終了用のイージングのプリセット
-	const Easing presetEaseMenuEndPosX_[GOMEN_Num]
-	{
-		{ 230.0f,-1300.0f, 1.0f},		//メニュー
-		{ 100.0f,-1300.0f, 1.1f},		//コンティニューへ
-		{ 100.0f,-1300.0f, 1.2f},		//ステージセレクトへ
-		{ 100.0f,-1300.0f, 1.3f},		//タイトルへ
-		{ 425.0f,-1300.0f, 1.4f},		//スペースで選択
-		{ 1100.0f,-1300.0f, 1.5f}		//操作方法
-	};
+	Easing easeMenuPosX_[GOMEN_Num];
 	//メニュー終了用のイージング
-	Easing easeMenuEndPosX_[GOMEN_Num]
-	{
-		presetEaseMenuEndPosX_[GOMEN_Menu],				//メニュー
-		presetEaseMenuEndPosX_[GOMEN_Continue],			//コンティニューへ
-		presetEaseMenuEndPosX_[GOMEN_StageSelect],		//ステージセレクトへ
-		presetEaseMenuEndPosX_[GOMEN_Title],			//タイトルへ
-		presetEaseMenuEndPosX_[GOMEN_SelectSpace],		//スペースで選択
-		presetEaseMenuEndPosX_[GOMEN_UI],				//操作方法
-	};
-	//カーソルX値のイージングプリセット
-	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
+	Easing easeMenuEndPosX_[GOMEN_Num];
 	//カーソルX値のイージング
-	Easing easeCursorPosX_ = presetEaseCursorPosX_;
-
-	//コンティニュー文字を真ん中に移動させるイージングのプリセット
-	const Easing presetEaseContinuePosX_ = Easing(0.0f, 380.0f, 1.0f);
+	Easing easeCursorPosX_;
 	//コンティニュー文字を真ん中に移動させるイージング
-	Easing easeContinuePosX_ = presetEaseContinuePosX_;
-
-	//コンティニュー文字を上に移動させるイージングのプリセット
-	const Easing presetEaseContinuePosY_ = Easing(150.0f, 0.0f, 1.0f);
+	Easing easeContinuePosX_;
 	//コンティニュー文字を上に移動させるイージング
-	Easing easeContinuePosY_ = presetEaseContinuePosY_;
-
-	//コンティニューするときの視点イージングのプリセット
-	const Easing presetEaseEyeContinue_[XYZ_Num]
-	{
-		{-6.0f, -21.0f, 1.0f},				//X
-		{-8.0f, -5.0f, 1.0f},				//Y
-		{-110.0f, -60.0f, 1.0f}				//Z
-	};
+	Easing easeContinuePosY_;
 	//コンティニューするときの視点イージング
-	Easing easeEyeContinue_[XYZ_Num]
-	{
-		presetEaseEyeContinue_[XYZ_X],				//X
-		presetEaseEyeContinue_[XYZ_Y],				//Y
-		presetEaseEyeContinue_[XYZ_Z]				//Z
-	};
-
-	//コンティニューするときの注視点イージングのプリセット
-	const Easing presetEaseTargetContinue_[XYZ_Num]
-	{
-		{-32.0f, 90.0f, 1.0f},				//X
-		{-24.0f, -22.0f, 1.0f},				//Y
-		{-10.0f, -61.0f, 1.0f}				//Z
-	};
-
+	Easing easeEyeContinue_[XYZ_Num];
 	//コンティニューするときの注視点イージング
-	Easing easeTargetContinue_[XYZ_Num]
-	{
-		presetEaseTargetContinue_[XYZ_X],				//X
-		presetEaseTargetContinue_[XYZ_Y],				//Y
-		presetEaseTargetContinue_[XYZ_Z]				//Z
-	};
-
-	//コンティニューするときの自機回転イージングのプリセット
-	const Easing presetEasePlayerRotateContinue_[XYZ_Num]
-	{
-		{90.0f, 0.0f, 1.0f},				//X
-		{-90.0f, 90.0f, 1.0f},				//Y
-		{0.0f, 0.0f, 1.0f}					//Z
-	};
+	Easing easeTargetContinue_[XYZ_Num];
 	//コンティニューするときの自機回転イージング
-	Easing easePlayerRotateContinue_[XYZ_Num]
-	{
-		presetEasePlayerRotateContinue_[XYZ_X],				//X
-		presetEasePlayerRotateContinue_[XYZ_Y],				//Y
-		presetEasePlayerRotateContinue_[XYZ_Z]				//Z
-	};
-
-	//コンティニューするときの自機移動イージングのプリセット
-	const Easing presetEasePlayerMoveContinue_[XYZ_Num]
-	{
-		{0.0f, 90.0f, 1.0f},				//X
-		{-8.0f, -8.0f, 1.0f},				//Y
-		{-60.0f, -60.0f, 1.0f}				//Z
-	};
+	Easing easePlayerRotateContinue_[XYZ_Num];
 	//コンティニューするときの自機移動イージング
-	Easing easePlayerMoveContinue_[XYZ_Num]
-	{
-		presetEasePlayerMoveContinue_[XYZ_X],				//X
-		presetEasePlayerMoveContinue_[XYZ_Y],				//Y
-		presetEasePlayerMoveContinue_[XYZ_Z]				//Z
-	};
-
-	//ステージセレクトへ遷移するときの視点イージングのプリセット
-	const Easing presetEaseEyeQuitStageSelect_[XYZ_Num]
-	{
-		{-6.0f, -21.0f, 1.0f},				//X
-		{-8.0f, -5.0f, 1.0f},				//Y
-		{-110.0f, -60.0f, 1.0f}				//Z
-	};
+	Easing easePlayerMoveContinue_[XYZ_Num];
 	//ステージセレクトへ遷移するときの視点イージング
-	Easing easeEyeQuitStageSelect_[XYZ_Num]
-	{
-		presetEaseEyeQuitStageSelect_[XYZ_X],				//X
-		presetEaseEyeQuitStageSelect_[XYZ_Y],				//Y
-		presetEaseEyeQuitStageSelect_[XYZ_Z]				//Z
-	};
-
-	//ステージセレクトへ遷移するときの注視点イージングのプリセット
-	const Easing presetEaseTargetQuitStageSelect_[XYZ_Num]
-	{
-		{-32.0f, 90.0f, 1.0f},				//X
-		{-24.0f, -22.0f, 1.0f},				//Y
-		{-10.0f, -61.0f, 1.0f}				//Z
-	};
+	Easing easeEyeQuitStageSelect_[XYZ_Num];
 	//ステージセレクトへ遷移するときの注視点イージング
-	Easing easeTargetQuitStageSelect_[XYZ_Num]
-	{
-		presetEaseTargetQuitStageSelect_[XYZ_X],				//X
-		presetEaseTargetQuitStageSelect_[XYZ_Y],				//Y
-		presetEaseTargetQuitStageSelect_[XYZ_Z]					//Z
-	};
-
-	//ステージセレクトへ遷移するときの自機回転イージングのプリセット
-	const Easing presetEasePlayerRotateQuitStageSelect_[XYZ_Num]
-	{
-		{90.0f, 0.0f, 1.0f},				//X
-		{-90.0f, 90.0f, 1.0f},				//Y
-		{0.0f, 0.0f, 1.0f}					//Z
-	};
+	Easing easeTargetQuitStageSelect_[XYZ_Num];
 	//ステージセレクトへ遷移するときの自機回転イージング
-	Easing easePlayerRotateQuitStageSelect_[XYZ_Num]
-	{
-		presetEasePlayerRotateQuitStageSelect_[XYZ_X],				//X
-		presetEasePlayerRotateQuitStageSelect_[XYZ_Y],				//Y
-		presetEasePlayerRotateQuitStageSelect_[XYZ_Z]				//Z
-	};
-
-	//ステージセレクトへ遷移するときの自機移動イージングのプリセット
-	const Easing presetEasePlayerMoveQuitStageSelect_[XYZ_Num]
-	{
-		{0.0f, 150.0f, 1.0f},					//X
-		{-8.0f, 20.0f, 1.0f},					//Y
-		{-60.0f, -60.0f, 1.0f}					//Z
-	};
+	Easing easePlayerRotateQuitStageSelect_[XYZ_Num];
 	//ステージセレクトへ遷移するときの自機移動イージング
-	Easing easePlayerMoveQuitStageSelect_[XYZ_Num]
-	{
-		presetEasePlayerMoveQuitStageSelect_[XYZ_X],					//X
-		presetEasePlayerMoveQuitStageSelect_[XYZ_Y],					//Y
-		presetEasePlayerMoveQuitStageSelect_[XYZ_Z]						//Z
-	};
-
-	//フェードインアウトのプリセット
-	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
+	Easing easePlayerMoveQuitStageSelect_[XYZ_Num];
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = presetEaseFadeInOut_;
+	Easing easeFadeInOut_;
 
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor_;//xyz=rgb

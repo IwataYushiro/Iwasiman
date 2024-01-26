@@ -153,20 +153,8 @@ private://メンバ変数
 	Easing easeTargetGameStart_[XYZ_Num];
 	//ステージ決定時の視点カメラワークイージングが終わった後の自機移動イージング
 	Easing easePlayerStartMove_[XYZ_Num];
-	//タイトルに戻るときの自機移動イージングのプリセット
-	const Easing presetEasePlayerQuitMove_[XYZ_Num] =
-	{
-		{150.0f, 0.0f, 2.0f},					//X
-		{40.0f, -8.0f, 2.0f},					//Y
-		{-60.0f, -60.0f, 2.0f}					//Z
-	};
 	//タイトルに戻るときの自機移動イージング
-	Easing easePlayerQuitMove_[XYZ_Num] =
-	{
-		presetEasePlayerQuitMove_[XYZ_X],					//X
-		presetEasePlayerQuitMove_[XYZ_Y],					//Y
-		presetEasePlayerQuitMove_[XYZ_Z]					//Z
-	};
+	Easing easePlayerQuitMove_[XYZ_Num];
 	//フェードインアウト(false フェードイン、true フェードアウト)
 	Easing easeFadeInOut_;
 
