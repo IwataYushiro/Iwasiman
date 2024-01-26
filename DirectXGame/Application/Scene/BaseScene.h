@@ -57,6 +57,8 @@ public://メンバ関数
 	virtual void Finalize() = 0;
 	//フェードインアウト
 	virtual void FadeIn(const DirectX::XMFLOAT3& color) = 0;
+	//イージングのロード
+	virtual void LoadEasing() = 0;
 
 protected://継承メンバ変数
 	//現在ステージのポジション

@@ -50,10 +50,10 @@ public://メンバ関数(ステージ番号)
 	void Draw() override;
 	//終了
 	void Finalize() override;
-
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
-
+	//イージングのロード
+	void LoadEasing() override;
 private://基盤メンバ変数
 	//DirectX基盤
 	DirectXCommon* dxCommon_ = nullptr;

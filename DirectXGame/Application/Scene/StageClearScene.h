@@ -39,9 +39,10 @@ public://メンバ関数
 	void FadeIn(const DirectX::XMFLOAT3& color)override;
 	//終了
 	void Finalize() override;
-
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
+	//イージングのロード
+	void LoadEasing() override;
 
 private://基盤メンバ変数
 	//DirectX基盤

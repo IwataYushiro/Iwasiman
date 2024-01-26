@@ -80,6 +80,8 @@ public://メンバ関数
 
 	//レベルデータ読み込み(ステージファイルパス)
 	void LoadLVData(const std::string& stagePath);
+	//イージングのロード
+	void LoadEasing() override;
 
 	//色が変わる処理(色)
 	void UpdateChangeColor();

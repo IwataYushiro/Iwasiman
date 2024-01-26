@@ -45,6 +45,8 @@ public://メンバ関数
 	void LoadLVData(const std::string& stagePath);
 	//フェードアウト
 	void FadeIn(const DirectX::XMFLOAT3& color)override;
+	//イージングのロード
+	void LoadEasing() override;
 	//色が変わる処理
 	void UpdateChangeColor();
 private://基盤メンバ変数

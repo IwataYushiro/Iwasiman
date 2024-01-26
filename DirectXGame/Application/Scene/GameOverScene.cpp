@@ -30,21 +30,7 @@ void GameOverScene::Initialize()
 	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
 
 	//イージングのロード
-	for (int i = 0; i < GOMEN_Num; i++)LoadEasingData("gameover/menuposx.csv", easeMenuPosX_[i], i);
-	for (int i = 0; i < GOMEN_Num; i++)LoadEasingData("gameover/menuendposx.csv", easeMenuEndPosX_[i], i);
-	LoadEasingData("gameover/cursorposx.csv", easeCursorPosX_);
-	LoadEasingData("gameover/continueposx.csv", easeContinuePosX_);
-	LoadEasingData("gameover/continueposy.csv", easeContinuePosY_);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/eyecontinue.csv", easeEyeContinue_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/targetcontinue.csv", easeTargetContinue_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playerrotatecontinue.csv", easePlayerRotateContinue_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playermovecontinue.csv", easePlayerMoveContinue_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/eyequitstageselect.csv", easeEyeQuitStageSelect_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/targetquitstageselect.csv", easeTargetQuitStageSelect_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playerrotatequitstageselect.csv", easePlayerRotateQuitStageSelect_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playermovequitstageselect.csv", easePlayerMoveQuitStageSelect_[i], i);
-	LoadEasingData("gameover/fadeinout.csv", easeFadeInOut_);
-
+	LoadEasing();
 
 	//カメラ初期化
 	camera_ = std::make_unique<Camera>();
@@ -729,6 +715,24 @@ void GameOverScene::FadeIn(const DirectX::XMFLOAT3& color)
 			spriteStageName_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ステージ開始時に出る
 		}
 	}
+}
+
+void GameOverScene::LoadEasing()
+{
+	for (int i = 0; i < GOMEN_Num; i++)LoadEasingData("gameover/menuposx.csv", easeMenuPosX_[i], i);
+	for (int i = 0; i < GOMEN_Num; i++)LoadEasingData("gameover/menuendposx.csv", easeMenuEndPosX_[i], i);
+	LoadEasingData("gameover/cursorposx.csv", easeCursorPosX_);
+	LoadEasingData("gameover/continueposx.csv", easeContinuePosX_);
+	LoadEasingData("gameover/continueposy.csv", easeContinuePosY_);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/eyecontinue.csv", easeEyeContinue_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/targetcontinue.csv", easeTargetContinue_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playerrotatecontinue.csv", easePlayerRotateContinue_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playermovecontinue.csv", easePlayerMoveContinue_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/eyequitstageselect.csv", easeEyeQuitStageSelect_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/targetquitstageselect.csv", easeTargetQuitStageSelect_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playerrotatequitstageselect.csv", easePlayerRotateQuitStageSelect_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameover/playermovequitstageselect.csv", easePlayerMoveQuitStageSelect_[i], i);
+	LoadEasingData("gameover/fadeinout.csv", easeFadeInOut_);
 }
 
 void GameOverScene::UpdateChangeColor()

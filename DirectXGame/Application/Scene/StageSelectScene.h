@@ -34,7 +34,6 @@ public://メンバ関数
 	void UpdateIsGameStart();
 	//タイトルへ戻るとき 
 	void UpdateIsQuitTitle();
-
 	//描画
 	void Draw() override;
 	//終了
@@ -43,6 +42,8 @@ public://メンバ関数
 	void FadeIn(const DirectX::XMFLOAT3& color) override;
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
+	//イージングのロード
+	void LoadEasing() override;
 
 private://基盤メンバ変数
 	//DirectX基盤
