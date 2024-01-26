@@ -72,7 +72,7 @@ void StageSelectScene::Initialize()
 	//ステージ2スプライト
 	spCommon_->LoadTexture(SSSTI_Menustage2Tex, "texture/stageboss.png");
 	spriteStage2_->Initialize(spCommon_, SSSTI_Menustage2Tex);
-	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].start,easeStartStagePosY_[SSSMI_Stage2_SpaceStage].start });
+	spriteStage2_->SetPosition({ easeMenuPosX_[SSMEN_Stage2_Space].start,easeStartStagePosY_[SSSMI_Stage1_Boss].start });
 
 	//決定表示スプライト
 	spCommon_->LoadTexture(SSSTI_MenuDoneTex, "texture/space.png");
@@ -158,8 +158,9 @@ void StageSelectScene::Initialize()
 
 void StageSelectScene::Update()
 {
+	//メニュー操作の上限
 	if (menuCount_ <= SSSMI_StageTutorial_Tutorial)menuCount_ = SSSMI_StageTutorial_Tutorial;
-	else if (menuCount_ >= SSSMI_Stage2_SpaceStage)menuCount_ = SSSMI_Stage2_SpaceStage;
+	else if (menuCount_ >= SSSMI_Stage1_Boss)menuCount_ = SSSMI_Stage1_Boss;
 
 	if (isStageSelect_)UpdateIsStageSelect();		//ステージセレクトメニュー時
 	else if (isDone_)UpdateIsDone();				//ステージ決定時
@@ -315,7 +316,7 @@ void StageSelectScene::UpdateIsStageSelect()
 		spriteBack_->SetColor(quitColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[SSMEN_Stage1_Sky] });
 	}
-	else if (menuCount_ == SSSMI_Stage2_SpaceStage)//宇宙ステージを選択時
+	else if (menuCount_ == SSSMI_Stage1_Boss)//宇宙ステージを選択時
 	{
 		objStage_->SetModel(modelStage2_.get());
 		spriteMenu_->SetColor(selectMenuColorDark);
@@ -360,7 +361,7 @@ void StageSelectScene::UpdateIsStageSelect()
 				spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
 
 			}
-			else if (menuCount_ == SSSMI_Stage2_SpaceStage)//宇宙ステージを選択時
+			else if (menuCount_ == SSSMI_Stage1_Boss)//宇宙ステージを選択時
 			{
 				//現在ステージスプライト
 				spCommon_->LoadTexture(SSSTI_StageInfoNowTex, "texture/stagef.png");
@@ -425,11 +426,11 @@ void StageSelectScene::UpdateIsDone()
 		spriteStage2_->SetPosition({ easeMenuEndPosX_[SSMEN_Stage2_Space].num_X,menuPosY_[SSMEN_Stage2_Space] });
 
 	}
-	else if (menuCount_ == SSSMI_Stage2_SpaceStage)
+	else if (menuCount_ == SSSMI_Stage1_Boss)
 	{
 		spriteTutorial_->SetPosition({ easeMenuEndPosX_[SSMEN_Tutorial].num_X,menuPosY_[SSMEN_Tutorial] });
 		spriteStage1_->SetPosition({ easeMenuEndPosX_[SSMEN_Stage1_Sky].num_X,menuPosY_[SSMEN_Stage1_Sky] });
-		spriteStage2_->SetPosition({ easeStartStagePosX_[SSSMI_Stage2_SpaceStage].num_X,easeStartStagePosY_[SSSMI_Stage2_SpaceStage].num_X });
+		spriteStage2_->SetPosition({ easeStartStagePosX_[SSSMI_Stage1_Boss].num_X,easeStartStagePosY_[SSSMI_Stage1_Boss].num_X });
 	}
 
 	//カメラもセット
@@ -453,7 +454,7 @@ void StageSelectScene::UpdateIsDone()
 	{
 		if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);//チュートリアルステージ
 		else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);//ステージ1
-		else if (menuCount_ == SSSMI_Stage2_SpaceStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//ステージ2はまだ未完成
+		else if (menuCount_ == SSSMI_Stage1_Boss)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//ステージ2はまだ未完成
 
 	}
 }
@@ -484,7 +485,7 @@ void StageSelectScene::UpdateIsGameStart()
 	{
 		if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);//チュートリアルステージ
 		else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_Area1);//ステージ1
-		else if (menuCount_ == SSSMI_Stage2_SpaceStage)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//ステージ2はまだ未完成
+		else if (menuCount_ == SSSMI_Stage1_Boss)sceneManager_->ChangeScene("GAMEPLAY", SL_Stage1_AreaBoss);//ステージ2はまだ未完成
 
 	}
 }
@@ -519,7 +520,7 @@ void StageSelectScene::UpdateIsQuitTitle()
 		//タイトルへ遷移(背景によって遷移時のタイトルシーンも変わる)
 		if (menuCount_ == SSSMI_StageTutorial_Tutorial)sceneManager_->ChangeScene("TITLE", SL_StageTutorial_StageID);
 		else if (menuCount_ == SSSMI_Stage1_SkyStage)sceneManager_->ChangeScene("TITLE", SL_Stage1_StageID);
-		else if (menuCount_ == SSSMI_Stage2_SpaceStage)sceneManager_->ChangeScene("TITLE", SL_Stage2_StageID);
+		else if (menuCount_ == SSSMI_Stage1_Boss)sceneManager_->ChangeScene("TITLE", SL_Stage1_AreaBoss);
 	}
 	
 }

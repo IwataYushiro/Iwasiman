@@ -46,8 +46,8 @@ void GameOverScene::Initialize()
 
 	//レベルデータ読み込み
 	if (stageNum_ == SL_Default)LoadLVData("scene/gameovert");
-	else if (stageNum_ <= SL_Stage1_StageID)LoadLVData("scene/gameover1");
-	else if (stageNum_ <= SL_Stage2_StageID)LoadLVData("scene/gameover2");
+	else if (stageNum_ <= SL_Stage1_Area3)LoadLVData("scene/gameover1");
+	else if (stageNum_ <= SL_Stage1_AreaBoss)LoadLVData("scene/gameover2");
 	else LoadLVData("scene/gameovert");
 
 	//ライトを生成
@@ -229,7 +229,7 @@ void GameOverScene::UpdateIsGameOver()
 	//ステージ位置(背景)によって色を変える
 	if (stageNum_ == SL_Default)gameOverColor = isLightBackGroundGameOverColor;
 	else if (stageNum_ <= SL_Stage1_StageID)gameOverColor = isLightBackGroundGameOverColor;
-	else if (stageNum_ <= SL_Stage2_StageID)gameOverColor = isDarkBackGroundGameOverColor;
+	else if (stageNum_ <= SL_Stage1_AreaBoss)gameOverColor = isDarkBackGroundGameOverColor;
 	else gameOverColor = isLightBackGroundGameOverColor;
 
 	//選択してる色
@@ -239,7 +239,7 @@ void GameOverScene::UpdateIsGameOver()
 
 	if (stageNum_ == SL_Default)selectMenuColor = isLightBackGroundSelectMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)selectMenuColor = isLightBackGroundSelectMenuColor;
-	else if (stageNum_ <= SL_Stage2_StageID)selectMenuColor = isDarkBackGroundSelectMenuColor;
+	else if (stageNum_ <= SL_Stage1_AreaBoss)selectMenuColor = isDarkBackGroundSelectMenuColor;
 	else selectMenuColor = isLightBackGroundSelectMenuColor;
 
 	//選択されていない色
@@ -250,7 +250,7 @@ void GameOverScene::UpdateIsGameOver()
 	//ステージ位置(背景)によって色を変える
 	if (stageNum_ == SL_Default)otherMenuColor = isLightBackGroundOtherMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)otherMenuColor = isLightBackGroundOtherMenuColor;
-	else if (stageNum_ <= SL_Stage2_StageID)otherMenuColor = isDarkBackGroundOtherMenuColor;
+	else if (stageNum_ <= SL_Stage1_AreaBoss)otherMenuColor = isDarkBackGroundOtherMenuColor;
 	else otherMenuColor = isLightBackGroundOtherMenuColor;
 
 	//決定指示スプライトのカラー
@@ -494,8 +494,8 @@ void GameOverScene::UpdateIsQuitStageSelect()
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
 		//ステージごとにステージセレクトの背景が違う
-		if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-		else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+		if (stageNum_ <= SL_Stage1_Area3)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+		else if (stageNum_ <= SL_Stage1_AreaBoss)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_Boss);
 		else if (stageNum_ <= SL_StageTutorial_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 
 	}

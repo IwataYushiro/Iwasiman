@@ -43,8 +43,8 @@ void StageClearScene::Initialize()
 
 	//レベルデータ読み込み
 	if (stageNum_ == SL_Default)LoadLVData("scene/stagecleart");
-	else if (stageNum_ <= SL_Stage1_StageID)LoadLVData("scene/stageclear1");
-	else if (stageNum_ <= SL_Stage2_StageID)LoadLVData("scene/stageclear2");
+	else if (stageNum_ <= SL_Stage1_Area3)LoadLVData("scene/stageclear1");
+	else if (stageNum_ <= SL_Stage1_AreaBoss)LoadLVData("scene/stageclear2");
 	else LoadLVData("scene/stagecleart");
 
 	//ライトを生成
@@ -314,9 +314,7 @@ void StageClearScene::UpdateIsNextStage()
 	//完全に白くなったら
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
-		if (stageNum_ == SL_Stage1_AreaBoss) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
-		else if (stageNum_ == SL_StageTutorial_Final) sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-		else sceneManager_->ChangeScene("GAMEPLAY", ++stageNum_);
+		sceneManager_->ChangeScene("GAMEPLAY", ++stageNum_);
 	}
 }
 
@@ -351,8 +349,8 @@ void StageClearScene::UpdateIsStageSelect()
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
 		//ステージ選択
-		if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-		else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+		if (stageNum_ <= SL_Stage1_Area3)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+		else if (stageNum_ <= SL_Stage1_AreaBoss)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_Boss);
 		else sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);//ここはチュートリアルに飛ばしてもいい
 	}
 }

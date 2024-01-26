@@ -41,10 +41,10 @@ void TitleScene::Initialize()
 	camera_->SetTarget({ easeTargetMenu_[XYZ_X].start, easeTargetMenu_[XYZ_Y].start, easeTargetMenu_[XYZ_Z].start });
 
 	//レベルデータ読み込み
-	if (stageNum_ == SL_Default)LoadLVData("scene/titlet");				//チュートリアルから戻ってきた場合
-	else if (stageNum_ <= SL_Stage1_StageID)LoadLVData("scene/title1");	//空ステージから戻ってきた場合
-	else if (stageNum_ <= SL_Stage2_StageID)LoadLVData("scene/title2");	//宇宙ステージから戻ってきた場合
-	else LoadLVData("scene/titlet");									//初期のレベル
+	if (stageNum_ == SL_Default)LoadLVData("scene/titlet");					//チュートリアルから戻ってきた場合
+	else if (stageNum_ <= SL_Stage1_Area3)LoadLVData("scene/title1");		//空ステージから戻ってきた場合
+	else if (stageNum_ <= SL_Stage1_AreaBoss)LoadLVData("scene/title2");	//ボスステージから戻ってきた場合
+	else LoadLVData("scene/titlet");										//初期のレベル
 
 	//ライトを生成
 	lightGroup_ = LightGroup::Create();
@@ -156,7 +156,7 @@ void TitleScene::Update()
 	//戻ってきたステージによって文字の色を変える
 	if (stageNum_ == SL_Default)titleColor = isLightBackGroundTitleColor;
 	else if (stageNum_ <= SL_Stage1_StageID)titleColor = isLightBackGroundTitleColor;
-	else if (stageNum_ <= SL_Stage2_StageID)titleColor = isDarkBackGroundTitleColor;
+	else if (stageNum_ <= SL_Stage1_AreaBoss)titleColor = isDarkBackGroundTitleColor;
 	else titleColor = isLightBackGroundTitleColor;
 
 	//決定指示スプライトのカラー
@@ -368,8 +368,8 @@ void TitleScene::UpdateIsStageSelect()
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
 		//ステージ選択
-		if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-		else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+		if (stageNum_ <= SL_Stage1_Area3)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+		else if (stageNum_ <= SL_Stage1_AreaBoss)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_Boss);
 		else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//チュートリアルに飛ばすと本末転倒
 	}
 
@@ -423,7 +423,7 @@ void TitleScene::UpdateIsMenu()
 	//ステージ位置(背景)によって色を変える
 	if (stageNum_ == SL_Default)selectMenuColor = isLightBackGroundSelectMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)selectMenuColor = isLightBackGroundSelectMenuColor;
-	else if (stageNum_ <= SL_Stage2_StageID)selectMenuColor = isDarkBackGroundSelectMenuColor;
+	else if (stageNum_ <= SL_Stage1_AreaBoss)selectMenuColor = isDarkBackGroundSelectMenuColor;
 	else selectMenuColor = isLightBackGroundSelectMenuColor;
 
 	//選択されていない色
@@ -434,7 +434,7 @@ void TitleScene::UpdateIsMenu()
 	//ステージ位置(背景)によって色を変える
 	if (stageNum_ == SL_Default)otherMenuColor = isLightBackGroundOtherMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)otherMenuColor = isLightBackGroundOtherMenuColor;
-	else if (stageNum_ <= SL_Stage2_StageID)otherMenuColor = isDarkBackGroundOtherMenuColor;
+	else if (stageNum_ <= SL_Stage1_AreaBoss)otherMenuColor = isDarkBackGroundOtherMenuColor;
 	else otherMenuColor = isLightBackGroundOtherMenuColor;
 
 	//イージング

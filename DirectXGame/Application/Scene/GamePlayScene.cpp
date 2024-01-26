@@ -187,7 +187,8 @@ void GamePlayScene::UpdateIsStartGame()
 		for (int i = 0; i < XYW_Num; i++)easeGoSizeAndAlpha_[i].ease_out_cubic();
 		//サイズ、カラーセット
 		spriteGo_->SetSize({ easeGoSizeAndAlpha_[XYW_X].num_X,easeGoSizeAndAlpha_[XYW_Y].num_X });
-		spriteGo_->SetColor({ black_.x,black_.y, black_.z,easeGoSizeAndAlpha_[XYW_W].num_X });
+		if (stageNum_ == SL_Stage1_AreaBoss)spriteGo_->SetColor({ white_.x,white_.y,white_.z,easeGoSizeAndAlpha_[XYW_W].num_X });//ボス戦時は真っ白
+		else spriteGo_->SetColor({ black_.x,black_.y, black_.z,easeGoSizeAndAlpha_[XYW_W].num_X });//通常時は真っ黒
 
 	}
 	else if (isStartReadyPart2_)//レディーが一定の位置に達したら
@@ -557,7 +558,7 @@ void GamePlayScene::UpdateIsQuitGame()
 		{
 			//ステージ選択へ
 			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+			else if (stageNum_ <= SL_Stage1_AreaBoss)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_Boss);
 			else sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 		}
 		else if (menuCount_ == GPSPMI_Title) sceneManager_->ChangeScene("TITLE", stageNum_);
@@ -1422,7 +1423,8 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(GPSTI_ReadyTex, "texture/ready2.png");
 	spriteReady_->Initialize(spCommon_, GPSTI_ReadyTex);
 	spriteReady_->SetPosition({ easeReadyPosition_[XXY_X1].start,easeReadyPosition_[XXY_Y].start });
-	spriteReady_->SetColor({ black_.x,black_.y,black_.z,easeFadeInOut_.start });//真っ黒
+	if(stageNum_==SL_Stage1_AreaBoss)spriteReady_->SetColor({ white_.x,white_.y,white_.z,easeFadeInOut_.start });//ボス戦時は真っ白
+	else spriteReady_->SetColor({ black_.x,black_.y,black_.z,easeFadeInOut_.start });//通常時は真っ黒
 
 	//Go表記文字用のスプライト
 	spCommon_->LoadTexture(GPSTI_GoTex, "texture/go.png");
@@ -1432,7 +1434,8 @@ void GamePlayScene::LoadSprite()
 
 	const XMFLOAT2 centralAnchorPoint = { 0.5f,0.5f };//アンカーポイントは中央
 	spriteGo_->SetAnchorPoint(centralAnchorPoint);
-	spriteGo_->SetColor({ black_.x,black_.y,black_.z,easeGoSizeAndAlpha_[XYW_W].start });
+	if (stageNum_ == SL_Stage1_AreaBoss)spriteGo_->SetColor({ white_.x,white_.y,white_.z,easeGoSizeAndAlpha_[XYW_W].start });//ボス戦時は真っ白
+	else spriteGo_->SetColor({ black_.x,black_.y,black_.z,easeGoSizeAndAlpha_[XYW_W].start });//通常時は真っ黒
 
 	//フェードインアウトスプライト
 	spCommon_->LoadTexture(GPSTI_FadeInOutTex, "texture/fade.png");
