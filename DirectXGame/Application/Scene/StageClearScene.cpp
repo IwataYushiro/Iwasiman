@@ -28,6 +28,15 @@ void StageClearScene::Initialize()
 	sceneManager_ = SceneManager::GetInstance();	//シーンマネージャー
 	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
 
+	//イージングのロード
+	for (int i = 0; i < SCMEN_Num; i++)LoadEasingData("stageclear/menuposx.csv", easeMenuPosX_[i], i);
+	for (int i = 0; i < SCMEN_Num; i++)LoadEasingData("stageclear/menuendposx.csv", easeMenuEndPosX_[i], i);
+	LoadEasingData("stageclear/cursorposx.csv", easeCursorPosX_);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageclear/eyestageclear.csv", easeEyeStageClear_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageclear/targetstageclear.csv", easeTargetStageClear_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageclear/playermovestageselect.csv", easePlayerMoveStageSelect_[i], i);
+	LoadEasingData("stageclear/fadeinout.csv", easeFadeInOut_);
+
 	//カメラ
 	camera_ = std::make_unique<Camera>();
 	//オーディオ
