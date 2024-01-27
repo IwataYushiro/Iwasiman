@@ -107,10 +107,6 @@ private://基盤メンバ変数
 	ImGuiManager* imguiManager_ = nullptr;
 
 private:
-
-	//サウンド読み込み
-	Audio::SoundData sound_;
-
 	//スプライト	
 	std::unique_ptr<Sprite> spritePause_ = std::make_unique<Sprite>();				//ポーズ時のスプライト
 	std::unique_ptr<Sprite> spritePauseInfo_ = std::make_unique<Sprite>();			//どのキーでポーズするのかを書いたスプライト

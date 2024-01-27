@@ -719,6 +719,7 @@ void GameOverScene::FadeIn(const DirectX::XMFLOAT3& color)
 
 void GameOverScene::LoadEasing()
 {
+	//イージングのロード
 	for (int i = 0; i < GOMEN_Num; i++)LoadEasingData("gameover/menuposx.csv", easeMenuPosX_[i], i);
 	for (int i = 0; i < GOMEN_Num; i++)LoadEasingData("gameover/menuendposx.csv", easeMenuEndPosX_[i], i);
 	LoadEasingData("gameover/cursorposx.csv", easeCursorPosX_);

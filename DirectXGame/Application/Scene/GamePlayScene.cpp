@@ -47,12 +47,6 @@ void GamePlayScene::Initialize()
 	//カメラ生成
 	camera_ = std::make_unique<Camera>();
 
-	//音声データ
-	sound_ = audio_->SoundLoadWave("Resources/TestMusic.wav");
-
-	//音声再生呼び出し例
-	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
-
 	camera_->Reset();
 	//弾リセット
 	for (std::unique_ptr<PlayerBullet>& pbullet : playerBullets_)pbullet->Reset();
@@ -767,8 +761,6 @@ void GamePlayScene::Finalize()
 	//終了処理
 	audio_->Finalize();
 	//解放
-	//各種音声
-	audio_->SoundUnLoad(&sound_);
 	//オブジェクト関係
 	objects_.clear();
 	skydomes_.clear();
