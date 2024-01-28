@@ -79,6 +79,12 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV_;
 		//マッピング
 		ConstBufferDataB1* constMap_ = nullptr;
+		//ディレクトリパス
+		std::wstring directoryPath_;
+		//ファイル名
+		std::wstring fileName_;
+		//ファイル拡張子
+		std::wstring fileExt_;
 
 	private://カプセル化メンバ関数
 		//コンストラクタ
@@ -95,6 +101,8 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		void Initialize();
 		//定数バッファ生成
 		void CreateConstBuffer();
+		//フォルダパスとファイル名を分離
+		void SeparateFilePath(const std::wstring& filePath);
 
 	public://アクセッサ置き場
 		// 定数バッファゲット

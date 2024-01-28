@@ -36,8 +36,6 @@ void Material::LoadTexture(const std::string& directoryPath, const D3D12_CPU_DES
 	const D3D12_GPU_DESCRIPTOR_HANDLE& gpuHandle)
 {
 	HRESULT result = S_FALSE;
-
-	
 	// テクスチャなし
 	if (textureFilename.size() == 0) {
 		textureFilename = "white1x1.png";
@@ -58,19 +56,31 @@ void Material::LoadTexture(const std::string& directoryPath, const D3D12_CPU_DES
 	const int cbMultiByte = -1;
 	MultiByteToWideChar(CP_ACP, 0,
 		filepath.c_str(), cbMultiByte, wfilePath, _countof(wfilePath));
-	// WICテクスチャのロード
-	result = LoadFromWICFile(wfilePath, WIC_FLAGS_NONE, &metadata, scratchImg);
-	assert(SUCCEEDED(result));
 
-	ScratchImage mipChain{};
-	// ミップマップ生成
-	result = GenerateMipMaps(
-		scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-		TEX_FILTER_DEFAULT, 0, mipChain);
-	if (SUCCEEDED(result)) {
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
+	//フォルダパスとファイル名を分離する
+	SeparateFilePath(wfilePath);
+
+	if (fileExt_ == L"dds")
+	{
+		// DDSテクスチャのロード
+		result = LoadFromDDSFile(wfilePath, DDS_FLAGS_NONE, &metadata, scratchImg);
 	}
+	else
+	{
+		// WICテクスチャのロード
+		result = LoadFromWICFile(wfilePath, WIC_FLAGS_NONE, &metadata, scratchImg);
+		//ddsじゃない場合ミップマップは生成されてないのでここで生成
+		ScratchImage mipChain{};
+		// ミップマップ生成
+		result = GenerateMipMaps(
+			scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+			TEX_FILTER_DEFAULT, 0, mipChain);
+		if (SUCCEEDED(result)) {
+			scratchImg = std::move(mipChain);
+			metadata = scratchImg.GetMetadata();
+		}
+	}
+	assert(SUCCEEDED(result));
 
 	// 読み込んだディフューズテクスチャをSRGBとして扱う
 	metadata.format = MakeSRGB(metadata.format);
@@ -80,7 +90,7 @@ void Material::LoadTexture(const std::string& directoryPath, const D3D12_CPU_DES
 	heapProps.Type = D3D12_HEAP_TYPE_CUSTOM;
 	heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 	heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	
+
 	// リソース設定
 	D3D12_RESOURCE_DESC texresDesc{};
 	texresDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
@@ -91,7 +101,7 @@ void Material::LoadTexture(const std::string& directoryPath, const D3D12_CPU_DES
 	texresDesc.MipLevels = (UINT16)metadata.mipLevels;
 	const UINT sampleCountNum = 1;
 	texresDesc.SampleDesc.Count = sampleCountNum;
-	
+
 	// テクスチャ用バッファの生成
 	result = device_->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &texresDesc,
@@ -181,4 +191,49 @@ void Material::CreateConstBuffer()
 	// 定数バッファへデータ転送
 	result = constBuff_->Map(0, nullptr, (void**)&constMap_);
 	assert(SUCCEEDED(result));
+}
+
+void Material::SeparateFilePath(const std::wstring& filePath)
+{
+	size_t pos1;
+	std::wstring exceptExt;
+
+	//区切り文字'.'が出てくる一番最後の部分を検索
+	pos1 = filePath.rfind('.');
+	//検索がヒットしたら
+	if (pos1 != std::wstring::npos)
+	{
+		//区切り文字の後ろをファイル拡張子として保存
+		fileExt_ = filePath.substr(pos1 + 1, filePath.size() - pos1 - 1);
+		//区切り文字の前までを抜き出す
+		exceptExt = filePath.substr(0, pos1);
+	}
+	else
+	{
+		fileExt_ = L"";
+		exceptExt = filePath;
+	}
+	//区切り文字'\\'が出てくる一番最後の部分を検索
+	pos1 = exceptExt.rfind('\\');
+	if (pos1 != std::wstring::npos)
+	{
+		//区切り文字の前までをディレクトリパスとして保存
+		directoryPath_ = exceptExt.substr(0, pos1 + 1);
+		//区切り文字の後ろをファイル名として保存
+		fileName_ = exceptExt.substr(pos1 + 1, exceptExt.size() - pos1 - 1);
+		return;
+	}
+	//区切り文字'/'が出てくる一番最後の部分を検索
+	pos1 = exceptExt.rfind('/');
+	if (pos1 != std::wstring::npos)
+	{
+		//区切り文字の前までをディレクトリパスとして保存
+		directoryPath_ = exceptExt.substr(0, pos1 + 1);
+		//区切り文字の後ろをファイル名として保存
+		fileName_ = exceptExt.substr(pos1 + 1, exceptExt.size() - pos1 - 1);
+		return;
+	}
+	//区切り文字がないのでファイル名のみとして扱う
+	directoryPath_ = L"";
+	fileName_ = exceptExt;
 }
