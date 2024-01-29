@@ -19,7 +19,7 @@ ID3D12Device* Model::device_ = nullptr;
 // デスクリプタサイズ
 UINT Model::descriptorHandleIncrementSize_;
 
-const std::string Model::BASE_DIRECTORY = "Resources/";
+const std::string Model::BASE_DIRECTORY = "Resources/Model/";
 
 Model::~Model()
 {
