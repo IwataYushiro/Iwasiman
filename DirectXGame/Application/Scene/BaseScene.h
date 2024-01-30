@@ -79,9 +79,6 @@ protected://継承メンバ変数
 	//演出スキップ用カウント
 	bool skip_ = false;
 
-	//イージングのセットコマンド
-	std::stringstream setEasingCommands_;
-
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)
 	SceneManager* sceneManager_ = nullptr;
@@ -127,8 +124,9 @@ protected://継承メンバ関数
 	void LoadEasingData(const std::string& fileName, Easing& ease, const uint32_t easeArrayNum = 0)
 	{
 		//ストリームの初期化
-		setEasingCommands_.str("");//バッファのクリア
-		setEasingCommands_.clear(std::stringstream::goodbit);//状態クリア
+		std::stringstream setEasingCommands;
+		setEasingCommands.str("");//バッファのクリア
+		setEasingCommands.clear(std::stringstream::goodbit);//状態クリア
 
 		//ディレクトリパスとファイル名を連結してフルパスを得る
 		const std::string defaultEasingPath = "Resources/csv/Easing/";
@@ -147,15 +145,18 @@ protected://継承メンバ関数
 		assert(file.is_open());
 
 		//ファイルの内容を文字列ストリームにコピー
-		setEasingCommands_ << file.rdbuf();
+		setEasingCommands << file.rdbuf();
 
 		//ファイルを閉じる
 		file.close();
 
+		//SETNumのバッファ
+		char* set = SetNumStr(easeArrayNum);
+
 		//1行分の文字列を入れる関数
 		std::string line;
 		//コマンド実行ループ
-		while (getline(setEasingCommands_, line))
+		while (getline(setEasingCommands, line))
 		{
 			//1行分の文字列をストリームに変換して解析しやすくする
 			std::istringstream line_stream(line);
@@ -167,18 +168,10 @@ protected://継承メンバ関数
 			// "//"=コメント
 			if (word.find("//") == 0)continue;//コメント行を飛ばす
 			//最大10種類のイージングに対応
-			SetEasingCommand("SET0", ESN_0, easeArrayNum, ease, line_stream, word);
-			SetEasingCommand("SET1", ESN_1, easeArrayNum, ease, line_stream, word);
-			SetEasingCommand("SET2", ESN_2, easeArrayNum, ease, line_stream, word);
-			SetEasingCommand("SET3", ESN_3, easeArrayNum, ease, line_stream, word);
-			SetEasingCommand("SET4", ESN_4, easeArrayNum, ease, line_stream, word);
-			SetEasingCommand("SET5", ESN_5, easeArrayNum, ease, line_stream, word);
-			SetEasingCommand("SET6", ESN_6, easeArrayNum, ease, line_stream, word);
-			SetEasingCommand("SET7", ESN_7, easeArrayNum, ease, line_stream, word);
-			SetEasingCommand("SET8", ESN_8, easeArrayNum, ease, line_stream, word);
-			SetEasingCommand("SET9", ESN_9, easeArrayNum, ease, line_stream, word);
-		}						 
+			for (uint32_t i = 0; i < ESN_MAX; i++)SetEasingCommand(set, i, easeArrayNum, ease, line_stream, word);
+		}
 	}
+	//イージングのコマンドから値のセット
 	void SetEasingCommand(const char* findWord, const uint32_t num, const uint32_t easeArrayNum, Easing& ease, std::istream& stream, std::string& word)
 	{
 		//イージングのセット
@@ -197,4 +190,21 @@ protected://継承メンバ関数
 			ease.SetEasing(start, end, time);
 		}
 	}
+	//SETの文字を決める
+	char* SetNumStr(const uint32_t easeArrayNum)
+	{
+		//
+		if (easeArrayNum == ESN_0)return "SET0";
+		else if (easeArrayNum == ESN_1)return "SET1";
+		else if (easeArrayNum == ESN_2)return "SET2";
+		else if (easeArrayNum == ESN_3)return "SET3";
+		else if (easeArrayNum == ESN_4)return "SET4";
+		else if (easeArrayNum == ESN_5)return "SET5";
+		else if (easeArrayNum == ESN_6)return "SET6";
+		else if (easeArrayNum == ESN_7)return "SET7";
+		else if (easeArrayNum == ESN_8)return "SET8";
+		else if (easeArrayNum == ESN_9)return "SET9";
+		else return nullptr;
+	}
 };
+
