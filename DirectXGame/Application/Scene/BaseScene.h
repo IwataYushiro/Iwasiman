@@ -151,7 +151,7 @@ protected://継承メンバ関数
 		file.close();
 
 		//SETNumのバッファ
-		char* set = SetNumStr(easeArrayNum);
+		const char* set = SetNumStr(easeArrayNum);
 
 		//1行分の文字列を入れる関数
 		std::string line;
@@ -179,21 +179,21 @@ protected://継承メンバ関数
 		{
 			//x座標
 			getline(stream, word, ',');
-			float start = (float)std::atof(word.c_str());
+			float start = static_cast<float>(std::atof(word.c_str()));
 			//y座標
 			getline(stream, word, ',');
-			float end = (float)std::atof(word.c_str());
+			float end = static_cast<float>(std::atof(word.c_str()));
 			//z座標
 			getline(stream, word, ',');
-			float time = (float)std::atof(word.c_str());
+			float time = static_cast<float>(std::atof(word.c_str()));
 			//イージングセット
 			ease.SetEasing(start, end, time);
 		}
 	}
 	//SETの文字を決める
-	char* SetNumStr(const uint32_t easeArrayNum)
+	const char* SetNumStr(const uint32_t easeArrayNum)
 	{
-		//
+		//配列番号によって返す文字列は違う
 		if (easeArrayNum == ESN_0)return "SET0";
 		else if (easeArrayNum == ESN_1)return "SET1";
 		else if (easeArrayNum == ESN_2)return "SET2";
