@@ -91,8 +91,31 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		//bounce_easing計算用
 		float bounceCalculation(float x);
 
+		//イージングの配列用
+		enum EasingSetNumM
+		{
+			//0～9の10個まで対応
+			ESN_0,
+			ESN_1,
+			ESN_2,
+			ESN_3,
+			ESN_4,
+			ESN_5,
+			ESN_6,
+			ESN_7,
+			ESN_8,
+			ESN_9,
+			ESN_MAX,
+		};
+
 	public:
 		//イージングセット
 		void SetEasing(const float s, const float e, const float t);
+		//イージングデータの読み込み
+		static void LoadEasingData(const std::string& fileName, Easing& ease, const uint32_t easeArrayNum = 0);
+		//イージングのコマンドから値のセット
+		static void SetEasingCommand(const char* findWord, const uint32_t num, const uint32_t easeArrayNum, Easing& ease, std::istream& stream, std::string& word);
+		//SETの文字を決める
+		static const char* SetNumStr(const uint32_t easeArrayNum);
 	};
 }

@@ -1079,17 +1079,17 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 
 void GamePlayScene::LoadEasing()
 {
-	for (int i = 0; i < TIEN_Num; i++)LoadEasingData("gameplay/infotutorial.csv", easeInfoTutorial_[i], i);
-	for (int i = 0; i < XY_Num; i++)LoadEasingData("gameplay/tutoriallistscale.csv", easeTutorialListScale_[i], i);
-	for (int i = 0; i < PMEN_Num; i++)LoadEasingData("gameplay/pausemenuposx.csv", easePauseMenuPosX_[i], i);
-	LoadEasingData("gameplay/cursorposx.csv", easeCursorPosX_);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameplay/eyegamestart.csv", easeEyeGameStart_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameplay/targetgamestart.csv", easeTargetGameStart_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("gameplay/playerpositiongamestart.csv", easePlayerPositionGameStart_[i], i);
-	for (int i = 0; i < XXY_Num; i++)LoadEasingData("gameplay/readyposition.csv", easeReadyPosition_[i], i);
-	for (int i = 0; i < XYW_Num; i++)LoadEasingData("gameplay/gosizeandalpha.csv", easeGoSizeAndAlpha_[i], i);
-	LoadEasingData("gameplay/fadeinout.csv", easeFadeInOut_);
-	LoadEasingData("gameplay/fadeinoutpause.csv", easeFadeInOutPause_);
+	for (int i = 0; i < TIEN_Num; i++)Easing::LoadEasingData("gameplay/infotutorial.csv", easeInfoTutorial_[i], i);
+	for (int i = 0; i < XY_Num; i++)Easing::LoadEasingData("gameplay/tutoriallistscale.csv", easeTutorialListScale_[i], i);
+	for (int i = 0; i < PMEN_Num; i++)Easing::LoadEasingData("gameplay/pausemenuposx.csv", easePauseMenuPosX_[i], i);
+	Easing::LoadEasingData("gameplay/cursorposx.csv", easeCursorPosX_);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("gameplay/eyegamestart.csv", easeEyeGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("gameplay/targetgamestart.csv", easeTargetGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("gameplay/playerpositiongamestart.csv", easePlayerPositionGameStart_[i], i);
+	for (int i = 0; i < XXY_Num; i++)Easing::LoadEasingData("gameplay/readyposition.csv", easeReadyPosition_[i], i);
+	for (int i = 0; i < XYW_Num; i++)Easing::LoadEasingData("gameplay/gosizeandalpha.csv", easeGoSizeAndAlpha_[i], i);
+	Easing::LoadEasingData("gameplay/fadeinout.csv", easeFadeInOut_);
+	Easing::LoadEasingData("gameplay/fadeinoutpause.csv", easeFadeInOutPause_);
 }
 
 void GamePlayScene::UpdateChangeColor()

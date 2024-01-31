@@ -734,18 +734,18 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 
 void TitleScene::LoadEasing()
 {
-	LoadEasingData("title/titleposx.csv", easeTitlePosX_);
-	for (int i = 0; i < TMEN_Num; i++)LoadEasingData("title/menuposx.csv", easeMenuPosX_[i], i);
-	for (int i = 0; i < TMEN_Num; i++)LoadEasingData("title/menuendposx.csv", easeMenuEndPosX_[i], i);
-	LoadEasingData("title/cursorposx.csv", easeCursorPosX_);
-	LoadEasingData("title/startstageposx.csv", easeStartStagePosX_);
-	LoadEasingData("title/startstageposy.csv", easeStartStagePosY_);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("title/eyemenu.csv", easeEyeMenu_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("title/targetmenu.csv", easeTargetMenu_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("title/eyegamestart.csv", easeEyeGameStart_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("title/targetgamestart.csv", easeTargetGameStart_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("title/playermove.csv", easePlayerMove_[i], i);
-	LoadEasingData("title/fadeinout.csv", easeFadeInOut_);
+	Easing::LoadEasingData("title/titleposx.csv", easeTitlePosX_);
+	for (int i = 0; i < TMEN_Num; i++)Easing::LoadEasingData("title/menuposx.csv", easeMenuPosX_[i], i);
+	for (int i = 0; i < TMEN_Num; i++)Easing::LoadEasingData("title/menuendposx.csv", easeMenuEndPosX_[i], i);
+	Easing::LoadEasingData("title/cursorposx.csv", easeCursorPosX_);
+	Easing::LoadEasingData("title/startstageposx.csv", easeStartStagePosX_);
+	Easing::LoadEasingData("title/startstageposy.csv", easeStartStagePosY_);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/eyemenu.csv", easeEyeMenu_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/targetmenu.csv", easeTargetMenu_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/eyegamestart.csv", easeEyeGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/targetgamestart.csv", easeTargetGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/playermove.csv", easePlayerMove_[i], i);
+	Easing::LoadEasingData("title/fadeinout.csv", easeFadeInOut_);
 }
 
 void TitleScene::UpdateChangeColor()

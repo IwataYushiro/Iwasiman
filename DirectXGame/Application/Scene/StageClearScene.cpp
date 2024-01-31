@@ -725,13 +725,13 @@ void StageClearScene::LoadLVData(const std::string& stagePath)
 
 void StageClearScene::LoadEasing()
 {
-	for (int i = 0; i < SCMEN_Num; i++)LoadEasingData("stageclear/menuposx.csv", easeMenuPosX_[i], i);
-	for (int i = 0; i < SCMEN_Num; i++)LoadEasingData("stageclear/menuendposx.csv", easeMenuEndPosX_[i], i);
-	LoadEasingData("stageclear/cursorposx.csv", easeCursorPosX_);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageclear/eyestageclear.csv", easeEyeStageClear_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageclear/targetstageclear.csv", easeTargetStageClear_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageclear/playermovestageselect.csv", easePlayerMoveStageSelect_[i], i);
-	LoadEasingData("stageclear/fadeinout.csv", easeFadeInOut_);
+	for (int i = 0; i < SCMEN_Num; i++)Easing::LoadEasingData("stageclear/menuposx.csv", easeMenuPosX_[i], i);
+	for (int i = 0; i < SCMEN_Num; i++)Easing::LoadEasingData("stageclear/menuendposx.csv", easeMenuEndPosX_[i], i);
+	Easing::LoadEasingData("stageclear/cursorposx.csv", easeCursorPosX_);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageclear/eyestageclear.csv", easeEyeStageClear_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageclear/targetstageclear.csv", easeTargetStageClear_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageclear/playermovestageselect.csv", easePlayerMoveStageSelect_[i], i);
+	Easing::LoadEasingData("stageclear/fadeinout.csv", easeFadeInOut_);
 }
 
 void StageClearScene::UpdateChangeColor()

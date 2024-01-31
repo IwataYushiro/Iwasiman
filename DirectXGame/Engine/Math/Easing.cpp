@@ -1,5 +1,9 @@
 #include "Easing.h"
 #include <cmath>
+#include <cassert>
+#include <sstream>
+#include <fstream>
+#include <Windows.h>
 
 using namespace std;
 using namespace IwasiEngine;
@@ -808,4 +812,95 @@ void Easing::SetEasing(const float s, const float e, const float t)
 	differencePos_ = end - start;	//開始位置-終了位置の差
 	isReverse_ = false;
 
+}
+
+//イージングデータの読み込み
+
+void Easing::LoadEasingData(const std::string& fileName, Easing& ease, const uint32_t easeArrayNum)
+{
+	//ストリームの初期化
+	stringstream setEasingCommands;
+	setEasingCommands.str("");//バッファのクリア
+	setEasingCommands.clear(stringstream::goodbit);//状態クリア
+
+	//ディレクトリパスとファイル名を連結してフルパスを得る
+	const string defaultEasingPath = "Resources/csv/Easing/";
+	string fullPath = defaultEasingPath + fileName;
+
+	//ワイド文字列に変換した際の文字列バッファサイズを計算
+	int filePathBufferSize = MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0);
+
+	//ワイド文字列に変換
+	vector<wchar_t> wfilePath(filePathBufferSize);
+	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), -1, wfilePath.data(), filePathBufferSize);
+
+	//ファイルを開く
+	ifstream file;
+	file.open(wfilePath.data());
+	assert(file.is_open());
+
+	//ファイルの内容を文字列ストリームにコピー
+	setEasingCommands << file.rdbuf();
+
+	//ファイルを閉じる
+	file.close();
+
+	//SETNumのバッファ
+	const char* set = SetNumStr(easeArrayNum);
+
+	//1行分の文字列を入れる関数
+	string line;
+	//コマンド実行ループ
+	while (getline(setEasingCommands, line))
+	{
+		//1行分の文字列をストリームに変換して解析しやすくする
+		istringstream line_stream(line);
+
+		string word;
+		//,区切りで行の戦闘文字列を取得
+		getline(line_stream, word, ',');
+
+		// "//"=コメント
+		if (word.find("//") == 0)continue;//コメント行を飛ばす
+		//最大10種類のイージングに対応
+		for (uint32_t i = 0; i < ESN_MAX; i++)SetEasingCommand(set, i, easeArrayNum, ease, line_stream, word);
+	}
+}
+
+//イージングのコマンドから値のセット
+void Easing::SetEasingCommand(const char* findWord, const uint32_t num, const uint32_t easeArrayNum, Easing& ease, std::istream& stream, std::string& word)
+{
+	//イージングのセット
+	if (word.find(findWord) == 0 && num == easeArrayNum)
+	{
+		//x座標
+		getline(stream, word, ',');
+		float start = static_cast<float>(std::atof(word.c_str()));
+		//y座標
+		getline(stream, word, ',');
+		float end = static_cast<float>(std::atof(word.c_str()));
+		//z座標
+		getline(stream, word, ',');
+		float time = static_cast<float>(std::atof(word.c_str()));
+		//イージングセット
+		ease.SetEasing(start, end, time);
+	}
+}
+
+//SETの文字を決める
+
+const char* Easing::SetNumStr(const uint32_t easeArrayNum)
+{
+	//配列番号によって返す文字列は違う
+	if (easeArrayNum == ESN_0)return "SET0";
+	else if (easeArrayNum == ESN_1)return "SET1";
+	else if (easeArrayNum == ESN_2)return "SET2";
+	else if (easeArrayNum == ESN_3)return "SET3";
+	else if (easeArrayNum == ESN_4)return "SET4";
+	else if (easeArrayNum == ESN_5)return "SET5";
+	else if (easeArrayNum == ESN_6)return "SET6";
+	else if (easeArrayNum == ESN_7)return "SET7";
+	else if (easeArrayNum == ESN_8)return "SET8";
+	else if (easeArrayNum == ESN_9)return "SET9";
+	else return nullptr;
 }

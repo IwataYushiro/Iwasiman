@@ -708,20 +708,20 @@ void StageSelectScene::LoadLVData(const std::string& stagePath)
 
 void StageSelectScene::LoadEasing()
 {
-	for (int i = 0; i < SSMEN_Num; i++)LoadEasingData("stageselect/menuposx.csv", easeMenuPosX_[i], i);
-	for (int i = 0; i < SSMEN_Num; i++)LoadEasingData("stageselect/menuendposx.csv", easeMenuEndPosX_[i], i);
-	LoadEasingData("stageselect/cursorposx.csv", easeCursorPosX_);
-	for (int i = 0; i < SSSMI_Num; i++)LoadEasingData("stageselect/startstageposx.csv", easeStartStagePosX_[i], i);
-	for (int i = 0; i < SSSMI_Num; i++)LoadEasingData("stageselect/startstageposy.csv", easeStartStagePosY_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageselect/eyestageselect.csv", easeEyeStageSelect_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageselect/targetstageselect.csv", easeTargetStageSelect_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageselect/eyedonemenu.csv", easeEyeDoneMenu_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageselect/targetdonemenu.csv", easeTargetDoneMenu_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageselect/eyegamestart.csv", easeEyeGameStart_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageselect/targetgamestart.csv", easeTargetGameStart_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageselect/playerstartmove.csv", easePlayerStartMove_[i], i);
-	for (int i = 0; i < XYZ_Num; i++)LoadEasingData("stageselect/playerquitmove.csv", easePlayerQuitMove_[i], i);
-	LoadEasingData("stageselect/fadeinout.csv", easeFadeInOut_);
+	for (int i = 0; i < SSMEN_Num; i++)Easing::LoadEasingData("stageselect/menuposx.csv", easeMenuPosX_[i], i);
+	for (int i = 0; i < SSMEN_Num; i++)Easing::LoadEasingData("stageselect/menuendposx.csv", easeMenuEndPosX_[i], i);
+	Easing::LoadEasingData("stageselect/cursorposx.csv", easeCursorPosX_);
+	for (int i = 0; i < SSSMI_Num; i++)Easing::LoadEasingData("stageselect/startstageposx.csv", easeStartStagePosX_[i], i);
+	for (int i = 0; i < SSSMI_Num; i++)Easing::LoadEasingData("stageselect/startstageposy.csv", easeStartStagePosY_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageselect/eyestageselect.csv", easeEyeStageSelect_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageselect/targetstageselect.csv", easeTargetStageSelect_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageselect/eyedonemenu.csv", easeEyeDoneMenu_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageselect/targetdonemenu.csv", easeTargetDoneMenu_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageselect/eyegamestart.csv", easeEyeGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageselect/targetgamestart.csv", easeTargetGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageselect/playerstartmove.csv", easePlayerStartMove_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("stageselect/playerquitmove.csv", easePlayerQuitMove_[i], i);
+	Easing::LoadEasingData("stageselect/fadeinout.csv", easeFadeInOut_);
 
 }
 
