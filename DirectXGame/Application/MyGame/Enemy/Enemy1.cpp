@@ -377,7 +377,10 @@ void Enemy1::DrawParticle()
 //状態変化用の更新関数
 //接近
 void Enemy1::UpdateApproach() {
-	
+	//自機の距離ー敵の距離が一定の距離より小さかったら動くようにする
+	const float updatePositionX = 50.0f;
+	if (player_->GetPosition().x - position_.x <= -updatePositionX)return;
+
 	//移動
 	position_.x += speed_.x;
 	position_.y += speed_.y;
