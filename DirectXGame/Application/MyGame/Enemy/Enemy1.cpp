@@ -378,7 +378,7 @@ void Enemy1::DrawParticle()
 //Ú‹ß
 void Enemy1::UpdateApproach() {
 	//Ž©‹@‚Ì‹——£[“G‚Ì‹——£‚ªˆê’è‚Ì‹——£‚æ‚è¬‚³‚©‚Á‚½‚ç“®‚­‚æ‚¤‚É‚·‚é
-	const float updatePositionX = 50.0f;
+	const float updatePositionX = 90.0f;
 	if (player_->GetPosition().x - position_.x <= -updatePositionX)return;
 
 	//ˆÚ“®

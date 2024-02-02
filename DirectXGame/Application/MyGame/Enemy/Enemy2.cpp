@@ -431,6 +431,8 @@ void Enemy2::DrawParticle()
 //‰º~
 void Enemy2::UpdateApproach() {
 
+	const float updatePositionX = 90.0f;
+	if (player_->GetPosition().x - position_.x <= -updatePositionX)return;
 	//ˆÚ“®
 	if (!onGround_)
 	{
@@ -448,6 +450,8 @@ void Enemy2::UpdateApproach() {
 //ã¸
 void Enemy2::UpdateBack()
 {
+	const float updatePositionX = 90.0f;
+	if (player_->GetPosition().x - position_.x <= -updatePositionX)return;
 	//ˆÚ“®
 	position_.x += backSpeed_.x;
 	position_.y += backSpeed_.y;
