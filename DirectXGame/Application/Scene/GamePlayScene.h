@@ -75,6 +75,8 @@ public://メンバ関数
 	void FadeOut(const DirectX::XMFLOAT3& color);
 	//描画
 	void Draw() override;
+	//ポストエフェクト描画
+	void DrawPostEffect() override;
 	//終了
 	void Finalize() override;
 

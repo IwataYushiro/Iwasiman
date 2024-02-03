@@ -24,7 +24,8 @@ public://メンバ関数
 
 	//描画
 	void Draw();
-
+	//ポストエフェクト描画
+	void DrawPostEffect();
 	//終了
 	void Finalize();
 

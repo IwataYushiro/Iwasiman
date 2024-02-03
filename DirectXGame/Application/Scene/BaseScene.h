@@ -10,6 +10,7 @@
 #include "LevelLoaderJson.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
+#include "PostEffect.h"
 
 #include <map>
 #include <memory>
@@ -42,6 +43,7 @@ protected://エイリアス
 	using LightGroup = IwasiEngine::LightGroup;
 	using Particle = IwasiEngine::Particle;
 	using ParticleManager = IwasiEngine::ParticleManager;
+	using PostEffect = IwasiEngine::PostEffect;
 
 public://メンバ関数
 	virtual~BaseScene() = default;
@@ -52,6 +54,8 @@ public://メンバ関数
 	virtual void Update() = 0;
 	//描画
 	virtual void Draw() = 0;
+	//ポストエフェクト描画
+	virtual void DrawPostEffect() = 0;
 	//終了処理
 	virtual void Finalize() = 0;
 	//フェードインアウト
@@ -77,6 +81,8 @@ protected://継承メンバ変数
 	std::map<std::string, Model*> models_;
 	//演出スキップ用カウント
 	bool skip_ = false;
+	//ポストエフェクト
+	std::unique_ptr<PostEffect> postEffect_;
 
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)

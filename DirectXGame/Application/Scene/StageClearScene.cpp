@@ -143,6 +143,9 @@ void StageClearScene::Initialize()
 		menuCount_ = SCSMI_StageSelect;
 	}
 
+	//ポストエフェクト初期化
+	postEffect_ = std::make_unique<PostEffect>();
+	postEffect_->Initialize(spCommon_);
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
 	for (int i = 0; i < SCMEN_Num; i++)easeMenuPosX_[i].Standby(false);
@@ -512,6 +515,8 @@ void StageClearScene::UpdateIsMenu()
 
 void StageClearScene::Draw()
 {
+	//ポストエフェクトをかけたいオブジェクトはここに
+	postEffect_->PreDraw(dxCommon_->GetCommandList());
 	//背景スプライト描画前処理
 	spCommon_->PreDraw();
 
@@ -539,7 +544,14 @@ void StageClearScene::Draw()
 	pmFire_->Draw();	//煙エフェクト
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
+	postEffect_->PostDraw(dxCommon_->GetCommandList());
+}
 
+void StageClearScene::DrawPostEffect()
+{
+	//ポストエフェクトをここで描画
+	postEffect_->Draw(dxCommon_->GetCommandList());
+	//ポストエフェクトをかけないオブジェクトはここに
 	//前景スプライト
 	spCommon_->PreDraw();
 	//スプライト描画	

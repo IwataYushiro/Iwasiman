@@ -132,6 +132,10 @@ void GameOverScene::Initialize()
 	pmGoal_->SetParticleModel(particleGoal_.get());
 	pmGoal_->SetCamera(camera_.get());
 
+	//ポストエフェクト初期化
+	postEffect_ = std::make_unique<PostEffect>();
+	postEffect_->Initialize(spCommon_);
+	
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
 	for (int i = 0; i < GOMEN_Num; i++)easeMenuPosX_[i].Standby(false);
@@ -538,6 +542,8 @@ void GameOverScene::UpdateIsQuitTitle()
 
 void GameOverScene::Draw()
 {
+	//ポストエフェクトをかけたいオブジェクトはここに
+	postEffect_->PreDraw(dxCommon_->GetCommandList());
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
@@ -562,7 +568,14 @@ void GameOverScene::Draw()
 	pmGoal_->Draw();	//パーティクル(ゴール)
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
+	postEffect_->PostDraw(dxCommon_->GetCommandList());
+}
 
+void GameOverScene::DrawPostEffect()
+{
+	//ポストエフェクトをここで描画
+	postEffect_->Draw(dxCommon_->GetCommandList());
+	//ポストエフェクトをかけないオブジェクトはここに
 	//前景スプライト
 	spCommon_->PreDraw();
 	//スプライト描画	
@@ -577,6 +590,7 @@ void GameOverScene::Draw()
 	spriteCursor_->Draw();				 //カーソルスプライト
 	spriteStageName_->Draw();			 //ステージ名スプライト
 	spriteMenuUI_->Draw();				//メニュー操作方法スプライト
+	
 }
 
 void GameOverScene::Finalize()

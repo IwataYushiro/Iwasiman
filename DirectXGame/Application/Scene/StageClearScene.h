@@ -35,6 +35,8 @@ public://メンバ関数
 	void UpdateIsMenu();
 	//描画
 	void Draw() override;
+	//ポストエフェクト描画
+	void DrawPostEffect() override;
 	//フェードアウト
 	void FadeIn(const DirectX::XMFLOAT3& color)override;
 	//終了

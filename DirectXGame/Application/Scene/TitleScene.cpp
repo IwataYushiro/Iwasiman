@@ -136,7 +136,10 @@ void TitleScene::Initialize()
 	pmGoal_->SetParticleModel(particleGoal_.get());
 	pmGoal_->SetCamera(camera_.get());
 
-	
+	//ポストエフェクト初期化
+	postEffect_ = std::make_unique<PostEffect>();
+	postEffect_->Initialize(spCommon_,"cold");
+
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
 }
@@ -271,7 +274,7 @@ void TitleScene::Update()
 	//ImGui
 	imguiManager_->Begin();
 #ifdef _DEBUG
-	//camera_->DebugCamera(true);//デバッグカメラ
+	camera_->DebugCamera(true);//デバッグカメラ
 #endif // _DEBUG
 
 	imguiManager_->End();
@@ -546,8 +549,9 @@ void TitleScene::FadeIn(const DirectX::XMFLOAT3& color)
 
 void TitleScene::Draw()
 {
+	//ポストエフェクトをかけたいオブジェクトはここに
+	postEffect_->PreDraw(dxCommon_->GetCommandList());
 	//背景スプライト描画前処理
-
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	for (std::unique_ptr<Object3d>& player : objPlayers_)player->Draw();				//プレイヤー
@@ -571,7 +575,14 @@ void TitleScene::Draw()
 	pmGoal_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
+	postEffect_->PostDraw(dxCommon_->GetCommandList());
+}
 
+void TitleScene::DrawPostEffect()
+{
+	//ポストエフェクトをここで描画
+	postEffect_->Draw(dxCommon_->GetCommandList());
+	//ポストエフェクトをかけないオブジェクトはここに
 	spCommon_->PreDraw();
 	//前景スプライト
 	//スプライト描画
@@ -588,6 +599,7 @@ void TitleScene::Draw()
 	spriteCursor_->Draw();					//カーソルスプライト
 	spriteStageName_->Draw();				//ステージ名スプライト
 	spriteMenuUI_->Draw();					//メニュー操作方法スプライト
+	
 }
 
 void TitleScene::Finalize()

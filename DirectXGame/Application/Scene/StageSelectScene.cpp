@@ -147,6 +147,9 @@ void StageSelectScene::Initialize()
 	pmGoal_->SetParticleModel(particleGoal_.get());
 	pmGoal_->SetCamera(camera_.get());
 
+	//ポストエフェクト初期化
+	postEffect_ = std::make_unique<PostEffect>();
+	postEffect_->Initialize(spCommon_);
 
 	//イージングスタンバイ
 	for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(false);
@@ -527,7 +530,8 @@ void StageSelectScene::UpdateIsQuitTitle()
 
 void StageSelectScene::Draw()
 {
-
+	//ポストエフェクトをかけたいオブジェクトはここに
+	postEffect_->PreDraw(dxCommon_->GetCommandList());
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 
@@ -552,8 +556,15 @@ void StageSelectScene::Draw()
 	pmGoal_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
+	postEffect_->PostDraw(dxCommon_->GetCommandList());
+	
+}
 
-
+void StageSelectScene::DrawPostEffect()
+{
+	//ポストエフェクトをここで描画
+	postEffect_->Draw(dxCommon_->GetCommandList());
+	//ポストエフェクトをかけないオブジェクトはここに
 	spCommon_->PreDraw();
 	//前景スプライト
 	//スプライト描画	
@@ -569,7 +580,6 @@ void StageSelectScene::Draw()
 	spriteCursor_->Draw();					//カーソルスプライト
 	spriteStageName_->Draw();				//ステージ名スプライト
 	spriteMenuUI_->Draw();					//メニュー操作方法スプライト
-
 }
 
 void StageSelectScene::Finalize()

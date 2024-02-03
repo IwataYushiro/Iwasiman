@@ -36,6 +36,8 @@ public://メンバ関数
 	void UpdateIsQuitTitle();
 	//描画
 	void Draw() override;
+	//ポストエフェクト描画
+	void DrawPostEffect() override;
 	//終了
 	void Finalize() override;
 	//フェードアウト

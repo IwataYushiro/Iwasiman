@@ -80,7 +80,11 @@ void GamePlayScene::Initialize()
 	pm_->SetBlendMode(ParticleManager::BP_ADD);
 	pm_->SetParticleModel(particle1_.get());
 	pm_->SetCamera(camera_.get());
-
+	
+	//ポストエフェクト初期化
+	postEffect_ = std::make_unique<PostEffect>();
+	postEffect_->Initialize(spCommon_);
+	
 	//イージングスタンバイ
 	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].Standby(false);
 	easeFadeInOut_.Standby(false);
@@ -651,6 +655,8 @@ void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& color)
 
 void GamePlayScene::Draw()
 {
+	//ポストエフェクトをかけたいオブジェクトはここに
+	postEffect_->PreDraw(dxCommon_->GetCommandList());
 	//モデル
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
@@ -680,7 +686,14 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();								//アイテムのパーティクル
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
+	postEffect_->PostDraw(dxCommon_->GetCommandList());
+}
 
+void GamePlayScene::DrawPostEffect()
+{
+	//ポストエフェクトをここで描画
+	postEffect_->Draw(dxCommon_->GetCommandList());
+	//ポストエフェクトをかけないオブジェクトはここに
 	//スプライト描画前処理
 	spCommon_->PreDraw();
 	//前景スプライト
@@ -699,7 +712,7 @@ void GamePlayScene::Draw()
 		spritePauseUI_->Draw();
 		spriteDone_->Draw();
 		spriteCursor_->Draw();
-		
+
 
 	}
 	else//ゲームプレイ時
@@ -752,8 +765,6 @@ void GamePlayScene::Draw()
 		spriteReady_->Draw();
 		spriteGo_->Draw();
 	}
-
-
 }
 
 void GamePlayScene::Finalize()

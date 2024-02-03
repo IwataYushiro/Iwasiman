@@ -48,6 +48,8 @@ public://メンバ関数(ステージ番号)
 	void FadeIn(const DirectX::XMFLOAT3& color) override;
 	//描画
 	void Draw() override;
+	//ポストエフェクト描画
+	void DrawPostEffect() override;
 	//終了
 	void Finalize() override;
 	//レベルデータ読み込み
