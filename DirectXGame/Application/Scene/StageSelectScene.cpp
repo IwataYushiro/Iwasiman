@@ -563,7 +563,7 @@ void StageSelectScene::Draw()
 void StageSelectScene::DrawPostEffect()
 {
 	//ポストエフェクトをここで描画
-	postEffect_->Draw(dxCommon_->GetCommandList());
+	postEffect_->Draw();
 	//ポストエフェクトをかけないオブジェクトはここに
 	spCommon_->PreDraw();
 	//前景スプライト

@@ -559,7 +559,7 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 
 }
 
-void PostEffect::Draw([[maybe_unused]] ID3D12GraphicsCommandList* cmdList)
+void PostEffect::Draw()
 {
 	//パイプラインステートとルートシグネチャの設定
 	spCommon_->GetDxCommon()->GetCommandList()->SetPipelineState(pipelineState_.Get());

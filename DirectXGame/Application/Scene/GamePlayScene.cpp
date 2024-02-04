@@ -692,7 +692,7 @@ void GamePlayScene::Draw()
 void GamePlayScene::DrawPostEffect()
 {
 	//ポストエフェクトをここで描画
-	postEffect_->Draw(dxCommon_->GetCommandList());
+	postEffect_->Draw();
 	//ポストエフェクトをかけないオブジェクトはここに
 	//スプライト描画前処理
 	spCommon_->PreDraw();

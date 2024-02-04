@@ -107,7 +107,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
         void CreateGraphicsPipelineState(const std::string& fileName);
 
         //描画(コマンドリスト)
-        void Draw(ID3D12GraphicsCommandList* cmdList);
+        void Draw();
         //描画前処理(コマンドリスト)
         void PreDraw(ID3D12GraphicsCommandList* cmdList);
 

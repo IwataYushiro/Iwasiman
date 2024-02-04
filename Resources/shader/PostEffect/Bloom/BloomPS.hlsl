@@ -36,7 +36,7 @@ float4 GaussianBlur(VSOutput input) : SV_TARGET
 
     }
     col.rgb = col.rgb / totalWeight;
-    //col.a = 1.0f;
+    col.a = 1.0f;
     return col;
 }
 

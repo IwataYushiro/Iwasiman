@@ -138,7 +138,7 @@ void TitleScene::Initialize()
 
 	//ポストエフェクト初期化
 	postEffect_ = std::make_unique<PostEffect>();
-	postEffect_->Initialize(spCommon_,"cold");
+	postEffect_->Initialize(spCommon_);
 
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
@@ -551,7 +551,7 @@ void TitleScene::Draw()
 {
 	//ポストエフェクトをかけたいオブジェクトはここに
 	postEffect_->PreDraw(dxCommon_->GetCommandList());
-	//背景スプライト描画前処理
+
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	for (std::unique_ptr<Object3d>& player : objPlayers_)player->Draw();				//プレイヤー
@@ -561,13 +561,6 @@ void TitleScene::Draw()
 	//モデル描画後処理
 	Object3d::PostDraw();
 
-	//Fbxモデル描画前処理
-	ObjectFbx::PreDraw(dxCommon_->GetCommandList());
-
-	//objF->Draw();
-	//Fbxモデル描画後処理
-	ObjectFbx::PostDraw();
-
 	//エフェクト描画前処理
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
@@ -575,14 +568,16 @@ void TitleScene::Draw()
 	pmGoal_->Draw();
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
+	
 	postEffect_->PostDraw(dxCommon_->GetCommandList());
 }
 
 void TitleScene::DrawPostEffect()
 {
 	//ポストエフェクトをここで描画
-	postEffect_->Draw(dxCommon_->GetCommandList());
+	postEffect_->Draw();
 	//ポストエフェクトをかけないオブジェクトはここに
+	//スプライト描画前処理
 	spCommon_->PreDraw();
 	//前景スプライト
 	//スプライト描画
@@ -599,7 +594,7 @@ void TitleScene::DrawPostEffect()
 	spriteCursor_->Draw();					//カーソルスプライト
 	spriteStageName_->Draw();				//ステージ名スプライト
 	spriteMenuUI_->Draw();					//メニュー操作方法スプライト
-	
+
 }
 
 void TitleScene::Finalize()

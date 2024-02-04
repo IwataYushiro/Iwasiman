@@ -574,7 +574,7 @@ void GameOverScene::Draw()
 void GameOverScene::DrawPostEffect()
 {
 	//ポストエフェクトをここで描画
-	postEffect_->Draw(dxCommon_->GetCommandList());
+	postEffect_->Draw();
 	//ポストエフェクトをかけないオブジェクトはここに
 	//前景スプライト
 	spCommon_->PreDraw();
