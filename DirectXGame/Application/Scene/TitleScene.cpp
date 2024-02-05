@@ -138,7 +138,7 @@ void TitleScene::Initialize()
 
 	//ポストエフェクト初期化
 	postEffect_ = std::make_unique<PostEffect>();
-	postEffect_->Initialize(spCommon_);
+	postEffect_->Initialize(spCommon_,"bloom");
 
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
@@ -274,7 +274,7 @@ void TitleScene::Update()
 	//ImGui
 	imguiManager_->Begin();
 #ifdef _DEBUG
-	camera_->DebugCamera(true);//デバッグカメラ
+	//camera_->DebugCamera(true);//デバッグカメラ
 #endif // _DEBUG
 
 	imguiManager_->End();
@@ -362,7 +362,7 @@ void TitleScene::UpdateIsStageSelect()
 	//カメラもセット
 	camera_->SetEye({ easeEyeGameStart_[XYZ_X].num_X, easeEyeGameStart_[XYZ_Y].num_X, easeEyeGameStart_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
-	//じきの座標セット
+	//自機の座標セット
 	for (std::unique_ptr<Object3d>& player : objPlayers_) player->SetPosition({ easePlayerMove_[XYZ_X].num_X,easePlayerMove_[XYZ_Y].num_X,easePlayerMove_[XYZ_Z].num_X });
 	//メニューのイージングが終わったら遷移演出
 	if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)FadeIn(black_);//黒くする	

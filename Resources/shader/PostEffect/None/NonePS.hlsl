@@ -7,16 +7,8 @@ SamplerState smp      : register(s0);	//0番スロットに設定されたサンプラー
 //デフォルト
 float4 main(VSOutput input) : SV_TARGET
 {
-    float2 samplePoint = input.uv;
-    float4 texcolor = tex.Sample(smp, samplePoint);
-    samplePoint.x += 0.01;
-
-    texcolor.r = tex.Sample(smp, samplePoint).r;
-    texcolor.g = tex.Sample(smp, -samplePoint).g;
-    texcolor.b = tex.Sample(smp, float2(0.0f,-samplePoint.x)).b;
-    return texcolor;
-    //float4 texcolor = tex.Sample(smp, input.uv);
-    //return float4(texcolor.rgb, 1.0f);
+    float4 texcolor = tex.Sample(smp, input.uv);
+    return float4(texcolor.rgb, 1.0f);
 }
 
 //走査線っぽいの

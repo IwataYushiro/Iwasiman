@@ -20,13 +20,13 @@ float Gaussian(float2 drawUV, float2 pickUV, float sigma)
 
 float4 GaussianBlur(VSOutput input) : SV_TARGET
 {
-    float totalWeight = 0.0f, _Sigma = 0.005f, _StepWidth = 0.001f;
+    float totalWeight = 0.0f, _Sigma = 0.005f, _StepWidth = 0.001f, _Power = 1.0f;
     float4 col = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-    for (float py = -_Sigma * 2.0f; py <= _Sigma * 2.0f; py += _StepWidth)
+    for (float py = -_Sigma * _Power; py <= _Sigma * _Power; py += _StepWidth)
     {
 				//[loop]A[unroll]‚Í‘‚©‚È‚­‚Ä‚¢‚¢
-        for (float px = -_Sigma * 2.0f; px <= _Sigma * 2.0f; px += _StepWidth)
+        for (float px = -_Sigma * _Power; px <= _Sigma * _Power; px += _StepWidth)
         {
             float2 pickUV = input.uv + float2(px, py);
             float weight = Gaussian(input.uv, pickUV, _Sigma);
