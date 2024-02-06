@@ -134,7 +134,7 @@ void GameOverScene::Initialize()
 
 	//ポストエフェクト初期化
 	postEffect_ = std::make_unique<PostEffect>();
-	postEffect_->Initialize(spCommon_);
+	postEffect_->Initialize("GrayScale");
 	
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
@@ -324,6 +324,7 @@ void GameOverScene::UpdateIsGameOver()
 			//イージングをスタンバイし次の処理へ
 			if (menuCount_ == GOSMI_Continue)//コンティニュー
 			{
+				postEffect_->Initialize();
 				for (int i = 0; i < GOMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeContinue_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetContinue_[i].Standby(false);
@@ -338,6 +339,7 @@ void GameOverScene::UpdateIsGameOver()
 			}
 			else if (menuCount_ == GOSMI_StageSelect)//ステージセレクトへ戻る
 			{
+				postEffect_->Initialize();
 				for (int i = 0; i < GOMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].Standby(false);

@@ -83,7 +83,7 @@ void GamePlayScene::Initialize()
 	
 	//ポストエフェクト初期化
 	postEffect_ = std::make_unique<PostEffect>();
-	postEffect_->Initialize(spCommon_);
+	postEffect_->Initialize();
 	
 	//イージングスタンバイ
 	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].Standby(false);

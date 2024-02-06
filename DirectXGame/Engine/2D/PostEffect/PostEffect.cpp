@@ -27,10 +27,9 @@ PostEffect::PostEffect()
 {
 }
 
-void PostEffect::Initialize(const SpriteCommon* spCommon, const std::string& fileName)
+void PostEffect::Initialize(const std::string& fileName)
 {
-	assert(spCommon);
-	this->spCommon_ = spCommon;
+	spCommon_ = SpriteCommon::GetInstance();
 
 	//頂点バッファ
 	CreateVertexBuffer();

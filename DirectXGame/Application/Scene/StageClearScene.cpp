@@ -145,7 +145,7 @@ void StageClearScene::Initialize()
 
 	//ポストエフェクト初期化
 	postEffect_ = std::make_unique<PostEffect>();
-	postEffect_->Initialize(spCommon_);
+	postEffect_->Initialize();
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);
 	for (int i = 0; i < SCMEN_Num; i++)easeMenuPosX_[i].Standby(false);

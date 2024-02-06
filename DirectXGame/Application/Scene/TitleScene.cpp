@@ -138,7 +138,7 @@ void TitleScene::Initialize()
 
 	//ポストエフェクト初期化
 	postEffect_ = std::make_unique<PostEffect>();
-	postEffect_->Initialize(spCommon_,"bloom");
+	postEffect_->Initialize("Bloom");
 
 	//イージングスタンバイ
 	easeFadeInOut_.Standby(false);

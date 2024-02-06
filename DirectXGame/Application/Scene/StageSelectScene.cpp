@@ -149,7 +149,7 @@ void StageSelectScene::Initialize()
 
 	//ポストエフェクト初期化
 	postEffect_ = std::make_unique<PostEffect>();
-	postEffect_->Initialize(spCommon_);
+	postEffect_->Initialize();
 
 	//イージングスタンバイ
 	for (int i = 0; i < SSMEN_Num; i++)easeMenuPosX_[i].Standby(false);

@@ -81,8 +81,8 @@ namespace IwasiEngine//IwasiEngineのネームスペース
     public:
         //コンストラクタ
         PostEffect();
-        //初期化(スプライト基盤、使用ポストエフェクトパス)
-        void Initialize(const SpriteCommon* spCommon, const std::string& fileName = "None");
+        //初期化(使用ポストエフェクトパス)
+        void Initialize(const std::string& fileName = "None");
         //更新
         void Update();
         //頂点バッファ生成
