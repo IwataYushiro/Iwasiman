@@ -175,7 +175,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyDanger.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyCore.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.cpp" />
-    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseSphere.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseGround.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Spike.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Goal\Goal.cpp" />
@@ -237,7 +237,7 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\BaseGimmick.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\AbstractGimmickFactory.h" />
-    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseSphere.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseGround.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Spike.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Goal\Goal.h" />

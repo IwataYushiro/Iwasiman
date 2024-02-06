@@ -384,7 +384,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.cpp">
       <Filter>Source File\Application\MyGame\Gimmick\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseSphere.cpp">
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseGround.cpp">
       <Filter>Source File\Application\MyGame\Gimmick</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\Scene\StageSelectScene.cpp">
@@ -593,7 +593,7 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\AbstractGimmickFactory.h">
       <Filter>Header File\Application\MyGame\Gimmick\Factory</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseSphere.h">
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseGround.h">
       <Filter>Header File\Application\MyGame\Gimmick</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\StageSelectScene.h">

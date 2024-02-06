@@ -1,4 +1,4 @@
-#include "FallAndRiseSphere.h"
+#include "FallAndRiseGround.h"
 #include "Player.h"
 #include "MeshCollider.h"
 #include <cassert>
@@ -9,17 +9,17 @@ using namespace DirectX;
 using namespace IwasiEngine;
 /*
 
-*	FallAndRiseSphere.cpp
+*	FallAndRiseGround.cpp
 
 *	落ちる球と昇る球
 
 */
 
 
-std::unique_ptr<FallAndRiseSphere> FallAndRiseSphere::Create(Model* model, const Player* player, const unsigned short subAttribute)
+std::unique_ptr<FallAndRiseGround> FallAndRiseGround::Create(Model* model, const Player* player, const unsigned short subAttribute)
 {
 	//インスタンス生成
-	std::unique_ptr<FallAndRiseSphere> ins = std::make_unique<FallAndRiseSphere>();
+	std::unique_ptr<FallAndRiseGround> ins = std::make_unique<FallAndRiseGround>();
 
 	if (ins == nullptr) return nullptr;
 
@@ -38,7 +38,7 @@ std::unique_ptr<FallAndRiseSphere> FallAndRiseSphere::Create(Model* model, const
 	return ins;
 }
 
-bool FallAndRiseSphere::Initialize(Model* model)
+bool FallAndRiseGround::Initialize(Model* model)
 {
 	//初期化
 	if (!Object3d::Initialize()) return false;
@@ -54,7 +54,7 @@ bool FallAndRiseSphere::Initialize(Model* model)
 
 }
 
-void FallAndRiseSphere::Update()
+void FallAndRiseGround::Update()
 {
 	
 	//更新時初期化
@@ -83,7 +83,7 @@ void FallAndRiseSphere::Update()
 	
 }
 
-void FallAndRiseSphere::UpdateFallSphere()
+void FallAndRiseGround::UpdateFallSphere()
 {
 	if (isRide_)//乗ってる場合
 	{
@@ -100,7 +100,7 @@ void FallAndRiseSphere::UpdateFallSphere()
 	}
 }
 
-void FallAndRiseSphere::UpdateFallSphereReturn()
+void FallAndRiseGround::UpdateFallSphereReturn()
 {
 	const float speed = 0.1f;//速度
 
@@ -127,7 +127,7 @@ void FallAndRiseSphere::UpdateFallSphereReturn()
 	
 }
 
-void FallAndRiseSphere::UpdateRiseSphere()
+void FallAndRiseGround::UpdateRiseSphere()
 {
 	if (isRide_)//乗ってる場合
 	{
@@ -144,7 +144,7 @@ void FallAndRiseSphere::UpdateRiseSphere()
 	}
 }
 
-void FallAndRiseSphere::UpdateRiseSphereReturn()
+void FallAndRiseGround::UpdateRiseSphereReturn()
 {
 	const float speed = 0.1f;//速度
 	if (isRide_)//乗ってる場合
@@ -169,12 +169,12 @@ void FallAndRiseSphere::UpdateRiseSphereReturn()
 	}
 }
 
-void FallAndRiseSphere::Draw()
+void FallAndRiseGround::Draw()
 {
 	Object3d::Draw();//描画
 }
 
-void FallAndRiseSphere::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
+void FallAndRiseGround::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (isRide_)return;//多重ヒットの防止
 

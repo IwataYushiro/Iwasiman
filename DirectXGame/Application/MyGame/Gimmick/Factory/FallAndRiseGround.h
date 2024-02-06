@@ -10,17 +10,17 @@
 
 /*
 
-*	FallAndRiseSphere.h
+*	FallAndRiseGround.h
 
 *	落ちる球と昇る球
 
 */
-class FallAndRiseSphere :public BaseGimmick
+class FallAndRiseGround :public BaseGimmick
 {
 public:
 
 	//生成(使用モデル、プレイヤー、サブ属性)
-	static std::unique_ptr<FallAndRiseSphere> Create(Model* model = nullptr, const Player* player = nullptr,
+	static std::unique_ptr<FallAndRiseGround> Create(Model* model = nullptr, const Player* player = nullptr,
 		const unsigned short subAttribute = 0b1000000000000001);
 	//初期化
 	bool Initialize(Model* model);
