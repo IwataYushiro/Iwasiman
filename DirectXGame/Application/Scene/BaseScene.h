@@ -18,6 +18,8 @@
 //前方宣言
 //シーンマネージャー
 class SceneManager;
+//jsonレベルデータ
+struct LevelData;
 
 /*
 
@@ -83,6 +85,9 @@ protected://継承メンバ変数
 	bool skip_ = false;
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
+
+	//jsonレベルデータ
+	LevelData* levelData_ = nullptr;
 
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)

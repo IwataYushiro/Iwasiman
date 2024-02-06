@@ -18,9 +18,6 @@
 
 #include "SceneManager.h"
 
-//jsonレベルデータ
-struct LevelData;
-
 /*
 
 *	TitleScene.h
@@ -111,9 +108,6 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteTitleBack_ = std::make_unique<Sprite>();			//タイトル画面スプライト(タイトルの後ろ)
 	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();			//ステージ名スプライト
 	std::unique_ptr<Sprite> spriteMenuUI_ = std::make_unique<Sprite>();				//メニュー操作方法スプライト
-
-	//jsonレベルデータ
-	LevelData* levelData_ = nullptr;
 
 	//モデル
 	std::unique_ptr<Model> modelPlayer_ = nullptr;					//自機モデル

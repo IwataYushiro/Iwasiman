@@ -27,9 +27,7 @@
 #include <sstream>
 #include <string>
 
-//jsonレベルデータ
-struct LevelData;
-
+//前方宣言
 class CollisionManager;
 class TouchableObject;
 
@@ -289,9 +287,6 @@ private:
 	std::unique_ptr<Model> modelGround_ = nullptr;				//床のモデル
 	std::unique_ptr<Model> modelSphere_ = nullptr;				//球モデル
 	std::unique_ptr<Model> modelBox_ = nullptr;					//AABB床モデル
-
-	//jsonレベルデータ
-	LevelData* levelData_ = nullptr;
 
 	//オブジェクト配列
 	std::vector<std::unique_ptr<Object3d>> objects_;
