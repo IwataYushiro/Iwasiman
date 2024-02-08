@@ -483,8 +483,16 @@ void Enemy1::OnCollision([[maybe_unused]]const CollisionInfo& info,
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;		//自機本体に触れても何も起こらない
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)		//自機の弾の場合
 		{
+			const float knockBackPosX = 3.0f;//ノックバックする値
+			const float calcKnockBackPositionX = player_->GetPosition().x - position_.x;
 			if (life_ > hitLife)//ライフが1より大きい場合
 			{
+				//ノックバック
+				//プレイヤーが左側にいたら右にノックバック
+				if (calcKnockBackPositionX <= 0.0f) position_.x += knockBackPosX;
+				//プレイヤーが右側にいたら左にノックバック
+				else  position_.x -= knockBackPosX;
+
 				//パーティクルでヒット演出
 				pmSmoke_->ActiveZ(smoke);
 
@@ -493,11 +501,13 @@ void Enemy1::OnCollision([[maybe_unused]]const CollisionInfo& info,
 			}
 			else//1以下の場合
 			{
+				
 				//パーティクルでヒット演出
 				pmFire_->ActiveZ(fire);
 
 				pmFire_->Update();
 			}
+			
 			//ライフが減る
 			life_--;
 		}
