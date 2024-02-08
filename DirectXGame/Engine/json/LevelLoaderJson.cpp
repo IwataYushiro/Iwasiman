@@ -18,7 +18,7 @@ using namespace IwasiEngine;
 const std::string LevelLoader::DEFAULT_BASE_DIRECTORY = "Resources/json/levels/";
 const std::string LevelLoader::EXTENSION = ".json";
 
-LevelData* LevelLoader::LoadFile(const std::string& fileName)
+std::unique_ptr<LevelData> LevelLoader::LoadFile(const std::string& fileName)
 {
 	//連結してフルパスを得る
 	const std::string fullpath = DEFAULT_BASE_DIRECTORY + fileName + EXTENSION;
@@ -49,7 +49,7 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName)
 	assert(name.compare("scene") == 0);
 
 	//レベルデータ格納用インスタンス
-	LevelData* lvData = new LevelData();
+	std::unique_ptr<LevelData> lvData = std::make_unique<LevelData>();
 	// "objects"の全オブジェクトを走査
 	for (nlohmann::json& object : deserialized["objects"])
 	{

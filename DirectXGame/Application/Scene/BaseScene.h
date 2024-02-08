@@ -87,7 +87,7 @@ protected://継承メンバ変数
 	std::unique_ptr<PostEffect> postEffect_;
 
 	//jsonレベルデータ
-	LevelData* levelData_ = nullptr;
+	std::unique_ptr<LevelData> levelData_ = nullptr;
 
 private://メンバ変数
 	//シーンマネージャー(借りてくるのでここでdeleteはダメゼッタイ)
