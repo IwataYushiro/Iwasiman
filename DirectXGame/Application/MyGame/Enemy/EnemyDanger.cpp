@@ -113,7 +113,7 @@ void EnemyDanger::Update(const bool isStart)
 			isReverse_ = false;
 		}
 		//í‰ñ“]
-		const float rot = 5.0f;
+		const float rot = 7.0f;
 		rotation_.y += rot;
 	}
 	//À•W‚ğ“]‘—
@@ -147,10 +147,10 @@ void EnemyDanger::UpdateParticleSkin()
 	{
 		particleFire_.get(),
 		position_,
-		{radius_*2.0f,radius_ * 2.0f,radius_ * 2.0f},
+		{radius_ * 2.0f,radius_ * 2.0f,radius_ * 2.0f},
 		{ -3.0f,0.2f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		4,
+		MyMath::RandomMTInt(1,5),
 		{MyMath::RandomMTFloat(3.0f,10.0f), 0.0f },
 		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.3f,0.5f),0.0f,1.0f },
 		{ 1.0f,MyMath::RandomMTFloat(0.2f,0.5f),MyMath::RandomMTFloat(0.0f,0.2f),1.0f }
