@@ -5,11 +5,11 @@ Texture2D<float4> tex : register(t0);	//0番スロットに設定されたテクスチャ
 SamplerState smp      : register(s0);	//0番スロットに設定されたサンプラー
 
 //デフォルト
-float4 main(VSOutput input) : SV_TARGET
-{
-    float4 texcolor = tex.Sample(smp, input.uv);
-    return float4(texcolor.rgb, 1.0f);
-}
+//float4 main(VSOutput input) : SV_TARGET
+//{
+//    float4 texcolor = tex.Sample(smp, input.uv);
+//    return float4(texcolor.rgb, 1.0f);
+//}
 
 //走査線っぽいの
 //float4 main(VSOutput input) : SV_TARGET
@@ -26,16 +26,16 @@ float4 main(VSOutput input) : SV_TARGET
 //}
 
 //ビネット
-//float4 main(VSOutput input) : SV_TARGET
-//{
-//    float2 samplePoint = input.uv;
-//    float4 texColor = tex.Sample(smp, samplePoint);
-//    float vignette = length(float2(0.5, 0.5) - input.uv);
-//    float power = 0.3f;//小さいほど強い
-//    vignette = clamp(vignette - power, 0, 1);
-//    texColor.rgb -= vignette;
-//    return texColor;
-//}
+float4 main(VSOutput input) : SV_TARGET
+{
+    float2 samplePoint = input.uv;
+    float4 texColor = tex.Sample(smp, samplePoint);
+    float vignette = length(float2(0.5, 0.5) - input.uv);
+    float power = 0.3f;//小さいほど強い
+    vignette = clamp(vignette - power, 0, 1);
+    texColor.rgb -= vignette;
+    return texColor;
+}
 
 //樽状湾曲
 //float4 main(VSOutput input) : SV_TARGET

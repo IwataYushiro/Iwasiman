@@ -235,6 +235,9 @@
     <Filter Include="Header File\Engine\2D\PostEffect">
       <UniqueIdentifier>{be1d2d58-4698-434a-b22c-ad9db1f4a85c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader File\PostEffect\Vignette">
+      <UniqueIdentifier>{984e3728-6f09-432f-9749-46366dacfe41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectXGame\Application\MyGame\MyGame.cpp">
@@ -682,6 +685,9 @@
     <None Include="Resources\shader\OBJ.hlsli">
       <Filter>Shader File</Filter>
     </None>
+    <None Include="Resources\shader\PostEffect\Vignette\Vignette.hlsli">
+      <Filter>Shader File\PostEffect\Vignette</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
@@ -794,6 +800,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\OBJVS.hlsl">
       <Filter>Shader File</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Vignette\VignettePS.hlsl">
+      <Filter>Shader File\PostEffect\Vignette</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Vignette\VignetteVS.hlsl">
+      <Filter>Shader File\PostEffect\Vignette</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

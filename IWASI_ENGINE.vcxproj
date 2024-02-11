@@ -317,6 +317,7 @@
     <None Include="Resources\shader\PostEffect\Test\Test.hlsli" />
     <None Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlur.hlsli" />
     <None Include="Resources\shader\PostEffect\UVShift\UVShift.hlsli" />
+    <None Include="Resources\shader\PostEffect\Vignette\Vignette.hlsli" />
     <None Include="Resources\shader\Sprite\Sprite.hlsli" />
     <None Include="Resources\shader\Toon\Toon.hlsli" />
   </ItemGroup>
@@ -450,6 +451,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\shader\PostEffect\UVShift\UVShiftVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Vignette\VignettePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Vignette\VignetteVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
