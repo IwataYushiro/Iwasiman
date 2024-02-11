@@ -91,6 +91,8 @@ public:
 	void AddPlayerBullet(const std::unique_ptr<PlayerBullet> playerBullet);
 	//敵弾追加(敵の弾)
 	void AddEnemyBullet(const std::unique_ptr<EnemyBullet> enemyBullet);
+	//ポストエフェクト変更
+	void SetPostEffect(const std::string& post) { postEffect_->Initialize(post); }
 
 private://基盤メンバ変数
 	//DirectX基盤

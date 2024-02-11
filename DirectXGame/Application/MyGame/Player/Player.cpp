@@ -829,8 +829,12 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].Standby(false);
 		//モデルを切り替えて死亡演出へ
 		model_ = modelHit_;
+		//ポストエフェクトも切り替える
+		gameScene_->SetPostEffect("Vignette");
 		isBreak_ = true;
 		isAlive_ = false;
+
+		
 	}
 	//一定の位置まで落ちても死ぬ
 	const float deadPosY = -60.0;
