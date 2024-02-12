@@ -326,7 +326,6 @@ void GameOverScene::UpdateIsGameOver()
 			//イージングをスタンバイし次の処理へ
 			if (menuCount_ == GOSMI_Continue)//コンティニュー
 			{
-				postEffect_->Initialize();
 				for (int i = 0; i < GOMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeContinue_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetContinue_[i].Standby(false);
@@ -334,6 +333,7 @@ void GameOverScene::UpdateIsGameOver()
 				easeContinuePosX_.Standby(false);
 				easeContinuePosY_.Standby(false);
 				easeCursorPosX_.Standby(true);
+				easePostEffectPower_.Standby(false);
 				//コンティニュー
 				isContinue_ = true;
 				isGameover_ = false;
@@ -341,12 +341,12 @@ void GameOverScene::UpdateIsGameOver()
 			}
 			else if (menuCount_ == GOSMI_StageSelect)//ステージセレクトへ戻る
 			{
-				postEffect_->Initialize();
 				for (int i = 0; i < GOMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easePlayerRotateQuitStageSelect_[i].Standby(false);
 				easeCursorPosX_.Standby(true);
+				easePostEffectPower_.Standby(false);
 				//ステージセレクトへ
 				isQuitStageSelect_ = true;
 				isGameover_ = false;
@@ -376,6 +376,7 @@ void GameOverScene::UpdateIsContinue()
 	easeContinuePosX_.ease_in_out_expo();
 	easeContinuePosY_.ease_in_out_expo();
 	easeCursorPosX_.ease_out_expo();
+	easePostEffectPower_.ease_in_out_cubic();
 	//座標セット
 	spriteGameOver_->SetPosition({ easeMenuEndPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
 	spriteContinue_->SetPosition({ easeContinuePosX_.num_X,easeContinuePosY_.num_X });
@@ -386,7 +387,8 @@ void GameOverScene::UpdateIsContinue()
 	//カメラもセット
 	camera_->SetEye({ easeEyeContinue_[XYZ_X].num_X, easeEyeContinue_[XYZ_Y].num_X, easeEyeContinue_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetContinue_[XYZ_X].num_X, easeTargetContinue_[XYZ_Y].num_X, easeTargetContinue_[XYZ_Z].num_X });
-
+	//ポストエフェクトのパワーもセット
+	postEffect_->SetPower(easePostEffectPower_.num_X);
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
 
@@ -457,6 +459,7 @@ void GameOverScene::UpdateIsQuitStageSelect()
 	for (int i = 0; i < XYZ_Num; i++)easeEyeQuitStageSelect_[i].ease_in_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetQuitStageSelect_[i].ease_in_out_expo();
 	easeCursorPosX_.ease_out_expo();
+	easePostEffectPower_.ease_in_out_cubic();
 	//座標セット
 	spriteGameOver_->SetPosition({ easeMenuEndPosX_[GOMEN_Menu].num_X,menuPosY_[GOMEN_Menu] });
 	spriteContinue_->SetPosition({ easeMenuEndPosX_[GOMEN_Continue].num_X,menuPosY_[GOMEN_Continue] });
@@ -467,6 +470,8 @@ void GameOverScene::UpdateIsQuitStageSelect()
 	//カメラもセット
 	camera_->SetEye({ easeEyeQuitStageSelect_[XYZ_X].num_X, easeEyeQuitStageSelect_[XYZ_Y].num_X, easeEyeQuitStageSelect_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetQuitStageSelect_[XYZ_X].num_X, easeTargetQuitStageSelect_[XYZ_Y].num_X, easeTargetQuitStageSelect_[XYZ_Z].num_X });
+	//ポストエフェクトのパワーもセット
+	postEffect_->SetPower(easePostEffectPower_.num_X);
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
@@ -539,7 +544,7 @@ void GameOverScene::UpdateIsQuitTitle()
 		//完全に黒くなったら
 		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 		{
-			sceneManager_->ChangeScene("TITLE", stageNum_);//
+			sceneManager_->ChangeScene("TITLE", stageNum_);//タイトルへ
 		}
 	}
 }
@@ -752,6 +757,7 @@ void GameOverScene::LoadEasing()
 	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("gameover/playerrotatequitstageselect.csv", easePlayerRotateQuitStageSelect_[i], i);
 	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("gameover/playermovequitstageselect.csv", easePlayerMoveQuitStageSelect_[i], i);
 	Easing::LoadEasingData("gameover/fadeinout.csv", easeFadeInOut_);
+	Easing::LoadEasingData("gameover/posteffectpower.csv", easePostEffectPower_);
 }
 
 void GameOverScene::UpdateChangeColor()

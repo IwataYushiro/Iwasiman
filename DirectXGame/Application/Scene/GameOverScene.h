@@ -172,6 +172,8 @@ private://メンバ変数
 	Easing easePlayerMoveQuitStageSelect_[XYZ_Num];
 	//フェードインアウト(false フェードイン、true フェードアウト)
 	Easing easeFadeInOut_;
+	//ポストエフェクトの強さのイージング
+	Easing easePostEffectPower_;
 
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor_;//xyz=rgb
