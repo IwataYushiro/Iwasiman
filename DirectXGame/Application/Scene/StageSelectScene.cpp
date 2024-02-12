@@ -246,6 +246,7 @@ void StageSelectScene::Update()
 	objStage_->Update();				//背景オブジェクト
 	pmFire_->Update();					//パーティクルマネージャー(ジェット)
 	pmGoal_->Update();					//パーティクルマネージャー(ゴールオブジェクト)
+	postEffect_->Update();				//ポストエフェクト
 
 	imguiManager_->Begin();
 #ifdef _DEBUG

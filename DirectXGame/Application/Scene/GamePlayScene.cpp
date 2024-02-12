@@ -161,7 +161,7 @@ void GamePlayScene::Update()
 	camera_->Update();				//カメラ
 	lightGroup_->Update();			//ライト
 	pm_->Update();					//パーティクル
-
+	postEffect_->Update();			//ポストエフェクト
 }
 
 void GamePlayScene::UpdateIsStartGame()

@@ -227,10 +227,11 @@ void StageClearScene::Update()
 	spriteMenuUI_->Update();				//メニュー操作方法スプライト
 
 	//更新
-	camera_->Update();		   //カメラ
-	lightGroup_->Update();	   //ライト
-	pmClear_->Update();		   //クリア時のパーティクル
-	pmFire_->Update();		   //煙のパーティクル
+	camera_->Update();			//カメラ
+	lightGroup_->Update();		//ライト
+	pmClear_->Update();			//クリア時のパーティクル
+	pmFire_->Update();			//煙のパーティクル
+	postEffect_->Update();		//ポストエフェクト
 	//ImGui
 	imguiManager_->Begin();
 	imguiManager_->End();

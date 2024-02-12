@@ -831,6 +831,10 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		model_ = modelHit_;
 		//ポストエフェクトも切り替える
 		gameScene_->SetPostEffect("Vignette");
+		//ポストエフェクトの色も死亡色に
+		const XMFLOAT4 deathColor = { 1.0f,0.2f,0.2f,1.0f };
+		gameScene_->SetPostEffectColor(deathColor);
+
 		isBreak_ = true;
 		isAlive_ = false;
 
@@ -888,28 +892,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 
 #ifdef _DEBUG
 	//デバッグ用
-	//if (input_->TriggerKey(DIK_M))
-	//{
-	//	nowEye_ = camera_->GetEye();
-	//	nowTarget_ = camera_->GetTarget();
-
-	//	easeOffset_ = { -18.0f,position_.y,85.0f + position_.z };//最初にオフセットを足さないと右カメラ、1回足すと中央カメラ、2回足したら左カメラ
-	//	//右カメラ視点[i][0]
-	//	easeDeadCameraEye_[0][0].SetEasing(nowEye_.x, nowEye_.x + easeOffset_.x, 1.0f);
-	//	easeDeadCameraEye_[1][0].SetEasing(nowEye_.y, nowEye_.y + easeOffset_.y, 1.0f);
-	//	easeDeadCameraEye_[2][0].SetEasing(nowEye_.z, nowEye_.z + easeOffset_.z, 1.0f);
-	//	//右カメラ注視点[i][0]
-	//	easeDeadCameraTarget_[0][0].SetEasing(nowTarget_.x, nowTarget_.x + easeOffset_.x, 1.0f);
-	//	easeDeadCameraTarget_[1][0].SetEasing(nowTarget_.y, nowTarget_.y + easeOffset_.y, 1.0f);
-	//	easeDeadCameraTarget_[2][0].SetEasing(nowTarget_.z, nowTarget_.z + easeOffset_.z, 1.0f);
-
-
-	//	for (int i = 0; i < 3; i++)easeDeadCameraEye_[i][0].Standby(false);
-	//	for (int i = 0; i < 3; i++)easeDeadCameraTarget_[i][0].Standby(false);
-
-	//	isBreak_ = true;
-	//	isAlive_ = false;
-	//}
+	
 #endif // _DEBUG
 }
 

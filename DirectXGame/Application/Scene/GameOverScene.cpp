@@ -215,6 +215,8 @@ void GameOverScene::Update()
 	pmFire_->Update();			//炎			
 	pmSmoke_->Update();			//煙
 	pmGoal_->Update();
+	//ポストエフェクト更新
+	postEffect_->Update();
 	//ImGui
 	imguiManager_->Begin();
 #ifdef _DEBUG

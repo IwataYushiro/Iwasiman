@@ -266,8 +266,9 @@ void TitleScene::Update()
 	//更新
 	camera_->Update();		//カメラ
 	lightGroup_->Update();	//ライト
-	pmFire_->Update();			//パーティクルマネージャー(ジェット)
-	pmGoal_->Update();			//パーティクルマネージャー(ゴールオブジェクト)
+	pmFire_->Update();		//パーティクルマネージャー(ジェット)
+	pmGoal_->Update();		//パーティクルマネージャー(ゴールオブジェクト)
+	postEffect_->Update();	//ポストエフェクト
 
 	//objF->Update();
 

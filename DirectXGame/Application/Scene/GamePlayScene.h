@@ -93,6 +93,9 @@ public:
 	void AddEnemyBullet(const std::unique_ptr<EnemyBullet> enemyBullet);
 	//ポストエフェクト変更
 	void SetPostEffect(const std::string& post) { postEffect_->Initialize(post); }
+	//ポストエフェクトカラー変更
+	void SetPostEffectColor(const DirectX::XMFLOAT4 color) { postEffect_->SetColor(color); }
+
 
 private://基盤メンバ変数
 	//DirectX基盤
