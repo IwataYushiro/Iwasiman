@@ -831,9 +831,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		model_ = modelHit_;
 		//ポストエフェクトも切り替える
 		gameScene_->SetPostEffect("Vignette");
-		//ポストエフェクトの色も死亡色に
-		const XMFLOAT4 deathColor = { 1.0f,0.2f,0.2f,1.0f };
-		gameScene_->SetPostEffectColor(deathColor);
+		
 
 		isBreak_ = true;
 		isAlive_ = false;
@@ -996,6 +994,9 @@ void Player::UpdateBreak()
 			isCameraEnd_ = true;
 		}
 	}
+	//ポストエフェクトの色は死亡色に
+	const XMFLOAT4 deathColor = { 1.0f,MyMath::RandomMTFloat(0.0f,0.3f),MyMath::RandomMTFloat(0.0f,0.3f),1.0f };
+	gameScene_->SetPostEffectColor(deathColor);
 
 	//スキップで死亡演出スキップ
 	if (input_->TriggerKey(DIK_SPACE))isSkipDeadDirection_ = true;
