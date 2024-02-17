@@ -13,6 +13,9 @@
 //前方宣言
 //自機クラス
 class Player;
+//ゲームプレイシーン
+class GamePlayScene;
+
 //コリジョンマネージャー
 class CollisionManager;
 
@@ -47,10 +50,10 @@ public://定数
 	const float MAX_TIME = 210.0f;
 public:
 	~Item();
-	
-	//生成(使用モデル、プレイヤー、サブ属性)
+
+	//生成(使用モデル、プレイヤー、ゲームシーン,サブ属性)
 	static std::unique_ptr<Item> Create(const Model* model = nullptr, const Player* player = nullptr
-		,const unsigned short subAttribute = 0b1000000000000001);
+		, GamePlayScene* gamescene = nullptr, const unsigned short subAttribute = 0b1000000000000001);
 	//初期化
 	bool Initialize()override;
 	//リセット
@@ -67,7 +70,7 @@ public:
 	void DrawSprite();
 
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
-	void OnCollision(const CollisionInfo& info, const unsigned short attribute,const unsigned short subAttribute)override;
+	void OnCollision(const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)override;
 
 private:
 	//取得時
@@ -80,7 +83,8 @@ private:
 	const float radius_ = 3.0f;
 	//プレイヤー
 	const Player* player_ = nullptr;
-
+	//ゲームシーン
+	GamePlayScene* gameScene_;
 	//イージング
 	//アイテム取得した時の現在時間
 	float count_;
@@ -100,7 +104,8 @@ public: //アクセッサ、インライン関数
 
 	//プレイヤーセット
 	void SetPlayer(const Player* player) { player_ = player; }
-
+	//ゲームシーンセット
+	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 private:
 	//スプライト基盤クラス
 	SpriteCommon* spCommon_ = nullptr;

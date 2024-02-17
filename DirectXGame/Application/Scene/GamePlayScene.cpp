@@ -80,11 +80,11 @@ void GamePlayScene::Initialize()
 	pm_->SetBlendMode(ParticleManager::BP_ADD);
 	pm_->SetParticleModel(particle1_.get());
 	pm_->SetCamera(camera_.get());
-	
+
 	//ポストエフェクト初期化
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize();
-	
+
 	//イージングスタンバイ
 	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].Standby(false);
 	easeFadeInOut_.Standby(false);
@@ -974,10 +974,10 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 			std::unique_ptr<Player>& player = players_.front();
 			//ジャンプ
 			if (objectData.objectPattern.find("JUMP") == LDTOF_TRUE)
-				newitem = Item::Create(modelItemJump_.get(), player.get(), SUBCOLLISION_ATTR_ITEM_JUMP);
+				newitem = Item::Create(modelItemJump_.get(), player.get(), this, SUBCOLLISION_ATTR_ITEM_JUMP);
 			//回復アイテム
 			else if (objectData.objectPattern.find("HEAL") == LDTOF_TRUE)
-				newitem = Item::Create(modelItemHeal_.get(), player.get(), SUBCOLLISION_ATTR_ITEM_HEAL);
+				newitem = Item::Create(modelItemHeal_.get(), player.get(), this, SUBCOLLISION_ATTR_ITEM_HEAL);
 			// 座標
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
@@ -1263,7 +1263,7 @@ void GamePlayScene::UpdateTutorialSprite()
 	spriteTutorialInfo2_->Update();
 	spriteTutorialInfo3_->Update();
 	spriteTutorialInfo4_->Update();
-	
+
 	spriteTutorialHTPMove_->Update();
 	spriteTutorialHTPDash_->Update();
 	spriteTutorialHTPJump_->Update();
@@ -1426,7 +1426,7 @@ void GamePlayScene::LoadSprite()
 	spCommon_->LoadTexture(GPSTI_ReadyTex, "texture/ready2.png");
 	spriteReady_->Initialize(spCommon_, GPSTI_ReadyTex);
 	spriteReady_->SetPosition({ easeReadyPosition_[XXY_X1].start,easeReadyPosition_[XXY_Y].start });
-	if(stageNum_==SL_Stage1_AreaBoss)spriteReady_->SetColor({ white_.x,white_.y,white_.z,easeFadeInOut_.start });//ボス戦時は真っ白
+	if (stageNum_ == SL_Stage1_AreaBoss)spriteReady_->SetColor({ white_.x,white_.y,white_.z,easeFadeInOut_.start });//ボス戦時は真っ白
 	else spriteReady_->SetColor({ black_.x,black_.y,black_.z,easeFadeInOut_.start });//通常時は真っ黒
 
 	//Go表記文字用のスプライト
@@ -1475,7 +1475,7 @@ void GamePlayScene::LoadSprite()
 	easeTutorialListScale_[XY_X].SetEasing(0.0f, spriteHowToPlayList_->GetSize().x, easeTutorialListScale_[XY_X].maxtime);
 	easeTutorialListScale_[XY_Y].SetEasing(0.0f, spriteHowToPlayList_->GetSize().y, easeTutorialListScale_[XY_Y].maxtime);
 	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
-	
+
 	//ヒントの内容はステージごとに違う
 	if (stageNum_ == SL_StageTutorial_Area1)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-1.png");
 	else if (stageNum_ == SL_StageTutorial_Area2)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-2.png");

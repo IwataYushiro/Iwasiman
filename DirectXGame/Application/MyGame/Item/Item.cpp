@@ -4,6 +4,7 @@
 #include <cassert>
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
+#include "GamePlayScene.h"
 #include "EnumList.h"
 #include "MyMath.h"
 
@@ -23,7 +24,7 @@ Item::~Item()
 {
 }
 
-std::unique_ptr<Item> Item::Create(const Model* model, const Player* player, const unsigned short subAttribute)
+std::unique_ptr<Item> Item::Create(const Model* model, const Player* player,GamePlayScene* gamescene, const unsigned short subAttribute)
 {
 	//インスタンス生成
 	std::unique_ptr<Item> ins = std::make_unique<Item>();
@@ -41,6 +42,8 @@ std::unique_ptr<Item> Item::Create(const Model* model, const Player* player, con
 	//自機のセット
 	if (player)ins->SetPlayer(player);
 	if (subAttribute)ins->collider_->SetSubAttribute(subAttribute);//どのアイテムかは引数で決める
+	//ゲームシーンのセット
+	if (gamescene)ins->SetGameScene(gamescene);
 
 	return ins;
 }
@@ -118,6 +121,11 @@ void Item::UpdateJumpPowerup()
 		ease_.ease_in_out_sine();
 		spriteItemJumpBar_->SetTextureSize({ ease_.num_X, spriteItemJumpBar_->GetSize().y});
 		spriteItemJumpBar_->SetSize({ ease_.num_X, spriteItemJumpBar_->GetSize().y });
+		
+		//ポストエフェクトの色も変更
+		const XMFLOAT4 jumpItemGetColor = { 1.0f,1.0f,MyMath::RandomMTFloat(0.0f,0.2f),1.0f };
+		gameScene_->SetPostEffectColor(jumpItemGetColor);
+
 		//効果時間を進める
 		count_++;
 	}
@@ -130,6 +138,11 @@ void Item::UpdateJumpPowerup()
 	//効果時間が一定の時間に達したら強化解除
 	if (count_ >= MAX_TIME)
 	{
+		//ポストエフェクトも切り替える
+		gameScene_->SetPostEffect("None");
+		//ポストエフェクトの色も変更
+		const XMFLOAT4 resetPostEffectColor = { 1.0f,1.0f,1.0f,1.0f };
+		gameScene_->SetPostEffectColor(resetPostEffectColor);
 		const float countReset = 0.0f;
 		count_ = countReset;
 		isGet_ = false;
@@ -183,6 +196,8 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info,const unsigned
 			{
 				//イージングをスタンバイ
 				ease_.Standby(false);
+				//ポストエフェクトも切り替える
+				gameScene_->SetPostEffect("Vignette");
 				//ゲット
 				isGetJump_ = true;
 			}
