@@ -113,7 +113,7 @@ void EnemyDanger::Update(const bool isStart)
 			isReverse_ = false;
 		}
 		//常時回転
-		const float rot = 5.0f;
+		const float rot = 7.0f;
 		rotation_.y += rot;
 	}
 	//座標を転送
@@ -147,13 +147,13 @@ void EnemyDanger::UpdateParticleSkin()
 	{
 		particleFire_.get(),
 		position_,
-		{radius_*2.0f,radius_ * 2.0f,radius_ * 2.0f},
+		{radius_ * 2.0f,radius_ * 2.0f,radius_ * 2.0f},
 		{ -3.0f,0.2f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		10,
+		MyMath::RandomMTInt(1,5),
 		{MyMath::RandomMTFloat(3.0f,10.0f), 0.0f },
-		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.1f,0.2f),0.0f,1.0f },
-		{ 1.0f,MyMath::RandomMTFloat(0.2f,0.5f),MyMath::RandomMTFloat(0.2f,0.5f),1.0f }
+		{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.3f,0.5f),0.0f,1.0f },
+		{ 1.0f,MyMath::RandomMTFloat(0.2f,0.5f),MyMath::RandomMTFloat(0.0f,0.2f),1.0f }
 
 	};
 	//マイナス座標用
@@ -172,8 +172,7 @@ void EnemyDanger::UpdateParticleSkin()
 	//体を覆う炎エフェクト
 	if (!isReverse_)//通常時
 	{
-		pmFire_->ActiveX(fire.particle, fire.startPos, fire.pos, fire.vel,
-			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+		pmFire_->ActiveX(fire);
 	}
 	else//反転時
 	{

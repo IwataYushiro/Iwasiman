@@ -80,15 +80,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)External\lib\DirectXTex\include;$(ProjectDir)External\lib\imgui\include;$(ProjectDir)External\lib\fbx_sdk\include;$(ProjectDir)External\include\json</IncludePath>
-    <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\Generated\Outputs\$(Configuration)\</OutDir>
     <LibraryPath>$(ProjectDir)External\lib\fbx_sdk\lib;$(ProjectDir)External\lib\DirectXTex\lib\$(Configuration);$(ProjectDir)External\lib\imgui\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)External\lib\DirectXTex\include;$(ProjectDir)External\lib\imgui\include;$(ProjectDir)External\lib\fbx_sdk\include;$(ProjectDir)External\include\json</IncludePath>
-    <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\Generated\Outputs\$(Configuration)\</OutDir>
     <LibraryPath>$(ProjectDir)External\lib\fbx_sdk\lib;$(ProjectDir)External\lib\DirectXTex\lib\$(Configuration);$(ProjectDir)External\lib\imgui\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -175,7 +175,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyDanger.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\EnemyCore.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.cpp" />
-    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseSphere.cpp" />
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseGround.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Spike.cpp" />
     <ClCompile Include="DirectXGame\Application\MyGame\Goal\Goal.cpp" />
@@ -237,7 +237,7 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Enemy\Factory\EnemyFactory.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\BaseGimmick.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\AbstractGimmickFactory.h" />
-    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseSphere.h" />
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseGround.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Spike.h" />
     <ClInclude Include="DirectXGame\Application\MyGame\Goal\Goal.h" />
@@ -317,6 +317,7 @@
     <None Include="Resources\shader\PostEffect\Test\Test.hlsli" />
     <None Include="Resources\shader\PostEffect\UVShiftBlur\UVShiftBlur.hlsli" />
     <None Include="Resources\shader\PostEffect\UVShift\UVShift.hlsli" />
+    <None Include="Resources\shader\PostEffect\Vignette\Vignette.hlsli" />
     <None Include="Resources\shader\Sprite\Sprite.hlsli" />
     <None Include="Resources\shader\Toon\Toon.hlsli" />
   </ItemGroup>
@@ -450,6 +451,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\shader\PostEffect\UVShift\UVShiftVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Vignette\VignettePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Vignette\VignetteVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>

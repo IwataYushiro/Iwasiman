@@ -45,22 +45,23 @@ enum GamePlaySceneTextureIndex
 	GPSTI_PauseStageSelectTex = 4,
 	GPSTI_PauseTitleTex = 5,
 	GPSTI_PauseDoneTex = 6,
-	GPSTI_QuitHowToPlayTex = 7,
-	GPSTI_ReadyTex = 8,
-	GPSTI_GoTex = 9,
-	GPSTI_LoadingTex = 10,
-	GPSTI_StageInfoNowTex = 11,
-	GPSTI_FadeInOutTex=12,
-	GPSTI_CursorTex=13,
-	GPSTI_HowToPlayListTex = 14,
-	GPSTI_StageNameTex = 15,
+	GPSTI_ReadyTex = 7,
+	GPSTI_GoTex = 8,
+	GPSTI_LoadingTex = 9,
+	GPSTI_StageInfoNowTex = 10,
+	GPSTI_FadeInOutTex=11,
+	GPSTI_CursorTex=12,
+	GPSTI_HowToPlayListTex = 13,
+	GPSTI_StageNameTex = 14,
+	GPSTI_PauseUITex = 15,
+	GPSTI_HintInfoTex = 16,
 };
 
 //ポーズ用メニューインデックス
 enum GamePlayScenePauseMenuIndex
 {
 	GPSPMI_Resume = 0,
-	GPSPMI_HowToPlay = 1,
+	GPSPMI_Hint = 1,
 	GPSPMI_StageSelect = 2,
 	GPSPMI_Title = 3,
 };
@@ -78,7 +79,6 @@ enum GamePlaySceneTutorialTextureIndex
 	GPSTTI_HowToPlayJumpTex = 1006,
 	GPSTTI_HowToPlayBackMoveTex = 1007,
 	GPSTTI_HowToPlayAttackTex = 1008,
-	GPSTTI_TutorialInfoHowToPlayTex = 1009,
 };
 
 //プレイヤーテクスチャインデックス
@@ -101,7 +101,7 @@ enum StageSelectSceneMenuIndex
 {
 	SSSMI_StageTutorial_Tutorial = 0,
 	SSSMI_Stage1_SkyStage = 1,
-	SSSMI_Stage2_SpaceStage = 2,
+	SSSMI_Stage1_Boss = 2,
 	SSSMI_Num = 3,//配列用
 };
 

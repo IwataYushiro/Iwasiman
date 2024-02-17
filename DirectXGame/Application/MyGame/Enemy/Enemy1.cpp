@@ -20,6 +20,12 @@ using namespace IwasiEngine;
 
 //静的メンバ変数の実体
 IwasiEngine::CollisionManager* Enemy1::colManager_ = CollisionManager::GetInstance();
+//メンバ関数ポインタテーブルの実体
+void (Enemy1::* Enemy1::updateTable_[])() =
+{
+	&Enemy1::UpdateApproach,
+	&Enemy1::UpdateLeave
+};
 
 Enemy1::~Enemy1() {
 	
@@ -172,14 +178,7 @@ void Enemy1::Update(const bool isStart) {
 	if (!isStart)//スタート演出時は何もしない
 	{
 		//座標を移動させる
-		switch (phase_) {
-		case Enemy1::Phase::Approach:	//行動時
-			UpdateApproach();
-			break;
-		case Enemy1::Phase::Leave:		//撃破時
-			UpdateLeave();
-			break;
-		}
+		(this->*updateTable_[static_cast<size_t>(phase_)])();
 	}
 	//座標を転送
 	Trans();
@@ -310,7 +309,7 @@ void Enemy1::Landing()
 	//球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;	
 	ray.start = sphereCollider->center;
-	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	ray.start.m128_f32[XYZ_Y] += sphereCollider->GetRadius();
 	const XMVECTOR rayDir = { 0.0f,-1.0f,0.0f,0.0f };
 	ray.dir = rayDir;
 	//レイキャスト
@@ -362,7 +361,7 @@ void Enemy1::Landing()
 void Enemy1::Draw() {
 
 	//モデルの描画
-	if (phase_ != Phase::Leave)Object3d::Draw();
+	Object3d::Draw();
 
 
 }
@@ -378,7 +377,10 @@ void Enemy1::DrawParticle()
 //状態変化用の更新関数
 //接近
 void Enemy1::UpdateApproach() {
-	
+	//自機の距離ー敵の距離が一定の距離より小さかったら動くようにする
+	const float updatePositionX = 90.0f;
+	if (player_->GetPosition().x - position_.x <= -updatePositionX)return;
+
 	//移動
 	position_.x += speed_.x;
 	position_.y += speed_.y;
@@ -412,7 +414,14 @@ void Enemy1::UpdateApproach() {
 
 	//死んだら
 	if (life_ <= deathLife_) {
-		life_ = deathLife_;
+		
+		life_ = deathLife_;//ライフをゼロに
+
+		//最新の情報をセットして死亡演出の準備
+		EaseDeadDirectionRotStart(false);	//回転
+		EaseDeadDirectionScaleStart(false);	//スケール
+		
+		//フェーズ切り替え
 		phase_ = Phase::Leave;
 		
 	}
@@ -426,6 +435,9 @@ void Enemy1::UpdateLeave() {
 	//サブ属性を死亡した扱いにする(死亡演出のため)
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
 	
+	//イージングをし転送
+	EaseDeadDirectionRotStart(true);	//回転
+	EaseDeadDirectionScaleStart(true);	//スケール
 	//一定の値までカウントが進んだら死亡する
 	deathTimer_++;
 	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
@@ -445,7 +457,7 @@ void Enemy1::OnCollision([[maybe_unused]]const CollisionInfo& info,
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		30,
+		20,
 		{ 3.0f, 0.0f },
 		{ 1.0f,1.0f,1.0f,1.0f },
 		{ 0.0f,0.0f,0.0f,1.0f }
@@ -458,7 +470,7 @@ void Enemy1::OnCollision([[maybe_unused]]const CollisionInfo& info,
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		30,
+		40,
 		{ 3.0f, 0.0f },
 		{ 1.0f,1.0f,1.0f,1.0f },
 		{ 0.0f,0.0f,0.0f,1.0f }
@@ -471,23 +483,31 @@ void Enemy1::OnCollision([[maybe_unused]]const CollisionInfo& info,
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;		//自機本体に触れても何も起こらない
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)		//自機の弾の場合
 		{
+			const float knockBackPosX = 3.0f;//ノックバックする値
+			const float calcKnockBackPositionX = player_->GetPosition().x - position_.x;
 			if (life_ > hitLife)//ライフが1より大きい場合
 			{
+				//ノックバック
+				//プレイヤーが左側にいたら右にノックバック
+				if (calcKnockBackPositionX <= 0.0f) position_.x += knockBackPosX;
+				//プレイヤーが右側にいたら左にノックバック
+				else  position_.x -= knockBackPosX;
+
 				//パーティクルでヒット演出
-				pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+				pmSmoke_->ActiveZ(smoke);
 
 				pmSmoke_->Update();
 				
 			}
 			else//1以下の場合
 			{
+				
 				//パーティクルでヒット演出
-				pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
-					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+				pmFire_->ActiveZ(fire);
 
 				pmFire_->Update();
 			}
+			
 			//ライフが減る
 			life_--;
 		}

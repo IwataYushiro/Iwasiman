@@ -108,7 +108,7 @@ private:
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	//右を向いてるか
-	bool isRight_ = true;
+	bool isRight_;
 	//振り向く用のイージングのプリセット
 	const Easing presetEaseRotateRightY_ = {-90.0f,90.0f,0.2f};//Y軸限定　左、右
 	//振り向く用のイージング
@@ -119,7 +119,7 @@ private:
 	SpriteCommon* spCommon_ = nullptr;//基盤
 
 	std::unique_ptr<Sprite> spriteLifeBar_ = std::make_unique<Sprite>();			//ライフバー
-	const XMFLOAT2 lifeBarPos_ = { 800.0f,25.0f };	//ライフバーの座標
+	const XMFLOAT2 lifeBarPos_ = { 50.0f,620.0f };	//ライフバーの座標
 	const XMFLOAT4 green_ = { 0.2f,1.0f,0.2f,1.0f };//緑
 	const XMFLOAT4 red_ = { 1.0f,0.2f,0.2f,1.0f };	//赤
 
@@ -184,12 +184,14 @@ private:
 	bool isBreak_ = false;
 
 	//生きてる
-	bool isAlive_ = true;
+	bool isAlive_ = false;
 	//死亡フラグ
 	bool isDead_ = false;
+	//死亡演出スキップフラグ
+	bool isSkipDeadDirection_ = false;
 	//スピード
-	const float moveSpeed = 0.5f;//通常時
-	const float dashSpeed = 1.5f;//ダッシュ時に掛ける
+	const float moveSpeed_ = 0.5f;//通常時
+	const float dashSpeed_ = 1.5f;//ダッシュ時に掛ける
 
 	//ライフ
 	int life_;
@@ -286,8 +288,10 @@ public: //アクセッサ、インライン関数
 	//ゲームシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 	//スピードゲット
-	const float GetSpeedMove()const { return moveSpeed; }				//通常移動スピード
-	const float GetSpeedDash()const { return moveSpeed * dashSpeed; }	//ダッシュ移動スピード
+	const float GetSpeedMove()const { return moveSpeed_; }				//通常移動スピード
+	const float GetSpeedDash()const { return moveSpeed_ * dashSpeed_; }	//ダッシュ移動スピード
+	//死亡演出スキップフラグゲット
+	const bool IsSkipDeadDirection()const { return isSkipDeadDirection_; }
 
 private://カプセル化メンバ関数
 	//生存時

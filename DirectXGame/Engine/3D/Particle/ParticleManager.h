@@ -100,15 +100,22 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		// パーティクル発射(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
 		void Active(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
 			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+		void Active(const Preset& preset);//プリセット指定版
+
 		// パーティクル発射X軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
 		void ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
 			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+		void ActiveX(const Preset& preset);//プリセット指定版
+		
 		// パーティクル発射Y軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
 		void ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
 			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+		void ActiveY(const Preset& preset);//プリセット指定版
+		
 		// パーティクル発射Z軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
 		void ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
 			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+		void ActiveZ(const Preset& preset);//プリセット指定版
 
 	private: // メンバ変数
 		ComPtr<ID3D12Resource> constBuff_; // 定数バッファ

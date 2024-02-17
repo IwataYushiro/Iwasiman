@@ -23,7 +23,7 @@ public:
 	//デストラクタ
 	~Enemy2();
 	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、パラメータレベル)
-	static std::unique_ptr<Enemy2> Create(const Model* model = nullptr,const Model* bullet = nullptr,
+	static std::unique_ptr<Enemy2> Create(const Model* model = nullptr, const Model* bullet = nullptr,
 		const Player* player = nullptr, GamePlayScene* gamescene = nullptr, int level = 1);
 
 	//初期化
@@ -42,22 +42,18 @@ public:
 	void Parameter();
 	//更新
 	void Update(const bool isStart = false)override;
+	//攻撃処理
+	void Attack();
 	//弾発射
 	void Fire();
+	//死亡処理
+	void Dead();
 	//着地処理
 	void Landing();
 	//描画
 	void Draw()override;
 	//パーティクル描画
 	void DrawParticle()override;
-
-	//状態変化用の更新関数
-	//接近
-	void UpdateApproach();
-	//戻る
-	void UpdateBack();
-	//離脱
-	void UpdateLeave();
 
 	//衝突を検出したら呼び出されるコールバック関数(コリジョン情報、メイン属性、サブ属性)
 	void OnCollision(const CollisionInfo& info, const unsigned short attribute,
@@ -113,10 +109,21 @@ private:
 	const float backFallPosY = -20.0f;//上へ
 	const float backUpPosY = 20.0f;//下へ
 
-public:
-
+public://アクセッサ置き場
 	//プレイヤーセット
 	void SetPlayer(const Player* player) { player_ = player; }
 	//ゲームシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
+
+public://状態変化用の更新
+	//状態変化用の更新関数
+	//接近
+	void UpdateApproach();
+	//戻る
+	void UpdateBack();
+	//離脱
+	void UpdateLeave();
+private:
+	//メンバ関数ポインタのテーブル
+	static void (Enemy2::*updateTable_[])();
 };

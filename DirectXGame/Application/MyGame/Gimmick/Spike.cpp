@@ -3,7 +3,7 @@
 #include "SphereCollider.h"
 #include <cassert>
 #include "CollisionAttribute.h"
-#include "CollisionManager.h"
+//#include "CollisionManager.h"
 
 using namespace DirectX;
 using namespace IwasiEngine;

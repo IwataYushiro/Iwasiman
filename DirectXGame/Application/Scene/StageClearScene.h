@@ -6,8 +6,6 @@
 
 #include "SceneManager.h"
 
-//jsonレベルデータ
-struct LevelData;
 
 /*
 
@@ -35,27 +33,30 @@ public://メンバ関数
 	void UpdateIsMenu();
 	//描画
 	void Draw() override;
+	//ポストエフェクト描画
+	void DrawPostEffect() override;
 	//フェードアウト
-	void FadeOut(const DirectX::XMFLOAT3& rgb);
+	void FadeIn(const DirectX::XMFLOAT3& color)override;
 	//終了
 	void Finalize() override;
-
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
+	//イージングのロード
+	void LoadEasing() override;
 
-private://静的メンバ変数
+private://基盤メンバ変数
 	//DirectX基盤
-	static DirectXCommon* dxCommon_;
-	
+	DirectXCommon* dxCommon_ = nullptr;
+	//スプライト基盤
+	SpriteCommon* spCommon_ = nullptr;
 	//インプット
-	static Input* input_;
+	Input* input_ = nullptr;
 	//オーディオ
-	static Audio* audio_;
+	Audio* audio_ = nullptr;
 	//シーンマネージャー
-	static SceneManager* sceneManager_;
+	SceneManager* sceneManager_ = nullptr;
 	//imgui
-	static ImGuiManager* imguiManager_;
-	
+	ImGuiManager* imguiManager_ = nullptr;
 
 private://メンバ変数
 	//ステージクリア用テクスチャインデックス
@@ -71,6 +72,7 @@ private://メンバ変数
 		SCSTI_StageInfoNowTex = 7,
 		SCSTI_CursorTex = 8,
 		SCSTI_StageNameTex = 9,
+		SCSTI_MenuUITex = 10,
 	};
 	//ステージクリア用メニューインデックス
 	enum StageClearSceneMenuIndex
@@ -80,8 +82,6 @@ private://メンバ変数
 		SCSMI_Title = 2,
 	};
 
-	//スプライト基盤
-	SpriteCommon* spCommon_ = nullptr;
 	//カメラ
 	std::unique_ptr<Camera> camera_ = nullptr;
 	
@@ -94,15 +94,13 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteNextStage_ =std::make_unique<Sprite>();		//次のステージ表示のスプライト
 	std::unique_ptr<Sprite> spriteStageSelect_ =std::make_unique<Sprite>();		//ステージセレクト表示のスプライト
 	std::unique_ptr<Sprite> spriteTitle_ =std::make_unique<Sprite>();			//タイトル表示のスプライト
-	std::unique_ptr<Sprite> spriteDone_ =std::make_unique<Sprite>();			//決定表示のスプライト
+	std::unique_ptr<Sprite> spriteDone_ =std::make_unique<Sprite>();			//決定表示兼スキップキー表示のスプライト
 	std::unique_ptr<Sprite> spriteFadeInOut_ =std::make_unique<Sprite>();		//フェードインアウトのスプライト
 	std::unique_ptr<Sprite> spriteLoad_ =std::make_unique<Sprite>();			//ロードスプライト
 	std::unique_ptr<Sprite> spriteStageInfoNow_ =std::make_unique<Sprite>();	//現在ステージスプライト
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();			//カーソルスプライト
 	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();		//ステージ名スプライト
-
-	//jsonレベルデータ
-	LevelData* levelData_ = nullptr;			
+	std::unique_ptr<Sprite> spriteMenuUI_ = std::make_unique<Sprite>();			//メニュー操作方法スプライト
 
 	//モデル
 	std::unique_ptr<Model> modelPlayer_ = nullptr;				//自機モデル
@@ -117,15 +115,12 @@ private://メンバ変数
 	std::vector<std::unique_ptr<Object3d>> objGrounds_;			//床配列
 	std::vector<std::unique_ptr<Object3d>> objGoals_;			//ゴール配列
 
-	//マッピングモデル
-	std::map<std::string, Model*> models_;
-
 	//フラグ類
 	bool isFinalStage_ = false;					//最終面の場合
 	bool isNextStage_ = false;					//次のステージへ行く場合
 	bool isStageSelect_ = false;				//ステージセレクトへ行く場合
 	bool isQuitTitle_ = false;					//タイトルに戻る場合
-	bool isFadeOut_ = false;					//フェードインアウト
+	bool isFadeIn_ = false;						//フェードイン
 
 	//メニュー説明用の列挙体
 	enum StageClearMenuEasingNum
@@ -135,102 +130,28 @@ private://メンバ変数
 		SCMEN_StageSelect = 2,			//ステージセレクトへ
 		SCMEN_Title = 3,				//タイトルへ
 		SCMEN_SelectSpace = 4,			//スペースで選択
-		SCMEN_Num = 5,					//配列用
+		SCMEN_UI = 5,					//操作方法
+		SCMEN_Num = 6,					//配列用
 	};
 	//イージング類
-	//メニュー表示用のイージングのプリセット
-	const Easing presetEaseMenuPosX_[SCMEN_Num]
-	{
-		{1300.0f, 200.0f, 1.0f},			//メニュー
-		{1300.0f, 100.0f, 1.2f},			//次のステージへ
-		{1300.0f, 100.0f, 1.4f},			//ステージセレクトへ
-		{1300.0f, 100.0f, 1.6f},			//タイトルへ
-		{1300.0f, 425.0f, 2.0f}				//スペースで選択
-	};
 	//メニュー表示用のイージング
-	Easing easeMenuPosX_[SCMEN_Num]
-	{
-		presetEaseMenuPosX_[SCMEN_Menu],				//メニュー
-		presetEaseMenuPosX_[SCMEN_NextStage],			//次のステージへ
-		presetEaseMenuPosX_[SCMEN_StageSelect],			//ステージセレクトへ
-		presetEaseMenuPosX_[SCMEN_Title],				//タイトルへ
-		presetEaseMenuPosX_[SCMEN_SelectSpace],			//スペースで選択
-	};
-	//メニュー終了用のイージングのプリセット
-	const Easing presetEaseMenuEndPosX_[SCMEN_Num]
-	{
-		{ 200.0f,-1300.0f, 1.0f},				//メニュー
-		{ 100.0f,-1300.0f, 1.2f},				//次のステージへ
-		{ 100.0f,-1300.0f, 1.4f},				//ステージセレクトへ
-		{ 100.0f,-1300.0f, 1.6f},				//タイトルへ
-		{ 425.0f,-1300.0f, 2.0f}				//スペースで選択
-	};
+	Easing easeMenuPosX_[SCMEN_Num];
 	//メニュー終了用のイージング
-	Easing easeMenuEndPosX_[SCMEN_Num]
-	{
-		presetEaseMenuEndPosX_[SCMEN_Menu],					//メニュー
-		presetEaseMenuEndPosX_[SCMEN_NextStage],			//次のステージへ
-		presetEaseMenuEndPosX_[SCMEN_StageSelect],			//ステージセレクトへ
-		presetEaseMenuEndPosX_[SCMEN_Title],				//タイトルへ
-		presetEaseMenuEndPosX_[SCMEN_SelectSpace],			//スペースで選択
-	};
-	//カーソルX値のイージングプリセット
-	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
+	Easing easeMenuEndPosX_[SCMEN_Num];
 	//カーソルX値のイージング
-	Easing easeCursorPosX_ = presetEaseCursorPosX_;
+	Easing easeCursorPosX_;
 
 	//メニューポジション
-	const std::array<float, SCMEN_Num> menuPosY_ = { 50.0f,150.0f,300.0f,450.0f,550.0f };
+	const std::array<float, SCMEN_Num> menuPosY_ = { 50.0f,150.0f,300.0f,450.0f,550.0f,300.0f };
 
-	//次のステージへ行くときの視点イージングのプリセット
-	const Easing presetEaseEyeStageClear_[XYZ_Num]
-	{
-		{0.0f, -22.0f, 1.8f},				//X
-		{1.0f, -1.0f, 1.8f},				//Y
-		{-110.0f, -60.0f, 1.8f},			//Z
-	};
 	//次のステージへ行くときの視点イージング
-	Easing easeEyeStageClear_[XYZ_Num]
-	{
-		presetEaseEyeStageClear_[XYZ_X],			//X
-		presetEaseEyeStageClear_[XYZ_Y],			//Y
-		presetEaseEyeStageClear_[XYZ_Z]				//Z
-	};
-
-	//次のステージへ行くときの注視点イージングのプリセット
-	const Easing presetEaseTargetStageClear_[XYZ_Num]
-	{
-		{0.0f, 50.0f, 1.8f},				//X
-		{0.0f, -8.0f, 1.8f},				//Y
-		{-10.0f, -57.0f, 1.8f},				//Z
-	};
+	Easing easeEyeStageClear_[XYZ_Num];
 	//次のステージへ行くときの注視点イージング
-	Easing easeTargetStageClear_[XYZ_Num]
-	{
-		 presetEaseTargetStageClear_[XYZ_X],			//X
-		 presetEaseTargetStageClear_[XYZ_Y],			//Y
-		 presetEaseTargetStageClear_[XYZ_Z]				//Z
-	};
-
-	//ステージセレクトへ行くときの自機移動イージングのプリセット
-	const Easing presetEasePlayerMoveStageSelect_[XYZ_Num]
-	{
-		{0.0f, 150.0f, 2.0f},				//X
-		{-8.0f, 40.0f, 2.0f},				//Y
-		{-60.0f, -60.0f, 2.0f},				//Z
-	};
+	Easing easeTargetStageClear_[XYZ_Num];
 	//ステージセレクトへ行くときの自機移動イージング
-	Easing easePlayerMoveStageSelect_[XYZ_Num]
-	{
-		presetEasePlayerMoveStageSelect_[XYZ_X],			//X
-		presetEasePlayerMoveStageSelect_[XYZ_Y],			//Y
-		presetEasePlayerMoveStageSelect_[XYZ_Z],			//Z
-	};
-
-	//フェードインアウトのプリセット
-	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
+	Easing easePlayerMoveStageSelect_[XYZ_Num];
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = presetEaseFadeInOut_;
+	Easing easeFadeInOut_;
 
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor_;//xyz=rgb

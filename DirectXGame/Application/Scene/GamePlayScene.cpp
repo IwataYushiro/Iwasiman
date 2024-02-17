@@ -21,36 +21,31 @@ using namespace IwasiEngine;
 
 */
 
-//静的メンバ変数の実体
-DirectXCommon* GamePlayScene::dxCommon_ = DirectXCommon::GetInstance();
-Input* GamePlayScene::input_ = Input::GetInstance();
-Audio* GamePlayScene::audio_ = Audio::GetInstance();
-SceneManager* GamePlayScene::sceneManager_ = SceneManager::GetInstance();
-ImGuiManager* GamePlayScene::imguiManager_ = ImGuiManager::GetInstance();
-
 GamePlayScene::GamePlayScene(int stagenum) :stageNum_(stagenum) {}
 
 void GamePlayScene::Initialize()
 {
 	//インスタンス取得
-	spCommon_ = SpriteCommon::GetInstance();
-	colManager_ = CollisionManager::GetInstance();
-	//工業地帯
+	dxCommon_ = DirectXCommon::GetInstance();		//DirectX基盤
+	spCommon_ = SpriteCommon::GetInstance();		//スプライト基盤
+	input_ = Input::GetInstance();					//入力情報
+	audio_ = Audio::GetInstance();					//音声
+	sceneManager_ = SceneManager::GetInstance();	//シーンマネージャー
+	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiマネージャー
+	colManager_ = CollisionManager::GetInstance();	//コリジョンマネージャー
+
+	//ファクトリー生成
 	enemyFactory_ = std::make_unique<EnemyFactory>();
 	gimmickFactory_ = std::make_unique<GimmickFactory>();
 
 
 	// 描画初期化処理　ここから
 #pragma region 描画初期化処理
+	//イージングのロード
+	LoadEasing();
 
 	//カメラ生成
 	camera_ = std::make_unique<Camera>();
-
-	//音声データ
-	sound_ = audio_->SoundLoadWave("Resources/TestMusic.wav");
-
-	//音声再生呼び出し例
-	//audio_->SoundPlayWave(audio_->GetXAudio2(), sound,true);
 
 	camera_->Reset();
 	//弾リセット
@@ -85,7 +80,11 @@ void GamePlayScene::Initialize()
 	pm_->SetBlendMode(ParticleManager::BP_ADD);
 	pm_->SetParticleModel(particle1_.get());
 	pm_->SetCamera(camera_.get());
-
+	
+	//ポストエフェクト初期化
+	postEffect_ = std::make_unique<PostEffect>();
+	postEffect_->Initialize();
+	
 	//イージングスタンバイ
 	if (stageNum_ >= SL_StageTutorial_Area1)for (int i = 0; i < TIEN_Num; i++)easeInfoTutorial_[i].Standby(false);
 	easeFadeInOut_.Standby(false);
@@ -131,7 +130,6 @@ void GamePlayScene::Update()
 	if (isStart_)			UpdateIsStartGame();			//ゲーム開始時
 	else if (isGamePlay_)	UpdateIsPlayGame();				//ゲームプレイ時
 	else if (isPause_)		UpdateIsPause();				//ポーズ時
-	else if (isHowToPlay_)	UpdateHowToPlay();				//遊び方説明時
 	else if (isClear_)		UpdateIsStageClear();			//ステージクリア時
 	else if (isGameOver_)	UpdateIsGameOver();				//ゲームオーバー時
 	else					UpdateIsQuitGame();				//終了時
@@ -140,11 +138,12 @@ void GamePlayScene::Update()
 	spritePause_->Update();
 	spritePauseInfo_->Update();
 	spritePauseResume_->Update();
-	spritePauseHowToPlay_->Update();
+	spritePauseHint_->Update();
+	spriteHintInfo_->Update();
 	spritePauseStageSelect_->Update();
 	spritePauseTitle_->Update();
+	spritePauseUI_->Update();
 	spriteDone_->Update();
-	spriteQuitHowtoPlay_->Update();
 	spriteReady_->Update();
 	spriteGo_->Update();
 	spriteFadeInOut_->Update();
@@ -162,7 +161,7 @@ void GamePlayScene::Update()
 	camera_->Update();				//カメラ
 	lightGroup_->Update();			//ライト
 	pm_->Update();					//パーティクル
-
+	postEffect_->Update();			//ポストエフェクト
 }
 
 void GamePlayScene::UpdateIsStartGame()
@@ -186,7 +185,8 @@ void GamePlayScene::UpdateIsStartGame()
 		for (int i = 0; i < XYW_Num; i++)easeGoSizeAndAlpha_[i].ease_out_cubic();
 		//サイズ、カラーセット
 		spriteGo_->SetSize({ easeGoSizeAndAlpha_[XYW_X].num_X,easeGoSizeAndAlpha_[XYW_Y].num_X });
-		spriteGo_->SetColor({ black_.x,black_.y, black_.z,easeGoSizeAndAlpha_[XYW_W].num_X });
+		if (stageNum_ == SL_Stage1_AreaBoss)spriteGo_->SetColor({ white_.x,white_.y,white_.z,easeGoSizeAndAlpha_[XYW_W].num_X });//ボス戦時は真っ白
+		else spriteGo_->SetColor({ black_.x,black_.y, black_.z,easeGoSizeAndAlpha_[XYW_W].num_X });//通常時は真っ黒
 
 	}
 	else if (isStartReadyPart2_)//レディーが一定の位置に達したら
@@ -249,16 +249,15 @@ void GamePlayScene::UpdateIsStartGame()
 			{0.0f,0.0f,0.0f,1.0f}
 		};
 		//パーティクル
-		pm_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-		
+		pm_->ActiveX(smoke);
+
 		//座標セット
 		player->SetPosition
 		({
 			easePlayerPositionGameStart_[XYZ_X].num_X,
 			easePlayerPositionGameStart_[XYZ_Y].num_X,
 			easePlayerPositionGameStart_[XYZ_Z].num_X
-		});
+			});
 
 		//更新(操作は出来ない)
 		player->Update(false, false, true);
@@ -270,7 +269,7 @@ void GamePlayScene::UpdateIsStartGame()
 			isGamePlay_ = true;
 		}
 	}
-	
+
 	//更新
 	//プレイヤーが死んでないとき
 	for (std::unique_ptr<Player>& player : players_)if (!player->IsBreak())for (std::unique_ptr<BaseEnemy>& enemy : enemys_)enemy->Update(true);					//敵
@@ -297,8 +296,8 @@ void GamePlayScene::UpdateIsPlayGame()
 		//基本状態
 		else player->Update();
 
-		//自機が死んだらゲームオーバー
-		if (player->IsDead())
+		//自機が死んだらゲームオーバー(死亡演出スキップでも同様)
+		if (player->IsDead() || player->IsSkipDeadDirection())
 		{
 			isGameOver_ = true;
 			isGamePlay_ = false;
@@ -378,7 +377,7 @@ void GamePlayScene::UpdateIsPause()
 	UpdateChangeColor();
 
 	//イージング(ポーズ中に準備してもここがやってくれる)
-	FadeOut(black_);
+	FadeIn(black_);
 	for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].ease_in_out_quint();
 	easeCursorPosX_.ease_in_out_quint();
 
@@ -387,44 +386,38 @@ void GamePlayScene::UpdateIsPause()
 	//ポーズ関係
 	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].num_X, pausePosY_[PMEN_Menu] });
 	spritePauseResume_->SetPosition({ easePauseMenuPosX_[PMEN_Resume].num_X, pausePosY_[PMEN_Resume] });
-	spritePauseHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_HowToPlay].num_X, pausePosY_[PMEN_HowToPlay] });
+	spritePauseHint_->SetPosition({ easePauseMenuPosX_[PMEN_Hint].num_X, pausePosY_[PMEN_Hint] });
 	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[PMEN_StageSelect].num_X, pausePosY_[PMEN_StageSelect] });
 	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].num_X, pausePosY_[PMEN_Title] });
 	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].num_X, pausePosY_[PMEN_SelectSpace] });
-	spriteTutorialInfoHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_TutorialHowToPlayInfo].num_X, pausePosY_[PMEN_TutorialHowToPlayInfo] });
-	//遊び方説明関係
-	spriteTutorialHTPMove_->SetPosition({ easeHowToPlayPosX_[HTPEN_Move].num_X,howToPlayPosY_[HTPEN_Move] });
-	spriteTutorialHTPDash_->SetPosition({ easeHowToPlayPosX_[HTPEN_Dash].num_X,howToPlayPosY_[HTPEN_Dash] });
-	spriteTutorialHTPJump_->SetPosition({ easeHowToPlayPosX_[HTPEN_Jump].num_X,howToPlayPosY_[HTPEN_Jump] });
-	spriteTutorialHTPMoveBack_->SetPosition({ easeHowToPlayPosX_[HTPEN_MoveBack].num_X,howToPlayPosY_[HTPEN_MoveBack] });
-	spriteTutorialHTPAttack_->SetPosition({ easeHowToPlayPosX_[HTPEN_Attack].num_X,howToPlayPosY_[HTPEN_Attack] });
-	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].num_X,howToPlayPosY_[HTPEN_Quit] });
+	spriteHintInfo_->SetPosition({ easePauseMenuPosX_[PMEN_HintInfo].num_X, pausePosY_[PMEN_HintInfo] });
+	spritePauseUI_->SetPosition({ easePauseMenuPosX_[PMEN_UI].num_X,pausePosY_[PMEN_UI] });
 
 	//メニュー操作
-	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;
-	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;
+	if (input_->TriggerKey(DIK_W))menuCount_--;
+	if (input_->TriggerKey(DIK_S))menuCount_++;
 
 	//色を変える(選択しているメニューは強調)
 	if (menuCount_ == GPSPMI_Resume)//ゲーム再開を選択時
 	{
 		spritePauseResume_->SetColor(selectMenuColor);
-		spritePauseHowToPlay_->SetColor(otherMenuColor);
+		spritePauseHint_->SetColor(otherMenuColor);
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(otherMenuColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_Resume] });
 	}
-	else if (menuCount_ == GPSPMI_HowToPlay)//遊び方説明を選択時
+	else if (menuCount_ == GPSPMI_Hint)//遊び方説明を選択時
 	{
 		spritePauseResume_->SetColor(otherMenuColor);
-		spritePauseHowToPlay_->SetColor(selectMenuColor);
+		spritePauseHint_->SetColor(selectMenuColor);
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(otherMenuColor);
-		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_HowToPlay] });
+		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_Hint] });
 	}
 	else if (menuCount_ == GPSPMI_StageSelect)//ステージセレクト遷移を選択時
 	{
 		spritePauseResume_->SetColor(otherMenuColor);
-		spritePauseHowToPlay_->SetColor(otherMenuColor);
+		spritePauseHint_->SetColor(otherMenuColor);
 		spritePauseStageSelect_->SetColor(selectMenuColor);
 		spritePauseTitle_->SetColor(otherMenuColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_StageSelect] });
@@ -432,7 +425,7 @@ void GamePlayScene::UpdateIsPause()
 	else if (menuCount_ == GPSPMI_Title)//タイトル遷移を選択時
 	{
 		spritePauseResume_->SetColor(otherMenuColor);
-		spritePauseHowToPlay_->SetColor(otherMenuColor);
+		spritePauseHint_->SetColor(otherMenuColor);
 		spritePauseStageSelect_->SetColor(otherMenuColor);
 		spritePauseTitle_->SetColor(selectMenuColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,pausePosY_[PMEN_Title] });
@@ -457,22 +450,6 @@ void GamePlayScene::UpdateIsPause()
 				}
 				isBack_ = true;
 
-			}
-			else if (menuCount_ == GPSPMI_HowToPlay)//遊び方説明へ移行
-			{
-				if (stageNum_ < SL_StageTutorial_Area1)//チュートリアルステージだと何も起こらない
-				{
-					//ここでイージングの準備。しかし終了座標に到達していないと受け付けない
-					if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
-					{
-						for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(true);
-						for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].Standby(false);
-						easeCursorPosX_.Standby(true);
-					}
-
-					isHowToPlay_ = true;
-					isPause_ = false;
-				}
 			}
 			else if (menuCount_ == GPSPMI_StageSelect)//ステージセレクトへ戻る
 			{
@@ -502,9 +479,9 @@ void GamePlayScene::UpdateIsPause()
 	if (isBack_)
 	{
 		//ポーズを解除するとき画面の明るさを戻す
-		if (menuCount_ == GPSPMI_Resume) FadeIn(black_);
-		else if (menuCount_ == GPSPMI_StageSelect) FadeIn(black_);
-		else if (menuCount_ == GPSPMI_Title) FadeIn(black_);
+		if (menuCount_ == GPSPMI_Resume) FadeOut(black_);
+		else if (menuCount_ == GPSPMI_StageSelect) FadeOut(black_);
+		else if (menuCount_ == GPSPMI_Title) FadeOut(black_);
 
 	}
 	//決定時のスプライトのイージングが終わったらポーズを解除
@@ -543,66 +520,11 @@ void GamePlayScene::UpdateIsPause()
 
 }
 
-void GamePlayScene::UpdateHowToPlay()
-{
-	//イージング
-	for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].ease_out_expo();
-	easeCursorPosX_.ease_out_expo();
-
-	//ポジションセット
-	//ポーズ関係のスプライト
-	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].num_X, pausePosY_[PMEN_Menu] });
-	spritePauseResume_->SetPosition({ easePauseMenuPosX_[PMEN_Resume].num_X, pausePosY_[PMEN_Resume] });
-	spritePauseHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_HowToPlay].num_X, pausePosY_[PMEN_HowToPlay] });
-	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[PMEN_StageSelect].num_X, pausePosY_[PMEN_StageSelect] });
-	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].num_X, pausePosY_[PMEN_Title] });
-	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].num_X, pausePosY_[PMEN_SelectSpace] });
-	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
-
-	//遊び方説明関係のスプライト
-	spriteTutorialHTPMove_->SetPosition({ easeHowToPlayPosX_[HTPEN_Move].num_X,howToPlayPosY_[HTPEN_Move] });
-	spriteTutorialHTPDash_->SetPosition({ easeHowToPlayPosX_[HTPEN_Dash].num_X,howToPlayPosY_[HTPEN_Dash] });
-	spriteTutorialHTPJump_->SetPosition({ easeHowToPlayPosX_[HTPEN_Jump].num_X,howToPlayPosY_[HTPEN_Jump] });
-	spriteTutorialHTPMoveBack_->SetPosition({ easeHowToPlayPosX_[HTPEN_MoveBack].num_X,howToPlayPosY_[HTPEN_MoveBack] });
-	spriteTutorialHTPAttack_->SetPosition({ easeHowToPlayPosX_[HTPEN_Attack].num_X,howToPlayPosY_[HTPEN_Attack] });
-	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].num_X,howToPlayPosY_[HTPEN_Quit] });
-	
-	//決定時のスプライトのイージングが終わったら操作を受け付ける
-	if (spriteDone_->GetPosition().x == easePauseMenuPosX_[HTPEN_Quit].start)
-	{
-		//到達した後スペースでポーズに戻る
-		if (input_->TriggerKey(DIK_SPACE))
-		{
-			//イージングスタンバイ
-			for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].Standby(false);
-			for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].Standby(true);
-			easeCursorPosX_.Standby(false);
-			isBackPause_ = true;
-		}
-
-	}
-	if (isBackPause_)
-	{
-		//イージング
-		for (int i = 0; i < PMEN_Num; i++)easePauseMenuPosX_[i].ease_in_out_quint();
-		for (int i = 0; i < HTPEN_Num; i++)easeHowToPlayPosX_[i].ease_in_out_quint();
-		easeCursorPosX_.ease_in_out_quint();
-		//イージングが終わったらポーズに戻る
-		if (spriteDone_->GetPosition().x == easePauseMenuPosX_[PMEN_SelectSpace].end)
-		{
-			isPause_ = true;
-			isBackPause_ = false;
-			isHowToPlay_ = false;
-		}
-	}
-}
-
 void GamePlayScene::UpdateIsStageClear()
 {
 	for (std::unique_ptr<Player>& player : players_)player->Update();
 
-	FadeOut(white_);//白くする
+	FadeIn(white_);//白くする
 	//完全に白くなったらステージクリアへ遷移
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -615,7 +537,7 @@ void GamePlayScene::UpdateIsGameOver()
 {
 	//ボスを撃破している場合は呼び出されない
 	for (std::unique_ptr<BaseEnemy>& enemy : enemys_)if (enemy->BossDead()) return;
-	FadeOut(deepRed_);//赤くする
+	FadeIn(deepRed_);//赤くする
 	//完全に赤くなったらゲームオーバーへ遷移
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -625,7 +547,7 @@ void GamePlayScene::UpdateIsGameOver()
 
 void GamePlayScene::UpdateIsQuitGame()
 {
-	FadeOut(black_);//黒くする
+	FadeIn(black_);//黒くする
 	//完全に黒くなったら各シーンへ
 	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
@@ -634,7 +556,7 @@ void GamePlayScene::UpdateIsQuitGame()
 		{
 			//ステージ選択へ
 			if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-			else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
+			else if (stageNum_ <= SL_Stage1_AreaBoss)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_Boss);
 			else sceneManager_->ChangeScene("STAGESELECT", SSSMI_StageTutorial_Tutorial);
 		}
 		else if (menuCount_ == GPSPMI_Title) sceneManager_->ChangeScene("TITLE", stageNum_);
@@ -672,60 +594,60 @@ void GamePlayScene::UpdateTutorial()
 	}
 }
 
-void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& rgb)
+void GamePlayScene::FadeIn(const DirectX::XMFLOAT3& color)
 {
 
 	if (isPause_)//ポーズ時の場合
 	{
-		if (!isFadeOutPause_)
-		{
-			//ここでスタンバイ
-			easeFadeInOutPause_.Standby(true);
-			isFadeOutPause_ = true;
-		}
-		else
-		{
-			//ここでフェードインアウト
-			easeFadeInOutPause_.ease_in_out_quint();
-			spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOutPause_.num_X });//透明度だけ変える
-
-		}
-	}
-	else//シーン遷移時の場合
-	{
-		if (!isFadeOutScene_)
-		{
-			//ここでスタンバイ
-			easeFadeInOut_.Standby(true);
-			isFadeOutScene_ = true;
-		}
-		else
-		{
-			//ここでフェードインアウト
-			const XMFLOAT3 negapozi = { 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z };
-			easeFadeInOut_.ease_in_out_quint();
-			spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//透明度だけ変える
-			if (isQuit_)spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
-		}
-	}
-}
-
-void GamePlayScene::FadeIn(const DirectX::XMFLOAT3& rgb)
-{
-
-	if (isPause_)//ポーズ時の場合にしか使わない
-	{
 		if (!isFadeInPause_)
 		{
 			//ここでスタンバイ
-			easeFadeInOutPause_.Standby(false);
+			easeFadeInOutPause_.Standby(true);
 			isFadeInPause_ = true;
 		}
 		else
 		{
 			//ここでフェードインアウト
 			easeFadeInOutPause_.ease_in_out_quint();
-			spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOutPause_.num_X });//透明度だけ変える
+			spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOutPause_.num_X });//透明度だけ変える
+
+		}
+	}
+	else//シーン遷移時の場合
+	{
+		if (!isFadeInScene_)
+		{
+			//ここでスタンバイ
+			easeFadeInOut_.Standby(true);
+			isFadeInScene_ = true;
+		}
+		else
+		{
+			//ここでフェードインアウト
+			const XMFLOAT3 negapozi = { 1.0f - color.x,1.0f - color.y,1.0f - color.z };
+			easeFadeInOut_.ease_in_out_quint();
+			spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOut_.num_X });//透明度だけ変える
+			if (isQuit_)spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ネガポジの応用
+		}
+	}
+}
+
+void GamePlayScene::FadeOut(const DirectX::XMFLOAT3& color)
+{
+
+	if (isPause_)//ポーズ時の場合にしか使わない
+	{
+		if (!isFadeOutPause_)
+		{
+			//ここでスタンバイ
+			easeFadeInOutPause_.Standby(false);
+			isFadeOutPause_ = true;
+		}
+		else
+		{
+			//ここでフェードインアウト
+			easeFadeInOutPause_.ease_in_out_quint();
+			spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOutPause_.num_X });//透明度だけ変える
 
 		}
 	}
@@ -733,6 +655,8 @@ void GamePlayScene::FadeIn(const DirectX::XMFLOAT3& rgb)
 
 void GamePlayScene::Draw()
 {
+	//ポストエフェクトをかけたいオブジェクトはここに
+	postEffect_->PreDraw(dxCommon_->GetCommandList());
 	//モデル
 	//モデル描画前処理
 	Object3d::PreDraw(dxCommon_->GetCommandList());
@@ -762,7 +686,14 @@ void GamePlayScene::Draw()
 	for (std::unique_ptr<Item>& item : items_)item->DrawParticle();								//アイテムのパーティクル
 	//エフェクト描画後処理
 	ParticleManager::PostDraw();
+	postEffect_->PostDraw(dxCommon_->GetCommandList());
+}
 
+void GamePlayScene::DrawPostEffect()
+{
+	//ポストエフェクトをここで描画
+	postEffect_->Draw();
+	//ポストエフェクトをかけないオブジェクトはここに
 	//スプライト描画前処理
 	spCommon_->PreDraw();
 	//前景スプライト
@@ -774,38 +705,15 @@ void GamePlayScene::Draw()
 		//ポーズ関係のスプライト
 		spritePause_->Draw();
 		spritePauseResume_->Draw();
-		spritePauseHowToPlay_->Draw();
+		spritePauseHint_->Draw();
+		if (menuCount_ == GPSPMI_Hint)spriteHintInfo_->Draw();//メニューカーソルをヒントに合わせた場合のみ表示
 		spritePauseStageSelect_->Draw();
 		spritePauseTitle_->Draw();
-		spriteDone_->Draw();
-		spriteCursor_->Draw();
-		if (stageNum_ >= SL_StageTutorial_Area1)//チュートリアルステージ以外は書かない
-		{
-			if (menuCount_ == GPSPMI_HowToPlay)spriteTutorialInfoHowToPlay_->Draw();
-		}
-
-	}
-	else if (isHowToPlay_)//遊び方説明時
-	{
-		//フェードインアウト
-		spriteFadeInOut_->Draw();
-
-		//ポーズ関係のスプライト(遊び方説明→ポーズへ戻るとき用)
-		spritePause_->Draw();
-		spritePauseResume_->Draw();
-		spritePauseHowToPlay_->Draw();
-		spritePauseStageSelect_->Draw();
-		spritePauseTitle_->Draw();
+		spritePauseUI_->Draw();
 		spriteDone_->Draw();
 		spriteCursor_->Draw();
 
-		//操作方法のスプライト
-		spriteTutorialHTPMove_->Draw();
-		spriteTutorialHTPDash_->Draw();
-		spriteTutorialHTPJump_->Draw();
-		spriteTutorialHTPMoveBack_->Draw();
-		spriteTutorialHTPAttack_->Draw();
-		spriteQuitHowtoPlay_->Draw();
+
 	}
 	else//ゲームプレイ時
 	{
@@ -857,8 +765,6 @@ void GamePlayScene::Draw()
 		spriteReady_->Draw();
 		spriteGo_->Draw();
 	}
-
-
 }
 
 void GamePlayScene::Finalize()
@@ -866,8 +772,6 @@ void GamePlayScene::Finalize()
 	//終了処理
 	audio_->Finalize();
 	//解放
-	//各種音声
-	audio_->SoundUnLoad(&sound_);
 	//オブジェクト関係
 	objects_.clear();
 	skydomes_.clear();
@@ -1184,6 +1088,21 @@ void GamePlayScene::LoadLVData(const std::string& stagePath)
 
 }
 
+void GamePlayScene::LoadEasing()
+{
+	for (int i = 0; i < TIEN_Num; i++)Easing::LoadEasingData("gameplay/infotutorial.csv", easeInfoTutorial_[i], i);
+	for (int i = 0; i < XY_Num; i++)Easing::LoadEasingData("gameplay/tutoriallistscale.csv", easeTutorialListScale_[i], i);
+	for (int i = 0; i < PMEN_Num; i++)Easing::LoadEasingData("gameplay/pausemenuposx.csv", easePauseMenuPosX_[i], i);
+	Easing::LoadEasingData("gameplay/cursorposx.csv", easeCursorPosX_);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("gameplay/eyegamestart.csv", easeEyeGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("gameplay/targetgamestart.csv", easeTargetGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("gameplay/playerpositiongamestart.csv", easePlayerPositionGameStart_[i], i);
+	for (int i = 0; i < XXY_Num; i++)Easing::LoadEasingData("gameplay/readyposition.csv", easeReadyPosition_[i], i);
+	for (int i = 0; i < XYW_Num; i++)Easing::LoadEasingData("gameplay/gosizeandalpha.csv", easeGoSizeAndAlpha_[i], i);
+	Easing::LoadEasingData("gameplay/fadeinout.csv", easeFadeInOut_);
+	Easing::LoadEasingData("gameplay/fadeinoutpause.csv", easeFadeInOutPause_);
+}
+
 void GamePlayScene::UpdateChangeColor()
 {
 	//色を変えるスピード
@@ -1232,54 +1151,32 @@ void GamePlayScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet)
 
 void GamePlayScene::LoadModel()
 {
-	// モデル読み込み
-	modelPlayer_ = Model::LoadFromOBJ("playeridle");				//自機モデル
-	modelPlayerBullet_ = Model::LoadFromOBJ("playerbullet");		//自機弾モデル
-	modelPlayerDash_ = Model::LoadFromOBJ("playerdash");			//自機ダッシュモデル
-	modelPlayerJump_ = Model::LoadFromOBJ("playerjump");			//自機ジャンプモデル
-	modelPlayerAttack_ = Model::LoadFromOBJ("playerattack");		//自機攻撃モデル
-	modelPlayerHit_ = Model::LoadFromOBJ("playerhit");				//自機死亡モデル
-	modelEnemy1_ = Model::LoadFromOBJ("enemy1");					//敵モデル
-	modelEnemyDanger_ = Model::LoadFromOBJ("enemydanger");			//危険な敵モデル
-	modelEnemyBullet_ = Model::LoadFromOBJ("enemybullet");			//敵弾モデル
-	modelBoss1_ = Model::LoadFromOBJ("boss1");						//ステージ1のボスモデル
-	modelBossCore1_ = Model::LoadFromOBJ("core1");					//ステージ1のボスの周りにあるコアのモデル
-	modelGoal_ = Model::LoadFromOBJ("sphere");						//ゴールモデル
-	modelItemJump_ = Model::LoadFromOBJ("itemjump");				//ジャンプ力強化アイテムモデル
-	modelItemHeal_ = Model::LoadFromOBJ("itemheal");				//ライフ回復アイテムモデル
-	modelSpike_ = Model::LoadFromOBJ("spikeball");					//トゲのモデル
-	modelBoxUpDown_ = Model::LoadFromOBJ("boxud");					//上下する床のモデル
-	modelStageT_ = Model::LoadFromOBJ("skydomet");					//チュートリアルステージモデル(天球)
-	modelStage1_ = Model::LoadFromOBJ("skydome");					//ステージ1モデル(天球)
-	modelStage2_ = Model::LoadFromOBJ("skydome2");					//ステージ2モデル(天球)
-	modelGround_ = Model::LoadFromOBJ("ground");					//床のモデル
-	modelSphere_ = Model::LoadFromOBJ("sphere2");					//球モデル
-	modelBox_ = Model::LoadFromOBJ("ground2");						//AABB床モデル
+	//モデル読み込んでマップに登録する
+	ModelMapping(modelPlayer_, "playeridle");					//自機モデル
+	ModelMapping(modelPlayerBullet_, "playerbullet");			//自機弾モデル
+	ModelMapping(modelPlayerDash_, "playerdash");				//自機ダッシュモデル
+	ModelMapping(modelPlayerJump_, "playerjump");				//自機ジャンプモデル
+	ModelMapping(modelPlayerAttack_, "playerattack");			//自機攻撃モデル
+	ModelMapping(modelPlayerHit_, "playerhit");					//自機死亡モデル
+	ModelMapping(modelEnemy1_, "enemy1");						//通常敵モデル
+	ModelMapping(modelEnemy2_, "enemy2");						//ドッスン風敵モデル
+	ModelMapping(modelEnemyDanger_, "enemydanger");				//危険な敵モデル
+	ModelMapping(modelEnemyBullet_, "enemybullet");				//敵弾モデル
+	ModelMapping(modelBoss1_, "boss1");							//ステージ1のボスモデル
+	ModelMapping(modelBossCore1_, "core1");						//ステージ1のボスの周りにあるコアのモデル
+	ModelMapping(modelGoal_, "sphere");							//ゴールモデル
+	ModelMapping(modelItemJump_, "itemjump");					//ジャンプ力強化アイテムモデル
+	ModelMapping(modelItemHeal_, "itemheal");					//ライフ回復アイテムモデル
+	ModelMapping(modelSpike_, "spikeball");						//トゲのモデル
+	ModelMapping(modelBoxUpDown_, "boxud");						//上下する床のモデル
+	ModelMapping(modelStageT_, "skydomet");						//チュートリアルステージモデル(天球)
+	ModelMapping(modelStage1_, "skydome");						//ステージ1モデル(天球)
+	ModelMapping(modelStage2_, "skydome2");						//ステージ2モデル(天球)
+	ModelMapping(modelGround_, "ground");						//床のモデル
+	ModelMapping(modelSphere_, "sphere2");						//球モデル
+	ModelMapping(modelBox_, "ground2");							//AABB床モデル
 
-	//マップに登録する
-	models_.insert(std::make_pair("playeridle", modelPlayer_.get()));
-	models_.insert(std::make_pair("playerbullet", modelPlayerBullet_.get()));
-	models_.insert(std::make_pair("playerdash", modelPlayerDash_.get()));
-	models_.insert(std::make_pair("playerjump", modelPlayerJump_.get()));
-	models_.insert(std::make_pair("playerattack", modelPlayerAttack_.get()));
-	models_.insert(std::make_pair("playerhit", modelPlayerHit_.get()));
-	models_.insert(std::make_pair("enemy1", modelEnemy1_.get()));
-	models_.insert(std::make_pair("enemydanger", modelEnemyDanger_.get()));
-	models_.insert(std::make_pair("enemybullet", modelEnemyBullet_.get()));
-	models_.insert(std::make_pair("boss1", modelBoss1_.get()));
-	models_.insert(std::make_pair("core1", modelBossCore1_.get()));
-	models_.insert(std::make_pair("sphere", modelGoal_.get()));
-	models_.insert(std::make_pair("Itemjump", modelItemJump_.get()));
-	models_.insert(std::make_pair("itemheal", modelItemHeal_.get()));
-	models_.insert(std::make_pair("spikeball", modelSpike_.get()));
-	models_.insert(std::make_pair("boxud", modelBoxUpDown_.get()));
-	models_.insert(std::make_pair("skydomet", modelStageT_.get()));
-	models_.insert(std::make_pair("skydome", modelStage1_.get()));
-	models_.insert(std::make_pair("skydome2", modelStage2_.get()));
-	models_.insert(std::make_pair("ground", modelGround_.get()));
-	models_.insert(std::make_pair("sphere2", modelSphere_.get()));
-	models_.insert(std::make_pair("ground2", modelBox_.get()));
-
+	//自機に使うモデル
 	modelPlayerList_.playerModel = modelPlayer_.get();				//基本態勢
 	modelPlayerList_.playerBullet = modelPlayerBullet_.get();		//弾
 	modelPlayerList_.playerHit = modelPlayerHit_.get();				//ヒット
@@ -1366,8 +1263,7 @@ void GamePlayScene::UpdateTutorialSprite()
 	spriteTutorialInfo2_->Update();
 	spriteTutorialInfo3_->Update();
 	spriteTutorialInfo4_->Update();
-	spriteTutorialInfoHowToPlay_->Update();
-
+	
 	spriteTutorialHTPMove_->Update();
 	spriteTutorialHTPDash_->Update();
 	spriteTutorialHTPJump_->Update();
@@ -1406,120 +1302,8 @@ void GamePlayScene::LoadStageNameSprite()
 	spriteStageName_->Update();
 }
 
-void GamePlayScene::SetUpCircleShadow(const DirectX::XMFLOAT3& pos)
+void GamePlayScene::LoadTutorialSprite()
 {
-	const DirectX::XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };			//投影方向
-	const DirectX::XMFLOAT3 casterPosOffset = { -0.5f,0.0f,0.0f };	//キャスター座標のオフセット
-	//キャスター座標
-	const DirectX::XMFLOAT3 casterPos =
-	{
-		pos.x + casterPosOffset.x,
-		pos.y + casterPosOffset.y,
-		pos.z + casterPosOffset.z
-	};
-	const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };				//距離減衰係数
-	const DirectX::XMFLOAT2 factorAngle = { 0.2f,0.5f };			//角度減衰係数
-
-	//シャドウのセット
-	lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
-	lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterPos);
-	lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);
-	lightGroup_->SetCircleShadowFactorAngleCos(LightGroup::LN_0, factorAngle);
-}
-
-void GamePlayScene::LoadSprite()
-{
-	//どのキでポーズするのかを書いたスプライト
-	spCommon_->LoadTexture(GPSTI_PauseInfoTex, "texture/pauseinfo.png");
-	spritePauseInfo_->Initialize(spCommon_, GPSTI_PauseInfoTex);
-
-	//ポーズ時のスプライト
-	spCommon_->LoadTexture(GPSTI_PauseTex, "texture/pause.png");
-	spritePause_->Initialize(spCommon_, GPSTI_PauseTex);
-	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].start,pausePosY_[PMEN_Menu] });
-
-	//ポーズ時にゲーム再開するかを書いたスプライト
-	spCommon_->LoadTexture(GPSTI_PauseResumeTex, "texture/resume.png");
-	spritePauseResume_->Initialize(spCommon_, GPSTI_PauseResumeTex);
-	spritePauseResume_->SetPosition({ easePauseMenuPosX_[PMEN_Resume].start,pausePosY_[PMEN_Resume] });
-
-	//ポーズ時に遊び方を確認するかを書いたスプライト
-	spCommon_->LoadTexture(GPSTI_PauseHowToPlayTex, "texture/howtoplay2.png");
-	spritePauseHowToPlay_->Initialize(spCommon_, GPSTI_PauseHowToPlayTex);
-	spritePauseHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_HowToPlay].start,pausePosY_[PMEN_HowToPlay] });
-
-	//ポーズ時にステージセレクトへ戻るかを書いたスプライト
-	spCommon_->LoadTexture(GPSTI_PauseStageSelectTex, "texture/backstageselect.png");
-	spritePauseStageSelect_->Initialize(spCommon_, GPSTI_PauseStageSelectTex);
-	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[PMEN_StageSelect].start,pausePosY_[PMEN_StageSelect] });
-
-	//ポーズ時にタイトルへ戻るかを書いたスプライト
-	spCommon_->LoadTexture(GPSTI_PauseTitleTex, "texture/backtitle.png");
-	spritePauseTitle_->Initialize(spCommon_, GPSTI_PauseTitleTex);
-	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].start,pausePosY_[PMEN_Title] });
-
-	//決定表示のスプライト
-	spCommon_->LoadTexture(GPSTI_PauseDoneTex, "texture/space.png");
-	spriteDone_->Initialize(spCommon_, GPSTI_PauseDoneTex);
-	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].start,pausePosY_[PMEN_SelectSpace] });
-
-	//遊び方説明時ポーズに戻る案内用のスプライト
-	spCommon_->LoadTexture(GPSTI_QuitHowToPlayTex, "texture/space.png");
-	spriteQuitHowtoPlay_->Initialize(spCommon_, GPSTI_QuitHowToPlayTex);
-	spriteQuitHowtoPlay_->SetPosition({ easeHowToPlayPosX_[HTPEN_Quit].start,howToPlayPosY_[HTPEN_Quit] });
-
-	//Ready表記文字用のスプライト
-	spCommon_->LoadTexture(GPSTI_ReadyTex, "texture/ready2.png");
-	spriteReady_->Initialize(spCommon_, GPSTI_ReadyTex);
-	spriteReady_->SetPosition({ easeReadyPosition_[XXY_X1].start,easeReadyPosition_[XXY_Y].start });
-	spriteReady_->SetColor({ black_.x,black_.y,black_.z,easeFadeInOut_.start });//真っ黒
-
-	//Go表記文字用のスプライト
-	spCommon_->LoadTexture(GPSTI_GoTex, "texture/go.png");
-	spriteGo_->Initialize(spCommon_, GPSTI_GoTex);
-	spriteGo_->SetSize({ easeGoSizeAndAlpha_[XYW_X].start,easeGoSizeAndAlpha_[XYW_Y].start });
-	spriteGo_->SetPosition({ goPosition_[XY_X],goPosition_[XY_Y] });
-
-	const XMFLOAT2 centralAnchorPoint = { 0.5f,0.5f };//アンカーポイントは中央
-	spriteGo_->SetAnchorPoint(centralAnchorPoint);
-	spriteGo_->SetColor({ black_.x,black_.y,black_.z,easeGoSizeAndAlpha_[XYW_W].start });
-
-	//フェードインアウトスプライト
-	spCommon_->LoadTexture(GPSTI_FadeInOutTex, "texture/fade.png");
-	spriteFadeInOut_->Initialize(spCommon_, GPSTI_FadeInOutTex);
-	spriteFadeInOut_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.start });//真っ白
-
-	//ロードスプライト
-	spCommon_->LoadTexture(GPSTI_LoadingTex, "texture/load.png");
-	spriteLoad_->Initialize(spCommon_, GPSTI_LoadingTex);
-	spriteLoad_->SetPosition(loadPos_);
-	spriteLoad_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
-
-	//現在ステージスプライト
-	const int32_t remainderNum = stageNum_ % 10;//余りによってスプライトを変える
-	if (remainderNum == SNL_Stage1) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage1.png");
-	else if (remainderNum == SNL_Stage2) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage2.png");
-	else if (remainderNum == SNL_Stage3) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage3.png");
-	else if (remainderNum == SNL_Stage4) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stagef.png");
-	spriteStageInfoNow_->Initialize(spCommon_, GPSTI_StageInfoNowTex);
-	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
-	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
-
-	//カーソルスプライト
-	spCommon_->LoadTexture(GPSTI_CursorTex, "texture/cursor.png");
-	spriteCursor_->Initialize(spCommon_, GPSTI_CursorTex);
-	spriteCursor_->SetPosition({ easeCursorPosX_.start,pausePosY_[PMEN_Resume] });
-
-	//遊び方説明リストのスプライト
-	spCommon_->LoadTexture(GPSTI_HowToPlayListTex, "texture/info/howtoplaylist.png");
-	spriteHowToPlayList_->Initialize(spCommon_, GPSTI_HowToPlayListTex);
-	const XMFLOAT2 howToPlayListPosition = { 30.0f,70.0f };
-	spriteHowToPlayList_->SetPosition(howToPlayListPosition);
-	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
-
-	//ステージ名スプライト
-	LoadStageNameSprite();
-
 	//チュートリアル時の説明文字スプライト
 	spCommon_->LoadTexture(GPSTTI_TutorialInfo1Tex, "texture/info/tinfo1.png");//1
 	spriteTutorialInfo1_->Initialize(spCommon_, GPSTTI_TutorialInfo1Tex);
@@ -1529,9 +1313,6 @@ void GamePlayScene::LoadSprite()
 	spriteTutorialInfo3_->Initialize(spCommon_, GPSTTI_TutorialInfo3Tex);
 	spCommon_->LoadTexture(GPSTTI_TutorialInfo4Tex, "texture/info/tinfo4.png");//4
 	spriteTutorialInfo4_->Initialize(spCommon_, GPSTTI_TutorialInfo4Tex);
-	spCommon_->LoadTexture(GPSTTI_TutorialInfoHowToPlayTex, "texture/info/tinfohowtoplay.png");//遊び方説明について
-	spriteTutorialInfoHowToPlay_->Initialize(spCommon_, GPSTTI_TutorialInfoHowToPlayTex);
-	spriteTutorialInfoHowToPlay_->SetPosition({ easePauseMenuPosX_[PMEN_TutorialHowToPlayInfo].start,pausePosY_[PMEN_TutorialHowToPlayInfo] });
 
 	//チュートリアル時の操作説明
 	spCommon_->LoadTexture(GPSTTI_HowToPlayMoveTex, "texture/info/moveinfo.png");//移動　1~
@@ -1540,7 +1321,7 @@ void GamePlayScene::LoadSprite()
 	spriteTutorialHTPDash_->Initialize(spCommon_, GPSTTI_HowToPlayDashTex);
 	spCommon_->LoadTexture(GPSTTI_HowToPlayJumpTex, "texture/info/jumpinfo.png");//ジャンプ　1~
 	spriteTutorialHTPJump_->Initialize(spCommon_, GPSTTI_HowToPlayJumpTex);
-	spCommon_->LoadTexture(GPSTTI_HowToPlayBackMoveTex, "texture/info/backmoveinfo.png");//手前、奥側ジャンプ　2~
+	spCommon_->LoadTexture(GPSTTI_HowToPlayBackMoveTex, "texture/info/backmoveinfo2.png");//手前、奥側ジャンプ　2~
 	spriteTutorialHTPMoveBack_->Initialize(spCommon_, GPSTTI_HowToPlayBackMoveTex);
 	spCommon_->LoadTexture(GPSTTI_HowToPlayAttackTex, "texture/info/attackinfo2.png");//攻撃　3~
 	spriteTutorialHTPAttack_->Initialize(spCommon_, GPSTTI_HowToPlayAttackTex);
@@ -1577,16 +1358,151 @@ void GamePlayScene::LoadSprite()
 		spriteTutorialHTPMoveBack_->SetColor(howToPlayColor);
 		spriteTutorialHTPAttack_->SetColor(howToPlayColor);
 	}
+}
+
+void GamePlayScene::SetUpCircleShadow(const DirectX::XMFLOAT3& pos)
+{
+	const DirectX::XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };			//投影方向
+	const DirectX::XMFLOAT3 casterPosOffset = { -0.5f,0.0f,0.0f };	//キャスター座標のオフセット
+	//キャスター座標
+	const DirectX::XMFLOAT3 casterPos =
+	{
+		pos.x + casterPosOffset.x,
+		pos.y + casterPosOffset.y,
+		pos.z + casterPosOffset.z
+	};
+	const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };				//距離減衰係数
+	const DirectX::XMFLOAT2 factorAngle = { 0.2f,0.5f };			//角度減衰係数
+
+	//シャドウのセット
+	lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
+	lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterPos);
+	lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);
+	lightGroup_->SetCircleShadowFactorAngleCos(LightGroup::LN_0, factorAngle);
+}
+
+void GamePlayScene::LoadSprite()
+{
+	//どのキでポーズするのかを書いたスプライト
+	spCommon_->LoadTexture(GPSTI_PauseInfoTex, "texture/pauseinfo2.png");
+	spritePauseInfo_->Initialize(spCommon_, GPSTI_PauseInfoTex);
+
+	//ポーズ時のスプライト
+	spCommon_->LoadTexture(GPSTI_PauseTex, "texture/pause.png");
+	spritePause_->Initialize(spCommon_, GPSTI_PauseTex);
+	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].start,pausePosY_[PMEN_Menu] });
+
+	//ポーズ時にゲーム再開するかを書いたスプライト
+	spCommon_->LoadTexture(GPSTI_PauseResumeTex, "texture/resume.png");
+	spritePauseResume_->Initialize(spCommon_, GPSTI_PauseResumeTex);
+	spritePauseResume_->SetPosition({ easePauseMenuPosX_[PMEN_Resume].start,pausePosY_[PMEN_Resume] });
+
+	//ポーズ時にヒントを確認するかを書いたスプライト
+	spCommon_->LoadTexture(GPSTI_PauseHowToPlayTex, "texture/hint.png");
+	spritePauseHint_->Initialize(spCommon_, GPSTI_PauseHowToPlayTex);
+	spritePauseHint_->SetPosition({ easePauseMenuPosX_[PMEN_Hint].start,pausePosY_[PMEN_Hint] });
+
+	//ポーズ時にステージセレクトへ戻るかを書いたスプライト
+	spCommon_->LoadTexture(GPSTI_PauseStageSelectTex, "texture/backstageselect.png");
+	spritePauseStageSelect_->Initialize(spCommon_, GPSTI_PauseStageSelectTex);
+	spritePauseStageSelect_->SetPosition({ easePauseMenuPosX_[PMEN_StageSelect].start,pausePosY_[PMEN_StageSelect] });
+
+	//ポーズ時にタイトルへ戻るかを書いたスプライト
+	spCommon_->LoadTexture(GPSTI_PauseTitleTex, "texture/backtitle.png");
+	spritePauseTitle_->Initialize(spCommon_, GPSTI_PauseTitleTex);
+	spritePauseTitle_->SetPosition({ easePauseMenuPosX_[PMEN_Title].start,pausePosY_[PMEN_Title] });
+
+	//メニュー操作スプライト
+	spCommon_->LoadTexture(GPSTI_PauseUITex, "texture/menuui.png");
+	spritePauseUI_->Initialize(spCommon_, GPSTI_PauseUITex);
+	spritePauseUI_->SetPosition({ easePauseMenuPosX_[PMEN_UI].start,pausePosY_[PMEN_UI] });
+
+	//決定表示のスプライト
+	spCommon_->LoadTexture(GPSTI_PauseDoneTex, "texture/space.png");
+	spriteDone_->Initialize(spCommon_, GPSTI_PauseDoneTex);
+	spriteDone_->SetPosition({ easePauseMenuPosX_[PMEN_SelectSpace].start,pausePosY_[PMEN_SelectSpace] });
+
+	//Ready表記文字用のスプライト
+	spCommon_->LoadTexture(GPSTI_ReadyTex, "texture/ready2.png");
+	spriteReady_->Initialize(spCommon_, GPSTI_ReadyTex);
+	spriteReady_->SetPosition({ easeReadyPosition_[XXY_X1].start,easeReadyPosition_[XXY_Y].start });
+	if(stageNum_==SL_Stage1_AreaBoss)spriteReady_->SetColor({ white_.x,white_.y,white_.z,easeFadeInOut_.start });//ボス戦時は真っ白
+	else spriteReady_->SetColor({ black_.x,black_.y,black_.z,easeFadeInOut_.start });//通常時は真っ黒
+
+	//Go表記文字用のスプライト
+	spCommon_->LoadTexture(GPSTI_GoTex, "texture/go.png");
+	spriteGo_->Initialize(spCommon_, GPSTI_GoTex);
+	spriteGo_->SetSize({ easeGoSizeAndAlpha_[XYW_X].start,easeGoSizeAndAlpha_[XYW_Y].start });
+	spriteGo_->SetPosition({ goPosition_[XY_X],goPosition_[XY_Y] });
+
+	const XMFLOAT2 centralAnchorPoint = { 0.5f,0.5f };//アンカーポイントは中央
+	spriteGo_->SetAnchorPoint(centralAnchorPoint);
+	if (stageNum_ == SL_Stage1_AreaBoss)spriteGo_->SetColor({ white_.x,white_.y,white_.z,easeGoSizeAndAlpha_[XYW_W].start });//ボス戦時は真っ白
+	else spriteGo_->SetColor({ black_.x,black_.y,black_.z,easeGoSizeAndAlpha_[XYW_W].start });//通常時は真っ黒
+
+	//フェードインアウトスプライト
+	spCommon_->LoadTexture(GPSTI_FadeInOutTex, "texture/fade.png");
+	spriteFadeInOut_->Initialize(spCommon_, GPSTI_FadeInOutTex);
+	spriteFadeInOut_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.start });//真っ白
+
+	//ロードスプライト
+	spCommon_->LoadTexture(GPSTI_LoadingTex, "texture/load.png");
+	spriteLoad_->Initialize(spCommon_, GPSTI_LoadingTex);
+	spriteLoad_->SetPosition(loadPos_);
+	spriteLoad_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
+	//現在ステージスプライト
+	const int32_t remainderNum = stageNum_ % 10;//余りによってスプライトを変える
+	if (remainderNum == SNL_Stage1) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage1.png");
+	else if (remainderNum == SNL_Stage2) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage2.png");
+	else if (remainderNum == SNL_Stage3) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stage3.png");
+	else if (remainderNum == SNL_Stage4) spCommon_->LoadTexture(GPSTI_StageInfoNowTex, "texture/stagef.png");
+	spriteStageInfoNow_->Initialize(spCommon_, GPSTI_StageInfoNowTex);
+	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
+	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//透明化
+
+	//カーソルスプライト
+	spCommon_->LoadTexture(GPSTI_CursorTex, "texture/cursor.png");
+	spriteCursor_->Initialize(spCommon_, GPSTI_CursorTex);
+	spriteCursor_->SetPosition({ easeCursorPosX_.start,pausePosY_[PMEN_Resume] });
+
+	//遊び方説明リストのスプライト
+	spCommon_->LoadTexture(GPSTI_HowToPlayListTex, "texture/info/howtoplaylist2.png");
+	spriteHowToPlayList_->Initialize(spCommon_, GPSTI_HowToPlayListTex);
+	const XMFLOAT2 howToPlayListPosition = { 30.0f,70.0f };
+	spriteHowToPlayList_->SetPosition(howToPlayListPosition);
+	//イージングを初期化
+	easeTutorialListScale_[XY_X].SetEasing(0.0f, spriteHowToPlayList_->GetSize().x, easeTutorialListScale_[XY_X].maxtime);
+	easeTutorialListScale_[XY_Y].SetEasing(0.0f, spriteHowToPlayList_->GetSize().y, easeTutorialListScale_[XY_Y].maxtime);
+	spriteHowToPlayList_->SetSize({ easeTutorialListScale_[XY_X].start,easeTutorialListScale_[XY_Y].start });
+	
+	//ヒントの内容はステージごとに違う
+	if (stageNum_ == SL_StageTutorial_Area1)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-1.png");
+	else if (stageNum_ == SL_StageTutorial_Area2)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-2.png");
+	else if (stageNum_ == SL_StageTutorial_Area3)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-3.png");
+	else if (stageNum_ == SL_StageTutorial_Final)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/1-4.png");
+	else if (stageNum_ == SL_Stage1_Area1)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/2-1.png");
+	else if (stageNum_ == SL_Stage1_Area2)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/2-2.png");
+	else if (stageNum_ == SL_Stage1_Area3)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/2-3.png");
+	else if (stageNum_ == SL_Stage1_AreaBoss)spCommon_->LoadTexture(GPSTI_HintInfoTex, "texture/stagehint/2-4.png");
+	spriteHintInfo_->Initialize(spCommon_, GPSTI_HintInfoTex);
+	spriteHintInfo_->SetPosition({ easePauseMenuPosX_[PMEN_HintInfo].start,pausePosY_[PMEN_HintInfo] });
+
+	//ステージ名スプライト
+	LoadStageNameSprite();
+
+	//チュートリアルスプライト
+	LoadTutorialSprite();
 
 	//各スプライトを更新
 	spritePause_->Update();
 	spritePauseInfo_->Update();
 	spritePauseResume_->Update();
-	spritePauseHowToPlay_->Update();
+	spritePauseHint_->Update();
 	spritePauseStageSelect_->Update();
 	spritePauseTitle_->Update();
+	spritePauseUI_->Update();
 	spriteDone_->Update();
-	spriteQuitHowtoPlay_->Update();
 	spriteReady_->Update();
 	spriteGo_->Update();
 	spriteFadeInOut_->Update();
@@ -1595,13 +1511,12 @@ void GamePlayScene::LoadSprite()
 	spriteTutorialInfo2_->Update();
 	spriteTutorialInfo3_->Update();
 	spriteTutorialInfo4_->Update();
-	spriteTutorialInfoHowToPlay_->Update();
+	spriteHintInfo_->Update();
 
 	spriteTutorialHTPMove_->Update();
 	spriteTutorialHTPDash_->Update();
 	spriteTutorialHTPJump_->Update();
 	spriteTutorialHTPMoveBack_->Update();
 	spriteTutorialHTPAttack_->Update();
-
 
 }

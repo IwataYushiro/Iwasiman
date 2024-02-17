@@ -16,6 +16,13 @@ using namespace IwasiEngine;
 *	ボス敵のコア
 
 */
+//メンバ関数ポインタテーブルの実体
+void (EnemyCore::* EnemyCore::updateTable_[])() =
+{
+	&EnemyCore::UpdateCore,
+	&EnemyCore::UpdateBreakCore,
+	&EnemyCore::UpdateLeave
+};
 
 EnemyCore::~EnemyCore() {
 
@@ -117,19 +124,8 @@ void EnemyCore::Update(const bool isStart) {
 	if (!isStart)
 	{
 		//座標を移動させる
-		switch (phase_) {
-		case EnemyCore::Phase::CoreStage1:	//行動時
-			UpdateCore();
-			break;
+		(this->*updateTable_[static_cast<size_t>(phase_)])();
 
-		case EnemyCore::Phase::CoreBreak:	//撃破演出時
-			UpdateBreakCore();
-
-			break;
-		case EnemyCore::Phase::Leave:		//撃破時
-			UpdateLeave();
-			break;
-		}
 	}
 	//座標を転送
 	Trans();
@@ -255,9 +251,9 @@ void EnemyCore::UpdateCore()
 
 		//ベジェ曲線の値
 		const XMFLOAT3 startBezier3Pos = nowPos_;
-		const XMFLOAT3 point1Bezier3Pos = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,40.0f,70.0f };
-		const XMFLOAT3 point2Bezier3Pos = { MyMath::RandomMTFloat(-30.0f,30.0f) + cameraMove,25.0f,85.0f };
-		const XMFLOAT3 endBezier3Pos = { MyMath::RandomMTFloat(-15.0f,15.0f),10.0f,100.0f };
+		const XMFLOAT3 point1Bezier3Pos = { MyMath::RandomMTFloat(-50.0f,50.0f) + cameraMove,40.0f,70.0f };
+		const XMFLOAT3 point2Bezier3Pos = { MyMath::RandomMTFloat(-50.0f,50.0f) + cameraMove,25.0f,85.0f };
+		const XMFLOAT3 endBezier3Pos = { MyMath::RandomMTFloat(-10.0f,10.0f),10.0f,100.0f };
 		//制御点
 		start_ = startBezier3Pos;
 		point1_ = point1Bezier3Pos;
@@ -363,8 +359,7 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 			if (life_ > deathLife_)//ライフが0じゃない場合
 			{
 				//パーティクルでヒット演出
-				pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+				pmSmoke_->ActiveZ(smoke);
 
 				pmSmoke_->Update();
 
@@ -372,8 +367,7 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 			else//ライフが0の場合
 			{
 				//パーティクルでヒット演出
-				pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
-					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+				pmFire_->ActiveZ(fire);
 
 				pmFire_->Update();
 
@@ -388,8 +382,7 @@ void EnemyCore::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 	{
 		if (subAttribute == SUBCOLLISION_ATTR_NONE)
 		{
-			pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
-				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+			pmFire_->ActiveZ(fire);
 
 			pmFire_->Update();
 

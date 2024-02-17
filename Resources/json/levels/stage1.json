@@ -191,7 +191,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "enemy2",
             "objecttype": "ENEMY",
             "objectpattern": "E2P"
         },
@@ -239,7 +239,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "enemy2",
             "objecttype": "ENEMY",
             "objectpattern": "E2G"
         },
@@ -298,7 +298,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "enemy2",
             "objecttype": "ENEMY",
             "objectpattern": "E2G"
         },
@@ -322,7 +322,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "enemy2",
             "objecttype": "ENEMY",
             "objectpattern": "E2S"
         },

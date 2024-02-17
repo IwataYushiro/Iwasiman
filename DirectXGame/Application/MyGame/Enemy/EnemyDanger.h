@@ -18,9 +18,9 @@ class EnemyDanger :public BaseEnemy {
 public:
 	//デストラクタ
 	~EnemyDanger();
-	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、パラメータレベル)
+	//生成(使用モデル、使用弾モデル、プレイヤー、ゲームプレイシーン、どの方向に進むか)
 	static std::unique_ptr<EnemyDanger> Create(const Model* model = nullptr,const Player* player = nullptr,
-		GamePlayScene* gamescene = nullptr, unsigned short level = EL_Level0);
+		GamePlayScene* gamescene = nullptr, unsigned short xyz = XYZ_X);
 
 	//初期化
 	bool Initialize()override;

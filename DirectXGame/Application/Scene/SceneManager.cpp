@@ -57,6 +57,11 @@ void SceneManager::Draw()
 	scene_->Draw();//ƒV[ƒ“•`‰æ
 }
 
+void SceneManager::DrawPostEffect()
+{
+	scene_->DrawPostEffect();
+}
+
 void SceneManager::Finalize()
 {
 	scene_->Finalize();//I—¹ˆ—

@@ -18,9 +18,6 @@
 
 #include "SceneManager.h"
 
-//jsonレベルデータ
-struct LevelData;
-
 /*
 
 *	TitleScene.h
@@ -45,27 +42,30 @@ public://メンバ関数(ステージ番号)
 	//状態更新(メニューのとき) 
 	void UpdateIsMenu();
 	//フェードアウト(色)
-	void FadeOut(const DirectX::XMFLOAT3& rgb);
+	void FadeIn(const DirectX::XMFLOAT3& color) override;
 	//描画
 	void Draw() override;
+	//ポストエフェクト描画
+	void DrawPostEffect() override;
 	//終了
 	void Finalize() override;
-
 	//レベルデータ読み込み
 	void LoadLVData(const std::string& stagePath);
-
-private://静的メンバ変数
+	//イージングのロード
+	void LoadEasing() override;
+private://基盤メンバ変数
 	//DirectX基盤
-	static DirectXCommon* dxCommon_;
-
+	DirectXCommon* dxCommon_ = nullptr;
+	//スプライト基盤
+	SpriteCommon* spCommon_ = nullptr;
 	//インプット
-	static Input* input_;
+	Input* input_ = nullptr;
 	//オーディオ
-	static Audio* audio_;
+	Audio* audio_ =nullptr;
 	//シーンマネージャー
-	static SceneManager* sceneManager_;
+	SceneManager* sceneManager_ = nullptr;
 	//imgui
-	static ImGuiManager* imguiManager_;
+	ImGuiManager* imguiManager_ = nullptr;
 
 
 private://メンバ変数
@@ -73,22 +73,21 @@ private://メンバ変数
 	enum TitleSceneTextureIndex
 	{
 		TSTI_TitleTex = 0,
-		TSTI_TitleDoneTex = 1,
-		TSTI_MenuTex = 2,
-		TSTI_MenuTutorialTex = 3,
-		TSTI_MenuStageSerectTex = 4,
-		TSTI_MenuDoneTex = 5,
-		TSTI_BackTitleTex = 6,
-		TSTI_FadeInOutTex = 7,
-		TSTI_LoadingTex = 8,
-		TSTI_StageInfoNowTex = 9,
-		TSTI_CursorTex = 10,
-		TSTI_TitleBackTex = 11,
-		TSTI_StageNameTex=12,
+		TSTI_MenuTex = 1,
+		TSTI_MenuTutorialTex = 2,
+		TSTI_MenuStageSerectTex = 3,
+		TSTI_MenuDoneTex = 4,
+		TSTI_BackTitleTex = 5,
+		TSTI_FadeInOutTex = 6,
+		TSTI_LoadingTex = 7,
+		TSTI_StageInfoNowTex = 8,
+		TSTI_CursorTex = 9,
+		TSTI_TitleBackTex = 10,
+		TSTI_StageNameTex = 11,
+		TSTI_MenuUITex = 12,
 	};
 
-	//スプライト基盤
-	SpriteCommon* spCommon_ = nullptr;
+	
 	//カメラ
 	std::unique_ptr<Camera> camera_ = nullptr;
 
@@ -97,11 +96,10 @@ private://メンバ変数
 
 	//Sprite
 	std::unique_ptr<Sprite> spriteTitle_ = std::make_unique<Sprite>();				//タイトル画面スプライト
-	std::unique_ptr<Sprite> spriteTitleDone_ = std::make_unique<Sprite>();			//タイトル決定表示スプライト
 	std::unique_ptr<Sprite> spriteMenu_ = std::make_unique<Sprite>();				//タイトルメニュー画面スプライト
 	std::unique_ptr<Sprite> spriteMenuTutorial_ = std::make_unique<Sprite>();		//チュートリアル表示スプライト
 	std::unique_ptr<Sprite> spriteMenuStageSelect_ = std::make_unique<Sprite>();	//ステージセレクト表示スプライト
-	std::unique_ptr<Sprite> spriteMenuDone_ = std::make_unique<Sprite>();			//タイトルメニュー決定表示スプライト
+	std::unique_ptr<Sprite> spriteMenuDone_ = std::make_unique<Sprite>();			//タイトルメニュー決定表示兼スキップキー表示スプライト
 	std::unique_ptr<Sprite> spriteBack_ = std::make_unique<Sprite>();				//タイトルメニュー→タイトル移行のスプライト
 	std::unique_ptr<Sprite> spriteFadeInOut_ = std::make_unique<Sprite>();			//フェードインアウトスプライト
 	std::unique_ptr<Sprite> spriteLoad_ = std::make_unique<Sprite>();				//ロードスプライト
@@ -109,9 +107,7 @@ private://メンバ変数
 	std::unique_ptr<Sprite> spriteCursor_ = std::make_unique<Sprite>();				//カーソルスプライト
 	std::unique_ptr<Sprite> spriteTitleBack_ = std::make_unique<Sprite>();			//タイトル画面スプライト(タイトルの後ろ)
 	std::unique_ptr<Sprite> spriteStageName_ = std::make_unique<Sprite>();			//ステージ名スプライト
-
-	//jsonレベルデータ
-	LevelData* levelData_ = nullptr;
+	std::unique_ptr<Sprite> spriteMenuUI_ = std::make_unique<Sprite>();				//メニュー操作方法スプライト
 
 	//モデル
 	std::unique_ptr<Model> modelPlayer_ = nullptr;					//自機モデル
@@ -126,38 +122,21 @@ private://メンバ変数
 	std::vector<std::unique_ptr<Object3d>> objGrounds_;					//床オブジェクト配列
 	std::vector<std::unique_ptr<Object3d>> objGoals_;					//ゴールオブジェクト配列
 
-	//マッピングモデル
-	std::map<std::string, Model*> models_;
 
 	//フラグ類
 	bool isMenu_ = false;				//タイトルメニュー画面にいるとき
 	bool isBack_ = false;				//タイトルメニューからタイトルに戻るとき
 	bool isStartGame_ = false;			//ゲーム開始するとき
 	bool isStageSelect_ = false;		//ステージセレクトに行くとき
-	bool isFadeOut_ = false;			//フェードアウト
+	bool isFadeIn_ = false;				//フェードイン
 
-	//タイトル→タイトルメニューの列挙体
-	enum TitleStart
-	{
-		TS_Title = 0,		//タイトル
-		TS_Done = 1,		//決定
-		TS_Num = 2		//配列用
-	};
+	
 	//最初の画面のY値
-	const std::array<float, TS_Num> startTitlePosY_ = { 50.0f,600.0f };
+	const float startTitlePosY_ = 50.0f;
 
-	//タイトル→タイトルメニューのイージングのプリセット
-	const Easing presetEaseTitlePosX_[TS_Num] =
-	{
-		{225.0f, -1300.0f, 1.0f},
-		{425.0f, -1300.0f, 1.0f}
-	};
 	//タイトル→タイトルメニューのイージング
-	Easing easeTitlePosX_[TS_Num] =
-	{
-		presetEaseTitlePosX_[TS_Title],
-		presetEaseTitlePosX_[TS_Done]
-	};
+	Easing easeTitlePosX_;
+
 
 	//メニュー説明用の列挙体
 	enum TitleMenuEasingNum
@@ -166,141 +145,36 @@ private://メンバ変数
 		TMEN_Tutorial = 1,			//チュートリアルへ
 		TMEN_StageSelect = 2,		//ステージセレクトへ
 		TMEN_SelectSpace = 3,		//スペースで選択
-		TMEN_Quit = 4,				//戻る
-		TMEN_Num = 5,				//配列用
+		TMEN_UI = 4,				//操作方法
+		TMEN_Quit = 5,				//戻る
+		TMEN_Num = 6,				//配列用
 	};
 	//メニューのY値
-	const std::array<float, TMEN_Num> menuPosY_ = { 50.0f,200.0f,350.0f,600.0f,50.0f };
-	//タイトルメニューの出現イージングのプリセット
-	const Easing presetEaseMenuPosX_[TMEN_Num] =
-	{
-		{1300.0f, 0.0f, 1.0f},		//メニュー
-		{1300.0f, 100.0f, 1.2f},	//チュートリアルへ
-		{1300.0f, 100.0f, 1.4f},	//ステージセレクトへ
-		{1300.0f, 425.0f, 1.6f},	//スペースで選択
-		{1300.0f, 900.0f, 1.8f}		//戻る
-	};
+	const std::array<float, TMEN_Num> menuPosY_ = { 50.0f,200.0f,350.0f,600.0f,300.0f,50.0f };
+	
 	//タイトルメニューの出現イージング
-	Easing easeMenuPosX_[TMEN_Num] =
-	{
-		presetEaseMenuPosX_[TMEN_Menu],			//メニュー
-		presetEaseMenuPosX_[TMEN_Tutorial],		//チュートリアルへ
-		presetEaseMenuPosX_[TMEN_StageSelect],	//ステージセレクトへ
-		presetEaseMenuPosX_[TMEN_SelectSpace],	//スペースで選択
-		presetEaseMenuPosX_[TMEN_Quit]			//戻る
-	};
-
-	//タイトルメニューの出現イージングのプリセット
-	const Easing presetEaseMenuEndPosX_[TMEN_Num] =
-	{
-		{ 0.0f, -1300.0f,1.0f},		//メニュー
-		{ 100.0f, -1300.0f,1.2f},	//チュートリアルへ
-		{ 100.0f, -1300.0f,1.4f},	//ステージセレクトへ
-		{ 425.0f, -1300.0f,1.6f},	//スペースで選択
-		{ 900.0f,-1300.0f, 1.8f}		//戻る
-	};
-	//タイトルメニューの出現イージング
-	Easing easeMenuEndPosX_[TMEN_Num] =
-	{
-		presetEaseMenuEndPosX_[TMEN_Menu],			//メニュー
-		presetEaseMenuEndPosX_[TMEN_Tutorial],		//チュートリアルへ
-		presetEaseMenuEndPosX_[TMEN_StageSelect],	//ステージセレクトへ
-		presetEaseMenuEndPosX_[TMEN_SelectSpace],	//スペースで選択
-		presetEaseMenuEndPosX_[TMEN_Quit]			//戻る
-	};
-	//カーソルX値のイージングプリセット
-	const Easing presetEaseCursorPosX_{ -200.0f,20.0f,1.0f };
+	Easing easeMenuPosX_[TMEN_Num];
+	//タイトルメニューの通過イージング
+	Easing easeMenuEndPosX_[TMEN_Num];
 	//カーソルX値のイージング
-	Easing easeCursorPosX_ = presetEaseCursorPosX_;
-	//選んだステージを真ん中に移動させるイージングのプリセット
-	const Easing presetEaseStartStagePosX_ = { 0.0f, 300.0f, 1.5f };//チュートリアルへ
+	Easing easeCursorPosX_;
 	//選んだステージを真ん中に移動させるイージング
-	Easing easeStartStagePosX_ = presetEaseStartStagePosX_;//チュートリアルへ
-
-
-	//選んだステージを上に移動させるイージングのプリセット
-	const Easing presetEaseStartStagePosY_ = { menuPosY_[TMEN_Tutorial], 0.0f, 1.5f };//チュートリアルへ
+	Easing easeStartStagePosX_;//チュートリアルへ
 	//選んだステージを上に移動させるイージング
-	Easing easeStartStagePosY_ = presetEaseStartStagePosY_;//チュートリアルへ
+	Easing easeStartStagePosY_;//チュートリアルへ
 
-	//タイトル→タイトルメニューの視点カメラワークイージングのプリセット
-	const Easing presetEaseEyeMenu_[XYZ_Num] =
-	{
-		{0.0f, 21.0f, 1.8f},			//X
-		{1.0f, -4.0f, 1.8f},			//Y
-		{-110.0f, -60.0f, 1.8f}			//Z
-	};
 	//タイトル→タイトルメニューの視点カメラワークイージング
-	Easing easeEyeMenu_[XYZ_Num] =
-	{
-		presetEaseEyeMenu_[XYZ_X],		//X
-		presetEaseEyeMenu_[XYZ_Y],		//Y
-		presetEaseEyeMenu_[XYZ_Z]		//Z
-	};
-
-	//タイトル→タイトルメニューの注視点カメラワークイージングのプリセット
-	const Easing presetEaseTargetMenu_[XYZ_Num] =
-	{
-		{0.0f, -100.0f, 1.8f},			//X
-		{0.0f, -10.0f, 1.8f},			//Y
-		{-10.0f, -62.0f, 1.8f}			//Z
-	};
+	Easing easeEyeMenu_[XYZ_Num];
 	//タイトル→タイトルメニューの注視点カメラワークイージング
-	Easing easeTargetMenu_[XYZ_Num] =
-	{
-		presetEaseTargetMenu_[XYZ_X],			//X
-		presetEaseTargetMenu_[XYZ_Y],			//Y
-		presetEaseTargetMenu_[XYZ_Z]			//Z
-	};
-
-	//タイトルメニュー→ゲーム開始の視点カメラワークイージングのプリセット
-	const Easing presetEaseEyeGameStart_[XYZ_Num] =
-	{
-		{21.0f, -22.0f, 1.0f},			//X
-		{-4.0f, -1.0f, 1.0f},			//Y
-		{-60.0f, -60.0f, 1.0f}			//Z
-	};
+	Easing easeTargetMenu_[XYZ_Num];
 	//タイトルメニュー→ゲーム開始の視点カメラワークイージング
-	Easing easeEyeGameStart_[XYZ_Num] =
-	{
-		presetEaseEyeGameStart_[XYZ_X],			//X
-		presetEaseEyeGameStart_[XYZ_Y],			//Y
-		presetEaseEyeGameStart_[XYZ_Z]			//Z
-	};
-
-	//タイトルメニュー→ゲーム開始の注視点カメラワークイージングのプリセット
-	const Easing presetEaseTargetGameStart_[XYZ_Num] =
-	{
-		{-100.0f, 50.0f, 1.0f},			//X
-		{-10.0f, -8.0f, 1.0f},			//Y
-		{-62.0f, -57.0f, 1.0f}			//Z
-	};
+	Easing easeEyeGameStart_[XYZ_Num];
 	//タイトルメニュー→ゲーム開始の注視点カメラワークイージング
-	Easing easeTargetGameStart_[XYZ_Num] =
-	{
-		presetEaseTargetGameStart_[XYZ_X],			//X
-		presetEaseTargetGameStart_[XYZ_Y],			//Y
-		presetEaseTargetGameStart_[XYZ_Z]			//Z
-	};
-
-	//タイトルメニュー→ステージセレクトの自機移動イージングのプリセット
-	const Easing presetEasePlayerMove_[XYZ_Num] =
-	{
-		{0.0f, 150.0f, 2.0f},			//X
-		{-8.0f, 40.0f, 2.0f},			//Y
-		{-60.0f, -60.0f, 2.0f}			//Z
-	};
+	Easing easeTargetGameStart_[XYZ_Num];
 	//タイトルメニュー→ステージセレクトの自機移動イージング
-	Easing easePlayerMove_[XYZ_Num] =
-	{
-		presetEasePlayerMove_[XYZ_X],			//X
-		presetEasePlayerMove_[XYZ_Y],			//Y
-		presetEasePlayerMove_[XYZ_Z]			//Z
-	};
-	//フェードインアウトのプリセット
-	const Easing presetEaseFadeInOut_ = { 1.0f, 0.0f, 1.0f };
+	Easing easePlayerMove_[XYZ_Num];
 	//フェードインアウト(false フェードイン、true フェードアウト)
-	Easing easeFadeInOut_ = presetEaseFadeInOut_;
+	Easing easeFadeInOut_;
 
 	//選択中の色
 	DirectX::XMFLOAT3 selectColor_;//xyz=rgb

@@ -58,9 +58,9 @@
                     0.0
                 ],
                 "scaling": [
-                    3.184230089187622,
-                    8.763559341430664,
-                    3.6212449073791504
+                    7.0,
+                    7.0,
+                    7.0
                 ]
             },
             "file_name": "skydome",
@@ -107,8 +107,8 @@
             "transform": {
                 "translation": [
                     0.0,
-                    55.0,
-                    10.0
+                    260.0,
+                    25.0
                 ],
                 "rotation": [
                     0.0,
@@ -153,8 +153,8 @@
             "transform": {
                 "translation": [
                     -150.0,
-                    30.0,
-                    10.0
+                    0.0,
+                    0.0
                 ],
                 "rotation": [
                     0.0,
@@ -245,35 +245,11 @@
         },
         {
             "type": "MESH",
-            "name": "fallsphere.003",
-            "transform": {
-                "translation": [
-                    60.00090408325195,
-                    55.0,
-                    -10.0
-                ],
-                "rotation": [
-                    179.99998474121094,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "file_name": "boxud",
-            "objecttype": "MOVEGROUND",
-            "objectpattern": "RSPHERERETURN"
-        },
-        {
-            "type": "MESH",
             "name": "Enemy1.002",
             "transform": {
                 "translation": [
-                    60.0,
-                    -100.0,
+                    0.0,
+                    35.0,
                     -1.0
                 ],
                 "rotation": [
@@ -362,6 +338,194 @@
             "file_name": "spikeball",
             "objecttype": "GIMMICK",
             "objectpattern": "SPIKE"
+        },
+        {
+            "type": "MESH",
+            "name": "Plane.002",
+            "transform": {
+                "translation": [
+                    60.0,
+                    61.718360900878906,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    0.15046873688697815,
+                    0.10260896384716034,
+                    1.0
+                ]
+            },
+            "file_name": "ground",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    200.0,
+                    200.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Plane.003",
+            "transform": {
+                "translation": [
+                    -0.8629841804504395,
+                    74.95689392089844,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    0.15046873688697815,
+                    0.2523059844970703,
+                    1.0
+                ]
+            },
+            "file_name": "ground",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    200.0,
+                    200.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.006",
+            "transform": {
+                "translation": [
+                    60.0,
+                    -100.0,
+                    -1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    4.5,
+                    4.5,
+                    4.5
+                ]
+            },
+            "file_name": "enemydanger",
+            "objecttype": "ENEMY",
+            "objectpattern": "ENEMYDANGER"
+        },
+        {
+            "type": "MESH",
+            "name": "Plane.004",
+            "transform": {
+                "translation": [
+                    -0.8629841804504395,
+                    145.17449951171875,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    0.15046873688697815,
+                    0.2423754334449768,
+                    1.0
+                ]
+            },
+            "file_name": "ground",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    200.0,
+                    200.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube",
+            "transform": {
+                "translation": [
+                    0.0,
+                    150.0,
+                    -8.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "itemjump",
+            "objecttype": "ITEM",
+            "objectpattern": "JUMP"
+        },
+        {
+            "type": "MESH",
+            "name": "Plane.005",
+            "transform": {
+                "translation": [
+                    -0.8629841804504395,
+                    220.3328094482422,
+                    -10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    0.15046873688697815,
+                    0.19865983724594116,
+                    1.0
+                ]
+            },
+            "file_name": "ground",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    10.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    200.0,
+                    200.0,
+                    2.0
+                ]
+            }
         }
     ]
 }

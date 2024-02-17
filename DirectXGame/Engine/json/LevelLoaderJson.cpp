@@ -18,7 +18,7 @@ using namespace IwasiEngine;
 const std::string LevelLoader::DEFAULT_BASE_DIRECTORY = "Resources/json/levels/";
 const std::string LevelLoader::EXTENSION = ".json";
 
-LevelData* LevelLoader::LoadFile(const std::string& fileName)
+std::unique_ptr<LevelData> LevelLoader::LoadFile(const std::string& fileName)
 {
 	//連結してフルパスを得る
 	const std::string fullpath = DEFAULT_BASE_DIRECTORY + fileName + EXTENSION;
@@ -49,7 +49,7 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName)
 	assert(name.compare("scene") == 0);
 
 	//レベルデータ格納用インスタンス
-	LevelData* lvData = new LevelData();
+	std::unique_ptr<LevelData> lvData = std::make_unique<LevelData>();
 	// "objects"の全オブジェクトを走査
 	for (nlohmann::json& object : deserialized["objects"])
 	{
@@ -84,21 +84,21 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName)
 			nlohmann::json& transform = object["transform"];
 			// 平行移動
 			const float transW = 1.0f;
-			objectData.trans.m128_f32[XYZW_X] = (float)transform["translation"][XYZ_Y];
-			objectData.trans.m128_f32[XYZW_Y] = (float)transform["translation"][XYZ_Z];
-			objectData.trans.m128_f32[XYZW_Z] = -(float)transform["translation"][XYZ_X];
+			objectData.trans.m128_f32[XYZW_X] = static_cast<float>(transform["translation"][XYZ_Y]);
+			objectData.trans.m128_f32[XYZW_Y] = static_cast<float>(transform["translation"][XYZ_Z]);
+			objectData.trans.m128_f32[XYZW_Z] = -static_cast<float>(transform["translation"][XYZ_X]);
 			objectData.trans.m128_f32[XYZW_W] = transW;
 			// 回転角
 			const float rotW = 0.0f;
-			objectData.rot.m128_f32[XYZW_X] = -(float)transform["rotation"][XYZ_Y];
-			objectData.rot.m128_f32[XYZW_Y] = -(float)transform["rotation"][XYZ_Z];
-			objectData.rot.m128_f32[XYZW_Z] = (float)transform["rotation"][XYZ_X];
+			objectData.rot.m128_f32[XYZW_X] = -static_cast<float>(transform["rotation"][XYZ_Y]);
+			objectData.rot.m128_f32[XYZW_Y] = -static_cast<float>(transform["rotation"][XYZ_Z]);
+			objectData.rot.m128_f32[XYZW_Z] = static_cast<float>(transform["rotation"][XYZ_X]);
 			objectData.rot.m128_f32[XYZW_W] = rotW;
 			// スケーリング
 			const float scaleW = 0.0f;
-			objectData.scale.m128_f32[XYZW_X] = (float)transform["scaling"][XYZ_Y];
-			objectData.scale.m128_f32[XYZW_Y] = (float)transform["scaling"][XYZ_Z];
-			objectData.scale.m128_f32[XYZW_Z] = (float)transform["scaling"][XYZ_X];
+			objectData.scale.m128_f32[XYZW_X] = static_cast<float>(transform["scaling"][XYZ_Y]);
+			objectData.scale.m128_f32[XYZW_Y] = static_cast<float>(transform["scaling"][XYZ_Z]);
+			objectData.scale.m128_f32[XYZW_Z] = static_cast<float>(transform["scaling"][XYZ_X]);
 			objectData.scale.m128_f32[XYZW_W] = scaleW;
 
 			// コライダーのパラメータ読み込み
@@ -107,15 +107,15 @@ LevelData* LevelLoader::LoadFile(const std::string& fileName)
 			{
 				// 平行移動
 				const float centerColliderW = 1.0f;
-				objectData.centerCollider.m128_f32[XYZW_X] = (float)collider["center"][XYZ_Y];
-				objectData.centerCollider.m128_f32[XYZW_Y] = (float)collider["center"][XYZ_Z];
-				objectData.centerCollider.m128_f32[XYZW_Z] = -(float)collider["center"][XYZ_X];
+				objectData.centerCollider.m128_f32[XYZW_X] = static_cast<float>(collider["center"][XYZ_Y]);
+				objectData.centerCollider.m128_f32[XYZW_Y] = static_cast<float>(collider["center"][XYZ_Z]);
+				objectData.centerCollider.m128_f32[XYZW_Z] = -static_cast<float>(collider["center"][XYZ_X]);
 				objectData.centerCollider.m128_f32[XYZW_W] = centerColliderW;
 				// 回転角
 				const float sizeColliderW = 0.0f;
-				objectData.sizeCollider.m128_f32[XYZW_X] = -(float)collider["size"][XYZ_Y];
-				objectData.sizeCollider.m128_f32[XYZW_Y] = -(float)collider["size"][XYZ_Z];
-				objectData.sizeCollider.m128_f32[XYZW_Z] = (float)collider["size"][XYZ_X];
+				objectData.sizeCollider.m128_f32[XYZW_X] = -static_cast<float>(collider["size"][XYZ_Y]);
+				objectData.sizeCollider.m128_f32[XYZW_Y] = -static_cast<float>(collider["size"][XYZ_Z]);
+				objectData.sizeCollider.m128_f32[XYZW_Z] = static_cast<float>(collider["size"][XYZ_X]);
 				objectData.sizeCollider.m128_f32[XYZW_W] = sizeColliderW;
 			}
 		}

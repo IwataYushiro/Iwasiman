@@ -52,13 +52,13 @@ private://メンバ変数
 	//速度
 	XMFLOAT3 velocity_;
 	//寿命<frm>
-	const float lifeTime_ = 60.0f;
+	const float lifeTime_ = 90.0f;
 	//死亡時間
 	float deathTimer_ = lifeTime_;
 	//死亡フラグ
 	bool isDead_ = false;
 	//半径
-	float radius_ = 4.0f;
+	float radius_ = 2.0f;
 
 	//自機からもらう
 	//パーティクル

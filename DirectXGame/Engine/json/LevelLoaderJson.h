@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <DirectXMath.h>
+#include <memory>
 
 namespace IwasiEngine//IwasiEngineのネームスペース
 {
@@ -52,7 +53,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 	public:
 		// レベルデータファイルの読み込み
-		static LevelData* LoadFile(const std::string& fileName);
+		static std::unique_ptr<LevelData> LoadFile(const std::string& fileName);
 
 	};
 }

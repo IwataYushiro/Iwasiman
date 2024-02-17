@@ -29,20 +29,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 		//初期化(Windowsアプリケーション)
 		void Initialize(const WinApp* winApp);
-		//デバイスの初期化
-		void InitializeDevice();
-		//コマンド関連の初期化
-		void InitializeCommand();
-		//スワップチェーンの初期化
-		void InitializeSwapchain();
-		//レンダーターゲットビューの初期化
-		void InitializeRenderTargetView();
-		//深度バッファの初期化
-		void InitializeDepthBuffer();
-		//深度ビュー作成
-		void CreateDepthView();
-		//フェンス初期化
-		void InitializeFence();
+		
 
 		//描画前処理
 		void PreDraw();
@@ -84,6 +71,8 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 		//リソースバリア
 		D3D12_RESOURCE_BARRIER barrierDesc_{};
+		//記録時間(FPS固定用)
+		std::chrono::steady_clock::time_point referense_;
 
 	public://アクセッサ置き場
 		//デバイス取得
@@ -97,8 +86,21 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		void InitializeFixFPS();
 		//FPS固定更新
 		void UpdateFixFPS();
-		//記録時間(FPS固定用)
-		std::chrono::steady_clock::time_point referense_;
+		//デバイスの初期化
+		void InitializeDevice();
+		//コマンド関連の初期化
+		void InitializeCommand();
+		//スワップチェーンの初期化
+		void InitializeSwapchain();
+		//レンダーターゲットビューの初期化
+		void InitializeRenderTargetView();
+		//深度バッファの初期化
+		void InitializeDepthBuffer();
+		//深度ビュー作成
+		void CreateDepthView();
+		//フェンス初期化
+		void InitializeFence();
+		
 	private:
 		//コンストラクタ（シングルトンパターン）
 		DirectXCommon() = default;

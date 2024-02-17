@@ -1,4 +1,4 @@
-#include "TitleScene.h"
+ï»¿#include "TitleScene.h"
 #include "FbxLoader.h"
 
 #include "MyMath.h"
@@ -12,207 +12,210 @@ using namespace IwasiEngine;
 
 *	TitleScene.cpp
 
-*	ƒ^ƒCƒgƒ‹ƒV[ƒ“
+*	ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³
 
 */
-
-//Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-DirectXCommon* TitleScene::dxCommon_ = DirectXCommon::GetInstance();
-Input* TitleScene::input_ = Input::GetInstance();
-Audio* TitleScene::audio_ = Audio::GetInstance();
-SceneManager* TitleScene::sceneManager_ = SceneManager::GetInstance();
-ImGuiManager* TitleScene::imguiManager_ = ImGuiManager::GetInstance();
-
 TitleScene::TitleScene(const int stagenum) : stageNum_(stagenum) {}
 
 void TitleScene::Initialize()
 {
-	//ƒCƒ“ƒXƒ^ƒ“ƒXæ“¾
-	spCommon_ = SpriteCommon::GetInstance();//ƒXƒvƒ‰ƒCƒgŠî”Õ
+	//ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹å–å¾—
+	dxCommon_ = DirectXCommon::GetInstance();		//DirectXåŸºç›¤
+	spCommon_ = SpriteCommon::GetInstance();		//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆåŸºç›¤
+	input_ = Input::GetInstance();					//å…¥åŠ›æƒ…å ±
+	audio_ = Audio::GetInstance();					//éŸ³å£°
+	sceneManager_ = SceneManager::GetInstance();	//ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
+	imguiManager_ = ImGuiManager::GetInstance();	//ImGuiãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 
-	//ƒJƒƒ‰‰Šú‰»
+	//ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	camera_ = std::make_unique<Camera>();
-	//ƒI[ƒfƒBƒI
+	//ã‚ªãƒ¼ãƒ‡ã‚£ã‚ª
 	audio_->Initialize();
 
-	// ‹“_À•W
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®ãƒ­ãƒ¼ãƒ‰
+	LoadEasing();
+
+	// è¦–ç‚¹åº§æ¨™
 	camera_->SetEye({ easeEyeMenu_[XYZ_X].start, easeEyeMenu_[XYZ_Y].start, easeEyeMenu_[XYZ_Z].start });
-	// ’‹“_À•W
+	// æ³¨è¦–ç‚¹åº§æ¨™
 	camera_->SetTarget({ easeTargetMenu_[XYZ_X].start, easeTargetMenu_[XYZ_Y].start, easeTargetMenu_[XYZ_Z].start });
 
-	//ƒŒƒxƒ‹ƒf[ƒ^“Ç‚İ‚İ
-	if (stageNum_ == SL_Default)LoadLVData("scene/titlet");				//ƒ`ƒ…[ƒgƒŠƒAƒ‹‚©‚ç–ß‚Á‚Ä‚«‚½ê‡
-	else if (stageNum_ <= SL_Stage1_StageID)LoadLVData("scene/title1");	//‹óƒXƒe[ƒW‚©‚ç–ß‚Á‚Ä‚«‚½ê‡
-	else if (stageNum_ <= SL_Stage2_StageID)LoadLVData("scene/title2");	//‰F’ˆƒXƒe[ƒW‚©‚ç–ß‚Á‚Ä‚«‚½ê‡
-	else LoadLVData("scene/titlet");									//‰Šú‚ÌƒŒƒxƒ‹
+	//ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
+	if (stageNum_ == SL_Default)LoadLVData("scene/titlet");					//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‹ã‚‰æˆ»ã£ã¦ããŸå ´åˆ
+	else if (stageNum_ <= SL_Stage1_Area3)LoadLVData("scene/title1");		//ç©ºã‚¹ãƒ†ãƒ¼ã‚¸ã‹ã‚‰æˆ»ã£ã¦ããŸå ´åˆ
+	else if (stageNum_ <= SL_Stage1_AreaBoss)LoadLVData("scene/title2");	//ãƒœã‚¹ã‚¹ãƒ†ãƒ¼ã‚¸ã‹ã‚‰æˆ»ã£ã¦ããŸå ´åˆ
+	else LoadLVData("scene/titlet");										//åˆæœŸã®ãƒ¬ãƒ™ãƒ«
 
-	//ƒ‰ƒCƒg‚ğ¶¬
+	//ãƒ©ã‚¤ãƒˆã‚’ç”Ÿæˆ
 	lightGroup_ = LightGroup::Create();
 	Object3d::SetLightGroup(lightGroup_.get());
-	lightGroup_->SetCircleShadowActive(LightGroup::LN_0, true);//0”ÔƒVƒƒƒhƒE‚¾‚¯‚ğ“®‚©‚·
-
-	//ƒXƒvƒ‰ƒCƒg
-	//ƒ^ƒCƒgƒ‹‰æ–ÊƒXƒvƒ‰ƒCƒg
+	lightGroup_->SetCircleShadowActive(LightGroup::LN_0, true);//0ç•ªã‚·ãƒ£ãƒ‰ã‚¦ã ã‘ã‚’å‹•ã‹ã™
+	
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	//ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title3.png");
 	spriteTitle_->Initialize(spCommon_, TSTI_TitleTex);
 	spriteTitle_->SetColor(backTitleColor_);
-	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].start,startTitlePosY_[TS_Title] });
+	spriteTitle_->SetPosition({ easeTitlePosX_.start,startTitlePosY_ });
 
-	//ƒ^ƒCƒgƒ‹‰æ–ÊƒXƒvƒ‰ƒCƒg(ƒ^ƒCƒgƒ‹‚ÌŒã‚ë)
+	//ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ(ã‚¿ã‚¤ãƒˆãƒ«ã®å¾Œã‚)
 	spCommon_->LoadTexture(TSTI_TitleBackTex, "texture/titleback.png");
 	spriteTitleBack_->Initialize(spCommon_, TSTI_TitleBackTex);
-	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].start,startTitlePosY_[TS_Title] });
+	spriteTitleBack_->SetPosition({ easeTitlePosX_.start,startTitlePosY_ });
 
-	//ƒ^ƒCƒgƒ‹Œˆ’è•\¦ƒXƒvƒ‰ƒCƒg
-	spCommon_->LoadTexture(TSTI_TitleDoneTex, "texture/space3.png");
-	spriteTitleDone_->Initialize(spCommon_, TSTI_TitleDoneTex);
-	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].start,startTitlePosY_[TS_Done] });
-
-	//ƒ^ƒCƒgƒ‹ƒƒjƒ…[‰æ–ÊƒXƒvƒ‰ƒCƒg
+	//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼ç”»é¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_MenuTex, "texture/titlemenu.png");
 	spriteMenu_->Initialize(spCommon_, TSTI_MenuTex);
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].start,menuPosY_[TMEN_Menu] });
 
-	//ƒ`ƒ…[ƒgƒŠƒAƒ‹•\¦ƒXƒvƒ‰ƒCƒg
+	//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«è¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_MenuTutorialTex, "texture/titlemenug.png");
 	spriteMenuTutorial_->Initialize(spCommon_, TSTI_MenuTutorialTex);
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].start,easeStartStagePosY_.start });
 
-	//ƒXƒe[ƒWƒZƒŒƒNƒg•\¦ƒXƒvƒ‰ƒCƒg
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆè¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_MenuStageSerectTex, "texture/titlemenus.png");
 	spriteMenuStageSelect_->Initialize(spCommon_, TSTI_MenuStageSerectTex);
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[TMEN_StageSelect].start,menuPosY_[TMEN_StageSelect] });
 
-	//ƒ^ƒCƒgƒ‹ƒƒjƒ…[Œˆ’è•\¦ƒXƒvƒ‰ƒCƒg
+	//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ±ºå®šè¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_MenuDoneTex, "texture/space.png");
 	spriteMenuDone_->Initialize(spCommon_, TSTI_MenuDoneTex);
 	spriteMenuDone_->SetPosition({ easeMenuPosX_[TMEN_SelectSpace].start,menuPosY_[TMEN_SelectSpace] });
 
-	//ƒ^ƒCƒgƒ‹ƒƒjƒ…[¨ƒ^ƒCƒgƒ‹ˆÚs‚ÌƒXƒvƒ‰ƒCƒg
+	//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼â†’ã‚¿ã‚¤ãƒˆãƒ«ç§»è¡Œã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_BackTitleTex, "texture/back.png");
 	spriteBack_->Initialize(spCommon_, TSTI_BackTitleTex);
 	spriteBack_->SetPosition({ easeMenuPosX_[TMEN_Quit].start,menuPosY_[TMEN_Quit] });
 	spriteBack_->SetColor(backTitleColor_);
 
-	//ƒtƒF[ƒhƒCƒ“ƒAƒEƒgƒXƒvƒ‰ƒCƒg
+	//ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ã‚¢ã‚¦ãƒˆã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_FadeInOutTex, "texture/fade.png");
 	spriteFadeInOut_->Initialize(spCommon_, TSTI_FadeInOutTex);
 	spriteFadeInOut_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.start });
 
-	//ƒ[ƒhƒXƒvƒ‰ƒCƒg
+	//ãƒ­ãƒ¼ãƒ‰ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_LoadingTex, "texture/load.png");
 	spriteLoad_->Initialize(spCommon_, TSTI_LoadingTex);
 	spriteLoad_->SetPosition(loadPos_);
-	spriteLoad_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.end });//“§–¾‰»
+	spriteLoad_->SetColor({ white_.x,white_.y,white_.z, easeFadeInOut_.end });//é€æ˜åŒ–
 
-	//Œ»İƒXƒe[ƒWƒXƒvƒ‰ƒCƒg
+	//ç¾åœ¨ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_StageInfoNowTex, "texture/stage1.png");
 	spriteStageInfoNow_->Initialize(spCommon_, TSTI_StageInfoNowTex);
 	spriteStageInfoNow_->SetPosition(stageInfoNowPos_);
-	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//“§–¾‰»
+	spriteStageInfoNow_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//é€æ˜åŒ–
 
-	//ƒJ[ƒ\ƒ‹ƒXƒvƒ‰ƒCƒg
+	//ã‚«ãƒ¼ã‚½ãƒ«ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_CursorTex, "texture/cursor.png");
 	spriteCursor_->Initialize(spCommon_, TSTI_CursorTex);
 	spriteCursor_->SetPosition({ easeCursorPosX_.start,menuPosY_[TMEN_Tutorial] });
 
-	//ƒXƒe[ƒW–¼ƒXƒvƒ‰ƒCƒg
+	//ã‚¹ãƒ†ãƒ¼ã‚¸åã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	spCommon_->LoadTexture(TSTI_StageNameTex, "texture/stagename/1-1.png");
 	spriteStageName_->Initialize(spCommon_, TSTI_StageNameTex);
 	spriteStageName_->SetPosition(stageNamePos_);
 	spriteStageName_->SetAnchorPoint(ANCHOR_POINT_CENTRAL);
-	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//“§–¾‰»
+	spriteStageName_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.end });//é€æ˜åŒ–
 
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ“ä½œã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spCommon_->LoadTexture(TSTI_MenuUITex, "texture/menuui.png");
+	spriteMenuUI_->Initialize(spCommon_, TSTI_MenuUITex);
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[TMEN_UI].start,menuPosY_[TMEN_UI] });
+
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	particleGoal_ = Particle::LoadFromParticleTexture("particle1.png");
-	//ƒu[ƒXƒg—p
+	//ãƒ–ãƒ¼ã‚¹ãƒˆç”¨
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetBlendMode(ParticleManager::BP_ADD);
 	pmFire_->SetParticleModel(particleFire_.get());
 	pmFire_->SetCamera(camera_.get());
-	//ƒS[ƒ‹ƒIƒuƒWƒFƒNƒg—p
+	//ã‚´ãƒ¼ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”¨
 	pmGoal_ = ParticleManager::Create();
 	pmGoal_->SetParticleModel(particleGoal_.get());
 	pmGoal_->SetCamera(camera_.get());
 
-	//ƒC[ƒWƒ“ƒOƒXƒ^ƒ“ƒoƒC
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
+	postEffect_ = std::make_unique<PostEffect>();
+	postEffect_->Initialize();
+
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã‚¹ã‚¿ãƒ³ãƒã‚¤
 	easeFadeInOut_.Standby(false);
 }
 
 void TitleScene::Update()
 {
 
-	//ƒƒjƒ…[ã‰ºŒÀ
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ä¸Šä¸‹é™
 	if (menuCount_ <= TSMI_Tutorial)menuCount_ = TSMI_Tutorial;
 	else if (menuCount_ >= TSMI_StageSelect)menuCount_ = TSMI_StageSelect;
 
-	//ƒ^ƒCƒgƒ‹ƒJƒ‰[
+	//ã‚¿ã‚¤ãƒˆãƒ«ã‚«ãƒ©ãƒ¼
 	DirectX::XMFLOAT4 titleColor;
-	const DirectX::XMFLOAT4 isLightBackGroundTitleColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };//–¾‚é‚¢”wŒi
-	const DirectX::XMFLOAT4 isDarkBackGroundTitleColor = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };//ˆÃ‚¢”wŒi
+	const DirectX::XMFLOAT4 isLightBackGroundTitleColor = { 0.0f,0.0f,0.1f + selectColor_.z,1.0f };//æ˜ã‚‹ã„èƒŒæ™¯
+	const DirectX::XMFLOAT4 isDarkBackGroundTitleColor = { selectColor_.x + 0.1f,selectColor_.y + 0.1f,1.0f,1.0f };//æš—ã„èƒŒæ™¯
 
-	//–ß‚Á‚Ä‚«‚½ƒXƒe[ƒW‚É‚æ‚Á‚Ä•¶š‚ÌF‚ğ•Ï‚¦‚é
+	//æˆ»ã£ã¦ããŸã‚¹ãƒ†ãƒ¼ã‚¸ã«ã‚ˆã£ã¦æ–‡å­—ã®è‰²ã‚’å¤‰ãˆã‚‹
 	if (stageNum_ == SL_Default)titleColor = isLightBackGroundTitleColor;
 	else if (stageNum_ <= SL_Stage1_StageID)titleColor = isLightBackGroundTitleColor;
-	else if (stageNum_ <= SL_Stage2_StageID)titleColor = isDarkBackGroundTitleColor;
+	else if (stageNum_ <= SL_Stage1_AreaBoss)titleColor = isDarkBackGroundTitleColor;
 	else titleColor = isLightBackGroundTitleColor;
 
-	//Œˆ’èw¦ƒXƒvƒ‰ƒCƒg‚ÌƒJƒ‰[
+	//æ±ºå®šæŒ‡ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ã‚«ãƒ©ãƒ¼
 	const DirectX::XMFLOAT4 doneColor = { 1.0f,1.0f,1.0f,0.6f + selectColor_.x };
 
-	//SetColor‚æ‚è‘O‚ÉŒÄ‚Ño‚·
+	//SetColorã‚ˆã‚Šå‰ã«å‘¼ã³å‡ºã™
 	UpdateChangeColor();
 
-	if (isStartGame_)UpdateIsStartGame();			//ƒQ[ƒ€ƒXƒ^[ƒg
-	else if (isStageSelect_)UpdateIsStageSelect();	//ƒXƒe[ƒWƒZƒŒƒNƒg‘JˆÚ
-	else if (isMenu_)UpdateIsMenu();				//ƒƒjƒ…[
-	else if (isBack_)UpdateIsBack();				//ƒ^ƒCƒgƒ‹‚Ö–ß‚Á‚½
-	else											//ƒ^ƒCƒgƒ‹‰æ–Ê
+	if (isStartGame_)UpdateIsStartGame();			//ã‚²ãƒ¼ãƒ ã‚¹ã‚¿ãƒ¼ãƒˆæ™‚
+	else if (isStageSelect_)UpdateIsStageSelect();	//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆé·ç§»æ™‚
+	else if (isMenu_)UpdateIsMenu();				//ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ™‚
+	else if (isBack_)UpdateIsBack();				//ã‚¿ã‚¤ãƒˆãƒ«ã¸æˆ»ã£ãŸæ™‚
+	else											//ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢æ™‚
 	{
 		easeFadeInOut_.ease_in_out_quint();
-		spriteFadeInOut_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.num_X });//“§–¾“x‚¾‚¯•Ï‚¦‚é
+		spriteFadeInOut_->SetColor({ black_.x,black_.y,black_.z, easeFadeInOut_.num_X });//é€æ˜åº¦ã ã‘å¤‰ãˆã‚‹
 
 		if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.end)
 		{
 			if (input_->TriggerKey(DIK_SPACE))
 			{
-				for (int i = 0; i < 2; i++)easeTitlePosX_[i].Standby(false);
-				for (int i = 0; i < 5; i++)easeMenuPosX_[i].Standby(false);
-				for (int i = 0; i < 3; i++)easeEyeMenu_[i].Standby(false);
-				for (int i = 0; i < 3; i++)easeTargetMenu_[i].Standby(false);
+				easeTitlePosX_.Standby(false);
+				for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].Standby(false);
+				for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].Standby(false);
+				for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].Standby(false);
 				easeCursorPosX_.Standby(false);
 				isMenu_ = true;
 
 			}
 		}
 	}
-	//ƒJƒ‰[ƒZƒbƒg
+	//ã‚«ãƒ©ãƒ¼ã‚»ãƒƒãƒˆ
 	spriteTitle_->SetColor(titleColor);
 	spriteMenu_->SetColor(titleColor);
-	spriteTitleDone_->SetColor(doneColor);
 	spriteMenuDone_->SetColor(doneColor);
 
-	//ƒXƒvƒ‰ƒCƒgXV
-	spriteTitle_->Update();				   //ƒ^ƒCƒgƒ‹‰æ–ÊƒXƒvƒ‰ƒCƒg
-	spriteTitleDone_->Update();			   //ƒ^ƒCƒgƒ‹Œˆ’è•\¦ƒXƒvƒ‰ƒCƒg
-	spriteMenu_->Update();				   //ƒ^ƒCƒgƒ‹ƒƒjƒ…[‰æ–ÊƒXƒvƒ‰ƒCƒg
-	spriteMenuTutorial_->Update();		   //ƒ`ƒ…[ƒgƒŠƒAƒ‹•\¦ƒXƒvƒ‰ƒCƒg
-	spriteMenuStageSelect_->Update();	   //ƒXƒe[ƒWƒZƒŒƒNƒg•\¦ƒXƒvƒ‰ƒCƒg
-	spriteMenuDone_->Update();			   //ƒ^ƒCƒgƒ‹ƒƒjƒ…[Œˆ’è•\¦ƒXƒvƒ‰ƒCƒg
-	spriteBack_->Update();				   //ƒ^ƒCƒgƒ‹ƒƒjƒ…[¨ƒ^ƒCƒgƒ‹ˆÚs‚ÌƒXƒvƒ‰ƒCƒg
-	spriteFadeInOut_->Update();			   //ƒtƒF[ƒhƒCƒ“ƒAƒEƒgƒXƒvƒ‰ƒCƒg
-	spriteLoad_->Update();				   //ƒ[ƒhƒXƒvƒ‰ƒCƒg
-	spriteStageInfoNow_->Update();		   //Œ»İƒXƒe[ƒWƒXƒvƒ‰ƒCƒg
-	spriteCursor_->Update();			   //ƒJ[ƒ\ƒ‹ƒXƒvƒ‰ƒCƒg
-	spriteTitleBack_->Update();			   //ƒ^ƒCƒgƒ‹‰æ–ÊƒXƒvƒ‰ƒCƒg(ƒ^ƒCƒgƒ‹‚ÌŒã‚ë)
-	spriteStageName_->Update();			   //ƒXƒe[ƒW–¼ƒXƒvƒ‰ƒCƒg
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæ›´æ–°
+	spriteTitle_->Update();					//ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenu_->Update();					//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼ç”»é¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenuTutorial_->Update();			//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«è¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenuStageSelect_->Update();		//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆè¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenuDone_->Update();				//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ±ºå®šè¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteBack_->Update();					//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼â†’ã‚¿ã‚¤ãƒˆãƒ«ç§»è¡Œã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteFadeInOut_->Update();				//ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ã‚¢ã‚¦ãƒˆã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteLoad_->Update();					//ãƒ­ãƒ¼ãƒ‰ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteStageInfoNow_->Update();			//ç¾åœ¨ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteCursor_->Update();				//ã‚«ãƒ¼ã‚½ãƒ«ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteTitleBack_->Update();				//ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ(ã‚¿ã‚¤ãƒˆãƒ«ã®å¾Œã‚)
+	spriteStageName_->Update();				//ã‚¹ãƒ†ãƒ¼ã‚¸åã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenuUI_->Update();				//ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ“ä½œæ–¹æ³•ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 
 	for (std::unique_ptr<Object3d>& player : objPlayers_)
 	{
-		const DirectX::XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//ƒ|ƒWƒVƒ‡ƒ“ƒIƒtƒZƒbƒg
-		
-		//‰ŒƒvƒŠƒZƒbƒg
+		const DirectX::XMFLOAT2 dashOffsetXY = { -2.0f,1.0f };//ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+
+		//ç…™ãƒ—ãƒªã‚»ãƒƒãƒˆ
 		const ParticleManager::Preset smoke =
 		{
 			particleFire_.get(),
@@ -225,13 +228,12 @@ void TitleScene::Update()
 			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
 			{ 0.0f,0.0f,0.0f,1.0f }
 		};
-		//ƒp[ƒeƒBƒNƒ‹
-		pmFire_->ActiveX(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-			smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
-		
-		//ŠÛ‰e
+		//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+		pmFire_->ActiveX(smoke);
+
+		//ä¸¸å½±
 		SetUpCircleShadow(player->GetPosition());
-		//XV
+		//æ›´æ–°
 		player->Update();
 	}
 
@@ -239,40 +241,41 @@ void TitleScene::Update()
 	{
 		DirectX::XMFLOAT3 move = ground->GetPosition();
 		const DirectX::XMFLOAT3 speed = { -1.0f,0.0f,0.0f };
-		//X’l‚ª‚±‚±‚Ü‚Å—ˆ‚½‚çƒ‹[ƒv
+		//Xå€¤ãŒã“ã“ã¾ã§æ¥ãŸã‚‰ãƒ«ãƒ¼ãƒ—
 		const float returnPos_ = -120.0f;
-		//íi‚Ş
+		//å¸¸æ™‚é€²ã‚€
 		move.x += speed.x;
 		ground->SetPosition(move);
 		if (ground->GetPosition().x <= returnPos_)ground->SetPosition(startPos_);
-		//XV
+		//æ›´æ–°
 		ground->Update();
 	}
 
 	for (std::unique_ptr<Object3d>& skydome : objSkydomes_)
 	{
-		//“V‹…‰ñ“]—p
+		//å¤©çƒå›è»¢ç”¨
 		DirectX::XMFLOAT3 rotSkydome = skydome->GetRotation();
-		//í‰ñ‚é
+		//å¸¸æ™‚å›ã‚‹
 		const float rotSpeed = -0.2f;
 		rotSkydome.y += rotSpeed;
 		skydome->SetRotation(rotSkydome);
-		//XV
+		//æ›´æ–°
 		skydome->Update();
 	}
 	for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Update();
-	//XV
-	camera_->Update();		//ƒJƒƒ‰
-	lightGroup_->Update();	//ƒ‰ƒCƒg
-	pmFire_->Update();			//ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ[(ƒWƒFƒbƒg)
-	pmGoal_->Update();			//ƒp[ƒeƒBƒNƒ‹ƒ}ƒl[ƒWƒƒ[(ƒS[ƒ‹ƒIƒuƒWƒFƒNƒg)
-	
+	//æ›´æ–°
+	camera_->Update();		//ã‚«ãƒ¡ãƒ©
+	lightGroup_->Update();	//ãƒ©ã‚¤ãƒˆ
+	pmFire_->Update();		//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼(ã‚¸ã‚§ãƒƒãƒˆ)
+	pmGoal_->Update();		//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼(ã‚´ãƒ¼ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ)
+	postEffect_->Update();	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+
 	//objF->Update();
-	
+
 	//ImGui
 	imguiManager_->Begin();
 #ifdef _DEBUG
-	//camera_->DebugCamera(true);//ƒfƒoƒbƒOƒJƒƒ‰
+	//camera_->DebugCamera(true);//ãƒ‡ãƒãƒƒã‚°ã‚«ãƒ¡ãƒ©
 #endif // _DEBUG
 
 	imguiManager_->End();
@@ -280,7 +283,7 @@ void TitleScene::Update()
 
 void TitleScene::UpdateIsStartGame()
 {
-	//ƒC[ƒWƒ“ƒO
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	for (int i = 0; i < TMEN_Num; i++)easeMenuEndPosX_[i].ease_in_out_quint();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].ease_in_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].ease_in_out_expo();
@@ -288,30 +291,30 @@ void TitleScene::UpdateIsStartGame()
 	easeStartStagePosY_.ease_out_expo();
 	easeCursorPosX_.ease_out_expo();
 
-	//À•WƒZƒbƒg
+	//åº§æ¨™ã‚»ãƒƒãƒˆ
 	spriteMenu_->SetPosition({ easeMenuEndPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeStartStagePosX_.num_X,easeStartStagePosY_.num_X });
 	spriteMenuStageSelect_->SetPosition({ easeMenuEndPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
-	spriteMenuDone_->SetPosition({ easeMenuEndPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[TMEN_UI].num_X,menuPosY_[TMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuEndPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 
-	//ƒJƒƒ‰‚àƒZƒbƒg
+	//ã‚«ãƒ¡ãƒ©ã‚‚ã‚»ãƒƒãƒˆ
 	camera_->SetEye({ easeEyeGameStart_[XYZ_X].num_X, easeEyeGameStart_[XYZ_Y].num_X, easeEyeGameStart_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
-	
+
 	for (std::unique_ptr<Object3d>& goal : objGoals_)
 	{
-		//‚±‚±‚ÅƒS[ƒ‹ƒIƒuƒWƒFƒNƒg‚ª“®‚­
+		//ã“ã“ã§ã‚´ãƒ¼ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå‹•ã
 		DirectX::XMFLOAT3 move = goal->GetPosition();
 		const DirectX::XMFLOAT3 speed = { -1.5f,0.0f,0.0f };
-		//X’l‚ª‚±‚±‚Ü‚Å—ˆ‚½‚çƒC[ƒWƒ“ƒO
+		//Xå€¤ãŒã“ã“ã¾ã§æ¥ãŸã‚‰ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 		const float gameStartPos_ = 60.0f;
-		//i‚Ş
+		//é€²ã‚€
 		move.x += speed.x;
 		goal->SetPosition(move);
 
-		//ƒp[ƒeƒBƒNƒ‹ƒvƒŠƒZƒbƒg
+		//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒ—ãƒªã‚»ãƒƒãƒˆ
 		const ParticleManager::Preset goalEffect =
 		{
 			particleGoal_.get(),
@@ -324,101 +327,87 @@ void TitleScene::UpdateIsStartGame()
 			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f},
 			{MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),MyMath::RandomMTFloat(0.0f,1.0f),1.0f}
 		};
-		//ƒS[ƒ‹‚ÌˆÊ’u‚ğ’m‚ç‚¹‚éƒp[ƒeƒBƒNƒ‹
-		pmGoal_->ActiveY(goalEffect.particle, goalEffect.startPos, goalEffect.pos, goalEffect.vel,
-			goalEffect.acc, goalEffect.num, goalEffect.scale, goalEffect.startColor, goalEffect.endColor);
+		//ã‚´ãƒ¼ãƒ«ã®ä½ç½®ã‚’çŸ¥ã‚‰ã›ã‚‹ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+		pmGoal_->ActiveY(goalEffect);
 
-		//ƒS[ƒ‹‚Íí‰ñ‚Á‚Ä‚¢‚é
+		//ã‚´ãƒ¼ãƒ«ã¯å¸¸æ™‚å›ã£ã¦ã„ã‚‹
 		DirectX::XMFLOAT3 rot = goal->GetRotation();
 		const float rotSpeedY = 1.0f;
 		rot.y += rotSpeedY;
 		goal->SetRotation(rot);
-		//ƒS[ƒ‹ƒIƒuƒWƒFƒNƒg‚ÌˆÊ’u‚ªˆê’è‚ÌˆÊ’u‚É“’…‚µ‚½‚ç‘JˆÚ‰‰o
-		if (goal->GetPosition().x <= gameStartPos_)
-		{
-			FadeOut(white_);//ƒQ[ƒ€ƒvƒŒƒC‘JˆÚ‚Í”’‚­‚·‚é
-			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)//Š®‘S‚É”’‚­‚È‚Á‚½‚ç
-			{
-				//ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒXƒe[ƒW‚Ö
-				sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);
-			}
-		};
-
+		//ã‚´ãƒ¼ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½ç½®ãŒä¸€å®šã®ä½ç½®ã«åˆ°ç€ã—ãŸã‚‰é·ç§»æ¼”å‡º
+		if (goal->GetPosition().x <= gameStartPos_)FadeIn(white_);//ã‚²ãƒ¼ãƒ ãƒ—ãƒ¬ã‚¤é·ç§»æ™‚ã¯ç™½ãã™ã‚‹
+		else SkipDirectionOnSpace(white_);//ã‚¹ãƒšãƒ¼ã‚¹ã‚’æŠ¼ã™ã¨ã‚¹ã‚­ãƒƒãƒ—
 
 	}
-
+	//å®Œå…¨ã«ç™½ããªã£ãŸã‚‰
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)sceneManager_->ChangeScene("GAMEPLAY", SL_StageTutorial_Area1);//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚¹ãƒ†ãƒ¼ã‚¸ã¸
 }
 
 void TitleScene::UpdateIsStageSelect()
 {
-	//ƒC[ƒWƒ“ƒO
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
 	for (int i = 0; i < TMEN_Num; i++)easeMenuEndPosX_[i].ease_in_out_quint();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].ease_in_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].ease_in_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easePlayerMove_[i].ease_in_out_expo();
 	easeCursorPosX_.ease_out_expo();
-	//À•WƒZƒbƒg
+	//åº§æ¨™ã‚»ãƒƒãƒˆ
 	spriteMenu_->SetPosition({ easeMenuEndPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
-	spriteMenuTutorial_->SetPosition({ easeMenuEndPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial]});
+	spriteMenuTutorial_->SetPosition({ easeMenuEndPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial] });
 	spriteMenuStageSelect_->SetPosition({ easeMenuEndPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
-	spriteMenuDone_->SetPosition({ easeMenuEndPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuEndPosX_[TMEN_UI].num_X,menuPosY_[TMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuEndPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
 
-	//ƒJƒƒ‰‚àƒZƒbƒg
+	//ã‚«ãƒ¡ãƒ©ã‚‚ã‚»ãƒƒãƒˆ
 	camera_->SetEye({ easeEyeGameStart_[XYZ_X].num_X, easeEyeGameStart_[XYZ_Y].num_X, easeEyeGameStart_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetGameStart_[XYZ_X].num_X, easeTargetGameStart_[XYZ_Y].num_X, easeTargetGameStart_[XYZ_Z].num_X });
-
-	for (std::unique_ptr<Object3d>& player : objPlayers_)
+	//è‡ªæ©Ÿã®åº§æ¨™ã‚»ãƒƒãƒˆ
+	for (std::unique_ptr<Object3d>& player : objPlayers_) player->SetPosition({ easePlayerMove_[XYZ_X].num_X,easePlayerMove_[XYZ_Y].num_X,easePlayerMove_[XYZ_Z].num_X });
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãŒçµ‚ã‚ã£ãŸã‚‰é·ç§»æ¼”å‡º
+	if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)FadeIn(black_);//é»’ãã™ã‚‹	
+	else SkipDirectionOnSpace(black_);//ã‚¹ãƒšãƒ¼ã‚¹ã‚’æŠ¼ã™ã¨ã‚¹ã‚­ãƒƒãƒ—
+	//å®Œå…¨ã«é»’ããªã£ãŸã‚‰
+	if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
 	{
-		//À•WƒZƒbƒg
-		player->SetPosition({ easePlayerMove_[XYZ_X].num_X,easePlayerMove_[XYZ_Y].num_X,easePlayerMove_[XYZ_Z].num_X });
-		
-		//ƒƒjƒ…[‚ÌƒC[ƒWƒ“ƒO‚ªI‚í‚Á‚½‚ç‘JˆÚ‰‰o
-		if (spriteMenu_->GetPosition().x == easeMenuEndPosX_[TMEN_Menu].end)
-		{
-			FadeOut(black_);//•‚­‚·‚é
-			//Š®‘S‚É•‚­‚È‚Á‚½‚ç
-			if (spriteFadeInOut_->GetColor().w == easeFadeInOut_.start)
-			{
-				//ƒXƒe[ƒW‘I‘ğ
-				if (stageNum_ <= SL_Stage1_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
-				else if (stageNum_ <= SL_Stage2_StageID)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage2_SpaceStage);
-				else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//ƒ`ƒ…[ƒgƒŠƒAƒ‹‚É”ò‚Î‚·‚Æ–{––“]“|
-			}
-		}
+		//ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠ
+		if (stageNum_ <= SL_Stage1_Area3)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);
+		else if (stageNum_ <= SL_Stage1_AreaBoss)sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_Boss);
+		else sceneManager_->ChangeScene("STAGESELECT", SSSMI_Stage1_SkyStage);//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã«é£›ã°ã™ã¨æœ¬æœ«è»¢å€’
 	}
+
 
 }
 
 void TitleScene::UpdateIsBack()
 {
-	//ƒC[ƒWƒ“ƒO
-	for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].ease_out_expo();
-	for (int i = 0; i < 5; i++)easeMenuPosX_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeEyeMenu_[i].ease_out_expo();
-	for (int i = 0; i < 3; i++)easeTargetMenu_[i].ease_out_expo();
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
+	easeTitlePosX_.ease_out_expo();
+	for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].ease_out_expo();
+	for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].ease_out_expo();
 	easeCursorPosX_.ease_out_expo();
-	//À•WƒZƒbƒg
-	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title]});
-	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
-	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].num_X,startTitlePosY_[TS_Done] });
+	//åº§æ¨™ã‚»ãƒƒãƒˆ
+	spriteTitle_->SetPosition({ easeTitlePosX_.num_X,startTitlePosY_ });
+	spriteTitleBack_->SetPosition({ easeTitlePosX_.num_X,startTitlePosY_ });
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial] });
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
 	spriteMenuDone_->SetPosition({ easeMenuPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[TMEN_UI].num_X,menuPosY_[TMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
 	spriteCursor_->SetPositionX(easeCursorPosX_.num_X);
-	//ƒJƒƒ‰‚àƒZƒbƒg
+	//ã‚«ãƒ¡ãƒ©ã‚‚ã‚»ãƒƒãƒˆ
 	camera_->SetEye({ easeEyeMenu_[XYZ_X].num_X, easeEyeMenu_[XYZ_Y].num_X, easeEyeMenu_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetMenu_[XYZ_X].num_X, easeTargetMenu_[XYZ_Y].num_X, easeTargetMenu_[XYZ_Z].num_X });
-	
-	//–ß‚é—p‚ÌƒXƒvƒ‰ƒCƒg‚ÌƒC[ƒWƒ“ƒO‚ªI‚í‚Á‚½‚ç‘€ì‚ğó‚¯•t‚¯‚é
+
+	//æˆ»ã‚‹ç”¨ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãŒçµ‚ã‚ã£ãŸã‚‰æ“ä½œã‚’å—ã‘ä»˜ã‘ã‚‹
 	if (spriteBack_->GetPosition().x == easeMenuPosX_[TMEN_Quit].start)
 	{
-		if (input_->TriggerKey(DIK_SPACE))//ƒƒjƒ…[‚Ö
+		if (input_->TriggerKey(DIK_SPACE))//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¸
 		{
-			for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].Standby(false);
+			easeTitlePosX_.Standby(false);
 			for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].Standby(false);
 			for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].Standby(false);
 			for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].Standby(false);
@@ -431,73 +420,76 @@ void TitleScene::UpdateIsBack()
 
 void TitleScene::UpdateIsMenu()
 {
-	//‘I‘ğ‚µ‚Ä‚éF
+	//é¸æŠã—ã¦ã‚‹è‰²
 	DirectX::XMFLOAT4 selectMenuColor;
 	const DirectX::XMFLOAT4 isLightBackGroundSelectMenuColor = { 0.1f + selectColor_.x,0.1f,0.1f,1.0f };
 	const DirectX::XMFLOAT4 isDarkBackGroundSelectMenuColor = { 1.0f,selectColor_.y + 0.1f,selectColor_.z + 0.1f,1.0f };
-	//ƒXƒe[ƒWˆÊ’u(”wŒi)‚É‚æ‚Á‚ÄF‚ğ•Ï‚¦‚é
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ä½ç½®(èƒŒæ™¯)ã«ã‚ˆã£ã¦è‰²ã‚’å¤‰ãˆã‚‹
 	if (stageNum_ == SL_Default)selectMenuColor = isLightBackGroundSelectMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)selectMenuColor = isLightBackGroundSelectMenuColor;
-	else if (stageNum_ <= SL_Stage2_StageID)selectMenuColor = isDarkBackGroundSelectMenuColor;
+	else if (stageNum_ <= SL_Stage1_AreaBoss)selectMenuColor = isDarkBackGroundSelectMenuColor;
 	else selectMenuColor = isLightBackGroundSelectMenuColor;
 
-	//‘I‘ğ‚³‚ê‚Ä‚¢‚È‚¢F
+	//é¸æŠã•ã‚Œã¦ã„ãªã„è‰²
 	DirectX::XMFLOAT4 otherMenuColor;
-	const DirectX::XMFLOAT4 isLightBackGroundOtherMenuColor = { 0.0f,0.0f,0.0f,0.7f };//–¾‚é‚¢”wŒi
-	const DirectX::XMFLOAT4 isDarkBackGroundOtherMenuColor = { 1.0f,1.0f,1.0f,0.7f };//ˆÃ‚¢”wŒi
-	
-	//ƒXƒe[ƒWˆÊ’u(”wŒi)‚É‚æ‚Á‚ÄF‚ğ•Ï‚¦‚é
+	const DirectX::XMFLOAT4 isLightBackGroundOtherMenuColor = { 0.0f,0.0f,0.0f,0.7f };//æ˜ã‚‹ã„èƒŒæ™¯
+	const DirectX::XMFLOAT4 isDarkBackGroundOtherMenuColor = { 1.0f,1.0f,1.0f,0.7f };//æš—ã„èƒŒæ™¯
+
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ä½ç½®(èƒŒæ™¯)ã«ã‚ˆã£ã¦è‰²ã‚’å¤‰ãˆã‚‹
 	if (stageNum_ == SL_Default)otherMenuColor = isLightBackGroundOtherMenuColor;
 	else if (stageNum_ <= SL_Stage1_StageID)otherMenuColor = isLightBackGroundOtherMenuColor;
-	else if (stageNum_ <= SL_Stage2_StageID)otherMenuColor = isDarkBackGroundOtherMenuColor;
+	else if (stageNum_ <= SL_Stage1_AreaBoss)otherMenuColor = isDarkBackGroundOtherMenuColor;
 	else otherMenuColor = isLightBackGroundOtherMenuColor;
 
-	//ƒC[ƒWƒ“ƒO
-	for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].ease_out_expo();
+	//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°
+	easeTitlePosX_.ease_out_expo();
 	for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].ease_out_expo();
 	for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].ease_out_expo();
 	easeCursorPosX_.ease_out_expo();
-	//À•WƒZƒbƒg
-	spriteTitle_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
-	spriteTitleBack_->SetPosition({ easeTitlePosX_[TS_Title].num_X,startTitlePosY_[TS_Title] });
-	spriteTitleDone_->SetPosition({ easeTitlePosX_[TS_Done].num_X,startTitlePosY_[TS_Done] });
+	//åº§æ¨™ã‚»ãƒƒãƒˆ
+	spriteTitle_->SetPosition({ easeTitlePosX_.num_X,startTitlePosY_ });
+	spriteTitleBack_->SetPosition({ easeTitlePosX_.num_X,startTitlePosY_ });
 	spriteMenu_->SetPosition({ easeMenuPosX_[TMEN_Menu].num_X,menuPosY_[TMEN_Menu] });
 	spriteMenuTutorial_->SetPosition({ easeMenuPosX_[TMEN_Tutorial].num_X,menuPosY_[TMEN_Tutorial] });
 	spriteMenuStageSelect_->SetPosition({ easeMenuPosX_[TMEN_StageSelect].num_X,menuPosY_[TMEN_StageSelect] });
 	spriteMenuDone_->SetPosition({ easeMenuPosX_[TMEN_SelectSpace].num_X,menuPosY_[TMEN_SelectSpace] });
+	spriteMenuUI_->SetPosition({ easeMenuPosX_[TMEN_UI].num_X,menuPosY_[TMEN_UI] });
 	spriteBack_->SetPosition({ easeMenuPosX_[TMEN_Quit].num_X,menuPosY_[TMEN_Quit] });
 
-	//ƒJƒƒ‰‚àƒZƒbƒg
+	//ã‚«ãƒ¡ãƒ©ã‚‚ã‚»ãƒƒãƒˆ
 	camera_->SetEye({ easeEyeMenu_[XYZ_X].num_X, easeEyeMenu_[XYZ_Y].num_X, easeEyeMenu_[XYZ_Z].num_X });
 	camera_->SetTarget({ easeTargetMenu_[XYZ_X].num_X, easeTargetMenu_[XYZ_Y].num_X, easeTargetMenu_[XYZ_Z].num_X });
 
-	//ƒƒjƒ…[‘I‘ğ
-	if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_W))menuCount_--;	
-	if (input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_S))menuCount_++;	
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼é¸æŠ
+	if (input_->TriggerKey(DIK_W))menuCount_--;
+	if (input_->TriggerKey(DIK_S))menuCount_++;
 
-	//F‚ğ•Ï‚¦‚é(‘I‘ğ‚µ‚Ä‚¢‚éƒƒjƒ…[‚Í‹­’²)
-	if (menuCount_ == TSMI_Tutorial)//ƒ`ƒ…[ƒgƒŠƒAƒ‹‘JˆÚ‚ğ‘I‘ğ
-	{	
+	//è‰²ã‚’å¤‰ãˆã‚‹(é¸æŠã—ã¦ã„ã‚‹ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¯å¼·èª¿)
+	if (menuCount_ == TSMI_Tutorial)//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«é·ç§»ã‚’é¸æŠæ™‚
+	{
 		spriteMenuTutorial_->SetColor(selectMenuColor);
 		spriteMenuStageSelect_->SetColor(otherMenuColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[TMEN_Tutorial] });
 	}
-	else if (menuCount_ == TSMI_StageSelect)//ƒXƒe[ƒWƒZƒŒƒNƒg‘JˆÚ‚ğ‘I‘ğ
+	else if (menuCount_ == TSMI_StageSelect)//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆé·ç§»ã‚’é¸æŠæ™‚
 	{
 		spriteMenuTutorial_->SetColor(otherMenuColor);
 		spriteMenuStageSelect_->SetColor(selectMenuColor);
 		spriteCursor_->SetPosition({ easeCursorPosX_.num_X,menuPosY_[TMEN_StageSelect] });
 	}
 
-	//ƒƒjƒ…[‚ÌƒC[ƒWƒ“ƒO‚ªI‚í‚Á‚½‚ç‘€ì‚ğó‚¯•t‚¯‚é
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ãŒçµ‚ã‚ã£ãŸã‚‰æ“ä½œã‚’å—ã‘ä»˜ã‘ã‚‹
 	if (spriteMenu_->GetPosition().x == easeMenuPosX_[TMEN_Menu].end)
 	{
-		if (input_->TriggerKey(DIK_SPACE))//Œˆ’è
+		if (input_->TriggerKey(DIK_SPACE))//æ±ºå®š
 		{
-			if (menuCount_ == TSMI_Tutorial)//ƒ`ƒ…[ƒgƒŠƒAƒ‹‚ğ‘I‚ñ‚¾ê‡ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ö‘JˆÚ
+			//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ±ºå®šè¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’æ¼”å‡ºã‚¹ã‚­ãƒƒãƒ—ã‚­ãƒ¼ã«å¤‰æ›´
+			spCommon_->LoadTexture(TSTI_MenuDoneTex, "texture/skip.png");
+
+			if (menuCount_ == TSMI_Tutorial)//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚’é¸ã‚“ã å ´åˆãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã¸é·ç§»
 			{
-				//ƒC[ƒWƒ“ƒO‚ÌƒXƒ^ƒ“ƒoƒC
+				//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®ã‚¹ã‚¿ãƒ³ãƒã‚¤
 				for (int i = 0; i < TMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].Standby(false);
@@ -506,9 +498,9 @@ void TitleScene::UpdateIsMenu()
 				easeCursorPosX_.Standby(true);
 				isStartGame_ = true;
 			}
-			else if (menuCount_ == TSMI_StageSelect)//ƒXƒe[ƒWƒZƒŒƒNƒg‚ğ‘I‚ñ‚¾‚çƒXƒe[ƒWƒZƒŒƒNƒg‚Ö‘JˆÚ
+			else if (menuCount_ == TSMI_StageSelect)//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆã‚’é¸ã‚“ã ã‚‰ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆã¸é·ç§»
 			{
-				//ƒC[ƒWƒ“ƒO‚ÌƒXƒ^ƒ“ƒoƒC
+				//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®ã‚¹ã‚¿ãƒ³ãƒã‚¤
 				for (int i = 0; i < TMEN_Num; i++)easeMenuEndPosX_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeEyeGameStart_[i].Standby(false);
 				for (int i = 0; i < XYZ_Num; i++)easeTargetGameStart_[i].Standby(false);
@@ -518,10 +510,10 @@ void TitleScene::UpdateIsMenu()
 
 			}
 		}
-		if (input_->TriggerKey(DIK_ESCAPE))//ESCƒL[‚Åƒ^ƒCƒgƒ‹‚É–ß‚é
+		if (input_->TriggerKey(DIK_ESCAPE))//ESCã‚­ãƒ¼ã§ã‚¿ã‚¤ãƒˆãƒ«ã«æˆ»ã‚‹
 		{
-			//ƒC[ƒWƒ“ƒO‚ÌƒXƒ^ƒ“ƒoƒC
-			for (int i = 0; i < TS_Num; i++)easeTitlePosX_[i].Standby(true);
+			//ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®ã‚¹ã‚¿ãƒ³ãƒã‚¤
+			easeTitlePosX_.Standby(true);
 			for (int i = 0; i < TMEN_Num; i++)easeMenuPosX_[i].Standby(true);
 			for (int i = 0; i < XYZ_Num; i++)easeEyeMenu_[i].Standby(true);
 			for (int i = 0; i < XYZ_Num; i++)easeTargetMenu_[i].Standby(true);
@@ -533,105 +525,101 @@ void TitleScene::UpdateIsMenu()
 
 }
 
-void TitleScene::FadeOut(const DirectX::XMFLOAT3& rgb)
+void TitleScene::FadeIn(const DirectX::XMFLOAT3& color)
 {
-	if (!isFadeOut_)
+	if (!isFadeIn_)
 	{
-		//‚±‚±‚ÅƒXƒ^ƒ“ƒoƒC
+		//ã“ã“ã§ã‚¹ã‚¿ãƒ³ãƒã‚¤
 		easeFadeInOut_.Standby(true);
-		isFadeOut_ = true;
+		isFadeIn_ = true;
 	}
 	else
 	{
-		//‚±‚±‚ÅƒtƒF[ƒhƒCƒ“ƒAƒEƒg
-		const DirectX::XMFLOAT3 negapozi = { 1.0f - rgb.x,1.0f - rgb.y,1.0f - rgb.z };
+		//ã“ã“ã§ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ã‚¢ã‚¦ãƒˆ
+		const DirectX::XMFLOAT3 negapozi = { 1.0f - color.x,1.0f - color.y,1.0f - color.z };
 		easeFadeInOut_.ease_in_out_quint();
-		spriteFadeInOut_->SetColor({ rgb.x,rgb.y,rgb.z, easeFadeInOut_.num_X });//“§–¾“x‚¾‚¯•Ï‚¦‚é
-		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ƒlƒKƒ|ƒW‚Ì‰—p
+		spriteFadeInOut_->SetColor({ color.x,color.y,color.z, easeFadeInOut_.num_X });//é€æ˜åº¦ã ã‘å¤‰ãˆã‚‹
+		spriteLoad_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ãƒã‚¬ãƒã‚¸ã®å¿œç”¨
 		if (isStartGame_)
 		{
-			spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ƒXƒe[ƒWŠJn‚Éo‚é
-			spriteStageName_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ƒXƒe[ƒWŠJn‚Éo‚é
+			spriteStageInfoNow_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ã‚¹ãƒ†ãƒ¼ã‚¸é–‹å§‹æ™‚ã«å‡ºã‚‹
+			spriteStageName_->SetColor({ negapozi.x,negapozi.y,negapozi.z, easeFadeInOut_.num_X });//ã‚¹ãƒ†ãƒ¼ã‚¸é–‹å§‹æ™‚ã«å‡ºã‚‹
 		}
 	}
 }
 
 void TitleScene::Draw()
 {
-	//”wŒiƒXƒvƒ‰ƒCƒg•`‰æ‘Oˆ—
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ãŸã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ã“ã“ã«
+	postEffect_->PreDraw(dxCommon_->GetCommandList());
 
-	//ƒ‚ƒfƒ‹•`‰æ‘Oˆ—
+	//ãƒ¢ãƒ‡ãƒ«æç”»å‰å‡¦ç†
 	Object3d::PreDraw(dxCommon_->GetCommandList());
-	for (std::unique_ptr<Object3d>& player : objPlayers_)player->Draw();				//ƒvƒŒƒCƒ„[
-	for (std::unique_ptr<Object3d>& ground : objGrounds_)ground->Draw();				//’n–Ê
-	for (std::unique_ptr<Object3d>& skydome : objSkydomes_)skydome->Draw();				//“V‹…(”wŒi)
-	if (!isStageSelect_)for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Draw();	//ƒS[ƒ‹
-	//ƒ‚ƒfƒ‹•`‰æŒãˆ—
+	for (std::unique_ptr<Object3d>& player : objPlayers_)player->Draw();				//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+	for (std::unique_ptr<Object3d>& ground : objGrounds_)ground->Draw();				//åœ°é¢
+	for (std::unique_ptr<Object3d>& skydome : objSkydomes_)skydome->Draw();				//å¤©çƒ(èƒŒæ™¯)
+	if (!isStageSelect_)for (std::unique_ptr<Object3d>& goal : objGoals_)goal->Draw();	//ã‚´ãƒ¼ãƒ«
+	//ãƒ¢ãƒ‡ãƒ«æç”»å¾Œå‡¦ç†
 	Object3d::PostDraw();
 
-	//Fbxƒ‚ƒfƒ‹•`‰æ‘Oˆ—
-	ObjectFbx::PreDraw(dxCommon_->GetCommandList());
-
-	//objF->Draw();
-	//Fbxƒ‚ƒfƒ‹•`‰æŒãˆ—
-	ObjectFbx::PostDraw();
-
-	//ƒGƒtƒFƒNƒg•`‰æ‘Oˆ—
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»å‰å‡¦ç†
 	ParticleManager::PreDraw(dxCommon_->GetCommandList());
 
 	pmFire_->Draw();
 	pmGoal_->Draw();
-	//ƒGƒtƒFƒNƒg•`‰æŒãˆ—
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»å¾Œå‡¦ç†
 	ParticleManager::PostDraw();
+	
+	postEffect_->PostDraw(dxCommon_->GetCommandList());
+}
 
+void TitleScene::DrawPostEffect()
+{
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã“ã“ã§æç”»
+	postEffect_->Draw();
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ãªã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ã“ã“ã«
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‰å‡¦ç†
 	spCommon_->PreDraw();
-	//‘OŒiƒXƒvƒ‰ƒCƒg
-	//ƒXƒvƒ‰ƒCƒg•`‰æ
-	spriteTitleBack_->Draw();				//ƒ^ƒCƒgƒ‹‰æ–ÊƒXƒvƒ‰ƒCƒg(ƒ^ƒCƒgƒ‹‚ÌŒã‚ë)
-	spriteTitle_->Draw();					//ƒ^ƒCƒgƒ‹‰æ–ÊƒXƒvƒ‰ƒCƒg
-	spriteTitleDone_->Draw();				//ƒ^ƒCƒgƒ‹Œˆ’è•\¦ƒXƒvƒ‰ƒCƒg
-	spriteMenu_->Draw();					//ƒ^ƒCƒgƒ‹ƒƒjƒ…[‰æ–ÊƒXƒvƒ‰ƒCƒg
-	spriteMenuTutorial_->Draw();			//ƒ`ƒ…[ƒgƒŠƒAƒ‹•\¦ƒXƒvƒ‰ƒCƒg
-	spriteMenuStageSelect_->Draw();			//ƒXƒe[ƒWƒZƒŒƒNƒg•\¦ƒXƒvƒ‰ƒCƒg
-	spriteMenuDone_->Draw();				//ƒ^ƒCƒgƒ‹ƒƒjƒ…[Œˆ’è•\¦ƒXƒvƒ‰ƒCƒg
-	spriteBack_->Draw();					//ƒ^ƒCƒgƒ‹ƒƒjƒ…[¨ƒ^ƒCƒgƒ‹ˆÚs‚ÌƒXƒvƒ‰ƒCƒg
-	spriteFadeInOut_->Draw();				//ƒtƒF[ƒhƒCƒ“ƒAƒEƒgƒXƒvƒ‰ƒCƒg
-	spriteLoad_->Draw();					//ƒ[ƒhƒXƒvƒ‰ƒCƒg
-	spriteStageInfoNow_->Draw();			//Œ»İƒXƒe[ƒWƒXƒvƒ‰ƒCƒg
-	spriteCursor_->Draw();					//ƒJ[ƒ\ƒ‹ƒXƒvƒ‰ƒCƒg
-	spriteStageName_->Draw();				//ƒXƒe[ƒW–¼ƒXƒvƒ‰ƒCƒg
+	//å‰æ™¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
+	spriteTitleBack_->Draw();				//ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ(ã‚¿ã‚¤ãƒˆãƒ«ã®å¾Œã‚)
+	spriteTitle_->Draw();					//ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenu_->Draw();					//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼ç”»é¢ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenuTutorial_->Draw();			//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«è¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenuStageSelect_->Draw();			//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆè¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenuDone_->Draw();				//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ±ºå®šè¡¨ç¤ºã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteBack_->Draw();					//ã‚¿ã‚¤ãƒˆãƒ«ãƒ¡ãƒ‹ãƒ¥ãƒ¼â†’ã‚¿ã‚¤ãƒˆãƒ«ç§»è¡Œã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteFadeInOut_->Draw();				//ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ã‚¢ã‚¦ãƒˆã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteLoad_->Draw();					//ãƒ­ãƒ¼ãƒ‰ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteStageInfoNow_->Draw();			//ç¾åœ¨ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteCursor_->Draw();					//ã‚«ãƒ¼ã‚½ãƒ«ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteStageName_->Draw();				//ã‚¹ãƒ†ãƒ¼ã‚¸åã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+	spriteMenuUI_->Draw();					//ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ“ä½œæ–¹æ³•ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
+
 }
 
 void TitleScene::Finalize()
 {
-	//‰¹º
+	//éŸ³å£°
 	audio_->Finalize();
 }
 
 void TitleScene::LoadLVData(const std::string& stagePath)
 {
-	// ƒŒƒxƒ‹ƒf[ƒ^‚Ì“Ç‚İ‚İ
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 	levelData_ = LevelLoader::LoadFile(stagePath);
 
-	// ƒ‚ƒfƒ‹“Ç‚İ‚İ
-	modelPlayer_ = Model::LoadFromOBJ("playerdash", true);	  //©‹@ƒ‚ƒfƒ‹
-	modelSkydome_ = Model::LoadFromOBJ("skydomet");			  //ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒXƒe[ƒWƒ‚ƒfƒ‹(“V‹…)
-	modelSkydomeStage1_ = Model::LoadFromOBJ("skydome");	  //ƒXƒe[ƒW1ƒ‚ƒfƒ‹(“V‹…)
-	modelSkydomeStage2_ = Model::LoadFromOBJ("skydome2");	  //ƒXƒe[ƒW2ƒ‚ƒfƒ‹(“V‹…)
-	modelGround_ = Model::LoadFromOBJ("ground");			  //°ƒ‚ƒfƒ‹
-	modelGoal_ = Model::LoadFromOBJ("sphere");				  //ƒS[ƒ‹ƒ‚ƒfƒ‹
-	
-	//ƒ}ƒbƒv‚É“o˜^‚·‚é
-	models_.insert(std::make_pair("playerdash", modelPlayer_.get()));
-	models_.insert(std::make_pair("skydomet", modelSkydome_.get()));
-	models_.insert(std::make_pair("skydome", modelSkydomeStage1_.get()));
-	models_.insert(std::make_pair("skydome2", modelSkydomeStage2_.get()));
-	models_.insert(std::make_pair("ground", modelGround_.get()));
-	models_.insert(std::make_pair("sphere", modelGoal_.get()));
+	// ãƒ¢ãƒ‡ãƒ«ã‚’èª­ã¿è¾¼ã‚“ã§ç™»éŒ²
+	ModelMapping(modelPlayer_, "playerdash", true);		//è‡ªæ©Ÿãƒ¢ãƒ‡ãƒ«
+	ModelMapping(modelSkydome_, "skydomet");			//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ¢ãƒ‡ãƒ«(å¤©çƒ)
+	ModelMapping(modelSkydomeStage1_, "skydome");		//ã‚¹ãƒ†ãƒ¼ã‚¸1ãƒ¢ãƒ‡ãƒ«(å¤©çƒ)
+	ModelMapping(modelSkydomeStage2_, "skydome2");		//ã‚¹ãƒ†ãƒ¼ã‚¸2ãƒ¢ãƒ‡ãƒ«(å¤©çƒ)
+	ModelMapping(modelGround_, "ground");				//åºŠãƒ¢ãƒ‡ãƒ«
+	ModelMapping(modelGoal_, "sphere");					//ã‚´ãƒ¼ãƒ«ãƒ¢ãƒ‡ãƒ«
 
-	// ƒŒƒxƒ‹ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ğ¶¬A”z’u
+	// ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã€é…ç½®
 	for (auto& objectData : levelData_->objects) {
-		// ƒtƒ@ƒCƒ‹–¼‚©‚ç“o˜^Ï‚İƒ‚ƒfƒ‹‚ğŒŸõ
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰ç™»éŒ²æ¸ˆã¿ãƒ¢ãƒ‡ãƒ«ã‚’æ¤œç´¢
 		Model* model = nullptr;
 		decltype(models_)::iterator it = models_.find(objectData.fileName);
 		if (it != models_.end()) {
@@ -640,111 +628,111 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 
 		if (objectData.objectType.find("PLAYER") == LDTOF_TRUE)
 		{
-			// ƒ‚ƒfƒ‹‚ğw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+			// ãƒ¢ãƒ‡ãƒ«ã‚’æŒ‡å®šã—ã¦3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 			std::unique_ptr<Object3d> newObject = Object3d::Create();
-			//ƒIƒuƒWƒFƒNƒg‚Éƒ‚ƒfƒ‹•R•t‚¯‚é
+			//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ãƒ¢ãƒ‡ãƒ«ç´ä»˜ã‘ã‚‹
 			newObject->SetModel(model);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newObject->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// ƒXƒP[ƒŠƒ“ƒO
+			// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			//ƒJƒƒ‰ƒZƒbƒg
+			//ã‚«ãƒ¡ãƒ©ã‚»ãƒƒãƒˆ
 			newObject->SetCamera(camera_.get());
-			// ”z—ñ‚É“o˜^
+			// é…åˆ—ã«ç™»éŒ²
 			objPlayers_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("PLANE") == LDTOF_TRUE)
 		{
-			// ƒ‚ƒfƒ‹‚ğw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+			// ãƒ¢ãƒ‡ãƒ«ã‚’æŒ‡å®šã—ã¦3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 			std::unique_ptr<Object3d> newObject = Object3d::Create();
-			//ƒIƒuƒWƒFƒNƒg‚Éƒ‚ƒfƒ‹•R•t‚¯‚é
+			//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ãƒ¢ãƒ‡ãƒ«ç´ä»˜ã‘ã‚‹
 			newObject->SetModel(model);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newObject->SetPosition(pos);
 			startPos_ = newObject->GetPosition();
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// ƒXƒP[ƒŠƒ“ƒO
+			// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			//ƒJƒƒ‰ƒZƒbƒg
+			//ã‚«ãƒ¡ãƒ©ã‚»ãƒƒãƒˆ
 			newObject->SetCamera(camera_.get());
-			// ”z—ñ‚É“o˜^
+			// é…åˆ—ã«ç™»éŒ²
 			objGrounds_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("SKYDOME") == LDTOF_TRUE)
 		{
-			// ƒ‚ƒfƒ‹‚ğw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+			// ãƒ¢ãƒ‡ãƒ«ã‚’æŒ‡å®šã—ã¦3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 			std::unique_ptr<Object3d> newObject = Object3d::Create();
-			//ƒIƒuƒWƒFƒNƒg‚Éƒ‚ƒfƒ‹•R•t‚¯‚é
+			//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ãƒ¢ãƒ‡ãƒ«ç´ä»˜ã‘ã‚‹
 			newObject->SetModel(model);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newObject->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// ƒXƒP[ƒŠƒ“ƒO
+			// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			//ƒJƒƒ‰ƒZƒbƒg
+			//ã‚«ãƒ¡ãƒ©ã‚»ãƒƒãƒˆ
 			newObject->SetCamera(camera_.get());
-			// ”z—ñ‚É“o˜^
+			// é…åˆ—ã«ç™»éŒ²
 			objSkydomes_.push_back(std::move(newObject));
 		}
 		else if (objectData.objectType.find("GOAL") == LDTOF_TRUE)
 		{
-			// ƒ‚ƒfƒ‹‚ğw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ğ¶¬
+			// ãƒ¢ãƒ‡ãƒ«ã‚’æŒ‡å®šã—ã¦3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 			std::unique_ptr<Object3d> newObject = Object3d::Create();
-			//ƒIƒuƒWƒFƒNƒg‚Éƒ‚ƒfƒ‹•R•t‚¯‚é
+			//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ãƒ¢ãƒ‡ãƒ«ç´ä»˜ã‘ã‚‹
 			newObject->SetModel(model);
 
-			// À•W
+			// åº§æ¨™
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMStoreFloat3(&pos, objectData.trans);
 			newObject->SetPosition(pos);
 
-			// ‰ñ“]Šp
+			// å›è»¢è§’
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rot);
 			newObject->SetRotation(rot);
 
-			// ƒXƒP[ƒŠƒ“ƒO
+			// ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scale);
 			newObject->SetScale(scale);
 
-			//ƒJƒƒ‰ƒZƒbƒg
+			//ã‚«ãƒ¡ãƒ©ã‚»ãƒƒãƒˆ
 			newObject->SetCamera(camera_.get());
-			// ”z—ñ‚É“o˜^
+			// é…åˆ—ã«ç™»éŒ²
 			objGoals_.push_back(std::move(newObject));
 		}
 
@@ -752,14 +740,30 @@ void TitleScene::LoadLVData(const std::string& stagePath)
 
 }
 
+void TitleScene::LoadEasing()
+{
+	Easing::LoadEasingData("title/titleposx.csv", easeTitlePosX_);
+	for (int i = 0; i < TMEN_Num; i++)Easing::LoadEasingData("title/menuposx.csv", easeMenuPosX_[i], i);
+	for (int i = 0; i < TMEN_Num; i++)Easing::LoadEasingData("title/menuendposx.csv", easeMenuEndPosX_[i], i);
+	Easing::LoadEasingData("title/cursorposx.csv", easeCursorPosX_);
+	Easing::LoadEasingData("title/startstageposx.csv", easeStartStagePosX_);
+	Easing::LoadEasingData("title/startstageposy.csv", easeStartStagePosY_);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/eyemenu.csv", easeEyeMenu_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/targetmenu.csv", easeTargetMenu_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/eyegamestart.csv", easeEyeGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/targetgamestart.csv", easeTargetGameStart_[i], i);
+	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/playermove.csv", easePlayerMove_[i], i);
+	Easing::LoadEasingData("title/fadeinout.csv", easeFadeInOut_);
+}
+
 void TitleScene::UpdateChangeColor()
 {
-	//F‚ğ•Ï‚¦‚éƒXƒs[ƒh
+	//è‰²ã‚’å¤‰ãˆã‚‹ã‚¹ãƒ”ãƒ¼ãƒ‰
 	const float speedColor = 0.02f;
 
 	if (isColorReverse_)
 	{
-		//”½“]‚³‚¹‚é
+		//åè»¢ã•ã›ã‚‹
 		selectColor_.x -= speedColor;
 		selectColor_.y -= speedColor;
 		selectColor_.z -= speedColor;
@@ -767,7 +771,7 @@ void TitleScene::UpdateChangeColor()
 
 	else
 	{
-		//F‚Í©“®“I‚É‘Œ¸
+		//è‰²ã¯è‡ªå‹•çš„ã«å¢—æ¸›
 		selectColor_.x += speedColor;
 		selectColor_.y += speedColor;
 		selectColor_.z += speedColor;
@@ -776,11 +780,11 @@ void TitleScene::UpdateChangeColor()
 
 	const DirectX::XMFLOAT2 maxAndMinSpeedColor = { 0.9f,0.0f };//{max,min}
 
-	if (selectColor_.x >= maxAndMinSpeedColor.x)//Max’l‚É“’B‚µ‚½‚ç”½“]
+	if (selectColor_.x >= maxAndMinSpeedColor.x)//Maxå€¤ã«åˆ°é”ã—ãŸã‚‰åè»¢
 	{
 		isColorReverse_ = true;
 	}
-	if (selectColor_.x <= maxAndMinSpeedColor.y)//Min’l‚É“’B‚µ‚½‚ç”½“]‚ğ–ß‚·
+	if (selectColor_.x <= maxAndMinSpeedColor.y)//Minå€¤ã«åˆ°é”ã—ãŸã‚‰åè»¢ã‚’æˆ»ã™
 	{
 		isColorReverse_ = false;
 	}
@@ -789,19 +793,19 @@ void TitleScene::UpdateChangeColor()
 
 void TitleScene::SetUpCircleShadow(const DirectX::XMFLOAT3& pos)
 {
-	const DirectX::XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };			//“Š‰e•ûŒü
-	const DirectX::XMFLOAT3 casterPosOffset = { -0.5f,0.0f,0.0f };	//ƒLƒƒƒXƒ^[À•W‚ÌƒIƒtƒZƒbƒg
-	//ƒLƒƒƒXƒ^[À•W
+	const DirectX::XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };			//æŠ•å½±æ–¹å‘
+	const DirectX::XMFLOAT3 casterPosOffset = { -0.5f,0.0f,0.0f };	//ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼åº§æ¨™ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+	//ã‚­ãƒ£ã‚¹ã‚¿ãƒ¼åº§æ¨™
 	const DirectX::XMFLOAT3 casterPos =
 	{
 		pos.x + casterPosOffset.x,
 		pos.y + casterPosOffset.y,
 		pos.z + casterPosOffset.z
 	};
-	const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };				//‹——£Œ¸ŠŒW”
-	const DirectX::XMFLOAT2 factorAngle = { 0.2f,0.5f };			//Šp“xŒ¸ŠŒW”
+	const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };				//è·é›¢æ¸›è¡°ä¿‚æ•°
+	const DirectX::XMFLOAT2 factorAngle = { 0.2f,0.5f };			//è§’åº¦æ¸›è¡°ä¿‚æ•°
 
-	//ƒVƒƒƒhƒE‚ÌƒZƒbƒg
+	//ã‚·ãƒ£ãƒ‰ã‚¦ã®ã‚»ãƒƒãƒˆ
 	lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
 	lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterPos);
 	lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);

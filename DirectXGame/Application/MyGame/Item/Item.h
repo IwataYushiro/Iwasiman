@@ -44,7 +44,7 @@ private:
 
 public://定数
 	//最大効果時間
-	const float MAX_TIME = 200.0f;
+	const float MAX_TIME = 210.0f;
 public:
 	~Item();
 	
@@ -87,8 +87,7 @@ private:
 	//タイマーの値まで来たら効果終了
 	const float timer_ = MAX_TIME / 60.0f;
 	//取得UIに使うイージング
-	const Vector2 settingEase_ = { 1.0f,0.0f };//イージングのスタート、エンド地点
-	Easing ease_ = { settingEase_.x, settingEase_.y, timer_ };
+	Easing ease_;
 
 	//パーティクル
 	std::unique_ptr<Particle> p_ = nullptr;

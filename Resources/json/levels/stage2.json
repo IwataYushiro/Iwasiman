@@ -263,7 +263,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "enemy2",
             "objecttype": "ENEMY",
             "objectpattern": "ENEMY2"
         },
@@ -287,7 +287,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "enemy2",
             "objecttype": "ENEMY",
             "objectpattern": "E2P"
         },
@@ -332,7 +332,7 @@
             "transform": {
                 "translation": [
                     0.0,
-                    0.0,
+                    -20.0,
                     -8.0
                 ],
                 "rotation": [
@@ -608,7 +608,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "enemy2",
             "objecttype": "ENEMY",
             "objectpattern": "ENEMY2"
         },
@@ -632,7 +632,7 @@
                     1.0
                 ]
             },
-            "file_name": "enemy1",
+            "file_name": "enemy2",
             "objecttype": "ENEMY",
             "objectpattern": "E2S"
         }

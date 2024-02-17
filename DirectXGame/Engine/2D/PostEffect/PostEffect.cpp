@@ -27,10 +27,9 @@ PostEffect::PostEffect()
 {
 }
 
-void PostEffect::Initialize(const SpriteCommon* spCommon, const std::string& fileName)
+void PostEffect::Initialize(const std::string& fileName)
 {
-	assert(spCommon);
-	this->spCommon_ = spCommon;
+	spCommon_ = SpriteCommon::GetInstance();
 
 	//頂点バッファ
 	CreateVertexBuffer();
@@ -52,6 +51,9 @@ void PostEffect::Initialize(const SpriteCommon* spCommon, const std::string& fil
 
 void PostEffect::Update()
 {
+	//GPUに転送
+	constMapMaterialPost_->color = color_;//色情報
+	constMapMaterialPost_->power = power_;//強さ情報
 }
 
 void PostEffect::CreateVertexBuffer()
@@ -559,7 +561,7 @@ void PostEffect::CreateGraphicsPipelineState(const std::string& fileName)
 
 }
 
-void PostEffect::Draw([[maybe_unused]] ID3D12GraphicsCommandList* cmdList)
+void PostEffect::Draw()
 {
 	//パイプラインステートとルートシグネチャの設定
 	spCommon_->GetDxCommon()->GetCommandList()->SetPipelineState(pipelineState_.Get());

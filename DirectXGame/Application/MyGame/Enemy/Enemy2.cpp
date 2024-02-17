@@ -21,13 +21,20 @@ using namespace IwasiEngine;
 
 //静的メンバ変数の実体
 IwasiEngine::CollisionManager* Enemy2::colManager_ = CollisionManager::GetInstance();
+//メンバ関数ポインタテーブルの実体
+void (Enemy2::* Enemy2::updateTable_[])() =
+{
+	&Enemy2::UpdateApproach,
+	&Enemy2::UpdateBack,
+	&Enemy2::UpdateLeave
+};
 
 Enemy2::~Enemy2() {
-	
+
 }
 
-std::unique_ptr<Enemy2> Enemy2::Create(const Model* model, const Model* bullet, 
-	const Player* player,GamePlayScene* gamescene, int level)
+std::unique_ptr<Enemy2> Enemy2::Create(const Model* model, const Model* bullet,
+	const Player* player, GamePlayScene* gamescene, int level)
 {
 	//インスタンス生成
 	std::unique_ptr<Enemy2> ins = std::make_unique<Enemy2>();
@@ -171,8 +178,8 @@ void Enemy2::Parameter() {
 	enum MinMax
 	{
 		MM_min = 0,
-		MM_max=1,
-		MM_num=2,
+		MM_max = 1,
+		MM_num = 2,
 	};
 	//敵弾の発射間隔はランダム
 	const std::array<int, MM_num>randomMinMax = { 75,100 };
@@ -203,37 +210,9 @@ void Enemy2::Update(const bool isStart) {
 	if (!isStart)//スタート演出時は何もしない
 	{
 		//座標を移動させる
-		switch (phase_) {
-		case Enemy2::Phase::Approach:	//下降時
-
-			UpdateApproach();
-			break;
-		case Enemy2::Phase::Back:		//上昇時
-			UpdateBack();
-			break;
-		case Enemy2::Phase::Leave:		//撃破時
-			UpdateLeave();
-			break;
-		}
-		if (phase_ != Phase::Leave)		//撃破時以外は弾を発射する
-		{
-			//発射タイマーカウントダウン
-			fireTimer_--;
-			//指定時間に達した
-			if (fireTimer_ <= endFireTime_) {
-				//弾発射
-				Fire();
-				//発射タイマー初期化
-				const int32_t minInterval = fireInterval_ / 2;
-				const int32_t maxInterval = fireInterval_;
-				fireTimer_ = MyMath::RandomMTInt(minInterval, maxInterval);
-			}
-		}
-
-		//死んだら
-		if (life_ <= deathLife_) {
-			phase_ = Phase::Leave;
-		}
+		(this->*updateTable_[static_cast<size_t>(phase_)])();
+		//死亡処理(Leaveが死亡演出)
+		if (phase_ != Phase::Leave)Dead();
 	}
 
 	//座標の転送
@@ -249,6 +228,21 @@ void Enemy2::Update(const bool isStart) {
 	pmFire_->Update();
 	pmSmoke_->Update();
 }
+void Enemy2::Attack()
+{
+	//発射タイマーカウントダウン
+	fireTimer_--;
+	//指定時間に達した
+	if (fireTimer_ <= endFireTime_) {
+		//弾発射
+		Fire();
+		//発射タイマー初期化
+		const int32_t minInterval = fireInterval_ / 2;
+		const int32_t maxInterval = fireInterval_;
+		fireTimer_ = MyMath::RandomMTInt(minInterval, maxInterval);
+	}
+}
+
 //弾発射
 void Enemy2::Fire() {
 	assert(player_);
@@ -291,6 +285,21 @@ void Enemy2::Fire() {
 	//弾を登録
 	gameScene_->AddEnemyBullet(std::move(newBullet));
 
+}
+
+void Enemy2::Dead()
+{
+	//ライフが0になったら
+	if (life_ <= deathLife_) {
+
+		life_ = deathLife_;//ライフをゼロに
+
+		//最新の情報をセットして死亡演出の準備
+		EaseDeadDirectionRotStart(false);	//回転
+		EaseDeadDirectionScaleStart(false);	//スケール
+		//フェーズ切り替え
+		phase_ = Phase::Leave;
+	}
 }
 
 void Enemy2::Landing()
@@ -365,7 +374,7 @@ void Enemy2::Landing()
 	Ray ray;
 	const XMVECTOR rayDir = { 0.0f,-1.0f,0.0f,0.0f };
 	ray.start = sphereCollider->center;
-	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	ray.start.m128_f32[XYZ_Y] += sphereCollider->GetRadius();
 	ray.dir = rayDir;
 	RaycastHit raycastHit;
 	//半径　X　2.0f(radiusMulNum)
@@ -406,11 +415,8 @@ void Enemy2::Landing()
 
 //描画
 void Enemy2::Draw() {
-
 	//モデルの描画
-	if (phase_ != Phase::Leave)Object3d::Draw();
-
-
+	Object3d::Draw();
 }
 
 void Enemy2::DrawParticle()
@@ -425,6 +431,8 @@ void Enemy2::DrawParticle()
 //下降
 void Enemy2::UpdateApproach() {
 
+	const float updatePositionX = 90.0f;
+	if (player_->GetPosition().x - position_.x <= -updatePositionX)return;
 	//移動
 	if (!onGround_)
 	{
@@ -432,32 +440,36 @@ void Enemy2::UpdateApproach() {
 		position_.y += speed_.y;
 		position_.z += speed_.z;
 	}
+	//攻撃処理
+	Attack();
 	//一定の位置まで達したら上へ
-	if (position_.y <= backFallPosY)
-	{
+	if (position_.y <= backFallPosY)phase_ = Phase::Back;
 
-		phase_ = Phase::Back;
-	}
 }
 
 //上昇
 void Enemy2::UpdateBack()
 {
+	const float updatePositionX = 90.0f;
+	if (player_->GetPosition().x - position_.x <= -updatePositionX)return;
 	//移動
 	position_.x += backSpeed_.x;
 	position_.y += backSpeed_.y;
 	position_.z += backSpeed_.z;
-
+	//攻撃処理
+	Attack();
 	//初期位置まで達したら下へ
 	if (position_.y >= startPos_.y) phase_ = Phase::Approach;
 }
 
 //離脱
 void Enemy2::UpdateLeave() {
-
+	
 	//サブ属性を死亡した扱いにする(死亡演出のため)
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
-
+	//イージングをし転送
+	EaseDeadDirectionRotStart(true);	//回転
+	EaseDeadDirectionScaleStart(true);	//スケール
 	//一定の値までカウントが進んだら死亡する
 	deathTimer_++;
 	if (deathTimer_ >= DEATH_TIME)isDead_ = true;
@@ -466,7 +478,7 @@ void Enemy2::UpdateLeave() {
 void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsigned short attribute, const unsigned short subAttribute)
 {
 	if (phase_ == Phase::Leave)return;//死亡時は何も起こらない
-
+	if (life_ <= 0) return;
 	//現在ライフによる判定処理の基準となるライフ
 	const int hitLife = 1;
 	//煙プリセット
@@ -477,7 +489,7 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		30,
+		20,
 		{ 3.0f, 0.0f },
 		{ 1.0f,1.0f,1.0f,1.0f },
 		{ 0.0f,0.0f,0.0f,1.0f }
@@ -490,7 +502,7 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 		{ 0.0f ,0.0f,25.0f },
 		{ 4.0f,4.0f,0.0f },
 		{ 0.0f,0.001f,0.0f },
-		30,
+		40,
 		{ 3.0f, 0.0f },
 		{ 1.0f,1.0f,1.0f,1.0f },
 		{ 0.0f,0.0f,0.0f,1.0f }
@@ -502,19 +514,19 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 		if (subAttribute == SUBCOLLISION_ATTR_NONE) return;		 //自機本体に触れても何も起こらない
 		else if (subAttribute == SUBCOLLISION_ATTR_BULLET)		 //自機の弾の場合
 		{
+			//死んだらスキップ
+			if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_ENEMY_ISDEAD) return;
 			if (life_ > hitLife)//ライフが1より大きい場合
 			{
 				//パーティクルでヒット演出
-				pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+				pmSmoke_->ActiveZ(smoke);
 
 				pmSmoke_->Update();
 			}
 			else//1以下の場合
 			{
 				//パーティクルでヒット演出
-				pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
-					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+				pmFire_->ActiveZ(fire);
 
 				pmFire_->Update();
 			}

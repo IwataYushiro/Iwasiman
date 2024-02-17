@@ -69,12 +69,6 @@
     <Filter Include="Header File\Engine">
       <UniqueIdentifier>{05c1b417-318a-44c0-ab47-b1cb3182258a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header File\Engine\2D">
-      <UniqueIdentifier>{eaeeaec6-a73c-450c-a3f8-ed6bda8c78fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header File\Engine\2D\Sprite">
-      <UniqueIdentifier>{01da2eee-dad8-4e6e-a701-8e30ee29ff2f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header File\Engine\3D">
       <UniqueIdentifier>{14a919c7-6b88-41fd-b50d-bf6ed0e41633}</UniqueIdentifier>
     </Filter>
@@ -120,9 +114,6 @@
     <Filter Include="Resource File">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Header File\Engine\2D\PostEffect">
-      <UniqueIdentifier>{be1d2d58-4698-434a-b22c-ad9db1f4a85c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header File\Engine\json">
       <UniqueIdentifier>{b2693328-4506-49fb-8039-8590696871e9}</UniqueIdentifier>
@@ -234,6 +225,18 @@
     </Filter>
     <Filter Include="Header File\Engine\3D\Light">
       <UniqueIdentifier>{c78cf77f-eb2d-4f42-873a-024885ce302b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Engine\2D">
+      <UniqueIdentifier>{eaeeaec6-a73c-450c-a3f8-ed6bda8c78fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Engine\2D\Sprite">
+      <UniqueIdentifier>{01da2eee-dad8-4e6e-a701-8e30ee29ff2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Engine\2D\PostEffect">
+      <UniqueIdentifier>{be1d2d58-4698-434a-b22c-ad9db1f4a85c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\Vignette">
+      <UniqueIdentifier>{984e3728-6f09-432f-9749-46366dacfe41}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -384,7 +387,7 @@
     <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\GimmickFactory.cpp">
       <Filter>Source File\Application\MyGame\Gimmick\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseSphere.cpp">
+    <ClCompile Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseGround.cpp">
       <Filter>Source File\Application\MyGame\Gimmick</Filter>
     </ClCompile>
     <ClCompile Include="DirectXGame\Application\Scene\StageSelectScene.cpp">
@@ -593,7 +596,7 @@
     <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\AbstractGimmickFactory.h">
       <Filter>Header File\Application\MyGame\Gimmick\Factory</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseSphere.h">
+    <ClInclude Include="DirectXGame\Application\MyGame\Gimmick\Factory\FallAndRiseGround.h">
       <Filter>Header File\Application\MyGame\Gimmick</Filter>
     </ClInclude>
     <ClInclude Include="DirectXGame\Application\Scene\StageSelectScene.h">
@@ -681,6 +684,9 @@
     </None>
     <None Include="Resources\shader\OBJ.hlsli">
       <Filter>Shader File</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffect\Vignette\Vignette.hlsli">
+      <Filter>Shader File\PostEffect\Vignette</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -794,6 +800,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shader\OBJVS.hlsl">
       <Filter>Shader File</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Vignette\VignettePS.hlsl">
+      <Filter>Shader File\PostEffect\Vignette</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffect\Vignette\VignetteVS.hlsl">
+      <Filter>Shader File\PostEffect\Vignette</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

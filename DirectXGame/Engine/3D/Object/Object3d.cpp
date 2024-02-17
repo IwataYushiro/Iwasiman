@@ -360,8 +360,6 @@ void Object3d::Draw()
 
 	// 定数バッファビューをセット
 	cmdList_->SetGraphicsRootConstantBufferView(RPI_ConstBuffTransform, constBuffB0_->GetGPUVirtualAddress());
-
-	//cmdList->SetGraphicsRootConstantBufferView(1, constBuffB0->GetGPUVirtualAddress());
 	//ライト描画
 	lightGroup_->Draw(cmdList_, RPI_ConstBuffLight);
 	//モデルを描画

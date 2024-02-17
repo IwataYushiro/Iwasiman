@@ -17,6 +17,13 @@ using namespace IwasiEngine;
 *	左右に動くボス敵
 
 */
+//メンバ関数ポインタテーブルの実体
+void (EnemyBoss::* EnemyBoss::updateTable_[])() =
+{
+	&EnemyBoss::UpdateApproach,
+	&EnemyBoss::UpdateAttack,
+	&EnemyBoss::UpdateLeave
+};
 
 EnemyBoss::~EnemyBoss() {
 
@@ -124,22 +131,7 @@ void EnemyBoss::Update(const bool isStart) {
 	if (!isStart)
 	{
 		//座標を移動させる
-		switch (phase_) {
-		case EnemyBoss::Phase::ApproachStage1:	//登場時
-
-			UpdateApproach();
-			break;
-
-		case EnemyBoss::Phase::AttackStage1:	//行動時
-
-			UpdateAttack();
-
-			break;
-
-		case EnemyBoss::Phase::Leave:			//撃破時
-			UpdateLeave();
-			break;
-		}
+		(this->*updateTable_[static_cast<size_t>(phase_)])();
 	}
 	//座標を転送
 	Trans();
@@ -239,9 +231,9 @@ void EnemyBoss::UpdateApproach() {
 
 		//ベジェ曲線の値
 		const XMFLOAT3 startBezier3Pos = { position_.x ,10.0f,moveAttackPhasePosZ };
-		const XMFLOAT3 point1Bezier3Pos = { -10.0f,-20.0f,moveAttackPhasePosZ };
-		const XMFLOAT3 point2Bezier3Pos = { 10.0f ,40.0f,moveAttackPhasePosZ };
-		const XMFLOAT3 endBezier3Pos = { 30.0f ,10.0f,moveAttackPhasePosZ };
+		const XMFLOAT3 point1Bezier3Pos = { -5.0f,-20.0f,moveAttackPhasePosZ };
+		const XMFLOAT3 point2Bezier3Pos = { 5.0f ,40.0f,moveAttackPhasePosZ };
+		const XMFLOAT3 endBezier3Pos = { 15.0f ,10.0f,moveAttackPhasePosZ };
 
 		//制御点
 		start_ = startBezier3Pos;
@@ -353,8 +345,7 @@ void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 			if (life_ > hitLife)//ライフが1より大きい場合
 			{
 				//パーティクルでヒット演出
-				pmSmoke_->ActiveZ(smoke.particle, smoke.startPos, smoke.pos, smoke.vel,
-					smoke.acc, smoke.num, smoke.scale, smoke.startColor, smoke.endColor);
+				pmSmoke_->ActiveZ(smoke);
 
 				pmSmoke_->Update();
 
@@ -362,8 +353,7 @@ void EnemyBoss::OnCollision([[maybe_unused]] const CollisionInfo& info, const un
 			else//1以下の場合
 			{
 				//パーティクルでヒット演出
-				pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
-					fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+				pmFire_->ActiveZ(fire);
 
 				pmFire_->Update();
 			}
@@ -412,10 +402,10 @@ void EnemyBoss::UpdateBezierMove(const bool notStageBoss)
 	else//ベジェ曲線はボス戦用に
 	{
 		//ベジェ曲線の値
-		const XMFLOAT3 startBezier3Pos = { -30.0f,10.0f,100.0f };
-		const XMFLOAT3 point1Bezier3Pos = { -10.0f,-20.0f,100.0f };
-		const XMFLOAT3 point2Bezier3Pos = { 10.0f,40.0f,100.0f };
-		const XMFLOAT3 endBezier3Pos = { 30.0f,10.0f,100.0f };
+		const XMFLOAT3 startBezier3Pos = { -15.0f,10.0f,100.0f };
+		const XMFLOAT3 point1Bezier3Pos = { -5.0f,-20.0f,100.0f };
+		const XMFLOAT3 point2Bezier3Pos = { 5.0f,40.0f,100.0f };
+		const XMFLOAT3 endBezier3Pos = { 15.0f,10.0f,100.0f };
 		//時間
 		//現在時間を取得する
 		nowCount_ = std::chrono::steady_clock::now();

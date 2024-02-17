@@ -13,8 +13,6 @@
 */
 class MyGame :public IwasiEngine::Framework
 {
-private:
-	using PostEffect = IwasiEngine::PostEffect;
 public:
 
 	//初期化
@@ -28,14 +26,6 @@ public:
 
 	//終了
 	void Finalize() override;
-	
-private:
-	//ポストエフェクト
-	std::unique_ptr<PostEffect> pe_;
 
-private:
-	void PostInitialize();	//ポストエフェクト初期化
-	void PostDraw();		//ポストエフェクト描画
-		
 };
 
