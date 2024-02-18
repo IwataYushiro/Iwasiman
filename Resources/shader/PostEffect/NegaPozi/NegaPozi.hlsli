@@ -2,6 +2,7 @@
 cbuffer ConstBufferDataMaterial : register(b0)
 {
     float4 color; //F(RGBA)
+    float4 texturecolor; //‘fŞ‚»‚Ì‚à‚Ì‚ÌF(RGBA)
     float power; //‹­‚³
 };
 //3D•ÏŠ·s—ñ

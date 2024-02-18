@@ -831,7 +831,9 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		model_ = modelHit_;
 		//ポストエフェクトも切り替える
 		gameScene_->SetPostEffect("Vignette");
-		
+		//ペラポリゴン自体は点滅しないようにした
+		const XMFLOAT4 deathColor = { 1.0f,MyMath::RandomMTFloat(0.0f,0.3f),MyMath::RandomMTFloat(0.0f,0.3f),1.0f };
+		gameScene_->SetPostEffectTextureColor(deathColor);
 
 		isBreak_ = true;
 		isAlive_ = false;

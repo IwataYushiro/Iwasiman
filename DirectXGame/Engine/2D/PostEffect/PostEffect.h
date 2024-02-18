@@ -24,8 +24,9 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		//マテリアル
 		struct ConstBufferDataMaterial
 		{
-			XMFLOAT4 color; //色(RGBA)
-			float power;    //ポストエフェクトの強さ
+			XMFLOAT4 color;				//色(RGBA)
+			XMFLOAT4 textureColor;		//素材そのものの色
+			float power;				//ポストエフェクトの強さ
 		};
 
 		//座標
@@ -160,6 +161,9 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		//色(RGBA)
 		const XMFLOAT4 defaultColor_ = { 1.0f,1.0f,1.0f,1.0f };
 		XMFLOAT4 color_ = defaultColor_;
+		//ペラポリゴン(素材そのもの)のカラー
+		XMFLOAT4 textureColor_ = defaultColor_;
+
 		//ポストエフェクトの強さ(グレースケールの濃さとか　1.0fで最大)
 		const float defaultPower_ = 1.0f;
 		float power_ = defaultPower_;
@@ -169,6 +173,10 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		void SetColor(const XMFLOAT4& color) { color_ = color; }
 		//カラーゲット
 		const XMFLOAT4& GetColor()const { return color_; }
+		//素材そのもののカラーセット
+		void SetTextureColor(const XMFLOAT4& color) { textureColor_ = color; }
+		//素材そのもののカラーゲット
+		const XMFLOAT4& GetTextureColor()const { return textureColor_; }
 		//パワーセット
 		void SetPower(const float power) { power_ = power; }
 		//パワーゲット

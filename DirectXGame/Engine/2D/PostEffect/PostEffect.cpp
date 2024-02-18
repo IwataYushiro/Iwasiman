@@ -52,8 +52,9 @@ void PostEffect::Initialize(const std::string& fileName)
 void PostEffect::Update()
 {
 	//GPU‚É“]‘—
-	constMapMaterialPost_->color = color_;//Fî•ñ
-	constMapMaterialPost_->power = power_;//‹­‚³î•ñ
+	constMapMaterialPost_->color = color_;					//Fî•ñ
+	constMapMaterialPost_->textureColor = textureColor_;	//‘fŞ‚»‚Ì‚à‚Ì‚ÌFî•ñ
+	constMapMaterialPost_->power = power_;					//‹­‚³î•ñ
 }
 
 void PostEffect::CreateVertexBuffer()

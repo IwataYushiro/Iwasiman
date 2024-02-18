@@ -1,8 +1,9 @@
 //マテリアル
 cbuffer ConstBufferDataMaterial : register(b0)
 {
-    float4 color; //色(RGBA)
-    float power; //強さ
+    float4 color;			//色(RGBA)
+    float4 texturecolor;	//素材そのものの色(RGBA)
+    float power;			//強さ
 };
 //3D変換行列
 cbuffer ConstBufferDataTransform : register(b1)
