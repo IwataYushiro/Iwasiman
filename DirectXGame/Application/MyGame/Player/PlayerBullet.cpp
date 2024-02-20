@@ -62,18 +62,11 @@ void PlayerBullet::Update() {
 	//パーティクルマネージャーにカメラをセット
 	pmFire_->SetCamera(camera_);
 	//座標を移動させる
-	XMFLOAT3 pos = Object3d::GetPosition();
-
-	pos.x += velocity_.x;
-	pos.y += velocity_.y;
-	pos.z += velocity_.z;
-
 	
-	//座標のセット
-	Object3d::SetPosition(pos);
-	//行列転送
-	Trans();
-	
+	position_.x += velocity_.x;
+	position_.y += velocity_.y;
+	position_.z += velocity_.z;
+
 	UpdateParticle();//パーティクル更新
 	//更新
 	camera_->Update();	//カメラ
@@ -117,7 +110,7 @@ void PlayerBullet::UpdateParticle()
 		particleFire_,
 		position_,
 		{ 0.05f ,2.0f,0.05f },
-		{-velocity_.x,velocity_.y,velocity_.z},//弾の速度と同じ
+		{0.0f,0.0f,0.0f},//弾の速度と同じ
 		{ 0.0f,0.001f,0.0f },
 		3,
 		{ 2.0f, 0.0f },
