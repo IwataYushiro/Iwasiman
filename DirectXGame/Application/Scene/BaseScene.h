@@ -98,11 +98,11 @@ public://アクセッサ置き場
 	//シーンマネージャーのセット
 	virtual void SetSceneManager(SceneManager* sceneManager) { this->sceneManager_ = sceneManager; }
 	//ポストエフェクト変更
-	void SetPostEffect(const std::string& post) { postEffect_->Initialize(post); }
+	void ChangePostEffect(const std::string& post) { postEffect_->Initialize(post); }
 	//ポストエフェクトカラー変更
-	void SetPostEffectColor(const DirectX::XMFLOAT4 color) { postEffect_->SetColor(color); }
+	void ChangePostEffectColor(const DirectX::XMFLOAT4 color) { postEffect_->SetColor(color); }
 	//ポストエフェクトカラー(ペラポリゴン自体の)変更
-	void SetPostEffectTextureColor(const DirectX::XMFLOAT4 color) { postEffect_->SetTextureColor(color); }
+	void ChangePostEffectTextureColor(const DirectX::XMFLOAT4 color) { postEffect_->SetTextureColor(color); }
 
 protected://継承メンバ関数
 	//モデル読み込みとマッピングの共通化

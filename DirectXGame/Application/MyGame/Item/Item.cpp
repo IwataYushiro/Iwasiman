@@ -123,8 +123,8 @@ void Item::UpdateJumpPowerup()
 		spriteItemJumpBar_->SetSize({ ease_.num_X, spriteItemJumpBar_->GetSize().y });
 		
 		//ポストエフェクトの色も変更
-		const XMFLOAT4 jumpItemGetColor = { 1.0f,1.0f,MyMath::RandomMTFloat(0.0f,0.2f),1.0f };
-		gameScene_->SetPostEffectColor(jumpItemGetColor);
+		const XMFLOAT4 jumpItemGetColor = { 1.0f,1.0f,MyMath::RandomMTFloat(0.3f,0.5f),1.0f };
+		gameScene_->ChangePostEffectColor(jumpItemGetColor);
 
 		//効果時間を進める
 		count_++;
@@ -139,10 +139,10 @@ void Item::UpdateJumpPowerup()
 	if (count_ >= MAX_TIME)
 	{
 		//ポストエフェクトも切り替える
-		gameScene_->SetPostEffect("None");
+		gameScene_->ChangePostEffect("None");
 		//ポストエフェクトの色も変更
 		const XMFLOAT4 resetPostEffectColor = { 1.0f,1.0f,1.0f,1.0f };
-		gameScene_->SetPostEffectColor(resetPostEffectColor);
+		gameScene_->ChangePostEffectColor(resetPostEffectColor);
 		const float countReset = 0.0f;
 		count_ = countReset;
 		isGet_ = false;
@@ -197,7 +197,7 @@ void Item::OnCollision([[maybe_unused]] const CollisionInfo& info,const unsigned
 				//イージングをスタンバイ
 				ease_.Standby(false);
 				//ポストエフェクトも切り替える
-				gameScene_->SetPostEffect("Vignette");
+				gameScene_->ChangePostEffect("Vignette");
 				//ゲット
 				isGetJump_ = true;
 			}

@@ -41,7 +41,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 	public://メンバ関数
 
 		//初期化(DirectX基盤)
-		void Initialize(const DirectXCommon* dxCommon);
+		void Initialize();
 
 		//テクスチャ読み込み(テクスチャインデックス、使用スプライト)
 		void LoadTexture(const uint32_t index, const std::string& fileName);

@@ -35,13 +35,13 @@ void Framework::Initialize()
 	//WinApp初期化
 	winApp_->Initialize();
 	//DirectX初期化
-	dxCommon_->Initialize(winApp_);
+	dxCommon_->Initialize();
 	//スプライト基盤
-	sprCommon_->Initialize(dxCommon_);
+	sprCommon_->Initialize();
 	//入力
 	input_->Initialize();
 	//imgui
-	imguiManager_->Initialize(winApp_, dxCommon_);
+	imguiManager_->Initialize();
 	//FBX
 	FbxLoader::GetInstance()->Initialize(dxCommon_->GetDevice());
 	//静的初期化

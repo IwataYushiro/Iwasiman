@@ -26,7 +26,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 	public://メンバ関数
 
 		//初期化(Windowsアプリケーション、DirectX基盤)
-		void Initialize(const WinApp* winApp, const DirectXCommon* dxCommon);
+		void Initialize();
 
 		//更新
 		void Update();

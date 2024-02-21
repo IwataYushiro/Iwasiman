@@ -96,9 +96,6 @@
     <Filter Include="Header File\Engine\Math">
       <UniqueIdentifier>{393d4d1b-d4a1-4d39-ab28-90ab178f417a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header File\Engine\Debug">
-      <UniqueIdentifier>{fdbcca7e-08d0-478e-a497-340a58cefd0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header File\Application">
       <UniqueIdentifier>{88775aed-b594-4db1-8006-15e71f1a0276}</UniqueIdentifier>
     </Filter>
@@ -237,6 +234,9 @@
     </Filter>
     <Filter Include="Shader File\PostEffect\Vignette">
       <UniqueIdentifier>{984e3728-6f09-432f-9749-46366dacfe41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header File\Engine\Debug">
+      <UniqueIdentifier>{fdbcca7e-08d0-478e-a497-340a58cefd0a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

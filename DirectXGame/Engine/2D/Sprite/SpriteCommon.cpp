@@ -28,11 +28,11 @@ SpriteCommon* SpriteCommon::GetInstance()
 	return &instance;
 }
 
-void SpriteCommon::Initialize(const DirectXCommon* dxCommon)
+void SpriteCommon::Initialize()
 {
 	HRESULT result;
 	assert(dxCommon);
-	this->dxCommon_ = dxCommon;
+	this->dxCommon_ = DirectXCommon::GetInstance();
 
 	//頂点シェーダ読み込み
 	result = D3DCompileFromFile(

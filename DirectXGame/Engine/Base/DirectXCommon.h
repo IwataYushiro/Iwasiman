@@ -27,8 +27,8 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		static DirectXCommon* GetInstance();
 	public:
 
-		//初期化(Windowsアプリケーション)
-		void Initialize(const WinApp* winApp);
+		//初期化
+		void Initialize();
 		
 
 		//描画前処理

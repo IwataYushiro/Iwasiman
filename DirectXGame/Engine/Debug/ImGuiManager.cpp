@@ -17,12 +17,11 @@ ImGuiManager* ImGuiManager::GetInstance()
 	return &instance;
 }
 
-void ImGuiManager::Initialize(const WinApp* winApp, const DirectXCommon* dxCommon)
+void ImGuiManager::Initialize()
 {
 	HRESULT result;
-
-	this->winApp_ = winApp;
-	this->dxCommon_ = dxCommon;
+	this->winApp_ = WinApp::GetInstance();
+	this->dxCommon_ = DirectXCommon::GetInstance();
 
 	//ImGuiのコンテキストを生成
 	ImGui::CreateContext();
@@ -56,30 +55,36 @@ void ImGuiManager::Initialize(const WinApp* winApp, const DirectXCommon* dxCommo
 
 void ImGuiManager::Update()
 {
-
+#ifdef _DEBUG
 	//ImGui呼び出し
 	Begin();
 	//ここからImGuiの表示項目を追加する
 	//ImGuiStyleShowSample();
 	//表示項目ここまで
 	End();
+#endif // _DEBUG
 
 }
 
 void ImGuiManager::Begin()
 {
+#ifdef _DEBUG
 	//imguiフレーム開始
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+#endif // _DEBUG
 }
 
 void ImGuiManager::End()
 {
+#ifdef _DEBUG
 	//描画前準備
 	ImGui::Render();
+#endif // _DEBUG
 }
 void ImGuiManager::ImGuiStyleShowSample() {
+#ifdef _DEBUG
 	//スタイル変更のサンプル
 	const int32_t maxBuff = 50;
 	static char buf[maxBuff] = {};
@@ -103,10 +108,12 @@ void ImGuiManager::ImGuiStyleShowSample() {
 
 	const float minMax[MMN_Num] = { 0.0f,1.0f };
 	ImGui::SliderFloat("float", &f, minMax[MMN_Min], minMax[MMN_Max]);//スライダー
+#endif // _DEBUG
 }
 
 void ImGuiManager::ImGuiMyFirstToolColor()
 {
+#ifdef _DEBUG
 	//公式サイトのMyFirstToolのサンプル
 	// Create a window called "My First Tool", with a menu bar.
 	enum ColorPatternIndex
@@ -159,9 +166,11 @@ void ImGuiManager::ImGuiMyFirstToolColor()
 		ImGui::Text("%04d: Some text", n);
 	ImGui::EndChild();
 	ImGui::End();
+#endif // _DEBUG
 }
 void ImGuiManager::Draw()
 {
+#ifdef _DEBUG
 	//コマンドリスト
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
@@ -170,10 +179,12 @@ void ImGuiManager::Draw()
 	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	//描画コマンドの実行
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+#endif // _DEBUG
 }
 
 void ImGuiManager::Finalize()
 {
+#ifdef _DEBUG
 	//後処理
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
@@ -181,4 +192,5 @@ void ImGuiManager::Finalize()
 
 	//デスクリプタヒープ開放
 	srvHeap_.Reset();
+#endif // _DEBUG
 }

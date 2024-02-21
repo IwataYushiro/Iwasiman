@@ -22,12 +22,9 @@ DirectXCommon* DirectXCommon::GetInstance()
 	return &instance;
 }
 
-void DirectXCommon::Initialize(const WinApp* winApp)
+void DirectXCommon::Initialize()
 {
-	//NULLチェック
-	assert(winApp);
-
-	this->winApp_ = winApp;
+	this->winApp_ = WinApp::GetInstance();
 
 #pragma region DirectX初期化
 	//FPS固定初期化

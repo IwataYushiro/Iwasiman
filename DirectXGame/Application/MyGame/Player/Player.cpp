@@ -830,10 +830,10 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		//モデルを切り替えて死亡演出へ
 		model_ = modelHit_;
 		//ポストエフェクトも切り替える
-		gameScene_->SetPostEffect("Vignette");
+		gameScene_->ChangePostEffect("Vignette");
 		//ペラポリゴン自体は点滅しないようにした
 		const XMFLOAT4 deathColor = { 1.0f,MyMath::RandomMTFloat(0.0f,0.3f),MyMath::RandomMTFloat(0.0f,0.3f),1.0f };
-		gameScene_->SetPostEffectTextureColor(deathColor);
+		gameScene_->ChangePostEffectTextureColor(deathColor);
 
 		isBreak_ = true;
 		isAlive_ = false;
@@ -998,7 +998,7 @@ void Player::UpdateBreak()
 	}
 	//ポストエフェクトの色は死亡色に
 	const XMFLOAT4 deathColor = { 1.0f,MyMath::RandomMTFloat(0.0f,0.3f),MyMath::RandomMTFloat(0.0f,0.3f),1.0f };
-	gameScene_->SetPostEffectColor(deathColor);
+	gameScene_->ChangePostEffectColor(deathColor);
 
 	//スキップで死亡演出スキップ
 	if (input_->TriggerKey(DIK_SPACE))isSkipDeadDirection_ = true;
