@@ -276,6 +276,7 @@ void TitleScene::Update()
 	imguiManager_->Begin();
 #ifdef _DEBUG
 	//camera_->DebugCamera(true);//デバッグカメラ
+	TestPostEffect("Vignette");//ポストエフェクトのテスト
 #endif // _DEBUG
 
 	imguiManager_->End();
@@ -754,6 +755,54 @@ void TitleScene::LoadEasing()
 	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/targetgamestart.csv", easeTargetGameStart_[i], i);
 	for (int i = 0; i < XYZ_Num; i++)Easing::LoadEasingData("title/playermove.csv", easePlayerMove_[i], i);
 	Easing::LoadEasingData("title/fadeinout.csv", easeFadeInOut_);
+}
+
+void TitleScene::TestPostEffect(const std::string& path)
+{
+	//ポストエフェクトの読み込みは一回だけ
+	if (!dirty_)
+	{
+		postEffect_->Initialize(path);
+		dirty_ = true;
+	}
+	//ImGuiに渡す用の変数
+	//エフェクトの色
+	float icolor[XYZW_Num] = {postEffect_->GetColor().x,postEffect_->GetColor().y,
+		postEffect_->GetColor().z, postEffect_->GetColor().w};
+	//素材そのものの色(ペラポリゴンの色)
+	float itexcolor[XYZW_Num] = { postEffect_->GetTextureColor().x,postEffect_->GetTextureColor().y,
+		postEffect_->GetTextureColor().z, postEffect_->GetTextureColor().w };
+	//パワー
+	float ipower = postEffect_->GetPower();
+	
+	//ウィンドウポジション
+	struct ImGuiWindowPosition
+	{
+		const float X = 100.0f;
+		const float Y = 0.0f;
+};
+	ImGuiWindowPosition iPos;
+	//ウィンドウサイズ
+	struct ImguiWindowSize
+	{
+		const float width = 300.0f;
+		const float height = 150.0f;
+	};
+	ImguiWindowSize iSize;
+	//調整はスライダーで
+	ImGui::Begin("PostEffectTest");
+	ImGui::SetWindowPos(ImVec2(iPos.X, iPos.Y));
+	ImGui::SetWindowSize(ImVec2(iSize.width, iSize.height));
+	ImGui::SliderFloat4("color", icolor, 0.0f, 1.0f);
+	ImGui::SliderFloat4("texturecolor",itexcolor,0.0f,1.0f);
+	ImGui::SliderFloat("power", &ipower, 0.0f, 1.0f);
+	ImGui::End();
+	
+	//値を適応
+	postEffect_->SetColor({ icolor[XYZW_X],icolor[XYZW_Y],icolor[XYZW_Z],icolor[XYZW_W] });
+	postEffect_->SetTextureColor({ itexcolor[XYZW_X],itexcolor[XYZW_Y],itexcolor[XYZW_Z],itexcolor[XYZW_W] });
+	postEffect_->SetPower(ipower);
+	postEffect_->Update();
 }
 
 void TitleScene::UpdateChangeColor()

@@ -53,6 +53,8 @@ public://メンバ関数(ステージ番号)
 	void LoadLVData(const std::string& stagePath);
 	//イージングのロード
 	void LoadEasing() override;
+	//ポストエフェクトテスト用
+	void TestPostEffect(const std::string& path);
 private://基盤メンバ変数
 	//DirectX基盤
 	DirectXCommon* dxCommon_ = nullptr;
@@ -198,7 +200,8 @@ private://メンバ変数
 
 	//どのステージにいるのかを受け取るための変数
 	int stageNum_;
-
+	//ダーティフラグ
+	bool dirty_ = false;
 public:
 	//色が変わる処理
 	void UpdateChangeColor();

@@ -11,8 +11,8 @@ float4 main(VSOutput input) : SV_TARGET
     float4 texColor = tex.Sample(smp, samplePoint) * texturecolor;
     //真ん中にビネット
     float vignette = length(float2(0.5f, 0.5f) - input.uv);
-    float power = 0.05f; //小さいほど強い
-    vignette = clamp(vignette - power, 0.0f, 1.0f);
+    float vignettepower = 1.01f-power; //小さいほど強い
+    vignette = clamp(vignette - vignettepower, 0.0f, 1.0f);
     texColor.rgb -= vignette * (1.0f - color.rgb);
     return texColor;
 }

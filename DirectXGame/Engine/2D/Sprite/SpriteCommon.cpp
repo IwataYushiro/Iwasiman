@@ -31,7 +31,6 @@ SpriteCommon* SpriteCommon::GetInstance()
 void SpriteCommon::Initialize()
 {
 	HRESULT result;
-	assert(dxCommon);
 	this->dxCommon_ = DirectXCommon::GetInstance();
 
 	//頂点シェーダ読み込み
