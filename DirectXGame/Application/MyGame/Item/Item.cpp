@@ -126,6 +126,7 @@ void Item::UpdateJumpPowerup()
 		const XMFLOAT4 jumpItemGetColor = { 1.0f,1.0f,MyMath::RandomMTFloat(0.3f,0.5f),1.0f };
 		gameScene_->ChangePostEffectColor(jumpItemGetColor);
 
+
 		//Œø‰ÊŠÔ‚ği‚ß‚é
 		count_++;
 	}

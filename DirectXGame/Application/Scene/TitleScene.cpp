@@ -53,13 +53,13 @@ void TitleScene::Initialize()
 	
 	//スプライト
 	//タイトル画面スプライト
-	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title3.dds");
+	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title3.png");
 	spriteTitle_->Initialize(spCommon_, TSTI_TitleTex);
 	spriteTitle_->SetColor(backTitleColor_);
 	spriteTitle_->SetPosition({ easeTitlePosX_.start,startTitlePosY_ });
 
 	//タイトル画面スプライト(タイトルの後ろ)
-	spCommon_->LoadTexture(TSTI_TitleBackTex, "texture/titleback.dds");
+	spCommon_->LoadTexture(TSTI_TitleBackTex, "texture/titleback.png");
 	spriteTitleBack_->Initialize(spCommon_, TSTI_TitleBackTex);
 	spriteTitleBack_->SetPosition({ easeTitlePosX_.start,startTitlePosY_ });
 
@@ -124,8 +124,8 @@ void TitleScene::Initialize()
 	spriteMenuUI_->SetPosition({ easeMenuPosX_[TMEN_UI].start,menuPosY_[TMEN_UI] });
 
 	//パーティクル
-	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
-	particleGoal_ = Particle::LoadFromParticleTexture("particle1.png");
+	particleFire_ = Particle::LoadFromParticleTexture("particle8.dds");
+	particleGoal_ = Particle::LoadFromParticleTexture("particle1.dds");
 	//ブースト用
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetBlendMode(ParticleManager::BP_ADD);

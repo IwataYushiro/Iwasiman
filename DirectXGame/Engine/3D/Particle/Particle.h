@@ -140,9 +140,17 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		D3D12_VERTEX_BUFFER_VIEW vbView_;
 		//頂点データ配列
 		VertexPosScale vertices_[VERTEX_COUNT];
-
+		//パーティクル一粒
 		std::forward_list<OneParticle> particles_;
-
+		//ディレクトリパス
+		std::wstring directoryPath_;
+		//ファイル名
+		std::wstring fileName_;
+		//ファイル拡張子
+		std::wstring fileExt_;
+	private:
+		//フォルダパスとファイル名を分離
+		void SeparateFilePath(const std::wstring& filePath);
 	public://アクセッサ置き場
 		//デバイスセット
 		static void SetDevice(ID3D12Device* device) { Particle::device_ = device; }

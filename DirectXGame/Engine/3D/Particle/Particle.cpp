@@ -74,28 +74,42 @@ void Particle::LoadTexture(const std::string& fileName)
 	//ワイド文字列に変換
 	std::vector<wchar_t> wfilePath(filePathBufferSize);
 	MultiByteToWideChar(CP_ACP, 0, fullPath.c_str(), cbMultiByte, wfilePath.data(), filePathBufferSize);
+	//フォルダパスとファイル名を分離
+	SeparateFilePath(wfilePath.data());
 
 	//画像ファイルの用意
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
-	//WICテクスチャのロード
-	result = LoadFromWICFile(
-		wfilePath.data(),	//Resourcesフォルダのtexture.png
-		WIC_FLAGS_NONE,
-		&metadata, scratchImg);
+	//ddsテクスチャの場合
+	if (fileExt_ == L"dds")
+	{
+		// DDSテクスチャのロード
+		result = LoadFromDDSFile(
+			wfilePath.data(),
+			DDS_FLAGS_NONE,
+			&metadata, scratchImg);
+	}
+	else//png,jpgなどのテクスチャの場合
+	{
+		// WICテクスチャのロード
+		result = LoadFromWICFile(
+			wfilePath.data(),
+			WIC_FLAGS_NONE,
+			&metadata, scratchImg);
 
+		//ddsじゃない場合ミップマップは生成されてないのでここで生成
+		ScratchImage mipChain{};
+		// ミップマップ生成
+		result = GenerateMipMaps(
+			scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+			TEX_FILTER_DEFAULT, 0, mipChain);
+		if (SUCCEEDED(result)) {
+			scratchImg = std::move(mipChain);
+			metadata = scratchImg.GetMetadata();
+		}
+	}
 	assert(SUCCEEDED(result));
 
-	ScratchImage mipChain{};
-	//ミップマップ生成
-	result = GenerateMipMaps(
-		scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-		TEX_FILTER_DEFAULT, 0, mipChain);
-	if (SUCCEEDED(result))
-	{
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
-	}
 	//読み込んだディフューズテクスチャをSRGBとして扱う
 	metadata.format = MakeSRGB(metadata.format);
 
@@ -300,6 +314,51 @@ void Particle::Add(const int life, const XMFLOAT3& position, const XMFLOAT3& vel
 	p.s_color = start_color;
 	p.e_color = end_color;
 	p.color = p.s_color;
+}
+
+void Particle::SeparateFilePath(const std::wstring& filePath)
+{
+	size_t pos1;
+	std::wstring exceptExt;
+
+	//区切り文字'.'が出てくる一番最後の部分を検索
+	pos1 = filePath.rfind('.');
+	//検索がヒットしたら
+	if (pos1 != std::wstring::npos)
+	{
+		//区切り文字の後ろをファイル拡張子として保存
+		fileExt_ = filePath.substr(pos1 + 1, filePath.size() - pos1 - 1);
+		//区切り文字の前までを抜き出す
+		exceptExt = filePath.substr(0, pos1);
+	}
+	else
+	{
+		fileExt_ = L"";
+		exceptExt = filePath;
+	}
+	//区切り文字'\\'が出てくる一番最後の部分を検索
+	pos1 = exceptExt.rfind('\\');
+	if (pos1 != std::wstring::npos)
+	{
+		//区切り文字の前までをディレクトリパスとして保存
+		directoryPath_ = exceptExt.substr(0, pos1 + 1);
+		//区切り文字の後ろをファイル名として保存
+		fileName_ = exceptExt.substr(pos1 + 1, exceptExt.size() - pos1 - 1);
+		return;
+	}
+	//区切り文字'/'が出てくる一番最後の部分を検索
+	pos1 = exceptExt.rfind('/');
+	if (pos1 != std::wstring::npos)
+	{
+		//区切り文字の前までをディレクトリパスとして保存
+		directoryPath_ = exceptExt.substr(0, pos1 + 1);
+		//区切り文字の後ろをファイル名として保存
+		fileName_ = exceptExt.substr(pos1 + 1, exceptExt.size() - pos1 - 1);
+		return;
+	}
+	//区切り文字がないのでファイル名のみとして扱う
+	directoryPath_ = L"";
+	fileName_ = exceptExt;
 }
 
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)

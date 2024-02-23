@@ -258,6 +258,7 @@ void SpriteCommon::LoadTexture(const uint32_t index, const std::string& fileName
 	//画像ファイルの用意
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
+	//ddsテクスチャの場合
 	if (fileExt_ == L"dds")
 	{
 		// DDSテクスチャのロード
@@ -266,7 +267,7 @@ void SpriteCommon::LoadTexture(const uint32_t index, const std::string& fileName
 			DDS_FLAGS_NONE,
 			&metadata, scratchImg);
 	}
-	else
+	else//png,jpgなどのテクスチャの場合
 	{
 		// WICテクスチャのロード
 		result = LoadFromWICFile(
