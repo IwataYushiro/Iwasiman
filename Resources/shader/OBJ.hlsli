@@ -1,5 +1,6 @@
 cbuffer cbuff0 : register(b0)
 {
+    float4 color;//F
     matrix viewproj;
     matrix world; // ‚R‚c•ÏŠ·s—ñ
     float3 cameraPos;

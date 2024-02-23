@@ -233,6 +233,7 @@ void TitleScene::Update()
 
 		//丸影
 		SetUpCircleShadow(player->GetPosition());
+		player->SetColor({ deepRed_.x,deepRed_.y,deepRed_.z,1.0f });
 		//更新
 		player->Update();
 	}

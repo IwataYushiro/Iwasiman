@@ -301,7 +301,7 @@ void Object3d::Update()
 	// 定数バッファへデータ転送
 	
 	result = constBuffB0_->Map(0, nullptr, (void**)&constMap0_);
-	//constMap0->color = color;
+	constMap0_->color = color_;
 	constMap0_->viewproj = matViewProjection;	// 行列の合成
 	constMap0_->world = matWorld_;
 	constMap0_->cameraPos = cameraPos;

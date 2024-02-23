@@ -44,6 +44,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		// 定数バッファ用データ構造体
 		struct ConstBufferDataB0
 		{
+			XMFLOAT4 color;		//色
 			XMMATRIX viewproj;		//ビュープロジェクション行列
 			XMMATRIX world;			//ワールド行列
 			XMFLOAT3 cameraPos;		//カメラ座標(ワールド座標)
@@ -181,7 +182,10 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 		//ポジションセット
 		void SetPosition(const XMFLOAT3& position) { this->position_ = position; }
-
+		//カラーゲット
+		const XMFLOAT4& GetColor() const { return color_; }
+		//カラーセット
+		void SetColor(const XMFLOAT4& color) { this->color_ = color; }
 		//カメラセット
 		void SetCamera(Camera* camera) { this->camera_ = camera; }
 		//ライトグループセット

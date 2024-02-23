@@ -18,7 +18,7 @@ float4 Lambert(VSOutput input)
 float4 Phong(VSOutput input)
 {
     //フォンシェーディング
-    float4 texcolor = tex.Sample(smp, input.uv);
+    float4 texcolor = tex.Sample(smp, input.uv) * color;
 	//光沢度
     const float shininess = 4.0f;
 	//頂点から視点への方向ベクトル
