@@ -190,9 +190,6 @@
     <Filter Include="Shader File\PostEffect\Test">
       <UniqueIdentifier>{1f5d8492-0320-4bab-9d43-42551becf07e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader File\PostEffect\UVShift">
-      <UniqueIdentifier>{787478eb-9368-414b-a83d-b78084cf0e57}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader File\PostEffect\UVSHiftBlur">
       <UniqueIdentifier>{c2efa3e5-e7ec-4ec4-9846-02c5a961eea8}</UniqueIdentifier>
     </Filter>
@@ -237,6 +234,9 @@
     </Filter>
     <Filter Include="Header File\Engine\Debug">
       <UniqueIdentifier>{fdbcca7e-08d0-478e-a497-340a58cefd0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\PostEffect\UVShift">
+      <UniqueIdentifier>{787478eb-9368-414b-a83d-b78084cf0e57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
