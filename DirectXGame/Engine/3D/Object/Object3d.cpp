@@ -299,7 +299,6 @@ void Object3d::Update()
 	const XMFLOAT3& cameraPos = camera_->GetEye();
 
 	// 定数バッファへデータ転送
-	
 	result = constBuffB0_->Map(0, nullptr, (void**)&constMap0_);
 	constMap0_->color = color_;
 	constMap0_->viewproj = matViewProjection;	// 行列の合成

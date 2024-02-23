@@ -110,7 +110,8 @@ void PostEffect::CreateConstBuffer()
 	//マテリアル
 	CreateConstBufferMaterialPost();
 	constMapMaterialPost_->color = this->color_;
-	
+	constMapMaterialPost_->textureColor = this->textureColor_;
+	constMapMaterialPost_->power = this->power_;
 
 	//変換行列
 	CreateConstBufferTransformPost();

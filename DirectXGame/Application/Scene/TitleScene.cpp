@@ -53,13 +53,13 @@ void TitleScene::Initialize()
 	
 	//スプライト
 	//タイトル画面スプライト
-	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title3.png");
+	spCommon_->LoadTexture(TSTI_TitleTex, "texture/title3.dds");
 	spriteTitle_->Initialize(spCommon_, TSTI_TitleTex);
 	spriteTitle_->SetColor(backTitleColor_);
 	spriteTitle_->SetPosition({ easeTitlePosX_.start,startTitlePosY_ });
 
 	//タイトル画面スプライト(タイトルの後ろ)
-	spCommon_->LoadTexture(TSTI_TitleBackTex, "texture/titleback.png");
+	spCommon_->LoadTexture(TSTI_TitleBackTex, "texture/titleback.dds");
 	spriteTitleBack_->Initialize(spCommon_, TSTI_TitleBackTex);
 	spriteTitleBack_->SetPosition({ easeTitlePosX_.start,startTitlePosY_ });
 
@@ -233,7 +233,6 @@ void TitleScene::Update()
 
 		//丸影
 		SetUpCircleShadow(player->GetPosition());
-		player->SetColor({ deepRed_.x,deepRed_.y,deepRed_.z,1.0f });
 		//更新
 		player->Update();
 	}

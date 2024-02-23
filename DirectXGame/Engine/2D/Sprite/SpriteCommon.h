@@ -89,6 +89,12 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		// ルートシグネチャのシリアライズ
 		ComPtr<ID3DBlob> rootSigBlob_ = nullptr;
 
+		//ディレクトリパス
+		std::wstring directoryPath_;
+		//ファイル名
+		std::wstring fileName_;
+		//ファイル拡張子
+		std::wstring fileExt_;
 	public://アクセッサ
 
 		//DirectX基盤ゲット
@@ -104,6 +110,9 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		ID3D12PipelineState* GetPipelineState() { return pipelineState_.Get(); }
 		//ルートシグネチャゲット
 		ID3D12RootSignature* GetRootSignature() { return rootSignature_.Get(); }
+	private:
+		//フォルダパスとファイル名を分離
+		void SeparateFilePath(const std::wstring& filePath);
 	private:
 		//コンストラクタ（シングルトンパターン）
 		SpriteCommon() = default;
