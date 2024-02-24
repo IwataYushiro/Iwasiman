@@ -275,8 +275,9 @@ void TitleScene::Update()
 	//ImGui
 	imguiManager_->Begin();
 #ifdef _DEBUG
+	for (std::unique_ptr<Object3d>& player : objPlayers_)player->TestObjectColor();//オブジェクトのカラーテスト
 	//camera_->DebugCamera(true);//デバッグカメラ
-	TestPostEffect("Vignette");//ポストエフェクトのテスト
+	//TestPostEffect("Vignette");//ポストエフェクトのテスト
 #endif // _DEBUG
 
 	imguiManager_->End();

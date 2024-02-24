@@ -202,6 +202,8 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		const XMFLOAT3 GetWorldPosition() const;
 		//座標の転送
 		void Trans();
+		//オブジェクトのカラーテストツール
+		void TestObjectColor();
 	};
 
 }

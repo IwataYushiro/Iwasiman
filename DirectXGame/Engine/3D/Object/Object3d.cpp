@@ -7,6 +7,7 @@
 #include <Vector>
 #include "BaseCollider.h"
 #include "CollisionManager.h"
+#include "ImGuiManager.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -407,4 +408,38 @@ void Object3d::Trans()
 
 	//合成してローカル変数に転送
 	matWorld_ = matScale * matRot * matTrans;
+}
+
+void Object3d::TestObjectColor()
+{
+#ifdef _DEBUG
+	//ImGuiに渡す用の変数
+	//エフェクトの色
+	float icolor[XYZW_Num] = { color_.x,color_.y,color_.z, color_.w };
+	//ウィンドウポジション
+	struct ImGuiWindowPosition
+	{
+		const float X = 400.0f;
+		const float Y = 0.0f;
+	};
+	ImGuiWindowPosition iPos;
+	//ウィンドウサイズ
+	struct ImguiWindowSize
+	{
+		const float width = 300.0f;
+		const float height = 50.0f;
+	};
+	ImguiWindowSize iSize;
+	//調整はスライダーで
+	ImGui::Begin("objColorTest");
+	ImGui::SetWindowPos(ImVec2(iPos.X, iPos.Y));
+	ImGui::SetWindowSize(ImVec2(iSize.width, iSize.height));
+	ImGui::SliderFloat4("color", icolor, 0.0f, 1.0f);
+	ImGui::End();
+
+	//値を適応
+	color_={ icolor[XYZW_X],icolor[XYZW_Y],icolor[XYZW_Z],icolor[XYZW_W] };
+	
+#endif // _DEBUG
+	Update();
 }

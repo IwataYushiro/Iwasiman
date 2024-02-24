@@ -17,7 +17,7 @@ using namespace IwasiEngine;
 */
 
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-const float PostEffect::clearColor_[PostEffect::ClearColorRGBW::CCRGBW_Num] = { 0.25f,0.5f,0.1f,0.0f };
+const float PostEffect::clearColor_[PostEffect::ClearColorRGBW::CCRGBW_Num] = { 1.0f,1.0f,1.0f,0.0f };
 
 const std::string PostEffect::baseDirectory_ = "Resources/shader/PostEffect/";
 const std::string PostEffect::directoryVS_ = "VS.hlsl";

@@ -123,7 +123,7 @@ protected://継承メンバ関数
 		//演出スキップ
 		if (skip_)FadeIn(color);
 	}
-
+	//ポストエフェクトの値のテストツール
 	void TestPostEffect(const std::string& path)
 	{
 		//ポストエフェクトの読み込みは一回だけ
@@ -171,5 +171,6 @@ protected://継承メンバ関数
 		postEffect_->SetPower(ipower);
 		postEffect_->Update();
 	}
+
 };
 
