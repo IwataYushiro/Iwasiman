@@ -53,11 +53,14 @@ Object3d::~Object3d()
 	}
 }
 
-void Object3d::StaticInitialize()
+void Object3d::StaticInitialize(const std::string& fileName)
 {
 
 	// nullptrチェック
 	Object3d::device_ = DirectXCommon::GetInstance()->GetDevice();
+
+	// パイプライン初期化
+	InitializeGraphicsPipeline(fileName);
 
 	Model::StaticInitialize(device_);
 }
@@ -84,7 +87,7 @@ void Object3d::PostDraw()
 	Object3d::cmdList_ = nullptr;
 }
 
-std::unique_ptr<Object3d> Object3d::Create(const std::string& fileName)
+std::unique_ptr<Object3d> Object3d::Create()
 {
 	// 3Dオブジェクトのインスタンスを生成
 	std::unique_ptr<Object3d> object3d = std::make_unique<Object3d>();
@@ -95,7 +98,7 @@ std::unique_ptr<Object3d> Object3d::Create(const std::string& fileName)
 	const float scale_val = 1.0f;
 	object3d->scale_ = { scale_val,scale_val ,scale_val };
 	// 初期化
-	if (!object3d->Initialize(fileName)) {
+	if (!object3d->Initialize()) {
 		assert(0);
 		return nullptr;
 	}
@@ -282,7 +285,7 @@ void Object3d::InitializeGraphicsPipeline(const std::string& fileName)
 }
 
 
-bool Object3d::Initialize(const std::string& fileName)
+bool Object3d::Initialize()
 {
 	// nullptrチェック
 	assert(device_);
@@ -308,9 +311,6 @@ bool Object3d::Initialize(const std::string& fileName)
 
 	//クラス名の文字列を取得
 	name_ = typeid(*this).name();
-
-	// パイプライン初期化
-	InitializeGraphicsPipeline(fileName);
 
 	return true;
 }

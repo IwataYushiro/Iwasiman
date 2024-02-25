@@ -275,7 +275,7 @@ void TitleScene::Update()
 	//ImGui
 	imguiManager_->Begin();
 #ifdef _DEBUG
-	for (std::unique_ptr<Object3d>& player : objPlayers_)player->TestObjectSetting("Toon");//オブジェクトのテスト
+	for (std::unique_ptr<Object3d>& player : objPlayers_)player->TestObjectSetting();//オブジェクトのテスト
 	//camera_->DebugCamera(true);//デバッグカメラ
 	//TestPostEffect("Vignette");//ポストエフェクトのテスト
 #endif // _DEBUG

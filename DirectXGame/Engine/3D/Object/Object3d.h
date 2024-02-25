@@ -60,7 +60,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 	public: // 静的メンバ関数
 
 		// 静的初期化(デバイス)
-		static void StaticInitialize();
+		static void StaticInitialize(const std::string& fileName = "OBJ");
 
 
 		// 描画前処理(コマンドリスト)
@@ -71,7 +71,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 
 		// 生成
-		static std::unique_ptr<Object3d> Create(const std::string& fileName = "OBJ");
+		static std::unique_ptr<Object3d> Create();
 
 	private: // 静的メンバ変数
 		// デバイス
@@ -100,11 +100,11 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 	private:// 静的メンバ関数
 		// グラフィックパイプライン生成
-		void InitializeGraphicsPipeline(const std::string& fileName);
+		static void InitializeGraphicsPipeline(const std::string& fileName);
 
 	public: // メンバ関数
 		//初期化
-		virtual bool Initialize(const std::string& fileName = "OBJ");
+		virtual bool Initialize();
 		//更新
 		virtual void Update();
 
@@ -137,7 +137,6 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 			RPI_Num = 4,
 		};
 		bool testDirty_ = false;
-
 	protected: // メンバ変数
 		//モデル
 		const Model* model_ = nullptr;
