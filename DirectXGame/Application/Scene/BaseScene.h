@@ -105,6 +105,8 @@ public://アクセッサ置き場
 	void ChangePostEffectColor(const DirectX::XMFLOAT4 color) { postEffect_->SetColor(color); }
 	//ポストエフェクトカラー(ペラポリゴン自体の)変更
 	void ChangePostEffectTextureColor(const DirectX::XMFLOAT4 color) { postEffect_->SetTextureColor(color); }
+	//ポストエフェクトパワー変更
+	void ChangePostEffectPower(const float power) { postEffect_->SetPower(power); }
 
 protected://継承メンバ関数
 	//モデル読み込みとマッピングの共通化

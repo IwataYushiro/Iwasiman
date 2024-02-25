@@ -831,9 +831,6 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		model_ = modelHit_;
 		//ポストエフェクトも切り替える
 		gameScene_->ChangePostEffect("Vignette");
-		//ペラポリゴン自体は点滅しないようにした
-		const XMFLOAT4 deathColor = { 1.0f,MyMath::RandomMTFloat(0.0f,0.3f),MyMath::RandomMTFloat(0.0f,0.3f),1.0f };
-		gameScene_->ChangePostEffectTextureColor(deathColor);
 
 		isBreak_ = true;
 		isAlive_ = false;
@@ -871,6 +868,12 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 
 		//+してイージング
 		easeHit_.ease_in_out_cubic();
+
+		//ライフがある場合のみモデルの色を変更
+		const XMFLOAT4 hitColorObject = { 1.0f - easeHit_.num_X,1.0f - easeHit_.num_X,1.0f,1.0f - (easeHit_.num_X / 2.0f) };
+		if(life_ > 0)SetColor(hitColorObject);
+
+		//ヒット時のスプライトを出す
 		spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
 		//無敵時間カウントを進める
 		mutekiCount_++;
