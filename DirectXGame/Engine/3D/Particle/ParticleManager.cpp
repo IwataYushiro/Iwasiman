@@ -1,4 +1,5 @@
 ﻿#include "ParticleManager.h"
+#include "DirectXCommon.h"
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
 
@@ -21,12 +22,10 @@ using namespace IwasiEngine;
 ID3D12Device* ParticleManager::device_ = nullptr;
 ID3D12GraphicsCommandList* ParticleManager::cmdList_ = nullptr;
 
-void ParticleManager::StaticInitialize(ID3D12Device* device)
+void ParticleManager::StaticInitialize()
 {
 	// nullptrチェック
-	assert(device);
-
-	device_ = device;
+	device_ = DirectXCommon::GetInstance()->GetDevice();
 
 	Particle::SetDevice(device_);
 

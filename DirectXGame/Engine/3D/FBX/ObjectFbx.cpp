@@ -1,4 +1,5 @@
 #include "ObjectFbx.h"
+#include "DirectXCommon.h"
 #include "FbxLoader.h"
 #include <d3dcompiler.h>
 
@@ -21,14 +22,12 @@ ID3D12GraphicsCommandList* ObjectFbx::cmdList_ = nullptr;
 ComPtr<ID3D12RootSignature> ObjectFbx::rootSignature_;
 ComPtr<ID3D12PipelineState> ObjectFbx::pipelineState_;
 
-void ObjectFbx::StaticInitialize(ID3D12Device* device)
+void ObjectFbx::StaticInitialize()
 {
-	// nullptrチェック
-	assert(device);
-	device_ = device;
+	device_ = DirectXCommon::GetInstance()->GetDevice();
 
 	//モデルにデバイスをセット
-	ModelFbx::SetDevice(device);
+	ModelFbx::SetDevice(device_);
 
 	// パイプライン初期化
 	CreateGraphicsPipeline();

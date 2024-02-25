@@ -67,7 +67,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 	public://静的メンバ関数
 		//静的初期化(デバイス)
-		static void StaticInitialize(ID3D12Device* device);
+		static void StaticInitialize();
 		//インスタンス生成
 		static std::unique_ptr<LightGroup> Create();
 

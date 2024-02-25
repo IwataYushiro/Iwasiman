@@ -60,7 +60,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 	public://静的メンバ関数
 		//静的初期化(デバイス)
-		static void StaticInitialize(ID3D12Device* device);
+		static void StaticInitialize();
 		// 描画前処理(コマンドリスト)
 		static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 		// 描画後処理

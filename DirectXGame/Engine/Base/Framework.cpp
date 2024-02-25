@@ -43,16 +43,16 @@ void Framework::Initialize()
 	//imgui
 	imguiManager_->Initialize();
 	//FBX
-	FbxLoader::GetInstance()->Initialize(dxCommon_->GetDevice());
+	FbxLoader::GetInstance()->Initialize();
 	//静的初期化
 	//3Dオブジェクト(.obj)
-	Object3d::StaticInitialize(dxCommon_->GetDevice());
+	Object3d::StaticInitialize();
 	//3Dオブジェクト(.fbx)
-	ObjectFbx::StaticInitialize(dxCommon_->GetDevice());
+	ObjectFbx::StaticInitialize();
 	//パーティクルマネージャー
-	ParticleManager::StaticInitialize(dxCommon_->GetDevice());
+	ParticleManager::StaticInitialize();
 	//ライト
-	LightGroup::StaticInitialize(dxCommon_->GetDevice());
+	LightGroup::StaticInitialize();
 
 }
 

@@ -1,4 +1,5 @@
 #include "LightGroup.h"
+#include "DirectXCommon.h"
 #include <cassert>
 
 using namespace DirectX;
@@ -14,14 +15,11 @@ using namespace IwasiEngine;
 //静的メンバ変数の実体
 ID3D12Device* LightGroup::device_ = nullptr;
 
-void LightGroup::StaticInitialize(ID3D12Device* device)
+void LightGroup::StaticInitialize()
 {
 	//再初期化チェック
 	assert(!LightGroup::device_);
-	//nullptrチェック
-	assert(device);
-
-	LightGroup::device_ = device;
+	LightGroup::device_ = DirectXCommon::GetInstance()->GetDevice();
 }
 
 std::unique_ptr<LightGroup> LightGroup::Create()

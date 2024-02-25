@@ -54,7 +54,7 @@ bool EnemyDanger::Initialize()
 	//各種パラメータ設定
 	Parameter();
 	//炎
-	particleFire_ = Particle::LoadFromParticleTexture("kaze.png");
+	particleFire_ = Particle::LoadFromParticleTexture("particle1.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 	pmFire_->SetParticleModel(particleFire_.get());

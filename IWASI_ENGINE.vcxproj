@@ -303,7 +303,7 @@
   <ItemGroup>
     <None Include="Resources\shader\Basic.hlsli" />
     <None Include="Resources\shader\FBX\FBX.hlsli" />
-    <None Include="Resources\shader\OBJ.hlsli" />
+    <None Include="Resources\shader\OBJ\OBJ\OBJ.hlsli" />
     <None Include="Resources\shader\Particle\Particle.hlsli" />
     <None Include="Resources\shader\PostEffect\Bloom\Bloom.hlsli" />
     <None Include="Resources\shader\PostEffect\Cold\Cold.hlsli" />
@@ -319,7 +319,7 @@
     <None Include="Resources\shader\PostEffect\UVShift\UVShift.hlsli" />
     <None Include="Resources\shader\PostEffect\Vignette\Vignette.hlsli" />
     <None Include="Resources\shader\Sprite\Sprite.hlsli" />
-    <None Include="Resources\shader\Toon\Toon.hlsli" />
+    <None Include="Resources\shader\OBJ\Toon\Toon.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\BasicPS.hlsl">
@@ -338,11 +338,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Resources\shader\OBJPS.hlsl">
+    <FxCompile Include="Resources\shader\OBJ\OBJ\OBJPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Resources\shader\OBJVS.hlsl">
+    <FxCompile Include="Resources\shader\OBJ\OBJ\OBJVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
@@ -470,11 +470,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Resources\shader\Toon\ToonPS.hlsl">
+    <FxCompile Include="Resources\shader\OBJ\Toon\ToonPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Resources\shader\Toon\ToonVS.hlsl">
+    <FxCompile Include="Resources\shader\OBJ\Toon\ToonVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>

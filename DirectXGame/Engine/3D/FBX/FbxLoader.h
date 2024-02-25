@@ -36,7 +36,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		static void ConvertMatrixFromFBX(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
 	public://メンバ関数
 		//初期化(デバイス)
-		void Initialize(ID3D12Device* device);
+		void Initialize();
 
 		//終了
 		void Finalize();

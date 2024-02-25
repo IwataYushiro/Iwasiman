@@ -95,7 +95,8 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 		//描画後処理(コマンドリスト)
 		void PostDraw(ID3D12GraphicsCommandList* cmdList);
-
+		//パイプライン生成(ポストエフェクトファイルパス)
+		void CreateGraphicsPipelineState(const std::string& fileName);
 	private:
 		//頂点データのプリセット
 		const Vertex presetVerticesPost_[verticesCount] = {
@@ -201,7 +202,6 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		void CreateDepthBuffer();
 		// DSV生成
 		void CreateDSV();
-		//パイプライン生成(ポストエフェクトファイルパス)
-		void CreateGraphicsPipelineState(const std::string& fileName);
+		
 	};
 }

@@ -100,7 +100,7 @@ public://アクセッサ置き場
 	//シーンマネージャーのセット
 	virtual void SetSceneManager(SceneManager* sceneManager) { this->sceneManager_ = sceneManager; }
 	//ポストエフェクト変更
-	void ChangePostEffect(const std::string& post) { postEffect_->Initialize(post); }
+	void ChangePostEffect(const std::string& post = "None") { postEffect_->CreateGraphicsPipelineState(post); }
 	//ポストエフェクトカラー変更
 	void ChangePostEffectColor(const DirectX::XMFLOAT4 color) { postEffect_->SetColor(color); }
 	//ポストエフェクトカラー(ペラポリゴン自体の)変更

@@ -60,7 +60,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 	public: // 静的メンバ関数
 
 		// 静的初期化(デバイス)
-		static void StaticInitialize(ID3D12Device* device);
+		static void StaticInitialize();
 
 
 		// 描画前処理(コマンドリスト)
@@ -71,7 +71,7 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 
 		// 生成
-		static std::unique_ptr<Object3d> Create();
+		static std::unique_ptr<Object3d> Create(const std::string& fileName = "OBJ");
 
 	private: // 静的メンバ変数
 		// デバイス
@@ -90,16 +90,21 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		static ComPtr<ID3DBlob> errorBlob_;		// エラーオブジェクト
 		//ライトグループ
 		static LightGroup* lightGroup_;
-
+		//ベースディレクトリ
+		static const std::string baseDirectory_;
+		//頂点シェーダー
+		static const std::string directoryVS_;
+		//ピクセルシェーダー
+		static const std::string directoryPS_;
 
 
 	private:// 静的メンバ関数
 		// グラフィックパイプライン生成
-		static void InitializeGraphicsPipeline();
+		void InitializeGraphicsPipeline(const std::string& fileName);
 
 	public: // メンバ関数
 		//初期化
-		virtual bool Initialize();
+		virtual bool Initialize(const std::string& fileName = "OBJ");
 		//更新
 		virtual void Update();
 
@@ -131,6 +136,8 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 			RPI_ConstBuffLight = 3,
 			RPI_Num = 4,
 		};
+		bool testDirty_ = false;
+
 	protected: // メンバ変数
 		//モデル
 		const Model* model_ = nullptr;
@@ -202,8 +209,8 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		const XMFLOAT3 GetWorldPosition() const;
 		//座標の転送
 		void Trans();
-		//オブジェクトのカラーテストツール
-		void TestObjectColor();
+		//ImGuiを使ったオブジェクトのテストツール
+		void TestObjectSetting(const std::string& fileName = "OBJ");
 	};
 
 }

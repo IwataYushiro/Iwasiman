@@ -38,6 +38,11 @@ ComPtr<ID3DBlob> Object3d::psBlob_;	// ピクセルシェーダオブジェク�
 ComPtr<ID3DBlob> Object3d::errorBlob_; // エラーオブジェクト
 LightGroup* Object3d::lightGroup_ = nullptr;
 
+const std::string Object3d::baseDirectory_ = "Resources/shader/OBJ/";
+const std::string Object3d::directoryVS_ = "VS.hlsl";
+const std::string Object3d::directoryPS_ = "PS.hlsl";
+
+
 Object3d::~Object3d()
 {
 	if (collider_)
@@ -48,17 +53,13 @@ Object3d::~Object3d()
 	}
 }
 
-void Object3d::StaticInitialize(ID3D12Device* device)
+void Object3d::StaticInitialize()
 {
 
 	// nullptrチェック
-	assert(device);
-	Object3d::device_ = device;
+	Object3d::device_ = DirectXCommon::GetInstance()->GetDevice();
 
-	// パイプライン初期化
-	InitializeGraphicsPipeline();
-
-	Model::StaticInitialize(device);
+	Model::StaticInitialize(device_);
 }
 
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
@@ -83,7 +84,7 @@ void Object3d::PostDraw()
 	Object3d::cmdList_ = nullptr;
 }
 
-std::unique_ptr<Object3d> Object3d::Create()
+std::unique_ptr<Object3d> Object3d::Create(const std::string& fileName)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	std::unique_ptr<Object3d> object3d = std::make_unique<Object3d>();
@@ -94,7 +95,7 @@ std::unique_ptr<Object3d> Object3d::Create()
 	const float scale_val = 1.0f;
 	object3d->scale_ = { scale_val,scale_val ,scale_val };
 	// 初期化
-	if (!object3d->Initialize()) {
+	if (!object3d->Initialize(fileName)) {
 		assert(0);
 		return nullptr;
 	}
@@ -102,16 +103,35 @@ std::unique_ptr<Object3d> Object3d::Create()
 	return object3d;
 }
 
-void Object3d::InitializeGraphicsPipeline()
+void Object3d::InitializeGraphicsPipeline(const std::string& fileName)
 {
 	HRESULT result = S_FALSE;
-	//ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
-	//ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
-	//ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
+	//ディレクトリパスとファイル名を連結してフルパスを得る
+	std::string fullPathV = baseDirectory_ + fileName + "/" + fileName + directoryVS_;
+	//Resources/shader/OBJ/ OBJ / OBJ VS.hlsl
+
+	const int cbMultiByte = -1;
+	//ワイド文字列に変換した際の文字列バッファサイズを計算
+	int filePathBufferSizeV = MultiByteToWideChar(CP_ACP, 0, fullPathV.c_str(), cbMultiByte, nullptr, 0);
+
+	//ワイド文字列に変換
+	std::vector<wchar_t> wfilePathV(filePathBufferSizeV);
+	MultiByteToWideChar(CP_ACP, 0, fullPathV.c_str(), cbMultiByte, wfilePathV.data(), filePathBufferSizeV);
+
+	//ピクセルシェーダー
+	//ディレクトリパスとファイル名を連結してフルパスを得る
+	std::string fullPathP = baseDirectory_ + fileName + "/" + fileName + directoryPS_;
+
+	//ワイド文字列に変換した際の文字列バッファサイズを計算
+	int filePathBufferSizeP = MultiByteToWideChar(CP_ACP, 0, fullPathP.c_str(), cbMultiByte, nullptr, 0);
+
+	//ワイド文字列に変換
+	std::vector<wchar_t> wfilePathP(filePathBufferSizeP);
+	MultiByteToWideChar(CP_ACP, 0, fullPathP.c_str(), cbMultiByte, wfilePathP.data(), filePathBufferSizeP);
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/OBJVS.hlsl",	// シェーダファイル名
+		wfilePathV.data(),	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -134,7 +154,7 @@ void Object3d::InitializeGraphicsPipeline()
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shader/OBJPS.hlsl",	// シェーダファイル名
+		wfilePathP.data(),	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -262,7 +282,7 @@ void Object3d::InitializeGraphicsPipeline()
 }
 
 
-bool Object3d::Initialize()
+bool Object3d::Initialize(const std::string& fileName)
 {
 	// nullptrチェック
 	assert(device_);
@@ -288,6 +308,9 @@ bool Object3d::Initialize()
 
 	//クラス名の文字列を取得
 	name_ = typeid(*this).name();
+
+	// パイプライン初期化
+	InitializeGraphicsPipeline(fileName);
 
 	return true;
 }
@@ -410,9 +433,16 @@ void Object3d::Trans()
 	matWorld_ = matScale * matRot * matTrans;
 }
 
-void Object3d::TestObjectColor()
+void Object3d::TestObjectSetting(const std::string& path)
 {
+	//シェーダーの読み込みは一回だけ
+	if (!testDirty_)
+	{
+		InitializeGraphicsPipeline(path);
+		testDirty_ = true;
+	}
 #ifdef _DEBUG
+	
 	//ImGuiに渡す用の変数
 	//エフェクトの色
 	float icolor[XYZW_Num] = { color_.x,color_.y,color_.z, color_.w };
@@ -431,7 +461,7 @@ void Object3d::TestObjectColor()
 	};
 	ImguiWindowSize iSize;
 	//調整はスライダーで
-	ImGui::Begin("objColorTest");
+	ImGui::Begin("objTest");
 	ImGui::SetWindowPos(ImVec2(iPos.X, iPos.Y));
 	ImGui::SetWindowSize(ImVec2(iSize.width, iSize.height));
 	ImGui::SliderFloat4("color", icolor, 0.0f, 1.0f);

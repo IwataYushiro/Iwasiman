@@ -1,4 +1,5 @@
 ﻿#include "FbxLoader.h"
+#include "DirectXCommon.h"
 #include <cassert>
 #include "XYZ.h"
 
@@ -37,12 +38,12 @@ void FbxLoader::ConvertMatrixFromFBX(DirectX::XMMATRIX* dst, const FbxAMatrix& s
 	}
 }
 
-void FbxLoader::Initialize(ID3D12Device* device)
+void FbxLoader::Initialize()
 {
 	//再初期化チェック
 	assert(fbxManager_ == nullptr);
 	//引数からメンバ変数に代入
-	this->device_ = device;
+	this->device_ = DirectXCommon::GetInstance()->GetDevice();
 
 	//FBXマネージャー生成
 	fbxManager_ = FbxManager::Create();
