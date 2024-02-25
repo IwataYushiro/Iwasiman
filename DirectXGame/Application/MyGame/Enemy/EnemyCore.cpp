@@ -123,8 +123,15 @@ void EnemyCore::Update(const bool isStart) {
 	{
 		//座標を移動させる
 		(this->*updateTable_[static_cast<size_t>(phase_)])();
-
 	}
+	//色合いは常時変わる
+	const float calcHitColor = hit_ * 0.1f;
+	const XMFLOAT4 coreColor = {
+		MyMath::RandomMTFloat(0.8f - calcHitColor,1.0f - calcHitColor),
+		MyMath::RandomMTFloat(0.0f,0.1f),
+		MyMath::RandomMTFloat(0.0f,0.1f),1.0f };
+
+	color_ = coreColor;
 	//座標を転送
 	Trans();
 	//更新

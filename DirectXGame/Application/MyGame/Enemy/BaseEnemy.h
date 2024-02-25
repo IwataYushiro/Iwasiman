@@ -181,9 +181,9 @@ protected://共有メンバ関数
 		struct ColorType
 		{
 			const XMFLOAT4 none = { 1.0f,1.0f,1.0f,1.0f };		  //通常属性
-			const XMFLOAT4 power = { 1.0f,0.1f,0.1f,0.9f };	  //攻撃属性
-			const XMFLOAT4 guard = { 0.1f,1.0f,0.1f,0.9f };	  //防御属性
-			const XMFLOAT4 speed = { 0.1f,0.1f,1.0f,0.9f };	  //速度属性
+			const XMFLOAT4 power = { 1.0f,0.1f,0.1f,1.0f };	  //攻撃属性
+			const XMFLOAT4 guard = { 0.1f,1.0f,0.1f,1.0f };	  //防御属性
+			const XMFLOAT4 speed = { 0.1f,0.1f,1.0f,1.0f };	  //速度属性
 			const XMFLOAT4 death = { 1.0f,1.0f,1.0f,1.0f };	  //危険属性
 		};
 		ColorType colorType;
