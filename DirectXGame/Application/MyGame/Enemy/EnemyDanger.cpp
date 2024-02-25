@@ -54,7 +54,7 @@ bool EnemyDanger::Initialize()
 	//各種パラメータ設定
 	Parameter();
 	//炎
-	particleFire_ = Particle::LoadFromParticleTexture("particle1.png");
+	particleFire_ = Particle::LoadFromParticleTexture("kaze.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetBlendMode(ParticleManager::BP_SUBTRACT);
 	pmFire_->SetParticleModel(particleFire_.get());
@@ -179,5 +179,7 @@ void EnemyDanger::UpdateParticleSkin()
 		pmFire_->ActiveX(fire.particle, minus.minusStartPos, fire.pos, minus.minusVel,
 			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
 	}
-
+	//色合いも炎っぽく
+	const XMFLOAT4 objFireColor = {0.0f,0.0f,MyMath::RandomMTFloat(0.2f,0.3f),1.0f };
+	SetColor(objFireColor);
 }
