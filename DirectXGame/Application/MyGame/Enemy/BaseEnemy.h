@@ -4,6 +4,7 @@
 #include "EnemyBullet.h"
 #include "ParticleManager.h"
 #include "CollisionManager.h"
+#include "CollisionAttribute.h"
 #include "XYZ.h"
 #include <DirectXMath.h>
 
@@ -172,6 +173,26 @@ protected://共有メンバ関数
 			//イージングが終わったら死亡
 			if (easeDeadDirectionScale_[XYZ_X].num_X == easeDeadDirectionScale_[XYZ_X].end)isDead_ = true;
 		}
+	}
+	//モデルのカラーは共通化
+	void InitColor()
+	{
+		//属性によってカラーは違う
+		struct ColorType
+		{
+			const XMFLOAT4 none = { 1.0f,1.0f,1.0f,1.0f };		  //通常属性
+			const XMFLOAT4 power = { 1.0f,0.1f,0.1f,0.9f };	  //攻撃属性
+			const XMFLOAT4 guard = { 0.1f,1.0f,0.1f,0.9f };	  //防御属性
+			const XMFLOAT4 speed = { 0.1f,0.1f,1.0f,0.9f };	  //速度属性
+			const XMFLOAT4 death = { 1.0f,1.0f,1.0f,1.0f };	  //危険属性
+		};
+		ColorType colorType;
+		//ライフ
+		if (collider_->GetSubAttribute() == IwasiEngine::SUBCOLLISION_ATTR_NONE) color_ = colorType.none;				  //通常属性
+		else if (collider_->GetSubAttribute() == IwasiEngine::SUBCOLLISION_ATTR_ENEMY_POWER) color_ = colorType.power;	  //攻撃属性
+		else if (collider_->GetSubAttribute() == IwasiEngine::SUBCOLLISION_ATTR_ENEMY_GUARD) color_ = colorType.guard;	  //防御属性
+		else if (collider_->GetSubAttribute() == IwasiEngine::SUBCOLLISION_ATTR_ENEMY_SPEED) color_ = colorType.speed;	  //速度属性
+		else if (collider_->GetSubAttribute() == IwasiEngine::SUBCOLLISION_ATTR_ENEMY_DEATH) color_ = colorType.death;	  //危険属性
 	}
 };
 

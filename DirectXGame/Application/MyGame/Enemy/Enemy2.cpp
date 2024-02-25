@@ -1,8 +1,6 @@
 #include "Enemy2.h"
 #include <cassert>
 #include "SphereCollider.h"
-#include "CollisionAttribute.h"
-#include "CollisionManager.h"
 #include "Player.h"
 #include "GamePlayScene.h"
 
@@ -117,7 +115,6 @@ void Enemy2::InitSpeed()
 	};
 	BackSpeedType backSpeedType;
 	//移動
-	//移動
 	if (collider_->GetSubAttribute() == SUBCOLLISION_ATTR_NONE)					//通常属性
 	{
 		speed_ = speedType.none;
@@ -191,6 +188,8 @@ void Enemy2::Parameter() {
 	InitSpeed();
 	//ライフ
 	InitLife();
+	//色
+	InitColor();
 	//死亡フラグ
 	isDead_ = false;
 

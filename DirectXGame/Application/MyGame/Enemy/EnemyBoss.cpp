@@ -1,8 +1,6 @@
 #include "EnemyBoss.h"
 #include <cassert>
 #include "SphereCollider.h"
-#include "CollisionAttribute.h"
-#include "CollisionManager.h"
 #include "Player.h"
 #include "GamePlayScene.h"
 

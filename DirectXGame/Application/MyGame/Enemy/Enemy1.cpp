@@ -1,7 +1,6 @@
 #include "Enemy1.h"
 #include <cassert>
 #include "SphereCollider.h"
-#include "CollisionAttribute.h"
 #include "Player.h"
 #include "GamePlayScene.h"
 
@@ -160,6 +159,8 @@ void Enemy1::Parameter() {
 	InitSpeed();
 	//ライフ
 	InitLife();
+	//色
+	InitColor();
 	//死亡フラグ
 	isDead_ = false;
 	
