@@ -216,6 +216,7 @@ void Player::DrawParticle() {
 
 //移動処理
 void Player::Move() {
+
 	//振り向くためのイージング
 	easeRotateRightY_.ease_out_cubic();
 	//値のゲッター
@@ -264,6 +265,8 @@ void Player::Move() {
 	{
 		//左にダッシュ移動
 		if (input_->PushKey(DIK_A)) {
+			//カウントリセット
+			activeCount_ = 0.0f;
 			if (isRight_)
 			{
 				easeRotateRightY_.Standby(true);
@@ -285,6 +288,8 @@ void Player::Move() {
 		}
 		//右にダッシュ移動
 		else if (input_->PushKey(DIK_D)) {
+			//カウントリセット
+			activeCount_ = 0.0f;
 			if (!isRight_)
 			{
 				easeRotateRightY_.Standby(false);
@@ -309,6 +314,8 @@ void Player::Move() {
 	{
 		//左に通常移動
 		if (input_->PushKey(DIK_A)) {
+			//カウントリセット
+			activeCount_ = 0.0f;
 			if (isRight_)
 			{
 				easeRotateRightY_.Standby(true);
@@ -331,6 +338,8 @@ void Player::Move() {
 		}
 		//右に通常移動
 		else if (input_->PushKey(DIK_D)) {
+			//カウントリセット
+			activeCount_ = 0.0f;
 			if (!isRight_)
 			{
 				easeRotateRightY_.Standby(false);
@@ -391,6 +400,8 @@ void Player::FallAndJump()
 	{
 		//モデルを変更
 		model_ = modelJump_;
+		//カウントリセット
+		activeCount_ = 0.0f;
 		//下向き加速度
 		const float fallAcc = -0.1f;
 		const float fallVYMin = -2.0f;
@@ -404,6 +415,8 @@ void Player::FallAndJump()
 	//ジャンプ操作
 	else if (input_->TriggerKey(DIK_SPACE))//地面に着いているときにスペースキーでジャンプ
 	{
+		//操作している扱いに
+		isActive_ = true;
 		onGround_ = false;
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
@@ -442,6 +455,9 @@ void Player::JumpBack()
 		{
 			if (input_->TriggerKey(DIK_W))//奥側へジャンプ
 			{
+				//操作している扱いに
+				isActive_ = true;
+
 				if (isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
 				jumpBackPos_ = position_;
@@ -450,6 +466,9 @@ void Player::JumpBack()
 			}
 			if (input_->TriggerKey(DIK_S))//手前側へジャンプ
 			{
+				//操作している扱いに
+				isActive_ = true;
+
 				if (!isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
 				jumpBackPos_ = position_;
@@ -460,7 +479,8 @@ void Player::JumpBack()
 	}
 	if (isJumpBack_)//奥側、手前側ジャンプ中
 	{
-
+		//カウントリセット
+		activeCount_ = 0.0f;
 		//現在時間を取得する
 		nowCount_ = std::chrono::steady_clock::now();
 		//前回記録からの経過時間を取得する
@@ -798,6 +818,7 @@ const XMFLOAT3 Player::Bezier3(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMF
 void Player::UpdateAlive(const bool isBack, const bool isAttack)
 {
 	if (isDead_)return;
+	isActive_ = false;
 	//移動処理
 	Move();
 	//ジャンプ処理
@@ -892,7 +913,18 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		mutekiCount_ = 0;
 		hitMove_ = resetHitMove_;
 	}
-
+	//カウントを進める
+	activeCount_++;
+	//最大値まで達したら操作してない扱いとする
+	if (activeCount_ >= maxActiveCount_)
+	{
+		//時間を固定化
+		activeCount_ = maxActiveCount_;
+		//モデルを立ち絵に
+		model_ = modelPlayer_;
+		//操作してない扱いにする
+		isActive_ = false;
+	}
 #ifdef _DEBUG
 	//デバッグ用
 	

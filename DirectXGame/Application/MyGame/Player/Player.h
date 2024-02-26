@@ -270,7 +270,12 @@ private:
 	bool isGetJumpItem_ = false;
 	//ジャンプアイテム効果時間
 	float jumpPowerUpcount_;
-	
+	//操作中か
+	bool isActive_ = false;
+	//操作中のカウント
+	float activeCount_ = 0.0f;
+	//上限(この値にまでカウントが進んだら操作中じゃないとする)
+	const float maxActiveCount_ = 5.0f;
 
 public: //アクセッサ、インライン関数
 	//死んだかどうか
@@ -279,6 +284,8 @@ public: //アクセッサ、インライン関数
 	bool IsBreak()const { return isBreak_; }
 	//立ってるかどうか
 	bool OnGround()const { return onGround_; }
+	//操作中か
+	bool IsActive()const { return isActive_; }
 	//立ち判定のセット
 	void SetOnGround(const bool og) { this->onGround_ = og; }
 	//ライフセット
