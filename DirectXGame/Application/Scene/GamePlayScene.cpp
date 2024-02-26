@@ -747,8 +747,8 @@ void GamePlayScene::DrawPostEffect()
 				}
 				else//チュートリアルじゃない場合
 				{
-					//操作説明のリストを描画
-					spriteHowToPlayList_->Draw();
+					//未操作の場合操作説明のリストを描画
+					if(!player->IsActive())spriteHowToPlayList_->Draw();
 				}
 			}
 		}

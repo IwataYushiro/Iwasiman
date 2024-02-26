@@ -267,6 +267,8 @@ void Player::Move() {
 		if (input_->PushKey(DIK_A)) {
 			//カウントリセット
 			activeCount_ = 0.0f;
+			//操作している扱いに
+			isActive_ = true;
 			if (isRight_)
 			{
 				easeRotateRightY_.Standby(true);
@@ -290,6 +292,8 @@ void Player::Move() {
 		else if (input_->PushKey(DIK_D)) {
 			//カウントリセット
 			activeCount_ = 0.0f;
+			//操作している扱いに
+			isActive_ = true;
 			if (!isRight_)
 			{
 				easeRotateRightY_.Standby(false);
@@ -316,6 +320,8 @@ void Player::Move() {
 		if (input_->PushKey(DIK_A)) {
 			//カウントリセット
 			activeCount_ = 0.0f;
+			//操作している扱いに
+			isActive_ = true;
 			if (isRight_)
 			{
 				easeRotateRightY_.Standby(true);
@@ -340,6 +346,8 @@ void Player::Move() {
 		else if (input_->PushKey(DIK_D)) {
 			//カウントリセット
 			activeCount_ = 0.0f;
+			//操作している扱いに
+			isActive_ = true;
 			if (!isRight_)
 			{
 				easeRotateRightY_.Standby(false);
@@ -400,6 +408,8 @@ void Player::FallAndJump()
 	{
 		//モデルを変更
 		model_ = modelJump_;
+		//操作している扱いに
+		isActive_ = true;
 		//カウントリセット
 		activeCount_ = 0.0f;
 		//下向き加速度
@@ -413,10 +423,9 @@ void Player::FallAndJump()
 		position_.z += fallVec_.z;
 	}
 	//ジャンプ操作
-	else if (input_->TriggerKey(DIK_SPACE))//地面に着いているときにスペースキーでジャンプ
+	else if (input_->TriggerKey(DIK_SPACE))
 	{
-		//操作している扱いに
-		isActive_ = true;
+		//地面に着いているときにスペースキーでジャンプ
 		onGround_ = false;
 		const XMFLOAT3 startJumpVec = { 0.0f,jumpVYFist_,0.0f };
 		fallVec_ = startJumpVec;
@@ -455,9 +464,7 @@ void Player::JumpBack()
 		{
 			if (input_->TriggerKey(DIK_W))//奥側へジャンプ
 			{
-				//操作している扱いに
-				isActive_ = true;
-
+				
 				if (isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
 				jumpBackPos_ = position_;
@@ -466,9 +473,6 @@ void Player::JumpBack()
 			}
 			if (input_->TriggerKey(DIK_S))//手前側へジャンプ
 			{
-				//操作している扱いに
-				isActive_ = true;
-
 				if (!isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
 				jumpBackPos_ = position_;
@@ -481,6 +485,8 @@ void Player::JumpBack()
 	{
 		//カウントリセット
 		activeCount_ = 0.0f;
+		//操作している扱いに
+		isActive_ = true;
 		//現在時間を取得する
 		nowCount_ = std::chrono::steady_clock::now();
 		//前回記録からの経過時間を取得する
@@ -651,6 +657,13 @@ void Player::Landing(const unsigned short attribute)
 void Player::Attack() {
 
 	if (input_->TriggerKey(DIK_L)) {
+		//猶予
+		const float graceCountNum = 30.0f;
+		//カウントに猶予を持たせてリセット
+		activeCount_ = 0.0f - graceCountNum;
+		//操作している扱いに
+		isActive_ = true;
+
 		//地面にいるとき,通常の立ち絵のとき限定でモデルを変える
 		if (model_ == modelPlayer_ && onGround_) model_ = modelAttack_;
 		//弾の速度
