@@ -227,7 +227,8 @@ private:
 
 	//ポーズ用のフェードインアウトイージング
 	Easing easeFadeInOutPause_;
-
+	//遊び方を表示するイージング
+	Easing easeHowToPlayList_;
 	//プレイ中か
 	bool isGamePlay_ = false;
 	//ゲームプレイシーンから離れるか

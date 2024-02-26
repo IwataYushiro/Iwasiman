@@ -298,6 +298,33 @@ void GamePlayScene::UpdateIsPlayGame()
 			isGameOver_ = true;
 			isGamePlay_ = false;
 		}
+		//遊び方のスプライトをイージング
+		if (!player->IsActive())
+		{
+			//操作中の場合イージング
+			easeHowToPlayList_.ease_in_cubic();
+			//アルファを更新
+			spriteHowToPlayList_->SetColor(
+				{ spriteHowToPlayList_->GetColor().x,
+				spriteHowToPlayList_->GetColor().y,
+				spriteHowToPlayList_->GetColor().z,
+				easeHowToPlayList_.num_X
+				}
+			);
+		}
+		else
+		{
+			//未操作の場合イージングの準備
+			easeHowToPlayList_.Standby(false);
+			//アルファを初期化
+			spriteHowToPlayList_->SetColor(
+				{ spriteHowToPlayList_->GetColor().x,
+				spriteHowToPlayList_->GetColor().y,
+				spriteHowToPlayList_->GetColor().z,
+				easeHowToPlayList_.start
+				}
+			);
+		}
 		//ImGui	
 		imguiManager_->Begin();
 		imguiManager_->End();
@@ -1097,6 +1124,7 @@ void GamePlayScene::LoadEasing()
 	for (int i = 0; i < XYW_Num; i++)Easing::LoadEasingData("gameplay/gosizeandalpha.csv", easeGoSizeAndAlpha_[i], i);
 	Easing::LoadEasingData("gameplay/fadeinout.csv", easeFadeInOut_);
 	Easing::LoadEasingData("gameplay/fadeinoutpause.csv", easeFadeInOutPause_);
+	Easing::LoadEasingData("gameplay/howtoplaylist.csv", easeHowToPlayList_);
 }
 
 void GamePlayScene::UpdateChangeColor()
