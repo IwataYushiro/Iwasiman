@@ -202,9 +202,6 @@
     <Filter Include="Shader File\FBX">
       <UniqueIdentifier>{953b38a2-26ef-45ce-b0b0-1b34ec8a6ad4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader File\Toon">
-      <UniqueIdentifier>{72240c68-f0d5-4fe8-8d4d-adfd97fa77cc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header File\Application\MyGame\Player">
       <UniqueIdentifier>{54f779d3-ae29-4d9f-a94c-993b1f5f8730}</UniqueIdentifier>
     </Filter>
@@ -237,6 +234,15 @@
     </Filter>
     <Filter Include="Shader File\PostEffect\UVShift">
       <UniqueIdentifier>{787478eb-9368-414b-a83d-b78084cf0e57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\OBJ">
+      <UniqueIdentifier>{8f1409c2-0223-4f24-adcb-1a5bdfc57497}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\OBJ\OBJ">
+      <UniqueIdentifier>{30fd9543-a7bd-4e35-8507-ee13a956d742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader File\OBJ\Toon">
+      <UniqueIdentifier>{72240c68-f0d5-4fe8-8d4d-adfd97fa77cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -635,7 +641,7 @@
       <Filter>Shader File\FBX</Filter>
     </None>
     <None Include="Resources\shader\OBJ\Toon\Toon.hlsli">
-      <Filter>Shader File\Toon</Filter>
+      <Filter>Shader File\OBJ\Toon</Filter>
     </None>
     <None Include="Resources\shader\Sprite\Sprite.hlsli">
       <Filter>Shader File\Splite</Filter>
@@ -682,11 +688,11 @@
     <None Include="Resources\shader\Basic.hlsli">
       <Filter>Shader File</Filter>
     </None>
-    <None Include="Resources\shader\OBJ\OBJ\OBJ.hlsli">
-      <Filter>Shader File</Filter>
-    </None>
     <None Include="Resources\shader\PostEffect\Vignette\Vignette.hlsli">
       <Filter>Shader File\PostEffect\Vignette</Filter>
+    </None>
+    <None Include="Resources\shader\OBJ\OBJ\OBJ.hlsli">
+      <Filter>Shader File\OBJ\OBJ</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -697,10 +703,10 @@
       <Filter>Shader File\FBX</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\OBJ\Toon\ToonPS.hlsl">
-      <Filter>Shader File\Toon</Filter>
+      <Filter>Shader File\OBJ\Toon</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\OBJ\Toon\ToonVS.hlsl">
-      <Filter>Shader File\Toon</Filter>
+      <Filter>Shader File\OBJ\Toon</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\Sprite\SpritePS.hlsl">
       <Filter>Shader File\Splite</Filter>
@@ -795,17 +801,17 @@
     <FxCompile Include="Resources\shader\BasicVS.hlsl">
       <Filter>Shader File</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\shader\OBJ\OBJ\OBJPS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\OBJ\OBJ\OBJVS.hlsl">
-      <Filter>Shader File</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shader\PostEffect\Vignette\VignettePS.hlsl">
       <Filter>Shader File\PostEffect\Vignette</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shader\PostEffect\Vignette\VignetteVS.hlsl">
       <Filter>Shader File\PostEffect\Vignette</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\OBJ\OBJ\OBJPS.hlsl">
+      <Filter>Shader File\OBJ\OBJ</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\OBJ\OBJ\OBJVS.hlsl">
+      <Filter>Shader File\OBJ\OBJ</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

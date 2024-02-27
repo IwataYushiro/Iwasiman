@@ -20,7 +20,7 @@ float4 Phong(VSOutput input)
     //フォンシェーディング
     float4 texcolor = tex.Sample(smp, input.uv) * color;
 	//光沢度
-    const float shininess = 4.0f;
+    const float shininess = 1.0f;
 	//頂点から視点への方向ベクトル
     float3 eyeDir = normalize(cameraPos - input.worldPos.xyz);
 	//環境反射光
@@ -35,14 +35,14 @@ float4 Phong(VSOutput input)
 	        //ライトに向かうベクトルと法線の内積
             float3 dotlightnormal = dot(dirLights[i].lightv, input.normal);
 	        //反射光ベクトル
-            float3 reflect = normalize(dirLights[i].lightv + 2.0f * dotlightnormal * input.normal);
+            float3 reflect = normalize(-dirLights[i].lightv + shininess * dotlightnormal * input.normal);
    
 	        //拡散反射光
             float3 diffuse = dotlightnormal * m_diffuse;
 	        //鏡面反射光
             float3 specular = pow(saturate(dot(reflect, eyeDir)), shininess) * m_specular;
-            //全加算
-            shade_color.rgb += (diffuse + specular) * dirLights[i].lightcolor;
+            //全減算
+            shade_color.rgb -= (diffuse + specular) * dirLights[i].lightcolor;
             shade_color.a = m_alpha;
         }
     }
