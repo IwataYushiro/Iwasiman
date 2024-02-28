@@ -20,7 +20,7 @@ float4 Phong(VSOutput input)
     //フォンシェーディング
     float4 texcolor = tex.Sample(smp, input.uv) * color;
 	//光沢度
-    const float shininess = 1.0f;
+    const float shininess = 4.0f;
 	//頂点から視点への方向ベクトル
     float3 eyeDir = normalize(cameraPos - input.worldPos.xyz);
 	//環境反射光

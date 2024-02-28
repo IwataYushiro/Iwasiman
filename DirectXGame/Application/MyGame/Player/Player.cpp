@@ -861,8 +861,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		//イージングスタンバイ
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].Standby(false);
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].Standby(false);
-		//モデルを切り替えて死亡演出へ
-		model_ = modelHit_;
+		
 		//ポストエフェクトも切り替える
 		gameScene_->ChangePostEffect("Vignette");
 
@@ -1031,6 +1030,8 @@ void Player::UpdateBreak()
 	}
 	else//ライフが0になった瞬間
 	{
+		//死亡時モデルに切り替える
+		model_ = modelHit_;
 		//カメラ移動
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].ease_out_cubic();
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].ease_out_cubic();
