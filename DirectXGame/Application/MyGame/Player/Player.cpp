@@ -115,8 +115,8 @@ bool Player::Initialize() {
 	particleFire_ = Particle::LoadFromParticleTexture("particle8.png");
 	pmFire_ = ParticleManager::Create();
 	pmFire_->SetParticleModel(particleFire_.get());
-	//弾を撃つときの炎
-	particleBullet_ = Particle::LoadFromParticleTexture("particle2.png");
+	//弾を撃つときの軌跡
+	particleBullet_ = Particle::LoadFromParticleTexture("kaze.png");
 	pmBullet_ = ParticleManager::Create();
 	pmBullet_->SetParticleModel(particleBullet_.get());
 

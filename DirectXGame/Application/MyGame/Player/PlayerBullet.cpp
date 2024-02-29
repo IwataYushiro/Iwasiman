@@ -112,8 +112,8 @@ void PlayerBullet::UpdateParticle()
 		{ 0.05f ,2.0f,0.05f },
 		{0.0f,0.0f,0.0f},//’e‚Ì‘¬“x‚Æ“¯‚¶
 		{ 0.0f,0.001f,0.0f },
-		3,
-		{ 2.0f, 0.0f },
+		2,
+		{MyMath::RandomMTFloat(0.5f,2.0f), 0.0f },
 		{0.0f,MyMath::RandomMTFloat(0.0f,0.2f),MyMath::RandomMTFloat(0.9f,1.0f),1.0f },
 		{0.0f,0.0f,0.0f,1.0f}
 	};
