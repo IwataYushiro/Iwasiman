@@ -181,6 +181,4 @@ private://メンバ変数
 public:
 	//色が変わる処理
 	void UpdateChangeColor();
-	//丸影セット
-	void SetUpCircleShadow(const DirectX::XMFLOAT3& pos);
 };

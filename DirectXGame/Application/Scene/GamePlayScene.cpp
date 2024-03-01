@@ -104,12 +104,6 @@ void GamePlayScene::Update()
 		[](std::unique_ptr<EnemyBullet>& ebullet) { return ebullet->IsDead(); });
 	enemys_.remove_if(
 		[](std::unique_ptr<BaseEnemy>& enemy) {return enemy->IsDead(); });
-
-	for (std::unique_ptr<Player>& player : players_)
-	{
-		//丸影は常時表示
-		SetUpCircleShadow(player->GetPosition());
-	}
 	//天球(背景)
 	for (std::unique_ptr<Object3d>& skydome : skydomes_)
 	{
@@ -1382,27 +1376,6 @@ void GamePlayScene::LoadTutorialSprite()
 		spriteTutorialHTPMoveBack_->SetColor(howToPlayColor);
 		spriteTutorialHTPAttack_->SetColor(howToPlayColor);
 	}
-}
-
-void GamePlayScene::SetUpCircleShadow(const DirectX::XMFLOAT3& pos)
-{
-	const DirectX::XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };			//投影方向
-	const DirectX::XMFLOAT3 casterPosOffset = { -0.5f,0.0f,0.0f };	//キャスター座標のオフセット
-	//キャスター座標
-	const DirectX::XMFLOAT3 casterPos =
-	{
-		pos.x + casterPosOffset.x,
-		pos.y + casterPosOffset.y,
-		pos.z + casterPosOffset.z
-	};
-	const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };				//距離減衰係数
-	const DirectX::XMFLOAT2 factorAngle = { 0.2f,0.5f };			//角度減衰係数
-
-	//シャドウのセット
-	lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
-	lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterPos);
-	lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);
-	lightGroup_->SetCircleShadowFactorAngleCos(LightGroup::LN_0, factorAngle);
 }
 
 void GamePlayScene::LoadSprite()

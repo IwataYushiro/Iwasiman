@@ -232,7 +232,7 @@ void TitleScene::Update()
 		pmFire_->ActiveX(smoke);
 
 		//丸影
-		SetUpCircleShadow(player->GetPosition());
+		player->SetUpCircleShadow();
 		//更新
 		player->Update();
 	}
@@ -791,25 +791,4 @@ void TitleScene::UpdateChangeColor()
 		isColorReverse_ = false;
 	}
 
-}
-
-void TitleScene::SetUpCircleShadow(const DirectX::XMFLOAT3& pos)
-{
-	const DirectX::XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };			//投影方向
-	const DirectX::XMFLOAT3 casterPosOffset = { -0.5f,0.0f,0.0f };	//キャスター座標のオフセット
-	//キャスター座標
-	const DirectX::XMFLOAT3 casterPos =
-	{
-		pos.x + casterPosOffset.x,
-		pos.y + casterPosOffset.y,
-		pos.z + casterPosOffset.z
-	};
-	const DirectX::XMFLOAT3 atten = { 0.5f,0.6f,0.0f };				//距離減衰係数
-	const DirectX::XMFLOAT2 factorAngle = { 0.2f,0.5f };			//角度減衰係数
-
-	//シャドウのセット
-	lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
-	lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterPos);
-	lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);
-	lightGroup_->SetCircleShadowFactorAngleCos(LightGroup::LN_0, factorAngle);
 }

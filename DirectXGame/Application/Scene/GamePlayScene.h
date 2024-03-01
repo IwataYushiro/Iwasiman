@@ -363,6 +363,4 @@ private:
 	void LoadStageNameSprite();
 	//チュートリアル中のスプライトをロード
 	void LoadTutorialSprite();
-	//丸影セット
-	void SetUpCircleShadow(const DirectX::XMFLOAT3& pos);
 };

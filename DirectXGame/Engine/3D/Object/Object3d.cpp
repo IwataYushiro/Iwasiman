@@ -473,3 +473,25 @@ void Object3d::TestObjectSetting(const std::string& path)
 #endif // _DEBUG
 	Update();
 }
+
+void IwasiEngine::Object3d::SetUpCircleShadow()
+{
+	const XMVECTOR dir = { 0.0f,1.0f,0.0f,0.0f };			//投影方向
+	const XMFLOAT3 casterPosOffset = { -0.5f,-0.9f,0.0f };	//キャスター座標のオフセット
+	//キャスター座標
+	XMFLOAT3 casterPos =
+	{
+		position_.x + casterPosOffset.x,
+		position_.y + casterPosOffset.y,
+		position_.z + casterPosOffset.z
+	};
+	
+	const XMFLOAT3 atten = { 0.5f,0.6f,0.0f };			//距離減衰係数
+	const XMFLOAT2 factorAngle = { 0.2f,0.5f };			//角度減衰係数
+
+	//シャドウのセット
+	lightGroup_->SetCircleShadowDir(LightGroup::LN_0, dir);
+	lightGroup_->SetCircleShadowCasterPos(LightGroup::LN_0, casterPos);
+	lightGroup_->SetCircleShadowAtten(LightGroup::LN_0, atten);
+	lightGroup_->SetCircleShadowFactorAngleCos(LightGroup::LN_0, factorAngle);
+}

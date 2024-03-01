@@ -210,6 +210,8 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		void Trans();
 		//ImGuiを使ったオブジェクトのテストツール
 		void TestObjectSetting(const std::string& fileName = "OBJ");
+		//オブジェクトに丸影
+		void SetUpCircleShadow();
 	};
 
 }
