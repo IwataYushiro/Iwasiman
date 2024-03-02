@@ -173,8 +173,7 @@ void Player::Update(const bool isBack, const bool isAttack, const bool isStart) 
 	pmFire_->Update();		//パーティクルマネージャー(炎)
 	pmSmoke_->Update();		//パーティクルマネージャー(煙)
 	collider_->Update();	//コライダー
-	//丸影は常時表示
-	SetUpCircleShadow();
+	
 
 	//着地処理
 	Landing(COLLISION_ATTR_LANDSHAPE);

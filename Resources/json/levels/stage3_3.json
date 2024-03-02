@@ -86,7 +86,7 @@
                     1.0
                 ]
             },
-            "file_name": "ground",
+            "file_name": "ground2",
             "collider": {
                 "type": "BOX",
                 "center": [
@@ -359,7 +359,7 @@
                     1.0
                 ]
             },
-            "file_name": "ground",
+            "file_name": "ground2",
             "collider": {
                 "type": "BOX",
                 "center": [
@@ -394,7 +394,7 @@
                     1.0
                 ]
             },
-            "file_name": "ground",
+            "file_name": "ground2",
             "collider": {
                 "type": "BOX",
                 "center": [
@@ -453,7 +453,7 @@
                     1.0
                 ]
             },
-            "file_name": "ground",
+            "file_name": "ground2",
             "collider": {
                 "type": "BOX",
                 "center": [
@@ -512,7 +512,7 @@
                     1.0
                 ]
             },
-            "file_name": "ground",
+            "file_name": "ground2",
             "collider": {
                 "type": "BOX",
                 "center": [
