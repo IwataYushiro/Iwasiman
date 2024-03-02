@@ -61,7 +61,7 @@ void GamePlayScene::Initialize()
 	else if (stageNum_ == SL_Stage1_Area3)LoadLVData("stage3_3");
 	else if (stageNum_ == SL_Stage1_AreaBoss)LoadLVData("stageboss1");
 
-	else if (stageNum_ == SL_StageTutorial_Area1)LoadLVData("tutorial");
+	else if (stageNum_ == SL_StageTutorial_Area1)LoadLVData("x");
 	else if (stageNum_ == SL_StageTutorial_Area2)LoadLVData("tutorial2");
 	else if (stageNum_ == SL_StageTutorial_Area3)LoadLVData("tutorial3_2");
 	else if (stageNum_ == SL_StageTutorial_Final)LoadLVData("tutorialf");
@@ -1191,6 +1191,7 @@ void GamePlayScene::LoadModel()
 	ModelMapping(modelStage1_, "skydome");						//ステージ1モデル(天球)
 	ModelMapping(modelStage2_, "skydome2");						//ステージ2モデル(天球)
 	ModelMapping(modelGround_, "ground");						//床のモデル
+	ModelMapping(modelGround2_, "ground2");						//床のモデル(分厚い)
 	ModelMapping(modelSphere_, "sphere2");						//球モデル
 	ModelMapping(modelBox_, "ground2");							//AABB床モデル
 
