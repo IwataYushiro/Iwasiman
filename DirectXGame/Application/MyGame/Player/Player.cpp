@@ -172,8 +172,9 @@ void Player::Update(const bool isBack, const bool isAttack, const bool isStart) 
 	UpdateWorldMatrix();	//行列
 	pmFire_->Update();		//パーティクルマネージャー(炎)
 	pmSmoke_->Update();		//パーティクルマネージャー(煙)
+	pmBullet_->Update();	//パーティクルマネージャー（弾の軌跡）
 	collider_->Update();	//コライダー
-	
+
 
 	//着地処理
 	Landing(COLLISION_ATTR_LANDSHAPE);
@@ -183,11 +184,10 @@ void Player::Update(const bool isBack, const bool isAttack, const bool isStart) 
 	lifeBarDamageSize_.x = easelifeBarSize_.num_X;//サイズをセット
 	spriteLifeBar_->SetTextureSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
 	spriteLifeBar_->SetSize({ lifeBarDamageSize_.x * life_,lifeBarDamageSize_.y });
-	//ライフがこの値にまで下がったらピンチだと知らせる
-	const int dangerLifeZone = 3;
+
 	//ピンチ時はライフバーを赤くし、それ以外は緑に
-	if (life_ <= dangerLifeZone) { spriteLifeBar_->SetColor(red_); }
-	else { spriteLifeBar_->SetColor(green_); }
+	if (life_ <= dangerLifeZone_)spriteLifeBar_->SetColor(red_);
+	else spriteLifeBar_->SetColor(green_);
 	//スプライト更新
 	spriteLifeBar_->Update();
 	spriteHit_->Update();
@@ -438,6 +438,7 @@ void Player::FallAndJump()
 		const float countReset = 0.0f;
 		jumpPowerUpcount_ = countReset;
 		isGetJumpItem_ = false;
+		
 	}
 
 }
@@ -465,7 +466,7 @@ void Player::JumpBack()
 		{
 			if (input_->TriggerKey(DIK_W))//奥側へジャンプ
 			{
-				
+
 				if (isBack_)return;
 				startCount_ = std::chrono::steady_clock::now();
 				jumpBackPos_ = position_;
@@ -752,9 +753,19 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		//ヒット演出
 		pmFire_->ActiveZ(fire);
 		pmFire_->Update();
-
 		//model_ = modelHit_;
 		isHit_ = true;
+
+		//ピンチ時はポストエフェクトの色は危険色に
+		if (life_ <= dangerLifeZone_)
+		{
+			//ポストエフェクトはビネットに変更
+			gameScene_->ChangePostEffect("Vignette");
+			//カラーもチェンジ
+			const XMFLOAT4 dangerColor = { 1.0f,0.1f * life_,0.1f * life_,1.0f };
+			gameScene_->ChangePostEffectColor(dangerColor);
+		}
+
 	}
 
 	else if (attribute == COLLISION_ATTR_GIMMICK)//ギミックの場合
@@ -774,6 +785,17 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 
 			//model_ = modelHit_;
 			isHit_ = true;
+
+			//ピンチ時はポストエフェクトの色は危険色に
+			if (life_ <= dangerLifeZone_)
+			{
+				//ポストエフェクトはビネットに変更
+				gameScene_->ChangePostEffect("Vignette");
+				//カラーもチェンジ
+				const XMFLOAT4 dangerColor = { 1.0f,0.2f * life_,0.2f * life_,1.0f };
+				gameScene_->ChangePostEffectColor(dangerColor);
+			}
+
 		}
 
 	}
@@ -804,10 +826,26 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		}
 		else if (subAttribute == SUBCOLLISION_ATTR_ITEM_HEAL)//ライフ回復アイテム
 		{
+			//回復する前のライフがちょうどピンチ状態から脱却するとき（ライフ3のとき）
+			if (life_ == dangerLifeZone_)
+			{
+				//回復アイテム取得時にだけポストエフェクトも切り替える
+				gameScene_->ChangePostEffect("None");
+				//ポストエフェクトの色も変更
+				const XMFLOAT4 resetPostEffectColor = { 1.0f,1.0f,1.0f,1.0f };
+				gameScene_->ChangePostEffectColor(resetPostEffectColor);
+			}
+			//ピンチ時はポストエフェクトの色を変える
+			else
+			{
+				//カラーもチェンジ
+				const XMFLOAT4 dangerColor = { 1.0f,0.2f * life_,0.2f * life_,1.0f };
+				gameScene_->ChangePostEffectColor(dangerColor);
+			}
 			//回復する
 			const int heal = 1;
 			life_ += heal;
-
+			
 		}
 
 	}
@@ -862,14 +900,14 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 		//イージングスタンバイ
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraEye_[i].Standby(false);
 		for (int i = 0; i < XYZ_Num; i++)easeDeadCameraTarget_[i].Standby(false);
-		
+
 		//ポストエフェクトも切り替える
 		gameScene_->ChangePostEffect("Vignette");
 
 		isBreak_ = true;
 		isAlive_ = false;
 
-		
+
 	}
 	//一定の位置まで落ちても死ぬ
 	const float deadPosY = -60.0;
@@ -905,7 +943,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 
 		//ライフがある場合のみモデルの色を変更
 		const XMFLOAT4 hitColorObject = { 1.0f - easeHit_.num_X,1.0f - easeHit_.num_X,1.0f,1.0f - (easeHit_.num_X / 2.0f) };
-		if(life_ > 0)SetColor(hitColorObject);
+		if (life_ > 0)SetColor(hitColorObject);
 
 		//ヒット時のスプライトを出す
 		spriteHit_->SetColor({ hitColor_.x,hitColor_.y,hitColor_.z ,easeHit_.num_X });
@@ -940,7 +978,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 	}
 #ifdef _DEBUG
 	//デバッグ用
-	
+
 #endif // _DEBUG
 }
 

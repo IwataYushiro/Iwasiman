@@ -139,11 +139,22 @@ void Item::UpdateJumpPowerup()
 	//効果時間が一定の時間に達したら強化解除
 	if (count_ >= MAX_TIME)
 	{
-		//ポストエフェクトも切り替える
-		gameScene_->ChangePostEffect("None");
-		//ポストエフェクトの色も変更
-		const XMFLOAT4 resetPostEffectColor = { 1.0f,1.0f,1.0f,1.0f };
-		gameScene_->ChangePostEffectColor(resetPostEffectColor);
+		//ピンチ時はポストエフェクトの色は危険色に
+		if (player_->GetLife() <= player_->GetDangerLife())
+		{
+			//ポストエフェクトも切り替える
+			gameScene_->ChangePostEffect("Vignette");
+			const XMFLOAT4 dangerColor = { 1.0f,0.1f * player_->GetLife(),0.1f * player_->GetLife(),1.0f };
+			gameScene_->ChangePostEffectColor(dangerColor);
+		}
+		else//通常時は普通に
+		{
+			//ポストエフェクトも切り替える
+			gameScene_->ChangePostEffect("None");
+			//ポストエフェクトの色も変更
+			const XMFLOAT4 resetPostEffectColor = { 1.0f,1.0f,1.0f,1.0f };
+			gameScene_->ChangePostEffectColor(resetPostEffectColor);
+		}
 		const float countReset = 0.0f;
 		count_ = countReset;
 		isGet_ = false;

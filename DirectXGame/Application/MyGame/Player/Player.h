@@ -193,6 +193,8 @@ private:
 	const float moveSpeed_ = 0.5f;//通常時
 	const float dashSpeed_ = 1.5f;//ダッシュ時に掛ける
 
+	//ライフがこの値にまで下がったらピンチだと知らせる
+	const int dangerLifeZone_ = 3;
 	//ライフ
 	int life_;
 	//敵の攻撃やトゲ等に当たったか
@@ -292,6 +294,8 @@ public: //アクセッサ、インライン関数
 	void SetLife(const int life) { this->life_ = life; }
 	//ライフゲット
 	const int GetLife()const { return life_; }
+	//危険時ライフゲット
+	const int GetDangerLife()const { return dangerLifeZone_; }
 	//ゲームシーンセット
 	void SetGameScene(GamePlayScene* gameScene) { gameScene_ = gameScene; }
 	//スピードゲット

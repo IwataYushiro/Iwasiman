@@ -64,9 +64,6 @@ void Framework::Update()
 		//ゲーム終了
 		EndGame_ = true;
 	}
-	//ポストエフェクト
-	//postEffect_->Update();
-
 	//入力の更新
 	input_->Update();
 
