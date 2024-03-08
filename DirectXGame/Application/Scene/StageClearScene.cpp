@@ -496,7 +496,8 @@ void StageClearScene::UpdateIsMenu()
 		3,
 		{ RandomMTFloat(4.0f,6.0f), 0.0f },
 		{RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f},
-		{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f }
+		{ RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),RandomMTFloat(0.0f,1.0f),1.0f },
+		RandomMTInt(50,70)
 	};
 
 	const DirectX::XMFLOAT3 clearStartPosLeft = { -30.0f,-30.0f,-5.0f };//ç∂ë§

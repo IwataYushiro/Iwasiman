@@ -830,7 +830,8 @@ void GameOverScene::FallParticle(const std::unique_ptr<Object3d>& player)
 		8,
 		{ 1.0f, 0.0f },
 		{1.0f,1.0f,1.0,1.0f },
-		{ 0.0f,0.0f,0.0f,1.0f }
+		{ 0.0f,0.0f,0.0f,1.0f },
+		MyMath::RandomMTInt(30,60)
 	};
 	//煙パーティクル
 	pmSmoke_->ActiveY(smoke);

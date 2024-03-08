@@ -226,8 +226,7 @@ void TitleScene::Update()
 			2,
 			{ 1.0f, 0.0f },
 			{MyMath::RandomMTFloat(0.9f,1.0f),MyMath::RandomMTFloat(0.2f,0.5f),0.0f,1.0f },
-			{ 0.0f,0.0f,0.0f,1.0f },
-			10
+			{ 0.0f,0.0f,0.0f,1.0f }
 		};
 		//パーティクル
 		pmFire_->ActiveX(smoke);
