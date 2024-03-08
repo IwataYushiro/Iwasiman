@@ -279,7 +279,7 @@ void Player::Move() {
 			if (onGround_)model_ = modelMove_;//地面についてたらモデルを切り替える
 			//パーティクルを出す
 			pmFire_->ActiveX(fire.particle, startPosLeft, fire.pos, fire.vel,
-				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor,fire.life);
 			//移動
 			move.x -= moveSpeed_ * dashSpeed_;
 			cmove.x -= moveSpeed_ * dashSpeed_;
@@ -304,7 +304,7 @@ void Player::Move() {
 			if (onGround_)model_ = modelMove_;//地面についてたらモデルを切り替える
 			//パーティクルを出す
 			pmFire_->ActiveX(fire.particle, startPosRight, fire.pos, reverseParticleVel,
-				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor, fire.life);
 			//移動
 			move.x += moveSpeed_ * dashSpeed_;
 			cmove.x += moveSpeed_ * dashSpeed_;
@@ -332,7 +332,7 @@ void Player::Move() {
 			if (onGround_)model_ = modelMove_;//地面についてたらモデルを切り替える
 			//パーティクルを出す
 			pmFire_->ActiveX(fire.particle, startPosLeft, fire.pos, fire.vel,
-				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor);
+				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor, fire.life);
 			//移動
 			move.x -= moveSpeed_;
 			cmove.x -= moveSpeed_;
@@ -358,7 +358,7 @@ void Player::Move() {
 			if (onGround_)model_ = modelMove_;//地面についてたらモデルを切り替える
 			//パーティクルを出す
 			pmFire_->ActiveX(fire.particle, startPosRight, fire.pos, reverseParticleVel,
-				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor);
+				fire.acc, walkParticleNum, fire.scale, walkStartColor, fire.endColor, fire.life);
 			//移動
 			move.x += moveSpeed_;
 			cmove.x += moveSpeed_;
@@ -779,8 +779,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 			life_ -= damege.GimmickSpike;
 
 			//ヒット演出
-			pmFire_->ActiveZ(fire.particle, fire.startPos, fire.pos, fire.vel,
-				fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+			pmFire_->ActiveZ(fire);
 			pmFire_->Update();
 
 			//model_ = modelHit_;

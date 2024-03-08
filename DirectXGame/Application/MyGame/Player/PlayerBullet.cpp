@@ -68,6 +68,7 @@ void PlayerBullet::Update() {
 	position_.z += velocity_.z;
 
 	UpdateParticle();//パーティクル更新
+	
 	//更新
 	camera_->Update();	//カメラ
 	Object3d::Update();	//3Dオブジェクト

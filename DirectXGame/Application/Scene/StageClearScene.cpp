@@ -504,11 +504,11 @@ void StageClearScene::UpdateIsMenu()
 
 	//左側に
 	pmClear_->ActiveY(clear.particle, clearStartPosLeft, clear.pos, clear.vel,
-		clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
+		clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor,clear.life);
 
 	//右側に
 	pmClear_->ActiveY(clear.particle, clearStartPosRight, clear.pos, clear.vel,
-		clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor);
+		clear.acc, clear.num, clear.scale, clear.startColor, clear.endColor, clear.life);
 	//カラーセット
 	spriteStageClear_->SetColor(clearColor);
 	spriteDone_->SetColor(doneColor);

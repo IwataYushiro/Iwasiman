@@ -55,8 +55,9 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 			XMFLOAT3 acc;			//重力分布
 			int num;				//一気に出す量
 			XMFLOAT2 scale;			//開始、終了スケール
-			XMFLOAT4 startColor;	//開始カラー
-			XMFLOAT4 endColor;		//終了カラー
+			XMFLOAT4 startColor= { 1.0f,1.0f,1.0f,1.0f };	//開始カラー
+			XMFLOAT4 endColor = { 0.0f,0.0f,0.0f,1.0f };		//終了カラー
+			int life = 60;		//寿命
 		};
 		
 	public: // 静的メンバ関数
@@ -97,24 +98,24 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 		//描画
 		void Draw();
 
-		// パーティクル発射(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
+		// パーティクル発射(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール}、開始カラー、終了カラー、寿命)
 		void Active(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
-			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color,const int setLife);
 		void Active(const Preset& preset);//プリセット指定版
 
-		// パーティクル発射X軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
+		// パーティクル発射X軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール}、開始カラー、終了カラー、寿命)
 		void ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
-			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color, const int setLife);
 		void ActiveX(const Preset& preset);//プリセット指定版
-		
-		// パーティクル発射Y軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
+
+		// パーティクル発射Y軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール}、開始カラー、終了カラー、寿命)
 		void ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
-			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color, const int setLife);
 		void ActiveY(const Preset& preset);//プリセット指定版
-		
-		// パーティクル発射Z軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール},{開始カラー、終了カラー})
+
+		// パーティクル発射Z軸(パーティクル、初期座標、座標、速度、重力分布、一気に出す量、{開始スケール、終了スケール}、開始カラー、終了カラー、寿命)
 		void ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel, const XMFLOAT3& setacc,
-			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color = { 1.0f,1.0f,1.0f,1.0f }, const XMFLOAT4& end_color = { 0.0f,0.0f,0.0f,1.0f });
+			const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color, const int setLife);
 		void ActiveZ(const Preset& preset);//プリセット指定版
 
 	private: // メンバ変数
@@ -133,8 +134,6 @@ namespace IwasiEngine//IwasiEngineのネームスペース
 
 		//計算オフセット
 		const float calculationPosVelOffset_ = 2.0f;
-		//寿命
-		const int32_t lifeTime_ = 60;
 	public://アクセッサ置き場
 		//パーティクルモデルセット
 		void SetParticleModel(Particle* pmodel) { this->particle_ = pmodel; }

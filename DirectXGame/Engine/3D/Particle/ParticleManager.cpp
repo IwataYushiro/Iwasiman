@@ -335,7 +335,7 @@ void ParticleManager::Draw()
 }
 
 void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3& setpos, const XMFLOAT3& setvel,
- const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
+ const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color,const int setLife)
 {
 	//パーティクルセット
 	particle_ = p;
@@ -361,17 +361,17 @@ void ParticleManager::Active(Particle* p, const XMFLOAT3& setmove,const XMFLOAT3
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(setLife, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 void ParticleManager::Active(const Preset& preset)
 {
 	//パーティクルセット
 	Active(preset.particle, preset.startPos, preset.pos, preset.vel,
-		preset.acc, preset.num, preset.scale, preset.startColor, preset.endColor);
+		preset.acc, preset.num, preset.scale, preset.startColor, preset.endColor,preset.life);
 }
 void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
-	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
+	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color, const int setLife)
 {
 	//パーティクルセット
 	particle_ = p;
@@ -396,7 +396,7 @@ void ParticleManager::ActiveX(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(setLife, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 
@@ -404,11 +404,11 @@ void ParticleManager::ActiveX(const Preset& preset)
 {
 	//パーティクルセット
 	ActiveX(preset.particle, preset.startPos, preset.pos, preset.vel,
-		preset.acc, preset.num, preset.scale, preset.startColor, preset.endColor);
+		preset.acc, preset.num, preset.scale, preset.startColor, preset.endColor, preset.life);
 }
 
 void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
-	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
+	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color, const int setLife)
 {
 	//パーティクルセット
 	particle_ = p;
@@ -433,7 +433,7 @@ void ParticleManager::ActiveY(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(setLife, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 
@@ -441,11 +441,11 @@ void ParticleManager::ActiveY(const Preset& preset)
 {
 	//パーティクルセット
 	ActiveY(preset.particle, preset.startPos, preset.pos, preset.vel,
-		preset.acc, preset.num, preset.scale, preset.startColor, preset.endColor);
+		preset.acc, preset.num, preset.scale, preset.startColor, preset.endColor, preset.life);
 }
 
 void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOAT3& setpos, const XMFLOAT3& setvel,
-	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color)
+	const XMFLOAT3& setacc, const int& setnum, const XMFLOAT2& setscale, const XMFLOAT4& start_color, const XMFLOAT4& end_color, const int setLife)
 {
 	//パーティクルセット
 	particle_ = p;
@@ -470,7 +470,7 @@ void ParticleManager::ActiveZ(Particle* p, const XMFLOAT3& setmove, const XMFLOA
 		acc.y = -(float)rand() / RAND_MAX * md_acc.y;
 
 		//追加
-		particle_->Add(lifeTime_, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
+		particle_->Add(setLife, pos, vel, acc, setscale.x, setscale.y, start_color, end_color);
 	}
 }
 
@@ -478,5 +478,5 @@ void ParticleManager::ActiveZ(const Preset& preset)
 {
 	//パーティクルセット
 	ActiveZ(preset.particle, preset.startPos, preset.pos, preset.vel,
-		preset.acc, preset.num, preset.scale, preset.startColor, preset.endColor);
+		preset.acc, preset.num, preset.scale, preset.startColor, preset.endColor, preset.life);
 }

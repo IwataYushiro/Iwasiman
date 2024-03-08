@@ -175,7 +175,7 @@ void EnemyDanger::UpdateParticleSkin()
 	else//îΩì]éû
 	{
 		pmFire_->ActiveX(fire.particle, minus.minusStartPos, fire.pos, minus.minusVel,
-			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor);
+			fire.acc, fire.num, fire.scale, fire.startColor, fire.endColor, fire.life);
 	}
 	//êFçáÇ¢Ç‡âäÇ¡Ç€Ç≠
 	const XMFLOAT4 objFireColor = {0.0f,0.0f,MyMath::RandomMTFloat(0.2f,0.3f),1.0f };
