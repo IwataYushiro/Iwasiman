@@ -461,7 +461,8 @@ void Enemy1::OnCollision([[maybe_unused]]const CollisionInfo& info,
 		20,
 		{ 3.0f, 0.0f },
 		{ 1.0f,1.0f,1.0f,1.0f },
-		{ 0.0f,0.0f,0.0f,1.0f }
+		{ 0.0f,0.0f,0.0f,1.0f },
+		20
 	};
 	//爆発プリセット
 	const ParticleManager::Preset fire =
@@ -474,7 +475,8 @@ void Enemy1::OnCollision([[maybe_unused]]const CollisionInfo& info,
 		40,
 		{ 3.0f, 0.0f },
 		{ 1.0f,1.0f,1.0f,1.0f },
-		{ 0.0f,0.0f,0.0f,1.0f }
+		{ 0.0f,0.0f,0.0f,1.0f },
+		20
 	};
 
 	if (attribute == COLLISION_ATTR_LANDSHAPE)return;	//地形の場合何も起こらない
