@@ -412,7 +412,8 @@ void Enemy1::UpdateApproach() {
 		position_.y += fallVec_.y;
 		position_.z += fallVec_.z;
 	}
-
+	
+	
 	//死んだら
 	if (life_ <= deathLife_) {
 		
@@ -504,7 +505,8 @@ void Enemy1::OnCollision([[maybe_unused]]const CollisionInfo& info,
 			}
 			else//1以下の場合
 			{
-				
+				//カラー変更
+				color_ = hitColor_;
 				//パーティクルでヒット演出
 				pmFire_->ActiveZ(fire);
 

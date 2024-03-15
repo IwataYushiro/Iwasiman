@@ -71,7 +71,8 @@ protected:
 	XMFLOAT3 startPos_;
 	//ボスの死亡フラグ
 	bool bossDead_;
-
+	//攻撃ヒット時のカラー
+	const XMFLOAT4 hitColor_ = { 1.0f,1.0f,1.0f,0.0f };
 	//敵属性
 	enum EnemyType
 	{
@@ -180,11 +181,11 @@ protected://共有メンバ関数
 		//属性によってカラーは違う
 		struct ColorType
 		{
-			const XMFLOAT4 none = { 1.0f,1.0f,1.0f,1.0f };		  //通常属性
-			const XMFLOAT4 power = { 1.0f,0.1f,0.1f,1.0f };	  //攻撃属性
-			const XMFLOAT4 guard = { 0.1f,1.0f,0.1f,1.0f };	  //防御属性
-			const XMFLOAT4 speed = { 0.1f,0.1f,1.0f,1.0f };	  //速度属性
-			const XMFLOAT4 death = { 1.0f,1.0f,1.0f,1.0f };	  //危険属性
+			const XMFLOAT4 none = { 1.0f,1.0f,1.0f,1.0f };		//通常属性
+			const XMFLOAT4 power = { 1.0f,0.1f,0.1f,1.0f };		//攻撃属性
+			const XMFLOAT4 guard = { 0.1f,1.0f,0.1f,1.0f };		//防御属性
+			const XMFLOAT4 speed = { 0.1f,0.1f,1.0f,1.0f };		//速度属性
+			const XMFLOAT4 death = { 1.0f,1.0f,1.0f,1.0f };		//危険属性
 		};
 		ColorType colorType;
 		//ライフ

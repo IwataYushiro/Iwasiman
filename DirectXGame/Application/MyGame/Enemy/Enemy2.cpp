@@ -212,8 +212,8 @@ void Enemy2::Update(const bool isStart) {
 		(this->*updateTable_[static_cast<size_t>(phase_)])();
 		//死亡処理(Leaveが死亡演出)
 		if (phase_ != Phase::Leave)Dead();
-	}
 
+	}
 	//座標の転送
 	Trans();
 	//更新
@@ -299,6 +299,7 @@ void Enemy2::Dead()
 		//フェーズ切り替え
 		phase_ = Phase::Leave;
 	}
+
 }
 
 void Enemy2::Landing()
@@ -463,7 +464,7 @@ void Enemy2::UpdateBack()
 
 //離脱
 void Enemy2::UpdateLeave() {
-	
+
 	//サブ属性を死亡した扱いにする(死亡演出のため)
 	collider_->SetSubAttribute(SUBCOLLISION_ATTR_ENEMY_ISDEAD);
 	//イージングをし転送
@@ -523,14 +524,18 @@ void Enemy2::OnCollision([[maybe_unused]] const CollisionInfo& info, const unsig
 				pmSmoke_->ActiveZ(smoke);
 
 				pmSmoke_->Update();
+				
 			}
 			else//1以下の場合
 			{
+				//カラー変更
+				color_ = hitColor_;
 				//パーティクルでヒット演出
 				pmFire_->ActiveZ(fire);
 
 				pmFire_->Update();
 			}
+
 			//ライフが減る
 			life_--;
 		}
