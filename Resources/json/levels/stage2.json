@@ -149,30 +149,6 @@
         },
         {
             "type": "MESH",
-            "name": "ItemHeal",
-            "transform": {
-                "translation": [
-                    60.0,
-                    20.0,
-                    7.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    30.00000762939453
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "itemheal",
-            "objecttype": "ITEM",
-            "objectpattern": "HEAL"
-        },
-        {
-            "type": "MESH",
             "name": "ItemJump.001",
             "transform": {
                 "translation": [
@@ -356,7 +332,7 @@
             "transform": {
                 "translation": [
                     60.0,
-                    40.0,
+                    30.0,
                     -8.0
                 ],
                 "rotation": [
@@ -434,11 +410,11 @@
                 "rotation": [
                     0.0,
                     -0.0,
-                    10.000000953674316
+                    0.0
                 ],
                 "scaling": [
-                    0.9999999403953552,
-                    0.9999999403953552,
+                    1.0,
+                    1.0,
                     1.0
                 ]
             },
@@ -451,9 +427,9 @@
             "name": "ItemHeal.003",
             "transform": {
                 "translation": [
-                    60.0,
+                    0.0,
                     20.0,
-                    -8.0
+                    30.0
                 ],
                 "rotation": [
                     0.0,
@@ -472,36 +448,12 @@
         },
         {
             "type": "MESH",
-            "name": "ItemHeal.004",
-            "transform": {
-                "translation": [
-                    60.0,
-                    20.0,
-                    12.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    40.000003814697266
-                ],
-                "scaling": [
-                    0.9999999403953552,
-                    0.9999999403953552,
-                    1.0
-                ]
-            },
-            "file_name": "itemheal",
-            "objecttype": "ITEM",
-            "objectpattern": "HEAL"
-        },
-        {
-            "type": "MESH",
             "name": "ItemHeal.005",
             "transform": {
                 "translation": [
-                    60.0,
-                    20.0,
-                    2.0
+                    0.0,
+                    15.0,
+                    30.0
                 ],
                 "rotation": [
                     0.0,
@@ -635,6 +587,54 @@
             "file_name": "enemy2",
             "objecttype": "ENEMY",
             "objectpattern": "E2S"
+        },
+        {
+            "type": "MESH",
+            "name": "Enemy1.003",
+            "transform": {
+                "translation": [
+                    0.0,
+                    5.0,
+                    10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    -90.00000762939453
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "enemy2",
+            "objecttype": "ENEMY",
+            "objectpattern": "E2P"
+        },
+        {
+            "type": "MESH",
+            "name": "ItemHeal.001",
+            "transform": {
+                "translation": [
+                    60.0,
+                    20.0,
+                    5.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "itemheal",
+            "objecttype": "ITEM",
+            "objectpattern": "HEAL"
         }
     ]
 }

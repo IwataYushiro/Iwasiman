@@ -835,7 +835,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 				gameScene_->ChangePostEffectColor(resetPostEffectColor);
 			}
 			//ピンチ時はポストエフェクトの色を変える
-			else
+			else if(life_ < dangerLifeZone_)
 			{
 				//カラーもチェンジ
 				const XMFLOAT4 dangerColor = { 1.0f,0.2f * life_,0.2f * life_,1.0f };
