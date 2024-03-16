@@ -302,7 +302,7 @@ void GamePlayScene::UpdateIsPlayGame()
 		if (!player->IsActive())
 		{
 			//操作中の場合イージング
-			easeHowToPlayList_.ease_in_cubic();
+			easeHowToPlayList_.ease_in_back();
 			//アルファを更新
 			spriteHowToPlayList_->SetColor(
 				{ spriteHowToPlayList_->GetColor().x,
@@ -405,7 +405,6 @@ void GamePlayScene::UpdateIsPause()
 	easeCursorPosX_.ease_in_out_quint();
 
 	//ポジションセット
-	// 
 	//ポーズ関係
 	spritePause_->SetPosition({ easePauseMenuPosX_[PMEN_Menu].num_X, pausePosY_[PMEN_Menu] });
 	spritePauseResume_->SetPosition({ easePauseMenuPosX_[PMEN_Resume].num_X, pausePosY_[PMEN_Resume] });
