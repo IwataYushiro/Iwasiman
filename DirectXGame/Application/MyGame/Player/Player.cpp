@@ -757,14 +757,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 		isHit_ = true;
 
 		//ピンチ時はポストエフェクトの色は危険色に
-		if (life_ <= dangerLifeZone_)
-		{
-			//ポストエフェクトはビネットに変更
-			gameScene_->ChangePostEffect("Vignette");
-			//カラーもチェンジ
-			const XMFLOAT4 dangerColor = { 1.0f,0.1f * life_,0.1f * life_,1.0f };
-			gameScene_->ChangePostEffectColor(dangerColor);
-		}
+		ChangeDangerPostEffect();
 
 	}
 
@@ -786,14 +779,7 @@ void Player::OnCollision([[maybe_unused]] const CollisionInfo& info,
 			isHit_ = true;
 
 			//ピンチ時はポストエフェクトの色は危険色に
-			if (life_ <= dangerLifeZone_)
-			{
-				//ポストエフェクトはビネットに変更
-				gameScene_->ChangePostEffect("Vignette");
-				//カラーもチェンジ
-				const XMFLOAT4 dangerColor = { 1.0f,0.2f * life_,0.2f * life_,1.0f };
-				gameScene_->ChangePostEffectColor(dangerColor);
-			}
+			ChangeDangerPostEffect();
 
 		}
 
@@ -1098,4 +1084,19 @@ void Player::UpdateGoal()
 	for (int i = 0; i < XYZ_Num; i++)easeChangeScaleStageClear_[i].ease_out_cubic();
 	scale_ = { easeChangeScaleStageClear_[XYZ_X].num_X,easeChangeScaleStageClear_[XYZ_Y].num_X ,easeChangeScaleStageClear_[XYZ_Z].num_X };
 
+}
+
+void Player::ChangeDangerPostEffect()
+{
+	if (life_ <= dangerLifeZone_)
+	{
+		//ポストエフェクトはビネットに変更
+		gameScene_->ChangePostEffect("Vignette");
+		//カラーもチェンジ
+		const XMFLOAT4 dangerColor = { 1.0f,0.1f * life_,0.1f * life_,1.0f };
+		gameScene_->ChangePostEffectColor(dangerColor);
+		//パワーもチェンジ
+		const float dangerPower = 1.0f - life_ * 0.1f;
+		gameScene_->ChangePostEffectPower(dangerPower);
+	}
 }

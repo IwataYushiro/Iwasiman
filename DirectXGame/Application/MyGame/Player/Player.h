@@ -311,4 +311,6 @@ private://カプセル化メンバ関数
 	void UpdateBreak();
 	//ゴール時
 	void UpdateGoal();
+	//ピンチ時にポストエフェクト変更
+	void ChangeDangerPostEffect();
 };
