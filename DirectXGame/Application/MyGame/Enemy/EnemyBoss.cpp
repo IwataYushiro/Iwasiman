@@ -146,7 +146,7 @@ void EnemyBoss::Fire() {
 	assert(player_);
 
 	//弾の速度
-	const float kBulletSpeed = 0.5f;
+	const float kBulletSpeed = 0.8f / life_;
 	XMFLOAT3 velocity = {};
 
 	//自機のワールド座標を取得
@@ -220,7 +220,7 @@ void EnemyBoss::UpdateApproach() {
 		//発射タイマー初期化
 		const int32_t minInterval_ = fireInterval_ / 2;
 		const int32_t maxInterval_ = fireInterval_;
-		fireTimer_ = MyMath::RandomMTInt(minInterval_, maxInterval_);
+		fireTimer_ = MyMath::RandomMTInt(minInterval_ * life_, maxInterval_ * life_);
 	}
 	//ここまで来たら攻撃フェーズへ
 	const float moveAttackPhasePosZ = 100.0f;

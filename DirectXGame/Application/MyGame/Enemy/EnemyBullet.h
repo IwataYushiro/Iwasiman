@@ -46,7 +46,7 @@ private:
 	XMFLOAT3 velocity_;
 
 	//Žõ–½
-	const float lifeTime_ = 60.0f * 2.0f;
+	const float lifeTime_ = 60.0f * 3.0f;
 	//Ž€–SŽžŠÔ
 	float deathTimer_ = lifeTime_;
 	//Ž€–Sƒtƒ‰ƒO

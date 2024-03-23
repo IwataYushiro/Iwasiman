@@ -908,6 +908,7 @@ void Player::UpdateAlive(const bool isBack, const bool isAttack)
 	}
 	if (isShake_)
 	{
+		//シェイク時間の間だけシェイク
 		if (mutekiCount_ <= SHAKE_COUNT)
 		{
 			//当たったらシェイクさせる
