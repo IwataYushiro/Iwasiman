@@ -47,6 +47,8 @@ private:
 	using CollisionManager = IwasiEngine::CollisionManager;
 	using CollisionInfo = IwasiEngine::CollisionInfo;
 public:
+	//シェイクカウント
+	const int SHAKE_COUNT = 30;
 	//最大無敵時間
 	const int MUTEKI_COUNT = 60;
 	//ジャンプ強化最大効果時間
